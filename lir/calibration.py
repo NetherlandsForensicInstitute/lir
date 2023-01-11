@@ -1,8 +1,10 @@
 import logging
 import math
-import numpy as np
 import warnings
 from functools import partial
+from typing import Optional, Tuple, Union, Callable
+
+import numpy as np
 from scipy.optimize import minimize
 from sklearn.base import BaseEstimator
 from sklearn.base import TransformerMixin
@@ -10,7 +12,6 @@ from sklearn.exceptions import NotFittedError
 from sklearn.linear_model import LogisticRegression
 from sklearn.mixture import GaussianMixture
 from sklearn.neighbors import KernelDensity
-from typing import Optional, Tuple, Union, Callable
 
 from .bayeserror import elub
 from .loss_functions import negative_log_likelihood_balanced
@@ -27,13 +28,16 @@ def check_misleading_Inf_negInf(log_odds_X, y):
 
     # give error message if H1's contain zeros and H2's contain ones
     if np.any(np.isneginf(log_odds_X[y == 1])) and np.any(np.isposinf(log_odds_X[y == 0])):
-        raise ValueError('Your data is possibly problematic for this calibrator. You have negInf under H1 and Inf under H2 after logodds transform. If you really want to proceed, adjust probs in order to get finite values on the logodds domain')
+        raise ValueError(
+            'Your data is possibly problematic for this calibrator. You have negInf under H1 and Inf under H2 after logodds transform. If you really want to proceed, adjust probs in order to get finite values on the logodds domain')
     # give error message if H1's contain zeros
     if np.any(np.isneginf(log_odds_X[y == 1])):
-        raise ValueError('Your data is possibly problematic for this calibrator. You have negInf under H1 after logodds transform. If you really want to proceed, adjust probs in order to get finite values on the logodds domain')
+        raise ValueError(
+            'Your data is possibly problematic for this calibrator. You have negInf under H1 after logodds transform. If you really want to proceed, adjust probs in order to get finite values on the logodds domain')
     # give error message if H2's contain ones
     if np.any(np.isposinf(log_odds_X[y == 0])):
-        raise ValueError('Your data is possibly problematic for this calibrator. You have Inf under H2 after logodds transform. If you really want to proceed, adjust probs in order to get finite values on the logodds domain')
+        raise ValueError(
+            'Your data is possibly problematic for this calibrator. You have Inf under H2 after logodds transform. If you really want to proceed, adjust probs in order to get finite values on the logodds domain')
 
 
 def compensate_and_remove_negInf_Inf(log_odds_X, y):
@@ -44,8 +48,8 @@ def compensate_and_remove_negInf_Inf(log_odds_X, y):
     el_H1 = np.logical_and(X_finite, y == 1)
     el_H2 = np.logical_and(X_finite, y == 0)
     n_H1 = np.sum(y)
-    numerator = np.sum(el_H1)/n_H1
-    denominator = np.sum(el_H2)/(len(y)-n_H1)
+    numerator = np.sum(el_H1) / n_H1
+    denominator = np.sum(el_H2) / (len(y) - n_H1)
     y = y[X_finite]
     log_odds_X = log_odds_X[X_finite]
     return log_odds_X, y, numerator, denominator
@@ -203,7 +207,7 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
         raise
 
     def fit(self, X, y):
-        #transform if needed
+        # transform if needed
         if self.score_transform:
             X = self.score_transform(X)
 
@@ -258,7 +262,7 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
         ln_dif = ln_H1 - ln_H2
         log10_dif = ln_to_log10(ln_dif)
 
-        #calculate p0 and p1's (redundant?)
+        # calculate p0 and p1's (redundant?)
         self.p0[el] = self.denominator * np.exp(ln_H2)
         self.p1[el] = self.numerator * np.exp(ln_H1)
 
@@ -291,7 +295,7 @@ class LogitCalibrator(BaseEstimator, TransformerMixin):
     Calculates a likelihood ratio of a score value, provided it is from one of
     two distributions. Uses logistic regression for interpolation.
     """
-    
+
     def __init__(self,
                  score_transform: Optional[Callable] = to_log_odds,
                  **kwargs):
@@ -307,7 +311,7 @@ class LogitCalibrator(BaseEstimator, TransformerMixin):
 
     def fit(self, X, y):
 
-        #transform if needed
+        # transform if needed
         if self.score_transform:
             X = self.score_transform(X)
         # sanity check
@@ -330,7 +334,7 @@ class LogitCalibrator(BaseEstimator, TransformerMixin):
         self.p0 = np.empty(np.shape(X))
         self.p1 = np.empty(np.shape(X))
 
-        #transform if needed
+        # transform if needed
         if self.score_transform:
             X = self.score_transform(X)
 
@@ -364,6 +368,7 @@ class GaussianCalibrator(BaseEstimator, TransformerMixin):
     Calculates a likelihood ratio of a score value, provided it is from one of
     two distributions. Uses a gaussian mixture model for interpolation.
     """
+
     def __init__(self,
                  score_transform: Optional[Callable] = to_log_odds,
                  n_components_H0=1,
@@ -375,11 +380,11 @@ class GaussianCalibrator(BaseEstimator, TransformerMixin):
         self.denominator = None
 
     def fit(self, X, y):
-        #transform if needed
+        # transform if needed
         if self.score_transform:
             X = self.score_transform(X)
 
-        #check whether training data is sane
+        # check whether training data is sane
         check_misleading_Inf_negInf(X, y)
 
         # Gaussian mixture needs finite scale. Inf and negInf are treated as point masses at the extremes.
@@ -402,7 +407,7 @@ class GaussianCalibrator(BaseEstimator, TransformerMixin):
         # initiate LLRs_output
         LLRs_output = np.empty(np.shape(X))
 
-        #transform if needed
+        # transform if needed
         if self.score_transform:
             X = self.score_transform(X)
 
@@ -422,7 +427,7 @@ class GaussianCalibrator(BaseEstimator, TransformerMixin):
         el = np.isfinite(X)
         X = X[el]
 
-        #perform density calculations for X as usual
+        # perform density calculations for X as usual
         X = X.reshape(-1, 1)
         ln_H1 = self._model1.score_samples(X)
         ln_H2 = self._model0.score_samples(X)
@@ -433,7 +438,7 @@ class GaussianCalibrator(BaseEstimator, TransformerMixin):
         self.p0[el] = np.multiply(self.denominator, np.exp(ln_H2))
         self.p1[el] = np.multiply(self.numerator, np.exp(ln_H1))
 
-        #apply correction for fraction of Infs and negInfs
+        # apply correction for fraction of Infs and negInfs
         log10_compensator = np.add(np.log10(self.numerator), np.multiply(-1, np.log(self.denominator)))
         LLRs_output[el] = np.add(log10_compensator, log10_dif)
         return np.float_power(10, LLRs_output)
@@ -470,7 +475,7 @@ class IsotonicCalibrator(BaseEstimator, TransformerMixin):
             n_misleading = self.add_misleading
 
         if n_misleading > 0:
-            X = np.concatenate([X, np.ones(n_misleading) * (X.max()+1), np.ones(n_misleading) * (X.min()-1)])
+            X = np.concatenate([X, np.ones(n_misleading) * (X.max() + 1), np.ones(n_misleading) * (X.min() - 1)])
             y = np.concatenate([y, np.zeros(n_misleading), np.ones(n_misleading)])
 
         prior = np.sum(y) / y.size
@@ -490,6 +495,7 @@ class FourParameterLogisticCalibrator:
     Calculates a likelihood ratio of a score value, provided it is from one of two distributions.
     Depending on the training data, a 2-, 3- or 4-parameter logistic model is used.
     """
+
     def __int__(self,
                 score_transform: Optional[Callable] = to_log_odds
                 ):
@@ -517,21 +523,21 @@ class FourParameterLogisticCalibrator:
         if estimate_c and estimate_d:
             # then define 4PL-logistic model
             self.model = self._four_pl_model
-            bounds.extend([(10**-10, 1-10**-10), (10**-10, np.inf)])
+            bounds.extend([(10 ** -10, 1 - 10 ** -10), (10 ** -10, np.inf)])
             LOG.warning("There were -Inf lrs for the same source samples and Inf lrs for the different source samples "
                         ", therefore a 4pl calibrator was fitted.")
         elif estimate_c:
             # then define 3-PL logistic model. Set 'd' to 0
             self.model = partial(self._four_pl_model, d=0)
             # use very small values since limits result in -inf llh
-            bounds.append((10**-10, 1-10**-10))
+            bounds.append((10 ** -10, 1 - 10 ** -10))
             LOG.warning("There were -Inf lrs for the same source samples, therefore a 3pl calibrator was fitted.")
         elif estimate_d:
             # then define 3-PL logistic model. Set 'c' to 0
             # use bind since 'c' is intermediate variable. In that case partial does not work.
             self.model = Bind(self._four_pl_model, ..., ..., ..., 0, ...)
             # use very small value since limits result in -inf llh
-            bounds.append((10**-10, np.inf))
+            bounds.append((10 ** -10, np.inf))
             LOG.warning("There were Inf lrs for the different source samples, therefore a 3pl calibrator was fitted.")
         else:
             # define ordinary logistic model (no regularization, so maximum likelihood estimates)
@@ -584,7 +590,7 @@ class DummyCalibrator(BaseEstimator, TransformerMixin):
 
     def transform(self, X):
         self.p0 = (1 - X)
-        self.p1 =  X
+        self.p1 = X
         return to_odds(self.p1)
 
 
@@ -647,8 +653,8 @@ class ELUBbounder(BaseEstimator, TransformerMixin):
         assuming that y=1 corresponds to Hp, y=0 to Hd
         """
         if self.also_fit_calibrator:
-            self.first_step_calibrator.fit(X,y)
-        lrs  = self.first_step_calibrator.transform(X)
+            self.first_step_calibrator.fit(X, y)
+        lrs = self.first_step_calibrator.transform(X)
 
         y = np.asarray(y).squeeze()
         self._lower_lr_bound, self._upper_lr_bound = elub(lrs, y, add_misleading=1)

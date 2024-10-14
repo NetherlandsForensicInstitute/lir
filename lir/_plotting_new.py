@@ -1,6 +1,7 @@
 import logging
 from contextlib import contextmanager
 from functools import partial
+from typing import Optional, List, Any, Mapping
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -37,7 +38,7 @@ class Canvas:
         return getattr(self.ax, attr)
 
 
-def savefig(path):
+def savefig(path: str, *args, **kwargs):
     """
     Creates a plotting context, write plot when closed.
 
@@ -48,6 +49,8 @@ def savefig(path):
         ax.pav(lrs, y)
     ```
 
+    This will call `matplotlib.pyplot.savefig()` and pass on any parameter other than `path`.
+
     A call to `savefig(path)` is identical to `axes(savefig=path)`.
 
     Parameters
@@ -55,7 +58,7 @@ def savefig(path):
     path : str
         write a PNG image to this path
     """
-    return axes(savefig=path)
+    return axes(savefig=path, savefig_args=args, savefig_kwargs=kwargs)
 
 
 def show():
@@ -75,7 +78,7 @@ def show():
 
 
 @contextmanager
-def axes(savefig=None, show=None):
+def axes(savefig: Optional[str] = None, show: bool = False, savefig_args: Optional[List[Any]] = None, savefig_kwargs: Optional[Mapping[str, Any]] = None):
     """
     Creates a plotting context.
 
@@ -90,8 +93,12 @@ def axes(savefig=None, show=None):
     try:
         yield Canvas(ax=plt)
     finally:
+        if savefig_args is None:
+            savefig_args = []
+        if savefig_kwargs is None:
+            savefig_kwargs = {}
         if savefig:
-            fig.savefig(savefig)
+            fig.savefig(savefig, *savefig_args, **savefig_kwargs)
         if show:
             plt.show()
         plt.close(fig)

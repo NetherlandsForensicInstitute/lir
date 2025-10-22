@@ -33,7 +33,7 @@ def _calculate_cllr(
     system.fit(*training_data)
     pair_llrs, pair_labels, pair_meta = system.apply(*test_data)
 
-    return metrics.cllr(10**pair_llrs, pair_labels)
+    return metrics.cllr(pair_llrs, pair_labels)
 
 
 def test_two_level_system():

@@ -7,7 +7,7 @@ and computation of case LRs.
 
 Prerequisites
 -----------
-- This repository is developed for Python 3.9.
+- This repository is developed for Python 3.10.
 - This project uses [pdm](https://pdm-project.org/en/latest/) as a dependency manager.
 
 ### Installing PDM

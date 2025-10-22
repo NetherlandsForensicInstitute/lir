@@ -1,16 +1,20 @@
 #!/usr/bin/env python3
 
 import argparse
+import datetime
 import logging
 import os
 import sys
 from logging.handlers import RotatingFileHandler
+from pathlib import Path
+from typing import Any
 
 import confidence
 
 from lir import registry
-from lir.config.base import YamlParseError
+from lir.config.base import YamlParseError, pop_field
 from lir.config.experiment_strategies import parse_experiments_setup
+from lir.config.substitution import _expand
 
 LOG = logging.getLogger(__file__)
 DEFAULT_LOGLEVEL = logging.WARNING
@@ -36,18 +40,15 @@ def setup_logging(file_path: str, level_increase: int) -> None:
     ch.setLevel(loglevel)
     logging.getLogger().addHandler(ch)
 
-    # setup a file handler
-    fh = RotatingFileHandler(
-        file_path, maxBytes=10 * 1024 * 1024, backupCount=2, delay=True
-    )
-    fh.setFormatter(fmt)
-    fh.setLevel(logging.INFO)
-    logging.getLogger().addHandler(fh)
-    if os.path.exists(file_path):
-        fh.doRollover()
+    logging.getLogger("").setLevel(logging.DEBUG)
 
-    logging.getLogger("").setLevel(logging.INFO)
-    logging.getLogger("lir").setLevel(loglevel)
+
+def initialize_logfile(output_dir: Path):
+    output_dir.mkdir(parents=True, exist_ok=True)
+    fh = logging.FileHandler(output_dir / "log.txt")
+    fh.setFormatter(logging.Formatter("[%(asctime)-15s %(levelname)s] %(name)s: %(message)s"))
+    fh.setLevel(logging.DEBUG)
+    logging.getLogger().addHandler(fh)
 
 
 def error(msg: str) -> None:
@@ -55,6 +56,15 @@ def error(msg: str) -> None:
     if LOG.level <= logging.DEBUG:
         raise
     sys.exit(1)
+
+
+def load_configuration(path: str) -> dict[str, Any]:
+    cfg = confidence.loadf(path)
+    cfg = confidence.Configuration(
+        cfg, {"timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")}
+    )
+
+    return _expand(cfg)
 
 
 def main() -> None:
@@ -97,8 +107,13 @@ def main() -> None:
             print(name)
         return
 
+    cfg = load_configuration(args.setup)
+
+    output_dir = pop_field([], cfg, "output", validate=Path)
+    initialize_logfile(output_dir)
+
     try:
-        experiments = parse_experiments_setup(confidence.loadf(args.setup))
+        experiments = parse_experiments_setup(cfg, output_dir)
     except YamlParseError as e:
         error(f"error while parsing {args.setup}: {str(e)}")
         raise  # this statement is not reachable, but helps code validation

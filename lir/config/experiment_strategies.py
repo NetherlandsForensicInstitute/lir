@@ -251,7 +251,7 @@ def parse_experiments(
     return experiments
 
 
-def parse_experiments_setup(cfg: Configuration) -> Mapping[str, Experiment]:
+def parse_experiments_setup(cfg: dict[str, Any], output_dir: Path) -> Mapping[str, Experiment]:
     """
     Extract which Experiment to run as dictated in the configuration.
 
@@ -262,8 +262,4 @@ def parse_experiments_setup(cfg: Configuration) -> Mapping[str, Experiment]:
     :param cfg: a `Configuration` object describing the experiments
     :return: a mapping of names to experiments
     """
-    cfg = confidence.Configuration(
-        cfg, {"timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")}
-    )
-
-    return parse_experiments(_expand(cfg), [], Path(cfg.output))
+    return parse_experiments(cfg, [], output_dir)

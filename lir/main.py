@@ -2,9 +2,8 @@
 
 import argparse
 import logging
-import os
 import sys
-from logging.handlers import RotatingFileHandler
+from pathlib import Path
 
 import confidence
 
@@ -23,7 +22,9 @@ def setup_logging(file_path: str, level_increase: int) -> None:
     :param file_path: target file
     :param level_increase: log level for stderr, relative to the default log level
     """
-    loglevel = max(logging.DEBUG, min(logging.CRITICAL, DEFAULT_LOGLEVEL - level_increase * 10))
+    loglevel = max(
+        logging.DEBUG, min(logging.CRITICAL, DEFAULT_LOGLEVEL - level_increase * 10)
+    )
 
     # setup formatter
     log_format = "[%(asctime)-15s %(levelname)s] %(name)s: %(message)s"
@@ -34,42 +35,38 @@ def setup_logging(file_path: str, level_increase: int) -> None:
     ch.setLevel(loglevel)
     logging.getLogger().addHandler(ch)
 
-    # setup a file handler
-    fh = RotatingFileHandler(file_path, maxBytes=10 * 1024 * 1024, backupCount=2, delay=True)
-    fh.setFormatter(fmt)
-    fh.setLevel(logging.INFO)
+    logging.getLogger("").setLevel(logging.DEBUG)
+
+
+def initialize_logfile(output_dir: Path) -> None:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    fh = logging.FileHandler(output_dir / "log.txt")
+    fh.setFormatter(
+        logging.Formatter("[%(asctime)-15s %(levelname)s] %(name)s: %(message)s")
+    )
+    fh.setLevel(logging.DEBUG)
     logging.getLogger().addHandler(fh)
-    if os.path.exists(file_path):
-        fh.doRollover()
-
-    logging.getLogger("").setLevel(logging.INFO)
-    logging.getLogger("lir").setLevel(loglevel)
 
 
-def error(msg: str, e: Exception | None = None) -> None:
-    """
-    Report an error to the console and abort execution.
-
-    If the log level is at least `logging.DEBUG`, the exception is raised (if not None).
-
-    :param msg: the error message
-    :param e: the associated exception, if any
-    """
+def error(msg: str) -> None:
     sys.stderr.write(f"{msg}\n")
-    if e and LOG.level <= logging.DEBUG:
-        raise e
+    if LOG.level <= logging.DEBUG:
+        raise
     sys.exit(1)
 
 
 def main() -> None:
-    app_name = "lir"
+    app_name = "benchmark"
 
-    parser = argparse.ArgumentParser(description="Run all or some of the parts of project")
+    parser = argparse.ArgumentParser(
+        description="Run all or some of the parts of project"
+    )
 
     parser.add_argument(
-        "setup",
-        metavar="SETUP_FILENAME",
+        "--setup",
+        metavar="PATH",
         help="path to YAML file describing the evaluation setup",
+        required=True,
     )
     parser.add_argument(
         "--experiment",
@@ -99,10 +96,12 @@ def main() -> None:
         return
 
     try:
-        experiments = parse_experiments_setup(confidence.loadf(args.setup))
+        experiments, output_dir = parse_experiments_setup(confidence.loadf(args.setup))
     except YamlParseError as e:
-        error(f"error while parsing {args.setup}: {str(e)}", e)
+        error(f"error while parsing {args.setup}: {str(e)}")
         raise  # this statement is not reachable, but helps code validation
+
+    initialize_logfile(output_dir)
 
     if args.list_experiments:
         for name, experiment in experiments.items():
@@ -111,10 +110,10 @@ def main() -> None:
 
     if args.experiment:
         for name in args.experiment:
-            if name not in experiments:
+            if name in experiments:
+                experiments[name].run()
+            else:
                 error(f"no such experiment: {name}")
-        for name in args.experiment:
-            experiments[name].run()
     else:
         for experiment in experiments.values():
             experiment.run()

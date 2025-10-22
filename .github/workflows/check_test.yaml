@@ -1,0 +1,36 @@
+name: Test package
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+
+jobs:
+  check:
+    name: Linting, formatting, static analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pdm-project/setup-pdm@v4
+        with:
+          python-version: '3.12'
+          cache: true
+          cache-dependency-path: 'pdm.lock'
+      - name: Install necessary dependencies
+        run: pdm install --group dev
+      - name: Run checks
+        run: pdm run check
+  test:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pdm-project/setup-pdm@v4
+        with:
+          python-version: '3.12'
+          cache: true
+          cache-dependency-path: 'pdm.lock'
+      - name: Install necessary dependencies
+        run: pdm install --group dev
+      - name: Run tests
+        run: pdm run test

@@ -50,25 +50,32 @@ def setup_logging(file_path: str, level_increase: int) -> None:
     logging.getLogger("lir").setLevel(loglevel)
 
 
-def error(msg: str) -> None:
+def error(msg: str, e: Exception | None = None) -> None:
+    """
+    Report an error to the console and abort execution.
+
+    If the log level is at least `logging.DEBUG`, the exception is raised (if not None).
+
+    :param msg: the error message
+    :param e: the associated exception, if any
+    """
     sys.stderr.write(f"{msg}\n")
-    if LOG.level <= logging.DEBUG:
-        raise
+    if e and LOG.level <= logging.DEBUG:
+        raise e
     sys.exit(1)
 
 
 def main() -> None:
-    app_name = "benchmark"
+    app_name = "lir"
 
     parser = argparse.ArgumentParser(
         description="Run all or some of the parts of project"
     )
 
     parser.add_argument(
-        "--setup",
-        metavar="PATH",
+        "setup",
+        metavar="SETUP_FILENAME",
         help="path to YAML file describing the evaluation setup",
-        required=True,
     )
     parser.add_argument(
         "--experiment",
@@ -100,7 +107,7 @@ def main() -> None:
     try:
         experiments = parse_experiments_setup(confidence.loadf(args.setup))
     except YamlParseError as e:
-        error(f"error while parsing {args.setup}: {str(e)}")
+        error(f"error while parsing {args.setup}: {str(e)}", e)
         raise  # this statement is not reachable, but helps code validation
 
     if args.list_experiments:
@@ -110,10 +117,10 @@ def main() -> None:
 
     if args.experiment:
         for name in args.experiment:
-            if name in experiments:
-                experiments[name].run()
-            else:
+            if name not in experiments:
                 error(f"no such experiment: {name}")
+        for name in args.experiment:
+            experiments[name].run()
     else:
         for experiment in experiments.values():
             experiment.run()

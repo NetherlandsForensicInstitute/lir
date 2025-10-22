@@ -1,0 +1,90 @@
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[project]
+name = "lir"
+description = "Package for optimising and evaluating Likelihood Ratio (LR) systems."
+dynamic = ["version"]
+authors = [
+    {name = "Netherlands Forensics Institute", email = "netherlandsforensicinstitute@users.noreply.github.com"},
+]
+requires-python = ">=3.9"
+readme = "README.md"
+license = {text = "Apache Software License 2.0"}
+dependencies = [
+    "confidence>=0.12",
+    "matplotlib>=3.5",
+    "numpy>=1.22",
+    "scikit-learn>=1.2",
+    "tqdm>=4.67.1",
+    "scikit-learn>=1.2",
+    "xgboost>=1.5",
+    "black>=24.8.0",
+    "mypy>=1.14.1",
+    "optuna>=4.4.0",
+    "scipy>=1.13.1",
+    "pandas>=2.3.2",
+]
+
+[project.urls]
+homepage = "https://github.com/NetherlandsForensicInstitute/lir/"
+
+[project.scripts]
+lir = "lir.main:main"
+
+[dependency-groups]
+dev = [
+    "coverage",
+    "flake8",
+    "flake8-pyproject",
+    "pytest",
+]
+
+[tool.pdm]
+version = {source = "scm"}
+
+[tool.pdm.scripts]
+all = {composite = ["check", "format-fix", "test"]}
+check = {composite = ["lint", "format-check", "mypy"]}
+lint = "flake8 lir/"
+format-check = "black --check lir"
+format-fix = "black lir"
+mypy = "mypy lir"
+test = "coverage run --branch --source lir --module pytest --strict-markers tests/"
+test-coverage = "coverage report"
+lir = "python run.py"
+
+[tool.flake8]
+max-line-length = 120
+application-import-names = ["lir"]
+import-order-style = "pycharm"
+
+[tool.mypy]
+# allow redefinition of inferred / assigned types
+allow_redefinition = true
+# require all defined functions to be fully typed
+allow_incomplete_defs = false
+allow_untyped_defs = false
+# be strict about optional types
+strict_optional = true
+# warn about lines in this file that make no sense to mypy
+warn_unused_configs = true
+# do not warn about missing imports
+ignore_missing_imports = true
+
+exclude = [
+    "lir/algorithms/bayeserror.py",  # imported from LIR
+    "lir/algorithms/invariance_bounds.py",  # imported from LIR
+    "lir/algorithms/isotonic_regression.py",  # imported from LIR
+    "lir/algorithms/kde.py",  # imported from LIR
+    "lir/lrsystems/two_level.py",  # imported from LIR
+    "lir/metrics/devpav.py",  # imported from LIR
+    "lir/plotting/__init__.py",  # imported from LIR
+    "lir/plotting/expected_calibration_error.py",  # imported from LIR
+    "lir/registry.py",
+    "lir/transform/calibration.py",  # imported from LIR
+    "lir/transform/distance.py",  # imported from LIR
+    "lir/transform/pairing.py",  # imported from LIR
+    "lir/transform/percentile_rank.py",  # imported from LIR
+]

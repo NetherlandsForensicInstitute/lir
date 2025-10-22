@@ -1,0 +1,255 @@
+# glass.yaml - an example LR system evaluation for glass data.
+#
+# This file features two common-source systems for evaluation on glass data: a score-based system and a features-based
+# system.
+#
+# Usage: pdm run lir --setup examples/glass.yaml
+#
+
+# Output will be written to the folder specified below. There will be a sub folder for each experiment. The sub folders
+# each contain a file named `metrics.csv` which contains the metrics for each LR system that is tested, and for each LR
+# system there is a folder that may contain visualizations and other by products.
+output: output/${timestamp}_glass_example
+
+# We use a pre-defined dataset of LA-ICP-MS measurements of elemental concentration from floatglass. For more
+# information on the dataset, see: https://github.com/NetherlandsForensicInstitute/elemental_composition_glass
+#
+# This requires internet access on first run to fetch the data. Subsequent runs will use the cached data in `cache_dir`.
+# The data consist of a pre-defined training/test set combination. The training data has three instances per source; the
+# test data has five instances per source, from which to draw two-to-three pairs for LR calculations.
+#
+data:
+  strategy: data_providers.glass
+  cache_dir: cache/glass
+
+# This defines a score-based LR system. We may later experiment with different parameter values by augmenting this
+# system.
+score_based_lr_system:
+  # The `score_based` architecture takes three arguments:
+  # - `preprocessing`: a pipeline of modules that takes instance features as input and may do some preprocessing;
+  # - `pairing`: a pairing method that takes instances as input and produces same-source and different-source pairs;
+  # - `comparing`: a pipeline of modules that takes pairs as input and produces LLRs.
+  #
+  # A module may be a scikit-learn-style transformer, an estimator or a function.
+  # A module always has a `method` argument which defines the module class, which may be a scikit-learn-style
+  # transformer, estimator or a plain function. All other arguments are passed to the module class on instantiation,
+  # like this:
+  #
+  # scaler:
+  #   method: standard_scaler
+  #   with_mean: False
+  #
+  # Alternatively, if the module needs no arguments, the module class can be entered directly. The modules `scaler1` and
+  # `scaler2` in the following snippet are equivalent.
+  #
+  # scaler1:
+  #   method: standard_scaler
+  # scaler2: standard_scaler
+  #
+  architecture: score_based
+
+  preprocessing:
+    raw_data: csv_writer  # generate a CSV file containing raw data, named `raw_data.csv`
+    scaler: standard_scaler  # apply the scikit-learn `StandardScaler` with default arguments
+
+    # Generate a CSV file containing all that we know about the instances.
+    _instances:
+      method: csv_writer
+      include_labels: True  # include the ground-truth labels
+      include_meta: True  # include the metadata of the instances
+      include_input: False  # do not write the current values, since we can include them from `scaler.csv`
+      include:  # include the content of the CSV files that we just generated
+        - raw_data.csv
+        - scaler.csv
+
+  pairing:
+    method: instance_pairs
+    ratio_limit: 1  # limit the number of different-source pairs to the number of same-source pairs
+
+  comparing:
+    scoring: abs_diff  # calculate the absolute difference between the two instances for each feature
+    clf: logistic_regression  # use scikit-learn `LogisticRegression` to estimate probabilities
+    to_llr: probabilities_to_logodds  # convert probabilities to their log-odds values
+    calibration:  # calibrate the log-odds to LLRs using KDE
+      method: kde
+      bandwidth: silverman
+    bounding: elub_bounder  # prevent excessive extrapolation by applying an LLR bounder
+
+    # Accumulate all intermediate results and write them to a CSV file.
+    _results:
+      method: csv_writer
+      include_labels: True  # include the ground truth labels
+      include_meta: True  # include the metadata on the pairs
+      include_input: False  # skip the input data, since we can read it from CSV
+      include:
+        - clf.csv
+        - to_llr.csv
+        - calibration.csv
+        - bounding.csv
+
+two_level_lr_system:
+  # The `two_level` architecture takes three arguments:
+  # - `preprocessing`: a pipeline that takes instance features as input and may do some preprocessing;
+  # - `pairing`: a pairing method that takes instances as input and produces same-source and different-source pairs;
+  # - `postprocessing`: a pipeline that takes LLRs as input and may do some postprocessing.
+  architecture: two_level
+
+  n_trace_instances: 2
+  n_ref_instances: 3
+  preprocessing:
+    scaler: standard_scaler
+  pairing:
+    method: source_pairs
+    ratio_limit: 1
+  postprocessing:
+    llr: csv_writer
+    bound_llr: elub_bounder
+    _results:
+      method: csv_writer
+      include_labels: True
+      include_meta: True
+      include_input: False
+      include:
+        - llr.csv
+        - bound_llr.csv
+  seed: 42
+
+# Below we define how the LR system should be evaluated. We define three experiments:
+#
+# - `model_selection` does a grid search on parameters of the score-based system;
+# - `architecture_evaluation` compares the two architectures, score-based and two-level (feature-based);
+# - `validation` evaluates just a single LR system.
+#
+experiments:
+
+  # Each experiment has a required argument `strategy`. All other values are parameters of the strategy. The grid search
+  # strategy `grid` takes the following arguments:
+  #
+  # - `lr_system` -- the base LR system
+  # - `data` -- the data to be used for evaluation
+  # - `hyperparameters` -- the hyperparameters that are varied
+  # - `metrics` -- the metrics to be included in the summary `metrics.csv`
+  # - `visualization` -- how to visualize the results
+  #
+  # The hyperparameter block has a list of hyperparameters. Each hyperparameter has a list of *options*, and their
+  # values are substituted in the base configuration of the LR system. Where exactly the values are substituted is
+  # defined by the *path* in the base configuration.
+  #
+  # For example, the path to the `standard_scaler` in the `score_based_lr_system` is "preprocessing.scaler". The scaler
+  # can be defined as a categorical hyperparameter as follows.
+  #
+  # ```
+  # hyperparameters:
+  #   - name: scaling method  # optional, defaults to `path`
+  #     path: preprocessing.scaler
+  #     options:
+  #       - standard_scaler
+  #       - min_max_scaler
+  # ```
+  #
+  # Alternatively, you may want to substitute several paths as a *cluster*. For example, the calibration settings may
+  # depend on which classifier is used. In this case, don't include the `path` under the hyperparameter definition, but
+  # declare *substitutions* for each option, like so.
+  #
+  # ```
+  # hyperparameters:
+  #   - name: clf
+  #     options:
+  #       - option_name: svm_and_kde
+  #         substitutions:
+  #           - path: comparing.clf
+  #             value:
+  #               method: svm
+  #               probability: True
+  #           - path: comparing.calibration
+  #             value:
+  #               method: kde
+  #               bandwidth: silverman
+  #       - option_name: logit
+  #         substitutions:
+  #           - path: comparing.clf
+  #             value: logistic_regression
+  #           - path: comparing.calibration
+  #             value: csv_writer
+  # ```
+  #
+  # The hyperparameter value may also be numerical, as follows.
+  #
+  # ```
+  # hyperparameters:
+  #   - name: kde_bandwidth
+  #     path: comparing.calibration.bandwidth
+  #     low: .1
+  #     high: 1
+  #     log: False
+  #     step: .1
+  # ```
+  #
+  # The appropriate hyperparameter type is inferred from its declaration. It may also be declared explicitly by adding
+  # a `type` field with the corresponding value `categorical`, `cluster`, or `float`.
+  model_selection:
+    strategy: grid  # use a grid search
+    lr_system: ${score_based_lr_system}  # refer the the previously defined `score_based_lr_system`
+    data: ${data}  # refer to the previously defined data
+
+    hyperparameters:
+      - name: clf
+        options:
+          - option_name: svm_and_kde
+            substitutions:
+              - path: comparing.clf
+                value:
+                  method: svm
+                  probability: True
+              - path: comparing.calibration
+                value:
+                  method: kde
+                  bandwidth: silverman
+          - option_name: logit
+            substitutions:
+              - path: comparing.clf
+                value: logistic_regression
+              - path: comparing.calibration
+                value: csv_writer
+
+    metrics:
+      - cllr
+      - cllr_min
+
+    visualization:
+      - pav
+      - ece
+
+  architecture_evaluation:
+    strategy: grid
+    lr_system:  # do not specify any base LR system at this point; it will be substituted anyway
+    data: ${data}
+    hyperparameters:
+      # to vary the architecture, we substitute the entire LR system, whose path is referred to by the empty string ""
+      - name: architecture
+        options:
+          - option_name: score_based
+            substitutions:
+              - path: ""
+                value: ${score_based_lr_system}
+          - option_name: tlm
+            substitutions:
+              - path: ""
+                value: ${two_level_lr_system}
+    metrics:
+      - cllr
+      - cllr_min
+    visualization:
+      - pav
+      - lr_histogram
+
+  validation:
+    strategy: single_run
+    lr_system: ${score_based_lr_system}
+    data: ${data}
+    metrics:
+      - cllr
+      - cllr_min
+    visualization:
+      - pav
+      - ece

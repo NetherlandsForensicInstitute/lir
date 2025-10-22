@@ -1,0 +1,74 @@
+output: output/${timestamp}_common_source
+
+data:
+  provider: synthesized_normal_multiclass
+  seed: 42
+  population:
+    size: 1000
+    instances_per_source: 2
+  dimensions:
+    - mean: 0
+      std: 3
+      error_std: 1
+
+cross_validation_splits:
+  strategy: multiclass_cross_validation
+  folds: 5
+  source: ${data}
+
+lr_system:
+  architecture: score_based
+  preprocessing:
+    raw_data:
+      method: csv_writer
+      include_labels: True
+  pairing:
+    method: instance_pairs
+    ratio_limit: 1
+  comparing:
+    scoring: abs_diff
+    clf:
+      method: logistic_regression
+      C: 1
+    to_llr: probabilities_to_logodds
+    bounding: elub_bounder
+    _results:
+      method: csv_writer
+      include_input: False
+      include_labels: True
+      include_batch: True
+      include:
+        - clf.csv
+        - to_llr.csv
+
+experiments:
+  model_selection:
+    strategy: grid
+    lr_system: ${lr_system}
+    data: ${cross_validation_splits}
+    hyperparameters:
+      - path: comparing.clf
+        options:
+          - option_name: logit
+            method: logistic_regression
+            C: 1
+          - option_name: svm
+            method: svm
+            probability: True
+    metrics:
+      - cllr
+      - cllr_min
+    visualization:
+      - pav
+      - ece
+
+  validation:
+    strategy: single_run
+    lr_system: ${lr_system}
+    data: ${cross_validation_splits}
+    metrics:
+      - cllr
+      - cllr_min
+    visualization:
+      - pav
+      - ece

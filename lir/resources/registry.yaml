@@ -1,0 +1,74 @@
+lrsystem_architectures:
+  specific_source: lir.config.lrsystem_architectures.specific_source
+  score_based: lir.config.lrsystem_architectures.score_based
+  two_level: lir.config.lrsystem_architectures.two_level
+experiment_strategies:
+  single_run: lir.config.experiment_strategies.SingleRunStrategy
+  grid: lir.config.experiment_strategies.GridStrategy
+  optuna: lir.config.experiment_strategies.OptunaStrategy
+data_strategies:
+  binary_train_test_split: lir.config.data_strategies.binary_train_test_split
+  binary_cross_validation: lir.config.data_strategies.binary_cross_validation
+  multiclass_train_test_split: lir.config.data_strategies.multiclass_train_test_split
+  multiclass_cross_validation: lir.config.data_strategies.multiclass_cross_validation
+data_providers:
+  synthesized_normal_binary: lir.data.datasets.synthesized_normal_binary.synthesized_normal_binary
+  synthesized_normal_multiclass: lir.data.datasets.synthesized_normal_multiclass.synthesized_normal_multiclass
+  glass: lir.data.datasets.glass.GlassData
+modules:
+  # transformations
+  standard_scaler:
+    class: sklearn.preprocessing.StandardScaler
+    wrapper: lir.config.numpy_csv_writer
+  probabilities_to_odds:
+    class: lir.util.probability_to_odds
+    wrapper: lir.config.numpy_csv_writer
+  probabilities_to_logodds:
+    class: lir.util.probability_to_logodds
+    wrapper: lir.config.numpy_csv_writer
+
+  # comparisons
+  abs_diff: lir.transform.distance.AbsDiffTransformer
+
+  # utility modules
+  tee: lir.config.util.TeeParser
+  csv_writer: lir.config.transform.csv_writer
+
+  # classifiers
+  logistic_regression:
+    class: sklearn.linear_model.LogisticRegression
+    wrapper: lir.config.numpy_csv_writer
+  svm:
+    class: sklearn.svm.SVC
+    wrapper: lir.config.numpy_csv_writer
+
+  # calibrators
+  kde:
+    class: lir.algorithms.kde.KDECalibrator
+    wrapper: lir.config.numpy_csv_writer
+  isotonic_calibrator:
+    class: lir.algorithms.isotonic_regression.IsotonicRegression
+    wrapper: lir.config.numpy_csv_writer
+
+  # bounders
+  static_bounder:
+    class: lir.bounding.StaticBounder
+    wrapper: lir.config.numpy_csv_writer
+  elub_bounder:
+    class: lir.algorithms.bayeserror.ELUBBounder
+    wrapper: lir.config.numpy_csv_writer
+metrics:
+  cllr: lir.metrics.cllr
+  cllr_min: lir.metrics.cllr_min
+visualization:
+  pav: lir.visualization.pav
+  ece: lir.visualization.ece
+  lr_histogram: lir.visualization.lr_histogram
+pairing:
+  instance_pairs: lir.transform.pairing.InstancePairing
+  source_pairs: lir.transform.pairing.SourcePairing
+hyperparameter_types:
+  categorical: lir.config.substitution.parse_categorical
+  cluster: lir.config.substitution.parse_clustered
+  constant: lir.config.substitution.parse_constant
+  float: lir.config.substitution.parse_float

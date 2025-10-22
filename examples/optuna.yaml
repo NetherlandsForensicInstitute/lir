@@ -1,0 +1,78 @@
+# optuna.yaml -- finetuning hyperparameters using `optuna`
+#
+# This example uses the `optuna` experiment strategy to demonstrate how to find the best hypoerparameter values for an
+# LR system.
+
+output: output/${timestamp}_optuna_example
+
+data:
+  strategy: data_providers.glass
+  cache_dir: cache/glass
+
+lr_system:
+  architecture: score_based
+  preprocessing:
+    scaler:
+      method: standard_scaler
+  pairing:
+    method: instance_pairs
+    ratio_limit: 1
+  comparing:
+    scoring:
+      method: abs_diff
+    clf:
+      method: logistic_regression
+      random_state: 0
+    to_llr:
+      method: probabilities_to_logodds
+    calibration:
+      method: kde
+      bandwidth: 1
+    bounding:
+      method: elub_bounder
+
+experiments:
+  # The hyperparameter we want to optimize is the bandwidth value for KDE calibration.
+  #
+  # The `optuna` strategy takes the following arguments:
+  # - primary_metric -- the metric that defines the quality of the system (lower is better)
+  # - n_trials -- the number of trials to run
+  # - lr_system -- the base LR system to evaluate
+  # - data -- data for evaluation
+  # - parameter -- the parameters to vary
+  # - metrics -- metrics to report to the end user
+  # - visualization -- LR visualization functions
+  #
+  optimize_kde_bandwidth:
+    strategy: optuna
+    primary_metric: cllr
+    n_trials: 20
+    lr_system: ${lr_system}
+    data: ${data}
+
+    # The parameters may be categorical or float. The `float` parameter type takes the following arguments:
+    #
+    # - low -- the low end of the search domain
+    # - high -- the high end of the search domain
+    # - log -- sample for the log space if True; otherwise sample from linear space
+    #
+    hyperparameters:
+      - path: comparing.calibration.bandwidth
+        type: float
+        low: .01
+        high: 2
+        log: True
+      - path: comparing.clf
+        type: categorical
+        options:
+          - option_name: logit
+            method: logistic_regression
+          - option_name: svm
+            method: svm
+            probability: True
+    metrics:
+      - cllr
+      - cllr_min
+    visualization:
+      - pav
+      - ece

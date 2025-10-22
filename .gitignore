@@ -1,0 +1,19 @@
+*~
+*.log
+*.log.[0-9]
+
+__pycache__
+
+/cache
+/.idea
+/output
+/venv
+/.venv
+
+/.coverage
+dist/
+
+# PDM specific
+/.pdm-build
+/.pdm-python
+/.python-version

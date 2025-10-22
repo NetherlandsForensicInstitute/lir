@@ -1,0 +1,72 @@
+output: output/${timestamp}_specific_source
+
+data:
+  provider: synthesized_normal_binary
+  seed: 42
+  h1:
+    mean: 1
+    std: 1
+    size: 1000
+  h2:
+    mean: -1
+    std: 1
+    size: 1000
+
+cross_validation_splits:
+  strategy: binary_cross_validation
+  folds: 5
+  seed: 42
+  source: ${data}
+
+lr_system:
+  architecture: specific_source
+  modules:
+    raw_data:
+      method: csv_writer
+      include_labels: True
+    scaler: standard_scaler
+    clf:
+      method: logistic_regression
+      C: 1
+    to_llr: probabilities_to_logodds
+    _results:
+      method: csv_writer
+      include_input: False
+      include_batch: True
+      include:
+        - raw_data.csv
+        - scaler.csv
+        - clf.csv
+        - to_llr.csv
+
+experiments:
+  model_selection:
+    strategy: grid
+    lr_system: ${lr_system}
+    data: ${cross_validation_splits}
+    hyperparameters:
+      - path: modules.clf
+        options:
+          - option_name: logit
+            method: logistic_regression
+            C: 1
+          - option_name: svm
+            method: svm
+            probability: True
+    metrics:
+      - cllr
+      - cllr_min
+    visualization:
+      - pav
+      - ece
+
+  validation:
+    strategy: single_run
+    lr_system: ${lr_system}
+    data: ${cross_validation_splits}
+    metrics:
+      - cllr
+      - cllr_min
+    visualization:
+      - pav
+      - ece

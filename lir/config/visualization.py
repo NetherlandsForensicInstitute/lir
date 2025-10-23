@@ -1,14 +1,12 @@
 from pathlib import Path
 from typing import Callable
 
-from confidence import Configuration
-
 from lir import registry
-from lir.config.base import GenericFunctionConfigParser, YamlParseError
+from lir.config.base import GenericFunctionConfigParser, YamlParseError, ContextAwareDict
 from lir.registry import ComponentNotFoundError
 
 
-def parse_visualizations(config: Configuration, context: list[str], output_path: Path) -> list[Callable]:
+def parse_visualizations(config: ContextAwareDict, output_path: Path) -> list[Callable]:
     """Prepare a list of functions to obtain the configured visualizations.
 
     Visualization functions must be available in the registry and accept three arguments:
@@ -24,9 +22,9 @@ def parse_visualizations(config: Configuration, context: list[str], output_path:
                 default_config_parser=GenericFunctionConfigParser,
                 search_path=["visualization"],
             )
-            func = parser.parse(config, context, output_path)
+            func = parser.parse(config, output_path)
             visualization_functions.append(func)
         except ComponentNotFoundError as e:
-            raise YamlParseError(context, str(e))
+            raise YamlParseError(config.context, str(e))
 
     return visualization_functions

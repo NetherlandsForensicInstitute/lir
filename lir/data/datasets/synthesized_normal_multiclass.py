@@ -4,6 +4,7 @@ from typing import Any, NamedTuple
 import numpy as np
 
 from lir.config.base import config_parser, pop_field
+from lir.config.substitution import ContextAwareDict
 from lir.data.models import DataSet
 
 
@@ -60,26 +61,24 @@ class SynthesizedNormalMulticlassData(DataSet):
 
 
 @config_parser
-def synthesized_normal_multiclass(config: dict[str, Any], config_context_path: list[str], _: Path) -> DataSet:
+def synthesized_normal_multiclass(config: ContextAwareDict, _: Path) -> DataSet:
     """Set up (multiple class) data source class to obtain normally distributed data from configuration."""
-    seed = pop_field(config_context_path, config, "seed", validate=int, required=False)
+    seed = pop_field(config, "seed", validate=int, required=False)
 
-    population = pop_field(config_context_path, config, "population")
-    population_size = pop_field(config_context_path + ["population"], population, "size", validate=int)
+    population = pop_field(config, "population")
+    population_size = pop_field(population, "size", validate=int)
     instances_per_source = pop_field(
-        config_context_path + ["population"],
         population,
         "instances_per_source",
         validate=int,
     )
 
-    dimensions_cfg = pop_field(config_context_path, config, "dimensions")
+    dimensions_cfg = pop_field(config, "dimensions")
     dimensions = []
-    for i, dim in enumerate(dimensions_cfg):
-        dimension_context = config_context_path + ["dimensions", str(i)]
-        mean = pop_field(dimension_context, dim, "mean", validate=float)
-        std = pop_field(dimension_context, dim, "std", validate=float)
-        error_std = pop_field(dimension_context, dim, "error_std", validate=float)
+    for dim in dimensions_cfg:
+        mean = pop_field(dim, "mean", validate=float)
+        std = pop_field(dim, "std", validate=float)
+        error_std = pop_field(dim, "error_std", validate=float)
         dimensions.append(SynthesizedDimension(mean, std, error_std))
 
     return SynthesizedNormalMulticlassData(

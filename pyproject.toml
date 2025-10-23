@@ -13,7 +13,7 @@ requires-python = ">=3.10"
 readme = "README.md"
 license = {text = "Apache Software License 2.0"}
 dependencies = [
-    "confidence>=0.12",
+    "confidence>=0.17.1",
     "matplotlib>=3.5",
     "numpy>=1.22",
     "scikit-learn>=1.2",

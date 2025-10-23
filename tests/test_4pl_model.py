@@ -11,7 +11,7 @@ from lir.util import odds_to_probability, Xn_to_Xy, probability_to_logodds, logo
 
 
 def read_data(path):
-    with open(path, 'r') as file:
+    with open(path, "r") as file:
         r = csv.reader(file)
         next(r)
         data = np.array([float(value) for _, value in r])

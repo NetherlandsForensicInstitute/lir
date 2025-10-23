@@ -1,12 +1,10 @@
-from typing import Tuple
-
 import numpy as np
 
 from lir.algorithms.isotonic_regression import IsotonicCalibrator
 from lir.util import Xy_to_Xn, logodds_to_odds
 
 
-def cllr(llrs: np.ndarray, y: np.ndarray, weights: Tuple[float, float] = (1, 1)) -> float:
+def cllr(llrs: np.ndarray, y: np.ndarray, weights: tuple[float, float] = (1, 1)) -> float:
     """
     Calculates a log likelihood ratio cost (C_llr) for a series of log likelihood
     ratios.
@@ -31,7 +29,7 @@ def cllr(llrs: np.ndarray, y: np.ndarray, weights: Tuple[float, float] = (1, 1))
         return (cllr0 + cllr1) / sum(weights)
 
 
-def cllr_min(llrs: np.ndarray, y: np.ndarray, weights: Tuple[float, float] = (1, 1)) -> float:
+def cllr_min(llrs: np.ndarray, y: np.ndarray, weights: tuple[float, float] = (1, 1)) -> float:
     """
     Estimates the discriminative power from a collection of log likelihood ratios.
 

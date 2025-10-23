@@ -1,14 +1,14 @@
 import csv
 from abc import abstractmethod, ABC
 from pathlib import Path
-from typing import Mapping, Callable, Any, OrderedDict, IO, Optional
+from typing import Mapping, Callable, Any, OrderedDict, IO
 
 import numpy as np
 
 
 class Aggregation(ABC):
     @abstractmethod
-    def report(self, llrs: np.ndarray, labels: Optional[np.ndarray], parameters: dict[str, Any]) -> None:
+    def report(self, llrs: np.ndarray, labels: np.ndarray | None, parameters: dict[str, Any]) -> None:
         """
         Report that new results are available.
 
@@ -31,11 +31,11 @@ class Aggregation(ABC):
 class WriteMetricsToCsv(Aggregation):
     def __init__(self, path: Path, metrics: Mapping[str, Callable]):
         self.path = path
-        self._file: Optional[IO[Any]] = None
-        self._writer: Optional[csv.DictWriter] = None
+        self._file: IO[Any] | None = None
+        self._writer: csv.DictWriter | None = None
         self.metrics = metrics
 
-    def report(self, llrs: np.ndarray, labels: Optional[np.ndarray], parameters: dict[str, Any]) -> None:
+    def report(self, llrs: np.ndarray, labels: np.ndarray | None, parameters: dict[str, Any]) -> None:
         metrics = [(key, metric(llrs, labels)) for key, metric in self.metrics.items()]
         results = OrderedDict(list(parameters.items()) + metrics)
 

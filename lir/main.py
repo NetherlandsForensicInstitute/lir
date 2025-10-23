@@ -22,9 +22,7 @@ def setup_logging(file_path: str, level_increase: int) -> None:
     :param file_path: target file
     :param level_increase: log level for stderr, relative to the default log level
     """
-    loglevel = max(
-        logging.DEBUG, min(logging.CRITICAL, DEFAULT_LOGLEVEL - level_increase * 10)
-    )
+    loglevel = max(logging.DEBUG, min(logging.CRITICAL, DEFAULT_LOGLEVEL - level_increase * 10))
 
     # setup formatter
     log_format = "[%(asctime)-15s %(levelname)s] %(name)s: %(message)s"
@@ -41,9 +39,7 @@ def setup_logging(file_path: str, level_increase: int) -> None:
 def initialize_logfile(output_dir: Path) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     fh = logging.FileHandler(output_dir / "log.txt")
-    fh.setFormatter(
-        logging.Formatter("[%(asctime)-15s %(levelname)s] %(name)s: %(message)s")
-    )
+    fh.setFormatter(logging.Formatter("[%(asctime)-15s %(levelname)s] %(name)s: %(message)s"))
     fh.setLevel(logging.DEBUG)
     logging.getLogger().addHandler(fh)
 
@@ -58,9 +54,7 @@ def error(msg: str) -> None:
 def main() -> None:
     app_name = "benchmark"
 
-    parser = argparse.ArgumentParser(
-        description="Run all or some of the parts of project"
-    )
+    parser = argparse.ArgumentParser(description="Run all or some of the parts of project")
 
     parser.add_argument(
         "--setup",

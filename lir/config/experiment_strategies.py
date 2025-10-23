@@ -242,7 +242,7 @@ def parse_experiments_setup(
     - `timestamp`: a formatted timestamp of the current date/time
 
     :param cfg: a `Configuration` object describing the experiments
-    :return: a mapping of names to experiments
+    :return: a tuple with two elements: (1) mapping of names to experiments; (2) path to output directory
     """
     cfg = confidence.Configuration(cfg, {"timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")})
 

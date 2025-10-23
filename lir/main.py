@@ -23,9 +23,7 @@ def setup_logging(file_path: str, level_increase: int) -> None:
     :param file_path: target file
     :param level_increase: log level for stderr, relative to the default log level
     """
-    loglevel = max(
-        logging.DEBUG, min(logging.CRITICAL, DEFAULT_LOGLEVEL - level_increase * 10)
-    )
+    loglevel = max(logging.DEBUG, min(logging.CRITICAL, DEFAULT_LOGLEVEL - level_increase * 10))
 
     # setup formatter
     log_format = "[%(asctime)-15s %(levelname)s] %(name)s: %(message)s"
@@ -37,9 +35,7 @@ def setup_logging(file_path: str, level_increase: int) -> None:
     logging.getLogger().addHandler(ch)
 
     # setup a file handler
-    fh = RotatingFileHandler(
-        file_path, maxBytes=10 * 1024 * 1024, backupCount=2, delay=True
-    )
+    fh = RotatingFileHandler(file_path, maxBytes=10 * 1024 * 1024, backupCount=2, delay=True)
     fh.setFormatter(fmt)
     fh.setLevel(logging.INFO)
     logging.getLogger().addHandler(fh)
@@ -68,9 +64,7 @@ def error(msg: str, e: Exception | None = None) -> None:
 def main() -> None:
     app_name = "lir"
 
-    parser = argparse.ArgumentParser(
-        description="Run all or some of the parts of project"
-    )
+    parser = argparse.ArgumentParser(description="Run all or some of the parts of project")
 
     parser.add_argument(
         "setup",

@@ -72,9 +72,7 @@ class LRSystem(ABC):
         self.name = name
         self.parameters: dict[str, Any] = {}
 
-    def fit(
-        self, instances: np.ndarray, labels: np.ndarray, meta: np.ndarray
-    ) -> "LRSystem":
+    def fit(self, instances: np.ndarray, labels: np.ndarray, meta: np.ndarray) -> "LRSystem":
         """
         Fits the LR system on a set of features and corresponding labels.
 

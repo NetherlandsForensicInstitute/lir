@@ -48,8 +48,8 @@ version = {source = "scm"}
 all = {composite = ["check", "format-fix", "test"]}
 check = {composite = ["lint", "format-check", "mypy"]}
 lint = "flake8 lir/"
-format-check = "black --check lir"
-format-fix = "black lir"
+format-check = "black --check lir --line-length 120"
+format-fix = "black lir --line-length 120"
 mypy = "mypy lir"
 test = "coverage run --branch --source lir --module pytest --strict-markers tests/"
 test-coverage = "coverage report"

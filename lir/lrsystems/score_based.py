@@ -25,14 +25,10 @@ class ScoreBasedSystem(LRSystem):
         self.pairing_function = pairing_function
         self.evaluation_pipeline = evaluation_pipeline or Pipeline([])
 
-    def fit(
-        self, features: np.ndarray, labels: np.ndarray, meta: np.ndarray
-    ) -> "LRSystem":
+    def fit(self, features: np.ndarray, labels: np.ndarray, meta: np.ndarray) -> "LRSystem":
         features = self.preprocessing_pipeline.fit_transform(features, labels)
 
-        pair_features, pair_labels, pair_meta = self.pairing_function.pair(
-            features, labels, meta, 1, 1
-        )
+        pair_features, pair_labels, pair_meta = self.pairing_function.pair(features, labels, meta, 1, 1)
         pair_features = pair_features.transpose(0, 2, 1)
 
         self.evaluation_pipeline.fit(pair_features, pair_labels)
@@ -54,9 +50,7 @@ class ScoreBasedSystem(LRSystem):
 
         features = self.preprocessing_pipeline.transform(features)
 
-        pair_features, pair_labels, pair_meta = self.pairing_function.pair(
-            features, labels, meta, 1, 1
-        )
+        pair_features, pair_labels, pair_meta = self.pairing_function.pair(features, labels, meta, 1, 1)
         pair_features = pair_features.transpose(0, 2, 1)
 
         pair_llrs = self.evaluation_pipeline.transform(pair_features)

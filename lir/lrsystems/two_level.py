@@ -52,9 +52,7 @@ class TwoLevelModelNormalKDE:
         self.kernel_bandwidth_sq = None
         self.between_covars = None
 
-    def fit_on_unpaired_instances(
-        self, X: np.ndarray, y: np.ndarray
-    ) -> "TwoLevelModelNormalKDE":
+    def fit_on_unpaired_instances(self, X: np.ndarray, y: np.ndarray) -> "TwoLevelModelNormalKDE":
         """
         X np.ndarray of measurements, rows are sources/repetitions, columns are features
         y np 1d-array of labels. For each source a unique identifier (label). Repetitions get the same label.
@@ -62,19 +60,13 @@ class TwoLevelModelNormalKDE:
         Construct the necessary matrices/scores/etc based on test data (X) so that we can predict a score later on.
         Store any calculated parameters in `self`.
         """
-        assert len(X.shape) == 2, (
-            f"fit(X, y) requires X to be 2-dimensional; found dimensions {X.shape}"
-        )
+        assert len(X.shape) == 2, f"fit(X, y) requires X to be 2-dimensional; found dimensions {X.shape}"
         self.n_sources = self._get_n_sources(y)
         self.n_features_train = X.shape[1]
         self.mean_within_covars = self._get_mean_covariance_within(X, y)
         self.means_per_source = self._get_means_per_source(X, y)
-        self.kernel_bandwidth_sq = self._get_kernel_bandwidth_squared(
-            self.n_sources, self.n_features_train
-        )
-        self.between_covars = self._get_between_covariance(
-            X, y, self.mean_within_covars
-        )
+        self.kernel_bandwidth_sq = self._get_kernel_bandwidth_squared(self.n_sources, self.n_features_train)
+        self.between_covars = self._get_between_covariance(X, y, self.mean_within_covars)
         self.model_fitted = True
 
         return self
@@ -108,9 +100,7 @@ class TwoLevelModelNormalKDE:
         p1 = 1 - p0
         return np.stack([p0, p1], axis=1)
 
-    def _predict_log10_lr_score(
-        self, X_trace: np.ndarray, X_ref: np.ndarray
-    ) -> np.ndarray:
+    def _predict_log10_lr_score(self, X_trace: np.ndarray, X_ref: np.ndarray) -> np.ndarray:
         """
         Predict ln_LR scores, making use of the parameters constructed during `self.fit()` (which should
                 now be stored in `self`).
@@ -120,9 +110,7 @@ class TwoLevelModelNormalKDE:
         returns: log10_LR_scores according to the two_level_model in Bolck et al. np.ndarray of shape (instances,)
         """
         if not self.model_fitted:
-            raise ValueError(
-                "The model is not fitted; fit it before you use it for predicting"
-            )
+            raise ValueError("The model is not fitted; fit it before you use it for predicting")
         elif self._get_n_features(X_trace) != self.n_features_train:
             raise ValueError(
                 "The number of features in the training data is different from the number of features in the trace"
@@ -225,9 +213,7 @@ class TwoLevelModelNormalKDE:
             page 86 formula 4.14 with A(K) the second row in the table on page 87
         """
         # calculate kernel bandwidth and square it, using Silverman's rule for multivariate data
-        kernel_bandwidth = (4 / ((n_features_train + 2) * n_sources)) ** (
-            1 / (n_features_train + 4)
-        )
+        kernel_bandwidth = (4 / ((n_features_train + 2) * n_sources)) ** (1 / (n_features_train + 4))
         return kernel_bandwidth**2
 
     @staticmethod
@@ -261,9 +247,7 @@ class TwoLevelModelNormalKDE:
         # Kappa converts within variance at measurement level to within variance at mean of source level and
         #   scales the SSQ_between to a mean between variance
 
-        return (
-            (sum_squares_between / (len(reps) - 1) - mean_within_covars) / kappa
-        ).to_numpy()
+        return ((sum_squares_between / (len(reps) - 1) - mean_within_covars) / kappa).to_numpy()
 
     def _predict_covariances_trace_ref(self, X_trace: np.ndarray, X_ref: np.ndarray):
         """
@@ -284,15 +268,9 @@ class TwoLevelModelNormalKDE:
         n_trace = len(X_trace)
         n_reference = len(X_ref)
         # Calculate covariance matrix for the trace data, given the training data (U_h0)
-        covars_trace = (
-            self.kernel_bandwidth_sq * self.between_covars
-            + self.mean_within_covars / n_trace
-        )
+        covars_trace = self.kernel_bandwidth_sq * self.between_covars + self.mean_within_covars / n_trace
         # Calculate covariance matrix for the reference data, given the training data (U_hx)
-        covars_ref = (
-            self.kernel_bandwidth_sq * self.between_covars
-            + self.mean_within_covars / n_reference
-        )
+        covars_ref = self.kernel_bandwidth_sq * self.between_covars + self.mean_within_covars / n_reference
         # take the inverses
         covars_trace_inv = np.linalg.inv(covars_trace)
         covars_ref_inv = np.linalg.inv(covars_ref)
@@ -336,9 +314,7 @@ class TwoLevelModelNormalKDE:
 
         return (mu_h_1 + mu_h_2).transpose()
 
-    def _predict_ln_num(
-        self, X_trace, X_ref, covars_ref_inv, covars_trace_update_inv, updated_ref_mean
-    ):
+    def _predict_ln_num(self, X_trace, X_ref, covars_ref_inv, covars_trace_update_inv, updated_ref_mean):
         """
         See Bolck et al formula in appendix. The formula consists of three sum_terms (and some other terms).
         The numerator sum term is calculated here.
@@ -362,9 +338,9 @@ class TwoLevelModelNormalKDE:
         dif_ref = mean_X_reference - self.means_per_source
 
         # calculate matrix products and sums
-        ln_num_terms = -0.5 * np.sum(
-            np.matmul(dif_trace, covars_trace_update_inv) * dif_trace, axis=1
-        ) + -0.5 * np.sum(np.matmul(dif_ref, covars_ref_inv) * dif_ref, axis=1)
+        ln_num_terms = -0.5 * np.sum(np.matmul(dif_trace, covars_trace_update_inv) * dif_trace, axis=1) + -0.5 * np.sum(
+            np.matmul(dif_ref, covars_ref_inv) * dif_ref, axis=1
+        )
 
         # exponentiate, sum and take log again
         return logsumexp(ln_num_terms)
@@ -465,26 +441,20 @@ class TwoLevelSystem(LRSystem):
         features = self.preprocessing_pipeline.fit_transform(features, labels)
         self.model.fit_on_unpaired_instances(features, labels)
 
-        pair_features, pair_labels, pair_meta = self.pairing_function.pair(
-            features, labels, meta
-        )
+        pair_features, pair_labels, pair_meta = self.pairing_function.pair(features, labels, meta)
 
         pair_llrs = self.model.transform(*_split_pairs(pair_features, 1))
         self.postprocessing_pipeline.fit(pair_llrs, pair_labels)
 
         return self
 
-    def apply(
-        self, features: Any, labels: Any, meta: Any
-    ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def apply(self, features: Any, labels: Any, meta: Any) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         if labels is None:
             raise ValueError("pairing requires labels")
 
         features = self.preprocessing_pipeline.transform(features)
 
-        pair_features, pair_labels, pair_meta = self.pairing_function.pair(
-            features, labels, meta
-        )
+        pair_features, pair_labels, pair_meta = self.pairing_function.pair(features, labels, meta)
 
         pair_llrs = self.model.transform(*_split_pairs(pair_features, 1))
         pair_llrs = self.postprocessing_pipeline.transform(pair_llrs)

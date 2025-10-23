@@ -8,9 +8,7 @@ import numpy as np
 
 class Aggregation(ABC):
     @abstractmethod
-    def report(
-        self, llrs: np.ndarray, labels: Optional[np.ndarray], parameters: dict[str, Any]
-    ) -> None:
+    def report(self, llrs: np.ndarray, labels: Optional[np.ndarray], parameters: dict[str, Any]) -> None:
         """
         Report that new results are available.
 
@@ -37,9 +35,7 @@ class WriteMetricsToCsv(Aggregation):
         self._writer: Optional[csv.DictWriter] = None
         self.metrics = metrics
 
-    def report(
-        self, llrs: np.ndarray, labels: Optional[np.ndarray], parameters: dict[str, Any]
-    ) -> None:
+    def report(self, llrs: np.ndarray, labels: Optional[np.ndarray], parameters: dict[str, Any]) -> None:
         metrics = [(key, metric(llrs, labels)) for key, metric in self.metrics.items()]
         results = OrderedDict(list(parameters.items()) + metrics)
 

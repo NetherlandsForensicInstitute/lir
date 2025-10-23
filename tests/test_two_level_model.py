@@ -31,39 +31,17 @@ data_tr = np.loadtxt(
     usecols=range(1, 12),
 )
 
-mean_cov_within_R = np.loadtxt(
-    os.path.join(output_path, "MSwithin.csv"), delimiter=",", dtype="float", skiprows=1
-)
-means_train_R = np.loadtxt(
-    os.path.join(output_path, "means_z.csv"), delimiter=",", dtype="float", skiprows=1
-)
-kernel_bandwidth_sq_R = np.loadtxt(
-    os.path.join(output_path, "h2.csv"), delimiter=",", dtype="float", skiprows=1
-)
-between_covars_R = np.loadtxt(
-    os.path.join(output_path, "T0.csv"), delimiter=",", dtype="float", skiprows=1
-)
-covars_trace_R = np.loadtxt(
-    os.path.join(output_path, "U_h0.csv"), delimiter=",", dtype="float", skiprows=1
-)
-covars_trace_update_R = np.loadtxt(
-    os.path.join(output_path, "U_hn.csv"), delimiter=",", dtype="float", skiprows=1
-)
-covars_ref_R = np.loadtxt(
-    os.path.join(output_path, "U_hx.csv"), delimiter=",", dtype="float", skiprows=1
-)
-updated_ref_mean_R = np.loadtxt(
-    os.path.join(output_path, "mu_h.csv"), delimiter=",", dtype="float", skiprows=1
-)
-ln_num1_R = np.loadtxt(
-    os.path.join(output_path, "ln_num1.csv"), delimiter=",", dtype="float", skiprows=1
-)
-ln_den_left_R = np.loadtxt(
-    os.path.join(output_path, "ln_num2.csv"), delimiter=",", dtype="float", skiprows=1
-)
-ln_den_right_R = np.loadtxt(
-    os.path.join(output_path, "ln_den.csv"), delimiter=",", dtype="float", skiprows=1
-)
+mean_cov_within_R = np.loadtxt(os.path.join(output_path, "MSwithin.csv"), delimiter=",", dtype="float", skiprows=1)
+means_train_R = np.loadtxt(os.path.join(output_path, "means_z.csv"), delimiter=",", dtype="float", skiprows=1)
+kernel_bandwidth_sq_R = np.loadtxt(os.path.join(output_path, "h2.csv"), delimiter=",", dtype="float", skiprows=1)
+between_covars_R = np.loadtxt(os.path.join(output_path, "T0.csv"), delimiter=",", dtype="float", skiprows=1)
+covars_trace_R = np.loadtxt(os.path.join(output_path, "U_h0.csv"), delimiter=",", dtype="float", skiprows=1)
+covars_trace_update_R = np.loadtxt(os.path.join(output_path, "U_hn.csv"), delimiter=",", dtype="float", skiprows=1)
+covars_ref_R = np.loadtxt(os.path.join(output_path, "U_hx.csv"), delimiter=",", dtype="float", skiprows=1)
+updated_ref_mean_R = np.loadtxt(os.path.join(output_path, "mu_h.csv"), delimiter=",", dtype="float", skiprows=1)
+ln_num1_R = np.loadtxt(os.path.join(output_path, "ln_num1.csv"), delimiter=",", dtype="float", skiprows=1)
+ln_den_left_R = np.loadtxt(os.path.join(output_path, "ln_num2.csv"), delimiter=",", dtype="float", skiprows=1)
+ln_den_right_R = np.loadtxt(os.path.join(output_path, "ln_den.csv"), delimiter=",", dtype="float", skiprows=1)
 log10_LR_R = np.loadtxt(
     os.path.join(output_path, "log10_MLRs.csv"),
     delimiter=",",
@@ -98,9 +76,7 @@ class TestTwoLevelModelNormalKDEFit(unittest.TestCase):
         np.testing.assert_equal(n_features, 10)
 
     def test_mean_covariance_within(self):
-        mean_cov_within_P = TwoLevelModelNormalKDE._get_mean_covariance_within(
-            data_train[:, 1:], data_train[:, 0]
-        )
+        mean_cov_within_P = TwoLevelModelNormalKDE._get_mean_covariance_within(data_train[:, 1:], data_train[:, 0])
         np.testing.assert_almost_equal(mean_cov_within_P, mean_cov_within_R, decimal=17)
 
     def test_means_train(self):
@@ -174,9 +150,7 @@ class TestTwoLevelModelNormalKDEPredict(unittest.TestCase):
         covars_trace_update_inv_P = self.two_level_model._predict_covariances_trace_ref(
             data_train[[0, 1], 1:], data_ref
         )[4]
-        np.testing.assert_almost_equal(
-            np.linalg.inv(covars_trace_update_inv_P), covars_trace_update_R, decimal=15
-        )
+        np.testing.assert_almost_equal(np.linalg.inv(covars_trace_update_inv_P), covars_trace_update_R, decimal=15)
 
     def test_U_hx_inv(self):
         covars_ref_inv_P = self.two_level_model._predict_covariances_trace_ref(
@@ -242,9 +216,7 @@ class TestTwoLevelModelNormalKDEPredict(unittest.TestCase):
         np.testing.assert_almost_equal(log10_LR_P, log10_LR, decimal=13)
 
     def test_predict_log10_LR_score(self):
-        data_tr_samples = [
-            data_tr[data_tr[:, 0] == label, 1:] for label in np.unique(data_tr[:, 0])
-        ]
+        data_tr_samples = [data_tr[data_tr[:, 0] == label, 1:] for label in np.unique(data_tr[:, 0])]
         data_tr_reshaped = construct_3d_input(data_tr_samples)
 
         data_ref_samples = [data_ref[:, 1:] for i in data_tr_samples]

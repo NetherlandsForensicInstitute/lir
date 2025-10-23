@@ -165,9 +165,9 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
         elif isinstance(bandwidth, str):
             raise ValueError(f"invalid input for bandwidth: {bandwidth}")
         elif isinstance(bandwidth, Sized):
-            assert (
-                len(bandwidth) == 2
-            ), f"bandwidth should have two elements; found {len(bandwidth)}; bandwidth = {bandwidth}"
+            assert len(bandwidth) == 2, (
+                f"bandwidth should have two elements; found {len(bandwidth)}; bandwidth = {bandwidth}"
+            )
             return lambda X, y: bandwidth
         else:
             return lambda X, y: (0 + bandwidth, bandwidth)

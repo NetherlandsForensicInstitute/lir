@@ -60,7 +60,9 @@ class TwoLevelModelNormalKDE:
         Construct the necessary matrices/scores/etc based on test data (X) so that we can predict a score later on.
         Store any calculated parameters in `self`.
         """
-        assert len(X.shape) == 2, f"fit(X, y) requires X to be 2-dimensional; found dimensions {X.shape}"
+        assert len(X.shape) == 2, (
+            f"fit(X, y) requires X to be 2-dimensional; found dimensions {X.shape}"
+        )
         self.n_sources = self._get_n_sources(y)
         self.n_features_train = X.shape[1]
         self.mean_within_covars = self._get_mean_covariance_within(X, y)

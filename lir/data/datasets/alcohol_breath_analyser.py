@@ -1,4 +1,3 @@
-
 import numpy as np
 
 from lir.data.models import DataSet

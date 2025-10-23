@@ -68,9 +68,7 @@ def plot_ece(llrs, labels, log_prior_odds_range=None, ax=plt):
     pav_llrs = IsotonicCalibrator().fit_transform(llrs, labels)
     ax.plot(
         log_prior_odds,
-        calculate_ece(
-            logodds_to_odds(pav_llrs), labels, odds_to_probability(prior_odds)
-        ),
+        calculate_ece(logodds_to_odds(pav_llrs), labels, odds_to_probability(prior_odds)),
         linestyle="--",
         label="PAV LRs",
     )
@@ -100,16 +98,12 @@ def calculate_ece(lrs, y, priors):
     assert np.all(lrs >= 0), "invalid input for LR values"
     assert np.all(np.unique(y) == np.array([0, 1])), "label set must be [0, 1]"
 
-    prior_odds = np.repeat(probability_to_odds(priors), len(lrs)).reshape(
-        (len(priors), len(lrs))
-    )
+    prior_odds = np.repeat(probability_to_odds(priors), len(lrs)).reshape((len(priors), len(lrs)))
     posterior_odds = prior_odds * lrs
     posterior_p = odds_to_probability(posterior_odds)
 
     with np.errstate(divide="ignore"):
-        ece0 = -(1 - priors.reshape((len(priors), 1))) * np.log2(
-            1 - posterior_p[:, y == 0]
-        )
+        ece0 = -(1 - priors.reshape((len(priors), 1))) * np.log2(1 - posterior_p[:, y == 0])
         ece1 = -priors.reshape((len(priors), 1)) * np.log2(posterior_p[:, y == 1])
 
     ece0[np.isnan(ece0)] = np.inf

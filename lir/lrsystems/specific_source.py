@@ -15,9 +15,7 @@ class SpecificSourceSystem(LRSystem):
         super().__init__(name)
         self.pipeline = pipeline
 
-    def fit(
-        self, instances: np.ndarray, labels: np.ndarray, meta: np.ndarray
-    ) -> "LRSystem":
+    def fit(self, instances: np.ndarray, labels: np.ndarray, meta: np.ndarray) -> "LRSystem":
         self.pipeline.fit(instances, labels)
         return self
 

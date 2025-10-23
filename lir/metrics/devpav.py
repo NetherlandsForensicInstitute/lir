@@ -56,32 +56,16 @@ def _calcsurface(c1: (float, float), c2: (float, float)) -> float:
         else:  # then intersection is not within line segment
             # if (situation 1 of 4) y1 <= x1 AND y2 <= x1, and surface is
             if y1 <= x1 and y2 <= x1:
-                surface = (
-                    0.5 * (y2 - y1) * (x2 - x1)
-                    + (x1 - y2) * (x2 - x1)
-                    + 0.5 * (x2 - x1) * (x2 - x1)
-                )
+                surface = 0.5 * (y2 - y1) * (x2 - x1) + (x1 - y2) * (x2 - x1) + 0.5 * (x2 - x1) * (x2 - x1)
             elif y1 > x1:  # (situation 2 of 4) then y1 > x1, and surface is
-                surface = (
-                    0.5 * (x2 - x1) * (x2 - x1)
-                    + (y1 - x2) * (x2 - x1)
-                    + 0.5 * (y2 - y1) * (x2 - x1)
-                )
-            elif (
-                y1 <= x1 and y2 > x1
-            ):  # (situation 3 of 4). This should be the last possibility.
-                surface = (
-                    0.5 * (y2 - y1) * (x2 - x1)
-                    - 0.5 * (y2 - x1) * (y2 - x1)
-                    + 0.5 * (x2 - y2) * (x2 - y2)
-                )
+                surface = 0.5 * (x2 - x1) * (x2 - x1) + (y1 - x2) * (x2 - x1) + 0.5 * (y2 - y1) * (x2 - x1)
+            elif y1 <= x1 and y2 > x1:  # (situation 3 of 4). This should be the last possibility.
+                surface = 0.5 * (y2 - y1) * (x2 - x1) - 0.5 * (y2 - x1) * (y2 - x1) + 0.5 * (x2 - y2) * (x2 - y2)
             else:
                 # situation 4 of 4 : this situation should never appear. There is a fourth sibution as situation 3,
                 # but than above the identity line. However, this is impossible by definition of a
                 # PAV-transform (y2 > x1).
-                raise ValueError(
-                    f"unexpected coordinate combination: ({x1}, {y1}) and ({x2}, {y2})"
-                )
+                raise ValueError(f"unexpected coordinate combination: ({x1}, {y1}) and ({x2}, {y2})")
     return surface
 
 
@@ -140,12 +124,8 @@ def _devpavcalculator(lrs, pav_lrs, y):
             deltaX = Xen[-1] - Xen[0]
             surface = 0
             for i in range(1, (len(Xen))):
-                surface = surface + _calcsurface(
-                    (Xen[i - 1], Yen[i - 1]), (Xen[i], Yen[i])
-                )
-                devPAVs[i - 1] = _calcsurface(
-                    (Xen[i - 1], Yen[i - 1]), (Xen[i], Yen[i])
-                )
+                surface = surface + _calcsurface((Xen[i - 1], Yen[i - 1]), (Xen[i], Yen[i]))
+                devPAVs[i - 1] = _calcsurface((Xen[i - 1], Yen[i - 1]), (Xen[i], Yen[i]))
             # return(list(surface/a, PAVresult, Xen, Yen, devPAVs))
             return surface / deltaX
 
@@ -155,9 +135,7 @@ def devpav(lrs: np.ndarray, y: np.ndarray) -> float:
     calculates devPAV for LR data under H1 and H2.
     """
     if sum(y) == len(y) or sum(y) == 0:
-        raise ValueError(
-            "devpav: illegal input: at least one value is required for each class"
-        )
+        raise ValueError("devpav: illegal input: at least one value is required for each class")
     cal = IsotonicCalibrator()
     pavllrs = cal.fit_transform(lrs, y)
     return _devpavcalculator(lrs, logodds_to_odds(pavllrs), y)

@@ -15,7 +15,14 @@ from lir.bounding import LLRBounder
 from lir.util import logodds_to_odds, odds_to_logodds
 
 
-def plot_nbe(llrs, y, log_lr_threshold_range=None, add_misleading: int = 1, step_size: float = 0.01, ax=plt):
+def plot_nbe(
+    llrs,
+    y,
+    log_lr_threshold_range=None,
+    add_misleading: int = 1,
+    step_size: float = 0.01,
+    ax=plt,
+):
     if log_lr_threshold_range is None:
         log_lr_threshold_range = (np.min(llrs) - 0.5, np.max(llrs) + 0.5)
 

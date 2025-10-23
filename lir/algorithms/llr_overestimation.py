@@ -34,7 +34,7 @@ def plot_llr_overestimation(
 
     # Calculate all required numbers
     llr_grid, llr_overestimation, llr_overestimation_interval = calc_llr_overestimation(
-        logodds_to_odds(llrs), y, num_fids, **kwargs
+        llrs, y, num_fids, **kwargs
     )
     if llr_grid and llr_overestimation and llr_overestimation_interval:
         llr_misestimation = np.mean(np.abs(llr_overestimation))
@@ -57,7 +57,7 @@ def plot_llr_overestimation(
 
 
 def calc_llr_overestimation(
-    lrs: np.ndarray,
+    llrs: np.ndarray,
     y: np.ndarray,
     num_fids: int = 1000,
     bw: tuple[str | float, str | float] = ("silverman", "silverman"),
@@ -78,7 +78,7 @@ def calc_llr_overestimation(
      - The relative frequencies are estimated with KDE using Silverman's rule-of-thumb for the bandwidths.
      - An interval around the LLR-overestimation can be calculated using fiducial distributions.
 
-    :param lrs: the likelihood ratios (LRs), as calculated by the LR-system
+    :param llrs: the log-10 likelihood ratios (LLRs), as calculated by the LR-system
     :param y: the corresponding labels (0 for H2 or Hd, 1 for H1 or Hp)
     :param num_grid_points: number of points used in the grid to calculate the LLR-overestimation on
     :param bw: two bandwidths for the KDEs of H1 & H2; for each specify a method (string) or a value (float)
@@ -89,8 +89,8 @@ def calc_llr_overestimation(
     """
 
     # Convert the LRs to log10 values (LLRs)
-    llr_h1 = np.log10(lrs[y == 1])
-    llr_h2 = np.log10(lrs[y == 0])
+    llr_h1 = llrs[y == 1]
+    llr_h2 = llrs[y == 0]
     # Determine x-limits to be used in the plot: based on lowest H1-LLRs and highest H2-LLRs
     # In case of very many LLRs do not take the very extreme values, due to instabilities in areas with little data
     llr_min = np.max(

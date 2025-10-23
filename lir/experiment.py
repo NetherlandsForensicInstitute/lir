@@ -46,7 +46,7 @@ class Experiment(ABC):
         """
         # Placeholders for numpy array's of LLRs and labels obtained from each train/test split
         llrs = []
-        labels: list[np.ndarray] | None = []
+        labels = []
 
         # Split the data into a train / test subset, according to the provided DataSetup. This could
         # for example be a simple binary split or a multiple fold cross validation split.

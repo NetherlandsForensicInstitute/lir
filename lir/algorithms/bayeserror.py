@@ -8,8 +8,6 @@ See:
     (2016) 482–491.
 """
 
-from typing import Optional, Tuple
-
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -17,9 +15,7 @@ from lir.bounding import LLRBounder
 from lir.util import logodds_to_odds, odds_to_logodds
 
 
-def plot_nbe(
-    llrs, y, log_lr_threshold_range=None, add_misleading=0, step_size=0.01, ax=plt
-):
+def plot_nbe(llrs, y, log_lr_threshold_range=None, add_misleading: int = 1, step_size: float = 0.01, ax=plt):
     if log_lr_threshold_range is None:
         log_lr_threshold_range = (np.min(llrs) - 0.5, np.max(llrs) + 0.5)
 
@@ -27,9 +23,7 @@ def plot_nbe(
     lr_threshold = np.power(10, log_lr_threshold)
 
     eu_neutral = calculate_expected_utility(np.ones(len(llrs)), y, lr_threshold)
-    eu_system = calculate_expected_utility(
-        logodds_to_odds(llrs), y, lr_threshold, add_misleading
-    )
+    eu_system = calculate_expected_utility(logodds_to_odds(llrs), y, lr_threshold, add_misleading)
 
     ax.plot(log_lr_threshold, np.log10(eu_neutral / eu_system))
 
@@ -42,8 +36,8 @@ def plot_nbe(
 def elub(
     lrs,
     y,
-    add_misleading=1,
-    step_size=0.01,
+    add_misleading: int = 1,
+    step_size: float = 0.01,
     substitute_extremes=(np.exp(-20), np.exp(20)),
 ):
     """
@@ -69,24 +63,16 @@ def elub(
     log_lr_threshold_range = (min(0, np.min(llrs)), max(0, np.max(llrs)) + step_size)
     lr_threshold = np.exp(np.arange(*log_lr_threshold_range, step_size))
 
-    eu_neutral = calculate_expected_utility(
-        np.ones(len(sanitized_lrs)), y, lr_threshold
-    )
-    eu_system = calculate_expected_utility(
-        sanitized_lrs, y, lr_threshold, add_misleading
-    )
+    eu_neutral = calculate_expected_utility(np.ones(len(sanitized_lrs)), y, lr_threshold)
+    eu_system = calculate_expected_utility(sanitized_lrs, y, lr_threshold, add_misleading)
     eu_ratio = eu_neutral / eu_system
 
     # find threshold LRs which have utility ratio < 1 (only utility ratio >= 1 is acceptable)
     eu_negative_left = lr_threshold[(lr_threshold <= 1) & (eu_ratio < 1)]
     eu_negative_right = lr_threshold[(lr_threshold >= 1) & (eu_ratio < 1)]
 
-    lower_bound = np.max(
-        eu_negative_left * np.exp(step_size), initial=np.min(lr_threshold)
-    )
-    upper_bound = np.min(
-        eu_negative_right / np.exp(step_size), initial=np.max(lr_threshold)
-    )
+    lower_bound = np.max(eu_negative_left * np.exp(step_size), initial=np.min(lr_threshold))
+    upper_bound = np.min(eu_negative_right / np.exp(step_size), initial=np.max(lr_threshold))
 
     # Check for bounds on the wrong side of 1. This may occur for badly
     # performing LR systems, e.g. if expected utility is always below neutral.
@@ -96,7 +82,7 @@ def elub(
     return lower_bound, upper_bound
 
 
-def calculate_expected_utility(lrs, y, threshold_lrs, add_misleading=0):
+def calculate_expected_utility(lrs, y, threshold_lrs, add_misleading: int = 0):
     """
     Calculates the expected utility of a set of LRs for a given threshold.
 
@@ -119,11 +105,7 @@ def calculate_expected_utility(lrs, y, threshold_lrs, add_misleading=0):
         )
         y = np.concatenate([y, np.ones(add_misleading), np.zeros(add_misleading)])
 
-    eu = (
-        1
-        - np.average(m_accept[y == 1], axis=0)
-        + threshold_lrs * np.average(m_accept[y == 0], axis=0)
-    )
+    eu = 1 - np.average(m_accept[y == 1], axis=0) + threshold_lrs * np.average(m_accept[y == 0], axis=0)
     return eu
 
 
@@ -161,10 +143,6 @@ class ELUBBounder(LLRBounder):
     # empirical_bounds=[min(a) max(a)]
     """
 
-    def calculate_bounds(
-        self, llrs: np.ndarray, labels: np.ndarray
-    ) -> Tuple[Optional[float], Optional[float]]:
-        lower_lr_bound, upper_lr_bound = elub(
-            logodds_to_odds(llrs), labels, add_misleading=1
-        )
+    def calculate_bounds(self, llrs: np.ndarray, labels: np.ndarray) -> tuple[float | None, float | None]:
+        lower_lr_bound, upper_lr_bound = elub(logodds_to_odds(llrs), labels, add_misleading=1)
         return odds_to_logodds(lower_lr_bound), odds_to_logodds(upper_lr_bound)

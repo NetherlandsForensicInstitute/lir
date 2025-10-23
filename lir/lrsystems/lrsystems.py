@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Tuple, Any, Optional, Mapping
+from typing import Any, Mapping
 
 import numpy as np
 import sklearn.pipeline
@@ -25,8 +25,8 @@ class Pipeline(sklearn.pipeline.Pipeline):
     def fit(
         self,
         features: np.ndarray,
-        labels: Optional[np.ndarray] = None,
-        meta: Optional[np.ndarray] = None,
+        labels: np.ndarray | None = None,
+        meta: np.ndarray | None = None,
         **fit_params: dict[str, Any],
     ) -> "Pipeline":
         self._set_values(
@@ -42,8 +42,8 @@ class Pipeline(sklearn.pipeline.Pipeline):
     def transform(
         self,
         features: np.ndarray,
-        labels: Optional[np.ndarray] = None,
-        meta: Optional[np.ndarray] = None,
+        labels: np.ndarray | None = None,
+        meta: np.ndarray | None = None,
     ) -> np.ndarray:
         self._set_values(
             {
@@ -57,8 +57,8 @@ class Pipeline(sklearn.pipeline.Pipeline):
     def fit_transform(
         self,
         features: np.ndarray,
-        labels: Optional[np.ndarray] = None,
-        meta: Optional[np.ndarray] = None,
+        labels: np.ndarray | None = None,
+        meta: np.ndarray | None = None,
         **fit_params: dict[str, Any],
     ) -> np.ndarray:
         self.fit(features, labels, meta, **fit_params)
@@ -84,8 +84,8 @@ class LRSystem(ABC):
 
     @abstractmethod
     def apply(
-        self, instances: np.ndarray, labels: Optional[np.ndarray], meta: np.ndarray
-    ) -> Tuple[np.ndarray, Optional[np.ndarray], np.ndarray]:
+        self, instances: np.ndarray, labels: np.ndarray | None, meta: np.ndarray
+    ) -> tuple[np.ndarray, np.ndarray | None, np.ndarray]:
         """
         Applies the LR system on a set of instances, optionally with corresponding labels, and returns a set of LRs and
         their labels.

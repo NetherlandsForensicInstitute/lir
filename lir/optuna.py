@@ -1,5 +1,5 @@
+from collections.abc import Callable, Sequence
 from pathlib import Path
-from typing import List, Callable, Sequence
 
 from confidence import Configuration
 import optuna
@@ -24,11 +24,11 @@ class OptunaExperiment(Experiment):
         name: str,
         data: DataStrategy,
         aggregations: Sequence[Aggregation],
-        visualization_functions: List[Callable],
+        visualization_functions: list[Callable],
         output_path: Path,
-        config_context_path: List[str],
+        config_context_path: list[str],
         baseline_config: Configuration,
-        hyperparameters: List[Hyperparameter],
+        hyperparameters: list[Hyperparameter],
         n_trials: int,
         metric_function: Callable,
     ):
@@ -40,9 +40,7 @@ class OptunaExperiment(Experiment):
         self.metric_function = metric_function
 
     @staticmethod
-    def _get_parameter_value(
-        trial: optuna.Trial, param: Hyperparameter
-    ) -> HyperparameterOption:
+    def _get_parameter_value(trial: optuna.Trial, param: Hyperparameter) -> HyperparameterOption:
         if isinstance(param, FloatHyperparameter):
             value = trial.suggest_float(
                 param.path,
@@ -54,14 +52,10 @@ class OptunaExperiment(Experiment):
             return HyperparameterOption(str(value), {param.path: value})
         else:
             options = {option.name: option for option in param.options()}
-            selected_option_name = trial.suggest_categorical(
-                param.name, list(options.keys())
-            )
+            selected_option_name = trial.suggest_categorical(param.name, list(options.keys()))
             return options[selected_option_name]
 
-    def _get_hypparameter_substitutions(
-        self, trial: optuna.Trial
-    ) -> dict[str, HyperparameterOption]:
+    def _get_hypparameter_substitutions(self, trial: optuna.Trial) -> dict[str, HyperparameterOption]:
         assignments = {}
         for param in self.hyperparameters:
             assignments[param.name] = self._get_parameter_value(trial, param)
@@ -93,6 +87,4 @@ class OptunaExperiment(Experiment):
 
     def _generate_and_run(self) -> None:
         study = optuna.create_study()  # Create a new study.
-        study.optimize(
-            self._objective, n_trials=self.n_trials
-        )  # Invoke optimization of the objective function.
+        study.optimize(self._objective, n_trials=self.n_trials)  # Invoke optimization of the objective function.

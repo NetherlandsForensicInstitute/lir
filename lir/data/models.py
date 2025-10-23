@@ -1,5 +1,5 @@
 from abc import abstractmethod, ABC
-from typing import Tuple, Iterable
+from typing import Iterable
 
 import numpy as np
 
@@ -12,7 +12,7 @@ class DataSet(ABC):
     """
 
     @abstractmethod
-    def get_instances(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def get_instances(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
         Returns a tuple of instances and their meta data. For a data set of `n`
         instances, this function returns a tuple of:

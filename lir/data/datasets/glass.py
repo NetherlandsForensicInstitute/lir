@@ -1,7 +1,7 @@
 import csv
 from os import PathLike
 from pathlib import Path
-from typing import Tuple, Iterator
+from typing import Iterator
 
 import numpy as np
 
@@ -31,7 +31,7 @@ class GlassData(DataSet, DataStrategy):
             Path(cache_dir),
         )
 
-    def _load_data(self, file: str) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def _load_data(self, file: str) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
         Returns a tuple of instances, labels and meta data.
         """
@@ -60,9 +60,7 @@ class GlassData(DataSet, DataStrategy):
         The data are returned as a tuple of features, labels, and metadata, similar to `get_instances()`.
         """
         training_data = self._load_data("training.csv")
-        test_features, test_labels, test_meta = zip(
-            self._load_data("duplo.csv"), self._load_data("triplo.csv")
-        )
+        test_features, test_labels, test_meta = zip(self._load_data("duplo.csv"), self._load_data("triplo.csv"))
         test_data = (
             np.concatenate(test_features),
             np.concatenate(test_labels),
@@ -70,7 +68,7 @@ class GlassData(DataSet, DataStrategy):
         )
         return iter([(training_data, test_data)])
 
-    def get_instances(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def get_instances(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
         Returns `training.csv` data with three instances (replicates) per source, as a tuple of features, labels and
         metadata.

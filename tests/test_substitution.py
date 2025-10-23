@@ -10,29 +10,37 @@ from lir.config.substitution import parse_hyperparameter, _expand, Hyperparamete
 @pytest.mark.parametrize(
     "desc,yaml,expected_options",
     [
-        pytest.param("categorical with simple options", """
+        pytest.param(
+            "categorical with simple options",
+            """
                 path: "param.root"
                 options:
                   - a
                   - b
-            """, [
+            """,
+            [
                 HyperparameterOption("a", {"param.root": "a"}),
                 HyperparameterOption("b", {"param.root": "b"}),
-            ]
+            ],
         ),  # pytest.param
-        pytest.param("categorical with named options", """
+        pytest.param(
+            "categorical with named options",
+            """
                 path: "param.root"
                 options:
                   - option_name: option_a
                     value: a
                   - option_name: option_b
                     value: b
-            """, [
+            """,
+            [
                 HyperparameterOption("option_a", {"param.root": "a"}),
-                HyperparameterOption("option_b", {"param.root": "b"})
-            ]
+                HyperparameterOption("option_b", {"param.root": "b"}),
+            ],
         ),  # pytest.param
-        pytest.param("clustered", """
+        pytest.param(
+            "clustered",
+            """
                 name: "hieperdepieper"
                 options:
                   - option_name: option_a
@@ -43,28 +51,35 @@ from lir.config.substitution import parse_hyperparameter, _expand, Hyperparamete
                     substitutions:
                       - path: param.root
                         value: b
-            """, [
+            """,
+            [
                 HyperparameterOption("option_a", {"param.root": "a"}),
-                HyperparameterOption("option_b", {"param.root": "b"})
-            ]
+                HyperparameterOption("option_b", {"param.root": "b"}),
+            ],
         ),  # pytest.param
-        pytest.param("constant", """
+        pytest.param(
+            "constant",
+            """
                 path: "param.root"
                 value: a
-            """, [
+            """,
+            [
                 HyperparameterOption("a", {"param.root": "a"}),
-            ]
+            ],
         ),  # pytest.param
-        pytest.param("numerical linear", """
+        pytest.param(
+            "numerical linear",
+            """
                 path: "param.root"
                 low: -1
                 high: 1
                 step: 1
-            """, [
+            """,
+            [
                 HyperparameterOption("-1", {"param.root": -1}),
                 HyperparameterOption("0", {"param.root": 0}),
                 HyperparameterOption("1", {"param.root": 1}),
-            ]
+            ],
         ),  # pytest.param
     ],
 )

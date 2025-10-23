@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
+from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
-from typing import Optional, Sequence
 
-from typing import Any, Mapping, Callable
+from typing import Any
 
 from lir import registry
 from lir.transform.pairing import PairingMethod
@@ -59,9 +59,7 @@ class GenericFunctionConfigParser(ConfigParser):
         if callable(self.component_class):
             return self.component_class
 
-        raise YamlParseError(
-            config_context_path, f"unrecognized module type: `{self.component_class}`"
-        )
+        raise YamlParseError(config_context_path, f"unrecognized module type: `{self.component_class}`")
 
 
 class GenericConfigParser(ConfigParser):
@@ -146,14 +144,12 @@ def parse_pairing_config(
         class_name = pop_field(config_context_path, module_config, "method")
         args = module_config
 
-    return registry.get(
-        class_name, search_path=["pairing"], default_config_parser=GenericConfigParser
-    ).parse(args, config_context_path, output_dir)
+    return registry.get(class_name, search_path=["pairing"], default_config_parser=GenericConfigParser).parse(
+        args, config_context_path, output_dir
+    )
 
 
-def get_parser_arguments_for_field(
-    config: dict[str, Any], context: list[str], output_path: Path, field: str
-) -> Any:
+def get_parser_arguments_for_field(config: dict[str, Any], context: list[str], output_path: Path, field: str) -> Any:
     """Initialize the appropriate parser for a given field in the YAML configuration (e.g. 'module')."""
     value = pop_field(context, config, field)
     return value, context + [field], output_path
@@ -183,9 +179,7 @@ def pop_field(
     # get required status and default value from function arguments
     required = required if required is not None else (default is None)
     if default is not None and required:
-        raise ValueError(
-            f"illegal argument values: required={required}; default={default}"
-        )
+        raise ValueError(f"illegal argument values: required={required}; default={default}")
 
     # if there is a configuration, it should be a `dict`, and we will try to get the field value from it
     if config:
@@ -197,9 +191,7 @@ def pop_field(
                 try:
                     value = validate(value)
                 except Exception as e:
-                    raise YamlParseError(
-                        context_path, f"illegal value for field `{field}`: {e}"
-                    )
+                    raise YamlParseError(context_path, f"illegal value for field `{field}`: {e}")
             return value
 
     # if no field value was returned, return the default value or raise an error
@@ -212,7 +204,7 @@ def pop_field(
 def check_is_empty(
     config_context_path: list[str],
     config: dict[str, Any],
-    accept_keys: Optional[Sequence[str]] = None,
+    accept_keys: Sequence[str] | None = None,
 ) -> None:
     """Ensure all defined expected arguments are parsed and warn about ignored arguments.
 

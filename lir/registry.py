@@ -2,7 +2,8 @@ import importlib.resources
 import inspect
 import logging
 from abc import ABC, abstractmethod
-from typing import Any, Mapping, Optional, Callable, List, Iterator, Iterable
+from collections.abc import Callable, Iterable, Iterator, Mapping
+from typing import Any
 
 import confidence
 
@@ -55,9 +56,7 @@ class ConfigParserLoader(ABC, Iterable):
     """
 
     @staticmethod
-    def _get_config_parser(
-        result_type: Any, default_config_parser: Optional[Callable]
-    ) -> ConfigParser:
+    def _get_config_parser(result_type, default_config_parser: Callable | None) -> ConfigParser:
         if inspect.isclass(result_type) and issubclass(result_type, ConfigParser):
             return result_type()
         elif default_config_parser is not None:
@@ -72,8 +71,8 @@ class ConfigParserLoader(ABC, Iterable):
     def get(
         self,
         key: str,
-        default_config_parser: Optional[Callable] = None,
-        search_path: Optional[List[str]] = None,
+        default_config_parser: Callable | None = None,
+        search_path: list[str] | None = None,
     ) -> ConfigParser:
         """
         Retrieve a value for a given key name.
@@ -101,8 +100,8 @@ class ClassLoader(ConfigParserLoader):
     def get(
         self,
         key: str,
-        default_config_parser: Optional[Callable] = None,
-        search_path: Optional[List[str]] = None,
+        default_config_parser: Callable | None = None,
+        search_path: list[str] | None = None,
     ) -> ConfigParser:
         parts = key.split(".")
         if len(parts) < 2:
@@ -123,7 +122,7 @@ class FederatedLoader(ConfigParserLoader):
     A configuration parser loader that delegates resolution to other loaders.
     """
 
-    def __init__(self, registries: List[ConfigParserLoader]):
+    def __init__(self, registries: list[ConfigParserLoader]):
         self.registries = registries
 
     def __iter__(self) -> Iterator[str]:
@@ -133,8 +132,8 @@ class FederatedLoader(ConfigParserLoader):
     def get(
         self,
         key: str,
-        default_config_parser: Optional[Callable] = None,
-        search_path: Optional[List[str]] = None,
+        default_config_parser: Callable | None = None,
+        search_path: list[str] | None = None,
     ) -> ConfigParser:
         errors = []
         for r in self.registries:
@@ -172,8 +171,8 @@ def registry() -> ConfigParserLoader:
 
 def get(
     name: str,
-    default_config_parser: Optional[Callable] = None,
-    search_path: Optional[List[str]] = None,
+    default_config_parser: Callable | None = None,
+    search_path: list[str] | None = None,
 ) -> ConfigParser:
     """Retrieve corresponding value for a given key name from the central registry."""
     return registry().get(name, default_config_parser, search_path)
@@ -199,13 +198,9 @@ class YamlRegistry(ConfigParserLoader):
                 yield f"{toplevel}.{component}"
 
     @staticmethod
-    def _parse(
-        key: str, spec: Mapping[str, str], default_config_parser: Optional[Callable]
-    ) -> ConfigParser:
+    def _parse(key: str, spec: Mapping[str, str], default_config_parser: Callable | None) -> ConfigParser:
         if "class" not in spec:
-            raise InvalidRegistryEntryError(
-                f"missing value for `class` in registry entry: {key}"
-            )
+            raise InvalidRegistryEntryError(f"missing value for `class` in registry entry: {key}")
         if not isinstance(spec.get("class"), str):
             raise InvalidRegistryEntryError(
                 f"expected `str` type for `class` in registry entry: {key}; found: {type(spec.get('class'))}"
@@ -214,9 +209,7 @@ class YamlRegistry(ConfigParserLoader):
         try:
             cls = _get_attribute_by_name(spec.get("class"))  # type: ignore[arg-type]
         except Exception as e:
-            raise ValueError(
-                f"registry key `{key}` resolved to `{spec.get('class')}` but failed to materialize: {e}"
-            )
+            raise ValueError(f"registry key `{key}` resolved to `{spec.get('class')}` but failed to materialize: {e}")
 
         parser = ConfigParserLoader._get_config_parser(cls, default_config_parser)
 
@@ -232,7 +225,7 @@ class YamlRegistry(ConfigParserLoader):
 
         return parser
 
-    def _find(self, key: str, search_path: Optional[List[str]]) -> Any:
+    def _find(self, key: str, search_path: list[str] | None) -> Any:
         try_keys = [key]
         if search_path is not None:
             try_keys += [f"{path_prefix}.{key}" for path_prefix in search_path]
@@ -241,15 +234,13 @@ class YamlRegistry(ConfigParserLoader):
             if try_key in self._cfg:
                 return self._cfg.get(try_key)
 
-        raise ComponentNotFoundError(
-            f"component not found: {key} (tried: {', '.join(try_keys)})"
-        )
+        raise ComponentNotFoundError(f"component not found: {key} (tried: {', '.join(try_keys)})")
 
     def get(
         self,
         key: str,
-        default_config_parser: Optional[Callable] = None,
-        search_path: Optional[List[str]] = None,
+        default_config_parser: Callable | None = None,
+        search_path: list[str] | None = None,
     ) -> ConfigParser:
         """Retrieve a value for a given key name from the YAML-based registry.
 
@@ -270,4 +261,4 @@ class YamlRegistry(ConfigParserLoader):
             return self._parse(key, spec, default_config_parser)
 
 
-_REGISTRY: Optional[ConfigParserLoader] = None
+_REGISTRY: ConfigParserLoader | None = None

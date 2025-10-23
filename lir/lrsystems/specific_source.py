@@ -1,5 +1,3 @@
-from typing import Tuple, Optional
-
 import numpy as np
 
 from lir.lrsystems.lrsystems import LRSystem, Pipeline
@@ -24,8 +22,8 @@ class SpecificSourceSystem(LRSystem):
         return self
 
     def apply(
-        self, instances: np.ndarray, labels: Optional[np.ndarray], meta: np.ndarray
-    ) -> Tuple[np.ndarray, Optional[np.ndarray], np.ndarray]:
+        self, instances: np.ndarray, labels: np.ndarray | None, meta: np.ndarray
+    ) -> tuple[np.ndarray, np.ndarray | None, np.ndarray]:
         """
         Applies the specific source LR system on a set of instances, optionally with corresponding labels, and returns a
         set of LLRs and their labels.

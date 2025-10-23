@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Any
+from typing import Any
 
 from lir import registry
 from lir.config.base import (
@@ -10,9 +10,7 @@ from lir.config.base import (
 from lir.data.models import DataSet
 
 
-def parse_data_provider(
-    cfg: dict[str, Any], context: List[str], output_path: Path
-) -> DataSet:
+def parse_data_provider(cfg: dict[str, Any], context: list[str], output_path: Path) -> DataSet:
     """Instantiate specific implementation of `DataSetup` as configured.
 
     The `type` field is parsed, which is expected to refer to a name in

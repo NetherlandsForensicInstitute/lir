@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Callable, List
+from typing import Callable
 
 from confidence import Configuration
 
@@ -8,9 +8,7 @@ from lir.config.base import GenericFunctionConfigParser, YamlParseError
 from lir.registry import ComponentNotFoundError
 
 
-def parse_visualizations(
-    config: Configuration, context: List[str], output_path: Path
-) -> List[Callable]:
+def parse_visualizations(config: Configuration, context: list[str], output_path: Path) -> list[Callable]:
     """Prepare a list of functions to obtain the configured visualizations.
 
     Visualization functions must be available in the registry and accept three arguments:

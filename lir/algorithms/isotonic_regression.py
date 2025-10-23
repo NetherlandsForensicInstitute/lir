@@ -13,7 +13,7 @@ class IsotonicRegression(sklearn.isotonic.IsotonicRegression):
     prevents the error being thrown when Inf or -Inf values are provided.
     """
 
-    def fit(self, X, y, sample_weight=None):
+    def fit(self, X, y, sample_weight=None) -> "IsotonicRegression":
         """Fit the model using X, y as training data.
 
         Parameters
@@ -38,9 +38,7 @@ class IsotonicRegression(sklearn.isotonic.IsotonicRegression):
         X is stored for future use, as :meth:`transform` needs X to interpolate
         new input data.
         """
-        check_params = dict(
-            accept_sparse=False, ensure_2d=False, ensure_all_finite=False
-        )
+        check_params = dict(accept_sparse=False, ensure_2d=False, ensure_all_finite=False)
         X = check_array(X, dtype=[np.float64, np.float32], **check_params)
         y = check_array(y, dtype=X.dtype, **check_params)
         check_consistent_length(X, y, sample_weight)
@@ -86,8 +84,7 @@ class IsotonicRegression(sklearn.isotonic.IsotonicRegression):
         # Handle the out_of_bounds argument by clipping if needed
         if self.out_of_bounds not in ["raise", "nan", "clip"]:
             raise ValueError(
-                "The argument ``out_of_bounds`` must be in "
-                "'nan', 'clip', 'raise'; got {0}".format(self.out_of_bounds)
+                "The argument ``out_of_bounds`` must be in 'nan', 'clip', 'raise'; got {0}".format(self.out_of_bounds)
             )
 
         if self.out_of_bounds == "clip":
@@ -131,9 +128,7 @@ class IsotonicCalibrator(BaseEstimator, TransformerMixin):
                     np.ones(self.add_misleading) * (X.min() - 1),
                 ]
             )
-            y = np.concatenate(
-                [y, np.zeros(self.add_misleading), np.ones(self.add_misleading)]
-            )
+            y = np.concatenate([y, np.zeros(self.add_misleading), np.ones(self.add_misleading)])
 
         prior = np.sum(y) / y.size
         weight = y * (1 - prior) + (1 - y) * prior

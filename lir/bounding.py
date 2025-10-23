@@ -1,5 +1,4 @@
 from abc import abstractmethod, ABC
-from typing import Optional, Tuple
 
 import numpy as np
 from sklearn.base import TransformerMixin
@@ -15,16 +14,14 @@ class LLRBounder(TransformerMixin, ABC):
 
     def __init__(
         self,
-        lower_llr_bound: Optional[float] = None,
-        upper_llr_bound: Optional[float] = None,
+        lower_llr_bound: float | None = None,
+        upper_llr_bound: float | None = None,
     ):
         self.lower_llr_bound = lower_llr_bound
         self.upper_llr_bound = upper_llr_bound
 
     @abstractmethod
-    def calculate_bounds(
-        self, llrs: np.ndarray, labels: np.ndarray
-    ) -> Tuple[Optional[float], Optional[float]]:
+    def calculate_bounds(self, llrs: np.ndarray, labels: np.ndarray) -> tuple[float | None, float | None]:
         """
         Calculates and returns appropriate bounds for a set of LLRs and their labels.
         """
@@ -33,13 +30,9 @@ class LLRBounder(TransformerMixin, ABC):
     @staticmethod
     def _validate(llrs: np.ndarray, labels: np.ndarray) -> None:
         if len(llrs.shape) != 1:
-            raise ValueError(
-                f"llrs argument should be 1-dimensional; dimensions found: {len(llrs.shape)}"
-            )
+            raise ValueError(f"llrs argument should be 1-dimensional; dimensions found: {len(llrs.shape)}")
         if len(labels.shape) != 1:
-            raise ValueError(
-                f"labels argument should be 1-dimensional; dimensions found: {len(labels.shape)}"
-            )
+            raise ValueError(f"labels argument should be 1-dimensional; dimensions found: {len(labels.shape)}")
         if llrs.shape[0] != labels.shape[0]:
             raise ValueError(
                 f"number of labels does not match the number of llrs ({labels.shape[0]} != {llrs.shape[0]})"
@@ -93,7 +86,5 @@ class StaticBounder(LLRBounder):
     def __init__(self, lower_llr_bound: float, upper_llr_bound: float):
         super().__init__(lower_llr_bound, upper_llr_bound)
 
-    def calculate_bounds(
-        self, llrs: np.ndarray, y: np.ndarray
-    ) -> Tuple[Optional[float], Optional[float]]:
+    def calculate_bounds(self, llrs: np.ndarray, y: np.ndarray) -> tuple[float | None, float | None]:
         return self.lower_llr_bound, self.upper_llr_bound

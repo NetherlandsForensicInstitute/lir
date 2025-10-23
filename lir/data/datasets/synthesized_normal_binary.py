@@ -1,5 +1,6 @@
+from collections.abc import Mapping
 from pathlib import Path
-from typing import Mapping, Any, Tuple, List
+from typing import Any
 
 import numpy as np
 import numpy.random
@@ -16,7 +17,7 @@ class SynthesizedNormalDataClass:
     LR system pipeline.
     """
 
-    def __init__(self, mean: float, std: float, size: int | Tuple[int, int]):
+    def __init__(self, mean: float, std: float, size: int | tuple[int, int]):
         self.mean = mean
         self.std = std
         # Convert size to a tuple if it is an integer, otherwise use the provided tuple.
@@ -30,13 +31,11 @@ class SynthesizedNormalDataClass:
 class SynthesizedNormalBinaryData(DataSet):
     """Implementation of a data source generating normally distributed binary class data."""
 
-    def __init__(
-        self, data_classes: Mapping[Any, SynthesizedNormalDataClass], seed: int
-    ):
+    def __init__(self, data_classes: Mapping[Any, SynthesizedNormalDataClass], seed: int):
         self.data_classes = data_classes
         self.seed = seed
 
-    def get_instances(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def get_instances(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
         Returns instances with randomly synthesized data and binary labels.
 
@@ -44,9 +43,7 @@ class SynthesizedNormalBinaryData(DataSet):
         dimensions `(n, 0)`.
         """
         rng = np.random.default_rng(seed=self.seed)
-        values = [
-            (cls.get(rng), class_name) for class_name, cls in self.data_classes.items()
-        ]
+        values = [(cls.get(rng), class_name) for class_name, cls in self.data_classes.items()]
         values = [(data, [class_name] * data.shape[0]) for data, class_name in values]
         features = np.concatenate([data for data, _ in values])
         labels = np.concatenate([labels for _, labels in values])
@@ -54,9 +51,7 @@ class SynthesizedNormalBinaryData(DataSet):
 
 
 @config_parser
-def synthesized_normal_binary(
-    config: Mapping[str, Any], config_context_path: List[str], _: Path
-) -> DataSet:
+def synthesized_normal_binary(config: Mapping[str, Any], config_context_path: list[str], _: Path) -> DataSet:
     """Set up (binary class) data source class to obtain normally distributed data from configuration."""
     seed = pop_field(config_context_path, config, "seed")
     h1 = pop_field(config_context_path, config, "h1")

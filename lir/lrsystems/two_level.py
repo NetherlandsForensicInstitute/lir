@@ -1,5 +1,4 @@
-from typing import Tuple, Any, Optional
-
+from typing import Any
 from lir.lrsystems.lrsystems import LRSystem, Pipeline
 
 import numpy as np
@@ -10,7 +9,7 @@ from lir.transform.pairing import PairingMethod
 
 
 class TwoLevelModelNormalKDE:
-    def __init__(self):
+    def __init__(self) -> None:
         """
         An implementation of the two-level model as outlined in FSI191(2009)42 by Bolck et al. "Different likelihood
         ratio approaches to evaluate the strength of evidence of MDMA tablet comparisons".
@@ -63,9 +62,9 @@ class TwoLevelModelNormalKDE:
         Construct the necessary matrices/scores/etc based on test data (X) so that we can predict a score later on.
         Store any calculated parameters in `self`.
         """
-        assert (
-            len(X.shape) == 2
-        ), f"fit(X, y) requires X to be 2-dimensional; found dimensions {X.shape}"
+        assert len(X.shape) == 2, (
+            f"fit(X, y) requires X to be 2-dimensional; found dimensions {X.shape}"
+        )
         self.n_sources = self._get_n_sources(y)
         self.n_features_train = X.shape[1]
         self.mean_within_covars = self._get_mean_covariance_within(X, y)
@@ -412,7 +411,7 @@ class TwoLevelModelNormalKDE:
         return ln_LR_score / np.log(10)
 
 
-def _split_pairs(pairs: np.ndarray, n_trace: int) -> Tuple[np.ndarray, np.ndarray]:
+def _split_pairs(pairs: np.ndarray, n_trace: int) -> tuple[np.ndarray, np.ndarray]:
     """
     This function splits the input array along the second dimension at position `n_trace`.
 
@@ -439,9 +438,9 @@ class TwoLevelSystem(LRSystem):
     def __init__(
         self,
         name: str,
-        preprocessing_pipeline: Optional[Pipeline],
+        preprocessing_pipeline: Pipeline | None,
         pairing_function: PairingMethod,
-        postprocessing_pipeline: Optional[Pipeline],
+        postprocessing_pipeline: Pipeline | None,
         n_trace_instances: int,
         n_ref_instances: int,
     ):
@@ -476,8 +475,8 @@ class TwoLevelSystem(LRSystem):
         return self
 
     def apply(
-        self, features: Any, labels: Optional[Any], meta: Any
-    ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+        self, features: Any, labels: Any, meta: Any
+    ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         if labels is None:
             raise ValueError("pairing requires labels")
 

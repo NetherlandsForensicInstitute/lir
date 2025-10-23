@@ -1,6 +1,6 @@
 import collections
 import inspect
-from typing import List, Any, Tuple, Optional, TypeVar
+from typing import Any, TypeVar
 
 import numpy as np
 import warnings
@@ -9,23 +9,15 @@ from functools import partial
 LR = collections.namedtuple("LR", ["lr", "p0", "p1"])
 
 
-def get_classes_from_Xy(
-    X: np.ndarray, y: np.ndarray, classes: Optional[List[Any]] = None
-) -> np.ndarray:
-    assert (
-        len(X.shape) >= 1
-    ), f"expected: X has at least 1 dimensions; found: {len(X.shape)} dimensions"
-    assert (
-        len(y.shape) == 1
-    ), f"expected: y is a 1-dimensional array; found: {len(y.shape)} dimensions"
-    assert (
-        X.shape[0] == y.size
-    ), f"dimensions of X and y do not match; found: {X.shape[0]} != {y.size}"
+def get_classes_from_Xy(X: np.ndarray, y: np.ndarray, classes: list[Any] | None = None) -> np.ndarray:
+    assert len(X.shape) >= 1, f"expected: X has at least 1 dimensions; found: {len(X.shape)} dimensions"
+    assert len(y.shape) == 1, f"expected: y is a 1-dimensional array; found: {len(y.shape)} dimensions"
+    assert X.shape[0] == y.size, f"dimensions of X and y do not match; found: {X.shape[0]} != {y.size}"
 
     return np.unique(y) if classes is None else np.asarray(classes)
 
 
-def Xn_to_Xy(*Xn: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+def Xn_to_Xy(*Xn: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     """
     Convert Xn to Xy format.
 
@@ -34,15 +26,11 @@ def Xn_to_Xy(*Xn: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     """
     Xn = [np.asarray(X) for X in Xn]
     X = np.concatenate(Xn)
-    y = np.concatenate(
-        [np.ones((X.shape[0],), dtype=np.int8) * i for i, X in enumerate(Xn)]
-    )
+    y = np.concatenate([np.ones((X.shape[0],), dtype=np.int8) * i for i, X in enumerate(Xn)])
     return X, y
 
 
-def Xy_to_Xn(
-    X: np.ndarray, y: np.ndarray, classes: Optional[List[int]] = None
-) -> List[np.ndarray]:
+def Xy_to_Xn(X: np.ndarray, y: np.ndarray, classes: list[int] | None = None) -> list[np.ndarray]:
     """
     Convert Xy to Xn format.
 
@@ -136,9 +124,7 @@ def check_misleading_finite(values: np.ndarray, labels: np.ndarray) -> None:
     """
 
     # give error message if H1's contain zeros and H2's contain ones
-    if np.any(np.isneginf(values[labels == 1])) and np.any(
-        np.isposinf(values[labels == 0])
-    ):
+    if np.any(np.isneginf(values[labels == 1])) and np.any(np.isposinf(values[labels == 0])):
         raise ValueError("invalid input: -inf found for H1 and inf found for H2")
     # give error message if H1's contain zeros
     if np.any(np.isneginf(values[labels == 1])):

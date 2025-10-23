@@ -1,5 +1,4 @@
-from typing import Optional, Callable
-
+from collections.abc import Callable
 import numpy as np
 import sklearn
 from scipy.interpolate import interp1d
@@ -39,14 +38,11 @@ class PercentileRankTransformer(sklearn.base.TransformerMixin):
     def __init__(self) -> None:
         self.rank_functions: list[Callable] | None = None
 
-    def fit(
-        self, X: np.ndarray, y: Optional[np.ndarray] = None
-    ) -> "PercentileRankTransformer":
+    def fit(self, X: np.ndarray, y: np.ndarray | None = None) -> "PercentileRankTransformer":
         X = X.reshape(X.shape[0], -1)
         ranks_X = rankdata(X, method="max", axis=0) / X.shape[0]
         self.rank_functions = [
-            interp1d(X[:, i], ranks_X[:, i], bounds_error=False, fill_value=(0, 1))
-            for i in range(X.shape[1])
+            interp1d(X[:, i], ranks_X[:, i], bounds_error=False, fill_value=(0, 1)) for i in range(X.shape[1])
         ]
         return self
 

@@ -1,5 +1,3 @@
-from typing import Tuple, Optional
-
 import numpy as np
 
 from lir.lrsystems.lrsystems import LRSystem, Pipeline
@@ -18,9 +16,9 @@ class ScoreBasedSystem(LRSystem):
     def __init__(
         self,
         name: str,
-        preprocessing_pipeline: Optional[Pipeline],
+        preprocessing_pipeline: Pipeline | None,
         pairing_function: PairingMethod,
-        evaluation_pipeline: Optional[Pipeline],
+        evaluation_pipeline: Pipeline | None,
     ):
         super().__init__(name)
         self.preprocessing_pipeline = preprocessing_pipeline or Pipeline([])
@@ -42,8 +40,8 @@ class ScoreBasedSystem(LRSystem):
         return self
 
     def apply(
-        self, features: np.ndarray, labels: Optional[np.ndarray], meta: np.ndarray
-    ) -> Tuple[np.ndarray, Optional[np.ndarray], np.ndarray]:
+        self, features: np.ndarray, labels: np.ndarray | None, meta: np.ndarray
+    ) -> tuple[np.ndarray, np.ndarray | None, np.ndarray]:
         """
         Applies the score-based LR system on a set of instances, optionally with corresponding labels, and returns a set
         of LLRs and their labels.

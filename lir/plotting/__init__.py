@@ -1,8 +1,9 @@
+from collections.abc import Iterator
 import logging
 from contextlib import contextmanager, _GeneratorContextManager
 from functools import partial
 from os import PathLike
-from typing import Any, Optional, Iterator, Tuple
+from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -82,9 +83,7 @@ def show() -> _GeneratorContextManager[Canvas]:
 
 
 @contextmanager
-def axes(
-    savefig: Optional[PathLike] = None, show: Optional[bool] = None
-) -> Iterator[Canvas]:
+def axes(savefig: PathLike | None = None, show: bool | None = None) -> Iterator[Canvas]:
     """
     Creates a plotting context.
 
@@ -159,7 +158,7 @@ def pav(
 
         def adjust_ticks_labels_and_range(
             neg_inf: bool, pos_inf: bool, axis_range: list
-        ):
+        ) -> tuple[list[Any], Any, list[str]]:
             ticks = np.linspace(axis_range[0], axis_range[1], 6).tolist()
             tick_labels = [str(round(tick, 1)) for tick in ticks]
             step_size = ticks[2] - ticks[1]
@@ -197,9 +196,7 @@ def pav(
 
         mask_not_inf = np.logical_or(np.isinf(llrs), np.isinf(pav_llrs))
         x_inf = replace_values_out_of_range(llrs[mask_not_inf], xrange[0], xrange[1])
-        y_inf = replace_values_out_of_range(
-            pav_llrs[mask_not_inf], yrange[0], yrange[1]
-        )
+        y_inf = replace_values_out_of_range(pav_llrs[mask_not_inf], yrange[0], yrange[1])
 
         ax.set_yticks(ticks_y, tick_labels_y)
         ax.set_xticks(ticks_x, tick_labels_x)
@@ -237,19 +234,14 @@ def lr_histogram(
     """
     bins = np.histogram_bin_edges(llrs, bins=bins)
     points0, points1 = util.Xy_to_Xn(llrs, y)
-    weights0, weights1 = (
-        np.ones_like(points) / len(points) if weighted else None
-        for points in (points0, points1)
-    )
+    weights0, weights1 = (np.ones_like(points) / len(points) if weighted else None for points in (points0, points1))
     ax.hist(points1, bins=bins, alpha=0.25, weights=weights1)
     ax.hist(points0, bins=bins, alpha=0.25, weights=weights0)
     ax.set_xlabel("log$_{10}$(LR)")
     ax.set_ylabel("count" if not weighted else "relative frequency")
 
 
-def tippett(
-    llrs: np.ndarray, y: np.ndarray, plot_type: int = 1, ax: Axes = plt
-) -> None:
+def tippett(llrs: np.ndarray, y: np.ndarray, plot_type: int = 1, ax: Axes = plt) -> None:
     """
     plots empirical cumulative distribution functions of same-source and
         different-sources lrs
@@ -288,7 +280,7 @@ def score_distribution(
     y: np.ndarray,
     bins: int = 20,
     weighted: bool = True,
-    ax: Axes = plt,
+    ax: Axes | None = None,
 ) -> None:
     """
     Plots the distributions of scores calculated by the (fitted) lr_system.
@@ -307,7 +299,10 @@ def score_distribution(
     ax: axes to plot figure to
 
     """
-    ax.rcParams.update({"font.size": 15})
+    if ax is None:
+        _, ax = plt.subplots()
+    plt.rcParams.update({"font.size": 15})
+
     bins = np.histogram_bin_edges(scores[np.isfinite(scores)], bins=bins)
     bin_width = bins[1] - bins[0]
 
@@ -322,7 +317,7 @@ def score_distribution(
 
     # handle inf values
     if np.isinf(scores).any():
-        prop_cycle = ax.rcParams["axes.prop_cycle"]
+        prop_cycle = plt.rcParams["axes.prop_cycle"]
         colors = prop_cycle.by_key()["color"]
         x_range = np.linspace(min(bins), max(bins), 6).tolist()
         labels = [str(round(tick, 1)) for tick in x_range]
@@ -370,18 +365,18 @@ def score_distribution(
             weights=weight / bin_width if weighted else None,
         )
 
-        ax.xlabel("score")
+        ax.set_xlabel("score")
     if weighted:
-        ax.ylabel("probability density")
+        ax.set_ylabel("probability density")
     else:
-        ax.ylabel("count")
+        ax.set_ylabel("count")
 
 
 def calibrator_fit(
     calibrator: Transformer,
-    score_range: Tuple[float, float] = (0, 1),
+    score_range: tuple[float, float] = (0, 1),
     resolution: int = 100,
-    ax: Axes = plt,
+    ax: Axes | None = None,
 ) -> None:
     """
     plots the fitted score distributions/score-to-posterior map
@@ -389,7 +384,9 @@ def calibrator_fit(
 
     TODO: plot multiple calibrators at once
     """
-    ax.rcParams.update({"font.size": 15})
+    if ax is None:
+        _, ax = plt.subplots()
+    plt.rcParams.update({"font.size": 15})
 
     x = np.linspace(score_range[0], score_range[1], resolution)
     calibrator.transform(x)

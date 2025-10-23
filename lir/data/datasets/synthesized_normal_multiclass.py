@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, NamedTuple, Optional
+from typing import Any, NamedTuple
 
 import numpy as np
 
@@ -21,16 +21,14 @@ class SynthesizedNormalMulticlassData(DataSet):
         dimensions: list[SynthesizedDimension],
         population_size: int,
         sources_size: int,
-        seed: Optional[int],
+        seed: int | None,
     ):
         self.dimensions = dimensions
         self.population_size = population_size
         self.sources_size = sources_size
         self.seed = seed
 
-    def _generate_dimension(
-        self, rng: Any, dimension: SynthesizedDimension
-    ) -> np.ndarray:
+    def _generate_dimension(self, rng: Any, dimension: SynthesizedDimension) -> np.ndarray:
         population = rng.normal(
             loc=dimension.population_mean,
             scale=dimension.population_std,
@@ -41,9 +39,7 @@ class SynthesizedNormalMulticlassData(DataSet):
             scale=dimension.sources_std,
             size=self.population_size * self.sources_size,
         )
-        measurements = (
-            np.concatenate([population] * self.sources_size) + measurement_error
-        )
+        measurements = np.concatenate([population] * self.sources_size) + measurement_error
         return measurements
 
     def get_instances(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
@@ -64,16 +60,12 @@ class SynthesizedNormalMulticlassData(DataSet):
 
 
 @config_parser
-def synthesized_normal_multiclass(
-    config: dict[str, Any], config_context_path: list[str], _: Path
-) -> DataSet:
+def synthesized_normal_multiclass(config: dict[str, Any], config_context_path: list[str], _: Path) -> DataSet:
     """Set up (multiple class) data source class to obtain normally distributed data from configuration."""
     seed = pop_field(config_context_path, config, "seed", validate=int, required=False)
 
     population = pop_field(config_context_path, config, "population")
-    population_size = pop_field(
-        config_context_path + ["population"], population, "size", validate=int
-    )
+    population_size = pop_field(config_context_path + ["population"], population, "size", validate=int)
     instances_per_source = pop_field(
         config_context_path + ["population"],
         population,

@@ -17,8 +17,13 @@ def test_registry_items_available():
     [
         pytest.param("lir", lir),
         pytest.param("lir.registry", lir.registry),
-        pytest.param("lir.registry.ConfigParserLoader", lir.registry.ConfigParserLoader),
-        pytest.param("lir.registry.ConfigParserLoader._get_config_parser", lir.registry.ConfigParserLoader._get_config_parser),
+        pytest.param(
+            "lir.registry.ConfigParserLoader", lir.registry.ConfigParserLoader
+        ),
+        pytest.param(
+            "lir.registry.ConfigParserLoader._get_config_parser",
+            lir.registry.ConfigParserLoader._get_config_parser,
+        ),
     ],
 )
 def test_get_attribute_by_name(obj_name: str, expected: Any):

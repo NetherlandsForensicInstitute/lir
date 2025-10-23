@@ -1,9 +1,10 @@
+from collections.abc import Callable, Iterator, Sequence
 import csv
 import logging
 from abc import abstractmethod, ABC
 from itertools import chain
 from pathlib import Path
-from typing import Callable, List, Any, Optional, Iterator, Protocol, Sequence
+from typing import Any, Protocol
 from typing_extensions import Self
 
 import numpy as np
@@ -27,7 +28,7 @@ class DataWriter(Protocol):
 class SKLearnPipelineModule(Protocol):
     """Representation of the interface required for estimators by the scikit-learn `Pipeline`."""
 
-    def fit(self, X: Sequence[Any], y: Optional[Sequence[Any]]) -> Self: ...
+    def fit(self, X: Sequence[Any], y: Sequence[Any] | None) -> Self: ...
     def transform(self, X: Any) -> Any: ...
     def predict_proba(self, X: Any) -> Any: ...
 
@@ -40,7 +41,7 @@ class Transformer(ABC, TransformerMixin):
     side effects.
     """
 
-    def fit(self, X: Sequence[Any], y: Optional[Sequence[Any]] = None) -> "Transformer":
+    def fit(self, X: Sequence[Any], y: Sequence[Any] | None = None) -> "Transformer":
         return self
 
     @abstractmethod
@@ -59,7 +60,7 @@ class AdvancedTransformer(Transformer, ABC):
     def __init__(self) -> None:
         self._values: dict[str, Any] = {}
 
-    def set_value(self, key: str, value: Optional[Any]) -> "AdvancedTransformer":
+    def set_value(self, key: str, value: Any | None) -> "AdvancedTransformer":
         self._values[key] = value
         return self
 
@@ -75,7 +76,7 @@ class BinaryClassifierTransformer(Transformer):
     def __init__(self, estimator: SKLearnPipelineModule):
         self.estimator = estimator
 
-    def fit(self, X: Sequence[Any], y: Optional[Sequence[Any]] = None) -> Transformer:
+    def fit(self, X: Sequence[Any], y: Sequence[Any] | None = None) -> Transformer:
         self.estimator.fit(X, y)
         return self
 
@@ -89,7 +90,7 @@ class FunctionTransformer(Transformer):
     def __init__(self, func: Callable):
         self.func = func
 
-    def fit(self, X: Sequence[Any], y: Optional[Sequence[Any]] = None) -> Transformer:
+    def fit(self, X: Sequence[Any], y: Sequence[Any] | None = None) -> Transformer:
         return self
 
     def transform(self, X: Sequence[Any]) -> Sequence[Any]:
@@ -99,7 +100,7 @@ class FunctionTransformer(Transformer):
 class Tee(AdvancedTransformer):
     """Implementation of a custom transformer allowing to perform two separate tasks on a given input."""
 
-    def __init__(self, transformers: List[Transformer]):
+    def __init__(self, transformers: list[Transformer]):
         super().__init__()
         self.transformers = transformers
 
@@ -111,7 +112,7 @@ class Tee(AdvancedTransformer):
 
         return self
 
-    def fit(self, X: Sequence[Any], y: Optional[Sequence[Any]] = None) -> Transformer:
+    def fit(self, X: Sequence[Any], y: Sequence[Any] | None = None) -> Transformer:
         for transformer in self.transformers:
             transformer.fit(X, y)
 
@@ -136,13 +137,13 @@ class TransformerWrapper(AdvancedTransformer):
         super().__init__()
         self.wrapped_transformer = wrapped_transformer
 
-    def set_value(self, key: str, value: Optional[Any]) -> AdvancedTransformer:
+    def set_value(self, key: str, value: Any | None) -> AdvancedTransformer:
         super().set_value(key, value)
         if isinstance(self.wrapped_transformer, AdvancedTransformer):
             self.wrapped_transformer.set_value(key, value)
         return self
 
-    def fit(self, X: Sequence[Any], y: Optional[Sequence[Any]] = None) -> Transformer:
+    def fit(self, X: Sequence[Any], y: Sequence[Any] | None = None) -> Transformer:
         self.wrapped_transformer.fit(X, y)
         return self
 
@@ -153,13 +154,11 @@ class TransformerWrapper(AdvancedTransformer):
 class NumpyTransformer(TransformerWrapper):
     """Implementation of a transformer wrapper to handle writing numpy data to CSV."""
 
-    def __init__(
-        self, transformer: Transformer, header: Optional[List[str]], path: Path
-    ):
+    def __init__(self, transformer: Transformer, header: list[str] | None, path: Path):
         super().__init__(transformer)
         self.csv_writer = CsvWriter(header=header, path=path)
 
-    def set_value(self, key: str, value: Optional[Any]) -> AdvancedTransformer:
+    def set_value(self, key: str, value: Any | None) -> AdvancedTransformer:
         super().set_value(key, value)
         self.csv_writer.set_value(key, value)
         return self
@@ -180,8 +179,8 @@ class CsvWriter(AdvancedTransformer):
     def __init__(
         self,
         path: Path,
-        include: Optional[List[str]] = None,
-        header: Optional[List[str]] = None,
+        include: list[str] | None = None,
+        header: list[str] | None = None,
         include_labels: bool = False,
         include_meta: bool = False,
         include_input: bool = True,
@@ -224,9 +223,7 @@ class CsvWriter(AdvancedTransformer):
             if meta is not None:
                 if len(meta.shape) < 2:
                     meta = meta.reshape(meta.shape[0], -1)
-                all_headers.extend(
-                    [f"{self.header_prefix}.meta{n}" for n in range(meta.shape[1])]
-                )
+                all_headers.extend([f"{self.header_prefix}.meta{n}" for n in range(meta.shape[1])])
                 all_data.append(meta)
 
         if self.include_batch:
@@ -235,9 +232,7 @@ class CsvWriter(AdvancedTransformer):
 
         if self.include_input:
             if self.header is None:
-                all_headers.extend(
-                    [f"{self.header_prefix}{i}" for i in range(len(rows[0]))]
-                )
+                all_headers.extend([f"{self.header_prefix}{i}" for i in range(len(rows[0]))])
             else:
                 all_headers.extend(self.header)
             all_data.append(rows)
@@ -255,10 +250,7 @@ class CsvWriter(AdvancedTransformer):
 
     def transform(self, features: np.ndarray) -> Any:
         """Write numpy feature vector to CSV output file."""
-        if (
-            TRANSFORMER_PHASE_KEY not in self._values
-            or self._values[TRANSFORMER_PHASE_KEY] != self.write_on_phase
-        ):
+        if TRANSFORMER_PHASE_KEY not in self._values or self._values[TRANSFORMER_PHASE_KEY] != self.write_on_phase:
             return features
 
         LOG.info(f"writing CSV file: {self.path}")

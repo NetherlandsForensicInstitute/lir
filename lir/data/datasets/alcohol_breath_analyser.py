@@ -1,4 +1,3 @@
-from typing import Tuple
 
 import numpy as np
 
@@ -17,7 +16,7 @@ class AlcoholBreathAnalyser(DataSet):
     def __init__(self, ill_calibrated: bool = False):
         self.ill_calibrated = ill_calibrated
 
-    def get_instances(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def get_instances(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         positive_lr = 1000 if self.ill_calibrated else 90
         lrs = np.concatenate(
             [

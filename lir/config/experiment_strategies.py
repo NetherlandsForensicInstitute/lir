@@ -1,8 +1,9 @@
+from collections.abc import Callable, Mapping, Sequence
 import datetime
 from abc import abstractmethod, ABC
 from itertools import product
 from pathlib import Path
-from typing import Mapping, Any, List, Callable, Sequence, Tuple
+from typing import Any
 
 import confidence
 from confidence import Configuration
@@ -34,7 +35,7 @@ from lir.optuna import OptunaExperiment
 from lir.registry import ComponentNotFoundError
 
 
-def parse_metric(name: str, context: List[str], output_path: Path) -> Callable:
+def parse_metric(name: str, context: list[str], output_path: Path) -> Callable:
     try:
         parser = registry.get(
             name,
@@ -46,9 +47,7 @@ def parse_metric(name: str, context: List[str], output_path: Path) -> Callable:
         raise YamlParseError(context, str(e))
 
 
-def parse_metrics_section(
-    config: Sequence[str], context: List[str], output_path: Path
-) -> Mapping[str, Callable]:
+def parse_metrics_section(config: Sequence[str], context: list[str], output_path: Path) -> Mapping[str, Callable]:
     """Parse the metrics section from the configuration.
 
     A resulting mapping of metric name and corresponding function is returned.
@@ -59,10 +58,7 @@ def parse_metrics_section(
     The metric function should return the value of the metric.
     The metrics are looked up by their name in the registry.
     """
-    return {
-        metric_name: parse_metric(metric_name, context, output_path)
-        for metric_name in config
-    }
+    return {metric_name: parse_metric(metric_name, context, output_path) for metric_name in config}
 
 
 class ExperimentStrategyConfigParser(ConfigParser, ABC):
@@ -72,14 +68,12 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
 
     def __init__(self) -> None:
         self._config: dict[str, Any]
-        self._context: List[str]
+        self._context: list[str]
         self._output_dir: Path
 
     def data(self) -> DataStrategy:
         return parse_data_strategy(
-            *get_parser_arguments_for_field(
-                self._config, self._context, self._output_dir, "data"
-            )
+            *get_parser_arguments_for_field(self._config, self._context, self._output_dir, "data")
         )
 
     def primary_metric(self) -> Callable:
@@ -88,23 +82,17 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
 
     def aggregations(self) -> Sequence[Aggregation]:
         metrics = parse_metrics_section(
-            *get_parser_arguments_for_field(
-                self._config, self._context, self._output_dir, "metrics"
-            )
+            *get_parser_arguments_for_field(self._config, self._context, self._output_dir, "metrics")
         )
         return [WriteMetricsToCsv(self._output_dir / "metrics.csv", metrics)]
 
-    def visualization_functions(self) -> List[Callable]:
+    def visualization_functions(self) -> list[Callable]:
         return parse_visualizations(
-            *get_parser_arguments_for_field(
-                self._config, self._context, self._output_dir, "visualization"
-            )
+            *get_parser_arguments_for_field(self._config, self._context, self._output_dir, "visualization")
         )
 
-    def lrsystem(self) -> Tuple[Configuration, List[Hyperparameter]]:
-        baseline_config = Configuration(
-            pop_field(self._context, self._config, "lr_system")
-        )
+    def lrsystem(self) -> tuple[Configuration, list[Hyperparameter]]:
+        baseline_config = Configuration(pop_field(self._context, self._config, "lr_system"))
 
         parameters = []
         if "hyperparameters" in self._config.keys():
@@ -127,7 +115,7 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
     def parse(
         self,
         config: dict[str, Any],
-        config_context_path: List[str],
+        config_context_path: list[str],
         output_dir: Path,
     ) -> Experiment:
         self._config = config
@@ -144,9 +132,7 @@ class SingleRunStrategy(ExperimentStrategyConfigParser):
 
     def get_experiment(self, name: str) -> Experiment:
         lrsystem = parse_lrsystem(
-            *get_parser_arguments_for_field(
-                self._config, self._context, self._output_dir, "lr_system"
-            )
+            *get_parser_arguments_for_field(self._config, self._context, self._output_dir, "lr_system")
         )
 
         return PredefinedExperiment(
@@ -170,9 +156,7 @@ class GridStrategy(ExperimentStrategyConfigParser):
         values = [param.options() for param in parameters]
         for value_set in product(*values):
             substitutions = dict(zip(names, value_set))
-            lrsystem = parse_augmented_lrsystem(
-                baseline_config, substitutions, self._context, self._output_dir
-            )
+            lrsystem = parse_augmented_lrsystem(baseline_config, substitutions, self._context, self._output_dir)
             lrsystems.append(lrsystem)
 
         return PredefinedExperiment(
@@ -205,9 +189,7 @@ class OptunaStrategy(ExperimentStrategyConfigParser):
         )
 
 
-def parse_experiment_strategy(
-    config: dict[str, Any], config_context_path: List[str], output_path: Path
-) -> Experiment:
+def parse_experiment_strategy(config: dict[str, Any], config_context_path: list[str], output_path: Path) -> Experiment:
     """Instantiate the corresponding experiment strategy class, e.g. for a single or grid run.
 
     A corresponding Experiment class is returned.
@@ -216,13 +198,11 @@ def parse_experiment_strategy(
     if strategy_name is None:
         raise YamlParseError(config_context_path, "Missing strategy name.")
     strategy_parser = registry.get(strategy_name, search_path=["experiment_strategies"])
-    return strategy_parser.parse(
-        config, config_context_path, output_path / config_context_path[-1]
-    )
+    return strategy_parser.parse(config, config_context_path, output_path / config_context_path[-1])
 
 
 def parse_experiments(
-    cfg: dict[str, Any], config_context_path: List[str], output_path: Path
+    cfg: dict[str, Any], config_context_path: list[str], output_path: Path
 ) -> Mapping[str, Experiment]:
     """
     Extract which Experiment to run as dictated in the configuration.
@@ -262,8 +242,6 @@ def parse_experiments_setup(cfg: Configuration) -> Mapping[str, Experiment]:
     :param cfg: a `Configuration` object describing the experiments
     :return: a mapping of names to experiments
     """
-    cfg = confidence.Configuration(
-        cfg, {"timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")}
-    )
+    cfg = confidence.Configuration(cfg, {"timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")})
 
     return parse_experiments(_expand(cfg), [], Path(cfg.output))

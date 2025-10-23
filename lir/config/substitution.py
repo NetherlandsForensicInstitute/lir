@@ -23,12 +23,13 @@ benchmarks:
 ```
 """
 
+from collections.abc import Iterable, Mapping, Sequence
 import itertools
 import json
 import logging
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import List, Any, Mapping, Sequence, Optional, Tuple, Iterable, NamedTuple
+from typing import Any, NamedTuple
 
 from confidence import Configuration
 
@@ -66,7 +67,7 @@ class Hyperparameter(ABC):
         self.name = name
 
     @abstractmethod
-    def options(self) -> List[HyperparameterOption]:
+    def options(self) -> list[HyperparameterOption]:
         """
         Get a list of values that a hyperparameter can take in the context of a particular experiment.
 
@@ -84,16 +85,16 @@ class CategoricalHyperparameter(Hyperparameter):
     - options: a list of options
     """
 
-    def __init__(self, name: str, options: List[HyperparameterOption]):
+    def __init__(self, name: str, options: list[HyperparameterOption]):
         super().__init__(name)
         self._options = options
 
-    def options(self) -> List[HyperparameterOption]:
+    def options(self) -> list[HyperparameterOption]:
         return self._options
 
 
 def _parse_categorical_option(
-    spec: Any, config_context_path: list[str], path: str, option_index: Optional[int]
+    spec: Any, config_context_path: list[str], path: str, option_index: int | None
 ) -> HyperparameterOption:
     """
     Parse a section describing an option value of a categorical hyperparameter.
@@ -134,9 +135,7 @@ def parse_categorical(
     # get the option definitions
     options = pop_field(config_context_path, spec, "options")
     options = [
-        _parse_categorical_option(
-            spec, config_context_path + ["options", str(i)], path, i
-        )
+        _parse_categorical_option(spec, config_context_path + ["options", str(i)], path, i)
         for i, spec in enumerate(options)
     ]
 
@@ -144,18 +143,14 @@ def parse_categorical(
     return CategoricalHyperparameter(name, options)
 
 
-def _parse_substitution(
-    config_context_path: list[str], spec: dict[str, Any]
-) -> Tuple[str, Any]:
+def _parse_substitution(config_context_path: list[str], spec: dict[str, Any]) -> tuple[str, Any]:
     path = pop_field(config_context_path, spec, "path")
     value = pop_field(config_context_path, spec, "value")
     check_is_empty(config_context_path, spec)
     return path, _expand(value)
 
 
-def _parse_clustered_option(
-    config_context_path: list[str], spec: dict[str, Any]
-) -> HyperparameterOption:
+def _parse_clustered_option(config_context_path: list[str], spec: dict[str, Any]) -> HyperparameterOption:
     option_name = pop_field(config_context_path, spec, "option_name")
     substitutions = pop_field(config_context_path, spec, "substitutions")
     substitutions = [
@@ -187,8 +182,7 @@ def parse_clustered(
     parameter_name = pop_field(config_context_path, spec, "name")
     options = pop_field(config_context_path, spec, "options")
     options = [
-        _parse_clustered_option(config_context_path + ["options", str(i)], option)
-        for i, option in enumerate(options)
+        _parse_clustered_option(config_context_path + ["options", str(i)], option) for i, option in enumerate(options)
     ]
     check_is_empty(config_context_path, spec)
     return CategoricalHyperparameter(parameter_name, options)
@@ -227,9 +221,7 @@ class FloatHyperparameter(Hyperparameter):
       False)
     """
 
-    def __init__(
-        self, path: str, low: float, high: float, step: Optional[float], log: bool
-    ):
+    def __init__(self, path: str, low: float, high: float, step: float | None, log: bool):
         super().__init__(path)
         self.path = path
         self.low = low
@@ -237,7 +229,7 @@ class FloatHyperparameter(Hyperparameter):
         self.step = step
         self.log = log
 
-    def options(self) -> List[HyperparameterOption]:
+    def options(self) -> list[HyperparameterOption]:
         if self.step is None:
             raise ValueError(
                 f"unable to generate options for floating point hyperparameter {self.path}: no step size defined"
@@ -245,15 +237,11 @@ class FloatHyperparameter(Hyperparameter):
 
         n_steps = int((self.high - self.low) // self.step + 1)
         values = [self.low + value * self.step for value in range(n_steps)]
-        return [
-            HyperparameterOption(str(value), {self.path: value}) for value in values
-        ]
+        return [HyperparameterOption(str(value), {self.path: value}) for value in values]
 
 
 @config_parser
-def parse_float(
-    spec: dict[str, Any], config_context_path: list[str], output_path: Path
-) -> "FloatHyperparameter":
+def parse_float(spec: dict[str, Any], config_context_path: list[str], output_path: Path) -> "FloatHyperparameter":
     """Parse the `parameters` section of the configuration into a `CategoricalVariable` object."""
     path = pop_field(config_context_path, spec, "path")
     low = pop_field(config_context_path, spec, "low")
@@ -292,9 +280,7 @@ def parse_hyperparameter(
     """
 
     if "type" in spec:
-        parameter_type = pop_field(
-            config_context_path, spec, "type"
-        )  # read from specified configuration
+        parameter_type = pop_field(config_context_path, spec, "type")  # read from specified configuration
 
         parser = registry.get(parameter_type, search_path=["hyperparameter_types"])
     elif "value" in spec:
@@ -314,7 +300,7 @@ def parse_hyperparameter(
     return parser.parse(spec, config_context_path, output_dir)
 
 
-def _assign(struct: dict | list, path: List[str], value: Any) -> None:
+def _assign(struct: dict | list, path: list[str], value: Any) -> None:
     """
     Assigns a new value to a path within an hierarchical `dict` structure.
 
@@ -343,7 +329,7 @@ def _path_exists(struct: dict | list, path: list[str]) -> bool:
         if isinstance(struct, dict):
             options = ", ".join(struct.keys())
         else:
-            options = f"0..{len(struct)-1}"
+            options = f"0..{len(struct) - 1}"
         raise ValueError(f"no such key: {index}; found: {options}")
 
     if len(path) == 1:
@@ -353,16 +339,14 @@ def _path_exists(struct: dict | list, path: list[str]) -> bool:
 
 
 def validate_substitution_paths(
-    config_context_path: List[str],
+    config_context_path: list[str],
     base_config: Configuration,
     parameter_paths: Iterable[str],
 ) -> None:
-    parameter_paths: List[Optional[str]] = [None] + sorted(parameter_paths)
+    parameter_paths: list[str | None] = [None] + sorted(parameter_paths)
     for previous_path, path in itertools.pairwise(parameter_paths):
         if path != "" and not _path_exists(_expand(base_config), path.split(".")):  # type: ignore
-            raise YamlParseError(
-                config_context_path, f"invalid substitution path: {path}"
-            )
+            raise YamlParseError(config_context_path, f"invalid substitution path: {path}")
 
         if previous_path is not None:
             if previous_path == "" or path.startswith(previous_path + "."):  # type: ignore[union-attr]
@@ -372,9 +356,7 @@ def validate_substitution_paths(
                 )
 
 
-def substitute_hyperparameters(
-    base_config: Configuration, hyperparameters: Mapping[str, Any]
-) -> Configuration:
+def substitute_hyperparameters(base_config: Configuration, hyperparameters: Mapping[str, Any]) -> Configuration:
     """
     Substitute hyperparameters in an LR system configuration and return the updated configuration.
 

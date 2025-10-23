@@ -1,7 +1,7 @@
 import logging
 from abc import ABC, abstractmethod
+from collections.abc import Iterable, Sequence, Callable
 from pathlib import Path
-from typing import List, Iterable, Callable, Optional, Sequence, Tuple
 
 import numpy as np
 from tqdm import tqdm
@@ -23,7 +23,7 @@ class Experiment(ABC):
         name: str,
         data: DataStrategy,
         aggregations: Sequence[Aggregation],
-        visualization_functions: List[Callable],
+        visualization_functions: list[Callable],
         output_path: Path,
     ):
         self.name = name
@@ -32,9 +32,7 @@ class Experiment(ABC):
         self.visualization_functions = visualization_functions
         self.output_path = output_path
 
-    def _run_lrsystem(
-        self, lrsystem: LRSystem
-    ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
+    def _run_lrsystem(self, lrsystem: LRSystem) -> tuple[np.ndarray, np.ndarray | None]:
         """Run experiment on a single LR system configuration using the provided data(setup).
 
         First, the data is split into a training and testing subset, according to the provided
@@ -48,7 +46,7 @@ class Experiment(ABC):
         """
         # Placeholders for numpy array's of LLRs and labels obtained from each train/test split
         llrs = []
-        labels: List[np.ndarray] = []
+        labels: list[np.ndarray] | None = []
 
         # Split the data into a train / test subset, according to the provided DataSetup. This could
         # for example be a simple binary split or a multiple fold cross validation split.
@@ -58,9 +56,7 @@ class Experiment(ABC):
             meta_test,
         ) in self.data:
             lrsystem.fit(features_train, labels_train, meta_train)
-            subset_llrs, subset_labels, subset_meta = lrsystem.apply(
-                features_test, labels_test, meta_test
-            )
+            subset_llrs, subset_labels, subset_meta = lrsystem.apply(features_test, labels_test, meta_test)
             # Store results (numpy arrays) into the placeholder lists
             llrs.append(subset_llrs)
             if subset_labels is not None:
@@ -68,7 +64,7 @@ class Experiment(ABC):
 
         # Combine collected numpy array's after iteration over the train/test split(s)
         llrs = np.concatenate(llrs)
-        labels: Optional[np.ndarray] = np.concatenate(labels) if labels else None
+        labels = np.concatenate(labels) if labels else None
 
         # Generate visualization output as configured by `visualization_functions`
         # and write graphical output to the `output_path`.
@@ -109,7 +105,7 @@ class PredefinedExperiment(Experiment):
         name: str,
         data: DataStrategy,
         aggregations: Sequence[Aggregation],
-        visualization_functions: List[Callable],
+        visualization_functions: list[Callable],
         output_path: Path,
         lrsystems: Iterable[LRSystem],
     ):
@@ -117,7 +113,5 @@ class PredefinedExperiment(Experiment):
         self.lrsystems = lrsystems
 
     def _generate_and_run(self) -> None:
-        for lrsystem in tqdm(
-            self.lrsystems, desc=self.name, disable=not lir.is_interactive()
-        ):
+        for lrsystem in tqdm(self.lrsystems, desc=self.name, disable=not lir.is_interactive()):
             self._run_lrsystem(lrsystem)

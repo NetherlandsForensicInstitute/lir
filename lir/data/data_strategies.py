@@ -1,4 +1,4 @@
-from typing import Optional, Iterator
+from typing import Iterator
 
 import sklearn
 from sklearn.model_selection import KFold, GroupKFold, GroupShuffleSplit
@@ -12,9 +12,7 @@ class BinaryTrainTestSplit(DataStrategy):
     The BinaryTrainTestSplit implementation is aimed at data consisting of two classes.
     """
 
-    def __init__(
-        self, source: DataSet, test_size: float | int, seed: Optional[int] = None
-    ):
+    def __init__(self, source: DataSet, test_size: float | int, seed: int | None = None):
         self.source = source
         self.test_size = test_size
         self.seed = seed
@@ -35,10 +33,13 @@ class BinaryTrainTestSplit(DataStrategy):
             shuffle=self.shuffle,
             random_state=self.seed,
         )
-        yield (features_train, labels_train, meta_train), (
-            features_test,
-            labels_test,
-            meta_test,
+        yield (
+            (features_train, labels_train, meta_train),
+            (
+                features_test,
+                labels_test,
+                meta_test,
+            ),
         )
 
 
@@ -48,7 +49,7 @@ class BinaryCrossValidation(DataStrategy):
     The BinaryCrossValidation implementation is aimed at data consisting of two classes.
     """
 
-    def __init__(self, source: DataSet, folds: int, seed: Optional[int] = None):
+    def __init__(self, source: DataSet, folds: int, seed: int | None = None):
         self.source = source
         self.folds = folds
         self.seed = seed
@@ -59,10 +60,13 @@ class BinaryCrossValidation(DataStrategy):
         kf = KFold(n_splits=self.folds, shuffle=self.shuffle, random_state=self.seed)
         features, labels, meta = self.source.get_instances()
         for i, (train_index, test_index) in enumerate(kf.split(features, y=labels)):
-            yield (features[train_index], labels[train_index], meta[train_index]), (
-                features[test_index],
-                labels[test_index],
-                meta[test_index],
+            yield (
+                (features[train_index], labels[train_index], meta[train_index]),
+                (
+                    features[test_index],
+                    labels[test_index],
+                    meta[test_index],
+                ),
             )
 
 
@@ -72,18 +76,14 @@ class MulticlassTrainTestSplit(DataStrategy):
     The MulticlassTrainTestSplit implementation is aimed at data consisting of multiple classes.
     """
 
-    def __init__(
-        self, source: DataSet, test_size: float | int, seed: int | None = None
-    ):
+    def __init__(self, source: DataSet, test_size: float | int, seed: int | None = None):
         self.source = source
         self.test_size = test_size
         self.seed = seed
 
     def __iter__(self) -> Iterator:
         """Allow iteration by looping over the resulting train/test split(s)."""
-        splitter = GroupShuffleSplit(
-            test_size=self.test_size, n_splits=1, random_state=self.seed
-        )
+        splitter = GroupShuffleSplit(test_size=self.test_size, n_splits=1, random_state=self.seed)
         features, labels, meta = self.source.get_instances()
         ((train_index, test_index),) = splitter.split(features, labels, labels)
 
@@ -107,11 +107,12 @@ class MulticlassCrossValidation(DataStrategy):
         kf = GroupKFold(n_splits=self.folds)
 
         features, labels, meta = self.source.get_instances()
-        for i, (train_index, test_index) in enumerate(
-            kf.split(features, groups=labels)
-        ):
-            yield (features[train_index], labels[train_index], meta[train_index]), (
-                features[test_index],
-                labels[test_index],
-                meta[test_index],
+        for i, (train_index, test_index) in enumerate(kf.split(features, groups=labels)):
+            yield (
+                (features[train_index], labels[train_index], meta[train_index]),
+                (
+                    features[test_index],
+                    labels[test_index],
+                    meta[test_index],
+                ),
             )

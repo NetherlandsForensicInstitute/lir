@@ -1,7 +1,8 @@
+from collections.abc import Callable
 import logging
 import math
 import warnings
-from typing import Sized, Callable, Union, Tuple, Optional
+from typing import Sized
 
 import numpy as np
 from sklearn.base import TransformerMixin, BaseEstimator
@@ -14,7 +15,7 @@ LOG = logging.getLogger(__name__)
 
 def compensate_and_remove_neginf_inf(
     log_odds: np.ndarray, y: np.ndarray
-) -> Tuple[np.ndarray, np.ndarray, float, float]:
+) -> tuple[np.ndarray, np.ndarray, float, float]:
     """
     for Gaussian and KDE-calibrator fitting: remove negInf, Inf and compensate
     """
@@ -35,9 +36,7 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
     two distributions. Uses kernel density estimation (KDE) for interpolation.
     """
 
-    def __init__(
-        self, bandwidth: Union[Callable, str, float, Tuple[float, float]] = None
-    ):
+    def __init__(self, bandwidth: Callable | str | float | tuple[float, float] | None = None):
         """
 
         :param bandwidth:
@@ -50,12 +49,12 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
               which are the bandwidths for the two distributions.
         """
         self.bandwidth: Callable = self._parse_bandwidth(bandwidth)
-        self._kde0: Optional[KernelDensity] = None
-        self._kde1: Optional[KernelDensity] = None
+        self._kde0: KernelDensity | None = None
+        self._kde1: KernelDensity | None = None
         self.numerator, self.denominator = None, None
 
     @staticmethod
-    def bandwidth_silverman(X, y):
+    def bandwidth_silverman(X, y) -> list[float]:
         """
         Estimates the optimal bandwidth parameter using Silverman's rule of
         thumb.
@@ -147,7 +146,7 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
 
     @staticmethod
     def _parse_bandwidth(
-        bandwidth: Union[Callable, float, Tuple[float, float]],
+        bandwidth: Callable | float | tuple[float, float] | None,
     ) -> Callable:
         """
         Returns bandwidth as a tuple of two (optional) floats.
@@ -166,9 +165,9 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
         elif isinstance(bandwidth, str):
             raise ValueError(f"invalid input for bandwidth: {bandwidth}")
         elif isinstance(bandwidth, Sized):
-            assert (
-                len(bandwidth) == 2
-            ), f"bandwidth should have two elements; found {len(bandwidth)}; bandwidth = {bandwidth}"
+            assert len(bandwidth) == 2, (
+                f"bandwidth should have two elements; found {len(bandwidth)}; bandwidth = {bandwidth}"
+            )
             return lambda X, y: bandwidth
         else:
             return lambda X, y: (0 + bandwidth, bandwidth)

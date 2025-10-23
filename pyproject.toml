@@ -9,7 +9,7 @@ dynamic = ["version"]
 authors = [
     {name = "Netherlands Forensics Institute", email = "netherlandsforensicinstitute@users.noreply.github.com"},
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 readme = "README.md"
 license = {text = "Apache Software License 2.0"}
 dependencies = [

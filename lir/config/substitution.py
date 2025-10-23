@@ -23,15 +23,12 @@ benchmarks:
 ```
 """
 
-from collections.abc import Iterable, Mapping, Sequence
-import itertools
+from collections.abc import Mapping
 import json
 import logging
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, NamedTuple
-
-from confidence import Configuration
 
 from lir import registry
 from lir.config.base import (
@@ -39,6 +36,9 @@ from lir.config.base import (
     check_is_empty,
     pop_field,
     config_parser,
+    ContextAwareDict,
+    _expand,
+    ContextAwareList,
 )
 
 LOG = logging.getLogger(__name__)
@@ -93,9 +93,7 @@ class CategoricalHyperparameter(Hyperparameter):
         return self._options
 
 
-def _parse_categorical_option(
-    spec: Any, config_context_path: list[str], path: str, option_index: int | None
-) -> HyperparameterOption:
+def _parse_categorical_option(spec: Any, path: str, option_index: int | None) -> HyperparameterOption:
     """
     Parse a section describing an option value of a categorical hyperparameter.
     """
@@ -103,12 +101,12 @@ def _parse_categorical_option(
     name = None
     if isinstance(spec, Mapping):
         # use the explicityly declared name, if any
-        name = pop_field(config_context_path, spec, "option_name", required=False)
+        name = pop_field(spec, "option_name", required=False)
 
     # use the explicitly declared value, or default to the full subtree
     value = None
     if isinstance(spec, Mapping) and "value" in spec:
-        value = pop_field(config_context_path, spec, "value")
+        value = pop_field(spec, "value")
     else:
         value = spec
 
@@ -125,47 +123,37 @@ def _parse_categorical_option(
 
 
 @config_parser
-def parse_categorical(
-    spec: dict[str, Any], config_context_path: list[str], output_path: Path
-) -> "CategoricalHyperparameter":
+def parse_categorical(spec: ContextAwareDict, output_path: Path) -> "CategoricalHyperparameter":
     """Parse the `parameters` section of the configuration into a `CategoricalVariable` object."""
-    path = pop_field(config_context_path, spec, "path")
-    name = pop_field(config_context_path, spec, "name", default=path or "lrsystem")
+    path = pop_field(spec, "path")
+    name = pop_field(spec, "name", default=path or "lrsystem")
 
     # get the option definitions
-    options = pop_field(config_context_path, spec, "options")
-    options = [
-        _parse_categorical_option(spec, config_context_path + ["options", str(i)], path, i)
-        for i, spec in enumerate(options)
-    ]
+    options = pop_field(spec, "options")
+    options = [_parse_categorical_option(spec, path, i) for i, spec in enumerate(options)]
 
-    check_is_empty(config_context_path, spec)
+    check_is_empty(spec)
     return CategoricalHyperparameter(name, options)
 
 
-def _parse_substitution(config_context_path: list[str], spec: dict[str, Any]) -> tuple[str, Any]:
-    path = pop_field(config_context_path, spec, "path")
-    value = pop_field(config_context_path, spec, "value")
-    check_is_empty(config_context_path, spec)
-    return path, _expand(value)
+def _parse_substitution(spec: ContextAwareDict) -> tuple[str, Any]:
+    path = pop_field(spec, "path")
+    value = pop_field(spec, "value")
+    check_is_empty(spec)
+    return path, value
 
 
-def _parse_clustered_option(config_context_path: list[str], spec: dict[str, Any]) -> HyperparameterOption:
-    option_name = pop_field(config_context_path, spec, "option_name")
-    substitutions = pop_field(config_context_path, spec, "substitutions")
-    substitutions = [
-        _parse_substitution(config_context_path + ["substitutions", str(i)], subst)
-        for i, subst in enumerate(substitutions)
-    ]
+def _parse_clustered_option(spec: ContextAwareDict) -> HyperparameterOption:
+    option_name = pop_field(spec, "option_name")
+    substitutions = pop_field(spec, "substitutions")
+    substitutions = [_parse_substitution(subst) for i, subst in enumerate(substitutions)]
     substitutions = dict(substitutions)
-    check_is_empty(config_context_path, spec)
+    check_is_empty(spec)
     return HyperparameterOption(option_name, substitutions)
 
 
 @config_parser
-def parse_clustered(
-    spec: dict[str, Any], config_context_path: list[str], output_path: Path
-) -> CategoricalHyperparameter:
+def parse_clustered(spec: ContextAwareDict, output_path: Path) -> CategoricalHyperparameter:
     """
     Parse the configuration section of a clustered hyperparameter.
 
@@ -179,19 +167,15 @@ def parse_clustered(
     - name: a descriptive name for this option
     - substitutions: a list of substitutions, with a `path` and `value` field each
     """
-    parameter_name = pop_field(config_context_path, spec, "name")
-    options = pop_field(config_context_path, spec, "options")
-    options = [
-        _parse_clustered_option(config_context_path + ["options", str(i)], option) for i, option in enumerate(options)
-    ]
-    check_is_empty(config_context_path, spec)
+    parameter_name = pop_field(spec, "name")
+    options = pop_field(spec, "options")
+    options = [_parse_clustered_option(option) for i, option in enumerate(options)]
+    check_is_empty(spec)
     return CategoricalHyperparameter(parameter_name, options)
 
 
 @config_parser
-def parse_constant(
-    spec: dict[str, Any], config_context_path: list[str], output_path: Path
-) -> CategoricalHyperparameter:
+def parse_constant(spec: ContextAwareDict, output_path: Path) -> CategoricalHyperparameter:
     """
     Parse the configuration section of a constant.
 
@@ -201,10 +185,10 @@ def parse_constant(
     - path: the path of this hyperparameter in the LR system configuration
     - value: the substitution value
     """
-    path = pop_field(config_context_path, spec, "path")
-    value = pop_field(config_context_path, spec, "value")
-    value = _parse_categorical_option(value, config_context_path + ["value"], path, 0)
-    check_is_empty(config_context_path, spec)
+    path = pop_field(spec, "path")
+    value = pop_field(spec, "value")
+    value = _parse_categorical_option(value, path, 0)
+    check_is_empty(spec)
     return CategoricalHyperparameter(path, [value])
 
 
@@ -241,38 +225,26 @@ class FloatHyperparameter(Hyperparameter):
 
 
 @config_parser
-def parse_float(spec: dict[str, Any], config_context_path: list[str], output_path: Path) -> "FloatHyperparameter":
+def parse_float(spec: ContextAwareDict, output_path: Path) -> "FloatHyperparameter":
     """Parse the `parameters` section of the configuration into a `CategoricalVariable` object."""
-    path = pop_field(config_context_path, spec, "path")
-    low = pop_field(config_context_path, spec, "low")
-    high = pop_field(config_context_path, spec, "high")
-    log = pop_field(config_context_path, spec, "log", default=False)
-    step = pop_field(config_context_path, spec, "step", required=False)
+    path = pop_field(spec, "path")
+    low = pop_field(spec, "low")
+    high = pop_field(spec, "high")
+    log = pop_field(spec, "log", default=False)
+    step = pop_field(spec, "step", required=False)
 
     if log and step is not None:
         raise YamlParseError(
-            config_context_path,
+            spec.context,
             "configuration field `log` and `step` cannot be cannot be combined",
         )
 
-    check_is_empty(config_context_path, spec)
+    check_is_empty(spec)
     return FloatHyperparameter(path, low, high, step, log)
 
 
-def _expand(cfg: Any) -> Any:
-    """Iteratively unpack the data structure into the appropriate underlying representation."""
-    if isinstance(cfg, Mapping):
-        return {key: _expand(value) for key, value in cfg.items()}
-    elif isinstance(cfg, str):
-        return cfg
-    elif isinstance(cfg, Sequence):
-        return [_expand(value) for value in cfg]
-    return cfg
-
-
 def parse_hyperparameter(
-    spec: dict[str, Any],
-    config_context_path: list[str],
+    spec: ContextAwareDict,
     output_dir: Path,
 ) -> Hyperparameter:
     """
@@ -280,7 +252,7 @@ def parse_hyperparameter(
     """
 
     if "type" in spec:
-        parameter_type = pop_field(config_context_path, spec, "type")  # read from specified configuration
+        parameter_type = pop_field(spec, "type")  # read from specified configuration
 
         parser = registry.get(parameter_type, search_path=["hyperparameter_types"])
     elif "value" in spec:
@@ -293,14 +265,14 @@ def parse_hyperparameter(
         parser = parse_float()
     else:
         raise YamlParseError(
-            config_context_path,
+            spec.context,
             f"unrecognized hyperparameter type with fields: {', '.join(f'{key}' for key in spec.keys())}",
         )
 
-    return parser.parse(spec, config_context_path, output_dir)
+    return parser.parse(spec, output_dir)
 
 
-def _assign(struct: dict | list, path: list[str], value: Any) -> None:
+def _assign(struct: ContextAwareDict | ContextAwareList, path: list[str], value: Any) -> None:
     """
     Assigns a new value to a path within an hierarchical `dict` structure.
 
@@ -312,12 +284,12 @@ def _assign(struct: dict | list, path: list[str], value: Any) -> None:
     if isinstance(struct, list):
         index = int(path[0])
         if len(path) == 1:
-            struct[index] = value
+            struct[index] = _expand(struct.context + [str(index)], value)
         else:
             _assign(struct[index], path[1:], value)
     else:
         if len(path) == 1:
-            struct[path[0]] = value
+            struct[path[0]] = _expand(struct.context + [path[0]], value)
         else:
             _assign(struct[path[0]], path[1:], value)
 
@@ -338,41 +310,26 @@ def _path_exists(struct: dict | list, path: list[str]) -> bool:
         return index in struct and _path_exists(struct[index], path[1:])  # type: ignore
 
 
-def validate_substitution_paths(
-    config_context_path: list[str],
-    base_config: Configuration,
-    parameter_paths: Iterable[str],
-) -> None:
-    parameter_paths: list[str | None] = [None] + sorted(parameter_paths)
-    for previous_path, path in itertools.pairwise(parameter_paths):
-        if path != "" and not _path_exists(_expand(base_config), path.split(".")):  # type: ignore
-            raise YamlParseError(config_context_path, f"invalid substitution path: {path}")
-
-        if previous_path is not None:
-            if previous_path == "" or path.startswith(previous_path + "."):  # type: ignore[union-attr]
-                raise YamlParseError(
-                    config_context_path,
-                    f"conflicting substitution path: {path} is a sub path of {previous_path}",
-                )
-
-
-def substitute_hyperparameters(base_config: Configuration, hyperparameters: Mapping[str, Any]) -> Configuration:
+def substitute_hyperparameters(
+    base_config: ContextAwareDict, hyperparameters: Mapping[str, Any], context: list[str]
+) -> ContextAwareDict:
     """
     Substitute hyperparameters in an LR system configuration and return the updated configuration.
 
     :param base_config: the original LR system configuration
     :param hyperparameters: the hyperparameters and their values
+    :param context: the context path of the augmented configuration
     :return: the augmented LR system configuration
     """
 
     if "" in hyperparameters:
         # if the root is assigned, don't bother substituting and return the assigned value immediately
-        augmented_config = Configuration(hyperparameters[""])
+        augmented_config = _expand(context, hyperparameters[""])
     else:
-        augmented_config = _expand(base_config)
-        LOG.debug(f"base system: {json.dumps(augmented_config)}")
+        LOG.debug(f"base system: {json.dumps(base_config)}")
+        augmented_config = base_config.clone(context)
         for key, value in hyperparameters.items():
             _assign(augmented_config, key.split("."), value)
 
-    LOG.debug(f"augmented system: {json.dumps(_expand(augmented_config))}")
+    LOG.debug(f"augmented system: {json.dumps(augmented_config)}")
     return augmented_config

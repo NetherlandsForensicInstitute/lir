@@ -1,7 +1,6 @@
 from collections.abc import Callable, Sequence
 from pathlib import Path
 
-from confidence import Configuration
 import optuna
 
 from lir import compat
@@ -11,6 +10,7 @@ from lir.config.substitution import (
     Hyperparameter,
     FloatHyperparameter,
     HyperparameterOption,
+    ContextAwareDict,
 )
 from lir.data.models import DataStrategy
 from lir.experiment import Experiment
@@ -26,14 +26,12 @@ class OptunaExperiment(Experiment):
         aggregations: Sequence[Aggregation],
         visualization_functions: list[Callable],
         output_path: Path,
-        config_context_path: list[str],
-        baseline_config: Configuration,
+        baseline_config: ContextAwareDict,
         hyperparameters: list[Hyperparameter],
         n_trials: int,
         metric_function: Callable,
     ):
         super().__init__(name, data, aggregations, visualization_functions, output_path)
-        self._config_context_path = config_context_path
         self.baseline_config = baseline_config
         self.hyperparameters = hyperparameters
         self.n_trials = n_trials
@@ -67,7 +65,6 @@ class OptunaExperiment(Experiment):
         lrsystem = parse_augmented_lrsystem(
             self.baseline_config,
             assignments,
-            self._config_context_path + [str(trial.number)],
             self.output_path,
             dirname_prefix=f"{trial.number:03d}__",
         )

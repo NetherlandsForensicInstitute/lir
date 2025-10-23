@@ -1,8 +1,5 @@
 from collections.abc import Callable, Sequence
 from pathlib import Path
-from typing import Any
-
-from confidence import Configuration
 
 from lir import registry
 from lir.config.base import (
@@ -10,10 +7,10 @@ from lir.config.base import (
     config_parser,
     pop_field,
     check_is_empty,
-    get_parser_arguments_for_field,
     GenericConfigParser,
 )
 from lir.config.data_providers import parse_data_provider
+from lir.config.substitution import ContextAwareDict
 from lir.data.data_strategies import (
     BinaryCrossValidation,
     MulticlassCrossValidation,
@@ -24,55 +21,47 @@ from lir.data.models import DataStrategy
 
 
 def _parse_train_test_split(
-    config: dict[str, Any],
-    config_context_path: list[str],
+    config: ContextAwareDict,
     output_path: Path,
     constructor: Callable,
 ) -> DataStrategy:
-    data_source = parse_data_provider(
-        *get_parser_arguments_for_field(config, config_context_path, output_path, "source")
-    )
-    test_size = pop_field(config_context_path, config, "test_size")
+    data_source = parse_data_provider(pop_field(config, "source"), output_path)
+    test_size = pop_field(config, "test_size")
     seed = config.pop("seed", None)
-    check_is_empty(config_context_path, config)
+    check_is_empty(config)
     return constructor(data_source, test_size, seed)
 
 
 @config_parser
-def binary_train_test_split(config: dict[str, Any], config_context_path: list[str], output_path: Path) -> DataStrategy:
+def binary_train_test_split(config: ContextAwareDict, output_path: Path) -> DataStrategy:
     """
     Parse settings for a train/test split strategy for binary data.
     """
-    return _parse_train_test_split(config, config_context_path, output_path, BinaryTrainTestSplit)
+    return _parse_train_test_split(config, output_path, BinaryTrainTestSplit)
 
 
 @config_parser
-def multiclass_train_test_split(
-    config: dict[str, Any], config_context_path: list[str], output_path: Path
-) -> DataStrategy:
+def multiclass_train_test_split(config: ContextAwareDict, output_path: Path) -> DataStrategy:
     """
     Parse settings for a train/test split strategy for multiclass data.
     """
-    return _parse_train_test_split(config, config_context_path, output_path, MulticlassTrainTestSplit)
+    return _parse_train_test_split(config, output_path, MulticlassTrainTestSplit)
 
 
 def _parse_cross_validation(
-    config: dict[str, Any],
-    config_context_path: list[str],
+    config: ContextAwareDict,
     output_path: Path,
     constructor: Callable,
     extra_args: Sequence[str],
 ) -> DataStrategy:
-    folds = int(pop_field(config_context_path, config, "folds"))
-    data_source = parse_data_provider(
-        *get_parser_arguments_for_field(config, config_context_path, output_path, "source")
-    )
-    check_is_empty(config_context_path, config, extra_args)
+    folds = int(pop_field(config, "folds"))
+    data_source = parse_data_provider(pop_field(config, "source"), output_path)
+    check_is_empty(config, extra_args)
     return constructor(data_source, folds, **config)
 
 
 @config_parser
-def binary_cross_validation(config: dict[str, Any], config_context_path: list[str], output_path: Path) -> DataStrategy:
+def binary_cross_validation(config: ContextAwareDict, output_path: Path) -> DataStrategy:
     """Initialize K-fold cross validation strategy by parsing the configuration for binary classes.
 
     This method might be referenced in the YAML registry as follows:
@@ -97,13 +86,11 @@ def binary_cross_validation(config: dict[str, Any], config_context_path: list[st
         data: ${binary_cross_validation_splits}
         ...
     """
-    return _parse_cross_validation(config, config_context_path, output_path, BinaryCrossValidation, ["seed"])
+    return _parse_cross_validation(config, output_path, BinaryCrossValidation, ["seed"])
 
 
 @config_parser
-def multiclass_cross_validation(
-    config: dict[str, Any], config_context_path: list[str], output_path: Path
-) -> DataStrategy:
+def multiclass_cross_validation(config: ContextAwareDict, output_path: Path) -> DataStrategy:
     """Initialize K-fold cross validation strategy by parsing the configuration for multiple classes.
 
     This method might be referenced in the YAML registry as follows:
@@ -130,10 +117,10 @@ def multiclass_cross_validation(
         ...
     ```
     """
-    return _parse_cross_validation(config, config_context_path, output_path, MulticlassCrossValidation, [])
+    return _parse_cross_validation(config, output_path, MulticlassCrossValidation, [])
 
 
-def parse_data_strategy(cfg: Configuration, context: list[str], output_path: Path) -> DataStrategy:
+def parse_data_strategy(cfg: ContextAwareDict, output_path: Path) -> DataStrategy:
     """Instantiate specific implementation of `DataSetup` as configured.
 
     The `setup` field is parsed, which is expected to refer to a name in
@@ -142,8 +129,7 @@ def parse_data_strategy(cfg: Configuration, context: list[str], output_path: Pat
 
     Data setup configuration is provided under the `data_setup` key.
     """
-    cfg = dict(cfg)
-    strategy = pop_field(context, cfg, "strategy")
+    strategy = pop_field(cfg, "strategy")
 
     try:
         parser = registry.get(
@@ -153,8 +139,8 @@ def parse_data_strategy(cfg: Configuration, context: list[str], output_path: Pat
         )
     except Exception as e:
         raise YamlParseError(
-            context,
+            cfg.context,
             f"no parser available for data type `{strategy}`; the error was: {e}",
         )
 
-    return parser.parse(cfg, context, output_path)
+    return parser.parse(cfg, output_path)

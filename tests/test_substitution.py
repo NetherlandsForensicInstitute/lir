@@ -84,6 +84,6 @@ from lir.config.substitution import parse_hyperparameter, _expand, Hyperparamete
     ],
 )
 def test_substitution(desc, yaml: str, expected_options: list[Any]):
-    cfg = _expand(confidence.loads(yaml))
-    param = parse_hyperparameter(cfg, [], Path("/"))
+    cfg = _expand([], confidence.loads(yaml))
+    param = parse_hyperparameter(cfg, Path("/"))
     assert param.options() == expected_options, desc

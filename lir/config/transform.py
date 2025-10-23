@@ -1,7 +1,5 @@
-from collections.abc import Mapping
 import inspect
 from pathlib import Path
-from typing import Any
 
 from lir import registry
 from lir.config.base import (
@@ -9,6 +7,7 @@ from lir.config.base import (
     ConfigParser,
     YamlParseError,
     pop_field,
+    ContextAwareDict,
 )
 from lir.transform import (
     CsvWriter,
@@ -35,8 +34,7 @@ class GenericTransformerConfigParser(ConfigParser):
 
     def parse(
         self,
-        config: Mapping[str, Any],
-        config_context_path: list[str],
+        config: ContextAwareDict,
         output_dir: Path,
     ) -> Transformer:
         """Prepare the defined component to support the expected methods in the scikit-learn `Pipeline`."""
@@ -45,7 +43,7 @@ class GenericTransformerConfigParser(ConfigParser):
                 instance = self.component_class(**config)
             except Exception as e:
                 raise YamlParseError(
-                    config_context_path,
+                    config.context,
                     f"failed to instantiate module {self.component_class.__name__}: {e}",
                 )
 
@@ -68,7 +66,7 @@ class GenericTransformerConfigParser(ConfigParser):
             # which the wrapper provides.
             return FunctionTransformer(self.component_class)
 
-        raise YamlParseError(config_context_path, f"unrecognized module type: `{self.component_class}`")
+        raise YamlParseError(config.context, f"unrecognized module type: `{self.component_class}`")
 
 
 class NumpyCsvWriterWrappingConfigParser(ConfigParser):
@@ -78,20 +76,20 @@ class NumpyCsvWriterWrappingConfigParser(ConfigParser):
         super().__init__()
         self.module_parser = module_parser
 
-    def parse(self, config: dict[str, Any], config_context_path: list[str], output_dir: Path) -> Transformer:
+    def parse(self, config: ContextAwareDict, output_dir: Path) -> Transformer:
         header = config.pop("header") if "header" in config else None
-        path = config.pop("path") if "path" in config else f"{config_context_path[-1]}.csv"
+        path = pop_field(config, "path", default=f"{config.context[-1]}.csv")
         return NumpyTransformer(
-            self.module_parser.parse(config, config_context_path, output_dir),
+            self.module_parser.parse(config, output_dir),
             header=header,
             path=output_dir / path,
         )
 
 
 def parse_module(
-    module_config: dict[str, Any] | str,
-    config_context_path: list[str],
+    module_config: ContextAwareDict | str,
     output_dir: Path,
+    config_context_path: list[str],
 ) -> Transformer:
     """
     Constructs a `Transformer` from a string or configuration section.
@@ -110,19 +108,17 @@ def parse_module(
     """
     if isinstance(module_config, str):
         class_name = module_config
-        args = {}
+        args = ContextAwareDict(config_context_path)
     else:
-        args = dict(module_config)
-        class_name = pop_field(config_context_path, args, "method")
+        args = module_config
+        class_name = pop_field(args, "method")
 
-    return registry.get(class_name, GenericTransformerConfigParser, search_path=["modules"]).parse(
-        args, config_context_path, output_dir
-    )
+    return registry.get(class_name, GenericTransformerConfigParser, search_path=["modules"]).parse(args, output_dir)
 
 
 @config_parser
-def csv_writer(config: dict[str, Any], config_context_path: list[str], output_dir: Path) -> CsvWriter:
+def csv_writer(config: ContextAwareDict, output_dir: Path) -> CsvWriter:
     """Set up a CSV Writer object, according to the configuration."""
     if "path" not in config:
-        config |= {"path": output_dir / f"{config_context_path[-1]}.csv"}
+        config |= {"path": output_dir / f"{config.context[-1]}.csv"}
     return CsvWriter(**config)

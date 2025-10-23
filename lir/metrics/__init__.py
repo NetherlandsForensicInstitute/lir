@@ -10,7 +10,7 @@ def cllr(
     llrs: np.ndarray, y: np.ndarray, weights: Tuple[float, float] = (1, 1)
 ) -> float:
     """
-    Calculates a log likelihood ratio cost (C_llr) for a series of likelihood
+    Calculates a log likelihood ratio cost (C_llr) for a series of log likelihood
     ratios.
 
     Nico Brümmer and Johan du Preez, Application-independent evaluation of speaker detection, In: Computer Speech and
@@ -37,7 +37,7 @@ def cllr_min(
     llrs: np.ndarray, y: np.ndarray, weights: Tuple[float, float] = (1, 1)
 ) -> float:
     """
-    Estimates the discriminative power from a collection of likelihood ratios.
+    Estimates the discriminative power from a collection of log likelihood ratios.
 
     :param llrs: a numpy array of LLRs
     :param y: a numpy array of labels (0 or 1)

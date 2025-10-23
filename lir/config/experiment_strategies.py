@@ -231,7 +231,9 @@ def parse_experiments(
     return experiments
 
 
-def parse_experiments_setup(cfg: Configuration) -> Mapping[str, Experiment]:
+def parse_experiments_setup(
+    cfg: confidence.Configuration,
+) -> tuple[Mapping[str, Experiment], Path]:
     """
     Extract which Experiment to run as dictated in the configuration.
 
@@ -240,8 +242,11 @@ def parse_experiments_setup(cfg: Configuration) -> Mapping[str, Experiment]:
     - `timestamp`: a formatted timestamp of the current date/time
 
     :param cfg: a `Configuration` object describing the experiments
-    :return: a mapping of names to experiments
+    :return: a tuple with two elements: (1) mapping of names to experiments; (2) path to output directory
     """
     cfg = confidence.Configuration(cfg, {"timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")})
 
-    return parse_experiments(_expand(cfg), [], Path(cfg.output))
+    cfg = _expand(cfg)
+
+    output_dir = pop_field([], cfg, "output", validate=Path)
+    return parse_experiments(cfg, [], output_dir), output_dir

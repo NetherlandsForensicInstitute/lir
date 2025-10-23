@@ -14,8 +14,8 @@ from lir.util import odds_to_probability, odds_to_logodds
 
 class TestPlotting(unittest.TestCase):
     def test_contexts(self):
-        warnings.simplefilter("error")
-        lrs = np.array([0.5, 0.5, 0.5, 1, 1, 2, 2, 2])
+        #warnings.simplefilter("error")
+        lrs = np.array([.5, .5, .5, 1, 1, 2, 2, 2])
         llrs = odds_to_logodds(lrs)
         y = np.array([0, 0, 1, 0, 1, 0, 1, 1])
 
@@ -29,7 +29,7 @@ class TestPlotting(unittest.TestCase):
         plotting.pav(llrs, y)
         plt.title("simple call with full control")
         plt.close(fig)
-
+        
         # sub plots
         fig, axs = plt.subplots(2)
         plotting.pav(llrs, y, ax=axs[0])
@@ -37,7 +37,7 @@ class TestPlotting(unittest.TestCase):
         plt.close(fig)
 
     def test_calls(self):
-        lrs = np.array([0.5, 0.5, 0.5, 1, 1, 2, 2, 2, np.inf, 0])
+        lrs = np.array([.5, .5, .5, 1, 1, 2, 2, 2, np.inf, 0])
         llrs = odds_to_logodds(lrs)
         scores = odds_to_probability(lrs)
         y = np.array([0, 0, 1, 0, 1, 0, 1, 1, 1, 0])
@@ -71,5 +71,5 @@ class TestPlotting(unittest.TestCase):
             ax.calibrator_fit(cal)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

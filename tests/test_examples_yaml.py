@@ -9,7 +9,6 @@ def test_parse_examples():
     examples_dir = Path(__file__).parent.parent / "examples"
     for yaml_file in examples_dir.rglob("*.yaml"):
         try:
-            cfg = confidence.loadf(yaml_file)
-            parse_experiments_setup(cfg)
+            parse_experiments_setup(confidence.loadf(yaml_file))
         except Exception as e:
             raise ValueError(f"{yaml_file}: {e}")

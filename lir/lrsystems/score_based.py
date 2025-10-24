@@ -37,8 +37,8 @@ class ScoreBasedSystem(LRSystem):
 
     def apply(self, features: np.ndarray, labels: np.ndarray | None, meta: np.ndarray) -> LLRData:
         """
-        Applies the score-based LR system on a set of instances, optionally with corresponding labels, and returns a set
-        of LLRs and their labels.
+        Applies the score-based LR system on a set of instances, optionally with corresponding labels, and returns a
+        representation of the calculated LLR data through the `LLRData` tuple.
 
         The system takes instances as input, and calculates LLRs for pairs of instances. That means that there is a 2-1
         relation between input and output data.

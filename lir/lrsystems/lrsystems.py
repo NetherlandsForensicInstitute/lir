@@ -66,6 +66,12 @@ class Pipeline(sklearn.pipeline.Pipeline):
 
 
 class LLRData(NamedTuple):
+    """Representation of calculated LLR values.
+
+    The tuple contains same size numpy arrays of LLR values, corresponding
+    meta-data and optionally the corresponding interval values and labels.
+    """
+
     llrs: np.ndarray
     meta_data: np.ndarray
     intervals: np.ndarray | None = None  # 2 columns: low, high
@@ -90,11 +96,8 @@ class LRSystem(ABC):
     @abstractmethod
     def apply(self, instances: np.ndarray, labels: np.ndarray | None, meta: np.ndarray) -> LLRData:
         """
-        Applies the LR system on a set of instances, optionally with corresponding labels, and returns a set of LRs and
-        their labels.
-
-        The return value is a tuple of two numpy arrays of the same size, containing LRs and labels respectively. The
-        second array should be `None` if the input data are unlabeled.
+        Applies the LR system on a set of instances, optionally with corresponding labels, and returns a
+        representation of the calculated LLR data through the `LLRData` tuple.
         """
         raise NotImplementedError
 

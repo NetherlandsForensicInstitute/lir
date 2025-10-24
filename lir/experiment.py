@@ -9,10 +9,25 @@ from tqdm import tqdm
 import lir
 from lir.aggregation import Aggregation
 from lir.data.models import DataStrategy
-from lir.lrsystems.lrsystems import LRSystem
-
+from lir.lrsystems.lrsystems import LRSystem, LLRData
 
 LOG = logging.getLogger(__name__)
+
+
+def combine_results(llr_sets: list[LLRData]) -> LLRData:
+    """Combine the results of the LLRData tuples into a single tuple."""
+
+    llrs = [llr_data_tuple.llrs for llr_data_tuple in llr_sets]
+    intervals = [llr_data_tuple.intervals for llr_data_tuple in llr_sets if llr_data_tuple.intervals is not None]
+    labels = [llr_data_tuple.labels for llr_data_tuple in llr_sets if llr_data_tuple.labels is not None]
+    meta_data = [llr_data_tuple.meta_data for llr_data_tuple in llr_sets]
+
+    return LLRData(
+        llrs=np.concatenate(llrs),
+        intervals=np.concatenate(intervals) if all(interval is not None for interval in intervals) else None,
+        labels=np.concatenate(labels) if all(label is not None for label in labels) else None,
+        meta_data=np.concatenate(meta_data),
+    )
 
 
 class Experiment(ABC):
@@ -45,8 +60,7 @@ class Experiment(ABC):
         through the `visualization_functions` and stored in the `output_path` directory.
         """
         # Placeholders for numpy array's of LLRs and labels obtained from each train/test split
-        llrs = []
-        labels = []
+        llr_sets: list[LLRData] = []
 
         # Split the data into a train / test subset, according to the provided DataSetup. This could
         # for example be a simple binary split or a multiple fold cross validation split.
@@ -56,15 +70,15 @@ class Experiment(ABC):
             meta_test,
         ) in self.data:
             lrsystem.fit(features_train, labels_train, meta_train)
-            subset_llrs, subset_labels, subset_meta = lrsystem.apply(features_test, labels_test, meta_test)
+            subset_llr_results: LLRData = lrsystem.apply(features_test, labels_test, meta_test)
+
             # Store results (numpy arrays) into the placeholder lists
-            llrs.append(subset_llrs)
-            if subset_labels is not None:
-                labels.append(subset_labels)
+            llr_sets.append(subset_llr_results)
 
         # Combine collected numpy array's after iteration over the train/test split(s)
-        llrs = np.concatenate(llrs)
-        labels = np.concatenate(labels) if labels else None
+        combined_llrs: LLRData = combine_results(llr_sets)
+        llrs = combined_llrs.llrs
+        labels = combined_llrs.labels
 
         # Generate visualization output as configured by `visualization_functions`
         # and write graphical output to the `output_path`.

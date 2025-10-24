@@ -1,5 +1,5 @@
 from typing import Any
-from lir.lrsystems.lrsystems import LRSystem, Pipeline
+from lir.lrsystems.lrsystems import LRSystem, Pipeline, LLRData
 
 import numpy as np
 import pandas as pd
@@ -448,7 +448,7 @@ class TwoLevelSystem(LRSystem):
 
         return self
 
-    def apply(self, features: Any, labels: Any, meta: Any) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def apply(self, features: Any, labels: Any, meta: Any) -> LLRData:
         if labels is None:
             raise ValueError("pairing requires labels")
 
@@ -459,4 +459,8 @@ class TwoLevelSystem(LRSystem):
         pair_llrs = self.model.transform(*_split_pairs(pair_features, 1))
         pair_llrs = self.postprocessing_pipeline.transform(pair_llrs)
 
-        return pair_llrs, pair_labels, pair_meta
+        return LLRData(
+            llrs=pair_llrs,
+            labels=pair_labels,
+            meta_data=pair_meta,
+        )

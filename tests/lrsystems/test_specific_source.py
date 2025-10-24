@@ -10,7 +10,7 @@ from lir.data.datasets.synthesized_normal_binary import (
     SynthesizedNormalDataClass,
     SynthesizedNormalBinaryData,
 )
-from lir.lrsystems.lrsystems import Pipeline
+from lir.lrsystems.lrsystems import Pipeline, LLRData
 from lir.lrsystems.specific_source import SpecificSourceSystem
 
 
@@ -40,9 +40,13 @@ def test_specific_source_pipeline(synthesized_normal_data: SynthesizedNormalBina
         (features_test, labels_test, meta_test),
     ) = next(iter(data))
     specific_source_system.fit(features_train, labels_train, meta_train)
-    scores, labels, meta = specific_source_system.apply(
+
+    llr_data: LLRData = specific_source_system.apply(
         features_test, labels_test, meta_test
     )
+
+    scores = llr_data.llrs
+    labels = llr_data.labels
 
     golden_master_path = "tests/golden_master/test_specific_source_pipeline"
     if not os.path.exists(f"{golden_master_path}.npz"):

@@ -2,6 +2,7 @@ import logging
 from abc import ABC, abstractmethod
 from collections.abc import Iterable, Sequence, Callable
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 from tqdm import tqdm
@@ -14,18 +15,39 @@ from lir.lrsystems.lrsystems import LRSystem, LLRData
 LOG = logging.getLogger(__name__)
 
 
+def np_concatenate_optional(optional_values: list[Any]) -> np.ndarray | None:
+    """Helper function to use `np.concatenate()` using collections with optional None values.
+
+    When a list may contain optional `None` values, it is not allowed (by type checking) to directly
+    call `np.concatenate()` on this list, even when explicitly checked that this list does not contain
+    `None` values.
+
+    This helper function either directly returns `None` if a collection contains a `None` value, or
+    it uses a workaround by using a list comprehension which filters out the `None` values (which are not
+    present anymore) to satisfy the type checker.
+    """
+    if None in optional_values:
+        return None
+
+    # Workaround for type checking optional None values
+    return np.concatenate([value for value in optional_values if value is not None])
+
+
 def combine_results(llr_sets: list[LLRData]) -> LLRData:
     """Combine the results of the LLRData tuples into a single tuple."""
 
     llrs = [llr_data_tuple.llrs for llr_data_tuple in llr_sets]
-    intervals = [llr_data_tuple.intervals for llr_data_tuple in llr_sets if llr_data_tuple.intervals is not None]
-    labels = [llr_data_tuple.labels for llr_data_tuple in llr_sets if llr_data_tuple.labels is not None]
+    intervals = [llr_data_tuple.intervals for llr_data_tuple in llr_sets]
+    labels = [llr_data_tuple.labels for llr_data_tuple in llr_sets]
     meta_data = [llr_data_tuple.meta_data for llr_data_tuple in llr_sets]
 
+    # The `np_concatenate_optional()` helper function ensures values do not contain `None` values
+    # before calling `np.concatenate()`, specifically for type checking (mypy) reasons. If any collection
+    # does contain `None`, the result `None` is returned (indicating a mismatch in data sets).
     return LLRData(
         llrs=np.concatenate(llrs),
-        intervals=np.concatenate(intervals) if all(interval is not None for interval in intervals) else None,
-        labels=np.concatenate(labels) if all(label is not None for label in labels) else None,
+        intervals=np_concatenate_optional(intervals),
+        labels=np_concatenate_optional(labels),
         meta_data=np.concatenate(meta_data),
     )
 

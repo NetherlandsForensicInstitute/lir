@@ -449,6 +449,10 @@ class TwoLevelSystem(LRSystem):
         return self
 
     def apply(self, features: Any, labels: Any, meta: Any) -> LLRData:
+        """
+        Applies the two level LR system on a set of instances., optionally with corresponding labels,
+        and returns a representation of the calculated LLR data through the `LLRData` tuple.
+        """
         if labels is None:
             raise ValueError("pairing requires labels")
 

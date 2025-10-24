@@ -2,6 +2,7 @@ import logging
 from abc import ABC, abstractmethod
 from collections.abc import Iterable, Sequence, Callable
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 from tqdm import tqdm
@@ -9,10 +10,46 @@ from tqdm import tqdm
 import lir
 from lir.aggregation import Aggregation
 from lir.data.models import DataStrategy
-from lir.lrsystems.lrsystems import LRSystem
-
+from lir.lrsystems.lrsystems import LRSystem, LLRData
 
 LOG = logging.getLogger(__name__)
+
+
+def np_concatenate_optional(optional_values: list[Any]) -> np.ndarray | None:
+    """Helper function to use `np.concatenate()` using collections with optional None values.
+
+    When a list may contain optional `None` values, it is not allowed (by type checking) to directly
+    call `np.concatenate()` on this list, even when explicitly checked that this list does not contain
+    `None` values.
+
+    This helper function either directly returns `None` if a collection contains a `None` value, or
+    it uses a workaround by using a list comprehension which filters out the `None` values (which are not
+    present anymore) to satisfy the type checker.
+    """
+    if None in optional_values:
+        return None
+
+    # Workaround for type checking optional None values
+    return np.concatenate([value for value in optional_values if value is not None])
+
+
+def combine_results(llr_sets: list[LLRData]) -> LLRData:
+    """Combine the results of the LLRData tuples into a single tuple."""
+
+    llrs = [llr_data_tuple.llrs for llr_data_tuple in llr_sets]
+    intervals = [llr_data_tuple.intervals for llr_data_tuple in llr_sets]
+    labels = [llr_data_tuple.labels for llr_data_tuple in llr_sets]
+    meta_data = [llr_data_tuple.meta_data for llr_data_tuple in llr_sets]
+
+    # The `np_concatenate_optional()` helper function ensures values do not contain `None` values
+    # before calling `np.concatenate()`, specifically for type checking (mypy) reasons. If any collection
+    # does contain `None`, the result `None` is returned (indicating a mismatch in data sets).
+    return LLRData(
+        llrs=np.concatenate(llrs),
+        intervals=np_concatenate_optional(intervals),
+        labels=np_concatenate_optional(labels),
+        meta_data=np.concatenate(meta_data),
+    )
 
 
 class Experiment(ABC):
@@ -45,8 +82,7 @@ class Experiment(ABC):
         through the `visualization_functions` and stored in the `output_path` directory.
         """
         # Placeholders for numpy array's of LLRs and labels obtained from each train/test split
-        llrs = []
-        labels = []
+        llr_sets: list[LLRData] = []
 
         # Split the data into a train / test subset, according to the provided DataSetup. This could
         # for example be a simple binary split or a multiple fold cross validation split.
@@ -56,15 +92,15 @@ class Experiment(ABC):
             meta_test,
         ) in self.data:
             lrsystem.fit(features_train, labels_train, meta_train)
-            subset_llrs, subset_labels, subset_meta = lrsystem.apply(features_test, labels_test, meta_test)
+            subset_llr_results: LLRData = lrsystem.apply(features_test, labels_test, meta_test)
+
             # Store results (numpy arrays) into the placeholder lists
-            llrs.append(subset_llrs)
-            if subset_labels is not None:
-                labels.append(subset_labels)
+            llr_sets.append(subset_llr_results)
 
         # Combine collected numpy array's after iteration over the train/test split(s)
-        llrs = np.concatenate(llrs)
-        labels = np.concatenate(labels) if labels else None
+        combined_llrs: LLRData = combine_results(llr_sets)
+        llrs = combined_llrs.llrs
+        labels = combined_llrs.labels
 
         # Generate visualization output as configured by `visualization_functions`
         # and write graphical output to the `output_path`.

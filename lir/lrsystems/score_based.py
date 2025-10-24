@@ -1,6 +1,6 @@
 import numpy as np
 
-from lir.lrsystems.lrsystems import LRSystem, Pipeline
+from lir.lrsystems.lrsystems import LRSystem, Pipeline, LLRData
 from lir.transform.pairing import PairingMethod
 
 
@@ -35,12 +35,10 @@ class ScoreBasedSystem(LRSystem):
 
         return self
 
-    def apply(
-        self, features: np.ndarray, labels: np.ndarray | None, meta: np.ndarray
-    ) -> tuple[np.ndarray, np.ndarray | None, np.ndarray]:
+    def apply(self, features: np.ndarray, labels: np.ndarray | None, meta: np.ndarray) -> LLRData:
         """
-        Applies the score-based LR system on a set of instances, optionally with corresponding labels, and returns a set
-        of LLRs and their labels.
+        Applies the score-based LR system on a set of instances, optionally with corresponding labels, and returns a
+        representation of the calculated LLR data through the `LLRData` tuple.
 
         The system takes instances as input, and calculates LLRs for pairs of instances. That means that there is a 2-1
         relation between input and output data.
@@ -55,4 +53,8 @@ class ScoreBasedSystem(LRSystem):
 
         pair_llrs = self.evaluation_pipeline.transform(pair_features)
 
-        return pair_llrs, pair_labels, pair_meta
+        return LLRData(
+            llrs=pair_llrs,
+            labels=pair_labels,
+            meta_data=pair_meta,
+        )

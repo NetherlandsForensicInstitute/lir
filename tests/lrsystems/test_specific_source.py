@@ -10,7 +10,7 @@ from lir.data.datasets.synthesized_normal_binary import (
     SynthesizedNormalDataClass,
     SynthesizedNormalBinaryData,
 )
-from lir.lrsystems.lrsystems import Pipeline, LLRData, FeatureData
+from lir.lrsystems.lrsystems import Pipeline, LLRData
 from lir.lrsystems.specific_source import SpecificSourceSystem
 
 
@@ -35,11 +35,17 @@ def test_specific_source_pipeline(synthesized_normal_data: SynthesizedNormalBina
     pipeline = Pipeline(steps)
 
     specific_source_system = SpecificSourceSystem("test_system", pipeline)
-    data_train, data_test = next(iter(data))
-    specific_source_system.fit(data_train)
-    llr_data: LLRData = specific_source_system.apply(data_test)
+    (
+        (features_train, labels_train, meta_train),
+        (features_test, labels_test, meta_test),
+    ) = next(iter(data))
+    specific_source_system.fit(features_train, labels_train, meta_train)
 
-    scores = llr_data.features
+    llr_data: LLRData = specific_source_system.apply(
+        features_test, labels_test, meta_test
+    )
+
+    scores = llr_data.llrs
     labels = llr_data.labels
 
     golden_master_path = "tests/golden_master/test_specific_source_pipeline"
@@ -48,5 +54,5 @@ def test_specific_source_pipeline(synthesized_normal_data: SynthesizedNormalBina
         pytest.skip(f"Written {golden_master_path}, skipped test for this run.")
     else:
         expected = np.load(f"{golden_master_path}.npz")
-        assert np.all(scores == expected["scores"])
-        assert np.all(labels == expected["labels"])
+        assert np.array_equal(scores, expected["scores"])
+        assert np.array_equal(labels, expected["labels"])

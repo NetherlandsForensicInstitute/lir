@@ -14,7 +14,6 @@ from lir.util import odds_to_probability, odds_to_logodds
 
 class TestPlotting(unittest.TestCase):
     def test_contexts(self):
-        #warnings.simplefilter("error")
         lrs = np.array([.5, .5, .5, 1, 1, 2, 2, 2])
         llrs = odds_to_logodds(lrs)
         y = np.array([0, 0, 1, 0, 1, 0, 1, 1])

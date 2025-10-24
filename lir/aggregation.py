@@ -1,13 +1,9 @@
 import csv
 from abc import abstractmethod, ABC
 from pathlib import Path
-from typing import Any, IO
-from collections import OrderedDict
-from collections.abc import Mapping, Callable
+from typing import Mapping, Callable, Any, OrderedDict, IO
 
 import numpy as np
-
-from lir import compat
 
 
 class Aggregation(ABC):
@@ -40,7 +36,7 @@ class WriteMetricsToCsv(Aggregation):
         self.metrics = metrics
 
     def report(self, llrs: np.ndarray, labels: np.ndarray | None, parameters: dict[str, Any]) -> None:
-        metrics = [(key, metric(compat.llr_to_lr(llrs), labels)) for key, metric in self.metrics.items()]
+        metrics = [(key, metric(llrs, labels)) for key, metric in self.metrics.items()]
         results = OrderedDict(list(parameters.items()) + metrics)
 
         # Record column header names only once to the CSV

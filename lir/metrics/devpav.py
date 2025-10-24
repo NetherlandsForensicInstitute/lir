@@ -130,12 +130,12 @@ def _devpavcalculator(lrs, pav_lrs, y):
             return surface / deltaX
 
 
-def devpav(lrs: np.ndarray, y: np.ndarray) -> float:
+def devpav(llrs: np.ndarray, y: np.ndarray) -> float:
     """
     calculates devPAV for LR data under H1 and H2.
     """
-    if sum(y) == len(y) or sum(y) == 0:
+    if all(y) or not any(y):
         raise ValueError("devpav: illegal input: at least one value is required for each class")
     cal = IsotonicCalibrator()
-    pavllrs = cal.fit_transform(lrs, y)
-    return _devpavcalculator(lrs, logodds_to_odds(pavllrs), y)
+    pavllrs = cal.fit_transform(llrs, y)
+    return _devpavcalculator(logodds_to_odds(llrs), logodds_to_odds(pavllrs), y)

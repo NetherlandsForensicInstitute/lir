@@ -1,30 +1,20 @@
-lir
-===========
+LIR Python Likelihood Ratio Toolkit
+===================================
 
-Repository for optimising and evaluating Likelihood Ratio (LR) systems. This allows benchmarking of LR systems on 
-different datasets, investigating impact of different sampling schemes or techniques, and doing case-based validation
+Toolkit for developing, optimising and evaluating Likelihood Ratio (LR) systems. This allows benchmarking of LR systems
+on different datasets, investigating impact of different sampling schemes or techniques, and doing case-based validation
 and computation of case LRs.
 
-Prerequisites
------------
-- This repository is developed for Python 3.10.
-- This project uses [pdm](https://pdm-project.org/en/latest/) as a dependency manager.
+LIR was first released in 2020 and redesigned from scratch in 2025, replacing the [previous repository](https://github.com/NetherlandsForensicInstitute/lir-deprecated).
 
-### Installing PDM
-For installation instructions, please consult the [Installation](https://pdm-project.org/en/latest/#installation)
-section on the PDM project website.
+Installation
+------------
 
-### Installing project dependencies
-Having PDM installed, install all dependencies of the project, run the following command to install the project
-dependencies.
+LIR is compatible with Python 3.10 and later. The easiest way to install LIR is to use `pip`:
 
 ```shell
-pdm install
+pip install lir
 ```
-
-A `.venv` directory will be created and used by PDM by default to run the python code as defined in the PDM run scripts.
-
-*(Optional) Note: You can alternatively select a different python interpreter for PDM using `pdm use`.*
 
 Terminology
 -----------
@@ -69,7 +59,7 @@ Command-line interface
 
 Evaluate an LR system using the command-line interface as follows:
 1. define your data, LR system and experiments in a YAML file;
-2. run `pdm run benchmark --setup <yaml file>`.
+2. run `lir --setup <yaml file>`.
 
 The `examples` folder may be a good starting point for setting up an experiment.
 
@@ -95,6 +85,32 @@ normal distributions.
 
 Development
 -----------
+
+### Source code
+
+Clone the repository as follows:
+
+```shell
+git clone https://github.com/NetherlandsForensicInstitute/lir.git
+```
+
+This project uses [pdm](https://pdm-project.org/en/latest/) as a dependency manager. For installation of PDM, please consult the
+[PDM project website](https://pdm-project.org/en/latest/#installation).
+
+Having PDM installed, install all dependencies of the project, run the following command to install the project
+dependencies.
+
+```shell
+pdm install
+```
+
+A `.venv` directory will be created and used by PDM by default to run the python code as defined in the PDM run scripts.
+
+This will give you the command to launch LIR with all settings in place:
+
+```shell
+pdm lir --help
+```
 
 ### Setting up git pre-commit hook
 To run all checks before committing, you can add a git pre-commit hook which ensures all checks and balances are green

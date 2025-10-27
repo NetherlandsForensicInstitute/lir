@@ -31,9 +31,8 @@ def _calculate_cllr(
     system = TwoLevelSystem(
         "test_system", None, pairing, None, n_trace_instances=50, n_ref_instances=50
     )
-    system.fit(*training_data)
-
-    llr_data: LLRData = system.apply(*test_data)
+    system.fit(training_data)
+    llr_data: LLRData = system.apply(test_data)
     pair_llrs = llr_data.llrs
     pair_labels = llr_data.labels
 

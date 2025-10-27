@@ -1,5 +1,4 @@
-from typing import Any
-from lir.lrsystems.lrsystems import LRSystem, Pipeline, LLRData
+from lir.lrsystems.lrsystems import LRSystem, Pipeline, LLRData, FeatureData
 
 import numpy as np
 import pandas as pd
@@ -437,34 +436,30 @@ class TwoLevelSystem(LRSystem):
         self.n_trace_instances = n_trace_instances
         self.n_ref_instances = n_ref_instances
 
-    def fit(self, features: Any, labels: Any, meta: Any) -> "LRSystem":
-        features = self.preprocessing_pipeline.fit_transform(features, labels)
-        self.model.fit_on_unpaired_instances(features, labels)
+    def fit(self, instances: FeatureData) -> "LRSystem":
+        instances = self.preprocessing_pipeline.fit_transform(instances)
+        self.model.fit_on_unpaired_instances(instances.features, instances.labels)
 
-        pair_features, pair_labels, pair_meta = self.pairing_function.pair(features, labels, meta)
-
-        pair_llrs = self.model.transform(*_split_pairs(pair_features, 1))
-        self.postprocessing_pipeline.fit(pair_llrs, pair_labels)
+        pairs = self.pairing_function.pair(instances)
+        pair_llrs = pairs.replace(features=self.model.transform(*_split_pairs(pairs.features, 1)))
+        self.postprocessing_pipeline.fit(pair_llrs)
 
         return self
 
-    def apply(self, features: Any, labels: Any, meta: Any) -> LLRData:
+    def apply(self, instances: FeatureData) -> LLRData:
         """
         Applies the two level LR system on a set of instances., optionally with corresponding labels,
         and returns a representation of the calculated LLR data through the `LLRData` tuple.
         """
-        if labels is None:
+        if instances.has_labels is None:
             raise ValueError("pairing requires labels")
 
-        features = self.preprocessing_pipeline.transform(features)
+        instances = self.preprocessing_pipeline.transform(instances)
 
-        pair_features, pair_labels, pair_meta = self.pairing_function.pair(features, labels, meta)
-
-        pair_llrs = self.model.transform(*_split_pairs(pair_features, 1))
+        pairs = self.pairing_function.pair(instances)
+        pair_llrs = LLRData(
+            **pairs.replace(features=self.model.transform(*_split_pairs(pairs.features, 1))).model_dump()
+        )
         pair_llrs = self.postprocessing_pipeline.transform(pair_llrs)
 
-        return LLRData(
-            llrs=pair_llrs,
-            labels=pair_labels,
-            meta_data=pair_meta,
-        )
+        return pair_llrs

@@ -18,23 +18,25 @@ def test_instance_pairing_seed():
         dimensions, population_size=100, sources_size=2, seed=0
     )
 
-    pairing0 = InstancePairing()
-    pairing1 = InstancePairing()
+    pairing0 = InstancePairing(seed=1)
+    pairing1 = InstancePairing(seed=1)
+    instances = data.get_instances()
+    instances_tuple = instances.features, instances.labels, np.ones((instances.labels.shape[0], 0))
     for values in zip(
-        pairing0.pair(*data.get_instances()), pairing1.pair(*data.get_instances())
+        pairing0._pair_arrays(*instances_tuple), pairing1._pair_arrays(*instances_tuple)
     ):
-        np.all(values[0] == values[1])
+        assert np.all(values[0] == values[1])
 
-    pairing0 = InstancePairing(ratio_limit=1)
-    pairing1 = InstancePairing(ratio_limit=1)
+    pairing0 = InstancePairing(seed=1, ratio_limit=1)
+    pairing1 = InstancePairing(seed=1, ratio_limit=1)
     for values in zip(
-        pairing0.pair(*data.get_instances()), pairing0.pair(*data.get_instances())
+        pairing0._pair_arrays(*instances_tuple), pairing0._pair_arrays(*instances_tuple)
     ):
-        np.all(values[0] == values[1])
+        assert np.all(values[0] == values[1])
     for values in zip(
-        pairing0.pair(*data.get_instances()), pairing1.pair(*data.get_instances())
+        pairing0._pair_arrays(*instances_tuple), pairing1._pair_arrays(*instances_tuple)
     ):
-        np.all(values[0] == values[1])
+        assert np.all(values[0] == values[1])
 
 
 @pytest.mark.parametrize(
@@ -190,7 +192,7 @@ def test_source_level_pairing(
     n_trace_instances: int,
     n_ref_instances: int,
 ):
-    pair_features, pair_labels, pair_meta = SourcePairing().pair(
+    pair_features, pair_labels, pair_meta = SourcePairing()._pair_arrays(
         features, labels, features, n_trace_instances, n_ref_instances
     )
     assert len(pair_labels) == n_pairs_expected

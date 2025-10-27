@@ -152,6 +152,8 @@ def concatenate_instances(first: InstanceDataType, *others: InstanceDataType) ->
             values.append(getattr(instances, field))
         if isinstance(values[0], np.ndarray):
             data[field] = np.concatenate(values)
+        elif None in values:
+            data[field] = None
         else:
             data[field] = values
     return first.replace(**data)

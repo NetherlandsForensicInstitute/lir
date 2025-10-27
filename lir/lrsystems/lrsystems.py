@@ -1,83 +1,25 @@
 from abc import ABC, abstractmethod
-from typing import Any, Mapping, Annotated, Self
-
-import numpy as np
-from pydantic import ConfigDict, AfterValidator, model_validator, BaseModel
+from typing import Any, Mapping
 
 from lir import transform
-from lir.transform import AdvancedTransformer, Identity
-
-
-def _validate_labels(labels: np.ndarray | None) -> np.ndarray | None:
-    if labels is not None:
-        if not isinstance(labels, np.ndarray):
-            raise ValueError(f"labels must be None or np.ndarray; found: {type(labels)}")
-        if len(labels.shape) != 1:
-            raise ValueError(f"labels must be 1-dimensional; shape: {labels.shape}")
-        unique_labels = np.unique(labels)
-        if np.any((unique_labels != 0) & (unique_labels != 1)):
-            raise ValueError(f"label values must be 0 or 1; found: {unique_labels}")
-
-    return labels
-
-
-class InstanceData(BaseModel):
-    """
-    Base class for data on instances.
-    """
-    model_config = ConfigDict(frozen=True, extra='allow', arbitrary_types_allowed=True)
-
-    labels: Annotated[np.ndarray | None, AfterValidator(_validate_labels)] = None
-
-
-class FeatureData(InstanceData):
-    features: np.ndarray
-
-    @model_validator(mode='after')
-    def validate(self) -> Self:
-        if self.labels is not None and self.labels.shape[0] != self.features.shape[0]:
-            raise ValueError(f"dimensions of labels and features do not match; {self.labels.shape[0]} != {self.features.shape[0]}")
-        return self
-
-
-class LLRData(FeatureData):
-    """Representation of calculated LLR values.
-
-    The tuple contains same size numpy arrays of LLR values, corresponding
-    meta-data and optionally the corresponding interval values and labels.
-    """
-    @property
-    def llrs(self) -> np.ndarray:
-        if len(self.features.shape) == 1:
-            return self.features
-        else:
-            return self.features[:, 0]
-
-    @property
-    def llr_intervals(self):
-        if len(self.features.shape) == 2 and self.features.shape[1] == 3:
-            return self.features[:, 1:]
-        else:
-            return None
-
-    def validate(self) -> Self:
-        super().validate()
-
-        if len(self.features.shape) > 2:
-            raise ValueError(f"features must have 1 or 2 dimensions; shape: {self.features.shape}")
-        if len(self.features.shape) == 2 and self.features.shape[1] != 3 and self.features.shape[1] != 1:
-            raise ValueError(f"features must be 1-dimensional or 2-dimensional with 1 or 3 columns; shape: {self.features.shape}")
-
-        return self
+from lir.data.models import FeatureData, FeatureDataType, LLRData
+from lir.transform import AdvancedTransformer
 
 
 class Pipeline:
-    def __init__(self, steps: list[tuple[str, Any]], **kwargs: dict):
-        # an sklearn pipeline cannot be empty --> create an empty pipeline by adding the identity transformer
-        if len(steps) == 0:
-            steps = [("id", Identity())]
+    """
+    A pipeline of processing modules.
 
-        super().__init__(steps, **kwargs)
+    A module may be a scikit-learn style transformer, estimator, or a LIR `Transformer`
+    """
+
+    def __init__(self, steps: list[tuple[str, Any]]):
+        """
+        Constructor.
+
+        :param steps: the steps of the pipeline as a list of (name, module) tuples.
+        """
+        self.steps = steps
 
     def _set_values(self, values: Mapping[str, Any]) -> None:
         for _, module in self.steps:
@@ -89,26 +31,37 @@ class Pipeline:
         self._set_values(
             {
                 transform.TRANSFORMER_PHASE_KEY: "train",
-                transform.TRANSFORMER_LABELS_KEY: labels,
-                transform.TRANSFORMER_META_KEY: meta,
+                transform.TRANSFORMER_LABELS_KEY: instances.labels,
             },
         )
-        super().fit(features, labels, **fit_params)
+
+        features = instances.features
+        for name, module in self.steps[:-1]:
+            features = module.fit_transform(features, instances.labels)
+
+        if len(self.steps) > 0:
+            _, last_module = self.steps[-1]
+            last_module.fit(features)
+
         return self
 
-    def transform(self, instances: FeatureData) -> FeatureData:
+    def transform(self, instances: FeatureDataType) -> FeatureDataType:
         self._set_values(
             {
                 transform.TRANSFORMER_PHASE_KEY: "test",
-                transform.TRANSFORMER_LABELS_KEY: labels,
-                transform.TRANSFORMER_META_KEY: meta,
+                transform.TRANSFORMER_LABELS_KEY: instances.labels,
             },
         )
-        return super().transform(instances)
+        features = instances.features
+        for name, module in self.steps:
+            features = module.transform(features)
+        return instances.replace(features=features)
 
-    def fit_transform(self, instances: FeatureData) -> FeatureData:
-        self.fit(instances)
-        return self.transform(instances)
+    def fit_transform(self, instances: FeatureDataType) -> FeatureDataType:
+        features = instances.features
+        for name, module in self.steps:
+            features = module.fit_transform(features, instances.labels)
+        return instances.replace(features=features)
 
 
 class LRSystem(ABC):

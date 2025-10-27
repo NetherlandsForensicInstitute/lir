@@ -1,6 +1,4 @@
-import numpy as np
-
-from lir.lrsystems.lrsystems import LRSystem, Pipeline, LLRData
+from lir.lrsystems.lrsystems import LRSystem, Pipeline, LLRData, FeatureData
 from lir.transform.pairing import PairingMethod
 
 
@@ -25,17 +23,13 @@ class ScoreBasedSystem(LRSystem):
         self.pairing_function = pairing_function
         self.evaluation_pipeline = evaluation_pipeline or Pipeline([])
 
-    def fit(self, features: np.ndarray, labels: np.ndarray, meta: np.ndarray) -> "LRSystem":
-        features = self.preprocessing_pipeline.fit_transform(features, labels)
-
-        pair_features, pair_labels, pair_meta = self.pairing_function.pair(features, labels, meta, 1, 1)
-        pair_features = pair_features.transpose(0, 2, 1)
-
-        self.evaluation_pipeline.fit(pair_features, pair_labels)
-
+    def fit(self, instances: FeatureData) -> "LRSystem":
+        instances = self.preprocessing_pipeline.fit_transform(instances)
+        pairs = self.pairing_function.pair(instances, 1, 1)
+        self.evaluation_pipeline.fit(pairs)
         return self
 
-    def apply(self, features: np.ndarray, labels: np.ndarray | None, meta: np.ndarray) -> LLRData:
+    def apply(self, instances: FeatureData) -> LLRData:
         """
         Applies the score-based LR system on a set of instances, optionally with corresponding labels, and returns a
         representation of the calculated LLR data through the `LLRData` tuple.
@@ -43,18 +37,11 @@ class ScoreBasedSystem(LRSystem):
         The system takes instances as input, and calculates LLRs for pairs of instances. That means that there is a 2-1
         relation between input and output data.
         """
-        if labels is None:
+        if instances.has_labels:
             raise ValueError("pairing requires labels")
 
-        features = self.preprocessing_pipeline.transform(features)
+        instances = self.preprocessing_pipeline.transform(instances)
+        pairs = self.pairing_function.pair(instances, 1, 1)
+        pair_llrs = self.evaluation_pipeline.transform(pairs)
 
-        pair_features, pair_labels, pair_meta = self.pairing_function.pair(features, labels, meta, 1, 1)
-        pair_features = pair_features.transpose(0, 2, 1)
-
-        pair_llrs = self.evaluation_pipeline.transform(pair_features)
-
-        return LLRData(
-            llrs=pair_llrs,
-            labels=pair_labels,
-            meta_data=pair_meta,
-        )
+        return LLRData(**pair_llrs.model_dump())

@@ -1,36 +1,38 @@
+from typing import Any, Self
+
 import numpy as np
 import pytest
 from pydantic import ValidationError
 
-from lir.lrsystems.lrsystems import InstanceData, FeatureData, LLRData
+from lir.data.models import InstanceData, FeatureData, LLRData
+
+
+class _BareInstanceData(InstanceData):
+    def replace(self, **kwargs: Any) -> Self:
+        return self
 
 
 def test_instance_data():
-    InstanceData(labels=None)
-    InstanceData(labels=np.zeros((10,)))
-    InstanceData(labels=np.zeros((10,)), meta=np.zeros((10,)))  # type: ignore
-    InstanceData(labels=np.ones((10,)))
-    InstanceData(labels=np.concatenate([np.zeros((10,)), np.ones((10,))]))
+    _BareInstanceData(labels=None)
+    _BareInstanceData(labels=np.zeros((10,)))
+    _BareInstanceData(labels=np.zeros((10,)), meta=np.zeros((10,)))  # type: ignore
+    _BareInstanceData(labels=np.ones((10,)))
+    _BareInstanceData(labels=np.concatenate([np.zeros((10,)), np.ones((10,))]))
+
+    assert {"labels"} == set(_BareInstanceData(labels=None).all_fields)
+    assert {"labels", "meta"} == set(_BareInstanceData(labels=None, meta=1).all_fields)
 
     # illegal labels type
     with pytest.raises(ValidationError):
-        InstanceData(labels=1)  # type: ignore
+        _BareInstanceData(labels=1)  # type: ignore
 
     # illegal label dimensions
     with pytest.raises(ValidationError):
-        InstanceData(labels=np.ones((10, 1)))
-
-    # illegal label values
-    with pytest.raises(ValidationError):
-        InstanceData(labels=np.ones((10,)) * 2)
-
-    # illegal label values
-    with pytest.raises(ValidationError):
-        InstanceData(labels=np.array([0, 1, np.nan]))
+        _BareInstanceData(labels=np.ones((10, 1)))
 
     # illegal operation
     with pytest.raises(ValidationError):
-        instances = InstanceData(labels=np.array([0, 1]))
+        instances = _BareInstanceData(labels=np.array([0, 1]))
         instances.labels = np.array([1, 1])
 
 

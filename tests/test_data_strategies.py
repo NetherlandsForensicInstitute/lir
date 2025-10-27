@@ -13,14 +13,12 @@ def test_multiclass_train_test_split():
         population_size=100, sources_size=3, seed=0, dimensions=dimensions
     )
     strategy = MulticlassTrainTestSplit(data, test_size=0.5, seed=0)
-    features, labels, meta = data.get_instances()
+    instances = data.get_instances()
     for data_train, data_test in strategy:
-        labels_train = data_train[1]
-        labels_test = data_test[1]
-        assert len(np.unique(labels_train)) + len(np.unique(labels_test)) == len(
-            np.unique(labels)
+        assert len(np.unique(data_train.labels)) + len(np.unique(data_test.labels)) == len(
+            np.unique(instances.labels)
         )
-        assert len(labels_train) + len(labels_test) == len(labels)
+        assert len(data_train.labels) + len(data_test.labels) == len(instances.labels)
 
 
 def test_multiclass_train_test_split_seed():
@@ -38,12 +36,12 @@ def test_multiclass_train_test_split_seed():
     strategies = [MulticlassTrainTestSplit(data, test_size=0.5, seed=0)] * 2
     for strategy in strategies:
         for data_train, data_test in strategy:
-            assert np.all(data_train[0] == ref_train[0])
-            assert np.all(data_test[0] == ref_test[0])
+            assert data_train == ref_train
+            assert data_test == ref_test
 
     # test:
     # - another MulticlassTrainTestSplit instance with another seed should yield different results
     strategy = MulticlassTrainTestSplit(data, test_size=0.5, seed=1)
     for data_train, data_test in strategy:
-        assert not np.all(data_train[0] == ref_train[0])
-        assert not np.all(data_test[0] == ref_test[0])
+        assert not data_train == ref_train
+        assert not data_test == ref_test

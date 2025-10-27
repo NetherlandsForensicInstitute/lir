@@ -2,7 +2,8 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 import numpy as np
-import sklearn.base
+
+from lir.lrsystems.lrsystems import FeatureData
 
 
 class PairingMethod(ABC):
@@ -14,6 +15,52 @@ class PairingMethod(ABC):
 
     @abstractmethod
     def pair(
+        self,
+        instances: FeatureData,
+        n_trace_instances: int = 1,
+        n_ref_instances: int = 1,
+    ) -> FeatureData:
+        """
+        Takes instances as input, and returns pairs.
+
+        A pair may be a pair of sources, with multiple instances per source.
+
+        The returned features have dimensions `(p, i, ...)`` where the first dimension is the pairs, the second
+        dimension is the instances, and subsequent dimensions are the features.
+        If the input has labels, the returned labels are an array of source labels, one label per pair, where the labels
+        are 0=different source, 1=same source.
+        Any other attributes are combined into tuples.
+
+        :param instances: An array of instance features, with one row per instance.
+        :param n_trace_instances: Number of instances per trace.
+        :param n_ref_instances: Number of instances per reference source.
+        :return: instance pairs
+        """
+        raise NotImplementedError
+
+
+class LegacyPairingMethod(ABC):
+    """
+    Base class for pairing methods.
+
+    A pairing method should implement the `pair()` function.
+    """
+
+    def pair(
+        self,
+        instances: FeatureData,
+        n_trace_instances: int = 1,
+        n_ref_instances: int = 1,
+    ) -> FeatureData:
+        meta = instances.meta if hasattr(instances, "meta") else np.zeros((instances.features.shape[0], 0))
+        pair_features, pair_labels, pair_meta = self._pair_arrays(
+            instances.features, instances.labels, meta, n_trace_instances, n_ref_instances
+        )
+        pairs = FeatureData(features=pair_features, labels=pair_labels, meta=pair_meta)  # type: ignore
+        return pairs
+
+    @abstractmethod
+    def _pair_arrays(
         self,
         features: np.ndarray,
         labels: np.ndarray,
@@ -52,7 +99,7 @@ class PairingMethod(ABC):
         raise NotImplementedError
 
 
-class SourcePairing(PairingMethod):
+class SourcePairing(LegacyPairingMethod):
     """
     Returns paired sources (i.e. classes) from an array of instance features, labels and meta data.
 
@@ -146,7 +193,7 @@ class SourcePairing(PairingMethod):
             np.stack(result_meta, axis=0),
         )
 
-    def pair(
+    def _pair_arrays(
         self,
         features: np.ndarray,
         labels: np.ndarray,
@@ -222,7 +269,7 @@ class SourcePairing(PairingMethod):
         return pair_features, pair_labels, pair_meta
 
 
-class InstancePairing(sklearn.base.TransformerMixin):
+class InstancePairing(LegacyPairingMethod):
     def __init__(
         self,
         same_source_limit=None,
@@ -259,12 +306,17 @@ class InstancePairing(sklearn.base.TransformerMixin):
         self._ss_limit = same_source_limit
         self._ds_limit = different_source_limit
         self._ratio_limit = ratio_limit
-        self.rng = np.random.default_rng(seed=seed)
+        self._seed = seed
+        self.__rng = None
 
-    def fit(self, X):
-        return self
+    @property
+    def rng(self):
+        if not self.__rng:
+            self.__rng = np.random.default_rng(seed=self._seed)
+        return self.__rng
 
     def _transform(self, X, y) -> tuple[np.ndarray[Any, Any], Any]:
+        self.__rng = None
         pairing = np.array(np.meshgrid(np.arange(X.shape[0]), np.arange(X.shape[0]))).T.reshape(
             -1, 2
         )  # generate all possible pairs
@@ -303,7 +355,7 @@ class InstancePairing(sklearn.base.TransformerMixin):
 
         return X, y
 
-    def pair(
+    def _pair_arrays(
         self,
         features: np.ndarray,
         labels: np.ndarray,

@@ -9,30 +9,10 @@ from tqdm import tqdm
 
 import lir
 from lir.aggregation import Aggregation
-from lir.data.models import DataStrategy
-from lir.lrsystems.lrsystems import LRSystem, LLRData
+from lir.data.models import DataStrategy, concatenate_instances
+from lir.lrsystems.lrsystems import LRSystem, LLRData, FeatureData
 
 LOG = logging.getLogger(__name__)
-
-
-def combine_results(llr_sets: list[LLRData]) -> LLRData:
-    """Combine the results of the LLRData tuples into a single tuple."""
-
-    llrs = [llr_data_tuple.llrs for llr_data_tuple in llr_sets]
-    intervals = [llr_data_tuple.intervals for llr_data_tuple in llr_sets]
-    labels = [llr_data_tuple.labels for llr_data_tuple in llr_sets]
-    meta_data = [llr_data_tuple.meta_data for llr_data_tuple in llr_sets]
-
-    return LLRData(
-        llrs=np.concatenate(llrs),
-        intervals=(
-            np.concatenate(typing.cast(list[int], intervals))
-            if all(interval is not None for interval in intervals)
-            else None
-        ),
-        labels=np.concatenate(typing.cast(list[int], labels)) if all(label is not None for label in labels) else None,
-        meta_data=np.concatenate(meta_data),
-    )
 
 
 class Experiment(ABC):
@@ -52,7 +32,7 @@ class Experiment(ABC):
         self.visualization_functions = visualization_functions
         self.output_path = output_path
 
-    def _run_lrsystem(self, lrsystem: LRSystem) -> tuple[np.ndarray, np.ndarray | None]:
+    def _run_lrsystem(self, lrsystem: LRSystem) -> LLRData:
         """Run experiment on a single LR system configuration using the provided data(setup).
 
         First, the data is split into a training and testing subset, according to the provided
@@ -74,14 +54,16 @@ class Experiment(ABC):
             labels_test,
             meta_test,
         ) in self.data:
-            lrsystem.fit(features_train, labels_train, meta_train)
-            subset_llr_results: LLRData = lrsystem.apply(features_test, labels_test, meta_test)
+            lrsystem.fit(FeatureData(features=features_train, labels=labels_train, meta=meta_train))  # type: ignore
+            subset_llr_results: LLRData = lrsystem.apply(
+                FeatureData(features=features_test, labels=labels_test, meta=meta_test)  # type: ignore
+            )
 
             # Store results (numpy arrays) into the placeholder lists
             llr_sets.append(subset_llr_results)
 
         # Combine collected numpy array's after iteration over the train/test split(s)
-        combined_llrs: LLRData = combine_results(llr_sets)
+        combined_llrs: LLRData = concatenate_instances(*llr_sets)
         llrs = combined_llrs.llrs
         labels = combined_llrs.labels
 
@@ -96,7 +78,7 @@ class Experiment(ABC):
         for aggregation in self.aggregations:
             aggregation.report(llrs, labels, lrsystem.parameters)
 
-        return llrs, labels
+        return combined_llrs
 
     @abstractmethod
     def _generate_and_run(self) -> None:

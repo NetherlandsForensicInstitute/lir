@@ -7,14 +7,15 @@ from sklearn.pipeline import Pipeline
 from lir.algorithms import invariance_bounds
 from lir.algorithms.invariance_bounds import IVBounder
 from lir.data.datasets.alcohol_breath_analyser import AlcoholBreathAnalyser
+from lir.data.models import LLRData
 from lir.transform import BinaryClassifierTransformer, FunctionTransformer
 from lir.util import Xn_to_Xy, probability_to_logodds, logodds_to_odds
 
 
 class TestBounding(unittest.TestCase):
     def test_breath(self):
-        llrs, y, meta = AlcoholBreathAnalyser(ill_calibrated=True).get_instances()
-        bounds = invariance_bounds.calculate_invariance_bounds(logodds_to_odds(llrs), y)
+        llrs = AlcoholBreathAnalyser(ill_calibrated=True).get_instances()
+        bounds = invariance_bounds.calculate_invariance_bounds(logodds_to_odds(llrs.llrs), llrs.labels)
         np.testing.assert_almost_equal((0.1052741, 85.3731634), bounds[:2])
 
     def test_extreme_smallset(self):

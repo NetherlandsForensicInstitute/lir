@@ -64,9 +64,10 @@ class InstanceData(BaseModel, ABC):
     def has_labels(self) -> bool:
         return self.labels is not None
 
-    @abstractmethod
     def replace(self, **kwargs: Any) -> Self:
-        raise NotImplementedError
+        args = self.model_dump()
+        args.update(kwargs)
+        return type(self)(**args)  # type: ignore
 
 
 class FeatureData(InstanceData):
@@ -89,11 +90,6 @@ class FeatureData(InstanceData):
                 f"dimensions of labels and features do not match; {self.labels.shape[0]} != {self.features.shape[0]}"
             )
         return self
-
-    def replace(self, **kwargs: Any) -> Self:
-        args = self.model_dump()
-        args.update(kwargs)
-        return FeatureData(**args)  # type: ignore
 
 
 class LLRData(FeatureData):
@@ -127,11 +123,6 @@ class LLRData(FeatureData):
             return self.features[:, 1:]
         else:
             return None
-
-    def replace(self, **kwargs: Any) -> Self:
-        args = self.model_dump()
-        args.update(kwargs)
-        return LLRData(**args)  # type: ignore
 
     @model_validator(mode="after")
     def check_features_are_llrs(self) -> Self:

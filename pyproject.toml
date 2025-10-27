@@ -26,6 +26,7 @@ dependencies = [
     "scipy>=1.13.1",
     "pandas>=2.3.2",
     "KDEpy>=1.1.12",
+    "pydantic>=2.12.3",
 ]
 
 [project.urls]

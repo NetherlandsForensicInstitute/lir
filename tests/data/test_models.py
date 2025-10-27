@@ -8,8 +8,7 @@ from lir.data.models import InstanceData, FeatureData, LLRData
 
 
 class _BareInstanceData(InstanceData):
-    def replace(self, **kwargs: Any) -> Self:
-        return self
+    pass
 
 
 def test_instance_data():
@@ -19,8 +18,13 @@ def test_instance_data():
     _BareInstanceData(labels=np.ones((10,)))
     _BareInstanceData(labels=np.concatenate([np.zeros((10,)), np.ones((10,))]))
 
+    # test all_fields property
     assert {"labels"} == set(_BareInstanceData(labels=None).all_fields)
     assert {"labels", "meta"} == set(_BareInstanceData(labels=None, meta=1).all_fields)
+
+    # test slicing
+    assert np.all(_BareInstanceData(labels=np.arange(10))[:5].labels == np.arange(5))
+    assert _BareInstanceData(labels=np.arange(10))[8:9].labels == np.array([8])
 
     # illegal labels type
     with pytest.raises(ValidationError):

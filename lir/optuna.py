@@ -3,7 +3,6 @@ from pathlib import Path
 
 import optuna
 
-from lir import compat
 from lir.aggregation import Aggregation
 from lir.config.lrsystem_architectures import parse_augmented_lrsystem
 from lir.config.substitution import (
@@ -80,7 +79,7 @@ class OptunaExperiment(Experiment):
         )
 
         llrs, labels = self._run_lrsystem(lrsystem)
-        return self.metric_function(compat.llr_to_lr(llrs), labels)
+        return self.metric_function(llrs, labels)
 
     def _generate_and_run(self) -> None:
         study = optuna.create_study()  # Create a new study.

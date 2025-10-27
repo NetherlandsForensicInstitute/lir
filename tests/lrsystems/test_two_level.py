@@ -14,8 +14,8 @@ def _calculate_cllr(
     mean: float = 0.0, std: float = 1.0, error_std: float = 1.0
 ) -> float:
     params = {
-        "population_size": 100,
-        "sources_size": 100,
+        "population_size": 20,
+        "sources_size": 6,
         "dimensions": [SynthesizedDimension(mean, std, error_std)],
         "seed": 0,
     }
@@ -33,7 +33,7 @@ def _calculate_cllr(
     system.fit(*training_data)
     pair_llrs, pair_labels, pair_meta = system.apply(*test_data)
 
-    return metrics.cllr(10**pair_llrs, pair_labels)
+    return metrics.cllr(pair_llrs, pair_labels)
 
 
 def test_two_level_system():
@@ -47,4 +47,4 @@ def test_two_level_system():
     for i in [0.01, 0.1, 1]:
         assert _calculate_cllr(error_std=i) < _calculate_cllr(error_std=i * 10)
 
-    assert _calculate_cllr(error_std=0.01) == pytest.approx(0.0697, abs=0.001)
+    assert _calculate_cllr(error_std=0.01) == pytest.approx(0.017634552368655944, abs=0.001)

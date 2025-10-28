@@ -6,13 +6,11 @@ from pydantic import model_validator, AfterValidator, ConfigDict, BaseModel
 
 
 def _validate_labels(labels: np.ndarray | None) -> np.ndarray | None:
-    if labels is not None:
-        if not isinstance(labels, np.ndarray):
-            raise ValueError(f"labels must be None or np.ndarray; found: {type(labels)}")
-        if len(labels.shape) != 1:
-            raise ValueError(f"labels must be 1-dimensional; shape: {labels.shape}")
+    """Check if labels have the correct shape."""
+    if labels is None or len(labels.shape) == 1:
+        return labels
 
-    return labels
+    raise ValueError(f"labels must be 1-dimensional; shape: {labels.shape}")
 
 
 class InstanceData(BaseModel, ABC):
@@ -27,7 +25,23 @@ class InstanceData(BaseModel, ABC):
 
     labels: Annotated[np.ndarray | None, AfterValidator(_validate_labels)] = None
 
-    def __getitem__(self, indexes: np.ndarray) -> Self:
+    @abstractmethod
+    def __len__(self) -> int:
+        """
+        :return: the number of instances in this dataset
+        """
+        raise NotImplementedError
+
+    def __getitem__(self, indexes: np.ndarray | int) -> Self:
+        """
+        Get a copy of a subset of instances.
+
+        All `ndarray` fields are indexed using `indexes`.
+        All other fields are taken as-is.
+
+        :param indexes: the indexes to select
+        :return: a subset of this dataset
+        """
         data = {}
         for field in self.all_fields:
             values = getattr(self, field)
@@ -37,8 +51,38 @@ class InstanceData(BaseModel, ABC):
                 data[field] = values
         return self.replace(**data)
 
-    def __eq__(self, other: Any) -> bool:
+    def has_same_type(self, other: Any) -> bool:
+        """
+        Compare these instance data to another class.
+
+        Returns True iff:
+        - `other` has the same class
+        - `other` has the same fields
+        - all fields have the same type
+        """
         if type(self) is not type(other):
+            return False
+
+        if self.model_extra.keys() != other.model_extra.keys():
+            return False
+
+        for field in self.all_fields:
+            if type(getattr(self, field)) != type(getattr(other, field)):
+                return False
+
+        return True
+
+
+    def __eq__(self, other: Any) -> bool:
+        """
+        Compare these instance data to another class.
+
+        Returns True iff:
+        - the method `has_same_type()` returns `True`
+        - all numpy fields in `other` have the same shape and the same values
+        - all other fields are compared using the `!=` operator
+        """
+        if not self.has_same_type(other):
             return False
 
         for field in self.all_fields:
@@ -55,6 +99,9 @@ class InstanceData(BaseModel, ABC):
 
     @property
     def all_fields(self) -> list[str]:
+        """
+        :return: a list of all fields, including both mandatory and extra fields
+        """
         all_fields = list(type(self).model_fields.keys())
         if self.model_extra:
             all_fields += list(self.model_extra.keys())
@@ -62,9 +109,15 @@ class InstanceData(BaseModel, ABC):
 
     @property
     def has_labels(self) -> bool:
+        """
+        :return: True iff the instances are labeled
+        """
         return self.labels is not None
 
     def replace(self, **kwargs: Any) -> Self:
+        """
+        :return: a copy of these instances, while replacing specific fields
+        """
         args = self.model_dump()
         args.update(kwargs)
         return type(self)(**args)  # type: ignore
@@ -143,19 +196,31 @@ FeatureDataType = TypeVar("FeatureDataType", bound=FeatureData)
 def concatenate_instances(first: InstanceDataType, *others: InstanceDataType) -> InstanceDataType:
     """
     Combine the results of the InstanceData objects.
+
+    All concatenated objects must have the same types and fields, and the same values for all non-numpy array fields,
+    or an error is raised. Numpy fields are concatenated using `np.concatenate`. Other fields are copied as-is.
     """
 
     data = {}
     for field in first.all_fields:
-        values = [getattr(first, field)]
-        for instances in others:
-            values.append(getattr(instances, field))
-        if isinstance(values[0], np.ndarray):
+        first_value = getattr(first, field)
+        if isinstance(first_value, np.ndarray):
+            # we have a numpy array field -> concatenate
+            values = [first_value]
+
+            for instances in others:
+                if not first.has_same_type(instances):
+                    raise ValueError("instances to concatinate must have the same types and fields")
+                values.append(getattr(instances, field))
+
             data[field] = np.concatenate(values)
-        elif None in values:
-            data[field] = None
         else:
-            data[field] = values
+            # we have another field -> check if they have the same value
+            for instances in others:
+                other_value = getattr(instances, field)
+                if other_value != first_value:
+                    raise ValueError(f"unable to concatenate field `{field}`: value mismatch: {other_value} != {first_value}")
+
     return first.replace(**data)
 
 

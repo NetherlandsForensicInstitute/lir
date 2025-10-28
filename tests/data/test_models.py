@@ -4,39 +4,52 @@ import numpy as np
 import pytest
 from pydantic import ValidationError
 
-from lir.data.models import InstanceData, FeatureData, LLRData
+from lir.data.models import InstanceData, FeatureData, LLRData, concatenate_instances
 
 
-class _BareInstanceData(InstanceData):
-    pass
+class BareData(InstanceData):
+    def __len__(self) -> int:
+        if self.labels is None:
+            raise ValueError()
+        else:
+            return self.labels.shape[0]
 
 
 def test_instance_data():
-    _BareInstanceData(labels=None)
-    _BareInstanceData(labels=np.zeros((10,)))
-    _BareInstanceData(labels=np.zeros((10,)), meta=np.zeros((10,)))  # type: ignore
-    _BareInstanceData(labels=np.ones((10,)))
-    _BareInstanceData(labels=np.concatenate([np.zeros((10,)), np.ones((10,))]))
+    BareData(labels=None)
+    BareData(labels=np.zeros((10,)))
+    BareData(labels=np.zeros((10,)), meta=np.zeros((10,)))  # type: ignore
+    BareData(labels=np.ones((10,)))
+    BareData(labels=np.concatenate([np.zeros((10,)), np.ones((10,))]))
 
     # test all_fields property
-    assert {"labels"} == set(_BareInstanceData(labels=None).all_fields)
-    assert {"labels", "meta"} == set(_BareInstanceData(labels=None, meta=1).all_fields)
+    assert {"labels"} == set(BareData(labels=None).all_fields)
+    assert {"labels", "meta"} == set(BareData(labels=None, meta=1).all_fields)
+
+    # test __eq__ method
+    assert BareData(labels=np.ones((10,))) == BareData(labels=np.ones((10,)))
+    assert not (BareData(labels=np.zeros((10,))) == BareData(labels=np.ones((10,))))
+    assert BareData(labels=np.zeros((10,))) != BareData(labels=np.ones((10,)))
+    assert not (BareData(labels=np.zeros((10,))) == BareData(labels=np.ones((10,))))
+    assert BareData(labels=np.ones((10,)), meta=3) == BareData(labels=np.ones((10,)), meta=3)
+    assert BareData(labels=np.ones((10,)), meta=2) != BareData(labels=np.ones((10,)), meta=3)
+    assert BareData(labels=np.ones((10,)), meta=2) != BareData(labels=np.ones((10,)))
 
     # test slicing
-    assert np.all(_BareInstanceData(labels=np.arange(10))[:5].labels == np.arange(5))
-    assert _BareInstanceData(labels=np.arange(10))[8:9].labels == np.array([8])
+    assert np.all(BareData(labels=np.arange(10))[:5].labels == np.arange(5))
+    assert BareData(labels=np.arange(10))[8:9].labels == np.array([8])
 
     # illegal labels type
     with pytest.raises(ValidationError):
-        _BareInstanceData(labels=1)  # type: ignore
+        BareData(labels=1)  # type: ignore
 
     # illegal label dimensions
     with pytest.raises(ValidationError):
-        _BareInstanceData(labels=np.ones((10, 1)))
+        BareData(labels=np.ones((10, 1)))
 
     # illegal operation
     with pytest.raises(ValidationError):
-        instances = _BareInstanceData(labels=np.array([0, 1]))
+        instances = BareData(labels=np.array([0, 1]))
         instances.labels = np.array([1, 1])
 
 
@@ -50,6 +63,23 @@ def test_feature_data():
     with pytest.raises(ValidationError):
         instances = FeatureData(features=np.ones((10, 2)), labels=np.ones((10,)))
         instances.features = np.ones((10, 2))
+
+
+def test_concatenate():
+    data = FeatureData(features=np.ones((10, 2)))
+    assert concatenate_instances(data, data) == FeatureData(features=np.ones((20, 2)))
+
+    data = FeatureData(features=np.ones((10, 2)), extra1=3, extra2=None)
+    assert concatenate_instances(data, data) == FeatureData(features=np.ones((20, 2)), extra1=3, extra2=None)
+
+    data = FeatureData(features=np.ones((10, 2)), extra1=[1, 2])
+    assert concatenate_instances(data, data) == FeatureData(features=np.ones((20, 2)), extra1=[1, 2])
+
+    with pytest.raises(ValueError):
+        concatenate_instances(FeatureData(features=np.ones((10, 2)), extra1=3), FeatureData(features=np.ones((10, 2)), extra1=4))
+
+    with pytest.raises(ValueError):
+        concatenate_instances(FeatureData(features=np.ones((10, 2)), extra1=[1, 2]), FeatureData(features=np.ones((10, 2)), extra1=[2, 1]))
 
 
 def test_llr_data():

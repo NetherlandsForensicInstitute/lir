@@ -10,7 +10,7 @@ from tqdm import tqdm
 import lir
 from lir.aggregation import Aggregation
 from lir.data.models import DataStrategy, concatenate_instances
-from lir.lrsystems.lrsystems import LRSystem, LLRData, FeatureData
+from lir.lrsystems.lrsystems import LRSystem, LLRData
 
 LOG = logging.getLogger(__name__)
 
@@ -49,15 +49,9 @@ class Experiment(ABC):
 
         # Split the data into a train / test subset, according to the provided DataSetup. This could
         # for example be a simple binary split or a multiple fold cross validation split.
-        for (features_train, labels_train, meta_train), (
-            features_test,
-            labels_test,
-            meta_test,
-        ) in self.data:
-            lrsystem.fit(FeatureData(features=features_train, labels=labels_train, meta=meta_train))  # type: ignore
-            subset_llr_results: LLRData = lrsystem.apply(
-                FeatureData(features=features_test, labels=labels_test, meta=meta_test)  # type: ignore
-            )
+        for training_data, test_data in self.data:
+            lrsystem.fit(training_data)
+            subset_llr_results: LLRData = lrsystem.apply(test_data)
 
             # Store results (numpy arrays) into the placeholder lists
             llr_sets.append(subset_llr_results)

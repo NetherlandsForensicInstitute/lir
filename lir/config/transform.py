@@ -14,7 +14,7 @@ from lir.transform import (
     NumpyTransformer,
     Transformer,
     FunctionTransformer,
-    BinaryClassifierTransformer,
+    as_transformer,
 )
 
 
@@ -41,24 +41,14 @@ class GenericTransformerConfigParser(ConfigParser):
         if inspect.isclass(self.component_class):
             try:
                 instance = self.component_class(**config)
+
+                # make sure we have an object of type `Transformer`
+                return as_transformer(instance)
             except Exception as e:
                 raise YamlParseError(
                     config.context,
                     f"failed to instantiate module {self.component_class.__name__}: {e}",
                 )
-
-            if isinstance(instance, Transformer):
-                # The component already supports all necessary methods,
-                # through the `Transformer` interface.
-                return instance
-            if hasattr(instance, "transform"):
-                # The component implements a `transform()` method, which means it
-                # is a transformer and can be used in the scikit-learn pipeline.
-                return instance
-            if hasattr(instance, "predict_proba"):
-                # The component has a `predict_proba` method, which should be used as
-                # `transform()` step in the pipeline, which the wrapper class provides.
-                return BinaryClassifierTransformer(instance)
 
         elif callable(self.component_class):
             # When none of the above conditions apply, the component class might be a function

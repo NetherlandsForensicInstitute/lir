@@ -63,15 +63,14 @@ class InstanceData(BaseModel, ABC):
         if type(self) is not type(other):
             return False
 
-        if self.model_extra.keys() != other.model_extra.keys():
+        if self.model_extra.keys() != other.model_extra.keys():  # type: ignore
             return False
 
         for field in self.all_fields:
-            if type(getattr(self, field)) != type(getattr(other, field)):
+            if type(getattr(self, field)) is not type(getattr(other, field)):
                 return False
 
         return True
-
 
     def __eq__(self, other: Any) -> bool:
         """
@@ -219,7 +218,9 @@ def concatenate_instances(first: InstanceDataType, *others: InstanceDataType) ->
             for instances in others:
                 other_value = getattr(instances, field)
                 if other_value != first_value:
-                    raise ValueError(f"unable to concatenate field `{field}`: value mismatch: {other_value} != {first_value}")
+                    raise ValueError(
+                        f"unable to concatenate field `{field}`: value mismatch: {other_value} != {first_value}"
+                    )
 
     return first.replace(**data)
 

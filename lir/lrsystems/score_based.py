@@ -37,7 +37,7 @@ class ScoreBasedSystem(LRSystem):
         The system takes instances as input, and calculates LLRs for pairs of instances. That means that there is a 2-1
         relation between input and output data.
         """
-        if instances.has_labels:
+        if not instances.has_labels:
             raise ValueError("pairing requires labels")
 
         instances = self.preprocessing_pipeline.transform(instances)

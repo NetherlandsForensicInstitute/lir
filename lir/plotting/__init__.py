@@ -111,8 +111,8 @@ def pav(
     add_misleading: int = 0,
     show_scatter: bool = True,
     ax: Axes = plt,
-    h1_color = "red",
-    h2_color = "blue"
+    h1_color="red",
+    h2_color="blue",
 ) -> None:
     """
     Generates a plot of pre- versus post-calibrated LRs using Pool Adjacent
@@ -130,6 +130,10 @@ def pav(
         If True, show individual LRs (default: `True`)
     ax : pyplot axes object
         defaults to `matplotlib.pyplot`
+    h1_color : color
+        color for H1 points in scatter plot (default: 'red')
+    h2_color : color
+        color for H2 points in scatter plot (default: 'blue')
     ----------
     """
     pav = IsotonicCalibrator(add_misleading=add_misleading)

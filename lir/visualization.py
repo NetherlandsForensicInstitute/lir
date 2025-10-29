@@ -1,11 +1,12 @@
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 
 from lir.plotting import savefig
 
 
-def pav(base_path: Path, llrs: np.ndarray, labels: np.ndarray, **kwargs) -> None:
+def pav(base_path: Path, llrs: np.ndarray, labels: np.ndarray, **kwargs: Any) -> None:
     """Helper function to generate and save a PAV-plot to the output directory."""
     base_path.mkdir(exist_ok=True, parents=True)
     path = base_path / "pav.png"
@@ -13,7 +14,7 @@ def pav(base_path: Path, llrs: np.ndarray, labels: np.ndarray, **kwargs) -> None
         fig.pav(llrs, labels, **kwargs)
 
 
-def ece(base_path: Path, llrs: np.ndarray, labels: np.ndarray, **kwargs) -> None:
+def ece(base_path: Path, llrs: np.ndarray, labels: np.ndarray, **kwargs: Any) -> None:
     """Helper function to generate and save an ECE-plot to the output directory."""
     base_path.mkdir(exist_ok=True, parents=True)
     path = base_path / "ece.png"
@@ -21,7 +22,7 @@ def ece(base_path: Path, llrs: np.ndarray, labels: np.ndarray, **kwargs) -> None
         fig.ece(llrs, labels, **kwargs)
 
 
-def lr_histogram(base_path: Path, llrs: np.ndarray, labels: np.ndarray, **kwargs) -> None:
+def lr_histogram(base_path: Path, llrs: np.ndarray, labels: np.ndarray, **kwargs: Any) -> None:
     """Helper function to generate and save an histogram-plot to the output directory."""
     base_path.mkdir(exist_ok=True, parents=True)
     path = base_path / "histogram.png"

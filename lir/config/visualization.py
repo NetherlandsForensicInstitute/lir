@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Callable
+from typing import Callable, Any
 
 from lir import registry
 from lir.config.base import GenericFunctionConfigParser, YamlParseError, ContextAwareDict
@@ -8,7 +8,7 @@ from functools import partial
 from collections.abc import Mapping
 
 
-def parse_visualizations(config: ContextAwareDict, output_path: Path) -> list[Callable]:
+def parse_visualizations(config: ContextAwareDict, output_path: Path) -> list[Callable[..., Any]]:
     """Prepare a list of functions to obtain the configured visualizations.
 
     Visualization functions must be available in the registry and accept three arguments:
@@ -16,7 +16,7 @@ def parse_visualizations(config: ContextAwareDict, output_path: Path) -> list[Ca
        - lrs: np.ndarray, a list of lrs
        - labels: np.ndarray, a list of labels corresponding to the lrs
     """
-    visualization_functions = []
+    visualization_functions: list[Callable[..., Any]] = []
     for item in config:
         # support both simple list entries and dict entries
         # (e.g. `- pav: {h1_color: yellow, h2_color: green}` or just `- pav`)

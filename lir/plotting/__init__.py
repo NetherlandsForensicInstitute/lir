@@ -28,9 +28,6 @@ plt.get_ylim = lambda: plt.gca().get_ylim()
 plt.set_xticks = plt.xticks
 plt.set_yticks = plt.yticks
 
-H1_COLOR = "red"
-H2_COLOR = "blue"
-
 
 class Canvas:
     def __init__(self, ax: Axis):
@@ -114,6 +111,8 @@ def pav(
     add_misleading: int = 0,
     show_scatter: bool = True,
     ax: Axes = plt,
+    h1_color = "red",
+    h2_color = "blue"
 ) -> None:
     """
     Generates a plot of pre- versus post-calibrated LRs using Pool Adjacent
@@ -204,7 +203,7 @@ def pav(
         ax.set_yticks(ticks_y, tick_labels_y)
         ax.set_xticks(ticks_x, tick_labels_x)
 
-        color = [H1_COLOR if i > 0 else H2_COLOR for i in y_inf]
+        color = [h1_color if i > 0 else h2_color for i in y_inf]
         ax.scatter(x_inf, y_inf, color=color, marker="|")
 
     ax.axis(xrange + yrange)
@@ -222,8 +221,8 @@ def pav(
         n_h1 = np.count_nonzero(y)
         n_h2 = len(y) - n_h1
 
-        ax.scatter(h1_llrs, h1_pav, facecolors=H1_COLOR, marker=2, linewidths=1, alpha=0.5, label=f"H1 (n={n_h1})")
-        ax.scatter(h2_llrs, h2_pav, facecolors=H2_COLOR, marker=3, linewidths=1, alpha=0.5, label=f"H2 (n={n_h2})")
+        ax.scatter(h1_llrs, h1_pav, facecolors=h1_color, marker=2, linewidths=1, alpha=0.5, label=f"H1 (n={n_h1})")
+        ax.scatter(h2_llrs, h2_pav, facecolors=h2_color, marker=3, linewidths=1, alpha=0.5, label=f"H2 (n={n_h2})")
 
         # scatter plot of measured lrs
 

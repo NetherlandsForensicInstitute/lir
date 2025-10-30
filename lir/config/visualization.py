@@ -5,8 +5,7 @@ from lir import registry
 from lir.config.base import GenericFunctionConfigParser, YamlParseError, ContextAwareDict
 from lir.registry import ComponentNotFoundError
 from functools import partial
-from collections.abc import Mapping
-
+from collections.abc import Mapping, Sequence
 
 def parse_visualizations(config: ContextAwareDict, output_path: Path) -> list[Callable[..., Any]]:
     """Prepare a list of functions to obtain the configured visualizations.
@@ -16,20 +15,46 @@ def parse_visualizations(config: ContextAwareDict, output_path: Path) -> list[Ca
        - lrs: np.ndarray, a list of lrs
        - labels: np.ndarray, a list of labels corresponding to the lrs
     """
-    visualization_functions: list[Callable[..., Any]] = []
-    for item in config:
-        # support both simple list entries and dict entries
-        # (e.g. `- pav: {h1_color: yellow, h2_color: green}` or just `- pav`)
-        if isinstance(item, str):
-            visualization_type = item
-            module_cfg = None
-        elif isinstance(item, Mapping):
-            if len(item) != 1:
-                raise YamlParseError(config.context, f"invalid visualization entry: {item}")
-            visualization_type = next(iter(item.keys()))
-            module_cfg = item[visualization_type]
+
+    def _parse_params(module_cfg: Any, context: list[str]) -> dict[str, Any] | None:
+        """Normalise module configuration into a parameter dict."""
+
+        # No parameters provided
+        if module_cfg is None:
+            return None
+        
+        # Parameters provided as a dict/Mapping. In the yaml, it would look like:
+        # visualization:
+        #   - pav:
+        #       h1_color: yellow
+        #       h2_color: green
+        if isinstance(module_cfg, Mapping):
+            return dict(module_cfg)
+        
+        # Parameters provided as a list of single-entry dicts. In the yaml, it would look like:
+        # visualization:
+        #   - pav:
+        #       - h1_color: yellow
+        #       - h2_color: green
+        if isinstance(module_cfg, Sequence):
+            params = {}
+            for el in module_cfg:
+                params.update(el)
+            return params
+        
+        # Invalid configuration format. This can happen if the user provides a single value, like
+        # visualization:
+        #   - pav: 
+        # yellow
+        raise YamlParseError(context, f"invalid visualization configuration: {module_cfg}")
+
+    visualizations = []
+    for entry in config:
+        # Extract type and module config
+        if isinstance(entry, str):
+            visualization_type, module_cfg = entry, None
         else:
-            raise YamlParseError(config.context, f"invalid visualization entry type: {type(item)}")
+            visualization_type, module_cfg = next(iter(entry.items()))
 
         try:
             parser = registry.get(
@@ -39,14 +64,11 @@ def parse_visualizations(config: ContextAwareDict, output_path: Path) -> list[Ca
             )
             func = parser.parse(ContextAwareDict(config.context + [visualization_type]), output_path)
 
-            # If the config for this visualization contains parameters (e.g. h1_color/h2_color),
-            # bind them as keyword arguments when calling the visualization function.
-            if isinstance(module_cfg, ContextAwareDict) and len(module_cfg) > 0:
-                params = dict(module_cfg)
-                visualization_functions.append(partial(func, **params))
-            else:
-                visualization_functions.append(func)
-        except ComponentNotFoundError as e:
-            raise YamlParseError(config.context, str(e))
+            params = _parse_params(module_cfg, config.context)
+            visualizations.append(partial(func, **params) if params else func)
 
-    return visualization_functions
+        except ComponentNotFoundError as e:
+            raise YamlParseError(config.context, str(e)) from e
+
+    return visualizations
+

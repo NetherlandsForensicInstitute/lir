@@ -1,10 +1,8 @@
 import logging
-import typing
 from abc import ABC, abstractmethod
 from collections.abc import Iterable, Sequence, Callable
 from pathlib import Path
 
-import numpy as np
 from tqdm import tqdm
 
 import lir

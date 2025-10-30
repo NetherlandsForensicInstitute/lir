@@ -2,9 +2,7 @@ import logging
 from abc import ABC, abstractmethod
 from collections.abc import Iterable, Sequence, Callable
 from pathlib import Path
-from typing import Any
 
-import numpy as np
 from tqdm import tqdm
 
 import lir
@@ -13,24 +11,6 @@ from lir.data.models import DataStrategy, concatenate_instances
 from lir.lrsystems.lrsystems import LRSystem, LLRData
 
 LOG = logging.getLogger(__name__)
-
-
-def np_concatenate_optional(optional_values: list[Any]) -> np.ndarray | None:
-    """Helper function to use `np.concatenate()` using collections with optional None values.
-
-    When a list may contain optional `None` values, it is not allowed (by type checking) to directly
-    call `np.concatenate()` on this list, even when explicitly checked that this list does not contain
-    `None` values.
-
-    This helper function either directly returns `None` if a collection contains a `None` value, or
-    it uses a workaround by using a list comprehension which filters out the `None` values (which are not
-    present anymore) to satisfy the type checker.
-    """
-    if None in optional_values:
-        return None
-
-    # Workaround for type checking optional None values
-    return np.concatenate([value for value in optional_values if value is not None])
 
 
 class Experiment(ABC):

@@ -1,4 +1,5 @@
 import logging
+import typing
 from abc import ABC, abstractmethod
 from collections.abc import Iterable, Sequence, Callable
 from pathlib import Path
@@ -18,14 +19,18 @@ def combine_results(llr_sets: list[LLRData]) -> LLRData:
     """Combine the results of the LLRData tuples into a single tuple."""
 
     llrs = [llr_data_tuple.llrs for llr_data_tuple in llr_sets]
-    intervals = [llr_data_tuple.intervals for llr_data_tuple in llr_sets if llr_data_tuple.intervals is not None]
-    labels = [llr_data_tuple.labels for llr_data_tuple in llr_sets if llr_data_tuple.labels is not None]
+    intervals = [llr_data_tuple.intervals for llr_data_tuple in llr_sets]
+    labels = [llr_data_tuple.labels for llr_data_tuple in llr_sets]
     meta_data = [llr_data_tuple.meta_data for llr_data_tuple in llr_sets]
 
     return LLRData(
         llrs=np.concatenate(llrs),
-        intervals=np.concatenate(intervals) if all(interval is not None for interval in intervals) else None,
-        labels=np.concatenate(labels) if all(label is not None for label in labels) else None,
+        intervals=(
+            np.concatenate(typing.cast(list[int], intervals))
+            if all(interval is not None for interval in intervals)
+            else None
+        ),
+        labels=np.concatenate(typing.cast(list[int], labels)) if all(label is not None for label in labels) else None,
         meta_data=np.concatenate(meta_data),
     )
 

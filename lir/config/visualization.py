@@ -7,6 +7,7 @@ from lir.registry import ComponentNotFoundError
 from functools import partial
 from collections.abc import Mapping, Sequence
 
+
 def parse_visualizations(config: ContextAwareDict, output_path: Path) -> list[Callable[..., Any]]:
     """Prepare a list of functions to obtain the configured visualizations.
 
@@ -22,7 +23,7 @@ def parse_visualizations(config: ContextAwareDict, output_path: Path) -> list[Ca
         # No parameters provided
         if module_cfg is None:
             return None
-        
+
         # Parameters provided as a dict/Mapping. In the yaml, it would look like:
         # visualization:
         #   - pav:
@@ -30,7 +31,7 @@ def parse_visualizations(config: ContextAwareDict, output_path: Path) -> list[Ca
         #       h2_color: green
         if isinstance(module_cfg, Mapping):
             return dict(module_cfg)
-        
+
         # Parameters provided as a list of single-entry dicts. In the yaml, it would look like:
         # visualization:
         #   - pav:
@@ -41,10 +42,10 @@ def parse_visualizations(config: ContextAwareDict, output_path: Path) -> list[Ca
             for el in module_cfg:
                 params.update(el)
             return params
-        
+
         # Invalid configuration format. This can happen if the user provides a single value, like
         # visualization:
-        #   - pav: 
+        #   - pav:
         # yellow
         raise YamlParseError(context, f"invalid visualization configuration: {module_cfg}")
 
@@ -71,4 +72,3 @@ def parse_visualizations(config: ContextAwareDict, output_path: Path) -> list[Ca
             raise YamlParseError(config.context, str(e)) from e
 
     return visualizations
-

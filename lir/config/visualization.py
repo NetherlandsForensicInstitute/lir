@@ -50,9 +50,9 @@ def parse_visualizations(config: ContextAwareDict, output_path: Path) -> list[Ca
 
         visualization_fn = parser.parse(ContextAwareDict(config.context + [visualization_type]), output_path)
 
-        # The `extra_options` are represented in a `ContextAwareList`, which needs to be casted to the
+        # The `extra_options` are represented in a `ContextAwareList`, which needs to be cast to the
         # corresponding dictionary to provide the `**kwargs` to the visualization function.
-        extra_parameters = dict(ChainMap(*extra_options))
+        extra_parameters = extra_options if isinstance(extra_options, dict) else dict(ChainMap(*extra_options))
 
         visualization_functions.append(partial(visualization_fn, **extra_parameters))
 

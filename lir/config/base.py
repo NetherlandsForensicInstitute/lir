@@ -83,10 +83,14 @@ class GenericFunctionConfigParser(ConfigParser):
         config: ContextAwareDict,
         output_dir: Path,
     ) -> Callable:
-        if callable(self.component_class):
-            return self.component_class
+        if not callable(self.component_class):
+            raise YamlParseError(
+                config.context,
+                f"invalid module `{self.component_class}`: expected `Callable`; found: `{type(self.component_class)}`",
+            )
 
-        raise YamlParseError(config.context, f"unrecognized module type: `{self.component_class}`")
+        check_is_empty(config)
+        return self.component_class
 
 
 class GenericConfigParser(ConfigParser):

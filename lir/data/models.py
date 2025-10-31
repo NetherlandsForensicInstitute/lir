@@ -171,7 +171,7 @@ class PairData(FeatureData):
 
     @property
     def features_ref(self) -> np.ndarray:
-        return self.features[:, : self.n_ref_instances]
+        return self.features[:, self.n_trace_instances :]  # noqa: E203
 
     @model_validator(mode="after")
     def check_features_dimensions(self) -> Self:

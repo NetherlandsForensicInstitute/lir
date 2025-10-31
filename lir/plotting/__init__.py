@@ -111,6 +111,8 @@ def pav(
     add_misleading: int = 0,
     show_scatter: bool = True,
     ax: Axes = plt,
+    h1_color="red",
+    h2_color="blue",
 ) -> None:
     """
     Generates a plot of pre- versus post-calibrated LRs using Pool Adjacent
@@ -128,6 +130,10 @@ def pav(
         If True, show individual LRs (default: `True`)
     ax : pyplot axes object
         defaults to `matplotlib.pyplot`
+    h1_color : color
+        color for H1 points in scatter plot (default: 'red')
+    h2_color : color
+        color for H2 points in scatter plot (default: 'blue')
     ----------
     """
     pav = IsotonicCalibrator(add_misleading=add_misleading)
@@ -139,7 +145,7 @@ def pav(
     ]
 
     # plot line through origin
-    ax.plot(xrange, yrange)
+    ax.plot(xrange, yrange, "--", color="gray", label="Optimal system")
 
     # line pre pav llrs x and post pav llrs y
     line_x = np.arange(*xrange, 0.01)
@@ -150,8 +156,8 @@ def pav(
     line_x, line_y = line_x[~np.isnan(line_y)], line_y[~np.isnan(line_y)]
 
     # some values of line_y go beyond the yrange which is problematic when there are infinite values
-    mask_out_of_range = np.logical_and(line_y >= yrange[0], line_y <= yrange[1])
-    ax.plot(line_x[mask_out_of_range], line_y[mask_out_of_range])
+    mask_out_of_range = np.logical_and(line_x >= yrange[0], line_x <= yrange[1])
+    ax.plot(line_x[mask_out_of_range], line_y[mask_out_of_range], color="black", label="PAV transform")
 
     # add points for infinite values
     if np.logical_or(np.isinf(pav_llrs), np.isinf(llrs)).any():
@@ -201,16 +207,32 @@ def pav(
         ax.set_yticks(ticks_y, tick_labels_y)
         ax.set_xticks(ticks_x, tick_labels_x)
 
-        ax.scatter(x_inf, y_inf, facecolors="none", edgecolors="#1f77b4", linestyle=":")
+        color = [h1_color if i > 0 else h2_color for i in y_inf]
+        ax.scatter(x_inf, y_inf, color=color, marker="|")
 
     ax.axis(xrange + yrange)
     # pre-/post-calibrated lr fit
 
     if show_scatter:
-        ax.scatter(llrs, pav_llrs)  # scatter plot of measured lrs
+        mask_y = y == 1
+        mask_not_y = ~mask_y
+
+        h1_llrs = np.where(mask_y, llrs, np.nan)
+        h1_pav = np.where(mask_y, pav_llrs, np.nan)
+        h2_llrs = np.where(mask_not_y, llrs, np.nan)
+        h2_pav = np.where(mask_not_y, pav_llrs, np.nan)
+
+        n_h1 = np.count_nonzero(y)
+        n_h2 = len(y) - n_h1
+
+        ax.scatter(h1_llrs, h1_pav, facecolors=h1_color, marker=2, linewidths=1, alpha=0.5, label=f"H1 (n={n_h1})")
+        ax.scatter(h2_llrs, h2_pav, facecolors=h2_color, marker=3, linewidths=1, alpha=0.5, label=f"H2 (n={n_h2})")
+
+        # scatter plot of measured lrs
 
     ax.set_xlabel("pre-calibrated log$_{10}$(LR)")
     ax.set_ylabel("post-calibrated log$_{10}$(LR)")
+    ax.legend()
 
 
 def lr_histogram(

@@ -17,6 +17,6 @@ class AbsDiffTransformer(sklearn.base.TransformerMixin):
 
     def transform(self, X):
         assert len(X.shape) == 3
-        assert X.shape[2] == 2
+        assert X.shape[1] == 2
 
-        return np.abs(X[:, :, 0] - X[:, :, 1])
+        return np.abs(X[:, 0, :] - X[:, 1, :])

@@ -16,11 +16,7 @@ def test_binary_data():
         1: SynthesizedNormalDataClass(1, 1, 100),
     }
     data = SynthesizedNormalBinaryData(data_spec, seed=0)
-    for values in zip(
-        data.get_instances(),
-        SynthesizedNormalBinaryData(data_spec, seed=0).get_instances(),
-    ):
-        np.all(values[0] == values[1])
+    assert data.get_instances() == SynthesizedNormalBinaryData(data_spec, seed=0).get_instances()
 
 
 def test_multiclass_data():
@@ -33,8 +29,5 @@ def test_multiclass_data():
     data1 = SynthesizedNormalMulticlassData(
         dimensions=dimensions, population_size=100, sources_size=2, seed=0
     )
-    for values in zip(data0.get_instances(), data1.get_instances()):
-        np.all(values[0] == values[1])
-
-    for values in zip(data0.get_instances(), data0.get_instances()):
-        np.all(values[0] == values[1])
+    assert data0.get_instances() == data1.get_instances()
+    assert data0.get_instances() == data0.get_instances()

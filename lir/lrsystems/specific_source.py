@@ -1,6 +1,4 @@
-import numpy as np
-
-from lir.lrsystems.lrsystems import LRSystem, Pipeline
+from lir.lrsystems.lrsystems import LRSystem, Pipeline, LLRData, FeatureData
 
 
 class SpecificSourceSystem(LRSystem):
@@ -15,19 +13,17 @@ class SpecificSourceSystem(LRSystem):
         super().__init__(name)
         self.pipeline = pipeline
 
-    def fit(self, instances: np.ndarray, labels: np.ndarray, meta: np.ndarray) -> "LRSystem":
-        self.pipeline.fit(instances, labels)
+    def fit(self, instances: FeatureData) -> "LRSystem":
+        self.pipeline.fit(instances)
         return self
 
-    def apply(
-        self, instances: np.ndarray, labels: np.ndarray | None, meta: np.ndarray
-    ) -> tuple[np.ndarray, np.ndarray | None, np.ndarray]:
+    def apply(self, instances: FeatureData) -> LLRData:
         """
         Applies the specific source LR system on a set of instances, optionally with corresponding labels, and returns a
-        set of LLRs and their labels.
+        representation of the calculated LLR data through the `LLRData` tuple.
 
         The returned set of LLRs has the same order as the set of input instances, and the returned labels are unchanged
         from the input labels.
         """
         llrs = self.pipeline.transform(instances)
-        return llrs, labels, meta
+        return LLRData(**llrs.model_dump())

@@ -7,6 +7,7 @@ import numpy.random
 
 from lir.config.base import config_parser, pop_field, ContextAwareDict
 from lir.data.models import DataSet
+from lir.lrsystems.lrsystems import FeatureData
 
 
 class SynthesizedNormalDataClass:
@@ -35,7 +36,7 @@ class SynthesizedNormalBinaryData(DataSet):
         self.data_classes = data_classes
         self.seed = seed
 
-    def get_instances(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def get_instances(self) -> FeatureData:
         """
         Returns instances with randomly synthesized data and binary labels.
 
@@ -47,7 +48,7 @@ class SynthesizedNormalBinaryData(DataSet):
         values = [(data, [class_name] * data.shape[0]) for data, class_name in values]
         features = np.concatenate([data for data, _ in values])
         labels = np.concatenate([labels for _, labels in values])
-        return features, labels, np.array([]).reshape(labels.size, 0)
+        return FeatureData(features=features, labels=labels)
 
 
 @config_parser

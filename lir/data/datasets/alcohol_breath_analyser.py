@@ -1,6 +1,6 @@
 import numpy as np
 
-from lir.data.models import DataSet
+from lir.data.models import DataSet, LLRData
 
 
 class AlcoholBreathAnalyser(DataSet):
@@ -15,7 +15,7 @@ class AlcoholBreathAnalyser(DataSet):
     def __init__(self, ill_calibrated: bool = False):
         self.ill_calibrated = ill_calibrated
 
-    def get_instances(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def get_instances(self) -> LLRData:
         positive_lr = 1000 if self.ill_calibrated else 90
         lrs = np.concatenate(
             [
@@ -26,4 +26,4 @@ class AlcoholBreathAnalyser(DataSet):
             ]
         )
         y = np.concatenate([np.zeros(1000), np.ones(100)])
-        return np.log10(lrs), y, np.ones((len(y), 0))
+        return LLRData(features=np.log10(lrs), labels=y)

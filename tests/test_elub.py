@@ -12,8 +12,8 @@ from lir.util import Xn_to_Xy, probability_to_logodds, logodds_to_odds
 
 class TestElub(unittest.TestCase):
     def test_breath(self):
-        llrs, y, _ = AlcoholBreathAnalyser(ill_calibrated=True).get_instances()
-        bounds = bayeserror.elub(logodds_to_odds(llrs), y, add_misleading=1)
+        data = AlcoholBreathAnalyser(ill_calibrated=True).get_instances()
+        bounds = bayeserror.elub(logodds_to_odds(data.llrs), data.labels, add_misleading=1)
         np.testing.assert_almost_equal((0.11051160265422605, 80.42823031359497), bounds)
 
     def test_extreme_smallset(self):

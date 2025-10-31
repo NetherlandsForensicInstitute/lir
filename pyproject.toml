@@ -9,7 +9,7 @@ dynamic = ["version"]
 authors = [
     {name = "Netherlands Forensics Institute", email = "netherlandsforensicinstitute@users.noreply.github.com"},
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 readme = "README.md"
 license = {text = "Apache Software License 2.0"}
 dependencies = [
@@ -26,6 +26,7 @@ dependencies = [
     "scipy>=1.13.1",
     "pandas>=2.3.2",
     "KDEpy>=1.1.12",
+    "pydantic>=2.12.3",
 ]
 
 [project.urls]

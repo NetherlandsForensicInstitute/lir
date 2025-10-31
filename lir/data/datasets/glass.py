@@ -7,6 +7,7 @@ import numpy as np
 
 from lir.data.io import RemoteResource
 from lir.data.models import DataSet, DataStrategy
+from lir.lrsystems.lrsystems import FeatureData
 
 
 class GlassData(DataSet, DataStrategy):
@@ -60,15 +61,18 @@ class GlassData(DataSet, DataStrategy):
         The data are returned as a tuple of features, labels, and metadata, similar to `get_instances()`.
         """
         training_data = self._load_data("training.csv")
+        training_data = FeatureData(
+            features=training_data[0], labels=training_data[1], meta=training_data[2]  # type: ignore
+        )
         test_features, test_labels, test_meta = zip(self._load_data("duplo.csv"), self._load_data("triplo.csv"))
-        test_data = (
-            np.concatenate(test_features),
-            np.concatenate(test_labels),
-            np.concatenate(test_meta),
+        test_data = FeatureData(
+            features=np.concatenate(test_features),
+            labels=np.concatenate(test_labels),
+            meta=np.concatenate(test_meta),  # type: ignore
         )
         return iter([(training_data, test_data)])
 
-    def get_instances(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def get_instances(self) -> FeatureData:
         """
         Returns `training.csv` data with three instances (replicates) per source, as a tuple of features, labels and
         metadata.
@@ -81,4 +85,5 @@ class GlassData(DataSet, DataStrategy):
 
         The meta values of an instance are a concatenation of the filename and a row number, e.g. "training.csv:22".
         """
-        return self._load_data("training.csv")
+        features, labels, meta = self._load_data("training.csv")
+        return FeatureData(features=features, labels=labels, meta=meta)  # type: ignore

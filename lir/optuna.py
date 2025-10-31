@@ -78,8 +78,8 @@ class OptunaExperiment(Experiment):
             }
         )
 
-        llrs, labels = self._run_lrsystem(lrsystem)
-        return self.metric_function(llrs, labels)
+        llrs = self._run_lrsystem(lrsystem)
+        return self.metric_function(llrs.llrs, llrs.labels)
 
     def _generate_and_run(self) -> None:
         study = optuna.create_study()  # Create a new study.

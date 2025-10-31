@@ -12,7 +12,7 @@ class Pipeline(Transformer):
     A module may be a scikit-learn style transformer, estimator, or a LIR `Transformer`
     """
 
-    def __init__(self, steps: list[tuple[str, Transformer]]):
+    def __init__(self, steps: list[tuple[str, Transformer | Any]]):
         """
         Constructor.
 

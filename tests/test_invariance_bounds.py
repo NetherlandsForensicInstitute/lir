@@ -7,7 +7,7 @@ from lir.algorithms.invariance_bounds import IVBounder
 from lir.data.datasets.alcohol_breath_analyser import AlcoholBreathAnalyser
 from lir.data.models import FeatureData
 from lir.lrsystems.lrsystems import Pipeline
-from lir.transform import BinaryClassifierTransformer, FunctionTransformer
+from lir.transform import BinaryClassifierTransformer, FunctionTransformer, as_transformer
 from lir.util import Xn_to_Xy, probability_to_logodds, logodds_to_odds
 
 
@@ -77,8 +77,8 @@ class TestBounding(unittest.TestCase):
         bounder = IVBounder()
         pipeline = Pipeline(
             [
-                ("logit", BinaryClassifierTransformer(LogisticRegression())),
-                ("to_logodds", FunctionTransformer(probability_to_logodds)),
+                ("logit", LogisticRegression()),
+                ("to_logodds", probability_to_logodds),
                 ("iv", bounder),
             ]
         )

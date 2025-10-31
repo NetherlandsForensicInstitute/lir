@@ -272,5 +272,8 @@ def as_transformer(transformer_like: Any) -> Transformer:
     if hasattr(transformer_like, "predict_proba"):
         # The component has a `predict_proba` method, which means we assume it is a sklearn style estimator
         return BinaryClassifierTransformer(transformer_like)
+    if callable(transformer_like):
+        # The component is a function
+        return FunctionTransformer(transformer_like)
 
     raise ValueError(f"unknown module type of class {type(transformer_like)}")

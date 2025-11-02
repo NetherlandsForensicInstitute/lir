@@ -16,13 +16,13 @@ from lir.util import logodds_to_odds, odds_to_logodds
 
 
 def plot_nbe(
-    llrs,
-    y,
-    log_lr_threshold_range=None,
+    llrs: np.ndarray,
+    y: np.ndarray,
+    log_lr_threshold_range: tuple[float, float] | None = None,
     add_misleading: int = 1,
     step_size: float = 0.01,
-    ax=plt,
-):
+    ax: plt.Axes = plt,  # type: ignore
+) -> None:
     if log_lr_threshold_range is None:
         log_lr_threshold_range = (np.min(llrs) - 0.5, np.max(llrs) + 0.5)
 
@@ -41,12 +41,12 @@ def plot_nbe(
 
 
 def elub(
-    lrs,
-    y,
+    lrs: np.ndarray,
+    y: np.ndarray,
     add_misleading: int = 1,
     step_size: float = 0.01,
-    substitute_extremes=(np.exp(-20), np.exp(20)),
-):
+    substitute_extremes: tuple[float, float] = (np.exp(-20), np.exp(20)),
+) -> tuple[float, float]:
     """
     Returns the empirical upper and lower bound LRs (ELUB LRs).
 
@@ -89,7 +89,9 @@ def elub(
     return lower_bound, upper_bound
 
 
-def calculate_expected_utility(lrs, y, threshold_lrs, add_misleading: int = 0):
+def calculate_expected_utility(
+    lrs: np.ndarray, y: np.ndarray, threshold_lrs: np.ndarray, add_misleading: int = 0
+) -> float:
     """
     Calculates the expected utility of a set of LRs for a given threshold.
 

@@ -76,7 +76,6 @@ warn_unused_configs = true
 ignore_missing_imports = true
 
 exclude = [
-    "lir/algorithms/bayeserror.py",  # imported from LIR
     "lir/algorithms/invariance_bounds.py",  # imported from LIR
     "lir/algorithms/isotonic_regression.py",  # imported from LIR
     "lir/lrsystems/two_level.py",  # imported from LIR

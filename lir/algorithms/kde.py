@@ -2,7 +2,7 @@ from collections.abc import Callable
 import logging
 import math
 import warnings
-from typing import Sized
+from typing import Sized, Self
 
 import numpy as np
 from sklearn.base import TransformerMixin, BaseEstimator
@@ -51,10 +51,11 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
         self.bandwidth: Callable = self._parse_bandwidth(bandwidth)
         self._kde0: KernelDensity | None = None
         self._kde1: KernelDensity | None = None
-        self.numerator, self.denominator = None, None
+        self.numerator: float | None = None
+        self.denominator: float | None = None
 
     @staticmethod
-    def bandwidth_silverman(X, y) -> list[float]:
+    def bandwidth_silverman(X: np.ndarray, y: np.ndarray) -> list[float]:
         """
         Estimates the optimal bandwidth parameter using Silverman's rule of
         thumb.
@@ -79,14 +80,7 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
 
         return bandwidth
 
-    @staticmethod
-    def bandwidth_scott(X, y):
-        """
-        Not implemented.
-        """
-        raise
-
-    def fit(self, X, y):
+    def fit(self, X: np.ndarray, y: np.ndarray) -> Self:
         # check if data is sane
         check_misleading_finite(X, y)
 
@@ -103,9 +97,11 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
         self._kde1 = KernelDensity(kernel="gaussian", bandwidth=bandwidth1).fit(X1)
         return self
 
-    def transform(self, X):
+    def transform(self, X: np.ndarray) -> np.ndarray:
         """Provide LLR's as output."""
-        assert self._kde0 is not None, "KDECalibrator.transform() called before fit"
+        if self._kde0 is None or self._kde1 is None or self.numerator is None or self.denominator is None:
+            raise ValueError("KDECalibrator.transform() called before fit")
+
         self.p0 = np.empty(np.shape(X))
         self.p1 = np.empty(np.shape(X))
         # initiate LRs_output
@@ -146,7 +142,7 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
 
     @staticmethod
     def _parse_bandwidth(
-        bandwidth: Callable | float | tuple[float, float] | None,
+        bandwidth: Callable | str | float | tuple[float, float] | None,
     ) -> Callable:
         """
         Returns bandwidth as a tuple of two (optional) floats.
@@ -160,8 +156,6 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
             return bandwidth
         elif bandwidth == "silverman":
             return KDECalibrator.bandwidth_silverman
-        elif bandwidth == "scott":
-            return KDECalibrator.bandwidth_scott
         elif isinstance(bandwidth, str):
             raise ValueError(f"invalid input for bandwidth: {bandwidth}")
         elif isinstance(bandwidth, Sized):

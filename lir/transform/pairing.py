@@ -3,6 +3,7 @@ from typing import Any
 
 import numpy as np
 
+from lir.data.models import PairedFeatureData
 from lir.lrsystems.lrsystems import FeatureData
 
 
@@ -19,7 +20,7 @@ class PairingMethod(ABC):
         instances: FeatureData,
         n_trace_instances: int = 1,
         n_ref_instances: int = 1,
-    ) -> FeatureData:
+    ) -> PairedFeatureData:
         """
         Takes instances as input, and returns pairs.
 
@@ -51,12 +52,18 @@ class LegacyPairingMethod(ABC):
         instances: FeatureData,
         n_trace_instances: int = 1,
         n_ref_instances: int = 1,
-    ) -> FeatureData:
+    ) -> PairedFeatureData:
         meta = instances.meta if hasattr(instances, "meta") else np.zeros((instances.features.shape[0], 0))
         pair_features, pair_labels, pair_meta = self._pair_arrays(
             instances.features, instances.labels, meta, n_trace_instances, n_ref_instances
         )
-        pairs = FeatureData(features=pair_features, labels=pair_labels, meta=pair_meta)  # type: ignore
+        pairs = PairedFeatureData(
+            features=pair_features,
+            labels=pair_labels,
+            n_trace_instances=n_trace_instances,
+            n_ref_instances=n_ref_instances,
+            meta=pair_meta,  # type: ignore
+        )
         return pairs
 
     @abstractmethod

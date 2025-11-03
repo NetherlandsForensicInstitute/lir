@@ -441,7 +441,7 @@ class TwoLevelSystem(LRSystem):
         self.model.fit_on_unpaired_instances(instances.features, instances.labels)
 
         pairs = self.pairing_function.pair(instances)
-        pair_llrs = pairs.replace(features=self.model.transform(*_split_pairs(pairs.features, 1)))
+        pair_llrs = pairs.replace_as(LLRData, features=self.model.transform(pairs.features_trace, pairs.features_ref))
         self.postprocessing_pipeline.fit(pair_llrs)
 
         return self
@@ -457,9 +457,7 @@ class TwoLevelSystem(LRSystem):
         instances = self.preprocessing_pipeline.transform(instances)
 
         pairs = self.pairing_function.pair(instances)
-        pair_llrs = LLRData(
-            **pairs.replace(features=self.model.transform(*_split_pairs(pairs.features, 1))).model_dump()
-        )
+        pair_llrs = pairs.replace_as(LLRData, features=self.model.transform(pairs.features_trace, pairs.features_ref))
         pair_llrs = self.postprocessing_pipeline.transform(pair_llrs)
 
         return pair_llrs

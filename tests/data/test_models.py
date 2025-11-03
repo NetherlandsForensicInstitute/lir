@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 from pydantic import ValidationError
 
-from lir.data.models import InstanceData, FeatureData, LLRData, concatenate_instances
+from lir.data.models import InstanceData, FeatureData, LLRData, concatenate_instances, PairedFeatureData
 
 
 class BareData(InstanceData):
@@ -80,6 +80,23 @@ def test_concatenate():
 
     with pytest.raises(ValueError):
         concatenate_instances(FeatureData(features=np.ones((10, 2)), extra1=[1, 2]), FeatureData(features=np.ones((10, 2)), extra1=[2, 1]))
+
+
+def test_pair_data():
+    """
+    Check consistency and validation mechanism of `PairedFeatureData`.
+    """
+    PairedFeatureData(features=np.ones((10, 9, 1)), n_trace_instances=4, n_ref_instances=5)
+
+    with pytest.raises(ValueError):
+        PairedFeatureData(features=np.ones((10, 9)), n_trace_instances=4, n_ref_instances=5)
+
+    with pytest.raises(ValueError):
+        PairedFeatureData(features=np.ones((10, 9, 1)), n_trace_instances=4, n_ref_instances=4)
+
+    assert PairedFeatureData(features=np.ones((10, 9, 1)), n_trace_instances=4, n_ref_instances=5).features_trace.shape == (10, 4, 1)
+    assert PairedFeatureData(features=np.ones((10, 9, 1)), n_trace_instances=4, n_ref_instances=5).features_ref.shape == (10, 5, 1)
+    assert PairedFeatureData(features=np.ones((10, 9, 3, 4)), n_trace_instances=4, n_ref_instances=5).features_ref.shape == (10, 5, 3, 4)
 
 
 def test_llr_data():

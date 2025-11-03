@@ -1,5 +1,5 @@
 from abc import abstractmethod, ABC
-from typing import Iterable, TypeVar, Self, Any, Annotated
+from typing import Iterable, TypeVar, Self, Any, Annotated, Type
 
 import numpy as np
 from pydantic import model_validator, AfterValidator, ConfigDict, BaseModel
@@ -115,11 +115,24 @@ class InstanceData(BaseModel, ABC):
 
     def replace(self, **kwargs: Any) -> Self:
         """
-        :return: a copy of these instances, while replacing specific fields
+        Returns a modified copy with updated values.
+
+        :param kwargs: the fields to replace
+        :return: the modified copy
+        """
+        return self.replace_as(type(self), **kwargs)
+
+    def replace_as(self, datatype: Type["InstanceDataType"], **kwargs: Any) -> "InstanceDataType":
+        """
+        Returns a modified copy with updated data type and values.
+
+        :param datatype: the return type
+        :param kwargs: the fields to replace
+        :return: the modified copy
         """
         args = self.model_dump()
         args.update(kwargs)
-        return type(self)(**args)  # type: ignore
+        return datatype(**args)
 
 
 class FeatureData(InstanceData):
@@ -140,6 +153,34 @@ class FeatureData(InstanceData):
         if self.labels is not None and self.labels.shape[0] != self.features.shape[0]:
             raise ValueError(
                 f"dimensions of labels and features do not match; {self.labels.shape[0]} != {self.features.shape[0]}"
+            )
+        return self
+
+
+class PairedFeatureData(FeatureData):
+    """
+    Data class for instance pair data.
+    """
+
+    n_trace_instances: int
+    n_ref_instances: int
+
+    @property
+    def features_trace(self) -> np.ndarray:
+        return self.features[:, : self.n_trace_instances]
+
+    @property
+    def features_ref(self) -> np.ndarray:
+        return self.features[:, self.n_trace_instances :]  # noqa: E203
+
+    @model_validator(mode="after")
+    def check_features_dimensions(self) -> Self:
+        if len(self.features.shape) < 3:
+            raise ValueError(f"features should have 3 or more dimensions; found shape: {self.features.shape}")
+        if self.features.shape[1] != self.n_trace_instances + self.n_ref_instances:
+            raise ValueError(
+                f"features should have shape (*, {self.n_trace_instances}+{self.n_ref_instances}, *); "
+                f"found: {self.features.shape[1]}"
             )
         return self
 

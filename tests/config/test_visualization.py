@@ -9,8 +9,8 @@ def _yaml_to_context_aware_config(config_dict: dict) -> ContextAwareDict:
     """Helper function to produce a ContextAwareDict from a regular dict."""
     config_key, config_values = next(iter(config_dict.items()))
 
-    context_dict = ContextAwareDict(context=['experiments', 'model_selection', 'visualization'])
-    context_list = ContextAwareList(context=['experiments', 'model_selection', 'visualization'])
+    context_dict = ContextAwareDict(context=[])
+    context_list = ContextAwareList(context=[])
 
     context_list.extend(config_values)
 

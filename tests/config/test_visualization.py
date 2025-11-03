@@ -35,7 +35,14 @@ visualization:
         - h1_color: green
         - h2_color: blue
     - ece
+""",
 """
+visualization:
+    - pav:
+        - h1_color: green
+          h2_color: blue
+    - ece
+""",
 ])
 def test_parse_extra_visualization_options(yaml_config: str):
     """Check that extra provided visualization options are handled correctly."""

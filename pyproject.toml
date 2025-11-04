@@ -20,7 +20,6 @@ dependencies = [
     "tqdm>=4.67.1",
     "scikit-learn>=1.2",
     "xgboost>=1.5",
-    "black>=24.8.0",
     "mypy>=1.14.1",
     "optuna>=4.4.0",
     "scipy>=1.13.1",
@@ -38,8 +37,6 @@ lir = "lir.main:main"
 [dependency-groups]
 dev = [
     "coverage",
-    "flake8",
-    "flake8-pyproject",
     "pytest",
 ]
 
@@ -49,18 +46,10 @@ version = {source = "scm"}
 [tool.pdm.scripts]
 all = {composite = ["check", "format-fix", "test"]}
 check = {composite = ["lint", "format-check", "mypy"]}
-lint = "flake8 lir/"
-format-check = "black --check lir --line-length 120"
-format-fix = "black lir --line-length 120"
 mypy = "mypy lir"
 test = "coverage run --branch --source lir --module pytest --strict-markers tests/"
 test-coverage = "coverage report"
 lir = "python run.py"
-
-[tool.flake8]
-max-line-length = 120
-application-import-names = ["lir"]
-import-order-style = "pycharm"
 
 [tool.mypy]
 # allow redefinition of inferred / assigned types

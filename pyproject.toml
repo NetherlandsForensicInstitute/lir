@@ -20,7 +20,6 @@ dependencies = [
     "tqdm>=4.67.1",
     "scikit-learn>=1.2",
     "xgboost>=1.5",
-    "mypy>=1.14.1",
     "optuna>=4.4.0",
     "scipy>=1.13.1",
     "pandas>=2.3.2",
@@ -38,6 +37,7 @@ lir = "lir.main:main"
 dev = [
     "coverage",
     "pytest",
+    "mypy>=1.18.2",
 ]
 
 [tool.pdm]

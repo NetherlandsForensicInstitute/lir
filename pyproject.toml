@@ -7,8 +7,7 @@ name = "lir"
 description = "Package for optimising and evaluating Likelihood Ratio (LR) systems."
 dynamic = ["version"]
 authors = [
-    {name = "Netherlands Forensics Institute", email = "netherlandsforensicinstitute@users.noreply.github.com"},
-]
+    {name = "Netherlands Forensics Institute", email = "netherlandsforensicinstitute@users.noreply.github.com"}, ]
 requires-python = ">=3.11"
 readme = "README.md"
 license = {text = "Apache Software License 2.0"}
@@ -20,8 +19,6 @@ dependencies = [
     "tqdm>=4.67.1",
     "scikit-learn>=1.2",
     "xgboost>=1.5",
-    "black>=24.8.0",
-    "mypy>=1.14.1",
     "optuna>=4.4.0",
     "scipy>=1.13.1",
     "pandas>=2.3.2",
@@ -38,29 +35,48 @@ lir = "lir.main:main"
 [dependency-groups]
 dev = [
     "coverage",
-    "flake8",
-    "flake8-pyproject",
     "pytest",
+    "mypy>=1.18.2",
+    "ruff>=0.14.3",
 ]
 
 [tool.pdm]
 version = {source = "scm"}
 
 [tool.pdm.scripts]
-all = {composite = ["check", "format-fix", "test"]}
-check = {composite = ["lint", "format-check", "mypy"]}
-lint = "flake8 lir/"
-format-check = "black --check lir --line-length 120"
-format-fix = "black lir --line-length 120"
+all = {composite = ["check", "test"]}
+check = {composite = ["format-check", "lint", "mypy"]}
+fix = {composite = ["lint-fix", "format-fix"]}
+lint = "ruff check lir/"
+lint-fix = "ruff check --fix lir/"
+format-check = "ruff format --diff lir/"
+format-fix = "ruff format lir/"
 mypy = "mypy lir"
 test = "coverage run --branch --source lir --module pytest --strict-markers tests/"
 test-coverage = "coverage report"
 lir = "python run.py"
 
-[tool.flake8]
-max-line-length = 120
-application-import-names = ["lir"]
-import-order-style = "pycharm"
+[tool.ruff]
+format.quote-style = "single"
+line-length = 120
+lint.flake8-builtins.ignorelist = ["format"]
+lint.flake8-quotes.inline-quotes = "single"
+lint.ignore = [
+    # enforced by the formatter, not ignoring this causes warnings
+    "COM812",
+    # 'r' is the default mode for builtin open(), but explicit is better than implicit
+    "UP015",
+    # `X` as variable name is allowed to be uppercase in this project
+    "N802", "N803", "N806",
+    # allow `open()` over `Path.open()`
+    "PTH123",
+    # allow raising custom Exceptions in try/catch blocks
+    "B904",
+    # do not enforce use of all() inside `for()` loop
+    "SIM110",
+]
+lint.isort.lines-after-imports = 2
+lint.select = ["A", "B", "COM", "C4", "DTZ", "E", "F", "I", "N", "PTH", "Q", "SIM", "UP"]
 
 [tool.mypy]
 # allow redefinition of inferred / assigned types

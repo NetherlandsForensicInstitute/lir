@@ -11,6 +11,7 @@ from lir import registry
 from lir.config.base import YamlParseError
 from lir.config.experiment_strategies import parse_experiments_setup
 
+
 LOG = logging.getLogger(__file__)
 DEFAULT_LOGLEVEL = logging.WARNING
 
@@ -25,7 +26,7 @@ def setup_logging(file_path: str, level_increase: int) -> None:
     loglevel = max(logging.DEBUG, min(logging.CRITICAL, DEFAULT_LOGLEVEL - level_increase * 10))
 
     # setup formatter
-    log_format = "[%(asctime)-15s %(levelname)s] %(name)s: %(message)s"
+    log_format = '[%(asctime)-15s %(levelname)s] %(name)s: %(message)s'
     fmt = logging.Formatter(log_format)
 
     ch = logging.StreamHandler()
@@ -33,55 +34,55 @@ def setup_logging(file_path: str, level_increase: int) -> None:
     ch.setLevel(loglevel)
     logging.getLogger().addHandler(ch)
 
-    logging.getLogger("").setLevel(logging.DEBUG)
+    logging.getLogger('').setLevel(logging.DEBUG)
 
 
 def initialize_logfile(output_dir: Path) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
-    fh = logging.FileHandler(output_dir / "log.txt")
-    fh.setFormatter(logging.Formatter("[%(asctime)-15s %(levelname)s] %(name)s: %(message)s"))
+    fh = logging.FileHandler(output_dir / 'log.txt')
+    fh.setFormatter(logging.Formatter('[%(asctime)-15s %(levelname)s] %(name)s: %(message)s'))
     fh.setLevel(logging.DEBUG)
     logging.getLogger().addHandler(fh)
 
 
 def error(msg: str) -> None:
-    sys.stderr.write(f"{msg}\n")
+    sys.stderr.write(f'{msg}\n')
     if LOG.level <= logging.DEBUG:
         raise
     sys.exit(1)
 
 
 def main() -> None:
-    app_name = "benchmark"
+    app_name = 'benchmark'
 
-    parser = argparse.ArgumentParser(description="Run all or some of the parts of project")
+    parser = argparse.ArgumentParser(description='Run all or some of the parts of project')
 
     parser.add_argument(
-        "setup",
-        metavar="FILENAME",
-        help="path to YAML file describing the evaluation setup",
+        'setup',
+        metavar='FILENAME',
+        help='path to YAML file describing the evaluation setup',
     )
     parser.add_argument(
-        "--experiment",
-        help="run a specific experiment (defaults to all experiments)",
-        nargs="*",
+        '--experiment',
+        help='run a specific experiment (defaults to all experiments)',
+        nargs='*',
     )
     parser.add_argument(
-        "--list-experiments",
-        help="prints a list of configured experiments",
-        action="store_true",
+        '--list-experiments',
+        help='prints a list of configured experiments',
+        action='store_true',
     )
     parser.add_argument(
-        "--list-registry",
-        help="prints a list of registered components",
-        action="store_true",
+        '--list-registry',
+        help='prints a list of registered components',
+        action='store_true',
     )
 
-    parser.add_argument("-v", help="increases verbosity", action="count", default=0)
-    parser.add_argument("-q", help="decreases verbosity", action="count", default=0)
+    parser.add_argument('-v', help='increases verbosity', action='count', default=0)
+    parser.add_argument('-q', help='decreases verbosity', action='count', default=0)
     args = parser.parse_args()
 
-    setup_logging(f"{app_name}.log", args.v - args.q)
+    setup_logging(f'{app_name}.log', args.v - args.q)
 
     if args.list_registry:
         for name in registry.registry():
@@ -91,13 +92,13 @@ def main() -> None:
     try:
         experiments, output_dir = parse_experiments_setup(confidence.loadf(args.setup))
     except YamlParseError as e:
-        error(f"error while parsing {args.setup}: {str(e)}")
+        error(f'error while parsing {args.setup}: {str(e)}')
         raise  # this statement is not reachable, but helps code validation
 
     initialize_logfile(output_dir)
 
     if args.list_experiments:
-        for name, experiment in experiments.items():
+        for name, _experiment in experiments.items():
             print(name)
         return
 
@@ -106,11 +107,11 @@ def main() -> None:
             if name in experiments:
                 experiments[name].run()
             else:
-                error(f"no such experiment: {name}")
+                error(f'no such experiment: {name}')
     else:
         for experiment in experiments.values():
             experiment.run()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

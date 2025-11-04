@@ -53,7 +53,7 @@ class LegacyPairingMethod(ABC):
         n_trace_instances: int = 1,
         n_ref_instances: int = 1,
     ) -> PairedFeatureData:
-        meta = instances.meta if hasattr(instances, "meta") else np.zeros((instances.features.shape[0], 0))
+        meta = instances.meta if hasattr(instances, 'meta') else np.zeros((instances.features.shape[0], 0))
         pair_features, pair_labels, pair_meta = self._pair_arrays(
             instances.features, instances.labels, meta, n_trace_instances, n_ref_instances
         )
@@ -374,9 +374,9 @@ class InstancePairing(LegacyPairingMethod):
         assert features.shape[0] == meta.shape[0]
 
         if n_trace_instances != 1:
-            raise ValueError(f"invalid values for `n_trace_instances`; expected: 1; found: {n_trace_instances}")
+            raise ValueError(f'invalid values for `n_trace_instances`; expected: 1; found: {n_trace_instances}')
         if n_ref_instances != 1:
-            raise ValueError(f"invalid values for `n_ref_instances`; expected: 1; found: {n_ref_instances}")
+            raise ValueError(f'invalid values for `n_ref_instances`; expected: 1; found: {n_ref_instances}')
 
         pair_features, pair_labels = self._transform(features, labels)
         pair_features = pair_features.transpose(0, 2, 1)

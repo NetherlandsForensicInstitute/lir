@@ -1,31 +1,31 @@
-from collections.abc import Callable, Mapping, Sequence
 import datetime
-from abc import abstractmethod, ABC
+from abc import ABC, abstractmethod
+from collections.abc import Callable, Mapping, Sequence
 from itertools import product
 from pathlib import Path
 
 import confidence
 
 from lir import registry
-from lir.aggregation import WriteMetricsToCsv, Aggregation
+from lir.aggregation import Aggregation, WriteMetricsToCsv
 from lir.config.base import (
+    ConfigParser,
+    ContextAwareList,
+    GenericFunctionConfigParser,
     YamlParseError,
     check_is_empty,
     pop_field,
-    GenericFunctionConfigParser,
-    ConfigParser,
-    ContextAwareList,
 )
 from lir.config.data_strategies import parse_data_strategy
 from lir.config.lrsystem_architectures import (
-    parse_lrsystem,
     parse_augmented_lrsystem,
+    parse_lrsystem,
 )
 from lir.config.substitution import (
-    Hyperparameter,
-    parse_hyperparameter,
-    _expand,
     ContextAwareDict,
+    Hyperparameter,
+    _expand,
+    parse_hyperparameter,
 )
 from lir.config.visualization import parse_visualizations
 from lir.data.models import DataStrategy
@@ -39,7 +39,7 @@ def parse_metric(name: str, output_path: Path, context: list[str]) -> Callable:
         parser = registry.get(
             name,
             default_config_parser=GenericFunctionConfigParser,
-            search_path=["metrics"],
+            search_path=['metrics'],
         )
         return parser.parse(ContextAwareDict(context), output_path)
     except ComponentNotFoundError as e:
@@ -70,27 +70,27 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         self._output_dir: Path
 
     def data(self) -> DataStrategy:
-        return parse_data_strategy(pop_field(self._config, "data"), self._output_dir)
+        return parse_data_strategy(pop_field(self._config, 'data'), self._output_dir)
 
     def primary_metric(self) -> Callable:
-        metric_name = pop_field(self._config, "primary_metric")
+        metric_name = pop_field(self._config, 'primary_metric')
         return parse_metric(metric_name, self._output_dir, self._config.context)
 
     def aggregations(self) -> Sequence[Aggregation]:
-        metrics = parse_metrics_section(pop_field(self._config, "metrics"), self._output_dir)
-        return [WriteMetricsToCsv(self._output_dir / "metrics.csv", metrics)]
+        metrics = parse_metrics_section(pop_field(self._config, 'metrics'), self._output_dir)
+        return [WriteMetricsToCsv(self._output_dir / 'metrics.csv', metrics)]
 
     def visualization_functions(self) -> list[Callable]:
-        return parse_visualizations(pop_field(self._config, "visualization"), self._output_dir)
+        return parse_visualizations(pop_field(self._config, 'visualization'), self._output_dir)
 
     def lrsystem(self) -> tuple[ContextAwareDict, list[Hyperparameter]]:
-        baseline_config = pop_field(self._config, "lr_system")
+        baseline_config = pop_field(self._config, 'lr_system')
         if baseline_config is None:
-            baseline_config = ContextAwareDict(self._config.context + ["lr_system"])
+            baseline_config = ContextAwareDict(self._config.context + ['lr_system'])
 
         parameters = []
-        if "hyperparameters" in self._config.keys():
-            parameters = self._config.pop("hyperparameters")
+        if 'hyperparameters' in self._config:
+            parameters = self._config.pop('hyperparameters')
             parameters = [
                 parse_hyperparameter(
                     variable,
@@ -122,7 +122,7 @@ class SingleRunStrategy(ExperimentStrategyConfigParser):
     """Prepare Experiment consisting of a single run using configuration values."""
 
     def get_experiment(self, name: str) -> Experiment:
-        lrsystem = parse_lrsystem(pop_field(self._config, "lr_system"), self._output_dir)
+        lrsystem = parse_lrsystem(pop_field(self._config, 'lr_system'), self._output_dir)
 
         return PredefinedExperiment(
             name,
@@ -144,7 +144,7 @@ class GridStrategy(ExperimentStrategyConfigParser):
         names = [param.name for param in parameters]
         values = [param.options() for param in parameters]
         for value_set in product(*values):
-            substitutions = dict(zip(names, value_set))
+            substitutions = dict(zip(names, value_set, strict=True))
             lrsystem = parse_augmented_lrsystem(baseline_config, substitutions, self._output_dir)
             lrsystems.append(lrsystem)
 
@@ -163,7 +163,7 @@ class OptunaStrategy(ExperimentStrategyConfigParser):
 
     def get_experiment(self, name: str) -> Experiment:
         baseline_config, parameters = self.lrsystem()
-        n_trials = pop_field(self._config, "n_trials", validate=int)
+        n_trials = pop_field(self._config, 'n_trials', validate=int)
         return OptunaExperiment(
             name,
             self.data(),
@@ -182,10 +182,10 @@ def parse_experiment_strategy(config: ContextAwareDict, output_path: Path) -> Ex
 
     A corresponding Experiment class is returned.
     """
-    strategy_name = pop_field(config, "strategy")
+    strategy_name = pop_field(config, 'strategy')
     if strategy_name is None:
-        raise YamlParseError(config.context, "Missing strategy name.")
-    strategy_parser = registry.get(strategy_name, search_path=["experiment_strategies"])
+        raise YamlParseError(config.context, 'Missing strategy name.')
+    strategy_parser = registry.get(strategy_name, search_path=['experiment_strategies'])
     return strategy_parser.parse(config, output_path / config.context[-1])
 
 
@@ -198,12 +198,12 @@ def parse_experiments(cfg: ContextAwareDict, output_path: Path) -> Mapping[str, 
     :return: a mapping of names to experiments
     """
     experiments: dict[str, Experiment] = {}
-    experiments_config_section = pop_field(cfg, "experiments")
+    experiments_config_section = pop_field(cfg, 'experiments')
     if not experiments_config_section:
         return experiments
 
     if not isinstance(experiments_config_section, Mapping):
-        raise YamlParseError(cfg.context, "invalid value for experiments")
+        raise YamlParseError(cfg.context, 'invalid value for experiments')
 
     for exp_name, exp_config in experiments_config_section.items():
         experiment = parse_experiment_strategy(
@@ -228,9 +228,9 @@ def parse_experiments_setup(
     :param cfg: a `Configuration` object describing the experiments
     :return: a tuple with two elements: (1) mapping of names to experiments; (2) path to output directory
     """
-    cfg = confidence.Configuration(cfg, {"timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")})
+    cfg = confidence.Configuration(cfg, {'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')})  # noqa: DTZ005
 
     cfg = _expand([], cfg)
 
-    output_dir = pop_field(cfg, "output", validate=Path)
+    output_dir = pop_field(cfg, 'output', validate=Path)
     return parse_experiments(cfg, output_dir), output_dir

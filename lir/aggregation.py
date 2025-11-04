@@ -1,7 +1,9 @@
 import csv
-from abc import abstractmethod, ABC
+from abc import ABC, abstractmethod
+from collections import OrderedDict
+from collections.abc import Callable, Mapping
 from pathlib import Path
-from typing import Mapping, Callable, Any, OrderedDict, IO
+from typing import IO, Any
 
 import numpy as np
 
@@ -18,7 +20,7 @@ class Aggregation(ABC):
         """
         raise NotImplementedError
 
-    def close(self) -> None:
+    def close(self) -> None:  # noqa: B027
         """
         Finalize the aggregation; no more results will come in.
 
@@ -42,7 +44,7 @@ class WriteMetricsToCsv(Aggregation):
         # Record column header names only once to the CSV
         if self._writer is None:
             self.path.parent.mkdir(parents=True, exist_ok=True)
-            self._file = open(self.path, "w")
+            self._file = open(self.path, 'w')  # noqa: SIM115
             self._writer = csv.DictWriter(self._file, fieldnames=results.keys())
             self._writer.writeheader()
 

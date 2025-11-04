@@ -1,8 +1,8 @@
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable
 
 from lir import registry
-from lir.config.base import GenericFunctionConfigParser, YamlParseError, ContextAwareDict
+from lir.config.base import ContextAwareDict, GenericFunctionConfigParser, YamlParseError
 from lir.registry import ComponentNotFoundError
 
 
@@ -20,7 +20,7 @@ def parse_visualizations(config: ContextAwareDict, output_path: Path) -> list[Ca
             parser = registry.get(
                 visualization_type,
                 default_config_parser=GenericFunctionConfigParser,
-                search_path=["visualization"],
+                search_path=['visualization'],
             )
             func = parser.parse(config, output_path)
             visualization_functions.append(func)

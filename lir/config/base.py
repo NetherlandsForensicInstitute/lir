@@ -1,8 +1,7 @@
 from abc import ABC, abstractmethod
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
-
-from typing import Any, Mapping
+from typing import Any
 
 from lir import registry
 from lir.transform.pairing import PairingMethod
@@ -12,8 +11,8 @@ class YamlParseError(ValueError):
     """Error raised when parsing YAML configuration fails, mentioning specific YAML path."""
 
     def __init__(self, config_context_path: list[str], message: str):
-        prefix = f"{'.'.join(config_context_path)}: " if config_context_path else ""
-        super().__init__(f"{prefix}{message}")
+        prefix = f'{".".join(config_context_path)}: ' if config_context_path else ''
+        super().__init__(f'{prefix}{message}')
 
 
 class ContextAwareDict(dict):
@@ -21,7 +20,7 @@ class ContextAwareDict(dict):
         super().__init__(*args, **kwargs)
         self.context = context
 
-    def clone(self, context: list[str] | None = None) -> "ContextAwareDict":
+    def clone(self, context: list[str] | None = None) -> 'ContextAwareDict':
         return _expand(context if context is not None else self.context, self)
 
 
@@ -30,7 +29,7 @@ class ContextAwareList(list):
         super().__init__(*args, **kwargs)
         self.context = context
 
-    def clone(self, context: list[str] | None = None) -> "ContextAwareList":
+    def clone(self, context: list[str] | None = None) -> 'ContextAwareList':
         return _expand(context if context is not None else self.context, self)
 
 
@@ -86,7 +85,7 @@ class GenericFunctionConfigParser(ConfigParser):
         if callable(self.component_class):
             return self.component_class
 
-        raise YamlParseError(config.context, f"unrecognized module type: `{self.component_class}`")
+        raise YamlParseError(config.context, f'unrecognized module type: `{self.component_class}`')
 
 
 class GenericConfigParser(ConfigParser):
@@ -108,7 +107,7 @@ class GenericConfigParser(ConfigParser):
         except Exception as e:
             raise YamlParseError(
                 config.context,
-                f"unable to initialize {self.component_class}; the error was: {e}",
+                f'unable to initialize {self.component_class}; the error was: {e}',
             )
 
 
@@ -166,10 +165,10 @@ def parse_pairing_config(
         class_name = module_config
         args = ContextAwareDict(context)
     else:
-        class_name = pop_field(module_config, "method")
+        class_name = pop_field(module_config, 'method')
         args = module_config
 
-    return registry.get(class_name, search_path=["pairing"], default_config_parser=GenericConfigParser).parse(
+    return registry.get(class_name, search_path=['pairing'], default_config_parser=GenericConfigParser).parse(
         args, output_dir
     )
 
@@ -196,24 +195,24 @@ def pop_field(
     # get required status and default value from function arguments
     required = required if required is not None else (default is None)
     if default is not None and required:
-        raise ValueError(f"illegal argument values: required={required}; default={default}")
+        raise ValueError(f'illegal argument values: required={required}; default={default}')
 
     # if there is a configuration, it should be a `dict`, and we will try to get the field value from it
     if config:
         if not isinstance(config, ContextAwareDict):
-            raise YamlParseError(config.context, f"expected dict; found: {type(config)}")
-        elif field in config.keys():
+            raise YamlParseError(config.context, f'expected dict; found: {type(config)}')
+        elif field in config:
             value = config.pop(field)
             if validate:
                 try:
                     value = validate(value)
                 except Exception as e:
-                    raise YamlParseError(config.context, f"illegal value for field `{field}`: {e}")
+                    raise YamlParseError(config.context, f'illegal value for field `{field}`: {e}')
             return value
 
     # if no field value was returned, return the default value or raise an error
     if required:
-        raise YamlParseError(config.context, f"missing field: `{field}`")
+        raise YamlParseError(config.context, f'missing field: `{field}`')
     else:
         return default
 
@@ -229,4 +228,4 @@ def check_is_empty(
     the user does not assume arguments are parsed that are in fact not recognized."""
     for key in config:
         if not accept_keys or key not in accept_keys:
-            raise YamlParseError(config.context, f"unrecognized argument: {key}")
+            raise YamlParseError(config.context, f'unrecognized argument: {key}')

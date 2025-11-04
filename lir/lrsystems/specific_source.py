@@ -1,4 +1,4 @@
-from lir.lrsystems.lrsystems import LRSystem, LLRData, FeatureData
+from lir.lrsystems.lrsystems import FeatureData, LLRData, LRSystem
 from lir.transform.pipeline import Pipeline
 
 
@@ -14,7 +14,7 @@ class SpecificSourceSystem(LRSystem):
         super().__init__(name)
         self.pipeline = pipeline
 
-    def fit(self, instances: FeatureData) -> "LRSystem":
+    def fit(self, instances: FeatureData) -> 'LRSystem':
         self.pipeline.fit(instances)
         return self
 

@@ -1,8 +1,8 @@
-from typing import Iterator
+from collections.abc import Iterator
 
 import numpy as np
 import sklearn
-from sklearn.model_selection import KFold, GroupKFold, GroupShuffleSplit
+from sklearn.model_selection import GroupKFold, GroupShuffleSplit, KFold
 
 from lir.data.models import DataSet, DataStrategy
 
@@ -17,7 +17,7 @@ class BinaryTrainTestSplit(DataStrategy):
         self.source = source
         self.test_size = test_size
         self.seed = seed
-        self.shuffle = True if self.seed is not None else False
+        self.shuffle = True if self.seed is not None else False  # noqa: SIM210
 
     def __iter__(self) -> Iterator:
         """Allow iteration by looping over the resulting train/test split(s)."""
@@ -41,13 +41,13 @@ class BinaryCrossValidation(DataStrategy):
         self.source = source
         self.folds = folds
         self.seed = seed
-        self.shuffle = True if self.seed is not None else False
+        self.shuffle = True if self.seed is not None else False  # noqa: SIM210
 
     def __iter__(self) -> Iterator:
         """Allow iteration by looping over the resulting train/test split(s)."""
         kf = KFold(n_splits=self.folds, shuffle=self.shuffle, random_state=self.seed)
         instances = self.source.get_instances()
-        for i, (train_index, test_index) in enumerate(kf.split(instances.features, y=instances.labels)):
+        for _i, (train_index, test_index) in enumerate(kf.split(instances.features, y=instances.labels)):
             yield instances[train_index], instances[test_index]
 
 
@@ -86,5 +86,5 @@ class MulticlassCrossValidation(DataStrategy):
         kf = GroupKFold(n_splits=self.folds)
 
         instances = self.source.get_instances()
-        for i, (train_index, test_index) in enumerate(kf.split(instances.features, groups=instances.labels)):
+        for _i, (train_index, test_index) in enumerate(kf.split(instances.features, groups=instances.labels)):
             yield instances[train_index], instances[test_index]

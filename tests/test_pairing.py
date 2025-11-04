@@ -23,18 +23,21 @@ def test_instance_pairing_seed():
     instances = data.get_instances()
     instances_tuple = instances.features, instances.labels, np.ones((instances.labels.shape[0], 0))
     for values in zip(
-        pairing0._pair_arrays(*instances_tuple), pairing1._pair_arrays(*instances_tuple)
+        pairing0._pair_arrays(*instances_tuple), pairing1._pair_arrays(*instances_tuple),
+        strict=True
     ):
         assert np.all(values[0] == values[1])
 
     pairing0 = InstancePairing(seed=1, ratio_limit=1)
     pairing1 = InstancePairing(seed=1, ratio_limit=1)
     for values in zip(
-        pairing0._pair_arrays(*instances_tuple), pairing0._pair_arrays(*instances_tuple)
+        pairing0._pair_arrays(*instances_tuple), pairing0._pair_arrays(*instances_tuple),
+        strict=True
     ):
         assert np.all(values[0] == values[1])
     for values in zip(
-        pairing0._pair_arrays(*instances_tuple), pairing1._pair_arrays(*instances_tuple)
+        pairing0._pair_arrays(*instances_tuple), pairing1._pair_arrays(*instances_tuple),
+        strict=True
     ):
         assert np.all(values[0] == values[1])
 

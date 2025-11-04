@@ -22,7 +22,7 @@ def cllr(llrs: np.ndarray, y: np.ndarray, weights: tuple[float, float] = (1, 1))
     #   divide -> ignore divide by zero
     #   over -> ignore scalar overflow
     lrs = logodds_to_odds(llrs)
-    with np.errstate(divide="ignore", over="ignore"):
+    with np.errstate(divide='ignore', over='ignore'):
         lrs0, lrs1 = Xy_to_Xn(lrs, y)
         cllr0 = weights[0] * np.mean(np.log2(1 + lrs0)) if weights[0] > 0 else 0
         cllr1 = weights[1] * np.mean(np.log2(1 + 1 / lrs1)) if weights[1] > 0 else 0

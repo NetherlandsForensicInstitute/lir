@@ -23,7 +23,7 @@ def _calcsurface(c1: tuple[float, float], c2: tuple[float, float]) -> float:
 
     elif a < 0:
         raise ValueError(
-            f"slope is negative; impossible for PAV-transform. Coordinates are {c1} and {c2}. Calculated slope is {a}"
+            f'slope is negative; impossible for PAV-transform. Coordinates are {c1} and {c2}. Calculated slope is {a}'
         )
     else:
         # than xs is finite:
@@ -65,7 +65,7 @@ def _calcsurface(c1: tuple[float, float], c2: tuple[float, float]) -> float:
                 # situation 4 of 4 : this situation should never appear. There is a fourth sibution as situation 3,
                 # but than above the identity line. However, this is impossible by definition of a
                 # PAV-transform (y2 > x1).
-                raise ValueError(f"unexpected coordinate combination: ({x1}, {y1}) and ({x2}, {y2})")
+                raise ValueError(f'unexpected coordinate combination: ({x1}, {y1}) and ({x2}, {y2})')
     return surface
 
 
@@ -132,7 +132,7 @@ def devpav(llrs: np.ndarray, y: np.ndarray) -> float:
     calculates devPAV for LR data under H1 and H2.
     """
     if all(y) or not any(y):
-        raise ValueError("devpav: illegal input: at least one value is required for each class")
+        raise ValueError('devpav: illegal input: at least one value is required for each class')
     cal = IsotonicCalibrator()
     pavllrs = cal.fit_transform(llrs, y)
     return _devpavcalculator(logodds_to_odds(llrs), logodds_to_odds(pavllrs), y)

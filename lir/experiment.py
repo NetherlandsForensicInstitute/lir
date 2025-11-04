@@ -1,6 +1,6 @@
 import logging
 from abc import ABC, abstractmethod
-from collections.abc import Iterable, Sequence, Callable
+from collections.abc import Callable, Iterable, Sequence
 from pathlib import Path
 
 from tqdm import tqdm
@@ -8,7 +8,8 @@ from tqdm import tqdm
 import lir
 from lir.aggregation import Aggregation
 from lir.data.models import DataStrategy, concatenate_instances
-from lir.lrsystems.lrsystems import LRSystem, LLRData
+from lir.lrsystems.lrsystems import LLRData, LRSystem
+
 
 LOG = logging.getLogger(__name__)
 
@@ -62,7 +63,7 @@ class Experiment(ABC):
         # Generate visualization output as configured by `visualization_functions`
         # and write graphical output to the `output_path`.
         output_dir = self.output_path / lrsystem.name
-        LOG.debug(f"writing visualizations to {output_dir}")
+        LOG.debug(f'writing visualizations to {output_dir}')
         for visualization_function in self.visualization_functions:
             visualization_function(output_dir, llrs, labels)
 

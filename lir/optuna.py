@@ -6,10 +6,10 @@ import optuna
 from lir.aggregation import Aggregation
 from lir.config.lrsystem_architectures import parse_augmented_lrsystem
 from lir.config.substitution import (
-    Hyperparameter,
-    FloatHyperparameter,
-    HyperparameterOption,
     ContextAwareDict,
+    FloatHyperparameter,
+    Hyperparameter,
+    HyperparameterOption,
 )
 from lir.data.models import DataStrategy
 from lir.experiment import Experiment
@@ -65,16 +65,16 @@ class OptunaExperiment(Experiment):
             self.baseline_config,
             assignments,
             self.output_path,
-            dirname_prefix=f"{trial.number:03d}__",
+            dirname_prefix=f'{trial.number:03d}__',
         )
 
         # add optuna values as system parameters
         lrsystem.parameters.update(
             {
                 # trial.number is a sequence number, starting at 0
-                "trial": trial.number,
+                'trial': trial.number,
                 # the best trial is known only at the second run, since the first trial results are not available yet
-                "best_trial": trial.study.best_trial.number if trial.number > 0 else "",
+                'best_trial': trial.study.best_trial.number if trial.number > 0 else '',
             }
         )
 

@@ -1,4 +1,5 @@
-from lir.lrsystems.lrsystems import LRSystem, Pipeline, LLRData, FeatureData
+from lir.lrsystems.lrsystems import LRSystem, LLRData, FeatureData
+from lir.transform.pipeline import Pipeline
 
 
 class SpecificSourceSystem(LRSystem):

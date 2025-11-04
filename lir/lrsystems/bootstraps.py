@@ -10,7 +10,8 @@ from lir.transform.pipeline import Pipeline
 class TrainDataBootstrap(Pipeline):
     """Bootstrap system that estimates confidence intervals around the best estimate of a pipeline.
     This bootstrap system creates bootstrap samples from the training data, fits the pipeline on each sample,
-    and then computes confidence intervals for the pipeline outputs based on the variability across the bootstrap samples.
+    and then computes confidence intervals for the pipeline outputs based on the variability across the bootstrap
+    samples.
 
     Attributes:
         interval: The lower and upper quantiles for the confidence interval.
@@ -28,7 +29,8 @@ class TrainDataBootstrap(Pipeline):
         Parameters:
         param steps: list[tuple[str, Any]]: The steps of the pipeline to be bootstrapped.
         param n_bootstraps: int: The number of bootstrap samples to generate. Default is 400.
-        param interval: tuple[float, float]: The lower and upper quantiles for the confidence interval. Default is (0.05, 0.95).
+        param interval: tuple[float, float]: The lower and upper quantiles for the confidence interval.
+                                             Default: (0.05,0.95).
         """
         self.interval = interval
         self.n_bootstraps = n_bootstraps

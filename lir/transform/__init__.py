@@ -90,10 +90,12 @@ class SklearnTransformer(Transformer):
         return self
 
     def transform(self, instances: FeatureData) -> FeatureData:
-        return instances.replace(features=self.transformer.transform(instances.features))
+        return instances.replace_as(FeatureData, features=self.transformer.transform(instances.features))
 
     def fit_transform(self, instances: FeatureData) -> FeatureData:
-        return instances.replace(features=self.transformer.fit_transform(instances.features, instances.labels))
+        return instances.replace_as(
+            FeatureData, features=self.transformer.fit_transform(instances.features, instances.labels)
+        )
 
 
 class FunctionTransformer(Transformer):
@@ -157,6 +159,12 @@ class NumpyTransformer(TransformerWrapper):
         result = super().transform(instances)
         self.csv_writer.transform(result)
         return result
+
+    def fit_transform(self, instances: FeatureData) -> FeatureData:
+        self.fit(instances)
+
+        # avoid doing self.transform() because no CSV should be written during training
+        return super().transform(instances)
 
 
 class CsvWriter(Transformer):
@@ -234,7 +242,7 @@ class CsvWriter(Transformer):
             for filename in self.input_files:
                 rows = self._join_reader(filename)
                 all_headers.extend(next(rows))
-                all_data.append(np.array(rows))
+                all_data.append(np.array(list(rows)))
 
         if write_header:
             writer.writerow(all_headers)

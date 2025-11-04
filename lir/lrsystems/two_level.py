@@ -460,4 +460,4 @@ class TwoLevelSystem(LRSystem):
         pair_llrs = pairs.replace_as(LLRData, features=self.model.transform(pairs.features_trace, pairs.features_ref))
         pair_llrs = self.postprocessing_pipeline.transform(pair_llrs)
 
-        return pair_llrs
+        return pair_llrs.replace_as(LLRData)

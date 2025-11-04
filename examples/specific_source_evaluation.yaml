@@ -32,7 +32,7 @@ lr_system:
     _results:
       method: csv_writer
       include_input: False
-      include_batch: True
+      include_batch: False
       include:
         - raw_data.csv
         - scaler.csv

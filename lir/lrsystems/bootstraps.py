@@ -22,7 +22,11 @@ class BootstrapAtData(Pipeline):
     """
 
     def __init__(
-        self, steps: list[tuple[str, Any]], n_bootstraps: int = 400, interval: tuple[float, float] = (0.05, 0.95)
+        self,
+        steps: list[tuple[str, Any]],
+        n_bootstraps: int = 400,
+        interval: tuple[float, float] = (0.05, 0.95),
+        seed: int | None = None,
     ):
         """Initialize the TrainDataBootstrap with the given pipeline steps, number of bootstraps, and interval.
 
@@ -34,10 +38,11 @@ class BootstrapAtData(Pipeline):
         """
         self.interval = interval
         self.n_bootstraps = n_bootstraps
+        self.seed = seed
 
         self.f_interval_lower = None
-
         self.f_interval_upper = None
+
         super().__init__(steps)
 
     def fit(self, instances: FeatureData) -> Self:
@@ -48,6 +53,9 @@ class BootstrapAtData(Pipeline):
         """
 
         all_vals = []
+        if self.seed is not None:
+            np.random.seed(self.seed)
+
         for _ in range(self.n_bootstraps):
             sample_index = np.random.choice(len(instances), size=len(instances))
             samples = instances[sample_index]

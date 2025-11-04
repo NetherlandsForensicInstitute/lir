@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from lir.bounding import LLRBounder
-from lir.util import logodds_to_odds, odds_to_logodds
+from lir.util import logodds_to_odds
 
 
 def plot_nbe(
@@ -67,7 +67,7 @@ def elub(
 
     # determine the range of LLRs to be considered, using dataset sizes: LB > -log10(size(Hp)+1), UB < log10(size(Hd)+1)
     llr_min = max((np.min(sanitized_llrs), -np.log10(np.sum(y) + 1)))
-    llr_max = min((np.max(sanitized_llrs), np.log10(np.sum(1-y) + 1)))
+    llr_max = min((np.max(sanitized_llrs), np.log10(np.sum(1 - y) + 1)))
     llr_steps_min = min(0, int(np.floor_divide(llr_min, step_size)))
     llr_steps_max = max(0, int((np.floor_divide(llr_max, step_size)) + 1))
     llr_threshold = np.linspace(llr_steps_min * step_size, llr_steps_max * step_size, llr_steps_max - llr_steps_min + 1)
@@ -157,5 +157,4 @@ class ELUBBounder(LLRBounder):
     """
 
     def calculate_bounds(self, llrs: np.ndarray, labels: np.ndarray) -> tuple[float | None, float | None]:
-        lower_lr_bound, upper_lr_bound = elub(llrs, labels, add_misleading=1)
-        return lower_lr_bound, upper_lr_bound
+        return elub(llrs, labels, add_misleading=1)

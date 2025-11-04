@@ -10,8 +10,9 @@ from lir.data.datasets.synthesized_normal_binary import (
     SynthesizedNormalDataClass,
     SynthesizedNormalBinaryData,
 )
-from lir.lrsystems.lrsystems import Pipeline, LLRData, FeatureData
+from lir.lrsystems.lrsystems import LLRData, FeatureData
 from lir.lrsystems.specific_source import SpecificSourceSystem
+from lir.transform.pipeline import Pipeline
 
 
 @pytest.fixture

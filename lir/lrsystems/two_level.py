@@ -1,10 +1,11 @@
-from lir.lrsystems.lrsystems import LRSystem, Pipeline, LLRData, FeatureData
+from lir.lrsystems.lrsystems import LRSystem, LLRData, FeatureData
 
 import numpy as np
 import pandas as pd
 from scipy.special import logsumexp
 
 from lir.transform.pairing import PairingMethod
+from lir.transform.pipeline import Pipeline
 
 
 class TwoLevelModelNormalKDE:

@@ -15,12 +15,12 @@ from lir.config.substitution import (
     ContextAwareDict,
 )
 from lir.config.transform import parse_module
-from lir.lrsystems.lrsystems import LRSystem, Pipeline
+from lir.lrsystems.lrsystems import LRSystem
 from lir.lrsystems.score_based import ScoreBasedSystem
 from lir.lrsystems.specific_source import SpecificSourceSystem
 from lir.lrsystems.two_level import TwoLevelSystem
 from lir.registry import ComponentNotFoundError
-
+from lir.transform.pipeline import Pipeline
 
 LOG = logging.getLogger(__name__)
 

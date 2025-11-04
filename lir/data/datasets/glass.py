@@ -1,7 +1,7 @@
 import csv
+from collections.abc import Iterator
 from os import PathLike
 from pathlib import Path
-from typing import Iterator
 
 import numpy as np
 
@@ -28,7 +28,7 @@ class GlassData(DataSet, DataStrategy):
 
     def __init__(self, cache_dir: PathLike):
         self.resources = RemoteResource(
-            "https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/main",
+            'https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/main',
             Path(cache_dir),
         )
 
@@ -39,14 +39,14 @@ class GlassData(DataSet, DataStrategy):
         labels = []
         origins = []
         values = []
-        with self.resources.open(file, "r") as f:
+        with self.resources.open(file, 'r') as f:
             reader = csv.DictReader(f)
             for i, row in enumerate(reader):
                 # the first measurement is at row 2, since row 1 is the header
                 row_number = i + 2
 
-                labels.append(int(row["Item"]))
-                origins.append(f"{file}:{row_number}")
+                labels.append(int(row['Item']))
+                origins.append(f'{file}:{row_number}')
                 values.append(np.array(list(map(float, row.values()))[3:]))
 
         return np.array(values), np.array(labels), np.array(origins).reshape(-1, 1)
@@ -60,11 +60,15 @@ class GlassData(DataSet, DataStrategy):
 
         The data are returned as a tuple of features, labels, and metadata, similar to `get_instances()`.
         """
-        training_data = self._load_data("training.csv")
+        training_data = self._load_data('training.csv')
         training_data = FeatureData(
-            features=training_data[0], labels=training_data[1], meta=training_data[2]  # type: ignore
+            features=training_data[0],
+            labels=training_data[1],
+            meta=training_data[2],  # type: ignore
         )
-        test_features, test_labels, test_meta = zip(self._load_data("duplo.csv"), self._load_data("triplo.csv"))
+        test_features, test_labels, test_meta = zip(
+            self._load_data('duplo.csv'), self._load_data('triplo.csv'), strict=True
+        )
         test_data = FeatureData(
             features=np.concatenate(test_features),
             labels=np.concatenate(test_labels),
@@ -85,5 +89,5 @@ class GlassData(DataSet, DataStrategy):
 
         The meta values of an instance are a concatenation of the filename and a row number, e.g. "training.csv:22".
         """
-        features, labels, meta = self._load_data("training.csv")
+        features, labels, meta = self._load_data('training.csv')
         return FeatureData(features=features, labels=labels, meta=meta)  # type: ignore

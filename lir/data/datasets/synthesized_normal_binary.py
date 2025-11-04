@@ -5,7 +5,7 @@ from typing import Any
 import numpy as np
 import numpy.random
 
-from lir.config.base import config_parser, pop_field, ContextAwareDict
+from lir.config.base import ContextAwareDict, config_parser, pop_field
 from lir.data.models import DataSet
 from lir.lrsystems.lrsystems import FeatureData
 
@@ -54,9 +54,9 @@ class SynthesizedNormalBinaryData(DataSet):
 @config_parser
 def synthesized_normal_binary(config: ContextAwareDict, _: Path) -> DataSet:
     """Set up (binary class) data source class to obtain normally distributed data from configuration."""
-    seed = pop_field(config, "seed")
-    h1 = pop_field(config, "h1")
-    h2 = pop_field(config, "h2")
+    seed = pop_field(config, 'seed')
+    h1 = pop_field(config, 'h1')
+    h2 = pop_field(config, 'h2')
     data_classes = {
         1: SynthesizedNormalDataClass(**h1),
         0: SynthesizedNormalDataClass(**h2),

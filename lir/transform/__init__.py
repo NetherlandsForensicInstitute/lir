@@ -1,16 +1,15 @@
-from collections.abc import Callable, Iterator
 import csv
 import logging
-from abc import abstractmethod, ABC
+from abc import ABC, abstractmethod
+from collections.abc import Callable, Iterator
 from itertools import chain
 from pathlib import Path
-from typing import Any, Protocol
-
-from typing_extensions import Self
+from typing import Any, Protocol, Self
 
 import numpy as np
 
 from lir.data.models import FeatureData
+
 
 LOG = logging.getLogger(__name__)
 
@@ -176,12 +175,12 @@ class CsvWriter(Transformer):
         include_meta: bool = False,
         include_input: bool = True,
         include_batch: bool = False,
-        phase: str = "test",
+        phase: str = 'test',
     ):
         super().__init__()
         self.path = path
         if self.path is None:
-            raise ValueError("missing argument: path")
+            raise ValueError('missing argument: path')
 
         self.header_prefix = self.path.stem
 
@@ -195,7 +194,7 @@ class CsvWriter(Transformer):
         self.n_batches = 0
 
     def _join_reader(self, filename: str) -> Iterator[list[str]]:
-        with open(self.path.parent / filename, "r") as f:
+        with open(self.path.parent / filename, 'r') as f:
             reader = csv.reader(f)
             yield from reader
 
@@ -204,18 +203,18 @@ class CsvWriter(Transformer):
         all_data: list[np.ndarray] = []
 
         if self.include_labels and instances.labels is not None:
-            all_headers.append("label")
+            all_headers.append('label')
             all_data.append(instances.labels.reshape(-1, 1))
 
-        if self.include_meta and hasattr(instances, "meta"):
+        if self.include_meta and hasattr(instances, 'meta'):
             meta = instances.meta
             if len(meta.shape) < 2:
                 meta = meta.reshape(meta.shape[0], -1)
-            all_headers.extend([f"{self.header_prefix}.meta{n}" for n in range(meta.shape[1])])
+            all_headers.extend([f'{self.header_prefix}.meta{n}' for n in range(meta.shape[1])])
             all_data.append(meta)
 
         if self.include_batch:
-            all_headers.append("batch")
+            all_headers.append('batch')
             all_data.append(np.ones((len(instances), 1)) * self.n_batches)
 
         if self.include_input:
@@ -223,10 +222,10 @@ class CsvWriter(Transformer):
             if len(features.shape) == 1:
                 features = features.reshape(-1, 1)
             elif len(features.shape) != 2:
-                raise ValueError(f"{__name__}: unsupported shape: {features.shape}")
+                raise ValueError(f'{__name__}: unsupported shape: {features.shape}')
 
             if self.header is None:
-                all_headers.extend([f"{self.header_prefix}{i}" for i in range(features.shape[1])])
+                all_headers.extend([f'{self.header_prefix}{i}' for i in range(features.shape[1])])
             else:
                 all_headers.extend(self.header)
             all_data.append(features)
@@ -239,7 +238,7 @@ class CsvWriter(Transformer):
 
         if write_header:
             writer.writerow(all_headers)
-        for row in zip(*all_data):
+        for row in zip(*all_data, strict=True):
             writer.writerow(chain(*row))
 
     def fit_transform(self, instances: FeatureData) -> FeatureData:
@@ -247,13 +246,13 @@ class CsvWriter(Transformer):
 
     def transform(self, instances: FeatureData) -> FeatureData:
         """Write numpy feature vector to CSV output file."""
-        LOG.info(f"writing CSV file: {self.path}")
+        LOG.info(f'writing CSV file: {self.path}')
         self.path.parent.mkdir(exist_ok=True, parents=True)
         if self.path.exists():
-            write_mode = "a"
+            write_mode = 'a'
             write_header = False
         else:
-            write_mode = "w"
+            write_mode = 'w'
             write_header = True
 
         with open(self.path, write_mode) as f:
@@ -281,14 +280,14 @@ def as_transformer(transformer_like: Any) -> Transformer:
     if isinstance(transformer_like, Transformer):
         # The component already supports all necessary methods, through the `Transformer` interface.
         return transformer_like
-    if hasattr(transformer_like, "transform"):
+    if hasattr(transformer_like, 'transform'):
         # The component implements a `transform()` method, which means we assume it is a sklearn style transformer.
         return SklearnTransformer(transformer_like)
-    if hasattr(transformer_like, "predict_proba"):
+    if hasattr(transformer_like, 'predict_proba'):
         # The component has a `predict_proba` method, which means we assume it is a sklearn style estimator
         return BinaryClassifierTransformer(transformer_like)
     if callable(transformer_like):
         # The component is a function
         return FunctionTransformer(transformer_like)
 
-    raise ValueError(f"unknown module type of class {type(transformer_like)}")
+    raise ValueError(f'unknown module type of class {type(transformer_like)}')

@@ -1,6 +1,6 @@
-from collections.abc import Iterator
 import logging
-from contextlib import contextmanager, _GeneratorContextManager
+from collections.abc import Iterator
+from contextlib import _GeneratorContextManager, contextmanager
 from functools import partial
 from os import PathLike
 from typing import Any
@@ -12,9 +12,11 @@ from matplotlib.axis import Axis
 
 from lir import util
 from lir.algorithms.bayeserror import plot_nbe as nbe
-from .expected_calibration_error import plot_ece as ece
+
 from ..algorithms.isotonic_regression import IsotonicCalibrator
 from ..transform import Transformer
+from .expected_calibration_error import plot_ece as ece
+
 
 LOG = logging.getLogger(__name__)
 
@@ -28,8 +30,8 @@ plt.get_ylim = lambda: plt.gca().get_ylim()
 plt.set_xticks = plt.xticks
 plt.set_yticks = plt.yticks
 
-H1_COLOR = "red"
-H2_COLOR = "blue"
+H1_COLOR = 'red'
+H2_COLOR = 'blue'
 
 
 class Canvas:
@@ -142,7 +144,7 @@ def pav(
     ]
 
     # plot line through origin
-    ax.plot(xrange, yrange, "--", color="gray", label="Optimal system")
+    ax.plot(xrange, yrange, '--', color='gray', label='Optimal system')
 
     # line pre pav llrs x and post pav llrs y
     line_x = np.arange(*xrange, 0.01)
@@ -154,7 +156,7 @@ def pav(
 
     # some values of line_y go beyond the yrange which is problematic when there are infinite values
     mask_out_of_range = np.logical_and(line_x >= yrange[0], line_x <= yrange[1])
-    ax.plot(line_x[mask_out_of_range], line_y[mask_out_of_range], color="black", label="PAV transform")
+    ax.plot(line_x[mask_out_of_range], line_y[mask_out_of_range], color='black', label='PAV transform')
 
     # add points for infinite values
     if np.logical_or(np.isinf(pav_llrs), np.isinf(llrs)).any():
@@ -171,12 +173,12 @@ def pav(
             if neg_inf:
                 axis_range[0] -= step_size
                 ticks = [axis_range[0]] + ticks
-                tick_labels = ["-∞"] + tick_labels
+                tick_labels = ['-∞'] + tick_labels
 
             if pos_inf:
                 axis_range[1] += step_size
                 ticks = ticks + [axis_range[1]]
-                tick_labels = tick_labels + ["+∞"]
+                tick_labels = tick_labels + ['+∞']
 
             return axis_range, ticks, tick_labels
 
@@ -205,7 +207,7 @@ def pav(
         ax.set_xticks(ticks_x, tick_labels_x)
 
         color = [H1_COLOR if i > 0 else H2_COLOR for i in y_inf]
-        ax.scatter(x_inf, y_inf, color=color, marker="|")
+        ax.scatter(x_inf, y_inf, color=color, marker='|')
 
     ax.axis(xrange + yrange)
     # pre-/post-calibrated lr fit
@@ -222,13 +224,13 @@ def pav(
         n_h1 = np.count_nonzero(y)
         n_h2 = len(y) - n_h1
 
-        ax.scatter(h1_llrs, h1_pav, facecolors=H1_COLOR, marker=2, linewidths=1, alpha=0.5, label=f"H1 (n={n_h1})")
-        ax.scatter(h2_llrs, h2_pav, facecolors=H2_COLOR, marker=3, linewidths=1, alpha=0.5, label=f"H2 (n={n_h2})")
+        ax.scatter(h1_llrs, h1_pav, facecolors=H1_COLOR, marker=2, linewidths=1, alpha=0.5, label=f'H1 (n={n_h1})')
+        ax.scatter(h2_llrs, h2_pav, facecolors=H2_COLOR, marker=3, linewidths=1, alpha=0.5, label=f'H2 (n={n_h2})')
 
         # scatter plot of measured lrs
 
-    ax.set_xlabel("pre-calibrated log$_{10}$(LR)")
-    ax.set_ylabel("post-calibrated log$_{10}$(LR)")
+    ax.set_xlabel('pre-calibrated log$_{10}$(LR)')
+    ax.set_ylabel('post-calibrated log$_{10}$(LR)')
     ax.legend()
 
 
@@ -256,8 +258,8 @@ def lr_histogram(
     weights0, weights1 = (np.ones_like(points) / len(points) if weighted else None for points in (points0, points1))
     ax.hist(points1, bins=bins, alpha=0.25, weights=weights1)
     ax.hist(points0, bins=bins, alpha=0.25, weights=weights0)
-    ax.set_xlabel("log$_{10}$(LR)")
-    ax.set_ylabel("count" if not weighted else "relative frequency")
+    ax.set_xlabel('log$_{10}$(LR)')
+    ax.set_ylabel('count' if not weighted else 'relative frequency')
 
 
 def tippett(llrs: np.ndarray, y: np.ndarray, plot_type: int = 1, ax: Axes = plt) -> None:
@@ -284,13 +286,13 @@ def tippett(llrs: np.ndarray, y: np.ndarray, plot_type: int = 1, ax: Axes = plt)
     elif plot_type == 2:
         perc1 = (sum(i <= xplot1 for i in lr_1) / len(lr_1)) * 100
     else:
-        raise ValueError("plot_type must be either 1 or 2.")
+        raise ValueError('plot_type must be either 1 or 2.')
 
-    ax.plot(xplot1, perc1, color="b", label=r"LRs given $\mathregular{H_1}$")
-    ax.plot(xplot0, perc0, color="r", label=r"LRs given $\mathregular{H_2}$")
-    ax.axvline(x=0, color="k", linestyle="--")
-    ax.set_xlabel("log$_{10}$(LR)")
-    ax.set_ylabel("Cumulative proportion")
+    ax.plot(xplot1, perc1, color='b', label=r'LRs given $\mathregular{H_1}$')
+    ax.plot(xplot0, perc0, color='r', label=r'LRs given $\mathregular{H_2}$')
+    ax.axvline(x=0, color='k', linestyle='--')
+    ax.set_xlabel('log$_{10}$(LR)')
+    ax.set_ylabel('Cumulative proportion')
     ax.legend()
 
 
@@ -320,7 +322,7 @@ def score_distribution(
     """
     if ax is None:
         _, ax = plt.subplots()
-    plt.rcParams.update({"font.size": 15})
+    plt.rcParams.update({'font.size': 15})
 
     bins = np.histogram_bin_edges(scores[np.isfinite(scores)], bins=bins)
     bin_width = bins[1] - bins[0]
@@ -336,8 +338,8 @@ def score_distribution(
 
     # handle inf values
     if np.isinf(scores).any():
-        prop_cycle = plt.rcParams["axes.prop_cycle"]
-        colors = prop_cycle.by_key()["color"]
+        prop_cycle = plt.rcParams['axes.prop_cycle']
+        colors = prop_cycle.by_key()['color']
         x_range = np.linspace(min(bins), max(bins), 6).tolist()
         labels = [str(round(tick, 1)) for tick in x_range]
         step_size = x_range[2] - x_range[1]
@@ -346,7 +348,7 @@ def score_distribution(
 
         if np.isneginf(scores).any():
             x_range = [x_range[0] - step_size] + x_range
-            labels = ["-∞"] + labels
+            labels = ['-∞'] + labels
             for i, s in enumerate(scores_by_class):
                 if np.isneginf(s).any():
                     plot_args_inf.append(
@@ -359,7 +361,7 @@ def score_distribution(
 
         if np.isposinf(scores).any():
             x_range = x_range + [x_range[-1] + step_size]
-            labels.append("∞")
+            labels.append('∞')
             for i, s in enumerate(scores_by_class):
                 if np.isposinf(s).any():
                     plot_args_inf.append(
@@ -373,22 +375,22 @@ def score_distribution(
         ax.set_xticks(x_range, labels)
 
         for color, x_coord, y_coord in plot_args_inf:
-            ax.bar(x_coord, y_coord, width=bar_width, color=color, alpha=0.3, hatch="/")
+            ax.bar(x_coord, y_coord, width=bar_width, color=color, alpha=0.3, hatch='/')
 
-    for cls, weight in zip(y_classes, weights):
+    for cls, weight in zip(y_classes, weights, strict=True):
         ax.hist(
             scores[y == cls],
             bins=bins,
             alpha=0.3,
-            label=f"class {cls}",
+            label=f'class {cls}',
             weights=weight / bin_width if weighted else None,
         )
 
-        ax.set_xlabel("score")
+        ax.set_xlabel('score')
     if weighted:
-        ax.set_ylabel("probability density")
+        ax.set_ylabel('probability density')
     else:
-        ax.set_ylabel("count")
+        ax.set_ylabel('count')
 
 
 def calibrator_fit(
@@ -405,10 +407,10 @@ def calibrator_fit(
     """
     if ax is None:
         _, ax = plt.subplots()
-    plt.rcParams.update({"font.size": 15})
+    plt.rcParams.update({'font.size': 15})
 
     x = np.linspace(score_range[0], score_range[1], resolution)
     calibrator.transform(x)
 
-    ax.plot(x, calibrator.p1, color="tab:blue", label="fit class 1")
-    ax.plot(x, calibrator.p0, color="tab:orange", label="fit class 0")
+    ax.plot(x, calibrator.p1, color='tab:blue', label='fit class 1')
+    ax.plot(x, calibrator.p0, color='tab:orange', label='fit class 0')

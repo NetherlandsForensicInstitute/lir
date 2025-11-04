@@ -1,18 +1,19 @@
 import collections
 import inspect
+import warnings
+from functools import partial
 from typing import Any, TypeVar
 
 import numpy as np
-import warnings
-from functools import partial
 
-LR = collections.namedtuple("LR", ["lr", "p0", "p1"])
+
+LR = collections.namedtuple('LR', ['lr', 'p0', 'p1'])
 
 
 def get_classes_from_Xy(X: np.ndarray, y: np.ndarray, classes: list[Any] | None = None) -> np.ndarray:
-    assert len(X.shape) >= 1, f"expected: X has at least 1 dimensions; found: {len(X.shape)} dimensions"
-    assert len(y.shape) == 1, f"expected: y is a 1-dimensional array; found: {len(y.shape)} dimensions"
-    assert X.shape[0] == y.size, f"dimensions of X and y do not match; found: {X.shape[0]} != {y.size}"
+    assert len(X.shape) >= 1, f'expected: X has at least 1 dimensions; found: {len(X.shape)} dimensions'
+    assert len(y.shape) == 1, f'expected: y is a 1-dimensional array; found: {len(y.shape)} dimensions'
+    assert X.shape[0] == y.size, f'dimensions of X and y do not match; found: {X.shape[0]} != {y.size}'
 
     return np.unique(y) if classes is None else np.asarray(classes)
 
@@ -45,7 +46,7 @@ def Xy_to_Xn(X: np.ndarray, y: np.ndarray, classes: list[int] | None = None) -> 
     return [X[y == yvalue] for yvalue in classes]
 
 
-FloatOrArray = TypeVar("FloatOrArray", np.ndarray, float)
+FloatOrArray = TypeVar('FloatOrArray', np.ndarray, float)
 
 
 def odds_to_probability(odds: FloatOrArray) -> FloatOrArray:
@@ -58,7 +59,7 @@ def odds_to_probability(odds: FloatOrArray) -> FloatOrArray:
        odds / (1 + odds), otherwise
     """
     inf_values = odds == np.inf
-    with np.errstate(invalid="ignore"):
+    with np.errstate(invalid='ignore'):
         p = np.divide(odds, (1 + odds))
     p[inf_values] = 1
     return p
@@ -68,7 +69,7 @@ def probability_to_odds(p: FloatOrArray) -> FloatOrArray:
     """
     Converts a probability to odds
     """
-    with np.errstate(divide="ignore"):
+    with np.errstate(divide='ignore'):
         return p / (1 - p)
 
 
@@ -76,7 +77,7 @@ def probability_to_logodds(p: FloatOrArray) -> FloatOrArray:
     """
     Converts probability values to their log odds with base 10.
     """
-    with np.errstate(divide="ignore"):
+    with np.errstate(divide='ignore'):
         complement = 1 - p
         return np.log10(p) - np.log10(complement)
 
@@ -86,7 +87,7 @@ def logodds_to_probability(log_odds: FloatOrArray) -> FloatOrArray:
 
 
 def logodds_to_odds(log_odds: FloatOrArray) -> FloatOrArray:
-    with np.errstate(divide="ignore"):
+    with np.errstate(divide='ignore'):
         return 10**log_odds
 
 
@@ -100,8 +101,9 @@ def ln_to_log10(ln_data: FloatOrArray) -> FloatOrArray:
 
 def warn_deprecated() -> None:
     warnings.warn(
-        f"the function `{inspect.stack()[1].function}` is no longer maintained; "
-        "please check documentation for alternatives"
+        f'the function `{inspect.stack()[1].function}` is no longer maintained; '
+        'please check documentation for alternatives',
+        stacklevel=2,
     )
 
 
@@ -125,10 +127,10 @@ def check_misleading_finite(values: np.ndarray, labels: np.ndarray) -> None:
 
     # give error message if H1's contain zeros and H2's contain ones
     if np.any(np.isneginf(values[labels == 1])) and np.any(np.isposinf(values[labels == 0])):
-        raise ValueError("invalid input: -inf found for H1 and inf found for H2")
+        raise ValueError('invalid input: -inf found for H1 and inf found for H2')
     # give error message if H1's contain zeros
     if np.any(np.isneginf(values[labels == 1])):
-        raise ValueError("invalid input: -inf found for H1")
+        raise ValueError('invalid input: -inf found for H1')
     # give error message if H2's contain ones
     if np.any(np.isposinf(values[labels == 0])):
-        raise ValueError("invalid input: inf found for H2")
+        raise ValueError('invalid input: inf found for H2')

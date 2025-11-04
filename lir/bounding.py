@@ -1,4 +1,4 @@
-from abc import abstractmethod, ABC
+from abc import ABC, abstractmethod
 
 import numpy as np
 from sklearn.base import TransformerMixin
@@ -30,17 +30,17 @@ class LLRBounder(TransformerMixin, ABC):
     @staticmethod
     def _validate(llrs: np.ndarray, labels: np.ndarray) -> None:
         if len(llrs.shape) != 1:
-            raise ValueError(f"llrs argument should be 1-dimensional; dimensions found: {len(llrs.shape)}")
+            raise ValueError(f'llrs argument should be 1-dimensional; dimensions found: {len(llrs.shape)}')
         if len(labels.shape) != 1:
-            raise ValueError(f"labels argument should be 1-dimensional; dimensions found: {len(labels.shape)}")
+            raise ValueError(f'labels argument should be 1-dimensional; dimensions found: {len(labels.shape)}')
         if llrs.shape[0] != labels.shape[0]:
             raise ValueError(
-                f"number of labels does not match the number of llrs ({labels.shape[0]} != {llrs.shape[0]})"
+                f'number of labels does not match the number of llrs ({labels.shape[0]} != {llrs.shape[0]})'
             )
         if list(np.unique(labels)) != [0, 1]:
-            raise ValueError(f"labels expected: 0, 1; found: {np.unique(labels)}")
+            raise ValueError(f'labels expected: 0, 1; found: {np.unique(labels)}')
 
-    def fit(self, llrs: np.ndarray, labels: np.ndarray) -> "LLRBounder":
+    def fit(self, llrs: np.ndarray, labels: np.ndarray) -> 'LLRBounder':
         """
         Configures this bounder by calculating bounds.
 
@@ -59,8 +59,8 @@ class LLRBounder(TransformerMixin, ABC):
             and self.lower_llr_bound > self.upper_llr_bound
         ):
             raise ValueError(
-                "the lower bound must be lower than the upper bound; "
-                f"lower_llr_bound={self.lower_llr_bound}; upper_llr_bound={self.upper_llr_bound}"
+                'the lower bound must be lower than the upper bound; '
+                f'lower_llr_bound={self.lower_llr_bound}; upper_llr_bound={self.upper_llr_bound}'
             )
 
         return self

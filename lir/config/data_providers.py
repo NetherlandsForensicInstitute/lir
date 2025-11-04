@@ -2,8 +2,8 @@ from pathlib import Path
 
 from lir import registry
 from lir.config.base import (
-    YamlParseError,
     GenericConfigParser,
+    YamlParseError,
     pop_field,
 )
 from lir.config.substitution import ContextAwareDict
@@ -19,18 +19,18 @@ def parse_data_provider(cfg: ContextAwareDict, output_path: Path) -> DataSet:
 
     Data sources are provided under the `data_sources` key.
     """
-    provider = pop_field(cfg, "provider")
+    provider = pop_field(cfg, 'provider')
 
     try:
         parser = registry.get(
             provider,
-            search_path=["data_providers"],
+            search_path=['data_providers'],
             default_config_parser=GenericConfigParser,
         )
     except Exception as e:
         raise YamlParseError(
             cfg.context,
-            f"no parser available for data provider `{provider}`; the error was: {e}",
+            f'no parser available for data provider `{provider}`; the error was: {e}',
         )
 
     return parser.parse(cfg, output_path)

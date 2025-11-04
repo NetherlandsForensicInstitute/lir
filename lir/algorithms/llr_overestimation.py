@@ -1,10 +1,10 @@
-from typing import Optional, Any
+from typing import Any
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
+from KDEpy import NaiveKDE
 from scipy.interpolate import interp1d
 from scipy.signal import savgol_filter
-from KDEpy import NaiveKDE
 
 
 def plot_llr_overestimation(
@@ -36,31 +36,31 @@ def plot_llr_overestimation(
         llr_misestimation = np.mean(np.abs(llr_overestimation))
 
         # Make the LLR-overestimation plot
-        label_text = "mean(abs) = " + str(np.round(llr_misestimation, 2))
+        label_text = 'mean(abs) = ' + str(np.round(llr_misestimation, 2))
         line = ax.plot(llr_grid, llr_overestimation, label=label_text)
         if num_fids > 0:
             ax.plot(
                 llr_grid,
                 llr_overestimation_interval[:, (0, 2)],
-                linestyle=":",
+                linestyle=':',
                 color=line[0].get_color(),
             )
 
-    ax.axhline(color="k", linestyle="dotted")
-    ax.set_xlabel("log$_{10}$(system LR)")
-    ax.set_ylabel("LLR-overestimation")
-    ax.legend(loc="upper center")
+    ax.axhline(color='k', linestyle='dotted')
+    ax.set_xlabel('log$_{10}$(system LR)')
+    ax.set_ylabel('LLR-overestimation')
+    ax.legend(loc='upper center')
 
 
 def calc_llr_overestimation(
     llrs: np.ndarray,
     y: np.ndarray,
     num_fids: int = 1000,
-    bw: tuple[str | float, str | float] = ("silverman", "silverman"),
+    bw: tuple[str | float, str | float] = ('silverman', 'silverman'),
     num_grid_points: int = 100,
     alpha: float = 0.05,
     **kwargs: Any,
-) -> tuple[Optional[np.ndarray], Optional[np.ndarray], Optional[np.ndarray]]:
+) -> tuple[np.ndarray | None, np.ndarray | None, np.ndarray | None]:
     """
     Calculate the LLR-overestimation as function of the system LLR.
      The LLR-overestimation is defined as the log-10 of the ratio between
@@ -91,14 +91,14 @@ def calc_llr_overestimation(
     # In case of very many LLRs do not take the very extreme values, due to instabilities in areas with little data
     llr_min = np.max(
         (
-            np.quantile(llr_h1, 0.001, method="hazen"),
-            np.quantile(llr_h2, 0.001, method="hazen"),
+            np.quantile(llr_h1, 0.001, method='hazen'),
+            np.quantile(llr_h2, 0.001, method='hazen'),
         )
     )
     llr_max = np.min(
         (
-            np.quantile(llr_h1, 0.999, method="hazen"),
-            np.quantile(llr_h2, 0.999, method="hazen"),
+            np.quantile(llr_h1, 0.999, method='hazen'),
+            np.quantile(llr_h2, 0.999, method='hazen'),
         )
     )
     if llr_min >= llr_max:
@@ -130,14 +130,14 @@ def calc_llr_overestimation(
     # Also calculate an interval around the LLR-overestimation
     if num_fids > 0:
         # Calculate pdf's of fiducial distributions of the two LLR-sets, and calculate distributions of observed LRs
-        pdfs_empirical_fid_h1 = calc_fiducial_density_functions(llr_h1, llr_grid, "pdf", num_fids, **kwargs)
-        pdfs_empirical_fid_h2 = calc_fiducial_density_functions(llr_h2, llr_grid, "pdf", num_fids, **kwargs)
+        pdfs_empirical_fid_h1 = calc_fiducial_density_functions(llr_h1, llr_grid, 'pdf', num_fids, **kwargs)
+        pdfs_empirical_fid_h2 = calc_fiducial_density_functions(llr_h2, llr_grid, 'pdf', num_fids, **kwargs)
         pdfs_empirical_fid_h1[pdfs_empirical_fid_h1 == 0] = np.nan
         pdfs_empirical_fid_h2[pdfs_empirical_fid_h2 == 0] = np.nan
         lrs_empirical_fid = pdfs_empirical_fid_h1 / pdfs_empirical_fid_h2
         # Calculate percentiles of these distributions; allowing some nans, but not too many
         percentages = (100 * alpha / 2, 50, 100 * (1 - alpha / 2))
-        lrs_empirical_interval = np.nanpercentile(lrs_empirical_fid, percentages, axis=1, method="hazen").transpose()
+        lrs_empirical_interval = np.nanpercentile(lrs_empirical_fid, percentages, axis=1, method='hazen').transpose()
         too_many_nans = np.sum(np.isnan(lrs_empirical_fid), axis=1) > (0.05 * num_fids)
         lrs_empirical_interval[too_many_nans, :] = np.nan
         # Do the conversion to the LLR-overestimation
@@ -151,7 +151,7 @@ def calc_llr_overestimation(
 def calc_fiducial_density_functions(
     data: np.ndarray,
     grid: np.ndarray,
-    df_type: str = "pdf",
+    df_type: str = 'pdf',
     num_fids: int = 1000,
     smoothing_grid_fraction: float = 1 / 10,
     smoothing_sample_size_correction: float = 1,
@@ -191,7 +191,7 @@ def calc_fiducial_density_functions(
         )
     )
     # Do interpolation on this grid; make sure extrapolation is allowed (typically near probabilities of 0 and 1)
-    f_interp = interp1d(np.sort(data), cdfs, axis=0, kind="linear", fill_value="extrapolate")
+    f_interp = interp1d(np.sort(data), cdfs, axis=0, kind='linear', fill_value='extrapolate')
     cdfs_extended_grid = f_interp(extended_grid)
     # Ensure no probabilities below 0 or above 1 in the cdfs
     cdfs_extended_grid[cdfs_extended_grid < 0] = 0
@@ -199,12 +199,12 @@ def calc_fiducial_density_functions(
     # Calculate pdfs (1st derivative) or cdfs (no derivative) , while also performing smoothing/noise-reduction;
     # This uses a low-order Savitzky-Golay filter, which requires an equally spaced grid.
     window_length = 2 * half_window + 1
-    if df_type == "pdf":
+    if df_type == 'pdf':
         derivative_order = 1
-    elif df_type == "cdf":
+    elif df_type == 'cdf':
         derivative_order = 0
     else:
-        raise ValueError("Unsupported type of density function specified: only cdf and pdf are supported.")
+        raise ValueError('Unsupported type of density function specified: only cdf and pdf are supported.')
     dfs_extended_grid = savgol_filter(
         cdfs_extended_grid,
         window_length,
@@ -212,7 +212,7 @@ def calc_fiducial_density_functions(
         axis=0,
         deriv=derivative_order,
         delta=grid_diff,
-        mode="nearest",
+        mode='nearest',
     )
     # Ensure no probabilities below 0 are present
     dfs_extended_grid[dfs_extended_grid < 0] = 0

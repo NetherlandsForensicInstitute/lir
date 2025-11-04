@@ -11,7 +11,7 @@ class LRSystem(ABC):
         self.name = name
         self.parameters: dict[str, Any] = {}
 
-    def fit(self, instances: FeatureData) -> "LRSystem":
+    def fit(self, instances: FeatureData) -> 'LRSystem':
         """
         Fits the LR system on a set of features and corresponding labels.
 

@@ -1,14 +1,15 @@
-from collections.abc import Callable
 import logging
 import math
 import warnings
-from typing import Sized, Self
+from collections.abc import Callable, Sized
+from typing import Self
 
 import numpy as np
-from sklearn.base import TransformerMixin, BaseEstimator
+from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.neighbors import KernelDensity
 
-from lir.util import ln_to_log10, Xy_to_Xn, check_misleading_finite
+from lir.util import Xy_to_Xn, check_misleading_finite, ln_to_log10
+
 
 LOG = logging.getLogger(__name__)
 
@@ -69,10 +70,11 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
             if std == 0:
                 # can happen eg if std(values) = 0
                 warnings.warn(
-                    "silverman bandwidth cannot be calculated if standard deviation is 0",
+                    'silverman bandwidth cannot be calculated if standard deviation is 0',
                     RuntimeWarning,
+                    stacklevel=2,
                 )
-                LOG.info("found a silverman bandwidth of 0 (using dummy value)")
+                LOG.info('found a silverman bandwidth of 0 (using dummy value)')
                 std = 1
 
             v = math.pow(std, 5) / len(values) * 4.0 / 3
@@ -93,14 +95,14 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
         X1 = X1.reshape(-1, 1)
 
         bandwidth0, bandwidth1 = self.bandwidth(X, y)
-        self._kde0 = KernelDensity(kernel="gaussian", bandwidth=bandwidth0).fit(X0)
-        self._kde1 = KernelDensity(kernel="gaussian", bandwidth=bandwidth1).fit(X1)
+        self._kde0 = KernelDensity(kernel='gaussian', bandwidth=bandwidth0).fit(X0)
+        self._kde1 = KernelDensity(kernel='gaussian', bandwidth=bandwidth1).fit(X1)
         return self
 
     def transform(self, X: np.ndarray) -> np.ndarray:
         """Provide LLR's as output."""
         if self._kde0 is None or self._kde1 is None or self.numerator is None or self.denominator is None:
-            raise ValueError("KDECalibrator.transform() called before fit")
+            raise ValueError('KDECalibrator.transform() called before fit')
 
         self.p0 = np.empty(np.shape(X))
         self.p1 = np.empty(np.shape(X))
@@ -151,17 +153,17 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
         :return: bandwidth used for kde0, bandwidth used for kde1
         """
         if bandwidth is None:
-            raise ValueError("missing bandwidth argument for KDE")
+            raise ValueError('missing bandwidth argument for KDE')
         elif callable(bandwidth):
             return bandwidth
-        elif bandwidth == "silverman":
+        elif bandwidth == 'silverman':
             return KDECalibrator.bandwidth_silverman
         elif isinstance(bandwidth, str):
-            raise ValueError(f"invalid input for bandwidth: {bandwidth}")
+            raise ValueError(f'invalid input for bandwidth: {bandwidth}')
         elif isinstance(bandwidth, Sized):
-            assert (
-                len(bandwidth) == 2
-            ), f"bandwidth should have two elements; found {len(bandwidth)}; bandwidth = {bandwidth}"
+            assert len(bandwidth) == 2, (
+                f'bandwidth should have two elements; found {len(bandwidth)}; bandwidth = {bandwidth}'
+            )
             return lambda X, y: bandwidth
         else:
             return lambda X, y: (0 + bandwidth, bandwidth)

@@ -63,22 +63,22 @@ class SynthesizedNormalMulticlassData(DataSet):
 @config_parser
 def synthesized_normal_multiclass(config: ContextAwareDict, _: Path) -> DataSet:
     """Set up (multiple class) data source class to obtain normally distributed data from configuration."""
-    seed = pop_field(config, "seed", validate=int, required=False)
+    seed = pop_field(config, 'seed', validate=int, required=False)
 
-    population = pop_field(config, "population")
-    population_size = pop_field(population, "size", validate=int)
+    population = pop_field(config, 'population')
+    population_size = pop_field(population, 'size', validate=int)
     instances_per_source = pop_field(
         population,
-        "instances_per_source",
+        'instances_per_source',
         validate=int,
     )
 
-    dimensions_cfg = pop_field(config, "dimensions")
+    dimensions_cfg = pop_field(config, 'dimensions')
     dimensions = []
     for dim in dimensions_cfg:
-        mean = pop_field(dim, "mean", validate=float)
-        std = pop_field(dim, "std", validate=float)
-        error_std = pop_field(dim, "error_std", validate=float)
+        mean = pop_field(dim, 'mean', validate=float)
+        std = pop_field(dim, 'std', validate=float)
+        error_std = pop_field(dim, 'error_std', validate=float)
         dimensions.append(SynthesizedDimension(mean, std, error_std))
 
     return SynthesizedNormalMulticlassData(

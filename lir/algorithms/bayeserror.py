@@ -34,10 +34,10 @@ def plot_nbe(
 
     ax.plot(log_lr_threshold, np.log10(eu_neutral / eu_system))
 
-    ax.set_xlabel("log$_{10}$(threshold LR)")
-    ax.set_ylabel("log$_{10}$(expected utility ratio)")
+    ax.set_xlabel('log$_{10}$(threshold LR)')
+    ax.set_ylabel('log$_{10}$(expected utility ratio)')
     ax.set_xlim(log_lr_threshold_range)
-    ax.grid(True, linestyle=":")
+    ax.grid(True, linestyle=':')
 
 
 def elub(

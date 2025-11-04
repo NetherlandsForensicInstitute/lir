@@ -1,9 +1,8 @@
-from lir.lrsystems.lrsystems import LRSystem, LLRData, FeatureData
-
 import numpy as np
 import pandas as pd
 from scipy.special import logsumexp
 
+from lir.lrsystems.lrsystems import FeatureData, LLRData, LRSystem
 from lir.transform.pairing import PairingMethod
 from lir.transform.pipeline import Pipeline
 
@@ -52,7 +51,7 @@ class TwoLevelModelNormalKDE:
         self.kernel_bandwidth_sq = None
         self.between_covars = None
 
-    def fit_on_unpaired_instances(self, X: np.ndarray, y: np.ndarray) -> "TwoLevelModelNormalKDE":
+    def fit_on_unpaired_instances(self, X: np.ndarray, y: np.ndarray) -> 'TwoLevelModelNormalKDE':
         """
         X np.ndarray of measurements, rows are sources/repetitions, columns are features
         y np 1d-array of labels. For each source a unique identifier (label). Repetitions get the same label.
@@ -60,7 +59,7 @@ class TwoLevelModelNormalKDE:
         Construct the necessary matrices/scores/etc based on test data (X) so that we can predict a score later on.
         Store any calculated parameters in `self`.
         """
-        assert len(X.shape) == 2, f"fit(X, y) requires X to be 2-dimensional; found dimensions {X.shape}"
+        assert len(X.shape) == 2, f'fit(X, y) requires X to be 2-dimensional; found dimensions {X.shape}'
         self.n_sources = self._get_n_sources(y)
         self.n_features_train = X.shape[1]
         self.mean_within_covars = self._get_mean_covariance_within(X, y)
@@ -81,7 +80,7 @@ class TwoLevelModelNormalKDE:
 
         returns: odds of same source / different source: one-dimensional np.ndarray with one element per instance
         """
-        assert self.model_fitted, "fit() must be called before transform()"
+        assert self.model_fitted, 'fit() must be called before transform()'
         log10_lr_score = self._predict_log10_lr_score(X_trace, X_ref)
         return log10_lr_score
 
@@ -110,20 +109,20 @@ class TwoLevelModelNormalKDE:
         returns: log10_LR_scores according to the two_level_model in Bolck et al. np.ndarray of shape (instances,)
         """
         if not self.model_fitted:
-            raise ValueError("The model is not fitted; fit it before you use it for predicting")
+            raise ValueError('The model is not fitted; fit it before you use it for predicting')
         elif self._get_n_features(X_trace) != self.n_features_train:
             raise ValueError(
-                "The number of features in the training data is different from the number of features in the trace"
+                'The number of features in the training data is different from the number of features in the trace'
             )
         elif self._get_n_features(X_ref) != self.n_features_train:
             raise ValueError(
-                "The number of features in the training data is different from the number of features in the reference"
+                'The number of features in the training data is different from the number of features in the reference'
             )
 
         log10lr = []
 
         # TODO use matrix multiplication instead of for-loop (means that all functions called here should be adjusted)
-        for x_trace, x_ref in zip(X_trace, X_ref):
+        for x_trace, x_ref in zip(X_trace, X_ref, strict=True):
             x_trace = x_trace[~np.isnan(x_trace).any(axis=1)]
             x_ref = x_ref[~np.isnan(x_ref).any(axis=1)]
 
@@ -177,19 +176,19 @@ class TwoLevelModelNormalKDE:
         data per source, calculating the covariance matrices per source and then taking the mean per feature.
         """
         # use pandas functionality to allow easy calculation
-        df = pd.DataFrame(X, index=pd.Index(y, name="label"))
+        df = pd.DataFrame(X, index=pd.Index(y, name='label'))
 
         # filter out single-repetitions,since they do not contribute to covariance calculations
-        grouped = df.groupby(by="label")
+        grouped = df.groupby(by='label')
         filtered = grouped.filter(lambda x: x[0].count() > 1)
 
         # make groups again by source id and calculate covariance matrices per source
-        grouped = filtered.groupby(by="label")
+        grouped = filtered.groupby(by='label')
         covars = grouped.cov(ddof=1)
 
         # add index names to allow grouping by feature, group by feature and get mean covariance matrix
-        covars.index.names = ["Source", "Feature"]
-        grouped_by_feature = covars.groupby(["Feature"])
+        covars.index.names = ['Source', 'Feature']
+        grouped_by_feature = covars.groupby(['Feature'])
 
         return np.array(grouped_by_feature.mean())
 
@@ -201,8 +200,8 @@ class TwoLevelModelNormalKDE:
         returns: means per source in a np.array matrix of size: number of sources * number of features
         """
         # use pandas functionality to allow easy calculation and group by source
-        df = pd.DataFrame(X, index=pd.Index(y, name="label"))
-        grouped = df.groupby(by="label")
+        df = pd.DataFrame(X, index=pd.Index(y, name='label'))
+        grouped = df.groupby(by='label')
 
         return np.array(grouped.mean())
 
@@ -226,8 +225,8 @@ class TwoLevelModelNormalKDE:
         """
 
         # use pandas functionality to allow easy calculation and
-        df = pd.DataFrame(X, index=pd.Index(y, name="label"))
-        grouped = df.groupby(by="label")
+        df = pd.DataFrame(X, index=pd.Index(y, name='label'))
+        grouped = df.groupby(by='label')
 
         # calculate kappa; kappa represents the "average" number of repetitions per source
         # get the repetitions per source
@@ -238,7 +237,7 @@ class TwoLevelModelNormalKDE:
 
         # calculate sum_of_squares between
         # substitute rows with their corresponding group means
-        group_means = grouped.transform("mean")
+        group_means = grouped.transform('mean')
         # calculate covariance of measurements
         cov_between_measurement = group_means.cov(ddof=0)
         sum_squares_between = cov_between_measurement * len(group_means)
@@ -437,7 +436,7 @@ class TwoLevelSystem(LRSystem):
         self.n_trace_instances = n_trace_instances
         self.n_ref_instances = n_ref_instances
 
-    def fit(self, instances: FeatureData) -> "LRSystem":
+    def fit(self, instances: FeatureData) -> 'LRSystem':
         instances = self.preprocessing_pipeline.fit_transform(instances)
         self.model.fit_on_unpaired_instances(instances.features, instances.labels)
 
@@ -453,7 +452,7 @@ class TwoLevelSystem(LRSystem):
         and returns a representation of the calculated LLR data through the `LLRData` tuple.
         """
         if instances.has_labels is None:
-            raise ValueError("pairing requires labels")
+            raise ValueError('pairing requires labels')
 
         instances = self.preprocessing_pipeline.transform(instances)
 

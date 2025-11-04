@@ -7,8 +7,9 @@ from typing import Any
 
 import confidence
 
-from . import resources as package_resources
 from lir.config.base import ConfigParser
+
+from . import resources as package_resources
 
 
 LOG = logging.getLogger(__name__)
@@ -16,20 +17,20 @@ LOG = logging.getLogger(__name__)
 
 def _get_attribute_by_name(name: str) -> Any:
     """Resolve the corresponding function or class in this project from the configuration string."""
-    parts = name.split(".")
+    parts = name.split('.')
 
     # split the full name into a module name and a class name
     for class_name_index in range(1, len(parts) + 1):
         try:
             if class_name_index < len(parts):
                 attr = __import__(
-                    ".".join(parts[:class_name_index]),
+                    '.'.join(parts[:class_name_index]),
                     fromlist=[parts[class_name_index]],
                 )
                 for part in parts[class_name_index:]:
                     attr = getattr(attr, part)
             else:
-                attr = __import__(".".join(parts))
+                attr = __import__('.'.join(parts))
 
             return attr
 
@@ -63,8 +64,8 @@ class ConfigParserLoader(ABC, Iterable):
             return default_config_parser(result_type)
         else:
             raise InvalidRegistryEntryError(
-                f"unable instantiate {result_type}: "
-                "not a ConfigParser and there is no default configuration parser in this context"
+                f'unable instantiate {result_type}: '
+                'not a ConfigParser and there is no default configuration parser in this context'
             )
 
     @abstractmethod
@@ -103,9 +104,9 @@ class ClassLoader(ConfigParserLoader):
         default_config_parser: Callable | None = None,
         search_path: list[str] | None = None,
     ) -> ConfigParser:
-        parts = key.split(".")
+        parts = key.split('.')
         if len(parts) < 2:
-            raise ComponentNotFoundError(f"no full class name: {key}")
+            raise ComponentNotFoundError(f'no full class name: {key}')
 
         try:
             result_type = _get_attribute_by_name(key)
@@ -142,15 +143,15 @@ class FederatedLoader(ConfigParserLoader):
             except ComponentNotFoundError as e:
                 errors.append(e)
 
-        raise ComponentNotFoundError("; ".join([str(e) for e in errors]))
+        raise ComponentNotFoundError('; '.join([str(e) for e in errors]))
 
 
-def _load_package_registry() -> "YamlRegistry":
-    registry_file = importlib.resources.files(package_resources) / "registry.yaml"
-    with registry_file.open("r") as f:
+def _load_package_registry() -> 'YamlRegistry':
+    registry_file = importlib.resources.files(package_resources) / 'registry.yaml'
+    with registry_file.open('r') as f:
         lib_registry = confidence.load(f)
 
-    user_registry = confidence.load_name("registry")
+    user_registry = confidence.load_name('registry')
     merged_registry = confidence.Configuration(lib_registry, user_registry)
 
     return YamlRegistry(merged_registry)
@@ -164,7 +165,7 @@ def registry() -> ConfigParserLoader:
             yaml_registry = _load_package_registry()
             _REGISTRY = FederatedLoader([yaml_registry, ClassLoader()])
         except Exception as e:
-            raise ValueError(f"registry initialization failed: {e}")
+            raise ValueError(f'registry initialization failed: {e}')
 
     return _REGISTRY
 
@@ -195,31 +196,31 @@ class YamlRegistry(ConfigParserLoader):
     def __iter__(self) -> Iterator[str]:
         for toplevel in self._cfg:
             for component in self._cfg.get(toplevel):
-                yield f"{toplevel}.{component}"
+                yield f'{toplevel}.{component}'
 
     @staticmethod
     def _parse(key: str, spec: Mapping[str, str], default_config_parser: Callable | None) -> ConfigParser:
-        if "class" not in spec:
-            raise InvalidRegistryEntryError(f"missing value for `class` in registry entry: {key}")
-        if not isinstance(spec.get("class"), str):
+        if 'class' not in spec:
+            raise InvalidRegistryEntryError(f'missing value for `class` in registry entry: {key}')
+        if not isinstance(spec.get('class'), str):
             raise InvalidRegistryEntryError(
-                f"expected `str` type for `class` in registry entry: {key}; found: {type(spec.get('class'))}"
+                f'expected `str` type for `class` in registry entry: {key}; found: {type(spec.get("class"))}'
             )
 
         try:
-            cls = _get_attribute_by_name(spec.get("class"))  # type: ignore[arg-type]
+            cls = _get_attribute_by_name(spec.get('class'))  # type: ignore[arg-type]
         except Exception as e:
-            raise ValueError(f"registry key `{key}` resolved to `{spec.get('class')}` but failed to materialize: {e}")
+            raise ValueError(f'registry key `{key}` resolved to `{spec.get("class")}` but failed to materialize: {e}')
 
         parser = ConfigParserLoader._get_config_parser(cls, default_config_parser)
 
-        if "wrapper" in spec:
+        if 'wrapper' in spec:
             try:
-                wrapper = _get_attribute_by_name(spec.get("wrapper"))  # type: ignore[arg-type]
+                wrapper = _get_attribute_by_name(spec.get('wrapper'))  # type: ignore[arg-type]
             except Exception as e:
                 raise InvalidRegistryEntryError(
-                    f"unable instantiate class {spec['class']}: "
-                    f"error while instantiating wrapper class: {spec['wrapper']}: {e}"
+                    f'unable instantiate class {spec["class"]}: '
+                    f'error while instantiating wrapper class: {spec["wrapper"]}: {e}'
                 )
             parser = wrapper(parser)
 
@@ -228,13 +229,13 @@ class YamlRegistry(ConfigParserLoader):
     def _find(self, key: str, search_path: list[str] | None) -> Any:
         try_keys = [key]
         if search_path is not None:
-            try_keys += [f"{path_prefix}.{key}" for path_prefix in search_path]
+            try_keys += [f'{path_prefix}.{key}' for path_prefix in search_path]
 
         for try_key in try_keys:
             if try_key in self._cfg:
                 return self._cfg.get(try_key)
 
-        raise ComponentNotFoundError(f"component not found: {key} (tried: {', '.join(try_keys)})")
+        raise ComponentNotFoundError(f'component not found: {key} (tried: {", ".join(try_keys)})')
 
     def get(
         self,
@@ -256,7 +257,7 @@ class YamlRegistry(ConfigParserLoader):
         """
         spec = self._find(key, search_path)
         if isinstance(spec, str):
-            return self._parse(key, {"class": spec}, default_config_parser)
+            return self._parse(key, {'class': spec}, default_config_parser)
         else:
             return self._parse(key, spec, default_config_parser)
 

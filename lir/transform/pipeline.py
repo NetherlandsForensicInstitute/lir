@@ -1,7 +1,7 @@
 from typing import Any
 
 from lir.data.models import FeatureData, FeatureDataType
-from lir.transform import as_transformer, Transformer
+from lir.transform import Transformer, as_transformer
 
 
 class Pipeline(Transformer):
@@ -19,8 +19,8 @@ class Pipeline(Transformer):
         """
         self.steps = [(name, as_transformer(module)) for name, module in steps]
 
-    def fit(self, instances: FeatureData) -> "Pipeline":
-        for name, module in self.steps[:-1]:
+    def fit(self, instances: FeatureData) -> 'Pipeline':
+        for _name, module in self.steps[:-1]:
             instances = module.fit_transform(instances)
 
         if len(self.steps) > 0:
@@ -30,11 +30,11 @@ class Pipeline(Transformer):
         return self
 
     def transform(self, instances: FeatureDataType) -> FeatureDataType:
-        for name, module in self.steps:
+        for _name, module in self.steps:
             instances = module.transform(instances)
         return instances
 
     def fit_transform(self, instances: FeatureData) -> FeatureData:
-        for name, module in self.steps:
+        for _name, module in self.steps:
             instances = module.fit_transform(instances)
         return instances

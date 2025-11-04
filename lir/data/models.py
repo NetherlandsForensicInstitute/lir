@@ -1,8 +1,9 @@
-from abc import abstractmethod, ABC
-from typing import Iterable, TypeVar, Self, Any, Annotated, Type
+from abc import ABC, abstractmethod
+from collections.abc import Iterable
+from typing import Annotated, Any, Self, TypeVar
 
 import numpy as np
-from pydantic import model_validator, AfterValidator, ConfigDict, BaseModel
+from pydantic import AfterValidator, BaseModel, ConfigDict, model_validator
 
 
 def _validate_labels(labels: np.ndarray | None) -> np.ndarray | None:
@@ -10,7 +11,7 @@ def _validate_labels(labels: np.ndarray | None) -> np.ndarray | None:
     if labels is None or len(labels.shape) == 1:
         return labels
 
-    raise ValueError(f"labels must be 1-dimensional; shape: {labels.shape}")
+    raise ValueError(f'labels must be 1-dimensional; shape: {labels.shape}')
 
 
 class InstanceData(BaseModel, ABC):
@@ -21,7 +22,7 @@ class InstanceData(BaseModel, ABC):
     - labels: an array of labels, a 1-dimensional array with one value per instance
     """
 
-    model_config = ConfigDict(frozen=True, extra="allow", arbitrary_types_allowed=True)
+    model_config = ConfigDict(frozen=True, extra='allow', arbitrary_types_allowed=True)
 
     labels: Annotated[np.ndarray | None, AfterValidator(_validate_labels)] = None
 
@@ -122,7 +123,7 @@ class InstanceData(BaseModel, ABC):
         """
         return self.replace_as(type(self), **kwargs)
 
-    def replace_as(self, datatype: Type["InstanceDataType"], **kwargs: Any) -> "InstanceDataType":
+    def replace_as(self, datatype: type['InstanceDataType'], **kwargs: Any) -> 'InstanceDataType':
         """
         Returns a modified copy with updated data type and values.
 
@@ -148,11 +149,11 @@ class FeatureData(InstanceData):
     def __len__(self) -> int:
         return self.features.shape[0]
 
-    @model_validator(mode="after")
+    @model_validator(mode='after')
     def check_matching_shapes(self) -> Self:
         if self.labels is not None and self.labels.shape[0] != self.features.shape[0]:
             raise ValueError(
-                f"dimensions of labels and features do not match; {self.labels.shape[0]} != {self.features.shape[0]}"
+                f'dimensions of labels and features do not match; {self.labels.shape[0]} != {self.features.shape[0]}'
             )
         return self
 
@@ -173,14 +174,14 @@ class PairedFeatureData(FeatureData):
     def features_ref(self) -> np.ndarray:
         return self.features[:, self.n_trace_instances :]  # noqa: E203
 
-    @model_validator(mode="after")
+    @model_validator(mode='after')
     def check_features_dimensions(self) -> Self:
         if len(self.features.shape) < 3:
-            raise ValueError(f"features should have 3 or more dimensions; found shape: {self.features.shape}")
+            raise ValueError(f'features should have 3 or more dimensions; found shape: {self.features.shape}')
         if self.features.shape[1] != self.n_trace_instances + self.n_ref_instances:
             raise ValueError(
-                f"features should have shape (*, {self.n_trace_instances}+{self.n_ref_instances}, *); "
-                f"found: {self.features.shape[1]}"
+                f'features should have shape (*, {self.n_trace_instances}+{self.n_ref_instances}, *); '
+                f'found: {self.features.shape[1]}'
             )
         return self
 
@@ -217,20 +218,20 @@ class LLRData(FeatureData):
         else:
             return None
 
-    @model_validator(mode="after")
+    @model_validator(mode='after')
     def check_features_are_llrs(self) -> Self:
         if len(self.features.shape) > 2:
-            raise ValueError(f"features must have 1 or 2 dimensions; shape: {self.features.shape}")
+            raise ValueError(f'features must have 1 or 2 dimensions; shape: {self.features.shape}')
         if len(self.features.shape) == 2 and self.features.shape[1] != 3 and self.features.shape[1] != 1:
             raise ValueError(
-                f"features must be 1-dimensional or 2-dimensional with 1 or 3 columns; shape: {self.features.shape}"
+                f'features must be 1-dimensional or 2-dimensional with 1 or 3 columns; shape: {self.features.shape}'
             )
 
         return self
 
 
-InstanceDataType = TypeVar("InstanceDataType", bound=InstanceData)
-FeatureDataType = TypeVar("FeatureDataType", bound=FeatureData)
+InstanceDataType = TypeVar('InstanceDataType', bound=InstanceData)
+FeatureDataType = TypeVar('FeatureDataType', bound=FeatureData)
 
 
 def concatenate_instances(first: InstanceDataType, *others: InstanceDataType) -> InstanceDataType:
@@ -250,7 +251,7 @@ def concatenate_instances(first: InstanceDataType, *others: InstanceDataType) ->
 
             for instances in others:
                 if not first.has_same_type(instances):
-                    raise ValueError("instances to concatinate must have the same types and fields")
+                    raise ValueError('instances to concatinate must have the same types and fields')
                 values.append(getattr(instances, field))
 
             data[field] = np.concatenate(values)
@@ -260,7 +261,7 @@ def concatenate_instances(first: InstanceDataType, *others: InstanceDataType) ->
                 other_value = getattr(instances, field)
                 if other_value != first_value:
                     raise ValueError(
-                        f"unable to concatenate field `{field}`: value mismatch: {other_value} != {first_value}"
+                        f'unable to concatenate field `{field}`: value mismatch: {other_value} != {first_value}'
                     )
 
     return first.replace(**data)

@@ -1,9 +1,9 @@
-from scipy.interpolate import interp1d
 from typing import Any, Self
 
-from lir.data.models import FeatureData, LLRData
 import numpy as np
+from scipy.interpolate import interp1d
 
+from lir.data.models import FeatureData, LLRData
 from lir.transform.pipeline import Pipeline
 
 
@@ -79,7 +79,7 @@ class BootstrapAtData(Pipeline):
         return LLRData: The transformed feature data with best estimate and confidence intervals.
         """
         if self.f_interval_lower is None or self.f_interval_upper is None:
-            raise ValueError("Bootstrap intervals have not been computed. Please fit the bootstrap first.")
+            raise ValueError('Bootstrap intervals have not been computed. Please fit the bootstrap first.')
 
         best_estimate = super().transform(instances)
         best_1d_estimate = best_estimate.features.reshape(-1)

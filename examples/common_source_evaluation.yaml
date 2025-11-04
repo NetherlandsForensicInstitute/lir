@@ -35,8 +35,8 @@ lr_system:
     _results:
       method: csv_writer
       include_input: False
-      include_labels: True
-      include_batch: True
+      include_labels: False
+      include_batch: False
       include:
         - clf.csv
         - to_llr.csv

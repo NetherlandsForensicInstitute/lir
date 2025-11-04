@@ -92,13 +92,7 @@ warn_unused_configs = true
 ignore_missing_imports = true
 
 exclude = [
-    "lir/algorithms/isotonic_regression.py",  # imported from LIR
     "lir/lrsystems/two_level.py",  # imported from LIR
     "lir/plotting/__init__.py",  # imported from LIR
-    "lir/plotting/expected_calibration_error.py",  # imported from LIR
-    "lir/registry.py",
-    "lir/transform/calibration.py",  # imported from LIR
-    "lir/transform/distance.py",  # imported from LIR
     "lir/transform/pairing.py",  # imported from LIR
-    "lir/transform/percentile_rank.py",  # imported from LIR
 ]

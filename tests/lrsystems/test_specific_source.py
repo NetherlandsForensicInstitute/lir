@@ -11,7 +11,7 @@ from lir.data.datasets.synthesized_normal_binary import (
     SynthesizedNormalBinaryData,
 )
 from lir.lrsystems.lrsystems import LLRData, FeatureData
-from lir.lrsystems.specific_source import SpecificSourceSystem
+from lir.lrsystems.binary_lrsystem import BinaryLRSystem
 from lir.transform.pipeline import Pipeline
 
 
@@ -35,7 +35,7 @@ def test_specific_source_pipeline(synthesized_normal_data: SynthesizedNormalBina
 
     pipeline = Pipeline(steps)
 
-    specific_source_system = SpecificSourceSystem("test_system", pipeline)
+    specific_source_system = BinaryLRSystem("test_system", pipeline)
     data_train, data_test = next(iter(data))
     specific_source_system.fit(data_train)
     llr_data: LLRData = specific_source_system.apply(data_test)

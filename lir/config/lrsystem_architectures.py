@@ -15,9 +15,9 @@ from lir.config.substitution import (
     substitute_hyperparameters,
 )
 from lir.config.transform import parse_module
+from lir.lrsystems.binary_lrsystem import BinaryLRSystem
 from lir.lrsystems.lrsystems import LRSystem
 from lir.lrsystems.score_based import ScoreBasedSystem
-from lir.lrsystems.specific_source import SpecificSourceSystem
 from lir.lrsystems.two_level import TwoLevelSystem
 from lir.registry import ComponentNotFoundError
 from lir.transform.pipeline import Pipeline
@@ -55,7 +55,7 @@ def specific_source(config: ContextAwareDict, output_dir: Path) -> LRSystem:
     registry. See for example: `lir.config.lrsystems.specific_source`.
     """
     pipeline = parse_pipeline(pop_field(config, 'modules'), output_dir)
-    return SpecificSourceSystem(output_dir.name, pipeline)
+    return BinaryLRSystem(output_dir.name, pipeline)
 
 
 @config_parser

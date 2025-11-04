@@ -2,8 +2,11 @@ from lir.lrsystems.lrsystems import FeatureData, LLRData, LRSystem
 from lir.transform.pipeline import Pipeline
 
 
-class SpecificSourceSystem(LRSystem):
-    """Representation of a specific source, feature based LR system.
+class BinaryLRSystem(LRSystem):
+    """
+    LR system for binary data and a linear pipeline.
+
+    This may be used in specific source feature based LR systems.
 
     In this strategy, a set of instances - captured within the
     feature vector X - and a set of (ground-truth) labels are used to train and

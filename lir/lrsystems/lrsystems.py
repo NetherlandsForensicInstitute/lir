@@ -1,67 +1,44 @@
 from abc import ABC, abstractmethod
-from typing import Any, Mapping
+from typing import Any
 
-from lir import transform
 from lir.data.models import FeatureData, FeatureDataType, LLRData
-from lir.transform import AdvancedTransformer
+from lir.transform import Transformer, as_transformer
 
 
-class Pipeline:
+class Pipeline(Transformer):
     """
     A pipeline of processing modules.
 
     A module may be a scikit-learn style transformer, estimator, or a LIR `Transformer`
     """
 
-    def __init__(self, steps: list[tuple[str, Any]]):
+    def __init__(self, steps: list[tuple[str, Transformer | Any]]):
         """
         Constructor.
 
         :param steps: the steps of the pipeline as a list of (name, module) tuples.
         """
-        self.steps = steps
-
-    def _set_values(self, values: Mapping[str, Any]) -> None:
-        for _, module in self.steps:
-            if isinstance(module, AdvancedTransformer):
-                for key, value in values.items():
-                    module.set_value(key, value)
+        self.steps = [(name, as_transformer(module)) for name, module in steps]
 
     def fit(self, instances: FeatureData) -> "Pipeline":
-        self._set_values(
-            {
-                transform.TRANSFORMER_PHASE_KEY: "train",
-                transform.TRANSFORMER_LABELS_KEY: instances.labels,
-            },
-        )
-
-        features = instances.features
         for name, module in self.steps[:-1]:
-            features = module.fit_transform(features, instances.labels)
+            instances = module.fit_transform(instances)
 
         if len(self.steps) > 0:
             _, last_module = self.steps[-1]
-            last_module.fit(features)
+            last_module.fit(instances)
 
         return self
 
     def transform(self, instances: FeatureDataType) -> FeatureDataType:
-        self._set_values(
-            {
-                transform.TRANSFORMER_PHASE_KEY: "test",
-                transform.TRANSFORMER_LABELS_KEY: instances.labels,
-            },
-        )
-        features = instances.features
         for name, module in self.steps:
-            features = module.transform(features)
-        return instances.replace(features=features)
+            instances = module.transform(instances)
+        return instances
 
-    def fit_transform(self, instances: FeatureDataType) -> FeatureDataType:
-        features = instances.features
+    def fit_transform(self, instances: FeatureData) -> FeatureData:
         for name, module in self.steps:
-            features = module.fit_transform(features, instances.labels)
-        return instances.replace(features=features)
+            instances = module.fit_transform(instances)
+        return instances
 
 
 class LRSystem(ABC):

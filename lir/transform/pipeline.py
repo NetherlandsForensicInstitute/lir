@@ -1,6 +1,6 @@
 from typing import Any
 
-from lir.data.models import FeatureData, FeatureDataType
+from lir.data.models import FeatureData
 from lir.transform import Transformer, as_transformer
 
 
@@ -29,7 +29,7 @@ class Pipeline(Transformer):
 
         return self
 
-    def transform(self, instances: FeatureDataType) -> FeatureDataType:
+    def transform(self, instances: FeatureData) -> FeatureData:
         for _name, module in self.steps:
             instances = module.transform(instances)
         return instances

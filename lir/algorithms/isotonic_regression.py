@@ -1,5 +1,6 @@
 import numpy as np
 import sklearn.isotonic
+from numpy.typing import ArrayLike
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.utils import check_array, check_consistent_length
 
@@ -13,7 +14,7 @@ class IsotonicRegression(sklearn.isotonic.IsotonicRegression):
     prevents the error being thrown when Inf or -Inf values are provided.
     """
 
-    def fit(self, X, y, sample_weight=None) -> 'IsotonicRegression':
+    def fit(self, X: ArrayLike, y: ArrayLike, sample_weight: ArrayLike | tuple | None = None) -> 'IsotonicRegression':
         """Fit the model using X, y as training data.
 
         Parameters
@@ -57,7 +58,7 @@ class IsotonicRegression(sklearn.isotonic.IsotonicRegression):
         self._build_f(X, y)
         return self
 
-    def transform(self, T):
+    def transform(self, T: ArrayLike) -> np.ndarray:
         """Transform new data by linear interpolation
 
         Parameters
@@ -105,7 +106,7 @@ class IsotonicCalibrator(BaseEstimator, TransformerMixin):
     - outputs logodds instead of probabilities
     """
 
-    def __init__(self, add_misleading=0):
+    def __init__(self, add_misleading: int = 0):
         """
 
         :param add_misleading:

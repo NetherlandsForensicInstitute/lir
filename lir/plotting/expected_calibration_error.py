@@ -15,6 +15,8 @@ See:
     Evaluating Forensic Science in the Courtroom, 2nd edition, 2016, pp. 96-97.
 """
 
+from typing import Any
+
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -26,7 +28,9 @@ from lir.util import (
 )
 
 
-def plot_ece(llrs, labels, log_prior_odds_range=None, ax=plt):
+def plot_ece(
+    llrs: np.ndarray, labels: np.ndarray, log_prior_odds_range: tuple[float, float] = (-3, 3), ax: Any = plt
+) -> None:
     """
     Generates an ECE plot for a set of LRs and corresponding ground-truth
     labels.
@@ -42,9 +46,6 @@ def plot_ece(llrs, labels, log_prior_odds_range=None, ax=plt):
     :param log_prior_odds_range: the range of prior odds (tuple of two values,
         indicating both ends of the range on the x-axis)
     """
-    if log_prior_odds_range is None:
-        log_prior_odds_range = (-3, 3)
-
     log_prior_odds = np.arange(*log_prior_odds_range, 0.01)
     prior_odds = np.power(10, log_prior_odds)
 
@@ -81,7 +82,7 @@ def plot_ece(llrs, labels, log_prior_odds_range=None, ax=plt):
     ax.grid(True, linestyle=':')
 
 
-def calculate_ece(lrs, y, priors):
+def calculate_ece(lrs: np.ndarray, y: np.ndarray, priors: np.ndarray) -> np.ndarray:
     """
     Calculates the empirical cross-entropy (ECE) of a set of LRs and
     corresponding ground-truth labels.

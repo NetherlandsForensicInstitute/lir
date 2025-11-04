@@ -57,7 +57,7 @@ class ConfigParserLoader(ABC, Iterable):
     """
 
     @staticmethod
-    def _get_config_parser(result_type, default_config_parser: Callable | None) -> ConfigParser:
+    def _get_config_parser(result_type: Any, default_config_parser: Callable | None) -> ConfigParser:
         if inspect.isclass(result_type) and issubclass(result_type, ConfigParser):
             return result_type()
         elif default_config_parser is not None:

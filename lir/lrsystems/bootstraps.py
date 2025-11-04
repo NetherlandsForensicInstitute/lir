@@ -7,7 +7,7 @@ import numpy as np
 from lir.transform.pipeline import Pipeline
 
 
-class TrainDataBootstrap(Pipeline):
+class BootstrapAtData(Pipeline):
     """Bootstrap system that estimates confidence intervals around the best estimate of a pipeline.
     This bootstrap system creates bootstrap samples from the training data, fits the pipeline on each sample,
     and then computes confidence intervals for the pipeline outputs based on the variability across the bootstrap

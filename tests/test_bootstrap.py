@@ -1,6 +1,6 @@
 from sklearn.linear_model import LogisticRegression
 from lir.data.datasets.synthesized_normal_binary import SynthesizedNormalBinaryData, SynthesizedNormalDataClass
-from lir.lrsystems.bootstraps import TrainDataBootstrap
+from lir.lrsystems.bootstraps import BootstrapAtData
 import numpy as np
 
 
@@ -17,7 +17,7 @@ def test_traindata_bootstrap():
         ("logreg", LogisticRegression(solver="lbfgs")),
     ]
 
-    results = TrainDataBootstrap(steps).fit(feature_data).transform(feature_data)
+    results = BootstrapAtData(steps).fit(feature_data).transform(feature_data)
 
     # Check that the llr values are within the inteval it has calculated.
     assert np.all(results.features[0] > results.features[1])
@@ -33,7 +33,7 @@ def test_traindata_bootstrap_empty_pipeline():
     feature_data = data.get_instances()
 
     steps = []
-    results = TrainDataBootstrap(steps).fit(feature_data).transform(feature_data)
+    results = BootstrapAtData(steps).fit(feature_data).transform(feature_data)
 
     # This is the most simple system possible, where all features and bounds should be zero.
     assert np.all(results.features == 0)

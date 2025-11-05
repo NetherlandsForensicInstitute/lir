@@ -58,7 +58,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description='Run all or some of the parts of project')
 
     parser.add_argument(
-        'setup',
+        '--setup',
         metavar='FILENAME',
         help='path to YAML file describing the evaluation setup',
     )

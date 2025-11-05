@@ -98,6 +98,7 @@ class BootstrapAtData(Pipeline):
         """
         return self.fit(instances).transform(instances)
 
+
 class BootstrapEquidistant(Pipeline):
     """Bootstrap system that estimates confidence intervals around the best estimate of a pipeline.
     This bootstrap system creates bootstrap samples from the training data, fits the pipeline on each sample,
@@ -115,9 +116,10 @@ class BootstrapEquidistant(Pipeline):
     def __init__(
         self,
         steps: list[tuple[str, Any]],
-        n_bootstraps: int = 4000,
+        n_bootstraps: int = 400,
         interval: tuple[float, float] = (0.05, 0.95),
         seed: int | None = None,
+        n_points: int | None = 1000,
     ):
         """Initialize the TrainDataBootstrap with the given pipeline steps, number of bootstraps, and interval.
 
@@ -126,11 +128,13 @@ class BootstrapEquidistant(Pipeline):
         param n_bootstraps: int: The number of bootstrap samples to generate. Default is 400.
         param interval: tuple[float, float]: The lower and upper quantiles for the confidence interval.
                                              Default: (0.05,0.95).
+        param n_points: int | None: The number of equidistant points to use for interval estimation. Default is 1000.
+                                    If None, uses the number of instances in the training data.
         """
         self.interval = interval
         self.n_bootstraps = n_bootstraps
         self.seed = seed
-
+        self.n_points = n_points
         self.f_interval_lower = None
         self.f_interval_upper = None
 
@@ -147,8 +151,15 @@ class BootstrapEquidistant(Pipeline):
         if self.seed is not None:
             np.random.seed(self.seed)
 
+        feat_vals = instances.features.reshape(-1)
 
-        equidistant_indices = np.linspace(min(instances.features), max(instances.features), num=len(instances), dtype=int).reshape(-1, 1)
+        if self.n_points is None:
+            self.n_points = len(instances)
+        equidistant_indices = np.linspace(
+            np.min(feat_vals), np.max(feat_vals), num=self.n_points, dtype=instances.features.dtype
+        ).reshape(-1, 1)
+
+        # Create FeatureData so the points can be used in the pipeline.
         fd = FeatureData(features=equidistant_indices)
 
         for _ in range(self.n_bootstraps):
@@ -160,11 +171,19 @@ class BootstrapEquidistant(Pipeline):
         all_vals = np.stack(all_vals, axis=1)
 
         intervals = np.quantile(all_vals, self.interval, axis=1)
-        best_estimate = super().fit_transform(instances)
 
-        best_estimate_values = best_estimate.features.reshape(-1)
-        self.f_interval_lower = interp1d(best_estimate_values, intervals[0])
-        self.f_interval_upper = interp1d(best_estimate_values, intervals[1])
+        super().fit(instances)
+        best_on_equidistant = super().transform(fd).features.reshape(-1)
+
+        lower = intervals[0]
+        upper = intervals[1]
+
+        self.f_interval_lower = interp1d(
+            best_on_equidistant, lower, bounds_error=False, fill_value=(lower[0], lower[-1])
+        )
+        self.f_interval_upper = interp1d(
+            best_on_equidistant, upper, bounds_error=False, fill_value=(upper[0], upper[-1])
+        )
 
         return self
 

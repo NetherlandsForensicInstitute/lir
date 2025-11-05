@@ -24,7 +24,7 @@ def test_traindata_bootstrap():
     # Check that the llr values are within the inteval it has calculated.
     assert np.all(results_data.llrs > results_data.llr_intervals[:, 0])
     assert np.all(results_data.llrs < results_data.llr_intervals[:, 1])
-    print(results_equidistant)
+
     assert np.all(results_equidistant.llrs > results_equidistant.llr_intervals[:, 0])
     assert np.all(results_equidistant.llrs < results_equidistant.llr_intervals[:, 1])
 

@@ -1,6 +1,6 @@
 from sklearn.linear_model import LogisticRegression
 from lir.data.datasets.synthesized_normal_binary import SynthesizedNormalBinaryData, SynthesizedNormalDataClass
-from lir.lrsystems.bootstraps import BootstrapAtData
+from lir.lrsystems.bootstraps import BootstrapAtData, BootstrapEquidistant
 import numpy as np
 
 
@@ -17,11 +17,16 @@ def test_traindata_bootstrap():
         ("logreg", LogisticRegression(solver="lbfgs")),
     ]
 
-    results = BootstrapAtData(steps).fit(feature_data).transform(feature_data)
+    results_data = BootstrapAtData(steps).fit(feature_data).transform(feature_data)
+    results_equidistant = BootstrapEquidistant(steps).fit(feature_data).transform(feature_data)
+
 
     # Check that the llr values are within the inteval it has calculated.
-    assert np.all(results.llrs > results.llr_intervals[:, 0])
-    assert np.all(results.llrs < results.llr_intervals[:, 1])
+    assert np.all(results_data.llrs > results_data.llr_intervals[:, 0])
+    assert np.all(results_data.llrs < results_data.llr_intervals[:, 1])
+    print(results_equidistant)
+    assert np.all(results_equidistant.llrs > results_equidistant.llr_intervals[:, 0])
+    assert np.all(results_equidistant.llrs < results_equidistant.llr_intervals[:, 1])
 
 
 def test_traindata_bootstrap_empty_pipeline():

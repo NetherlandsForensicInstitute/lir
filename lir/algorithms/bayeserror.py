@@ -66,8 +66,8 @@ def elub(
     sanitized_llrs[sanitized_llrs > substitute_extremes[1]] = substitute_extremes[1]
 
     # determine the range of LLRs to be considered, using dataset sizes: LB > -log10(size(Hp)+1), UB < log10(size(Hd)+1)
-    llr_min = max((np.min(sanitized_llrs), -np.log10(np.sum(y) + 1)))
-    llr_max = min((np.max(sanitized_llrs), np.log10(np.sum(1 - y) + 1)))
+    llr_min = max(np.min(sanitized_llrs), -np.log10(np.sum(y) + 1))
+    llr_max = min(np.max(sanitized_llrs), np.log10(np.sum(1 - y) + 1))
     llr_steps_min = min(0, int(np.floor_divide(llr_min, step_size)))
     llr_steps_max = max(0, int((np.floor_divide(llr_max, step_size)) + 1))
     llr_threshold = np.linspace(llr_steps_min * step_size, llr_steps_max * step_size, llr_steps_max - llr_steps_min + 1)

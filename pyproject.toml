@@ -36,6 +36,7 @@ lir = "lir.main:main"
 dev = [
     "coverage",
     "pytest",
+    "pytest-testmon>=2.1.3",
     "mypy>=1.18.2",
     "ruff>=0.14.3",
 ]
@@ -45,6 +46,7 @@ version = {source = "scm"}
 
 [tool.pdm.scripts]
 all = {composite = ["check", "test"]}
+all_with_quicktest = {composite = ["check", "quicktest"]}
 check = {composite = ["format-check", "lint", "mypy"]}
 fix = {composite = ["lint-fix", "format-fix"]}
 lint = "ruff check lir/"
@@ -52,7 +54,9 @@ lint-fix = "ruff check --fix lir/"
 format-check = "ruff format --diff lir/"
 format-fix = "ruff format lir/"
 mypy = "mypy lir"
-test = "coverage run --branch --source lir --module pytest --strict-markers tests/"
+# If no args are given to 'test', this will run as if '{args}' is an empty string.
+test = "coverage run --branch --source lir --module pytest --strict-markers tests/ {args}"
+quicktest = {composite = ["test --testmon"]}
 test-coverage = "coverage report"
 lir = "python run.py"
 

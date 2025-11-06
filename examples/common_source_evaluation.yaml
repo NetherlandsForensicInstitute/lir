@@ -19,14 +19,13 @@ cross_validation_splits:
 lr_system:
   architecture: score_based
   preprocessing:
-    steps:
-      raw_data:
-        method: csv_writer
-        include_labels: True
+    method: csv_writer
+    include_labels: True
   pairing:
     method: instance_pairs
     ratio_limit: 1
   comparing:
+    method: debug_pipeline
     steps:
       scoring: abs_diff
       clf:
@@ -34,14 +33,6 @@ lr_system:
         C: 1
       to_llr: probabilities_to_logodds
       bounding: elub_bounder
-      _results:
-        method: csv_writer
-        include_input: False
-        include_labels: False
-        include_batch: False
-        include:
-          - clf.csv
-          - to_llr.csv
 
 experiments:
   model_selection:

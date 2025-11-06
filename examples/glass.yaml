@@ -49,25 +49,16 @@ score_based_lr_system:
   architecture: score_based
 
   preprocessing:
+    method: debug_pipeline  # generate a CSV file containing the output of each processing step
     steps:
-      raw_data: csv_writer  # generate a CSV file containing raw data, named `raw_data.csv`
       scaler: standard_scaler  # apply the scikit-learn `StandardScaler` with default arguments
-
-      # Generate a CSV file containing all that we know about the instances.
-      _instances:
-        method: csv_writer
-        include_labels: True  # include the ground-truth labels
-        include_meta: True  # include the metadata of the instances
-        include_input: False  # do not write the current values, since we can include them from `scaler.csv`
-        include:  # include the content of the CSV files that we just generated
-          - raw_data.csv
-          - scaler.csv
 
   pairing:
     method: instance_pairs
     ratio_limit: 1  # limit the number of different-source pairs to the number of same-source pairs
 
   comparing:
+    method: debug_pipeline
     steps:
       scoring: abs_diff  # calculate the absolute difference between the two instances for each feature
       clf: logistic_regression  # use scikit-learn `LogisticRegression` to estimate probabilities
@@ -76,18 +67,6 @@ score_based_lr_system:
         method: kde
         bandwidth: silverman
       bounding: elub_bounder  # prevent excessive extrapolation by applying an LLR bounder
-
-      # Accumulate all intermediate results and write them to a CSV file.
-      _results:
-        method: csv_writer
-        include_labels: True  # include the ground truth labels
-        include_meta: True  # include the metadata on the pairs
-        include_input: False  # skip the input data, since we can read it from CSV
-        include:
-          - clf.csv
-          - to_llr.csv
-          - calibration.csv
-          - bounding.csv
 
 two_level_lr_system:
   # The `two_level` architecture takes three arguments:
@@ -98,24 +77,14 @@ two_level_lr_system:
 
   n_trace_instances: 2
   n_ref_instances: 3
-  preprocessing:
-    steps:
-      scaler: standard_scaler
+  preprocessing: standard_scaler
   pairing:
     method: source_pairs
     ratio_limit: 1
   postprocessing:
+    method: debug_pipeline
     steps:
-      llr: csv_writer
       bound_llr: elub_bounder
-      _results:
-        method: csv_writer
-        include_labels: True
-        include_meta: True
-        include_input: False
-        include:
-          - llr.csv
-          - bound_llr.csv
   seed: 42
 
 # Below we define how the LR system should be evaluated. We define three experiments:

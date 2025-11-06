@@ -14,6 +14,9 @@ def parse_visualizations(config: ContextAwareDict, output_path: Path) -> list[Ca
        - lrs: np.ndarray, a list of lrs
        - labels: np.ndarray, a list of labels corresponding to the lrs
     """
+    if not config:
+        return []
+
     visualization_functions = []
     for visualization_type in config:
         try:

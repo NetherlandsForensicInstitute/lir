@@ -81,7 +81,7 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         return [WriteMetricsToCsv(self._output_dir / 'metrics.csv', metrics)]
 
     def visualization_functions(self) -> list[Callable]:
-        return parse_visualizations(pop_field(self._config, 'visualization'), self._output_dir)
+        return parse_visualizations(pop_field(self._config, 'visualization', required=False), self._output_dir)
 
     def lrsystem(self) -> tuple[ContextAwareDict, list[Hyperparameter]]:
         baseline_config = pop_field(self._config, 'lr_system')

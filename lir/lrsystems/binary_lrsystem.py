@@ -1,5 +1,5 @@
+from lir import Transformer
 from lir.lrsystems.lrsystems import FeatureData, LLRData, LRSystem
-from lir.transform.pipeline import Pipeline
 
 
 class BinaryLRSystem(LRSystem):
@@ -13,7 +13,7 @@ class BinaryLRSystem(LRSystem):
     afterward calculate corresponding LLR's for given feature vectors.
     """
 
-    def __init__(self, name: str, pipeline: Pipeline):
+    def __init__(self, name: str, pipeline: Transformer):
         super().__init__(name)
         self.pipeline = pipeline
 

@@ -20,31 +20,9 @@ from lir.lrsystems.lrsystems import LRSystem
 from lir.lrsystems.score_based import ScoreBasedSystem
 from lir.lrsystems.two_level import TwoLevelSystem
 from lir.registry import ComponentNotFoundError
-from lir.transform.pipeline import Pipeline
 
 
 LOG = logging.getLogger(__name__)
-
-
-def parse_pipeline(modules_config: ContextAwareDict, output_dir: Path) -> Pipeline:
-    """Construct a scikit-learn Pipeline based on the provided configuration."""
-    if modules_config is None:
-        return Pipeline([])
-
-    module_names = list(modules_config.keys())
-    modules = [
-        (
-            module_name,
-            parse_module(
-                pop_field(modules_config, module_name),
-                output_dir,
-                modules_config.context + [module_name],
-            ),
-        )
-        for module_name in module_names
-    ]
-
-    return Pipeline(modules)
 
 
 @config_parser
@@ -54,7 +32,7 @@ def specific_source(config: ContextAwareDict, output_dir: Path) -> LRSystem:
     The `specific_source` function name corresponds with the naming scheme in the
     registry. See for example: `lir.config.lrsystems.specific_source`.
     """
-    pipeline = parse_pipeline(pop_field(config, 'modules'), output_dir)
+    pipeline = parse_module(pop_field(config, 'modules'), output_dir, config.context, default_method='pipeline')
     return BinaryLRSystem(output_dir.name, pipeline)
 
 
@@ -65,18 +43,24 @@ def score_based(config: ContextAwareDict, output_dir: Path) -> LRSystem:
     The `specific_source` function name corresponds with the naming scheme in the
     registry. See for example: `lir.config.lrsystems.score_based`.
     """
-    preprocessing = parse_pipeline(pop_field(config, 'preprocessing'), output_dir)
+    preprocessing = parse_module(
+        pop_field(config, 'preprocessing'), output_dir, config.context, default_method='pipeline'
+    )
     pairing_function = parse_pairing_config(pop_field(config, 'pairing'), output_dir, config.context)
-    evaluation = parse_pipeline(pop_field(config, 'comparing'), output_dir)
+    evaluation = parse_module(pop_field(config, 'comparing'), output_dir, config.context, default_method='pipeline')
 
     return ScoreBasedSystem(output_dir.name, preprocessing, pairing_function, evaluation)
 
 
 @config_parser
 def two_level(config: ContextAwareDict, output_dir: Path) -> LRSystem:
-    preprocessing = parse_pipeline(pop_field(config, 'preprocessing'), output_dir)
+    preprocessing = parse_module(
+        pop_field(config, 'preprocessing'), output_dir, config.context, default_method='pipeline'
+    )
     pairing_function = parse_pairing_config(pop_field(config, 'pairing'), output_dir, config.context)
-    postprocessing = parse_pipeline(pop_field(config, 'postprocessing'), output_dir)
+    postprocessing = parse_module(
+        pop_field(config, 'postprocessing'), output_dir, config.context, default_method='pipeline'
+    )
     n_trace_instances = pop_field(config, 'n_trace_instances', validate=int)
     n_ref_instances = pop_field(config, 'n_ref_instances', validate=int)
 

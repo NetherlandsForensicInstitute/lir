@@ -1,3 +1,4 @@
+from lir import Transformer
 from lir.lrsystems.lrsystems import FeatureData, LLRData, LRSystem
 from lir.transform.pairing import PairingMethod
 from lir.transform.pipeline import Pipeline
@@ -15,9 +16,9 @@ class ScoreBasedSystem(LRSystem):
     def __init__(
         self,
         name: str,
-        preprocessing_pipeline: Pipeline | None,
+        preprocessing_pipeline: Transformer | None,
         pairing_function: PairingMethod,
-        evaluation_pipeline: Pipeline | None,
+        evaluation_pipeline: Transformer | None,
     ):
         super().__init__(name)
         self.preprocessing_pipeline = preprocessing_pipeline or Pipeline([])

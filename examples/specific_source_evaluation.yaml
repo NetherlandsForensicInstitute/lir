@@ -21,23 +21,24 @@ cross_validation_splits:
 lr_system:
   architecture: specific_source
   modules:
-    raw_data:
-      method: csv_writer
-      include_labels: True
-    scaler: standard_scaler
-    clf:
-      method: logistic_regression
-      C: 1
-    to_llr: probabilities_to_logodds
-    _results:
-      method: csv_writer
-      include_input: False
-      include_batch: False
-      include:
-        - raw_data.csv
-        - scaler.csv
-        - clf.csv
-        - to_llr.csv
+    steps:
+      raw_data:
+        method: csv_writer
+        include_labels: True
+      scaler: standard_scaler
+      clf:
+        method: logistic_regression
+        C: 1
+      to_llr: probabilities_to_logodds
+      _results:
+        method: csv_writer
+        include_input: False
+        include_batch: False
+        include:
+          - raw_data.csv
+          - scaler.csv
+          - clf.csv
+          - to_llr.csv
 
 experiments:
   model_selection:
@@ -45,7 +46,7 @@ experiments:
     lr_system: ${lr_system}
     data: ${cross_validation_splits}
     hyperparameters:
-      - path: modules.clf
+      - path: modules.steps.clf
         options:
           - option_name: logit
             method: logistic_regression

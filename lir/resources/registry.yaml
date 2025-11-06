@@ -16,6 +16,9 @@ data_providers:
   synthesized_normal_multiclass: lir.data.datasets.synthesized_normal_multiclass.synthesized_normal_multiclass
   glass: lir.data.datasets.glass.GlassData
 modules:
+  # pipelines
+  pipeline: lir.transform.pipeline.pipeline
+
   # transformations
   standard_scaler:
     class: sklearn.preprocessing.StandardScaler

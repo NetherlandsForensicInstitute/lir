@@ -19,27 +19,29 @@ cross_validation_splits:
 lr_system:
   architecture: score_based
   preprocessing:
-    raw_data:
-      method: csv_writer
-      include_labels: True
+    steps:
+      raw_data:
+        method: csv_writer
+        include_labels: True
   pairing:
     method: instance_pairs
     ratio_limit: 1
   comparing:
-    scoring: abs_diff
-    clf:
-      method: logistic_regression
-      C: 1
-    to_llr: probabilities_to_logodds
-    bounding: elub_bounder
-    _results:
-      method: csv_writer
-      include_input: False
-      include_labels: False
-      include_batch: False
-      include:
-        - clf.csv
-        - to_llr.csv
+    steps:
+      scoring: abs_diff
+      clf:
+        method: logistic_regression
+        C: 1
+      to_llr: probabilities_to_logodds
+      bounding: elub_bounder
+      _results:
+        method: csv_writer
+        include_input: False
+        include_labels: False
+        include_batch: False
+        include:
+          - clf.csv
+          - to_llr.csv
 
 experiments:
   model_selection:
@@ -47,7 +49,7 @@ experiments:
     lr_system: ${lr_system}
     data: ${cross_validation_splits}
     hyperparameters:
-      - path: comparing.clf
+      - path: comparing.steps.clf
         options:
           - option_name: logit
             method: logistic_regression

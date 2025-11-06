@@ -17,15 +17,14 @@ class BinaryTrainTestSplit(DataStrategy):
         self.source = source
         self.test_size = test_size
         self.seed = seed
-        self.shuffle = True if self.seed is not None else False  # noqa: SIM210
 
     def __iter__(self) -> Iterator:
         """Allow iteration by looping over the resulting train/test split(s)."""
         instances = self.source.get_instances()
 
         indexes = np.arange(len(instances))
-        indexes_train, indexes_test, labels_train, labels_test = sklearn.model_selection.train_test_split(
-            indexes, instances.labels, test_size=self.test_size, shuffle=self.shuffle, random_state=self.seed
+        indexes_train, indexes_test = sklearn.model_selection.train_test_split(
+            indexes, stratify=instances.labels, test_size=self.test_size, shuffle=True, random_state=self.seed
         )
 
         yield instances[indexes_train], instances[indexes_test]

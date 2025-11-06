@@ -20,7 +20,7 @@ def compensate_and_remove_neginf_inf(
     """
     for Gaussian and KDE-calibrator fitting: remove negInf, Inf and compensate
     """
-    X_finite = np.isfinite(log_odds)
+    X_finite = np.isfinite(log_odds).flatten()
     el_H1 = np.logical_and(X_finite, y == 1)
     el_H2 = np.logical_and(X_finite, y == 0)
     n_H1 = np.sum(y)
@@ -83,6 +83,13 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
         return bandwidth
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> Self:
+        # check if we have matching dimensions
+        if np.prod(X.shape) != len(y):
+            raise ValueError(f"invalid shape: expected: ({len(y)},) or ({len(y)}, 1); found: {X.shape}")
+
+        # make sure we have a 2d array of one column
+        X = X.reshape(-1, 1)
+
         # check if data is sane
         check_misleading_finite(X, y)
 
@@ -91,8 +98,6 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
         # LRs in finite range will be corrected for fractions in transform function
         X, y, self.numerator, self.denominator = compensate_and_remove_neginf_inf(X, y)
         X0, X1 = Xy_to_Xn(X, y)
-        X0 = X0.reshape(-1, 1)
-        X1 = X1.reshape(-1, 1)
 
         bandwidth0, bandwidth1 = self.bandwidth(X, y)
         self._kde0 = KernelDensity(kernel='gaussian', bandwidth=bandwidth0).fit(X0)

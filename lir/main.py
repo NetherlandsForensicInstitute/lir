@@ -45,10 +45,10 @@ def initialize_logfile(output_dir: Path) -> None:
     logging.getLogger().addHandler(fh)
 
 
-def error(msg: str) -> None:
+def error(msg: str, e: Exception | None = None) -> None:
     sys.stderr.write(f'{msg}\n')
-    if LOG.level <= logging.DEBUG:
-        raise
+    if e and LOG.level <= logging.DEBUG:
+        raise e
     sys.exit(1)
 
 
@@ -61,11 +61,12 @@ def main() -> None:
         'setup',
         metavar='FILENAME',
         help='path to YAML file describing the evaluation setup',
+        nargs='?',
     )
     parser.add_argument(
         '--experiment',
         help='run a specific experiment (defaults to all experiments)',
-        nargs='*',
+        action='append',
     )
     parser.add_argument(
         '--list-experiments',
@@ -89,10 +90,15 @@ def main() -> None:
             print(name)
         return
 
+    ### an experiment setup is required beyond this point ###
+
+    if not args.setup:
+        parser.error('missing FILENAME argument')
+
     try:
         experiments, output_dir = parse_experiments_setup(confidence.loadf(args.setup))
     except YamlParseError as e:
-        error(f'error while parsing {args.setup}: {str(e)}')
+        error(f'error while parsing {args.setup}: {str(e)}', e)
         raise  # this statement is not reachable, but helps code validation
 
     initialize_logfile(output_dir)
@@ -104,10 +110,11 @@ def main() -> None:
 
     if args.experiment:
         for name in args.experiment:
-            if name in experiments:
-                experiments[name].run()
-            else:
+            if name not in experiments:
                 error(f'no such experiment: {name}')
+
+        for name in args.experiment:
+            experiments[name].run()
     else:
         for experiment in experiments.values():
             experiment.run()

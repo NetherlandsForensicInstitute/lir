@@ -75,8 +75,8 @@ class GenericTransformerConfigParser(ConfigParser):
         raise YamlParseError(config.context, f'unrecognized module type: `{self.component_class}`')
 
 
-class NumpyCsvWriterWrappingConfigParser(ConfigParser):
-    """Wrap a given CSV Writer object to handle Numpy specific data."""
+class NumpyWrappingConfigParser(ConfigParser):
+    """Wrap a Transformer to add a header to FeatureData."""
 
     def __init__(self, module_parser: ConfigParser):
         super().__init__()
@@ -84,11 +84,9 @@ class NumpyCsvWriterWrappingConfigParser(ConfigParser):
 
     def parse(self, config: ContextAwareDict, output_dir: Path) -> Transformer:
         header = config.pop('header') if 'header' in config else None
-        path = pop_field(config, 'path', default=f'{config.context[-1]}.csv')
         return NumpyTransformer(
             self.module_parser.parse(config, output_dir),
             header=header,
-            path=output_dir / path,
         )
 
 

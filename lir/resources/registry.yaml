@@ -18,18 +18,19 @@ data_providers:
 modules:
   # pipelines
   pipeline: lir.transform.pipeline.pipeline
+  debug_pipeline: lir.transform.pipeline.debug_pipeline
   bootstrap: lir.algorithms.bootstraps.bootstrap
 
   # transformations
   standard_scaler:
     class: sklearn.preprocessing.StandardScaler
-    wrapper: lir.config.numpy_csv_writer
+    wrapper: lir.config.numpy_wrapper
   probabilities_to_odds:
     class: lir.util.probability_to_odds
-    wrapper: lir.config.numpy_csv_writer
+    wrapper: lir.config.numpy_wrapper
   probabilities_to_logodds:
     class: lir.util.probability_to_logodds
-    wrapper: lir.config.numpy_csv_writer
+    wrapper: lir.config.numpy_wrapper
 
   # comparisons
   abs_diff: lir.transform.distance.AbsDiffTransformer
@@ -41,26 +42,26 @@ modules:
   # classifiers
   logistic_regression:
     class: sklearn.linear_model.LogisticRegression
-    wrapper: lir.config.numpy_csv_writer
+    wrapper: lir.config.numpy_wrapper
   svm:
     class: sklearn.svm.SVC
-    wrapper: lir.config.numpy_csv_writer
+    wrapper: lir.config.numpy_wrapper
 
   # calibrators
   kde:
     class: lir.algorithms.kde.KDECalibrator
-    wrapper: lir.config.numpy_csv_writer
+    wrapper: lir.config.numpy_wrapper
   isotonic_calibrator:
     class: lir.algorithms.isotonic_regression.IsotonicRegression
-    wrapper: lir.config.numpy_csv_writer
+    wrapper: lir.config.numpy_wrapper
 
   # bounders
   static_bounder:
     class: lir.bounding.StaticBounder
-    wrapper: lir.config.numpy_csv_writer
+    wrapper: lir.config.numpy_wrapper
   elub_bounder:
     class: lir.algorithms.bayeserror.ELUBBounder
-    wrapper: lir.config.numpy_csv_writer
+    wrapper: lir.config.numpy_wrapper
 metrics:
   cllr: lir.metrics.cllr
   cllr_min: lir.metrics.cllr_min

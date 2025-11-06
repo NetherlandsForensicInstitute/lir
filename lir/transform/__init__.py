@@ -149,22 +149,23 @@ class TransformerWrapper(Transformer):
 
 
 class NumpyTransformer(TransformerWrapper):
-    """Implementation of a transformer wrapper to handle writing numpy data to CSV."""
+    """Implementation of a transformer wrapper."""
 
-    def __init__(self, transformer: Transformer, header: list[str] | None, path: Path):
+    def __init__(self, transformer: Transformer, header: list[str] | None):
         super().__init__(transformer)
-        self.csv_writer = CsvWriter(header=header, path=path)
+        self.header = header
 
     def transform(self, instances: FeatureData) -> FeatureData:
-        result = super().transform(instances)
-        self.csv_writer.transform(result)
-        return result
+        instances = super().transform(instances)
+        if self.header:
+            instances = instances.replace(header=self.header)
+        return instances
 
     def fit_transform(self, instances: FeatureData) -> FeatureData:
-        self.fit(instances)
-
-        # avoid doing self.transform() because no CSV should be written during training
-        return super().transform(instances)
+        instances = super().fit_transform(instances)
+        if self.header:
+            instances = instances.replace(header=self.header)
+        return instances
 
 
 class CsvWriter(Transformer):
@@ -183,7 +184,6 @@ class CsvWriter(Transformer):
         include_meta: bool = False,
         include_input: bool = True,
         include_batch: bool = False,
-        phase: str = 'test',
     ):
         super().__init__()
         self.path = path
@@ -198,7 +198,6 @@ class CsvWriter(Transformer):
         self.include_meta = include_meta
         self.include_input = include_input
         self.include_batch = include_batch
-        self.write_on_phase = phase
         self.n_batches = 0
 
     def _join_reader(self, filename: str) -> Iterator[list[str]]:

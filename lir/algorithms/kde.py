@@ -85,7 +85,7 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
     def fit(self, X: np.ndarray, y: np.ndarray) -> Self:
         # check if we have matching dimensions
         if np.prod(X.shape) != len(y):
-            raise ValueError(f"invalid shape: expected: ({len(y)},) or ({len(y)}, 1); found: {X.shape}")
+            raise ValueError(f'invalid shape: expected: ({len(y)},) or ({len(y)}, 1); found: {X.shape}')
 
         # make sure we have a 2d array of one column
         X = X.reshape(-1, 1)

@@ -52,7 +52,7 @@ def error(msg: str, e: Exception | None = None) -> None:
     sys.exit(1)
 
 
-def main() -> None:
+def main(args: list[str] | None = None) -> None:
     app_name = 'benchmark'
 
     parser = argparse.ArgumentParser(description='Run all or some of the parts of project')
@@ -81,7 +81,7 @@ def main() -> None:
 
     parser.add_argument('-v', help='increases verbosity', action='count', default=0)
     parser.add_argument('-q', help='decreases verbosity', action='count', default=0)
-    args = parser.parse_args()
+    args = parser.parse_args(args)
 
     setup_logging(f'{app_name}.log', args.v - args.q)
 
@@ -113,7 +113,7 @@ def main() -> None:
             if name not in experiments:
                 error(f'no such experiment: {name}')
 
-        for name in args.experiment:
+        for name in set(args.experiment):
             experiments[name].run()
     else:
         for experiment in experiments.values():

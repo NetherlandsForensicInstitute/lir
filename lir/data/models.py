@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from typing import Annotated, Any, Self, TypeVar
 
 import numpy as np
@@ -52,6 +52,9 @@ class InstanceData(BaseModel, ABC):
                 data[field] = values
         return self.replace(**data)
 
+    def __add__(self, other: 'InstanceData') -> Self:
+        return self.combine(other, np.concatenate)
+
     def has_same_type(self, other: Any) -> bool:
         """
         Compare these instance data to another class.
@@ -72,6 +75,66 @@ class InstanceData(BaseModel, ABC):
                 return False
 
         return True
+
+    def combine(
+        self, others: 'list[InstanceData] | InstanceData | None', fn: Callable, *args: Any, **kwargs: dict[str, Any]
+    ) -> Self:
+        """
+        Apply a custom combination function to InstanceData objects.
+
+        All objects must have the same types and fields, and the same values for all non-numpy array
+        fields, or an error is raised. Numpy fields are concatenated using `fn`. Other fields are copied as-is.
+        """
+        if others is None:
+            others = []
+        elif isinstance(others, InstanceData):
+            others = [others]
+
+        # initialize the dictionary of fields to be updated
+        data: dict[str, np.ndarray | None] = {}
+
+        for field in self.all_fields:
+            first_value = getattr(self, field)
+            if isinstance(first_value, np.ndarray):
+                # we have a numpy array field -> update required
+
+                # collect values for all objects involved
+                values = [first_value]
+                for instances in others or []:
+                    if not self.has_same_type(instances):
+                        raise ValueError('instances to concatinate must have the same types and fields')
+                    values.append(getattr(instances, field))
+
+                # apply the function
+                values = fn(values, *args, **kwargs)
+
+                if field == 'labels' and len(values.shape) != 1:
+                    # drop labels if they are in bad shape
+                    data[field] = None
+                else:
+                    # store the value to be updated later
+                    data[field] = values
+
+            elif others:
+                # we have another field -> check if they have the same value
+                for instances in others:
+                    other_value = getattr(instances, field)
+                    if other_value != first_value:
+                        raise ValueError(
+                            f'unable to combine field `{field}`: value mismatch: {other_value} != {first_value}'
+                        )
+
+        return self.replace(**data)
+
+    def apply(
+        self, fn: Callable, *args: Any, _others: list['InstanceData'] | None = None, **kwargs: dict[str, Any]
+    ) -> Self:
+        """
+        Apply a custom function to this InstanceData object.
+
+        The function `fn` is applied to all Numpy fields. Other fields are copied as-is.
+        """
+        return self.combine(None, fn, *args, **kwargs)
 
     def __eq__(self, other: Any) -> bool:
         """
@@ -236,35 +299,12 @@ FeatureDataType = TypeVar('FeatureDataType', bound=FeatureData)
 
 def concatenate_instances(first: InstanceDataType, *others: InstanceDataType) -> InstanceDataType:
     """
-    Combine the results of the InstanceData objects.
+    Concatenate the results of the InstanceData objects.
 
     All concatenated objects must have the same types and fields, and the same values for all non-numpy array fields,
     or an error is raised. Numpy fields are concatenated using `np.concatenate`. Other fields are copied as-is.
     """
-
-    data = {}
-    for field in first.all_fields:
-        first_value = getattr(first, field)
-        if isinstance(first_value, np.ndarray):
-            # we have a numpy array field -> concatenate
-            values = [first_value]
-
-            for instances in others:
-                if not first.has_same_type(instances):
-                    raise ValueError('instances to concatinate must have the same types and fields')
-                values.append(getattr(instances, field))
-
-            data[field] = np.concatenate(values)
-        else:
-            # we have another field -> check if they have the same value
-            for instances in others:
-                other_value = getattr(instances, field)
-                if other_value != first_value:
-                    raise ValueError(
-                        f'unable to concatenate field `{field}`: value mismatch: {other_value} != {first_value}'
-                    )
-
-    return first.replace(**data)
+    return first.combine(list(others), np.concatenate)
 
 
 class DataSet(ABC):

@@ -1,0 +1,47 @@
+output: output/${timestamp}_specific_source
+
+data:
+  provider: synthesized_normal_binary
+  seed: 42
+  h1:
+    mean: 1
+    std: 1
+    size: 100
+  h2:
+    mean: -1
+    std: 1
+    size: 100
+
+data_splits:
+  strategy: binary_train_test_split
+  test_size: 0.5
+  source: ${data}
+
+lr_system:
+  architecture: specific_source
+  modules:
+    clf: logistic_regression
+    to_llr: probabilities_to_logodds
+
+experiments:
+  exp1:
+    strategy: grid
+    lr_system: ${lr_system}
+    data: ${data_splits}
+    hyperparameters:
+      - path: modules.clf
+        options:
+          - option_name: logit
+            method: logistic_regression
+          - option_name: svm
+            method: svm
+            probability: True
+    metrics:
+      - cllr
+
+  exp2:
+    strategy: single_run
+    lr_system: ${lr_system}
+    data: ${data_splits}
+    metrics:
+      - cllr

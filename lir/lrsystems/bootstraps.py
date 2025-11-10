@@ -53,11 +53,10 @@ class BootstrapAtData(Pipeline):
         """
 
         all_vals = []
-        if self.seed is not None:
-            np.random.seed(self.seed)
+        rng = np.random.default_rng(self.seed)
 
         for _ in range(self.n_bootstraps):
-            sample_index = np.random.choice(len(instances), size=len(instances))
+            sample_index = rng.choice(len(instances), size=len(instances))
             samples = instances[sample_index]
             super().fit(samples)
             all_vals.append(super().transform(instances).features.reshape(-1))
@@ -148,8 +147,7 @@ class BootstrapEquidistant(Pipeline):
         """
 
         all_vals = []
-        if self.seed is not None:
-            np.random.seed(self.seed)
+        rng = np.random.default_rng(self.seed)
 
         feat_vals = instances.features.reshape(-1)
 
@@ -163,7 +161,7 @@ class BootstrapEquidistant(Pipeline):
         fd = FeatureData(features=equidistant_indices)
 
         for _ in range(self.n_bootstraps):
-            sample_index = np.random.choice(len(instances), size=len(instances))
+            sample_index = rng.choice(len(instances), size=len(instances))
             samples = instances[sample_index]
             super().fit(samples)
             all_vals.append(super().transform(fd).features.reshape(-1))

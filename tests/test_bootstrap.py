@@ -1,6 +1,6 @@
 from sklearn.linear_model import LogisticRegression
 from lir.data.datasets.synthesized_normal_binary import SynthesizedNormalBinaryData, SynthesizedNormalDataClass
-from lir.lrsystems.bootstraps import BootstrapAtData, BootstrapEquidistant
+from lir.algorithms.bootstraps import BootstrapAtData, BootstrapEquidistant
 import numpy as np
 
 

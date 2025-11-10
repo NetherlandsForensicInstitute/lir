@@ -163,8 +163,8 @@ class BootstrapEquidistant(Pipeline):
         rng = np.random.default_rng(self.seed)
 
         # Raise an exception if the dimensions are not what we expect.
-        if instances.features.ndim != 2:
-            raise ValueError('Expected 2D feature array.')
+        if instances.features.ndim != 2 or instances.features.shape[1] != 1:
+            raise ValueError(f'expected 2D feature array with 1 column; found shape: {instances.features.shape}')
 
         feat_vals = instances.features.reshape(-1)
 

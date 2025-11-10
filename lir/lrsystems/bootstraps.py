@@ -67,8 +67,8 @@ class BootstrapAtData(Pipeline):
         best_estimate = super().fit_transform(instances)
 
         best_estimate_values = best_estimate.features.reshape(-1)
-        self.f_interval_lower = interp1d(best_estimate_values, intervals[0])
-        self.f_interval_upper = interp1d(best_estimate_values, intervals[1])
+        self.f_interval_lower = interp1d(best_estimate_values, intervals[0] - best_estimate_values)
+        self.f_interval_upper = interp1d(best_estimate_values, intervals[1] - best_estimate_values)
         return self
 
     def transform(self, instances: FeatureData) -> LLRData:
@@ -177,8 +177,8 @@ class BootstrapEquidistant(Pipeline):
         super().fit(instances)
         best_on_equidistant = super().transform(fd).features.reshape(-1)
 
-        lower = intervals[0]
-        upper = intervals[1]
+        lower = intervals[0] - best_on_equidistant
+        upper = intervals[1] - best_on_equidistant
 
         self.f_interval_lower = interp1d(
             best_on_equidistant, lower, bounds_error=False, fill_value=(lower[0], lower[-1])

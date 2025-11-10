@@ -12,18 +12,18 @@ class BootstrapAtData(Pipeline):
 
     This bootstrap system creates bootstrap samples from the training data, fits the pipeline on each sample,
     and then computes confidence intervals for the pipeline outputs based on the variability across the bootstrap
-    samples. These intervals are given as relative to the best estimate.
+    samples.
 
     Computing these intervals is done by creating interpolation functions that map the best estimate to the
-    lower and upper bounds of the confidence interval. This interpolation is fitted on the training data after
-    computing the bootstrap estimates. In contrast to the BootstrapEquidistant class, this class does not require
-    the creation of equidistant points, meaning more complex data types can be used.
+    difference between the best estimate and the lower and upper bounds of the confidence interval. This interpolation
+    is fitted on the training data after computing the bootstrap estimates. In contrast to the BootstrapEquidistant
+    class, this class does not require the creation of equidistant points, meaning more complex data types can be used.
 
     Attributes:
         interval: The lower and upper quantiles for the confidence interval.
         n_bootstraps: The number of bootstrap samples to generate.
-        f_interval_lower: Interpolation function for the lower bound of the interval.
-        f_interval_upper: Interpolation function for the upper bound of the interval.
+        f_delta_interval_lower: Interpolation function for the lower bound of the interval.
+        f_delta_interval_upper: Interpolation function for the upper bound of the interval.
 
     """
 
@@ -46,8 +46,8 @@ class BootstrapAtData(Pipeline):
         self.n_bootstraps = n_bootstraps
         self.seed = seed
 
-        self.f_interval_lower = None
-        self.f_interval_upper = None
+        self.f_delta_interval_lower = None
+        self.f_delta_interval_upper = None
 
         super().__init__(steps)
 
@@ -73,8 +73,8 @@ class BootstrapAtData(Pipeline):
         best_estimate = super().fit_transform(instances)
 
         best_estimate_values = best_estimate.features.reshape(-1)
-        self.f_interval_lower = interp1d(best_estimate_values, intervals[0] - best_estimate_values)
-        self.f_interval_upper = interp1d(best_estimate_values, intervals[1] - best_estimate_values)
+        self.f_delta_interval_lower = interp1d(best_estimate_values, intervals[0] - best_estimate_values)
+        self.f_delta_interval_upper = interp1d(best_estimate_values, intervals[1] - best_estimate_values)
         return self
 
     def transform(self, instances: FeatureData) -> LLRData:
@@ -83,13 +83,13 @@ class BootstrapAtData(Pipeline):
         param instances: FeatureData: The feature data to transform.
         return LLRData: The transformed feature data with best estimate and confidence intervals.
         """
-        if self.f_interval_lower is None or self.f_interval_upper is None:
+        if self.f_delta_interval_lower is None or self.f_delta_interval_upper is None:
             raise ValueError('Bootstrap intervals have not been computed. Please fit the bootstrap first.')
 
         best_estimate = super().transform(instances)
         best_1d_estimate = best_estimate.features.reshape(-1)
-        interval_lower = self.f_interval_lower(best_1d_estimate)
-        interval_upper = self.f_interval_upper(best_1d_estimate)
+        interval_lower = best_1d_estimate + self.f_delta_interval_lower(best_1d_estimate)
+        interval_upper = best_1d_estimate + self.f_delta_interval_upper(best_1d_estimate)
 
         return best_estimate.replace_as(
             LLRData, features=np.stack([best_1d_estimate, interval_lower, interval_upper], axis=1)
@@ -109,19 +109,19 @@ class BootstrapEquidistant(Pipeline):
 
     This bootstrap system creates bootstrap samples from the training data, fits the pipeline on each sample,
     and then computes confidence intervals for the pipeline outputs based on the variability across the bootstrap
-    samples. These intervals are given as relative to the best estimate.
+    samples.
 
     Computing these intervals is done by creating interpolation functions that map the best estimate to the
-    lower and upper bounds of the confidence interval. This interpolation is fitted on the training data after
-    computing the bootstrap estimates. In contrast to the BootstrapAtData class, this class requires
-    the creation of equidistant points for interval estimation. This means the input data must be of a type
-    that can be represented as equidistant points (e.g., continuous features).
+    difference between the best estimate and the lower and upper bounds of the confidence interval. This interpolation
+    is fitted on equidistant points after computing the bootstrap estimates. In contrast to the BootstrapAtData class,
+    this class requires the creation of equidistant points for interval estimation. This means the input data must be
+    of a type that can be represented as equidistant points (e.g., continuous features).
 
     Attributes:
         interval: The lower and upper quantiles for the confidence interval.
         n_bootstraps: The number of bootstrap samples to generate.
-        f_interval_lower: Interpolation function for the lower bound of the interval.
-        f_interval_upper: Interpolation function for the upper bound of the interval.
+        f_delta_interval_lower: Interpolation function for the lower bound of the interval.
+        f_delta_interval_upper: Interpolation function for the upper bound of the interval.
 
     """
 
@@ -147,8 +147,8 @@ class BootstrapEquidistant(Pipeline):
         self.n_bootstraps = n_bootstraps
         self.seed = seed
         self.n_points = n_points
-        self.f_interval_lower = None
-        self.f_interval_upper = None
+        self.f_delta_interval_lower = None
+        self.f_delta_interval_upper = None
 
         super().__init__(steps)
 
@@ -193,10 +193,10 @@ class BootstrapEquidistant(Pipeline):
         lower = intervals[0] - best_on_equidistant
         upper = intervals[1] - best_on_equidistant
 
-        self.f_interval_lower = interp1d(
+        self.f_delta_interval_lower = interp1d(
             best_on_equidistant, lower, bounds_error=False, fill_value=(lower[0], lower[-1])
         )
-        self.f_interval_upper = interp1d(
+        self.f_delta_interval_upper = interp1d(
             best_on_equidistant, upper, bounds_error=False, fill_value=(upper[0], upper[-1])
         )
 
@@ -208,13 +208,13 @@ class BootstrapEquidistant(Pipeline):
         param instances: FeatureData: The feature data to transform.
         return LLRData: The transformed feature data with best estimate and confidence intervals.
         """
-        if self.f_interval_lower is None or self.f_interval_upper is None:
+        if self.f_delta_interval_lower is None or self.f_delta_interval_upper is None:
             raise ValueError('Bootstrap intervals have not been computed. Please fit the bootstrap first.')
 
         best_estimate = super().transform(instances)
         best_1d_estimate = best_estimate.features.reshape(-1)
-        interval_lower = self.f_interval_lower(best_1d_estimate)
-        interval_upper = self.f_interval_upper(best_1d_estimate)
+        interval_lower = best_1d_estimate + self.f_delta_interval_lower(best_1d_estimate)
+        interval_upper = best_1d_estimate + self.f_delta_interval_upper(best_1d_estimate)
 
         return best_estimate.replace_as(
             LLRData, features=np.stack([best_1d_estimate, interval_lower, interval_upper], axis=1)

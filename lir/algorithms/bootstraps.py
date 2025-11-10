@@ -9,9 +9,15 @@ from lir.transform.pipeline import Pipeline
 
 class BootstrapAtData(Pipeline):
     """Bootstrap system that estimates confidence intervals around the best estimate of a pipeline.
+
     This bootstrap system creates bootstrap samples from the training data, fits the pipeline on each sample,
     and then computes confidence intervals for the pipeline outputs based on the variability across the bootstrap
-    samples.
+    samples. These intervals are given as relative to the best estimate.
+
+    Computing these intervals is done by creating interpolation functions that map the best estimate to the
+    lower and upper bounds of the confidence interval. This interpolation is fitted on the training data after
+    computing the bootstrap estimates. In contrast to the BootstrapEquidistant class, this class does not require
+    the creation of equidistant points, meaning more complex data types can be used.
 
     Attributes:
         interval: The lower and upper quantiles for the confidence interval.
@@ -100,9 +106,16 @@ class BootstrapAtData(Pipeline):
 
 class BootstrapEquidistant(Pipeline):
     """Bootstrap system that estimates confidence intervals around the best estimate of a pipeline.
+
     This bootstrap system creates bootstrap samples from the training data, fits the pipeline on each sample,
     and then computes confidence intervals for the pipeline outputs based on the variability across the bootstrap
-    samples.
+    samples. These intervals are given as relative to the best estimate.
+
+    Computing these intervals is done by creating interpolation functions that map the best estimate to the
+    lower and upper bounds of the confidence interval. This interpolation is fitted on the training data after
+    computing the bootstrap estimates. In contrast to the BootstrapAtData class, this class requires
+    the creation of equidistant points for interval estimation. This means the input data must be of a type
+    that can be represented as equidistant points (e.g., continuous features).
 
     Attributes:
         interval: The lower and upper quantiles for the confidence interval.

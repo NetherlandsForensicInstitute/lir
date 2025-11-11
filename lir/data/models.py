@@ -100,7 +100,7 @@ class InstanceData(BaseModel, ABC):
 
                 # collect values for all objects involved
                 values = [first_value]
-                for instances in others or []:
+                for instances in others:
                     if not self.has_same_type(instances):
                         raise ValueError('instances to concatinate must have the same types and fields')
                     values.append(getattr(instances, field))
@@ -115,8 +115,8 @@ class InstanceData(BaseModel, ABC):
                     # store the value to be updated later
                     data[field] = values
 
-            elif others:
-                # we have another field -> check if they have the same value
+            else:
+                # we have a non-numpy array field -> check if they have the same value
                 for instances in others:
                     other_value = getattr(instances, field)
                     if other_value != first_value:

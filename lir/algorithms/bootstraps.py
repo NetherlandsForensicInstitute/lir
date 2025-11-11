@@ -1,4 +1,4 @@
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from typing import Any, Self
 
 import numpy as np
@@ -8,7 +8,7 @@ from lir.data.models import FeatureData, LLRData
 from lir.transform.pipeline import Pipeline
 
 
-class Bootstrap(Pipeline):
+class Bootstrap(Pipeline, ABC):
     """Bootstrap system that estimates confidence intervals around the best estimate of a pipeline.
 
     This bootstrap system creates bootstrap samples from the training data, fits the pipeline on each sample,
@@ -71,7 +71,7 @@ class Bootstrap(Pipeline):
         param instances: FeatureData: The feature data to fit the bootstrap system on.
         return FeatureData: The feature data to use for interval estimation.
         """
-        pass
+        raise NotImplementedError
 
     def transform(self, instances: FeatureData) -> LLRData:
         """Transform the provided instances to include the best estimate and confidence intervals.

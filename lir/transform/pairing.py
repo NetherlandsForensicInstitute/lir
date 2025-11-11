@@ -3,7 +3,7 @@ from typing import Any
 
 import numpy as np
 
-from lir.data.models import PairedFeatureData
+from lir.data.models import PairedFeatureData, concatenate_instances
 from lir.lrsystems.lrsystems import FeatureData
 
 
@@ -40,73 +40,7 @@ class PairingMethod(ABC):
         raise NotImplementedError
 
 
-class LegacyPairingMethod(ABC):
-    """
-    Base class for pairing methods.
-
-    A pairing method should implement the `pair()` function.
-    """
-
-    def pair(
-        self,
-        instances: FeatureData,
-        n_trace_instances: int = 1,
-        n_ref_instances: int = 1,
-    ) -> PairedFeatureData:
-        meta = instances.meta if hasattr(instances, 'meta') else np.zeros((instances.features.shape[0], 0))
-        pair_features, pair_labels, pair_meta = self._pair_arrays(
-            instances.features, instances.labels, meta, n_trace_instances, n_ref_instances
-        )
-        pairs = PairedFeatureData(
-            features=pair_features,
-            labels=pair_labels,
-            n_trace_instances=n_trace_instances,
-            n_ref_instances=n_ref_instances,
-            meta=pair_meta,  # type: ignore
-        )
-        return pairs
-
-    @abstractmethod
-    def _pair_arrays(
-        self,
-        features: np.ndarray,
-        labels: np.ndarray,
-        meta: np.ndarray,
-        n_trace_instances: int = 1,
-        n_ref_instances: int = 1,
-    ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-        """
-        Takes instances as input, and returns pairs.
-
-        A pair may be a pair of sources, with multiple instances per source.
-
-        Parameters
-        ----------
-        features : np.ndarray
-            An array of instance features, with one row per instance.
-        labels : np.ndarray
-            An array of source labels, one label per instance, where each label is unique for a source.
-        meta : np.ndarray
-            An array of instance meta data.
-        n_trace_instances : int
-            Number of instances per trace.
-        n_ref_instances : int
-            Number of instances per reference source.
-
-        Returns
-        -------
-        features : np.ndarray
-            An array of features of dimensions `(p, i, ...)`` where the first dimension is the pairs, the second
-            dimension is the instances, and subsequent dimensions are the features.
-        labels : np.ndarray
-            An array of source labels, one label per pair, where the labels are 0=different source, 1=same source.
-        meta : np.ndarray
-            An array of meta data of dimensions `(p, i, ...)`, analogous to the features array.
-        """
-        raise NotImplementedError
-
-
-class SourcePairing(LegacyPairingMethod):
+class SourcePairing(PairingMethod):
     """
     Returns paired sources (i.e. classes) from an array of instance features, labels and meta data.
 
@@ -139,75 +73,68 @@ class SourcePairing(LegacyPairingMethod):
         self._ratio_limit = ratio_limit
         self.rng = np.random.default_rng(seed=seed)
 
-    def _get_subset(
-        self, size: int, features: np.ndarray, meta: np.ndarray
-    ) -> tuple[np.ndarray | None, np.ndarray | None]:
-        if features.shape[0] < size:
-            return None, None
+    def _get_random_subset(self, size: int, instances: FeatureData) -> FeatureData | None:
+        if len(instances) < size:
+            return None  # not enough data to generate a sufficiently large subset
 
-        idx = self.rng.choice(np.arange(features.shape[0]), size, replace=False)
-        return features[idx], meta[idx]
+        idx = self.rng.choice(np.arange(len(instances)), size, replace=False)
+        return instances[idx]
 
     def _construct_array(
         self,
         label_pairs: np.ndarray,
-        features: np.ndarray,
-        labels: np.ndarray,
-        meta: np.ndarray,
+        instances: FeatureData,
         n_trace_instances: int,
         n_ref_instances: int,
-    ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-        result_features: list[np.ndarray] = []
-        result_meta: list[np.ndarray] = []
-        result_labels = []
+    ) -> PairedFeatureData | None:
+        target_shape = (n_trace_instances + n_ref_instances,) + instances.features.shape[1:]
+        result_features: list[FeatureData] = []
         for trace_label, ref_label in label_pairs:
             if trace_label == ref_label:
-                pair_features, pair_meta = self._get_subset(
+                # construct a same-source pair
+                pair_instances = self._get_random_subset(
                     n_trace_instances + n_ref_instances,
-                    features[labels == trace_label],
-                    meta[labels == trace_label],
+                    instances[instances.labels == trace_label],
                 )
-                if pair_features is not None and pair_meta is not None:
-                    result_features.append(pair_features)
-                    result_labels.append(1)
-                    result_meta.append(pair_meta)
+                if pair_instances is not None:
+                    pair_instances = pair_instances.replace(labels=None)
+                    result_features.append(
+                        pair_instances.apply(np.reshape, (1,) + target_shape).replace(labels=np.ones(1))
+                    )
             else:
-                trace_features, trace_meta = self._get_subset(
+                # construct a different-source pair
+                trace_instances = self._get_random_subset(
                     n_trace_instances,
-                    features[labels == trace_label],
-                    meta[labels == trace_label],
+                    instances[instances.labels == trace_label],
                 )
-                ref_features, ref_meta = self._get_subset(
+                ref_instances = self._get_random_subset(
                     n_ref_instances,
-                    features[labels == ref_label],
-                    meta[labels == ref_label],
+                    instances[instances.labels == ref_label],
                 )
-                if trace_features is not None and ref_features is not None:
-                    result_features.append(np.concatenate([trace_features, ref_features]))
-                    result_labels.append(0)
-                    result_meta.append(np.concatenate([trace_meta, ref_meta]))
+                if trace_instances and ref_instances:
+                    pair_instances = (trace_instances + ref_instances).replace(labels=None)
+                    result_features.append(
+                        pair_instances.apply(np.reshape, (1,) + pair_instances.features.shape).replace(
+                            labels=np.zeros(1)
+                        )
+                    )
 
-        if not result_labels:
-            return (
-                np.ones((0, n_trace_instances + n_ref_instances) + features.shape[1:]),
-                np.array([]),
-                np.ones((0, n_trace_instances + n_ref_instances) + meta.shape[1:]),
-            )
+        if result_features:
+            paired_features = concatenate_instances(*result_features)
+        else:
+            # construct an empty set of pairs
+            paired_features = instances[:0].apply(np.reshape, (0,) + target_shape)
 
-        return (
-            np.stack(result_features, axis=0),
-            np.array(result_labels),
-            np.stack(result_meta, axis=0),
+        return paired_features.replace_as(
+            PairedFeatureData, n_trace_instances=n_trace_instances, n_ref_instances=n_ref_instances
         )
 
-    def _pair_arrays(
+    def pair(
         self,
-        features: np.ndarray,
-        labels: np.ndarray,
-        meta: np.ndarray,
+        instances: FeatureData,
         n_trace_instances: int = 1,
         n_ref_instances: int = 1,
-    ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    ) -> PairedFeatureData:
         """
         Pairs sources.
 
@@ -219,10 +146,7 @@ class SourcePairing(LegacyPairingMethod):
         `n_ref_instances` are both 1, the output features array has dimensions (p, 1+1, 5), with x is the number of
         input instances and p is the number of output pairs.
         """
-        assert features.shape[0] == labels.shape[0]
-        assert features.shape[0] == meta.shape[0]
-
-        unique_labels = np.unique(labels)
+        unique_labels = np.unique(instances.labels)
 
         label_pairing = np.array(np.meshgrid(unique_labels, unique_labels)).T.reshape(
             -1, 2
@@ -237,11 +161,9 @@ class SourcePairing(LegacyPairingMethod):
         if self._ss_limit is not None and np.sum(rows_same) > self._ss_limit:
             same_source_pairs = self.rng.choice(same_source_pairs, self._ss_limit, replace=False)
 
-        ss_pair_features, ss_pair_labels, ss_pair_meta = self._construct_array(
+        ss_paired_data = self._construct_array(
             same_source_pairs,
-            features,
-            labels,
-            meta,
+            instances,
             n_trace_instances,
             n_ref_instances,
         )
@@ -250,7 +172,7 @@ class SourcePairing(LegacyPairingMethod):
         n_ds_pairs = min(
             x
             for x in [
-                (ss_pair_labels.shape[0] * self._ratio_limit if self._ratio_limit else None),
+                (len(ss_paired_data) * self._ratio_limit if ss_paired_data and self._ratio_limit else None),
                 self._ds_limit,
                 different_source_pairs.shape[0],
             ]
@@ -260,23 +182,28 @@ class SourcePairing(LegacyPairingMethod):
         if n_ds_pairs < different_source_pairs.shape[0]:
             different_source_pairs = self.rng.choice(different_source_pairs, n_ds_pairs, replace=False)
 
-        ds_pair_features, ds_pair_labels, ds_pair_meta = self._construct_array(
+        ds_paired_data = self._construct_array(
             different_source_pairs,
-            features,
-            labels,
-            meta,
+            instances,
             n_trace_instances,
             n_ref_instances,
         )
 
-        pair_features = np.concatenate([ss_pair_features, ds_pair_features])
-        pair_labels = np.concatenate([ss_pair_labels, ds_pair_labels])
-        pair_meta = np.concatenate([ss_pair_meta, ds_pair_meta])
+        paired_data = [subset for subset in [ss_paired_data, ds_paired_data] if subset]
+        if paired_data:
+            return concatenate_instances(*paired_data)
+        else:
+            features = np.zeros((0, n_trace_instances + n_ref_instances) + instances.features.shape[1:])
+            labels = np.zeros((0,))
+            return PairedFeatureData(
+                features=features,
+                labels=labels,
+                n_trace_instances=n_trace_instances,
+                n_ref_instances=n_ref_instances,
+            )
 
-        return pair_features, pair_labels, pair_meta
 
-
-class InstancePairing(LegacyPairingMethod):
+class InstancePairing(PairingMethod):
     def __init__(
         self,
         same_source_limit=None,
@@ -322,12 +249,22 @@ class InstancePairing(LegacyPairingMethod):
             self.__rng = np.random.default_rng(seed=self._seed)
         return self.__rng
 
-    def _transform(self, X, y) -> tuple[np.ndarray[Any, Any], Any]:
+    def pair(
+        self,
+        instances: FeatureData,
+        n_trace_instances: int = 1,
+        n_ref_instances: int = 1,
+    ) -> PairedFeatureData:
+        if n_trace_instances != 1:
+            raise ValueError(f'invalid values for `n_trace_instances`; expected: 1; found: {n_trace_instances}')
+        if n_ref_instances != 1:
+            raise ValueError(f'invalid values for `n_ref_instances`; expected: 1; found: {n_ref_instances}')
+
         self.__rng = None
-        pairing = np.array(np.meshgrid(np.arange(X.shape[0]), np.arange(X.shape[0]))).T.reshape(
+        pairing = np.array(np.meshgrid(np.arange(len(instances)), np.arange(len(instances)))).T.reshape(
             -1, 2
         )  # generate all possible pairs
-        same_source = y[pairing[:, 0]] == y[pairing[:, 1]]
+        same_source = instances.labels[pairing[:, 0]] == instances.labels[pairing[:, 1]]
 
         rows_same = np.where((pairing[:, 0] < pairing[:, 1]) & same_source)[
             0
@@ -353,36 +290,12 @@ class InstancePairing(LegacyPairingMethod):
             rows_diff = self.rng.choice(rows_diff, n_ds_pairs, replace=False)
 
         pairing = np.concatenate([pairing[rows_same, :], pairing[rows_diff, :]])
-        self.pairing = pairing
+        pair_labels = np.concatenate([np.ones(rows_same.size), np.zeros(rows_diff.size)])
 
-        X = np.stack([X[pairing[:, 0]], X[pairing[:, 1]]], axis=2)  # pair instances by adding another dimension
-        y = np.concatenate(
-            [np.ones(rows_same.size), np.zeros(rows_diff.size)]
-        )  # apply the new labels: 1=same_source versus 0=different_source
+        # combine features by adding an extra dimension
+        paired_data = instances[pairing[:, 0]].combine(instances[pairing[:, 1]], np.stack, axis=1)
 
-        return X, y
-
-    def _pair_arrays(
-        self,
-        features: np.ndarray,
-        labels: np.ndarray,
-        meta: np.ndarray,
-        n_trace_instances: int = 1,
-        n_ref_instances: int = 1,
-    ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-        assert features.shape[0] == labels.shape[0]
-        assert features.shape[0] == meta.shape[0]
-
-        if n_trace_instances != 1:
-            raise ValueError(f'invalid values for `n_trace_instances`; expected: 1; found: {n_trace_instances}')
-        if n_ref_instances != 1:
-            raise ValueError(f'invalid values for `n_ref_instances`; expected: 1; found: {n_ref_instances}')
-
-        pair_features, pair_labels = self._transform(features, labels)
-        pair_features = pair_features.transpose(0, 2, 1)
-
-        # if meta is 1d, increase dimension to 2
-        meta = meta.reshape(labels.size, -1)
-        pair_meta = np.stack([meta[self.pairing[:, 0]], meta[self.pairing[:, 1]]], axis=1)
-
-        return pair_features, pair_labels, pair_meta
+        # apply the new labels: 1=same_source versus 0=different_source
+        return paired_data.replace_as(
+            PairedFeatureData, labels=pair_labels, instance_indices=pairing, n_trace_instances=1, n_ref_instances=1
+        )

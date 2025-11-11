@@ -33,6 +33,8 @@ lir = "lir.main:main"
 [dependency-groups]
 dev = [
     "coverage",
+    "ipython",
+    "pip",
     "pytest",
     "pytest-testmon>=2.1.3",
     "mypy>=1.18.2",

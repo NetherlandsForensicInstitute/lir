@@ -30,7 +30,7 @@ jobs:
     needs: check
     strategy:
       matrix:
-        python-version: ['3.11', '3.13']  # Check oldest and newest python version
+        python-version: ['3.11', '3.14']  # Check oldest and newest python version
     steps:
       - uses: actions/checkout@v5
       - uses: pdm-project/setup-pdm@v4

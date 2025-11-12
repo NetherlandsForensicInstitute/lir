@@ -12,6 +12,7 @@ from matplotlib.axis import Axis
 
 from lir import util
 from lir.algorithms.bayeserror import plot_nbe as nbe
+from lir.data.models import LLRData
 
 from ..algorithms.isotonic_regression import IsotonicCalibrator
 from ..transform import Transformer
@@ -45,6 +46,7 @@ class Canvas:
         self.pav = partial(pav, ax=ax)
         self.score_distribution = partial(score_distribution, ax=ax)
         self.tippett = partial(tippett, ax=ax)
+        self.llr_interval = partial(llr_interval, ax=ax)
 
     def __getattr__(self, attr: str) -> Any:
         return getattr(self.ax, attr)
@@ -294,6 +296,36 @@ def tippett(llrs: np.ndarray, y: np.ndarray, plot_type: int = 1, ax: Axes = plt)
     ax.set_xlabel('log$_{10}$(LR)')
     ax.set_ylabel('Cumulative proportion')
     ax.legend()
+
+
+def llr_interval(llrdata: LLRData, ax: Axes = plt) -> None:
+    """
+    Plots the lr's on the x-as, with the relative interval score on the y-as.
+
+    Parameters
+    ----------
+    llrdata : LLRData
+        The LLRData object containing the likelihood ratios and interval scores.
+    ax: axes to plot figure to
+
+    """
+    if not llrdata.has_intervals:
+        raise ValueError('LLRData must contain interval scores to plot Score-LR.')
+
+    llr_data = llrdata.features
+    llr_sorted = np.sort(llr_data, axis=0)
+    llrs = llr_sorted[:, 0]
+    interval_scores_low = llr_sorted[:, 1] - llrs
+    interval_scores_high = llr_sorted[:, 2] - llrs
+
+    ax.plot(llrs, interval_scores_low, '|-', linewidth=0.5, color='blue', label='Lower interval')
+    ax.plot(llrs, interval_scores_high, '|-', linewidth=0.5, color='red', label='Upper interval')
+
+    ax.axhline(y=0, color='gray', linestyle='--')
+
+    ax.set_xlabel('Likelihood ratio (log$_{10}$)')
+    ax.set_ylabel('Interval around LR (log$_{10}$(LR))')
+    ax.legend(loc=1)
 
 
 def score_distribution(

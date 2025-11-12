@@ -9,6 +9,7 @@ import pytest
 
 from lir import plotting
 from lir.algorithms.logistic_regression import LogitCalibrator
+from lir.data.models import LLRData
 from lir.util import odds_to_probability, odds_to_logodds
 
 
@@ -41,6 +42,7 @@ class TestPlotting(unittest.TestCase):
         scores = odds_to_probability(lrs)
         y = np.array([0, 0, 1, 0, 1, 0, 1, 1, 1, 0])
         finite_index = (lrs > 0) & (lrs < np.inf)
+        llr_data = LLRData(features=np.ones((10, 3)))
 
         with plotting.axes() as ax:
             ax.pav(llrs, y)
@@ -63,6 +65,9 @@ class TestPlotting(unittest.TestCase):
 
         with plotting.axes() as ax:
             ax.score_distribution(scores, y)
+
+        with plotting.axes() as ax:
+            ax.llr_interval(llr_data)
 
         cal = LogitCalibrator()
         cal.fit(scores, y)

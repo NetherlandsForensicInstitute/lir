@@ -258,10 +258,11 @@ def lr_histogram(
     bins = np.histogram_bin_edges(llrs, bins=bins)
     points0, points1 = util.Xy_to_Xn(llrs, y)
     weights0, weights1 = (np.ones_like(points) / len(points) if weighted else None for points in (points0, points1))
-    ax.hist(points1, bins=bins, alpha=0.25, weights=weights1)
-    ax.hist(points0, bins=bins, alpha=0.25, weights=weights0)
+    ax.hist(points1, bins=bins, alpha=0.25, weights=weights1, label=f'H1 (n={len(points1)})', color=H1_COLOR)
+    ax.hist(points0, bins=bins, alpha=0.25, weights=weights0, label=f'H2 (n={len(points0)})', color=H2_COLOR)
     ax.set_xlabel('log$_{10}$(LR)')
     ax.set_ylabel('count' if not weighted else 'relative frequency')
+    ax.legend()
 
 
 def tippett(llrs: np.ndarray, y: np.ndarray, plot_type: int = 1, ax: Axes = plt) -> None:

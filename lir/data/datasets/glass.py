@@ -64,15 +64,15 @@ class GlassData(DataSet, DataStrategy):
         training_data = FeatureData(
             features=training_data[0],
             labels=training_data[1],
-            meta=training_data[2],  # type: ignore
+            instance_ids=training_data[2],  # type: ignore
         )
-        test_features, test_labels, test_meta = zip(
+        test_features, test_labels, test_ids = zip(
             self._load_data('duplo.csv'), self._load_data('triplo.csv'), strict=True
         )
         test_data = FeatureData(
             features=np.concatenate(test_features),
             labels=np.concatenate(test_labels),
-            meta=np.concatenate(test_meta),  # type: ignore
+            instance_ids=np.concatenate(test_ids),  # type: ignore
         )
         return iter([(training_data, test_data)])
 
@@ -89,5 +89,5 @@ class GlassData(DataSet, DataStrategy):
 
         The meta values of an instance are a concatenation of the filename and a row number, e.g. "training.csv:22".
         """
-        features, labels, meta = self._load_data('training.csv')
-        return FeatureData(features=features, labels=labels, meta=meta)  # type: ignore
+        features, labels, instance_ids = self._load_data('training.csv')
+        return FeatureData(features=features, labels=labels, instance_ids=instance_ids)  # type: ignore

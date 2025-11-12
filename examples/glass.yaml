@@ -50,6 +50,8 @@ score_based_lr_system:
 
   preprocessing:
     method: debug_pipeline  # generate a CSV file containing the output of each processing step
+    include_fields:
+      - instance_ids
     steps:
       scaler: standard_scaler  # apply the scikit-learn `StandardScaler` with default arguments
 
@@ -59,6 +61,8 @@ score_based_lr_system:
 
   comparing:
     method: debug_pipeline
+    include_fields:
+      - instance_ids
     steps:
       scoring: abs_diff  # calculate the absolute difference between the two instances for each feature
       clf: logistic_regression  # use scikit-learn `LogisticRegression` to estimate probabilities

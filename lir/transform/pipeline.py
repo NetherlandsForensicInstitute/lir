@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Any
 
-from lir.config.base import ContextAwareDict, YamlParseError, pop_field
+from lir.config.base import ContextAwareDict, YamlParseError, check_is_empty, config_parser, pop_field
 from lir.config.transform import parse_module
 from lir.data.models import FeatureData
 from lir.transform import Transformer, as_transformer
@@ -43,6 +43,7 @@ class Pipeline(Transformer):
         return instances
 
 
+@config_parser
 def parse_pipeline(modules_config: ContextAwareDict, output_dir: Path) -> Pipeline:
     """Construct a scikit-learn Pipeline based on the provided configuration."""
     if modules_config is None:
@@ -66,5 +67,7 @@ def parse_pipeline(modules_config: ContextAwareDict, output_dir: Path) -> Pipeli
         )
         for module_name in module_names
     ]
+
+    check_is_empty(modules_config)
 
     return Pipeline(modules)

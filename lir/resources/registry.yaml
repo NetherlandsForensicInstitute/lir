@@ -64,6 +64,7 @@ visualization:
   pav: lir.visualization.pav
   ece: lir.visualization.ece
   lr_histogram: lir.visualization.lr_histogram
+  llr_interval: lir.visualization.llr_interval
 pairing:
   instance_pairs: lir.transform.pairing.InstancePairing
   source_pairs: lir.transform.pairing.SourcePairing

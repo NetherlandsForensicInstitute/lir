@@ -14,37 +14,15 @@ from lir.config.substitution import (
     HyperparameterOption,
     substitute_hyperparameters,
 )
-from lir.config.transform import parse_module
 from lir.lrsystems.binary_lrsystem import BinaryLRSystem
 from lir.lrsystems.lrsystems import LRSystem
 from lir.lrsystems.score_based import ScoreBasedSystem
 from lir.lrsystems.two_level import TwoLevelSystem
 from lir.registry import ComponentNotFoundError
-from lir.transform.pipeline import Pipeline
+from lir.transform.pipeline import parse_pipeline
 
 
 LOG = logging.getLogger(__name__)
-
-
-def parse_pipeline(modules_config: ContextAwareDict, output_dir: Path) -> Pipeline:
-    """Construct a scikit-learn Pipeline based on the provided configuration."""
-    if modules_config is None:
-        return Pipeline([])
-
-    module_names = list(modules_config.keys())
-    modules = [
-        (
-            module_name,
-            parse_module(
-                pop_field(modules_config, module_name),
-                output_dir,
-                modules_config.context + [module_name],
-            ),
-        )
-        for module_name in module_names
-    ]
-
-    return Pipeline(modules)
 
 
 @config_parser

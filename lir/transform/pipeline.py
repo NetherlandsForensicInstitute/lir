@@ -1,5 +1,8 @@
+from pathlib import Path
 from typing import Any
 
+from lir.config.base import ContextAwareDict, pop_field
+from lir.config.transform import parse_module
 from lir.data.models import FeatureData
 from lir.transform import Transformer, as_transformer
 
@@ -38,3 +41,24 @@ class Pipeline(Transformer):
         for _name, module in self.steps:
             instances = module.fit_transform(instances)
         return instances
+
+
+def parse_pipeline(modules_config: ContextAwareDict, output_dir: Path) -> Pipeline:
+    """Construct a scikit-learn Pipeline based on the provided configuration."""
+    if modules_config is None:
+        return Pipeline([])
+
+    module_names = list(modules_config.keys())
+    modules = [
+        (
+            module_name,
+            parse_module(
+                pop_field(modules_config, module_name),
+                output_dir,
+                modules_config.context + [module_name],
+            ),
+        )
+        for module_name in module_names
+    ]
+
+    return Pipeline(modules)

@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Any
 
-from lir.config.base import ContextAwareDict, pop_field
+from lir.config.base import ContextAwareDict, YamlParseError, pop_field
 from lir.config.transform import parse_module
 from lir.data.models import FeatureData
 from lir.transform import Transformer, as_transformer
@@ -48,14 +48,20 @@ def parse_pipeline(modules_config: ContextAwareDict, output_dir: Path) -> Pipeli
     if modules_config is None:
         return Pipeline([])
 
-    module_names = list(modules_config.keys())
+    steps = pop_field(modules_config, 'steps')
+    if not isinstance(steps, ContextAwareDict):
+        raise YamlParseError(
+            modules_config.context, f'invalid value for "steps": expected `dict`; found: {type(steps)}'
+        )
+    module_names = list(steps.keys())
+
     modules = [
         (
             module_name,
             parse_module(
-                pop_field(modules_config, module_name),
+                pop_field(steps, module_name),
                 output_dir,
-                modules_config.context + [module_name],
+                steps.context + [module_name],
             ),
         )
         for module_name in module_names

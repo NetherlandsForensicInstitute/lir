@@ -1,6 +1,10 @@
+from pathlib import Path
+
 from sklearn.linear_model import LogisticRegression
+
+from lir.config.base import _expand
 from lir.data.datasets.synthesized_normal_binary import SynthesizedNormalBinaryData, SynthesizedNormalDataClass
-from lir.algorithms.bootstraps import BootstrapAtData, BootstrapEquidistant
+from lir.algorithms.bootstraps import BootstrapAtData, BootstrapEquidistant, bootstrap
 import numpy as np
 import pytest
 from lir.data.models import FeatureData, LLRData
@@ -84,3 +88,23 @@ def test_traindata_bootstrap_empty_pipeline():
 
     # This is the most simple system possible, where all features and bounds should be zero.
     assert np.all(results.features == 0)
+
+
+@pytest.mark.parametrize("config", [
+    (
+            {
+                "steps": None,
+                "points": "data",
+            }
+    ),
+    (
+            {
+                "steps": None,
+                "points": "equidistant",
+                "n_points": 1000,
+            }
+    ),
+])
+def test_bootstrap_config(config):
+    config = _expand([], config)
+    bootstrap().parse(config, Path("/"))

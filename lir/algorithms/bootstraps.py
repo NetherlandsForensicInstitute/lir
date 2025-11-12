@@ -1,9 +1,12 @@
 from abc import ABC, abstractmethod
+from pathlib import Path
 from typing import Any, Self
 
 import numpy as np
 from scipy.interpolate import interp1d
 
+from lir.config.base import ContextAwareDict, config_parser, pop_field
+from lir.config.lrsystem_architectures import parse_pipeline
 from lir.data.models import FeatureData, LLRData
 from lir.transform.pipeline import Pipeline
 
@@ -42,7 +45,6 @@ class Bootstrap(Pipeline, ABC):
         n_bootstraps: int = 400,
         interval: tuple[float, float] = (0.05, 0.95),
         seed: int | None = None,
-        n_points: int | None = 1000,
     ):
         """Initialize the TrainDataBootstrap with the given pipeline steps, number of bootstraps, and interval.
 
@@ -59,7 +61,6 @@ class Bootstrap(Pipeline, ABC):
         self.interval = interval
         self.n_bootstraps = n_bootstraps
         self.seed = seed
-        self.n_points = n_points
 
         self.f_delta_interval_lower = None
         self.f_delta_interval_upper = None
@@ -153,6 +154,27 @@ class BootstrapEquidistant(Bootstrap):
     See the Bootstrap class for more details.
     """
 
+    def __init__(
+        self,
+        steps: list[tuple[str, Any]],
+        n_bootstraps: int = 400,
+        interval: tuple[float, float] = (0.05, 0.95),
+        seed: int | None = None,
+        n_points: int | None = 1000,
+    ):
+        """Initialize the instance with the given pipeline steps, number of bootstraps, and interval.
+
+        Parameters:
+        param steps: list[tuple[str, Any]]: The steps of the pipeline to be bootstrapped.
+        param n_bootstraps: int: The number of bootstrap samples to generate. Default is 400.
+        param interval: tuple[float, float]: The lower and upper quantiles for the confidence interval.
+                                             Default: (0.05,0.95).
+        param n_points: int | None: The number of equidistant points to use for interval estimation. Default is 1000.
+                                    If None, uses the number of instances in the training data.
+        """
+        super().__init__(steps, n_bootstraps, interval, seed)
+        self.n_points = n_points
+
     def get_bootstrap_data(self, instances: FeatureData) -> FeatureData:
         """Get the data points to use for interval estimation. This is done by creating equidistant points
         within the range of the training data.
@@ -172,3 +194,29 @@ class BootstrapEquidistant(Bootstrap):
             start=np.min(feat_vals), stop=np.max(feat_vals), num=self.n_points, dtype=instances.features.dtype
         ).reshape(-1, 1)
         return FeatureData(features=equidistant_indices)
+
+
+@config_parser
+def bootstrap(modules_config: ContextAwareDict, output_dir: Path) -> BootstrapAtData:
+    """
+    Transitional function to parse a bootstrapping pipeline.
+
+    The configuration takes the following arguments:
+    - steps: the pipeline steps to bootstrap
+    - points: the points to bootstrap, can be either `data` or `equidistant`. This selects the bootstrapping class:
+      `BootstrapAtData` for 'data', or `BootstrapEquidistant` for 'equidistant'
+
+    Any other arguments are passed directly to the `__init__()` method of the bootstrapping class.
+
+    :param modules_config: the configuration
+    :param output_dir: where to write output, if any
+    :return: a bootstrapping object
+    """
+    bootstrap_methods = {
+        'data': BootstrapAtData,
+        'equidistant': BootstrapEquidistant,
+    }
+
+    bootstrap_method = pop_field(modules_config, 'points', validate=bootstrap_methods.get)
+    pipeline = parse_pipeline(pop_field(modules_config, 'steps'), output_dir)
+    return bootstrap_method(pipeline.steps, **modules_config)

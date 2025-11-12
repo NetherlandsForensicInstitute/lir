@@ -30,7 +30,7 @@ def lr_histogram(base_path: Path, llrs: LLRData, labels: np.ndarray) -> None:
         fig.lr_histogram(llrs.llrs, labels)
 
 
-def llr_interval(base_path: Path, llrs: LLRData, labels: np.ndarray = None) -> None:
+def llr_interval(base_path: Path, llrs: LLRData, labels: np.ndarray | None = None) -> None:
     """Helper function to generate and save a Score-LR plot to the output directory."""
     base_path.mkdir(exist_ok=True, parents=True)
     path = base_path / 'llr_interval.png'

@@ -22,7 +22,7 @@ class UnboundLRs(DataSet):
             llrs_h2 = np.log10(np.exp(np.random.normal(0, 1, 1000)))
         elif self.example == 5:
             dirname = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-            input_path = os.path.join(dirname, 'resources\\lr_bounding')
+            input_path = os.path.join(dirname, 'resources/lr_bounding')
             llrs_h1 = np.loadtxt(os.path.join(input_path, 'LLR_KM.csv'))
             llrs_h2 = np.loadtxt(os.path.join(input_path, 'LLR_KNM.csv'))
         else:

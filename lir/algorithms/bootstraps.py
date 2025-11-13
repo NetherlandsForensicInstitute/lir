@@ -5,10 +5,9 @@ from typing import Any, Self
 import numpy as np
 from scipy.interpolate import interp1d
 
-from lir.config.base import ContextAwareDict, config_parser, pop_field
-from lir.config.lrsystem_architectures import parse_pipeline
+from lir.config.base import ContextAwareDict, check_not_none, config_parser, pop_field
 from lir.data.models import FeatureData, LLRData
-from lir.transform.pipeline import Pipeline
+from lir.transform.pipeline import Pipeline, parse_steps
 
 
 class Bootstrap(Pipeline, ABC):
@@ -218,5 +217,5 @@ def bootstrap(modules_config: ContextAwareDict, output_dir: Path) -> BootstrapAt
     }
 
     bootstrap_method = pop_field(modules_config, 'points', validate=bootstrap_methods.get)
-    pipeline = parse_pipeline(pop_field(modules_config, 'steps'), output_dir)
-    return bootstrap_method(pipeline.steps, **modules_config)
+    steps = parse_steps(pop_field(modules_config, 'steps', validate=check_not_none), output_dir)
+    return bootstrap_method(steps, **modules_config)

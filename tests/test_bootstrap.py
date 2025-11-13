@@ -93,13 +93,13 @@ def test_traindata_bootstrap_empty_pipeline():
 @pytest.mark.parametrize("config", [
     (
             {
-                "steps": None,
+                "steps": {},
                 "points": "data",
             }
     ),
     (
             {
-                "steps": None,
+                "steps": {},
                 "points": "equidistant",
                 "n_points": 1000,
             }

@@ -20,8 +20,9 @@ data_splits:
 lr_system:
   architecture: specific_source
   modules:
-    clf: logistic_regression
-    to_llr: probabilities_to_logodds
+    steps:
+      clf: logistic_regression
+      to_llr: probabilities_to_logodds
 
 experiments:
   exp1:
@@ -29,7 +30,7 @@ experiments:
     lr_system: ${lr_system}
     data: ${data_splits}
     hyperparameters:
-      - path: modules.clf
+      - path: modules.steps.clf
         options:
           - option_name: logit
             method: logistic_regression

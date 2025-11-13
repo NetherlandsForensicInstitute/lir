@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from scipy.special import logsumexp
 
+from lir import Transformer
 from lir.lrsystems.lrsystems import FeatureData, LLRData, LRSystem
 from lir.transform.pairing import PairingMethod
 from lir.transform.pipeline import Pipeline
@@ -413,9 +414,9 @@ class TwoLevelSystem(LRSystem):
     def __init__(
         self,
         name: str,
-        preprocessing_pipeline: Pipeline | None,
+        preprocessing_pipeline: Transformer | None,
         pairing_function: PairingMethod,
-        postprocessing_pipeline: Pipeline | None,
+        postprocessing_pipeline: Transformer | None,
         n_trace_instances: int,
         n_ref_instances: int,
     ):

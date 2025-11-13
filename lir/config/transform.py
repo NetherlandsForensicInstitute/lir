@@ -6,6 +6,7 @@ from lir.config.base import (
     ConfigParser,
     ContextAwareDict,
     YamlParseError,
+    check_not_none,
     config_parser,
     pop_field,
 )
@@ -13,6 +14,7 @@ from lir.transform import (
     BinaryClassifierTransformer,
     CsvWriter,
     FunctionTransformer,
+    Identity,
     NumpyTransformer,
     Transformer,
     as_transformer,
@@ -91,16 +93,19 @@ class NumpyCsvWriterWrappingConfigParser(ConfigParser):
 
 
 def parse_module(
-    module_config: ContextAwareDict | str,
+    module_config: ContextAwareDict | str | None,
     output_dir: Path,
     config_context_path: list[str],
+    default_method: str | None = None,
 ) -> Transformer:
     """
     Constructs a `Transformer` from a string or configuration section.
 
-    The configuration section must have the field `method`, which is an object that name is looked up the registry. All
-    other fields are initialization arguments. If no arguments are required, the input can be just the object name
-    instead.
+    If the `module_config` argument is `None`, the `Identity` transformer is returned.
+
+    If `module_config` is a dictionary, it must have the field `method`, which is an object that name is looked up the
+    registry. All other fields are initialization arguments. If no arguments are required, the input can be just the
+    object name instead.
 
     If the class is:
     - a subclass of `ConfigParser, then the class is instantiated, and the return value of its `parse()` method is
@@ -109,13 +114,24 @@ def parse_module(
     - a class which has a `predict_proba` attribute, it is instantiated, wrapped by `EstimatorTransformer` and
       returned;
     - any other callable, it is wrapped by `FunctionTransformer`, and returned.
+
+    If `module_config` is a `str`, the call to this function has the same effect as if it was a dictionary whose single
+    field `method` had this value.
+
+    :param module_config: the specification of this module
+    :param output_dir: where any output is written
+    :param config_context_path: the context of this configuration
+    :param default_method: the default value for the `method` field of the `mdoule_config`
+    :return: a transformer object
     """
-    if isinstance(module_config, str):
+    if module_config is None:
+        return Identity()
+    elif isinstance(module_config, str):
         class_name = module_config
         args = ContextAwareDict(config_context_path)
     else:
         args = module_config
-        class_name = pop_field(args, 'method')
+        class_name = pop_field(args, 'method', default=default_method, validate=check_not_none)
 
     return registry.get(class_name, GenericTransformerConfigParser, search_path=['modules']).parse(args, output_dir)
 

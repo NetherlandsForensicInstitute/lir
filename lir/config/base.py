@@ -173,6 +173,12 @@ def parse_pairing_config(
     )
 
 
+def check_not_none(v: Any) -> Any:
+    if v is None:
+        raise ValueError('value None is not allowed here')
+    return v
+
+
 def pop_field(
     config: ContextAwareDict | Any,
     field: str,

@@ -319,8 +319,8 @@ def llr_interval(llrdata: LLRData, ax: Axes = plt) -> None:
     interval_scores_low = llr_sorted[:, 1] - llrs
     interval_scores_high = llr_sorted[:, 2] - llrs
 
-    ax.plot(llrs, interval_scores_high, '|-', linewidth=0.5, color='red', label='Upper interval')
-    ax.plot(llrs, interval_scores_low, '|-', linewidth=0.5, color='blue', label='Lower interval')
+    ax.plot(llrs, interval_scores_high, '|-', linewidth=0.5, color=H1_COLOR, label='Upper interval')
+    ax.plot(llrs, interval_scores_low, '|-', linewidth=0.5, color=H2_COLOR, label='Lower interval')
 
     ax.axhline(y=0, color='gray', linestyle='--')
 

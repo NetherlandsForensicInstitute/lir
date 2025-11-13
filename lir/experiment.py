@@ -65,7 +65,7 @@ class Experiment(ABC):
         output_dir = self.output_path / lrsystem.name
         LOG.debug(f'writing visualizations to {output_dir}')
         for visualization_function in self.visualization_functions:
-            visualization_function(output_dir, llrs, labels)
+            visualization_function(output_dir, combined_llrs, labels)
 
         # Construct a `results` dictionary of metrics indicating the performance of the given LR system
         for aggregation in self.aggregations:

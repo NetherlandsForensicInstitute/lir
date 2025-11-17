@@ -21,6 +21,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from lir.algorithms.isotonic_regression import IsotonicCalibrator
+from lir.data.models import LLRData
 from lir.util import (
     logodds_to_odds,
     odds_to_probability,
@@ -29,7 +30,7 @@ from lir.util import (
 
 
 def plot_ece(
-    llrs: np.ndarray, labels: np.ndarray, log_prior_odds_range: tuple[float, float] = (-3, 3), ax: Any = plt
+    llrdata: LLRData, labels: np.ndarray, log_prior_odds_range: tuple[float, float] = (-3, 3), ax: Any = plt
 ) -> None:
     """
     Generates an ECE plot for a set of LRs and corresponding ground-truth
@@ -46,6 +47,8 @@ def plot_ece(
     :param log_prior_odds_range: the range of prior odds (tuple of two values,
         indicating both ends of the range on the x-axis)
     """
+    llrs = llrdata.llrs
+
     log_prior_odds = np.arange(*log_prior_odds_range, 0.01)
     prior_odds = np.power(10, log_prior_odds)
 

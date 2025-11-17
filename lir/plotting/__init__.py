@@ -29,6 +29,8 @@ plt.get_xlim = lambda: plt.gca().get_xlim()
 plt.get_ylim = lambda: plt.gca().get_ylim()
 plt.set_xticks = plt.xticks
 plt.set_yticks = plt.yticks
+plt.get_legend = lambda: plt.gca().get_legend()
+
 
 H1_COLOR = 'red'
 H2_COLOR = 'blue'
@@ -146,8 +148,9 @@ def pav(
         llrs[llrs != np.inf].max() + 0.5,
     ]
 
-    # plot line through origin
-    ax.plot(xrange, yrange, '--', color='gray', label='Optimal system')
+    has_legend = ax.get_legend() is not None
+    if not has_legend or 'Optimal system' not in [text.get_text() for text in ax.get_legend().get_texts()]:
+        ax.plot(xrange, yrange, '--', color='gray', label='Optimal system')
 
     # line pre pav llrs x and post pav llrs y
     line_x = np.arange(*xrange, 0.01)

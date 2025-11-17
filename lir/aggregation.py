@@ -57,28 +57,21 @@ class AggregatedPlot(Aggregation):
 
     def report(self, llrdata: LLRData, labels: np.ndarray | None, parameters: dict[str, Any]) -> None:
         current_plot = self.plots[self.plot_type]
+        current_plot['canvas'].plot(
+            [],
+            [],
+            marker='None',
+            linestyle='None',
+            label=', '.join(f'{k}={v}' for k, v in parameters.items()),
+        )  # Dummy plot to add legend entry
 
-        n_current_legend = (
-            len(current_plot['canvas'].get_legend().get_texts()) if current_plot['canvas'].get_legend() else 0
-        )
         self.f(None, llrdata, labels, current_plot['canvas'])
-        n_new_legend = (
-            len(current_plot['canvas'].get_legend().get_texts()) if current_plot['canvas'].get_legend() else 0
-        )
-        current_plot['legend_suffix'] += [str(parameters)] * (n_new_legend - n_current_legend)
 
     def close(self) -> None:
         """Generate and save each plot after all results have been reported."""
         for plot_type, plot_content in self.plots.items():
             ax = plot_content['ax']
-            legend_suffixes = plot_content['legend_suffix']
-
             ax.set_title(f'Aggregated {plot_type}')
-
-            if plot_content['canvas'].get_legend():
-                for text, suffix in zip(plot_content['canvas'].get_legend().get_texts(), legend_suffixes, strict=False):
-                    text.set_text(f'{text.get_text()} {suffix}')
-
             plot_content['fig'].savefig(f'{self.dir}/aggregated_{plot_type}.png')
 
 
@@ -99,7 +92,6 @@ class WriteMetricsToCsv(Aggregation):
             self._file = open(self.path, 'w')  # noqa: SIM115
             self._writer = csv.DictWriter(self._file, fieldnames=results.keys())
             self._writer.writeheader()
-
         self._writer.writerow(results)
         self._file.flush()  # type: ignore
 

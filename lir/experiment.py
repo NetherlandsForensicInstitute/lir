@@ -57,7 +57,6 @@ class Experiment(ABC):
 
         # Combine collected numpy array's after iteration over the train/test split(s)
         combined_llrs: LLRData = concatenate_instances(*llr_sets)
-        llrs = combined_llrs.llrs
         labels = combined_llrs.labels
 
         # Generate visualization output as configured by `visualization_functions`
@@ -69,7 +68,7 @@ class Experiment(ABC):
 
         # Construct a `results` dictionary of metrics indicating the performance of the given LR system
         for aggregation in self.aggregations:
-            aggregation.report(llrs, labels, lrsystem.parameters)
+            aggregation.report(combined_llrs, labels, lrsystem.parameters)
 
         return combined_llrs
 

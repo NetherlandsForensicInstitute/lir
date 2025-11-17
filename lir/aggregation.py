@@ -7,10 +7,12 @@ from typing import IO, Any
 
 import numpy as np
 
+from lir.data.models import LLRData
+
 
 class Aggregation(ABC):
     @abstractmethod
-    def report(self, llrs: np.ndarray, labels: np.ndarray | None, parameters: dict[str, Any]) -> None:
+    def report(self, llrdata: LLRData, labels: np.ndarray | None, parameters: dict[str, Any]) -> None:
         """
         Report that new results are available.
 
@@ -37,8 +39,8 @@ class WriteMetricsToCsv(Aggregation):
         self._writer: csv.DictWriter | None = None
         self.metrics = metrics
 
-    def report(self, llrs: np.ndarray, labels: np.ndarray | None, parameters: dict[str, Any]) -> None:
-        metrics = [(key, metric(llrs, labels)) for key, metric in self.metrics.items()]
+    def report(self, llrdata: LLRData, labels: np.ndarray | None, parameters: dict[str, Any]) -> None:
+        metrics = [(key, metric(llrdata.llrs, labels)) for key, metric in self.metrics.items()]
         results = OrderedDict(list(parameters.items()) + metrics)
 
         # Record column header names only once to the CSV

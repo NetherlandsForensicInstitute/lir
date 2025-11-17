@@ -8,7 +8,6 @@ from typing import Any
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.axes import Axes
-from matplotlib.axis import Axis
 
 from lir import util
 from lir.algorithms.bayeserror import plot_nbe as nbe
@@ -36,7 +35,7 @@ H2_COLOR = 'blue'
 
 
 class Canvas:
-    def __init__(self, ax: Axis):
+    def __init__(self, ax: Axes):
         self.ax = ax
 
         self.calibrator_fit = partial(calibrator_fit, ax=ax)

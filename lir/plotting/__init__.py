@@ -113,7 +113,7 @@ def axes(savefig: PathLike | None = None, show: bool | None = None) -> Iterator[
 
 
 def pav(
-    llrs: np.ndarray,
+    llrdata: LLRData,
     y: np.ndarray,
     add_misleading: int = 0,
     show_scatter: bool = True,
@@ -137,6 +137,8 @@ def pav(
         defaults to `matplotlib.pyplot`
     ----------
     """
+    llrs = llrdata.llrs
+
     pav = IsotonicCalibrator(add_misleading=add_misleading)
     pav_llrs = pav.fit_transform(llrs, y)
 
@@ -237,7 +239,7 @@ def pav(
 
 
 def lr_histogram(
-    llrs: np.ndarray,
+    llrdata: LLRData,
     y: np.ndarray,
     bins: int = 20,
     weighted: bool = True,
@@ -255,6 +257,8 @@ def lr_histogram(
     ax: axes to plot figure to
 
     """
+    llrs = llrdata.llrs
+
     bins = np.histogram_bin_edges(llrs, bins=bins)
     points0, points1 = util.Xy_to_Xn(llrs, y)
     weights0, weights1 = (np.ones_like(points) / len(points) if weighted else None for points in (points0, points1))
@@ -265,7 +269,7 @@ def lr_histogram(
     ax.legend()
 
 
-def tippett(llrs: np.ndarray, y: np.ndarray, plot_type: int = 1, ax: Axes = plt) -> None:
+def tippett(llrdata: LLRData, y: np.ndarray, plot_type: int = 1, ax: Axes = plt) -> None:
     """
     plots empirical cumulative distribution functions of same-source and
         different-sources lrs
@@ -280,6 +284,8 @@ def tippett(llrs: np.ndarray, y: np.ndarray, plot_type: int = 1, ax: Axes = plt)
         proportion of lrs smaller than or equal to the x-axis value.
     ax: axes to plot figure to
     """
+    llrs = llrdata.llrs
+
     lr_0, lr_1 = util.Xy_to_Xn(llrs, y)
     xplot0 = np.linspace(np.min(lr_0), np.max(lr_0), 100)
     xplot1 = np.linspace(np.min(lr_1), np.max(lr_1), 100)

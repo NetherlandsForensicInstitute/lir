@@ -10,7 +10,7 @@ LIR was first released in 2020 and redesigned from scratch in 2025, replacing th
 Installation
 ------------
 
-LIR is compatible with Python 3.10 and later. The easiest way to install LIR is to use `pip`:
+LIR is compatible with Python 3.11 and later. The easiest way to install LIR is to use `pip`:
 
 ```shell
 pip install lir

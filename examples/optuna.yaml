@@ -70,9 +70,10 @@ experiments:
           - option_name: svm
             method: svm
             probability: True
-    metrics:
-      - cllr
-      - cllr_min
+    aggregation:
+      metrics:
+        - cllr
+        - cllr_min
     visualization:
       - pav
       - ece

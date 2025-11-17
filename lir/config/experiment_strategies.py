@@ -7,7 +7,7 @@ from pathlib import Path
 import confidence
 
 from lir import registry
-from lir.aggregation import Aggregation, WriteMetricsToCsv
+from lir.aggregation import AggregatedPlot, Aggregation, WriteMetricsToCsv
 from lir.config.base import (
     ConfigParser,
     ContextAwareList,
@@ -46,7 +46,7 @@ def parse_metric(name: str, output_path: Path, context: list[str]) -> Callable:
         raise YamlParseError(context, str(e))
 
 
-def parse_metrics_section(config: ContextAwareList, output_path: Path) -> Mapping[str, Callable]:
+def parse_metrics_aggergation(config: ContextAwareList, output_path: Path) -> Mapping[str, Callable]:
     """Parse the metrics section from the configuration.
 
     A resulting mapping of metric name and corresponding function is returned.
@@ -77,8 +77,17 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         return parse_metric(metric_name, self._output_dir, self._config.context)
 
     def aggregations(self) -> Sequence[Aggregation]:
-        metrics = parse_metrics_section(pop_field(self._config, 'metrics'), self._output_dir)
-        return [WriteMetricsToCsv(self._output_dir / 'metrics.csv', metrics)]
+        aggregation = pop_field(self._config, 'aggregation', required=False)
+        if not aggregation:
+            return []
+
+        results: list[Aggregation] = []
+
+        if 'metrics' in aggregation:
+            metrics = parse_metrics_aggergation(aggregation['metrics'], self._output_dir)
+            results.append(WriteMetricsToCsv(self._output_dir / 'metrics.csv', metrics))
+
+        return results
 
     def visualization_functions(self) -> list[Callable]:
         return parse_visualizations(pop_field(self._config, 'visualization', required=False), self._output_dir)

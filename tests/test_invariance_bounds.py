@@ -8,6 +8,7 @@ from lir.data.datasets.alcohol_breath_analyser import AlcoholBreathAnalyser
 from lir.data.models import FeatureData
 from lir.transform.pipeline import Pipeline
 from lir.util import Xn_to_Xy, probability_to_logodds, logodds_to_odds
+from tests.data.datasets.lr_bounding import UnboundLRs
 
 
 class TestBounding(unittest.TestCase):
@@ -15,6 +16,17 @@ class TestBounding(unittest.TestCase):
         llrs = AlcoholBreathAnalyser(ill_calibrated=True).get_instances()
         bounds = invariance_bounds.calculate_invariance_bounds(logodds_to_odds(llrs.llrs), llrs.labels)
         np.testing.assert_almost_equal((0.1052741, 85.3731634), bounds[:2])
+
+    def test_iv_paper_examples(self):
+        llr_threshold = np.arange(-2, 3, 0.001)
+
+        llrs = UnboundLRs(example=4).get_instances()
+        bounds = invariance_bounds.calculate_invariance_bounds(logodds_to_odds(llrs.llrs), llrs.labels, llr_threshold)
+        np.testing.assert_almost_equal((0.2382319, 2.7861212), bounds[:2])
+
+        llrs = UnboundLRs(example=5).get_instances()
+        bounds = invariance_bounds.calculate_invariance_bounds(logodds_to_odds(llrs.llrs), llrs.labels, llr_threshold)
+        np.testing.assert_almost_equal((0.1412538, 38.1944271), bounds[:2])
 
     def test_extreme_smallset(self):
         lrs = np.array([np.inf, 0])

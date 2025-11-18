@@ -84,18 +84,19 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         results: list[Aggregation] = []
 
         if 'metrics' in aggregation:
-            metrics = parse_metrics_aggregation(aggregation['metrics'], self._output_dir)
+            metrics = parse_metrics_aggregation(pop_field(aggregation, 'metrics'), self._output_dir)
             results.append(WriteMetricsToCsv(self._output_dir / 'metrics.csv', metrics))
 
         if 'visualization' in aggregation:
             visualization_functions = parse_visualizations(
-                aggregation['visualization'],
+                pop_field(aggregation, 'visualization'),
                 self._output_dir,
             )
 
             for vis_func in visualization_functions:
                 results.append(AggregatedPlot(vis_func, str(self._output_dir)))
 
+        check_is_empty(aggregation)
         return results
 
     def visualization_functions(self) -> list[Callable]:

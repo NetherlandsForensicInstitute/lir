@@ -46,7 +46,7 @@ def parse_metric(name: str, output_path: Path, context: list[str]) -> Callable:
         raise YamlParseError(context, str(e))
 
 
-def parse_metrics_aggergation(config: ContextAwareList, output_path: Path) -> Mapping[str, Callable]:
+def parse_metrics_aggregation(config: ContextAwareList, output_path: Path) -> Mapping[str, Callable]:
     """Parse the metrics section from the configuration.
 
     A resulting mapping of metric name and corresponding function is returned.
@@ -84,7 +84,7 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         results: list[Aggregation] = []
 
         if 'metrics' in aggregation:
-            metrics = parse_metrics_aggergation(aggregation['metrics'], self._output_dir)
+            metrics = parse_metrics_aggregation(aggregation['metrics'], self._output_dir)
             results.append(WriteMetricsToCsv(self._output_dir / 'metrics.csv', metrics))
 
         if 'visualization' in aggregation:

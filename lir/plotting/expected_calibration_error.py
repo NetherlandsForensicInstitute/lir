@@ -29,9 +29,7 @@ from lir.util import (
 )
 
 
-def plot_ece(
-    llrdata: LLRData, labels: np.ndarray, log_prior_odds_range: tuple[float, float] = (-3, 3), ax: Any = plt
-) -> None:
+def plot_ece(llrdata: LLRData, log_prior_odds_range: tuple[float, float] = (-3, 3), ax: Any = plt) -> None:
     """
     Generates an ECE plot for a set of LRs and corresponding ground-truth
     labels.
@@ -48,6 +46,9 @@ def plot_ece(
         indicating both ends of the range on the x-axis)
     """
     llrs = llrdata.llrs
+    labels = llrdata.labels
+    if labels is None:
+        raise ValueError('LLRData must contain labels to plot ECE.')
 
     log_prior_odds = np.arange(*log_prior_odds_range, 0.01)
     prior_odds = np.power(10, log_prior_odds)
@@ -55,7 +56,7 @@ def plot_ece(
     # plot reference
     ax.plot(
         log_prior_odds,
-        calculate_ece(np.ones(len(labels)), labels, odds_to_probability(prior_odds)),
+        calculate_ece(np.ones_like(labels), labels, odds_to_probability(prior_odds)),
         linestyle=':',
         label='reference',
     )

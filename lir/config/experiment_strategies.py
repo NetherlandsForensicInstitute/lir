@@ -55,7 +55,7 @@ def parse_metrics_aggregation(config: ContextAwareList, output_path: Path) -> Ag
         (1) a numpy array of lrs, and;
         (2) a numpy array of labels.
     The metric function should return the value of the metric.
-    The metrics are looked upby their name in the registry.
+    The metrics are looked up by their name in the registry.
     """
     metric_dict = {metric_name: parse_metric(metric_name, output_path, config.context) for metric_name in config}
     return WriteMetricsToCsv(output_path / 'metrics.csv', metric_dict)

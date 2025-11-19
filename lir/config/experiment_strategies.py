@@ -46,7 +46,7 @@ def parse_metric(name: str, output_path: Path, context: list[str]) -> Callable:
         raise YamlParseError(context, str(e))
 
 
-def parse_metrics_aggregation(config: ContextAwareList, output_path: Path) -> Mapping[str, Callable]:
+def parse_metrics_aggregation(config: ContextAwareList, output_path: Path) -> Aggregation:
     """Parse the metrics section from the configuration.
 
     A resulting mapping of metric name and corresponding function is returned.
@@ -55,9 +55,10 @@ def parse_metrics_aggregation(config: ContextAwareList, output_path: Path) -> Ma
         (1) a numpy array of lrs, and;
         (2) a numpy array of labels.
     The metric function should return the value of the metric.
-    The metrics are looked up by their name in the registry.
+    The metrics are looked upby their name in the registry.
     """
-    return {metric_name: parse_metric(metric_name, output_path, config.context) for metric_name in config}
+    metric_dict = {metric_name: parse_metric(metric_name, output_path, config.context) for metric_name in config}
+    return WriteMetricsToCsv(output_path / 'metrics.csv', metric_dict)
 
 
 class ExperimentStrategyConfigParser(ConfigParser, ABC):
@@ -85,7 +86,7 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
 
         if 'metrics' in aggregation:
             metrics = parse_metrics_aggregation(pop_field(aggregation, 'metrics'), self._output_dir)
-            results.append(WriteMetricsToCsv(self._output_dir / 'metrics.csv', metrics))
+            results.append(metrics)
 
         if 'visualization' in aggregation:
             visualization_functions = parse_visualizations(

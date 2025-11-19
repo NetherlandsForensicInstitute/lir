@@ -32,7 +32,7 @@ class Aggregation(ABC):
         pass
 
 
-class AggregatedPlot(Aggregation):
+class AggregatePlot(Aggregation):
     """Aggregation that generates plots by repeatedly calling a plotting function."""
 
     def __init__(self, plot_function: Callable, output_dir: str) -> None:

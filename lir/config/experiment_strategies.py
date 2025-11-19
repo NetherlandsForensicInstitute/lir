@@ -7,7 +7,7 @@ from pathlib import Path
 import confidence
 
 from lir import registry
-from lir.aggregation import AggregatedPlot, Aggregation, WriteMetricsToCsv
+from lir.aggregation import AggregatePlot, Aggregation, WriteMetricsToCsv
 from lir.config.base import (
     ConfigParser,
     ContextAwareList,
@@ -95,7 +95,7 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
             )
 
             for vis_func in visualization_functions:
-                results.append(AggregatedPlot(vis_func, str(self._output_dir)))
+                results.append(AggregatePlot(vis_func, str(self._output_dir)))
 
         check_is_empty(aggregation)
         return results

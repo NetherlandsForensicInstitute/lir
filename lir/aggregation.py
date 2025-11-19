@@ -41,19 +41,11 @@ class AggregatePlot(Aggregation):
         self.f = plot_function
         self.dir = output_dir
         self.plot_type = plot_function.__name__
-
-        self.plots: dict[str, Any] = {}  # Dictionary to hold figures and axes for different plot types
-        # Add initial plot setup for this plot_type
-        self._setup_plot()
-
-    def _setup_plot(self) -> None:
-        """Set up a new plot for the given plot type."""
-        fig, ax = plt.subplots(figsize=(10, 8))
-        canvas = Canvas(ax)
-        self.plots = {'fig': fig, 'ax': ax, 'canvas': canvas, 'legend_suffix': []}
+        self._fig, self._ax = plt.subplots(figsize=(10, 8))
+        self._canvas = Canvas(self._ax)
 
     def report(self, llrdata: LLRData, parameters: dict[str, Any]) -> None:
-        self.plots['canvas'].plot(
+        self._canvas.plot(
             [],
             [],
             marker='None',
@@ -62,13 +54,12 @@ class AggregatePlot(Aggregation):
             label=', '.join(f'{k}={v}' for k, v in parameters.items()),
         )  # Dummy plot to add legend entry
 
-        self.f(None, llrdata, self.plots['canvas'])
+        self.f(None, llrdata, self._canvas)
 
     def close(self) -> None:
         """Generate and save each plot after all results have been reported."""
-        ax = self.plots['ax']
-        ax.set_title(f'Aggregated {self.plot_type}')
-        self.plots['fig'].savefig(f'{self.dir}/aggregated_{self.plot_type}.png')
+        self._ax.set_title(f'Aggregated {self.plot_type}')
+        self._fig.savefig(f'{self.dir}/aggregated_{self.plot_type}.png')
 
 
 class WriteMetricsToCsv(Aggregation):

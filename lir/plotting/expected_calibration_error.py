@@ -54,12 +54,13 @@ def plot_ece(llrdata: LLRData, log_prior_odds_range: tuple[float, float] = (-3, 
     prior_odds = np.power(10, log_prior_odds)
 
     # plot reference
-    ax.plot(
-        log_prior_odds,
-        calculate_ece(np.ones_like(labels), labels, odds_to_probability(prior_odds)),
-        linestyle=':',
-        label='reference',
-    )
+    if ax.get_legend() is None or 'reference' not in [text.get_text() for text in ax.get_legend().get_texts()]:
+        ax.plot(
+            log_prior_odds,
+            calculate_ece(np.ones_like(labels), labels, odds_to_probability(prior_odds)),
+            linestyle=':',
+            label='reference',
+        )
 
     # plot LRs
     ax.plot(

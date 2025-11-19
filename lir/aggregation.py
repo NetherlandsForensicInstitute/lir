@@ -48,7 +48,7 @@ class AggregatePlot(Aggregation):
 
     def _setup_plot(self) -> None:
         """Set up a new plot for the given plot type."""
-        fig, ax = plt.subplots()
+        fig, ax = plt.subplots(figsize=(10, 8))
         canvas = Canvas(ax)
         self.plots = {'fig': fig, 'ax': ax, 'canvas': canvas, 'legend_suffix': []}
 
@@ -58,6 +58,7 @@ class AggregatePlot(Aggregation):
             [],
             marker='None',
             linestyle='None',
+            color='white', # This is necessary to avoid matplotlib from cycling through colours
             label=', '.join(f'{k}={v}' for k, v in parameters.items()),
         )  # Dummy plot to add legend entry
 

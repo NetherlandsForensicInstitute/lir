@@ -162,7 +162,7 @@ def pav(
 
     # some values of line_y go beyond the yrange which is problematic when there are infinite values
     mask_out_of_range = np.logical_and(line_x >= yrange[0], line_x <= yrange[1])
-    ax.plot(line_x[mask_out_of_range], line_y[mask_out_of_range], color='black', label='PAV transform')
+    ax.plot(line_x[mask_out_of_range], line_y[mask_out_of_range], label='PAV transform', linewidth=2)
 
     # add points for infinite values
     if np.logical_or(np.isinf(pav_llrs), np.isinf(llrs)).any():
@@ -213,7 +213,7 @@ def pav(
         ax.set_xticks(ticks_x, tick_labels_x)
 
         color = [H1_COLOR if i > 0 else H2_COLOR for i in y_inf]
-        ax.scatter(x_inf, y_inf, color=color, marker='|')
+        ax.scatter(x_inf, y_inf, color=color, marker='|', linewidth=0.2)
 
     ax.axis(xrange + yrange)
     # pre-/post-calibrated lr fit
@@ -230,8 +230,8 @@ def pav(
         n_h1 = np.count_nonzero(y)
         n_h2 = len(y) - n_h1
 
-        ax.scatter(h1_llrs, h1_pav, facecolors=H1_COLOR, marker=2, linewidths=1, alpha=0.5, label=f'H1 (n={n_h1})')
-        ax.scatter(h2_llrs, h2_pav, facecolors=H2_COLOR, marker=3, linewidths=1, alpha=0.5, label=f'H2 (n={n_h2})')
+        ax.scatter(h1_llrs, h1_pav, facecolors=H1_COLOR, marker=2, linewidths=0.2, label=f'H1 (n={n_h1})')
+        ax.scatter(h2_llrs, h2_pav, facecolors=H2_COLOR, marker=3, linewidths=0.2, label=f'H2 (n={n_h2})')
 
         # scatter plot of measured lrs
 

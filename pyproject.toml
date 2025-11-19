@@ -22,6 +22,9 @@ dependencies = [
     "pandas>=2.3.2",
     "KDEpy>=1.1.12",
     "pydantic>=2.12.3",
+    "gitpython>=3.1.45",
+    "pytz>=2025.2",
+    "types-pytz>=2025.2.0.20251108",
 ]
 
 [project.urls]

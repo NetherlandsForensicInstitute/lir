@@ -50,7 +50,7 @@ class AggregatePlot(Aggregation):
             [],
             marker='None',
             linestyle='None',
-            color='white', # This is necessary to avoid matplotlib from cycling through colours
+            color='white',  # This is necessary to avoid matplotlib from cycling through colours
             label=', '.join(f'{k}={v}' for k, v in parameters.items()),
         )  # Dummy plot to add legend entry
 

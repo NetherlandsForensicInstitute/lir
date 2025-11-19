@@ -64,6 +64,10 @@ def test_feature_data():
         instances = FeatureData(features=np.ones((10, 2)), labels=np.ones((10,)))
         instances.features = np.ones((10, 2))
 
+    # initializing FeatureData with non-numeric feature values is an error
+    with pytest.raises(ValidationError):
+        FeatureData(features=np.array(['1'] * 10), labels=np.ones((10,)))
+
 
 def test_concatenate():
     data = FeatureData(features=np.ones((10, 2)))

@@ -220,6 +220,12 @@ class FeatureData(InstanceData):
             )
         return self
 
+    @model_validator(mode='after')
+    def check_features(self) -> Self:
+        if not np.issubdtype(self.features.dtype, np.number):
+            raise ValueError(f'features should be numeric; found: {self.features.dtype}')
+        return self
+
 
 class PairedFeatureData(FeatureData):
     """

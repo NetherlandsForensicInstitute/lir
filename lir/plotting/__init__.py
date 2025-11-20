@@ -149,8 +149,8 @@ def pav(
     ]
 
     has_legend = ax.get_legend() is not None
-    if not has_legend or 'Optimal system' not in [text.get_text() for text in ax.get_legend().get_texts()]:
-        ax.plot(xrange, yrange, '--', color='gray', label='Optimal system')
+    if not has_legend or 'Consistent system' not in [text.get_text() for text in ax.get_legend().get_texts()]:
+        ax.plot(xrange, yrange, '--', color='gray', label='Consistent system')
 
     # line pre pav llrs x and post pav llrs y
     line_x = np.arange(*xrange, 0.01)

@@ -8,7 +8,6 @@ from typing import Any
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.axes import Axes
-from matplotlib.axis import Axis
 
 from lir import util
 from lir.algorithms.bayeserror import plot_nbe as nbe
@@ -30,13 +29,15 @@ plt.get_xlim = lambda: plt.gca().get_xlim()
 plt.get_ylim = lambda: plt.gca().get_ylim()
 plt.set_xticks = plt.xticks
 plt.set_yticks = plt.yticks
+plt.get_legend = lambda: plt.gca().get_legend()
+
 
 H1_COLOR = 'red'
 H2_COLOR = 'blue'
 
 
 class Canvas:
-    def __init__(self, ax: Axis):
+    def __init__(self, ax: Axes):
         self.ax = ax
 
         self.calibrator_fit = partial(calibrator_fit, ax=ax)
@@ -114,7 +115,6 @@ def axes(savefig: PathLike | None = None, show: bool | None = None) -> Iterator[
 
 def pav(
     llrdata: LLRData,
-    y: np.ndarray,
     add_misleading: int = 0,
     show_scatter: bool = True,
     ax: Axes = plt,
@@ -138,6 +138,7 @@ def pav(
     ----------
     """
     llrs = llrdata.llrs
+    y = llrdata.labels
 
     pav = IsotonicCalibrator(add_misleading=add_misleading)
     pav_llrs = pav.fit_transform(llrs, y)
@@ -147,8 +148,9 @@ def pav(
         llrs[llrs != np.inf].max() + 0.5,
     ]
 
-    # plot line through origin
-    ax.plot(xrange, yrange, '--', color='gray', label='Optimal system')
+    has_legend = ax.get_legend() is not None
+    if not has_legend or 'Consistent system' not in [text.get_text() for text in ax.get_legend().get_texts()]:
+        ax.plot(xrange, yrange, '--', color='gray', label='Consistent system')
 
     # line pre pav llrs x and post pav llrs y
     line_x = np.arange(*xrange, 0.01)
@@ -160,7 +162,7 @@ def pav(
 
     # some values of line_y go beyond the yrange which is problematic when there are infinite values
     mask_out_of_range = np.logical_and(line_x >= yrange[0], line_x <= yrange[1])
-    ax.plot(line_x[mask_out_of_range], line_y[mask_out_of_range], color='black', label='PAV transform')
+    ax.plot(line_x[mask_out_of_range], line_y[mask_out_of_range], label='PAV transform', linewidth=2)
 
     # add points for infinite values
     if np.logical_or(np.isinf(pav_llrs), np.isinf(llrs)).any():
@@ -211,7 +213,7 @@ def pav(
         ax.set_xticks(ticks_x, tick_labels_x)
 
         color = [H1_COLOR if i > 0 else H2_COLOR for i in y_inf]
-        ax.scatter(x_inf, y_inf, color=color, marker='|')
+        ax.scatter(x_inf, y_inf, color=color, marker='|', linewidth=0.2)
 
     ax.axis(xrange + yrange)
     # pre-/post-calibrated lr fit
@@ -228,8 +230,8 @@ def pav(
         n_h1 = np.count_nonzero(y)
         n_h2 = len(y) - n_h1
 
-        ax.scatter(h1_llrs, h1_pav, facecolors=H1_COLOR, marker=2, linewidths=1, alpha=0.5, label=f'H1 (n={n_h1})')
-        ax.scatter(h2_llrs, h2_pav, facecolors=H2_COLOR, marker=3, linewidths=1, alpha=0.5, label=f'H2 (n={n_h2})')
+        ax.scatter(h1_llrs, h1_pav, facecolors=H1_COLOR, marker=2, linewidths=0.2, label=f'H1 (n={n_h1})')
+        ax.scatter(h2_llrs, h2_pav, facecolors=H2_COLOR, marker=3, linewidths=0.2, label=f'H2 (n={n_h2})')
 
         # scatter plot of measured lrs
 
@@ -240,7 +242,6 @@ def pav(
 
 def lr_histogram(
     llrdata: LLRData,
-    y: np.ndarray,
     bins: int = 20,
     weighted: bool = True,
     ax: Axes = plt,
@@ -258,6 +259,7 @@ def lr_histogram(
 
     """
     llrs = llrdata.llrs
+    y = llrdata.labels
 
     bins = np.histogram_bin_edges(llrs, bins=bins)
     points0, points1 = util.Xy_to_Xn(llrs, y)
@@ -269,7 +271,7 @@ def lr_histogram(
     ax.legend()
 
 
-def tippett(llrdata: LLRData, y: np.ndarray, plot_type: int = 1, ax: Axes = plt) -> None:
+def tippett(llrdata: LLRData, plot_type: int = 1, ax: Axes = plt) -> None:
     """
     plots empirical cumulative distribution functions of same-source and
         different-sources lrs
@@ -285,6 +287,7 @@ def tippett(llrdata: LLRData, y: np.ndarray, plot_type: int = 1, ax: Axes = plt)
     ax: axes to plot figure to
     """
     llrs = llrdata.llrs
+    y = llrdata.labels
 
     lr_0, lr_1 = util.Xy_to_Xn(llrs, y)
     xplot0 = np.linspace(np.min(lr_0), np.max(lr_0), 100)

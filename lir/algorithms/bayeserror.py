@@ -12,24 +12,29 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from lir.bounding import LLRBounder
+from lir.data.models import LLRData
 from lir.util import logodds_to_odds
 
 
 def plot_nbe(
-    llrs: np.ndarray,
-    y: np.ndarray,
+    llr_data: LLRData,
     log_lr_threshold_range: tuple[float, float] | None = None,
     add_misleading: int = 1,
     step_size: float = 0.01,
     ax: plt.Axes = plt,  # type: ignore
 ) -> None:
+    llrs = llr_data.llrs
+    y = llr_data.labels
+    if y is None:
+        raise ValueError('LLRData must contain labels to plot NBE.')
+
     if log_lr_threshold_range is None:
         log_lr_threshold_range = (np.min(llrs) - 0.5, np.max(llrs) + 0.5)
 
     log_lr_threshold = np.arange(*log_lr_threshold_range, step_size)
     lr_threshold = np.power(10, log_lr_threshold)
 
-    eu_neutral = calculate_expected_utility(np.ones(len(llrs)), y, lr_threshold)
+    eu_neutral = calculate_expected_utility(np.ones_like(llrs), y, lr_threshold)
     eu_system = calculate_expected_utility(logodds_to_odds(llrs), y, lr_threshold, add_misleading)
 
     ax.plot(log_lr_threshold, np.log10(eu_neutral / eu_system))

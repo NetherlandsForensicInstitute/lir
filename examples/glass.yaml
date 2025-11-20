@@ -184,10 +184,10 @@ experiments:
                 value: logistic_regression
               - path: comparing.steps.calibration
                 value: csv_writer
-
-    metrics:
-      - cllr
-      - cllr_min
+    aggregation:
+      metrics:
+        - cllr
+        - cllr_min
 
     visualization:
       - pav
@@ -209,9 +209,10 @@ experiments:
             substitutions:
               - path: ""
                 value: ${two_level_lr_system}
-    metrics:
-      - cllr
-      - cllr_min
+    aggregation:
+      metrics:
+        - cllr
+        - cllr_min
     visualization:
       - pav
       - lr_histogram
@@ -220,9 +221,10 @@ experiments:
     strategy: single_run
     lr_system: ${score_based_lr_system}
     data: ${data}
-    metrics:
-      - cllr
-      - cllr_min
+    aggregation:
+      metrics:
+        - cllr
+        - cllr_min
     visualization:
       - pav
       - ece

@@ -1,38 +1,39 @@
+from collections.abc import Callable
 from pathlib import Path
-
-import numpy as np
+from typing import Any
 
 from lir.data.models import LLRData
 from lir.plotting import savefig
 
 
-def pav(base_path: Path, llrdata: LLRData, labels: np.ndarray) -> None:
-    """Helper function to generate and save a PAV-plot to the output directory."""
-    base_path.mkdir(exist_ok=True, parents=True)
-    path = base_path / 'pav.png'
-    with savefig(str(path)) as fig:
-        fig.pav(llrdata, labels)
+def _save_or_plot(ax: Any | None, base_path: Path | None, filename: str, plot_func: Callable, *args: Any) -> None:
+    """Internal helper to either plot to an axis or save a plot to file."""
+    if ax is not None:
+        plot_func(ax, *args)
+    elif base_path is not None:
+        base_path.mkdir(exist_ok=True, parents=True)
+        path = base_path / filename
+        with savefig(str(path)) as fig:
+            plot_func(fig, *args)
+    else:
+        raise ValueError('Either base_path or ax must be provided.')
 
 
-def ece(base_path: Path, llrdata: LLRData, labels: np.ndarray) -> None:
-    """Helper function to generate and save an ECE-plot to the output directory."""
-    base_path.mkdir(exist_ok=True, parents=True)
-    path = base_path / 'ece.png'
-    with savefig(str(path)) as fig:
-        fig.ece(llrdata, labels)
+def pav(base_path: Path | None, llrdata: LLRData, ax: Any | None = None) -> None:
+    """Generate and handle a PAV plot, either saving to a file or plotting on a given axis."""
+    _save_or_plot(ax, base_path, 'pav.png', lambda obj, data: obj.pav(data), llrdata)
 
 
-def lr_histogram(base_path: Path, llrdata: LLRData, labels: np.ndarray) -> None:
-    """Helper function to generate and save an histogram-plot to the output directory."""
-    base_path.mkdir(exist_ok=True, parents=True)
-    path = base_path / 'histogram.png'
-    with savefig(str(path)) as fig:
-        fig.lr_histogram(llrdata, labels)
+def ece(base_path: Path | None, llrdata: LLRData, ax: Any | None = None) -> None:
+    """Generate and handle an ECE plot, either saving to a file or plotting on a given axis."""
+    _save_or_plot(ax, base_path, 'ece.png', lambda obj, data: obj.ece(data), llrdata)
 
 
-def llr_interval(base_path: Path, llrdata: LLRData, _: np.ndarray | None = None) -> None:
-    """Helper function to generate and save a Score-LR plot to the output directory."""
-    base_path.mkdir(exist_ok=True, parents=True)
-    path = base_path / 'llr_interval.png'
-    with savefig(str(path)) as fig:
-        fig.llr_interval(llrdata)
+def lr_histogram(base_path: Path | None, llrdata: LLRData, ax: Any | None = None) -> None:
+    """Generate and handle a histogram plot of likelihood ratios, either saving to file or plotting on an axis."""
+    _save_or_plot(ax, base_path, 'histogram.png', lambda obj, data: obj.lr_histogram(data), llrdata)
+
+
+def llr_interval(base_path: Path | None, llrdata: LLRData, ax: Any | None = None) -> None:
+    """Generate and handle a Score-LR plot, either saving to file or plotting on an axis."""
+    _save_or_plot(ax, base_path, 'llr_interval.png', lambda obj, data: obj.llr_interval(data), llrdata)

@@ -48,9 +48,9 @@ experiments:
           - option_name: svm
             method: svm
             probability: True
-    metrics:
-      - cllr
-      - cllr_min
+    aggregation:
+      metrics:
+        - cllr
     visualization:
       - pav
       - ece
@@ -59,9 +59,10 @@ experiments:
     strategy: single_run
     lr_system: ${lr_system}
     data: ${cross_validation_splits}
-    metrics:
-      - cllr
-      - cllr_min
+    aggregation:
+      metrics:
+        - cllr
+        - cllr_min
     visualization:
       - pav
       - ece

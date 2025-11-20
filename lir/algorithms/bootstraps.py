@@ -4,7 +4,9 @@ from typing import Any, Self
 
 import numpy as np
 from scipy.interpolate import interp1d
+from tqdm import tqdm
 
+import lir
 from lir.config.base import ContextAwareDict, check_not_none, config_parser, pop_field
 from lir.data.models import FeatureData, LLRData
 from lir.transform.pipeline import Pipeline, parse_steps
@@ -111,7 +113,13 @@ class Bootstrap(Pipeline, ABC):
 
         bootstrap_data = self.get_bootstrap_data(instances)
 
-        for _ in range(self.n_bootstraps):
+        for _ in tqdm(
+            range(self.n_bootstraps),
+            desc='Bootstrapping',
+            unit='samples',
+            leave=False,
+            disable=not lir.is_interactive(),
+        ):
             sample_index = rng.choice(len(instances), size=len(instances))
             samples = instances[sample_index]
             super().fit(samples)

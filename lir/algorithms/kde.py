@@ -31,6 +31,47 @@ def compensate_and_remove_neginf_inf(
     return log_odds, y, numerator, denominator
 
 
+def parse_bandwidth(
+    bandwidth: Callable | str | float | tuple[float, float] | None,
+) -> Callable:
+    """
+    Returns bandwidth as a tuple of two (optional) floats.
+    Extrapolates a single bandwidth.
+
+    :param bandwidth: provided bandwidth
+    :return: bandwidth used for kde0, bandwidth used for kde1
+    """
+    match bandwidth:
+        case None:
+            raise ValueError('Missing `bandwidth` argument for KDE')
+
+        case Callable():  #  type: ignore[misc]
+            return bandwidth
+
+        case str():
+            if bandwidth == 'silverman':
+                return KDECalibrator.bandwidth_silverman
+
+            # The given bandwidth method is not supported
+            raise ValueError(f'Invalid input for bandwidth: {bandwidth}')
+
+        case Sized():
+            if len(bandwidth) == 2:
+                # Lambda function casting input to a tuple of the bandwidth ranges
+                return lambda X, y: tuple(bandwidth)
+
+            raise ValueError(
+                f'The `bandwidth` should have two elements; found {len(bandwidth)}; bandwidth = {bandwidth}'
+            )
+
+        case float() | int():
+            # Lambda function casting input to a tuple of the bandwidth ranges
+            return lambda X, y: (0 + bandwidth, bandwidth)
+
+        case _:
+            raise ValueError(f'Invalid `bandwidth` type: {type(bandwidth)} (value={bandwidth!r})')
+
+
 class KDECalibrator(BaseEstimator, TransformerMixin):
     """
     Calculates a likelihood ratio of a score value, provided it is from one of
@@ -49,7 +90,7 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
             * If bandwidth is callable, it should accept two arguments, `X` and `y`, and return a tuple of two values
               which are the bandwidths for the two distributions.
         """
-        self.bandwidth: Callable = self._parse_bandwidth(bandwidth)
+        self.bandwidth: Callable = parse_bandwidth(bandwidth)
         self._kde0: KernelDensity | None = None
         self._kde1: KernelDensity | None = None
         self.numerator: float | None = None
@@ -146,29 +187,3 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
         LLRs_output[el] = log10_compensator + log10_dif
 
         return LLRs_output.flatten()
-
-    @staticmethod
-    def _parse_bandwidth(
-        bandwidth: Callable | str | float | tuple[float, float] | None,
-    ) -> Callable:
-        """
-        Returns bandwidth as a tuple of two (optional) floats.
-        Extrapolates a single bandwidth
-        :param bandwidth: provided bandwidth
-        :return: bandwidth used for kde0, bandwidth used for kde1
-        """
-        if bandwidth is None:
-            raise ValueError('missing bandwidth argument for KDE')
-        elif callable(bandwidth):
-            return bandwidth
-        elif bandwidth == 'silverman':
-            return KDECalibrator.bandwidth_silverman
-        elif isinstance(bandwidth, str):
-            raise ValueError(f'invalid input for bandwidth: {bandwidth}')
-        elif isinstance(bandwidth, Sized):
-            assert len(bandwidth) == 2, (
-                f'bandwidth should have two elements; found {len(bandwidth)}; bandwidth = {bandwidth}'
-            )
-            return lambda X, y: bandwidth
-        else:
-            return lambda X, y: (0 + bandwidth, bandwidth)

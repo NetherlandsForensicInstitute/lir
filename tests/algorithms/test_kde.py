@@ -1,9 +1,10 @@
 import math
+import pytest
 
 import numpy as np
 import unittest
 
-from lir.algorithms.kde import KDECalibrator
+from lir.algorithms.kde import KDECalibrator, parse_bandwidth
 from lir.util import logodds_to_odds, probability_to_logodds, odds_to_probability, Xn_to_Xy
 
 
@@ -131,3 +132,41 @@ class TestKDECalibrator(unittest.TestCase):
         calibrator.fit(X, y)
         llrs_cal = calibrator.transform(X)
         np.testing.assert_allclose(logodds_to_odds(llrs_cal), desired)
+
+
+@pytest.mark.parametrize('bandwidth_definition,expected_bandwidth', [
+    ([1, 2], (1, 2)),  # list input (`Sized` type)
+    ((1, 2), (1, 2)),  # tuple input (`Sized` type)
+    ({1, 2}, (1, 2)),  # set input (`Sized` type)
+    ({1: 2, 3: 4}, (1, 3)),  # dictionary input (`Sized` type)
+    (lambda X, y: (1234, 5678), (1234, 5678)),  # callable function
+    ('silverman', []),  # Silverman algorithm
+    (123.45,  (123.45, 123.45)),  # float
+    (12, (12, 12)),  # integer
+])
+def test_kde_bandwidth_parsing_supported_types(bandwidth_definition, expected_bandwidth):
+    bandwidth_fn = parse_bandwidth(bandwidth_definition)
+
+    samples_one_feature = [[1], [2], [3]]
+    labels = np.ndarray([0, 1, 0])
+
+    bandwidth = bandwidth_fn(X=samples_one_feature, y=labels)
+
+    assert bandwidth == expected_bandwidth
+
+
+@pytest.mark.parametrize('bandwidth_definition', [
+    None,  # undefined
+    (1, 2, 3),  # tuples of size 3
+    [1, 2, 3],  # lists of size 3
+    {1, 2, 3},  # set of size 3
+    {'a': 1, 'b': 2, 'c': 3},  # dictionary of size 3
+    (1,),  # tuples of size 1
+    [1],  # lists of size 1
+    {1},  # set of size 1
+    {'a': 1},  # dictionary of size 1
+    'inexistent',  # unsupported bandwidth methods
+])
+def test_kde_bandwidth_parsing_unsupported_types(bandwidth_definition):
+    with pytest.raises(ValueError):
+        bandwidth_fn = parse_bandwidth(bandwidth_definition)

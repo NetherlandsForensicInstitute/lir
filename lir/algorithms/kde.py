@@ -157,18 +157,20 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
         :param bandwidth: provided bandwidth
         :return: bandwidth used for kde0, bandwidth used for kde1
         """
-        if bandwidth is None:
-            raise ValueError('missing bandwidth argument for KDE')
-        elif callable(bandwidth):
-            return bandwidth
-        elif bandwidth == 'silverman':
-            return KDECalibrator.bandwidth_silverman
-        elif isinstance(bandwidth, str):
-            raise ValueError(f'invalid input for bandwidth: {bandwidth}')
-        elif isinstance(bandwidth, Sized):
-            assert len(bandwidth) == 2, (
-                f'bandwidth should have two elements; found {len(bandwidth)}; bandwidth = {bandwidth}'
-            )
-            return lambda X, y: bandwidth
-        else:
-            return lambda X, y: (0 + bandwidth, bandwidth)
+        match bandwidth:
+            case None:
+                raise ValueError('missing bandwidth argument for KDE')
+            case bw if callable(bw):
+                return bandwidth
+            case s if isinstance(s, str):
+                if s == 'silverman':
+                    return KDECalibrator.bandwidth_silverman
+                else:
+                    raise ValueError(f'invalid input for bandwidth: {bandwidth}')
+            case bw_tuple if isinstance(bw_tuple, Sized):
+                assert len(bw_tuple) == 2, (
+                    f'bandwidth should have two elements; found {len(bw_tuple)}; bandwidth = {bw_tuple}'
+                )
+                return lambda X, y: bw_tuple
+            case _:
+                return lambda X, y: (0 + bandwidth, bandwidth)

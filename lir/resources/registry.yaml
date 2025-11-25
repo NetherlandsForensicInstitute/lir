@@ -62,10 +62,10 @@ modules:
   elub_bounder:
     class: lir.algorithms.bayeserror.ELUBBounder
     wrapper: lir.config.numpy_wrapper
-metrics:
-  cllr: lir.metrics.cllr
-  cllr_min: lir.metrics.cllr_min
-visualization:
+outputs:
+  metrics_csv: lir.aggregation.WriteMetricsToCsv
+  # cllr: lir.metrics.cllr
+  # cllr_min: lir.metrics.cllr_min
   pav: lir.visualization.pav
   ece: lir.visualization.ece
   lr_histogram: lir.visualization.lr_histogram

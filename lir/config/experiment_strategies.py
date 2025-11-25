@@ -27,11 +27,9 @@ from lir.config.substitution import (
     _expand,
     parse_hyperparameter,
 )
-from lir.config.visualization import parse_visualizations
 from lir.data.models import DataStrategy
 from lir.experiment import Experiment, PredefinedExperiment
 from lir.optuna import OptunaExperiment
-from lir.registry import ComponentNotFoundError
 
 
 def parse_metric(name: str, output_path: Path, context: list[str]) -> Callable:
@@ -42,7 +40,7 @@ def parse_metric(name: str, output_path: Path, context: list[str]) -> Callable:
             search_path=['metrics'],
         )
         return parser.parse(ContextAwareDict(context), output_path)
-    except ComponentNotFoundError as e:
+    except registry.ComponentNotFoundError as e:
         raise YamlParseError(context, str(e))
 
 
@@ -72,6 +70,35 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
 
     def data(self) -> DataStrategy:
         return parse_data_strategy(pop_field(self._config, 'data'), self._output_dir)
+
+    def output_list(self) -> Sequence[Aggregation]:
+        """This handles the metrics_csv and plot outputs."""
+        config = pop_field(self._config, 'output', required=False)
+        if config is None:
+            return []
+
+        if not isinstance(config, ContextAwareList):
+            raise YamlParseError(self._config.context, 'Invalid output configuration.')
+
+        outputs: list[Aggregation] = []
+        # print(config)
+        for output_cfg in config:
+            print(output_cfg)
+            parser = registry.get(
+                output_cfg.get('method'),
+                search_path=['outputs'],
+            )
+            output = parser.parse(output_cfg, self._output_dir)
+            outputs.append(output)
+
+        return outputs
+
+    # def aggregations(self) -> Sequence[Aggregation]:
+    #     metrics = parse_metrics_section(pop_field(self._config, 'metrics'), self._output_dir)
+    #     return [WriteMetricsToCsv(self._output_dir / 'metrics.csv', metrics)]
+
+    # def visualization_functions(self) -> list[Callable]:
+    #     return parse_visualizations(pop_field(self._config, 'visualization', required=False), self._output_dir)
 
     def primary_metric(self) -> Callable:
         metric_name = pop_field(self._config, 'primary_metric')
@@ -147,8 +174,7 @@ class SingleRunStrategy(ExperimentStrategyConfigParser):
         return PredefinedExperiment(
             name,
             self.data(),
-            self.aggregations(),
-            self.visualization_functions(),
+            self.output_list(),
             self._output_dir,
             [lrsystem],
         )
@@ -171,8 +197,7 @@ class GridStrategy(ExperimentStrategyConfigParser):
         return PredefinedExperiment(
             name,
             self.data(),
-            self.aggregations(),
-            self.visualization_functions(),
+            self.output_list(),
             self._output_dir,
             lrsystems,
         )
@@ -187,8 +212,7 @@ class OptunaStrategy(ExperimentStrategyConfigParser):
         return OptunaExperiment(
             name,
             self.data(),
-            self.aggregations(),
-            self.visualization_functions(),
+            self.output_list(),
             self._output_dir,
             baseline_config,
             parameters,

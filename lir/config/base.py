@@ -84,7 +84,7 @@ class OutputConfigParser(ConfigParser):
         output_dir: Path,
     ) -> Aggregation:
         if issubclass(self.component_class, Aggregation):
-            return self.component_class(output_dir)
+            return self.component_class(**config)
 
         raise YamlParseError(config.context, f'unrecognized module type: `{self.component_class}`')
 

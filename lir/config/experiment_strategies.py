@@ -7,10 +7,9 @@ from pathlib import Path
 import confidence
 
 from lir import registry
-from lir.aggregation import AggregatePlot, Aggregation, WriteMetricsToCsv
+from lir.aggregation import Aggregation
 from lir.config.base import (
     ConfigParser,
-    ContextAwareList,
     GenericFunctionConfigParser,
     OutputConfigParser,
     YamlParseError,
@@ -73,61 +72,48 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         return parse_data_strategy(pop_field(self._config, 'data'), self._output_dir)
 
     def output_list(self) -> Sequence[Aggregation]:
-        """This handles the metrics_csv and plot outputs."""
-        config = pop_field(self._config, 'output', required=False)
-        if config is None:
-            return []
+        config: ContextAwareDict = pop_field(self._config, 'output', required=False)
 
-        if not isinstance(config, ContextAwareList):
-            raise YamlParseError(self._config.context, 'Invalid output configuration.')
+        results: list[Aggregation] = []
+        for item in config:
+            # Normalise configuration into (class_name, args)
+            if isinstance(item, str):
+                class_name, args = item, {}
+            elif isinstance(item, Mapping):
+                class_name = pop_field(item, 'method')
+                args = {} if len(item) == 0 else ContextAwareDict(config.context, item)
+            else:
+                raise YamlParseError(
+                    config.context,
+                    'Invalid output configuration; expected a string or a mapping with a "method" field.',
+                )
 
-        outputs: list[Aggregation] = []
-        # print(config)
-        for output_cfg in config:
-            print(output_cfg)
-            method = pop_field(output_cfg, 'method')
-            parser = registry.get(method, default_config_parser=OutputConfigParser, search_path=['outputs'])
-            output = parser.parse(output_cfg, self._output_dir)
-            outputs.append(output)
+            # Special handling for metrics_csv
+            if class_name == 'metrics_csv':
+                metrics = pop_field(args, 'metrics', required=True)
+                if not isinstance(metrics, Sequence):
+                    raise YamlParseError(
+                        config.context,
+                        'Invalid metrics configuration; expected a list of metric names.',
+                    )
 
-        return outputs
+                args['metrics'] = {name: parse_metric(name, self._output_dir, config.context) for name in metrics}
 
-    # def aggregations(self) -> Sequence[Aggregation]:
-    #     metrics = parse_metrics_section(pop_field(self._config, 'metrics'), self._output_dir)
-    #     return [WriteMetricsToCsv(self._output_dir / 'metrics.csv', metrics)]
+            args['output_dir'] = self._output_dir
 
-    # def visualization_functions(self) -> list[Callable]:
-    #     return parse_visualizations(pop_field(self._config, 'visualization', required=False), self._output_dir)
+            parser: ConfigParser = registry.get(
+                class_name,
+                default_config_parser=OutputConfigParser,
+                search_path=['output'],
+            )
+
+            results.append(parser.parse(output_dir=self._output_dir, config=args))  # type: ignore
+
+        return results
 
     def primary_metric(self) -> Callable:
         metric_name = pop_field(self._config, 'primary_metric')
         return parse_metric(metric_name, self._output_dir, self._config.context)
-
-    def aggregations(self) -> Sequence[Aggregation]:
-        aggregation = pop_field(self._config, 'aggregation', required=False)
-        if not aggregation:
-            return []
-
-        results: list[Aggregation] = []
-
-        if 'metrics' in aggregation:
-            metrics = parse_metrics_aggregation(pop_field(aggregation, 'metrics'), self._output_dir)
-            results.append(metrics)
-
-        if 'visualization' in aggregation:
-            visualization_functions = parse_visualizations(
-                pop_field(aggregation, 'visualization'),
-                self._output_dir,
-            )
-
-            for vis_func in visualization_functions:
-                results.append(AggregatePlot(vis_func, str(self._output_dir)))
-
-        check_is_empty(aggregation)
-        return results
-
-    def visualization_functions(self) -> list[Callable]:
-        return parse_visualizations(pop_field(self._config, 'visualization', required=False), self._output_dir)
 
     def lrsystem(self) -> tuple[ContextAwareDict, list[Hyperparameter]]:
         baseline_config = pop_field(self._config, 'lr_system')

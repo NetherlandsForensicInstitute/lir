@@ -64,8 +64,8 @@ class AggregatePlot(Aggregation):
 
 
 class WriteMetricsToCsv(Aggregation):
-    def __init__(self, path: Path, metrics: Mapping[str, Callable]):
-        self.path = path
+    def __init__(self, output_dir: Path, metrics: Mapping[str, Callable]):
+        self.path = output_dir / 'metrics.csv'
         self._file: IO[Any] | None = None
         self._writer: csv.DictWriter | None = None
         self.metrics = metrics
@@ -91,21 +91,20 @@ class WriteMetricsToCsv(Aggregation):
 class Plot(Aggregation):
     output_path: Path
 
-    def __init__(self, output_path: str) -> None:
-        self.output_path = Path(output_path)
+    def __init__(self, output_dir: str) -> None:
+        self.output_path = Path(output_dir)
         self.ax = axes(self.output_path)
 
     def report(self, llrdata: LLRData, parameters: dict[str, Any]) -> None:
         """Helper function to generate and save a PAV-plot to the output directory."""
-        file_name = self.output_path / str(*parameters) / f'{self.__class__.__name__}.png'
-        print(file_name)
-        (self.output_path / str(*parameters)).mkdir(exist_ok=True, parents=True)
-        # path = self.output_path / 'pav.png'
-        with savefig(str(file_name)) as fig:
+        dir_name = self.output_path
+        file_name = dir_name / f'{self.__class__.__name__}.png'
+        dir_name.mkdir(exist_ok=True, parents=True)
+        with savefig(str(file_name)) as _:
             self._plot(llrdata)
 
     @staticmethod
-    def _plot(llrs: LLRData, **kwargs) -> None:
+    def _plot(llrs: LLRData, **kwargs: Any) -> None:
         raise NotImplementedError
 
     def close(self) -> None:
@@ -114,23 +113,23 @@ class Plot(Aggregation):
 
 class PlotPAV(Plot):
     @staticmethod
-    def _plot(llrs: LLRData, **kwargs) -> None:
+    def _plot(llrs: LLRData, **kwargs: Any) -> None:
         pav(llrdata=llrs, **kwargs)
 
 
 class PlotECE(Plot):
     @staticmethod
-    def _plot(llrs: LLRData, **kwargs) -> None:
+    def _plot(llrs: LLRData, **kwargs: Any) -> None:
         ece(llrdata=llrs, **kwargs)
 
 
 class PlotLRHistogram(Plot):
     @staticmethod
-    def _plot(llrs: LLRData, **kwargs) -> None:
+    def _plot(llrs: LLRData, **kwargs: Any) -> None:
         lr_histogram(llrdata=llrs, **kwargs)
 
 
 class PlotLLRInterval(Plot):
     @staticmethod
-    def _plot(llrs: LLRData, **kwargs) -> None:
+    def _plot(llrs: LLRData, **kwargs: Any) -> None:
         llr_interval(llrdata=llrs, **kwargs)

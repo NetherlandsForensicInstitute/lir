@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import IO, Any
 
 from matplotlib import pyplot as plt
-from matplotlib.axes import Axes
 
 from lir.data.models import LLRData
 from lir.plotting import Canvas, axes, ece, llr_interval, lr_histogram, pav, savefig

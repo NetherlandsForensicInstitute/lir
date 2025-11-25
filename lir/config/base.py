@@ -83,13 +83,10 @@ class OutputConfigParser(ConfigParser):
         config: ContextAwareDict,
         output_dir: Path,
     ) -> Aggregation:
-        try:
-            return self.component_class
-        except Exception as e:
-            raise YamlParseError(
-                config.context,
-                f'unable to initialize {self.component_class}; the error was: {e}',
-            )
+        if issubclass(self.component_class, Aggregation):
+            return self.component_class(output_dir)
+
+        raise YamlParseError(config.context, f'unrecognized module type: `{self.component_class}`')
 
 
 class GenericFunctionConfigParser(ConfigParser):

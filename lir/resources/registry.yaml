@@ -66,8 +66,8 @@ outputs:
   metrics_csv: lir.aggregation.WriteMetricsToCsv
   # cllr: lir.metrics.cllr
   # cllr_min: lir.metrics.cllr_min
-  pav: lir.visualization.pav
-  ece: lir.visualization.ece
+  pav: lir.aggregation.PlotPAV
+  ece: lir.aggregation.PlotECE
   lr_histogram: lir.visualization.lr_histogram
   llr_interval: lir.visualization.llr_interval
 pairing:

@@ -6,9 +6,10 @@ from pathlib import Path
 from typing import IO, Any
 
 from matplotlib import pyplot as plt
+from matplotlib.axes import Axes
 
 from lir.data.models import LLRData
-from lir.plotting import Canvas
+from lir.plotting import Canvas, axes, ece, llr_interval, lr_histogram, pav, savefig
 
 
 class Aggregation(ABC):
@@ -85,3 +86,51 @@ class WriteMetricsToCsv(Aggregation):
     def close(self) -> None:
         if self._file:
             self._file.close()
+
+
+class Plot(Aggregation):
+    output_path: Path
+
+    def __init__(self, output_path: str) -> None:
+        self.output_path = Path(output_path)
+        self.ax = axes(self.output_path)
+
+    def report(self, llrdata: LLRData, parameters: dict[str, Any]) -> None:
+        """Helper function to generate and save a PAV-plot to the output directory."""
+        file_name = self.output_path / str(*parameters) / f'{self.__class__.__name__}.png'
+        print(file_name)
+        (self.output_path / str(*parameters)).mkdir(exist_ok=True, parents=True)
+        # path = self.output_path / 'pav.png'
+        with savefig(str(file_name)) as fig:
+            self._plot(llrdata)
+
+    @staticmethod
+    def _plot(llrs: LLRData, **kwargs) -> None:
+        raise NotImplementedError
+
+    def close(self) -> None:
+        plt.close()
+
+
+class PlotPAV(Plot):
+    @staticmethod
+    def _plot(llrs: LLRData, **kwargs) -> None:
+        pav(llrdata=llrs, **kwargs)
+
+
+class PlotECE(Plot):
+    @staticmethod
+    def _plot(llrs: LLRData, **kwargs) -> None:
+        ece(llrdata=llrs, **kwargs)
+
+
+class PlotLRHistogram(Plot):
+    @staticmethod
+    def _plot(llrs: LLRData, **kwargs) -> None:
+        lr_histogram(llrdata=llrs, **kwargs)
+
+
+class PlotLLRInterval(Plot):
+    @staticmethod
+    def _plot(llrs: LLRData, **kwargs) -> None:
+        llr_interval(llrdata=llrs, **kwargs)

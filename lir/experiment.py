@@ -59,13 +59,9 @@ class Experiment(ABC):
         # Generate output as configured by `outputs`
         # and write these output to the `output_path`.
         output_dir = self.output_path / lrsystem.name
-        LOG.debug(f'writing visualizations to {output_dir}')
-        for visualization_function in self.visualization_functions:
-            visualization_function(output_dir, combined_llrs)
-
-        # Construct a `results` dictionary of metrics indicating the performance of the given LR system
-        for aggregation in self.aggregations:
-            aggregation.report(combined_llrs, lrsystem.parameters)
+        LOG.debug(f'writing outputs to {output_dir}')
+        for output in self.outputs:
+            output.report(llrdata=combined_llrs, parameters=lrsystem.parameters)
 
         return combined_llrs
 
@@ -80,12 +76,7 @@ class Experiment(ABC):
         key metrics - results on the performance of the LR system - to the dedicated `metrics.csv`
         file in the `output_path` directory.
         """
-        try:
-            self._generate_and_run()
-        finally:
-            for output in self.outputs:
-                print(output)
-                output.close()
+        self._generate_and_run()
 
 
 class PredefinedExperiment(Experiment):

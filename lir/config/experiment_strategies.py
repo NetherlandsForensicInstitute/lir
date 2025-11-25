@@ -12,6 +12,7 @@ from lir.config.base import (
     ConfigParser,
     ContextAwareList,
     GenericFunctionConfigParser,
+    OutputConfigParser,
     YamlParseError,
     check_is_empty,
     pop_field,
@@ -84,10 +85,8 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         # print(config)
         for output_cfg in config:
             print(output_cfg)
-            parser = registry.get(
-                output_cfg.get('method'),
-                search_path=['outputs'],
-            )
+            method = pop_field(output_cfg, 'method')
+            parser = registry.get(method, default_config_parser=OutputConfigParser, search_path=['outputs'])
             output = parser.parse(output_cfg, self._output_dir)
             outputs.append(output)
 

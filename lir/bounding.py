@@ -14,14 +14,16 @@ class LLRBounder(TransformerMixin, ABC):
 
     def __init__(
         self,
-        lower_llr_bound: float | None = None,
-        upper_llr_bound: float | None = None,
+        lower_llr_bound: float | np.ndarray | None = None,
+        upper_llr_bound: float | np.ndarray | None = None,
     ):
         self.lower_llr_bound = lower_llr_bound
         self.upper_llr_bound = upper_llr_bound
 
     @abstractmethod
-    def calculate_bounds(self, llrs: np.ndarray, labels: np.ndarray) -> tuple[float | None, float | None]:
+    def calculate_bounds(
+        self, llrs: np.ndarray, labels: np.ndarray
+    ) -> tuple[float | np.ndarray | None, float | np.ndarray | None]:
         """
         Calculates and returns appropriate bounds for a set of LLRs and their labels.
         """
@@ -29,8 +31,8 @@ class LLRBounder(TransformerMixin, ABC):
 
     @staticmethod
     def _validate(llrs: np.ndarray, labels: np.ndarray) -> None:
-        if len(llrs.shape) != 1:
-            raise ValueError(f'llrs argument should be 1-dimensional; dimensions found: {len(llrs.shape)}')
+        if (len(llrs.shape) != 1) and (len(llrs.shape) != 2):
+            raise ValueError(f'llrs argument should be 1- or 2-dimensional; dimensions found: {len(llrs.shape)}')
         if len(labels.shape) != 1:
             raise ValueError(f'labels argument should be 1-dimensional; dimensions found: {len(labels.shape)}')
         if llrs.shape[0] != labels.shape[0]:
@@ -49,14 +51,23 @@ class LLRBounder(TransformerMixin, ABC):
         # validate the input
         self._validate(llrs, labels)
 
-        # calculate the bounds
-        self.lower_llr_bound, self.upper_llr_bound = self.calculate_bounds(llrs, labels)
+        # calculate the bounds; the first dimension always contains the llrs belonging to the labels
+        if len(llrs.shape) == 1:
+            self.lower_llr_bound, self.upper_llr_bound = self.calculate_bounds(llrs, labels)
+        else:
+            # if a second dimension is present, each column is a separate LR-system with its own bounds
+            self.lower_llr_bound = np.ones(llrs.shape[1]) * np.nan
+            self.upper_llr_bound = np.ones(llrs.shape[1]) * np.nan
+            for i_system in range(llrs.shape[1]):
+                self.lower_llr_bound[i_system], self.upper_llr_bound[i_system] = self.calculate_bounds(
+                    llrs[:, i_system], labels
+                )
 
         # check the sanity of the bounds
         if (
             self.lower_llr_bound is not None
             and self.upper_llr_bound is not None
-            and self.lower_llr_bound > self.upper_llr_bound
+            and np.any(self.lower_llr_bound > self.upper_llr_bound)
         ):
             raise ValueError(
                 'the lower bound must be lower than the upper bound; '
@@ -86,5 +97,7 @@ class StaticBounder(LLRBounder):
     def __init__(self, lower_llr_bound: float, upper_llr_bound: float):
         super().__init__(lower_llr_bound, upper_llr_bound)
 
-    def calculate_bounds(self, llrs: np.ndarray, y: np.ndarray) -> tuple[float | None, float | None]:
+    def calculate_bounds(
+        self, llrs: np.ndarray, y: np.ndarray
+    ) -> tuple[float | np.ndarray | None, float | np.ndarray | None]:
         return self.lower_llr_bound, self.upper_llr_bound

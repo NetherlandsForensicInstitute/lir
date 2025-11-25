@@ -111,7 +111,7 @@ def test_static_bounder(
         (  # invalid dimensions for llrs
             -1,
             1,
-            np.zeros((3, 1)),
+            np.zeros((3, 1, 2)),
             np.array([0, 1, 1]),
         ),
         (  # invalid dimensions for labels

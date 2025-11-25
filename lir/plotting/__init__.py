@@ -1,8 +1,4 @@
 import logging
-from collections.abc import Iterator
-from contextlib import _GeneratorContextManager, contextmanager
-from functools import partial
-from os import PathLike
 from typing import Any
 
 import matplotlib.pyplot as plt
@@ -10,12 +6,14 @@ import numpy as np
 from matplotlib.axes import Axes
 
 from lir import util
-from lir.algorithms.bayeserror import plot_nbe as nbe
 from lir.data.models import LLRData
 
 from ..algorithms.isotonic_regression import IsotonicCalibrator
 from ..transform import Transformer
-from .expected_calibration_error import plot_ece as ece
+from .expected_calibration_error import plot_ece
+
+
+ece = plot_ece
 
 
 LOG = logging.getLogger(__name__)
@@ -36,88 +34,11 @@ H1_COLOR = 'red'
 H2_COLOR = 'blue'
 
 
-class Canvas:
-    def __init__(self, ax: Axes):
-        self.ax = ax
-
-        self.calibrator_fit = partial(calibrator_fit, ax=ax)
-        self.ece = partial(ece, ax=ax)
-        self.lr_histogram = partial(lr_histogram, ax=ax)
-        self.nbe = partial(nbe, ax=ax)
-        self.pav = partial(pav, ax=ax)
-        self.score_distribution = partial(score_distribution, ax=ax)
-        self.tippett = partial(tippett, ax=ax)
-        self.llr_interval = partial(llr_interval, ax=ax)
-
-    def __getattr__(self, attr: str) -> Any:
-        return getattr(self.ax, attr)
-
-
-def savefig(path: str) -> _GeneratorContextManager[Canvas]:
-    """
-    Creates a plotting context, write plot when closed.
-
-    Example
-    -------
-    ```py
-    with savefig(filename) as ax:
-        ax.pav(lrs, y)
-    ```
-
-    A call to `savefig(path)` is identical to `axes(savefig=path)`.
-
-    Parameters
-    ----------
-    path : str
-        write a PNG image to this path
-    """
-    return axes(savefig=path)
-
-
-def show() -> _GeneratorContextManager[Canvas]:
-    """
-    Creates a plotting context, show plot when closed.
-
-    Example
-    -------
-    ```py
-    with show() as ax:
-        ax.pav(lrs, y)
-    ```
-
-    A call to `show()` is identical to `axes(show=True)`.
-    """
-    return axes(show=True)
-
-
-@contextmanager
-def axes(savefig: PathLike | None = None, show: bool | None = None) -> Iterator[Canvas]:
-    """
-    Creates a plotting context.
-
-    Example
-    -------
-    ```py
-    with axes() as ax:
-        ax.pav(lrs, y)
-    ```
-    """
-    fig = plt.figure()
-    try:
-        yield Canvas(ax=plt)
-    finally:
-        if savefig:
-            fig.savefig(savefig)
-        if show:
-            plt.show()
-        plt.close(fig)
-
-
 def pav(
     llrdata: LLRData,
+    ax: Axes = plt,
     add_misleading: int = 0,
     show_scatter: bool = True,
-    ax: Axes = plt,
 ) -> None:
     """
     Generates a plot of pre- versus post-calibrated LRs using Pool Adjacent

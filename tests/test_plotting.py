@@ -8,6 +8,16 @@ import matplotlib.pyplot as plt
 import pytest
 
 from lir import plotting
+from lir.aggregation import (
+    PlotCalibratorFit,
+    PlotECE,
+    PlotLLRInterval,
+    PlotLRHistogram,
+    PlotNBE,
+    PlotPAV,
+    PlotScoreDistribution,
+    PlotTippett,
+)
 from lir.algorithms.logistic_regression import LogitCalibrator
 from lir.data.models import LLRData
 from lir.util import odds_to_probability, odds_to_logodds
@@ -19,12 +29,6 @@ class TestPlotting(unittest.TestCase):
         llrs = odds_to_logodds(lrs)
         y = np.array([0, 0, 1, 0, 1, 0, 1, 1])
         llr_data = LLRData(features=llrs.reshape(-1, 1), labels=y)
-
-
-        # inside context
-        with plotting.axes() as ax:
-            ax.pav(llr_data)
-            ax.title('PAV plot using savefig()')
 
         # without context
         fig = plt.figure()
@@ -48,6 +52,7 @@ class TestPlotting(unittest.TestCase):
         llrs = odds_to_logodds(lrs)
         scores = odds_to_probability(lrs)
         y = np.array([0, 0, 1, 0, 1, 0, 1, 1, 1, 0])
+        y_nd = y.reshape(-1, 1)
         finite_index = (lrs > 0) & (lrs < np.inf)
 
         # The reshape(-1, 1) is to simulate single-feature data with one sample per row
@@ -73,39 +78,19 @@ class TestPlotting(unittest.TestCase):
         # Test that plots with invalid data raise exceptions.
         with pytest.raises(Exception):
             # This should fail because of infinite LLRs.
-            with plotting.axes() as ax:
-                ax.nbe(llr_data)
+            PlotNBE().plot(llr_data)
 
             # This should fail as llr_data has no intervals.
-            with plotting.axes() as ax:
-                ax.llr_interval(llr_data)
+            PlotLLRInterval().plot(llr_data)
 
-        try:
-            with plotting.axes() as ax:
-                ax.pav(llr_data)
-
-            with plotting.axes() as ax:
-                ax.ece(llr_data)
-
-            with plotting.axes() as ax:
-                ax.tippett(llr_data)
-
-            with plotting.axes() as ax:
-                ax.nbe(llr_data_finite)
-
-            with plotting.axes() as ax:
-                ax.lr_histogram(llr_data_finite)
-
-            with plotting.axes() as ax:
-                ax.score_distribution(llrs, y)
-
-            with plotting.axes() as ax:
-                ax.llr_interval(llr_data_intervals)
-
-            with plotting.axes() as ax:
-                ax.calibrator_fit(cal, y)
-        except Exception as e:
-            self.fail(f'Unexpected failure creating plot(s), while using valid data: {e}')
+        PlotPAV().plot(llr_data)
+        PlotECE().plot(llr_data)
+        PlotTippett().plot(llr_data)
+        PlotNBE().plot(llr_data_finite)
+        PlotLRHistogram().plot(llr_data_finite)
+        PlotScoreDistribution().plot(llr_data.features, y_nd)
+        PlotLLRInterval().plot(llr_data_intervals)
+        PlotCalibratorFit().plot(cal)
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 import logging
 import math
 import warnings
-from collections.abc import Callable, Sized
+from collections.abc import Callable
 from typing import Self
 
 import numpy as np
@@ -48,6 +48,7 @@ def parse_bandwidth(
         case Callable():  #  type: ignore[misc]
             return bandwidth
 
+        # string of specific supported bandwidth function
         case str():
             if bandwidth == 'silverman':
                 return KDECalibrator.bandwidth_silverman
@@ -55,14 +56,10 @@ def parse_bandwidth(
             # The given bandwidth method is not supported
             raise ValueError(f'Invalid input for bandwidth: {bandwidth}')
 
-        case Sized():
-            if len(bandwidth) == 2:
-                # Lambda function casting input to a tuple of the bandwidth ranges
-                return lambda X, y: tuple(bandwidth)
-
-            raise ValueError(
-                f'The `bandwidth` should have two elements; found {len(bandwidth)}; bandwidth = {bandwidth}'
-            )
+        # tuple or list
+        case [int() | float() as bandwidth_0, int() | float() as bandwidth_1]:
+            # Lambda function casting input to a tuple of the bandwidth ranges
+            return lambda X, y: (bandwidth_0, bandwidth_1)
 
         case float() | int():
             # Lambda function casting input to a tuple of the bandwidth ranges

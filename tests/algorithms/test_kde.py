@@ -137,8 +137,6 @@ class TestKDECalibrator(unittest.TestCase):
 @pytest.mark.parametrize('bandwidth_definition,expected_bandwidth', [
     ([1, 2], (1, 2)),  # list input (`Sized` type)
     ((1, 2), (1, 2)),  # tuple input (`Sized` type)
-    ({1, 2}, (1, 2)),  # set input (`Sized` type)
-    ({1: 2, 3: 4}, (1, 3)),  # dictionary input (`Sized` type)
     (lambda X, y: (1234, 5678), (1234, 5678)),  # callable function
     ('silverman', []),  # Silverman algorithm
     (123.45,  (123.45, 123.45)),  # float
@@ -159,13 +157,11 @@ def test_kde_bandwidth_parsing_supported_types(bandwidth_definition, expected_ba
     None,  # undefined
     (1, 2, 3),  # tuples of size 3
     [1, 2, 3],  # lists of size 3
-    {1, 2, 3},  # set of size 3
-    {'a': 1, 'b': 2, 'c': 3},  # dictionary of size 3
     (1,),  # tuples of size 1
     [1],  # lists of size 1
-    {1},  # set of size 1
-    {'a': 1},  # dictionary of size 1
     'inexistent',  # unsupported bandwidth methods
+    {1, 2},  # set
+    {'a': 1, 'b': 2},  # dict
 ])
 def test_kde_bandwidth_parsing_unsupported_types(bandwidth_definition):
     with pytest.raises(ValueError):

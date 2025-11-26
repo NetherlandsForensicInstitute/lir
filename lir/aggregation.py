@@ -35,36 +35,6 @@ class Aggregation(ABC):
         pass
 
 
-class AggregatePlot(Aggregation):
-    """Aggregation that generates plots by repeatedly calling a plotting function."""
-
-    def __init__(self, plot_function: Callable, output_dir: str) -> None:
-        super().__init__()
-
-        self.f = plot_function
-        self.dir = output_dir
-        self.plot_type = plot_function.__name__
-        self._fig, self._ax = plt.subplots(figsize=(10, 8))
-        # self._canvas = Canvas(self._ax)
-
-    def report(self, llrdata: LLRData, parameters: dict[str, Any]) -> None:
-        self._ax.plot(
-            [],
-            [],
-            marker='None',
-            linestyle='None',
-            color='white',  # This is necessary to avoid matplotlib from cycling through colours
-            label=', '.join(f'{k}={v}' for k, v in parameters.items()),
-        )  # Dummy plot to add legend entry
-
-        self.f(None, llrdata)
-
-    def close(self) -> None:
-        """Generate and save each plot after all results have been reported."""
-        self._ax.set_title(f'Aggregated {self.plot_type}')
-        self._fig.savefig(f'{self.dir}/aggregated_{self.plot_type}.png')
-
-
 class WriteMetricsToCsv(Aggregation):
     def __init__(self, output_dir: Path, metrics: Mapping[str, Callable]):
         self.path = output_dir / 'metrics.csv'
@@ -101,8 +71,9 @@ class Plot(Aggregation):
         self.fig = fig
 
     def report(self, llrdata: LLRData, parameters: dict[str, Any]) -> None:
-        """Helper function to generate and save a PAV-plot to the output directory."""
+        """Plot the data when new results are available.
 
+        _plot is not called directly, to allow for easier aggregation in the future."""
         self._plot(llrdata)
 
     @staticmethod
@@ -119,6 +90,7 @@ class Plot(Aggregation):
         self.fig.clf()
 
     def plot(self, *args: Any, **kwargs: Any) -> Any:
+        """Allows for direct plotting, outside of the aggregation framework."""
         self._plot(*args, **kwargs)
         self.close()
 

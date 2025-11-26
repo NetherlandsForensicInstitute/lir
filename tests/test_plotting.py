@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
-import warnings
-
-import numpy as np
 import unittest
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pytest
 
 from lir import plotting
@@ -20,7 +18,7 @@ from lir.aggregation import (
 )
 from lir.algorithms.logistic_regression import LogitCalibrator
 from lir.data.models import LLRData
-from lir.util import odds_to_probability, odds_to_logodds
+from lir.util import odds_to_logodds, odds_to_probability
 
 
 class TestPlotting(unittest.TestCase):

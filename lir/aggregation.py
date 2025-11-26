@@ -66,28 +66,29 @@ class Plot(Aggregation):
     def __init__(self, output_dir: str | None = None) -> None:
         if output_dir:
             self.output_path = Path(output_dir)
-        ax, fig = plt.gca(), plt.gcf()
-        self.ax = ax
-        self.fig = fig
 
     def report(self, llrdata: LLRData, parameters: dict[str, Any]) -> None:
-        """Plot the data when new results are available.
+        """Plot the data when new results are available."""
+        fig, ax = plt.subplots()
 
-        _plot is not called directly, to allow for easier aggregation in the future."""
-        self._plot(llrdata)
+        self._plot(llrdata, ax=ax)
+
+        # Only save the figure when an output path is provided.
+        if self.output_path is not None:
+            dir_name = self.output_path
+            param_string = '__'.join(f'{k}={v}' for k, v in parameters.items())
+            file_name = dir_name / param_string / f'{self.__class__.__name__}.png'
+            dir_name.mkdir(exist_ok=True, parents=True)
+
+            fig.savefig(file_name)
 
     @staticmethod
+    @abstractmethod
     def _plot(*args: Any, **kwargs: Any) -> Any:
         raise NotImplementedError
 
     def close(self) -> None:
-        if self.output_path is not None:
-            dir_name = self.output_path
-            file_name = dir_name / f'{self.__class__.__name__}.png'
-            dir_name.mkdir(exist_ok=True, parents=True)
-
-            self.fig.savefig(file_name)
-        self.fig.clf()
+        pass
 
     def plot(self, *args: Any, **kwargs: Any) -> Any:
         """Allows for direct plotting, outside of the aggregation framework."""

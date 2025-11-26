@@ -77,6 +77,8 @@ class Experiment(ABC):
         file in the `output_path` directory.
         """
         self._generate_and_run()
+        for output in self.outputs:
+            output.close()
 
 
 class PredefinedExperiment(Experiment):

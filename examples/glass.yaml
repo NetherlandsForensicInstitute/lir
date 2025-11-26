@@ -185,8 +185,8 @@ experiments:
               - path: comparing.steps.calibration
                 value: csv_writer
     output:
-      - method: metrics_csv
-        metrics:
+      - method: csv
+        columns:
         - cllr
         - cllr_min
       - pav
@@ -209,8 +209,8 @@ experiments:
               - path: ""
                 value: ${two_level_lr_system}
     output:
-      - method: metrics_csv
-        metrics:
+      - method: csv
+        columns:
         - cllr
         - cllr_min
       - pav
@@ -221,8 +221,8 @@ experiments:
     lr_system: ${score_based_lr_system}
     data: ${data}
     output:
-      - method: metrics_csv
-        metrics:
+      - method: csv
+        columns:
         - cllr
         - cllr_min
       - pav

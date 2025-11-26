@@ -71,8 +71,8 @@ experiments:
             method: svm
             probability: True
     output:
-      - method: metrics_csv
-        metrics:
+      - method: csv
+        columns:
         - cllr
         - cllr_min
       - pav

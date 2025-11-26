@@ -44,8 +44,8 @@ experiments:
             method: svm
             probability: True
     output:
-      - method: metrics_csv
-        metrics:
+      - method: csv
+        columns:
         - cllr
         - cllr_min
       - pav
@@ -56,8 +56,8 @@ experiments:
     lr_system: ${lr_system}
     data: ${cross_validation_splits}
     output:
-      - method: metrics_csv
-        metrics:
+      - method: csv
+        columns:
         - cllr
         - cllr_min
       - pav

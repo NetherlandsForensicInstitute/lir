@@ -89,15 +89,15 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
                 )
 
             # Special handling for metrics_csv
-            if class_name == 'metrics_csv':
-                metrics = pop_field(args, 'metrics', required=True)
-                if not isinstance(metrics, Sequence):
+            if class_name == 'csv':
+                metrics_col = pop_field(args, 'columns', required=True)
+                if not isinstance(metrics_col, Sequence):
                     raise YamlParseError(
                         config.context,
                         'Invalid metrics configuration; expected a list of metric names.',
                     )
 
-                args['metrics'] = {name: parse_metric(name, self._output_dir, config.context) for name in metrics}
+                args['metrics'] = {name: parse_metric(name, self._output_dir, config.context) for name in metrics_col}
 
             args['output_dir'] = self._output_dir
 

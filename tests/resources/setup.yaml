@@ -38,8 +38,8 @@ experiments:
             method: svm
             probability: True
     output:
-      - method: metrics_csv
-        metrics:
+      - method: csv
+        columns:
         - cllr
 
   exp2:
@@ -47,6 +47,6 @@ experiments:
     lr_system: ${lr_system}
     data: ${data_splits}
     output:
-      - method: metrics_csv
-        metrics:
+      - method: csv
+        columns:
         - cllr

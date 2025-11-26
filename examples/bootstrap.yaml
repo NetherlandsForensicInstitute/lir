@@ -39,11 +39,11 @@ experiments:
     strategy: single_run
     lr_system: ${lr_system}
     data: ${cross_validation_splits}
-    aggregation:
-      metrics:
+    output:
+      - method: csv
+        columns:
         - cllr
         - cllr_min
-    visualization:
       - pav
       - ece
       - llr_interval

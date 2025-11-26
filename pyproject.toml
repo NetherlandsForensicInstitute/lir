@@ -46,7 +46,7 @@ version = {source = "scm"}
 all = {composite = ["check", "test"]}
 all_with_quicktest = {composite = ["check", "quicktest"]}
 check = {composite = ["format-check", "lint", "mypy"]}
-fix = {composite = ["lint-fix", "format-fix"]}
+fix-all = {composite = ["lint-fix", "format-fix"]}
 lint = "ruff check lir/"
 lint-fix = "ruff check --fix lir/"
 format-check = "ruff format --diff lir/"

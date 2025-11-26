@@ -60,7 +60,7 @@ class WriteMetricsToCsv(Aggregation):
             self._file.close()
 
 
-class Plot(Aggregation):
+class Plot(Aggregation, ABC):
     output_path: Path | None = None
 
     def __init__(self, output_dir: str | None = None) -> None:

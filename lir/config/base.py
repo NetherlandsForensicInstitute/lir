@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import Any
 
 from lir import registry
-from lir.aggregation import Aggregation
 from lir.transform.pairing import PairingMethod
 
 
@@ -69,24 +68,6 @@ class ConfigParser(ABC):
         Returns: an object that is configured according to `config`.
         """
         raise NotImplementedError
-
-
-class OutputConfigParser(ConfigParser):
-    """Parser for output components, e.g. writing metrics to CSV files."""
-
-    def __init__(self, component_class: Any):
-        super().__init__()
-        self.component_class = component_class
-
-    def parse(
-        self,
-        config: ContextAwareDict,
-        output_dir: Path,
-    ) -> Aggregation:
-        if issubclass(self.component_class, Aggregation):
-            return self.component_class(**config)
-
-        raise YamlParseError(config.context, f'unrecognized module type: `{self.component_class}`')
 
 
 class GenericFunctionConfigParser(ConfigParser):

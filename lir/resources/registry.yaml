@@ -63,7 +63,7 @@ modules:
     class: lir.algorithms.bayeserror.ELUBBounder
     wrapper: lir.config.numpy_wrapper
 output:
-  csv: lir.aggregation.WriteMetricsToCsv
+  csv: lir.config.experiment_strategies.metrics_csv
   pav: lir.aggregation.PlotPAV
   ece: lir.aggregation.PlotECE
   lr_histogram: lir.aggregation.PlotLRHistogram

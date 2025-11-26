@@ -7,13 +7,13 @@ from pathlib import Path
 import confidence
 
 from lir import registry
-from lir.aggregation import Aggregation
+from lir.aggregation import Aggregation, WriteMetricsToCsv
 from lir.config.base import (
     ConfigParser,
     GenericFunctionConfigParser,
-    OutputConfigParser,
     YamlParseError,
     check_is_empty,
+    config_parser,
     pop_field,
 )
 from lir.config.data_strategies import parse_data_strategy
@@ -44,19 +44,17 @@ def parse_metric(name: str, output_path: Path, context: list[str]) -> Callable:
         raise YamlParseError(context, str(e))
 
 
-def parse_metrics_aggregation(config: ContextAwareList, output_path: Path) -> Aggregation:
-    """Parse the metrics section from the configuration.
+@config_parser
+def metrics_csv(config: ContextAwareDict, output_dir: Path) -> WriteMetricsToCsv:
+    metrics = pop_field(config, 'columns', required=True)
+    if not isinstance(metrics, Sequence):
+        raise YamlParseError(
+            config.context,
+            'Invalid metrics configuration; expected a list of metric names.',
+        )
 
-    A resulting mapping of metric name and corresponding function is returned.
-
-    Each metric function takes two arguments:
-        (1) a numpy array of lrs, and;
-        (2) a numpy array of labels.
-    The metric function should return the value of the metric.
-    The metrics are looked up by their name in the registry.
-    """
-    metric_dict = {metric_name: parse_metric(metric_name, output_path, config.context) for metric_name in config}
-    return WriteMetricsToCsv(output_path / 'metrics.csv', metric_dict)
+    metrics = {name: parse_metric(name, output_dir, config.context) for name in metrics}
+    return WriteMetricsToCsv(output_dir, metrics)
 
 
 class ExperimentStrategyConfigParser(ConfigParser, ABC):
@@ -73,41 +71,43 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
 
     def output_list(self) -> Sequence[Aggregation]:
         config: ContextAwareDict = pop_field(self._config, 'output', required=False)
+        if not config:
+            return []
 
         results: list[Aggregation] = []
         for item in config:
             # Normalise configuration into (class_name, args)
             if isinstance(item, str):
-                class_name, args = item, {}
+                class_name, args = item, ContextAwareDict(config.context)
             elif isinstance(item, Mapping):
                 class_name = pop_field(item, 'method')
-                args = {} if len(item) == 0 else ContextAwareDict(config.context, item)
+                args = ContextAwareDict(config.context, item)
             else:
                 raise YamlParseError(
                     config.context,
                     'Invalid output configuration; expected a string or a mapping with a "method" field.',
                 )
 
-            # Special handling for metrics_csv
-            if class_name == 'csv':
-                metrics_col = pop_field(args, 'columns', required=True)
-                if not isinstance(metrics_col, Sequence):
-                    raise YamlParseError(
-                        config.context,
-                        'Invalid metrics configuration; expected a list of metric names.',
-                    )
-
-                args['metrics'] = {name: parse_metric(name, self._output_dir, config.context) for name in metrics_col}
-
             args['output_dir'] = self._output_dir
 
             parser: ConfigParser = registry.get(
                 class_name,
-                default_config_parser=OutputConfigParser,
+                default_config_parser=GenericFunctionConfigParser,
                 search_path=['output'],
             )
+            parsed_object = parser.parse(args, self._output_dir)
 
-            results.append(parser.parse(output_dir=self._output_dir, config=args))  # type: ignore
+            # Instantiate if needed (not already done by the parser)
+            if isinstance(parsed_object, type):
+                parsed_object = parsed_object(**args)
+
+            if not isinstance(parsed_object, Aggregation):
+                raise YamlParseError(
+                    config.context,
+                    f'Invalid output configuration; expected an Aggregation, found: {type(parsed_object)}.',
+                )
+
+            results.append(parsed_object)  # type: ignore
 
         return results
 

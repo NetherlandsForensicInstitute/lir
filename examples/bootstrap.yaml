@@ -21,21 +21,19 @@ cross_validation_splits:
 lr_system:
   architecture: specific_source
   modules:
+    method: bootstrap
+    n_bootstraps: 2
+    seed: 0
+    points: data
+    # n_points: 100
     steps:
-      bootstrap:
-        method: bootstrap
-        n_bootstraps: 2
-        seed: 0
-        points: data
-        # n_points: 100
-        steps:
-          kde:
-            method: kde
-            bandwidth:
-              - 0.05  
-              - 0.23 
-          elub: elub_bounder
-          
+      kde:
+        method: kde
+        bandwidth:
+          - 0.05  
+          - 0.23 
+      elub: elub_bounder
+        
 experiments:
   model_selection:
     strategy: single_run

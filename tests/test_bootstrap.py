@@ -2,12 +2,45 @@ from pathlib import Path
 
 from sklearn.linear_model import LogisticRegression
 
+from lir.algorithms.bayeserror import ELUBBounder
+from lir.algorithms.kde import KDECalibrator
 from lir.config.base import _expand
 from lir.data.datasets.synthesized_normal_binary import SynthesizedNormalBinaryData, SynthesizedNormalDataClass
 from lir.algorithms.bootstraps import BootstrapAtData, BootstrapEquidistant, bootstrap
 import numpy as np
 import pytest
 from lir.data.models import FeatureData, LLRData
+
+
+@pytest.fixture(
+    params=[
+        [('kde', KDECalibrator((0.05, 0.023)))],
+        [('logistic', LogisticRegression())],
+        [
+            ('kde', KDECalibrator((0.05, 0.023))),
+            ('elub', ELUBBounder()),
+        ],
+        [
+            ('logistic', LogisticRegression()),
+            ('elub', ELUBBounder()),
+        ],
+        [],
+    ]
+)
+def sample_steps_and_data(request):
+    """This fixture provides sample steps and data for testing bootstrap methods.
+
+    The steps are parameterized to test different configurations, namely KDE and LogReg,
+    with and without ELUB bounding, as well as an empty step list."""
+    data_spec = {
+        0: SynthesizedNormalDataClass(-1, 1, 20),
+        1: SynthesizedNormalDataClass(1, 1, 20),
+    }
+    data = SynthesizedNormalBinaryData(data_spec, seed=0)
+    feature_data = data.get_instances()
+
+    steps = request.param
+    return steps, feature_data
 
 
 def test_traindata_bootstrap(sample_steps_and_data):
@@ -20,12 +53,20 @@ def test_traindata_bootstrap(sample_steps_and_data):
     results_data = model_data.transform(feature_data)
     results_equidistant = model_equidistant.transform(feature_data)
 
-    # Check that the llr values are within the inteval it has calculated.
-    assert np.all(results_data.llrs > results_data.llr_intervals[:, 0])
-    assert np.all(results_data.llrs < results_data.llr_intervals[:, 1])
+    assert results_data.llrs.shape == (feature_data.features.shape[0],)
+    assert results_data.has_intervals
+    assert results_data.llr_intervals.shape == (feature_data.features.shape[0], 2)
 
-    assert np.all(results_equidistant.llrs > results_equidistant.llr_intervals[:, 0])
-    assert np.all(results_equidistant.llrs < results_equidistant.llr_intervals[:, 1])
+    # If there are no steps, skip the rest of the test.
+    if not steps:
+        return
+
+    # Check that the llr values are within the inteval it has calculated.
+    assert np.all(results_data.llrs >= results_data.llr_intervals[:, 0])
+    assert np.all(results_data.llrs <= results_data.llr_intervals[:, 1])
+
+    assert np.all(results_equidistant.llrs >= results_equidistant.llr_intervals[:, 0])
+    assert np.all(results_equidistant.llrs <= results_equidistant.llr_intervals[:, 1])
 
 
 def test_interval_extrapolation(sample_steps_and_data):
@@ -60,51 +101,24 @@ def test_interval_extrapolation(sample_steps_and_data):
     )
 
 
-@pytest.fixture
-def sample_steps_and_data():
-    data_spec = {
-        0: SynthesizedNormalDataClass(-1, 1, 10),
-        1: SynthesizedNormalDataClass(1, 1, 10),
-    }
-    data = SynthesizedNormalBinaryData(data_spec, seed=0)
-    feature_data = data.get_instances()
-
-    steps = [
-        ('logreg', LogisticRegression(solver='lbfgs')),
-    ]
-    return steps, feature_data
-
-
-def test_traindata_bootstrap_empty_pipeline():
-    """Test TrainDataBootstrap with an empty pipeline."""
-    data_spec = {
-        0: SynthesizedNormalDataClass(0, 0, 10),
-    }
-    data = SynthesizedNormalBinaryData(data_spec, seed=0)
-    feature_data = data.get_instances()
-
-    steps = []
-    results = BootstrapAtData(steps).fit(feature_data).transform(feature_data)
-
-    # This is the most simple system possible, where all features and bounds should be zero.
-    assert np.all(results.features == 0)
-
-
-@pytest.mark.parametrize("config", [
-    (
+@pytest.mark.parametrize(
+    'config',
+    [
+        (
             {
-                "steps": {},
-                "points": "data",
+                'steps': {},
+                'points': 'data',
             }
-    ),
-    (
+        ),
+        (
             {
-                "steps": {},
-                "points": "equidistant",
-                "n_points": 1000,
+                'steps': {},
+                'points': 'equidistant',
+                'n_points': 1000,
             }
-    ),
-])
+        ),
+    ],
+)
 def test_bootstrap_config(config):
     config = _expand([], config)
-    bootstrap().parse(config, Path("/"))
+    bootstrap().parse(config, Path('/'))

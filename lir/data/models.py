@@ -20,11 +20,29 @@ class InstanceData(BaseModel, ABC):
 
     Attributes:
     - labels: an array of labels, a 1-dimensional array with one value per instance
+    - source_ids: an array of source ids, a 2-dimensional array with one column and one value per instance
     """
 
     model_config = ConfigDict(frozen=True, extra='allow', arbitrary_types_allowed=True)
 
     labels: Annotated[np.ndarray | None, AfterValidator(_validate_labels)] = None
+    source_ids: np.ndarray | None = None
+
+    @model_validator(mode='after')
+    def check_sourceids_labels_match(self) -> Self:
+        if self.labels is not None and self.source_ids is not None and self.labels.shape[0] != self.source_ids.shape[0]:
+            raise ValueError(
+                f'dimensions of labels and source_ids do not match; "'
+                f'{self.labels.shape[0]} != {self.source_ids.shape[0]}'
+            )
+
+        return self
+
+    @model_validator(mode='after')
+    def check_sourceid_shape(self) -> Self:
+        if self.source_ids is not None and (len(self.source_ids.shape) != 2 or self.source_ids.shape[1] != 1):
+            raise ValueError(f'source_ids should be 2-dimensional with 1 column; found shape {self.source_ids.shape}')
+        return self
 
     @abstractmethod
     def __len__(self) -> int:
@@ -218,6 +236,11 @@ class FeatureData(InstanceData):
             raise ValueError(
                 f'dimensions of labels and features do not match; {self.labels.shape[0]} != {self.features.shape[0]}'
             )
+        if self.source_ids is not None and self.source_ids.shape[0] != self.features.shape[0]:
+            raise ValueError(
+                f'dimensions of source_ids and features do not match; "'
+                f'{self.source_ids.shape[0]} != {self.features.shape[0]}'
+            )
         return self
 
     @model_validator(mode='after')
@@ -230,6 +253,18 @@ class FeatureData(InstanceData):
 class PairedFeatureData(FeatureData):
     """
     Data class for instance pair data.
+
+    Attributes:
+    - n_trace_instances: the number of trace instances in each pair
+    - n_ref_instances: the number of reference instances in each pair
+    - features: the features of all instances in the pair, with pairs along the first dimension, and instances along the
+        second
+    - source_ids: the source ids of the trace and reference instances of each pair, a 2-dimensional array with two
+        columns
+    - features_trace: the features of the trace instances
+    - features_ref: the features of the reference instances
+    - source_ids_trace: the source ids of the trace instances
+    - source_ids_ref: the source ids of the reference instances
     """
 
     n_trace_instances: int
@@ -242,6 +277,21 @@ class PairedFeatureData(FeatureData):
     @property
     def features_ref(self) -> np.ndarray:
         return self.features[:, self.n_trace_instances :]  # noqa: E203
+
+    @property
+    def source_ids_trace(self) -> np.ndarray | None:
+        return self.source_ids[:, 0] if self.source_ids else None
+
+    @property
+    def source_ids_ref(self) -> np.ndarray | None:
+        return self.source_ids[:, 1] if self.source_ids else None
+
+    @model_validator(mode='after')
+    def check_sourceid_shape(self) -> Self:
+        """Overrides the `InstanceData` implementation."""
+        if self.source_ids is not None and (len(self.source_ids.shape) != 2 or self.source_ids.shape[1] != 2):
+            raise ValueError(f'source_ids should be 2-dimensional with 2 columns; found shape {self.source_ids.shape}')
+        return self
 
     @model_validator(mode='after')
     def check_features_dimensions(self) -> Self:

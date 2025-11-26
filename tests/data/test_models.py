@@ -23,8 +23,8 @@ def test_instance_data():
     BareData(labels=np.concatenate([np.zeros((10,)), np.ones((10,))]))
 
     # test all_fields property
-    assert {"labels"} == set(BareData(labels=None).all_fields)
-    assert {"labels", "meta"} == set(BareData(labels=None, meta=1).all_fields)
+    assert {"labels", "source_ids"} == set(BareData(labels=None).all_fields)
+    assert {"labels", "source_ids", "meta"} == set(BareData(labels=None, meta=1).all_fields)
 
     # test __eq__ method
     assert BareData(labels=np.ones((10,))) == BareData(labels=np.ones((10,)))
@@ -101,6 +101,23 @@ def test_pair_data():
     assert PairedFeatureData(features=np.ones((10, 9, 1)), n_trace_instances=4, n_ref_instances=5).features_trace.shape == (10, 4, 1)
     assert PairedFeatureData(features=np.ones((10, 9, 1)), n_trace_instances=4, n_ref_instances=5).features_ref.shape == (10, 5, 1)
     assert PairedFeatureData(features=np.ones((10, 9, 3, 4)), n_trace_instances=4, n_ref_instances=5).features_ref.shape == (10, 5, 3, 4)
+
+
+def test_sourceids():
+    """
+    Check consistency and validation mechanism of `PairedFeatureData`.
+    """
+    FeatureData(features=np.ones((10, 2)), labels=np.ones(10), source_ids=np.ones((10, 1)))
+    PairedFeatureData(features=np.ones((10, 2, 2)), labels=np.ones(10), source_ids=np.ones((10, 2)), n_ref_instances=1, n_trace_instances=1)
+
+    # invalid dimensions for source_ids
+    with pytest.raises(ValueError):
+        FeatureData(features=np.ones((10, 2)), labels=np.ones(10), source_ids=np.ones((10,)))
+
+    # invalid dimensions for source_ids
+    with pytest.raises(ValueError):
+        PairedFeatureData(features=np.ones((10, 2, 2)), labels=np.ones(10), source_ids=np.ones((10, 1)),
+                          n_ref_instances=1, n_trace_instances=1)
 
 
 def test_llr_data():

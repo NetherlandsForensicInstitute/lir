@@ -3,22 +3,35 @@ from abc import ABC, abstractmethod
 from collections import OrderedDict
 from collections.abc import Callable, Mapping
 from pathlib import Path
-from typing import IO, Any
+from typing import IO, Any, NamedTuple
 
 from matplotlib import pyplot as plt
 
 from lir.data.models import LLRData
+from lir.lrsystems.lrsystems import LRSystem
 from lir.plotting import Canvas
+
+
+class AggregationData(NamedTuple):
+    """
+    Fields:
+    - llrdata: the LLR data containing LLRs and labels.
+    - lrsystem: the model that produced the results
+    - parameters: parameters that identify the system producing the results
+    """
+
+    llrdata: LLRData
+    lrsystem: LRSystem
+    parameters: dict[str, Any]
 
 
 class Aggregation(ABC):
     @abstractmethod
-    def report(self, llrdata: LLRData, parameters: dict[str, Any]) -> None:
+    def report(self, data: AggregationData) -> None:
         """
         Report that new results are available.
 
-        :param llrdata: the LLR data containing LLRs and labels.
-        :param parameters: parameters that identify the system producing the results
+        :param data: a named tuple containing the results
         """
         raise NotImplementedError
 
@@ -44,17 +57,17 @@ class AggregatePlot(Aggregation):
         self._fig, self._ax = plt.subplots(figsize=(10, 8))
         self._canvas = Canvas(self._ax)
 
-    def report(self, llrdata: LLRData, parameters: dict[str, Any]) -> None:
+    def report(self, data: AggregationData) -> None:
         self._canvas.plot(
             [],
             [],
             marker='None',
             linestyle='None',
             color='white',  # This is necessary to avoid matplotlib from cycling through colours
-            label=', '.join(f'{k}={v}' for k, v in parameters.items()),
+            label=', '.join(f'{k}={v}' for k, v in data.parameters.items()),
         )  # Dummy plot to add legend entry
 
-        self.f(None, llrdata, self._canvas)
+        self.f(None, data.llrdata, self._canvas)
 
     def close(self) -> None:
         """Generate and save each plot after all results have been reported."""
@@ -69,9 +82,9 @@ class WriteMetricsToCsv(Aggregation):
         self._writer: csv.DictWriter | None = None
         self.metrics = metrics
 
-    def report(self, llrdata: LLRData, parameters: dict[str, Any]) -> None:
-        metrics = [(key, metric(llrdata.llrs, llrdata.labels)) for key, metric in self.metrics.items()]
-        results = OrderedDict(list(parameters.items()) + metrics)
+    def report(self, data: AggregationData) -> None:
+        metrics = [(key, metric(data.llrdata.llrs, data.llrdata.labels)) for key, metric in self.metrics.items()]
+        results = OrderedDict(list(data.parameters.items()) + metrics)
 
         # Record column header names only once to the CSV
         if self._writer is None:

@@ -71,6 +71,10 @@ output:
   ece: lir.aggregation.ECEPlot
   lr_histogram: lir.aggregation.LRHistogramPlot
   llr_interval: lir.aggregation.LLRIntervalPlot
+  nbe: lir.aggregation.NBEPlot
+  tipett: lir.aggregation.TippettPlot
+  calibrator_fit: lir.aggregation.CalibratorFitPlot
+  score_distribution: lir.aggregation.ScoreDistributionPlot
 pairing:
   instance_pairs: lir.transform.pairing.InstancePairing
   source_pairs: lir.transform.pairing.SourcePairing

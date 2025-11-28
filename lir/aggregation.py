@@ -8,9 +8,10 @@ from typing import IO, Any, NamedTuple
 
 from matplotlib import pyplot as plt
 
+from lir.algorithms.bayeserror import plot_nbe
 from lir.data.models import LLRData
 from lir.lrsystems.lrsystems import LRSystem
-from lir.plotting import llr_interval, lr_histogram, pav
+from lir.plotting import calibrator_fit, llr_interval, lr_histogram, pav, score_distribution, tippett
 from lir.plotting.expected_calibration_error import plot_ece
 
 
@@ -90,6 +91,22 @@ class LRHistogramPlot(AggregatePlot):
 
 class LLRIntervalPlot(AggregatePlot):
     plot_fn = partial(llr_interval)
+
+
+class NBEPlot(AggregatePlot):
+    plot_function = plot_nbe
+
+
+class TippettPlot(AggregatePlot):
+    plot_function = tippett
+
+
+class CalibratorFitPlot(AggregatePlot):
+    plot_function = calibrator_fit
+
+
+class ScoreDistributionPlot(AggregatePlot):
+    plot_function = score_distribution
 
 
 class WriteMetricsToCsv(Aggregation):

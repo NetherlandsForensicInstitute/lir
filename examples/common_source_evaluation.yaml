@@ -52,7 +52,6 @@ experiments:
       - method: csv
         columns:
         - cllr
-    visualization:
       - pav
       - ece
 
@@ -65,6 +64,5 @@ experiments:
         columns:
         - cllr
         - cllr_min
-    visualization:
       - pav
       - ece

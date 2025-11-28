@@ -1,6 +1,6 @@
 import logging
 from abc import ABC, abstractmethod
-from collections.abc import Callable, Iterable, Sequence
+from collections.abc import Iterable, Sequence
 from pathlib import Path
 
 from tqdm import tqdm
@@ -21,13 +21,11 @@ class Experiment(ABC):
         self,
         name: str,
         data: DataStrategy,
-        visualization_functions: list[Callable],
         outputs: Sequence[Aggregation],
         output_path: Path,
     ):
         self.name = name
         self.data = data
-        self.visualization_functions = visualization_functions
         self.outputs = outputs
         self.output_path = output_path
 
@@ -58,14 +56,9 @@ class Experiment(ABC):
         # Combine collected numpy array's after iteration over the train/test split(s)
         combined_llrs: LLRData = concatenate_instances(*llr_sets)
 
-        # Generate output as configured by `outputs` and `visualization_functions`,
-        # and write these output to the `output_path`.
+        # Generate output as configured by `outputs` and write these output to
+        # the `output_path`.
         output_dir = self.output_path / lrsystem.name
-        LOG.debug(f'writing visualizations to {output_dir}')
-        for visualization_function in self.visualization_functions:
-            visualization_function(output_dir, combined_llrs)
-
-        # Construct a `results` dictionary of metrics indicating the performance of the given LR system
         LOG.debug(f'writing outputs to {output_dir}')
         for output in self.outputs:
             output.report(AggregationData(llrdata=combined_llrs, lrsystem=lrsystem, parameters=lrsystem.parameters))
@@ -97,12 +90,11 @@ class PredefinedExperiment(Experiment):
         self,
         name: str,
         data: DataStrategy,
-        visualization_functions: list[Callable],
         outputs: Sequence[Aggregation],
         output_path: Path,
         lrsystems: Iterable[LRSystem],
     ):
-        super().__init__(name, data, visualization_functions, outputs, output_path)
+        super().__init__(name, data, outputs, output_path)
         self.lrsystems = lrsystems
 
     def _generate_and_run(self) -> None:

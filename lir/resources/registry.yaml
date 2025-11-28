@@ -67,11 +67,10 @@ metrics:
   cllr_min: lir.metrics.cllr_min
 output:
   csv: lir.config.experiment_strategies.metrics_csv
-visualization:
-  pav: lir.visualization.pav
-  ece: lir.visualization.ece
-  lr_histogram: lir.visualization.lr_histogram
-  llr_interval: lir.visualization.llr_interval
+  pav: lir.aggregation.PAVPlot
+  ece: lir.aggregation.ECEPlot
+  lr_histogram: lir.aggregation.LRHistogramPlot
+  llr_interval: lir.aggregation.LLRIntervalPlot
 pairing:
   instance_pairs: lir.transform.pairing.InstancePairing
   source_pairs: lir.transform.pairing.SourcePairing

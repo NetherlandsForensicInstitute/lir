@@ -44,7 +44,6 @@ experiments:
         columns:
         - cllr
         - cllr_min
-    visualization:
       - pav
       - ece
       - llr_interval

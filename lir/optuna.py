@@ -22,7 +22,6 @@ class OptunaExperiment(Experiment):
         self,
         name: str,
         data: DataStrategy,
-        visualization_functions: list[Callable],
         outputs: Sequence[Aggregation],
         output_path: Path,
         baseline_config: ContextAwareDict,
@@ -30,7 +29,7 @@ class OptunaExperiment(Experiment):
         n_trials: int,
         metric_function: Callable,
     ):
-        super().__init__(name, data, visualization_functions, outputs, output_path)
+        super().__init__(name, data, outputs, output_path)
         self.baseline_config = baseline_config
         self.hyperparameters = hyperparameters
         self.n_trials = n_trials

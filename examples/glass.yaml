@@ -101,8 +101,7 @@ experiments:
   # - `lr_system` -- the base LR system
   # - `data` -- the data to be used for evaluation
   # - `hyperparameters` -- the hyperparameters that are varied
-  # - `metrics` -- the metrics to be included in the summary `metrics.csv`
-  # - `visualization` -- how to visualize the results
+  # - `output` -- the metrics and visualization functions (in the registry) to be applied
   #
   # The hyperparameter block has a list of hyperparameters. Each hyperparameter has a list of *options*, and their
   # values are substituted in the base configuration of the LR system. Where exactly the values are substituted is
@@ -189,7 +188,6 @@ experiments:
         columns:
         - cllr
         - cllr_min
-    visualization:
       - pav
       - ece
 
@@ -214,7 +212,6 @@ experiments:
         columns:
         - cllr
         - cllr_min
-    visualization:
       - pav
       - lr_histogram
 
@@ -227,6 +224,5 @@ experiments:
         columns:
         - cllr
         - cllr_min
-    visualization:
       - pav
       - ece

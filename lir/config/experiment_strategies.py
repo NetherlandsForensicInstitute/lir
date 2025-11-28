@@ -27,7 +27,6 @@ from lir.config.substitution import (
     _expand,
     parse_hyperparameter,
 )
-from lir.config.visualization import parse_visualizations
 from lir.data.models import DataStrategy
 from lir.experiment import Experiment, PredefinedExperiment
 from lir.optuna import OptunaExperiment
@@ -117,9 +116,6 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
 
         return results
 
-    def visualization_functions(self) -> list[Callable]:
-        return parse_visualizations(pop_field(self._config, 'visualization', required=False), self._output_dir)
-
     def lrsystem(self) -> tuple[ContextAwareDict, list[Hyperparameter]]:
         baseline_config = pop_field(self._config, 'lr_system')
         if baseline_config is None:
@@ -164,7 +160,6 @@ class SingleRunStrategy(ExperimentStrategyConfigParser):
         return PredefinedExperiment(
             name,
             self.data(),
-            self.visualization_functions(),
             self.output_list(),
             self._output_dir,
             [lrsystem],
@@ -188,7 +183,6 @@ class GridStrategy(ExperimentStrategyConfigParser):
         return PredefinedExperiment(
             name,
             self.data(),
-            self.visualization_functions(),
             self.output_list(),
             self._output_dir,
             lrsystems,
@@ -204,7 +198,6 @@ class OptunaStrategy(ExperimentStrategyConfigParser):
         return OptunaExperiment(
             name,
             self.data(),
-            self.visualization_functions(),
             self.output_list(),
             self._output_dir,
             baseline_config,

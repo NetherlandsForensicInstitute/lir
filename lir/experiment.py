@@ -6,7 +6,7 @@ from pathlib import Path
 from tqdm import tqdm
 
 import lir
-from lir.aggregation import Aggregation
+from lir.aggregation import Aggregation, AggregationData
 from lir.data.models import DataStrategy, concatenate_instances
 from lir.lrsystems.lrsystems import LLRData, LRSystem
 
@@ -67,7 +67,9 @@ class Experiment(ABC):
 
         # Construct a `results` dictionary of metrics indicating the performance of the given LR system
         for aggregation in self.aggregations:
-            aggregation.report(combined_llrs, lrsystem.parameters)
+            aggregation.report(
+                AggregationData(llrdata=combined_llrs, lrsystem=lrsystem, parameters=lrsystem.parameters)
+            )
 
         return combined_llrs
 

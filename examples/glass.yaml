@@ -226,3 +226,4 @@ experiments:
         - cllr_min
       - pav
       - ece
+      - save_model

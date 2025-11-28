@@ -73,6 +73,7 @@ output:
   llr_interval: lir.aggregation.plot_llr_interval
   nbe: lir.aggregation.plot_nbe
   tipett: lir.aggregation.plot_tipett
+  save_model: lir.persistence.parse_save_model
 pairing:
   instance_pairs: lir.transform.pairing.InstancePairing
   source_pairs: lir.transform.pairing.SourcePairing

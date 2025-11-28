@@ -72,8 +72,9 @@ experiments:
           - option_name: svm
             method: svm
             probability: True
-    aggregation:
-      metrics:
+    output:
+      - method: csv
+        columns:
         - cllr
         - cllr_min
     visualization:

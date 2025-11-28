@@ -76,8 +76,8 @@ class AggregatePlot(Aggregation):
 
 
 class WriteMetricsToCsv(Aggregation):
-    def __init__(self, path: Path, metrics: Mapping[str, Callable]):
-        self.path = path
+    def __init__(self, output_dir: Path, metrics: Mapping[str, Callable]):
+        self.path = output_dir / 'metrics.csv'
         self._file: IO[Any] | None = None
         self._writer: csv.DictWriter | None = None
         self.metrics = metrics

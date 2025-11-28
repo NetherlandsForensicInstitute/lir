@@ -37,14 +37,16 @@ experiments:
           - option_name: svm
             method: svm
             probability: True
-    aggregation:
-      metrics:
+    output:
+      - method: csv
+        columns:
         - cllr
 
   exp2:
     strategy: single_run
     lr_system: ${lr_system}
     data: ${data_splits}
-    aggregation:
-      metrics:
+    output:
+      - method: csv
+        columns:
         - cllr

@@ -65,6 +65,8 @@ modules:
 metrics:
   cllr: lir.metrics.cllr
   cllr_min: lir.metrics.cllr_min
+output:
+  csv: lir.config.experiment_strategies.metrics_csv
 visualization:
   pav: lir.visualization.pav
   ece: lir.visualization.ece

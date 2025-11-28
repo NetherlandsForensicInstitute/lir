@@ -21,14 +21,14 @@ class Experiment(ABC):
         self,
         name: str,
         data: DataStrategy,
-        aggregations: Sequence[Aggregation],
         visualization_functions: list[Callable],
+        outputs: Sequence[Aggregation],
         output_path: Path,
     ):
         self.name = name
         self.data = data
-        self.aggregations = aggregations
         self.visualization_functions = visualization_functions
+        self.outputs = outputs
         self.output_path = output_path
 
     def _run_lrsystem(self, lrsystem: LRSystem) -> LLRData:
@@ -58,18 +58,17 @@ class Experiment(ABC):
         # Combine collected numpy array's after iteration over the train/test split(s)
         combined_llrs: LLRData = concatenate_instances(*llr_sets)
 
-        # Generate visualization output as configured by `visualization_functions`
-        # and write graphical output to the `output_path`.
+        # Generate output as configured by `outputs` and `visualization_functions`,
+        # and write these output to the `output_path`.
         output_dir = self.output_path / lrsystem.name
         LOG.debug(f'writing visualizations to {output_dir}')
         for visualization_function in self.visualization_functions:
             visualization_function(output_dir, combined_llrs)
 
         # Construct a `results` dictionary of metrics indicating the performance of the given LR system
-        for aggregation in self.aggregations:
-            aggregation.report(
-                AggregationData(llrdata=combined_llrs, lrsystem=lrsystem, parameters=lrsystem.parameters)
-            )
+        LOG.debug(f'writing outputs to {output_dir}')
+        for output in self.outputs:
+            output.report(AggregationData(llrdata=combined_llrs, lrsystem=lrsystem, parameters=lrsystem.parameters))
 
         return combined_llrs
 
@@ -87,8 +86,8 @@ class Experiment(ABC):
         try:
             self._generate_and_run()
         finally:
-            for aggregation in self.aggregations:
-                aggregation.close()
+            for output in self.outputs:
+                output.close()
 
 
 class PredefinedExperiment(Experiment):
@@ -98,12 +97,12 @@ class PredefinedExperiment(Experiment):
         self,
         name: str,
         data: DataStrategy,
-        aggregations: Sequence[Aggregation],
         visualization_functions: list[Callable],
+        outputs: Sequence[Aggregation],
         output_path: Path,
         lrsystems: Iterable[LRSystem],
     ):
-        super().__init__(name, data, aggregations, visualization_functions, output_path)
+        super().__init__(name, data, visualization_functions, outputs, output_path)
         self.lrsystems = lrsystems
 
     def _generate_and_run(self) -> None:

@@ -10,6 +10,7 @@ from lir import registry
 from lir.aggregation import Aggregation, WriteMetricsToCsv
 from lir.config.base import (
     ConfigParser,
+    GenericConfigParser,
     GenericFunctionConfigParser,
     YamlParseError,
     check_is_empty,
@@ -97,14 +98,10 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
 
             parser: ConfigParser = registry.get(
                 class_name,
-                default_config_parser=GenericFunctionConfigParser,
+                default_config_parser=GenericConfigParser,
                 search_path=['output'],
             )
             parsed_object = parser.parse(args, self._output_dir)
-
-            # Instantiate if needed (not already done by the parser)
-            if isinstance(parsed_object, type):
-                parsed_object = parsed_object(**args)
 
             if not isinstance(parsed_object, Aggregation):
                 raise YamlParseError(

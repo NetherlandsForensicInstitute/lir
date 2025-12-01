@@ -8,11 +8,12 @@ from typing import IO, Any, NamedTuple
 
 from matplotlib import pyplot as plt
 
-from lir.algorithms.bayeserror import plot_nbe
+from lir.algorithms.bayeserror import plot_nbe as nbe
+from lir.config.base import ContextAwareDict, config_parser
 from lir.data.models import LLRData
 from lir.lrsystems.lrsystems import LRSystem
 from lir.plotting import calibrator_fit, llr_interval, lr_histogram, pav, score_distribution, tippett
-from lir.plotting.expected_calibration_error import plot_ece
+from lir.plotting.expected_calibration_error import plot_ece as ece
 
 
 class AggregationData(NamedTuple):
@@ -51,12 +52,9 @@ class Aggregation(ABC):
 class AggregatePlot(Aggregation):
     """Aggregation that generates plots by repeatedly calling a plotting function."""
 
-    output_path: Path | None = None
-    plot_fn: Callable
-
-    def __init__(self, output_dir: str | None = None) -> None:
-        if output_dir:
-            self.output_path = Path(output_dir)
+    def __init__(self, plot_fn: Callable, output_dir: Path | None = None) -> None:
+        self.output_path = output_dir
+        self.plot_fn = partial(plot_fn)
 
     def report(self, data: AggregationData) -> None:
         """Plot the data when new results are available."""
@@ -77,36 +75,44 @@ class AggregatePlot(Aggregation):
             fig.savefig(file_name)
 
 
-class PAVPlot(AggregatePlot):
-    plot_fn = partial(pav)
+@config_parser
+def plot_pav(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    return AggregatePlot(output_dir=output_dir, plot_fn=pav)
 
 
-class ECEPlot(AggregatePlot):
-    plot_fn = partial(plot_ece)
+@config_parser
+def plot_ece(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    return AggregatePlot(output_dir=output_dir, plot_fn=ece)
 
 
-class LRHistogramPlot(AggregatePlot):
-    plot_fn = partial(lr_histogram)
+@config_parser
+def plot_lr_histogram(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    return AggregatePlot(output_dir=output_dir, plot_fn=lr_histogram)
 
 
-class LLRIntervalPlot(AggregatePlot):
-    plot_fn = partial(llr_interval)
+@config_parser
+def plot_llr_interval(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    return AggregatePlot(output_dir=output_dir, plot_fn=llr_interval)
 
 
-class NBEPlot(AggregatePlot):
-    plot_function = plot_nbe
+@config_parser
+def plot_nbe(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    return AggregatePlot(output_dir=output_dir, plot_fn=nbe)
 
 
-class TippettPlot(AggregatePlot):
-    plot_function = tippett
+@config_parser
+def plot_tipett(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    return AggregatePlot(output_dir=output_dir, plot_fn=tippett)
 
 
-class CalibratorFitPlot(AggregatePlot):
-    plot_function = calibrator_fit
+@config_parser
+def plot_calibrator_fit(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    return AggregatePlot(output_dir=output_dir, plot_fn=calibrator_fit)
 
 
-class ScoreDistributionPlot(AggregatePlot):
-    plot_function = score_distribution
+@config_parser
+def plot_score_distribution(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    return AggregatePlot(output_dir=output_dir, plot_fn=score_distribution)
 
 
 class WriteMetricsToCsv(Aggregation):

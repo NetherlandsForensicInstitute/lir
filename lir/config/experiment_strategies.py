@@ -84,9 +84,9 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
             # Normalise configuration into (class_name, args)
             if isinstance(item, str):
                 class_name, args = item, ContextAwareDict(config.context)
-            elif isinstance(item, Mapping):
+            elif isinstance(item, ContextAwareDict):
                 class_name = pop_field(item, 'method')
-                args = ContextAwareDict(config.context, item)
+                args = item
             else:
                 raise YamlParseError(
                     config.context,

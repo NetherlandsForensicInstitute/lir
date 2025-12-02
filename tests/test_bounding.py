@@ -2,6 +2,7 @@ import numpy as np
 import pytest
 
 from lir.bounding import StaticBounder
+from lir.data.models import LLRData
 
 
 @pytest.mark.parametrize(
@@ -65,8 +66,10 @@ def test_static_bounder(
 ):
     bounder = StaticBounder(lower_bound, upper_bound)
     labels = np.concatenate([np.zeros(1), np.ones(llrs.shape[0] - 1)])
-    assert np.all(expected_result == bounder.transform(llrs))
-    assert np.all(expected_result == bounder.fit(llrs, labels).transform(llrs))
+    llrs = LLRData(features=llrs, labels=labels)
+    assert np.all(expected_result == bounder.transform(llrs).llrs)
+    assert np.all(expected_result == bounder.fit_transform(llrs).llrs)
+    assert np.all(expected_result == bounder.fit(llrs).transform(llrs).llrs)
 
 
 @pytest.mark.parametrize(

@@ -7,22 +7,11 @@ from sklearn.preprocessing import StandardScaler
 
 from lir.data.data_strategies import BinaryTrainTestSplit
 from lir.data.datasets.synthesized_normal_binary import (
-    SynthesizedNormalDataClass,
     SynthesizedNormalBinaryData,
 )
-from lir.lrsystems.lrsystems import LLRData, FeatureData
+from lir.lrsystems.lrsystems import LLRData
 from lir.lrsystems.binary_lrsystem import BinaryLRSystem
 from lir.transform.pipeline import Pipeline
-
-
-@pytest.fixture
-def synthesized_normal_data() -> SynthesizedNormalBinaryData:
-    data_classes = {
-        1: SynthesizedNormalDataClass(mean=0, std=1, size=100),  # H1
-        0: SynthesizedNormalDataClass(mean=2, std=1, size=100),  # H2
-    }
-
-    return SynthesizedNormalBinaryData(data_classes=data_classes, seed=42)
 
 
 def test_specific_source_pipeline(synthesized_normal_data: SynthesizedNormalBinaryData):

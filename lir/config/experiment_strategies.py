@@ -81,10 +81,10 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
             return []
 
         results: list[Aggregation] = []
-        for item in config:
+        for i, item in enumerate(config):
             # Normalise configuration into (class_name, args)
             if isinstance(item, str):
-                class_name, args = item, ContextAwareDict(config.context)
+                class_name, args = item, ContextAwareDict(config.context + [str(i)])
             elif isinstance(item, ContextAwareDict):
                 class_name = pop_field(item, 'method')
                 args = item

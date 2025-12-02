@@ -356,6 +356,8 @@ class LLRData(FeatureData):
             raise ValueError(
                 f'features must be 1-dimensional or 2-dimensional with 1 or 3 columns; shape: {self.features.shape}'
             )
+        if self.labels is not None and np.any((self.labels != 0) & (self.labels != 1)):
+            raise ValueError(f'labels allowed: 0, 1; found: {np.unique(self.labels)}')
 
         return self
 

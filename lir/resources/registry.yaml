@@ -73,7 +73,6 @@ output:
   llr_interval: lir.aggregation.plot_llr_interval
   nbe: lir.aggregation.plot_nbe
   tipett: lir.aggregation.plot_tipett
-  calibrator_fit: lir.aggregation.plot_calibrator_fit
 pairing:
   instance_pairs: lir.transform.pairing.InstancePairing
   source_pairs: lir.transform.pairing.SourcePairing

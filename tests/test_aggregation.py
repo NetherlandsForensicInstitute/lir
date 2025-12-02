@@ -1,12 +1,13 @@
 from pathlib import Path
 
-import numpy as np
 from _pytest.tmpdir import TempPathFactory
 
 from lir import registry
-from lir.aggregation import Aggregation
+from lir.aggregation import Aggregation, AggregationData
 from lir.config.base import GenericConfigParser, _expand
 from lir.data.models import LLRData
+from lir.lrsystems.binary_lrsystem import BinaryLRSystem
+from lir.transform import Identity
 
 
 def test_registry_items_available(synthesized_llrs_with_interval: LLRData, tmp_path_factory: TempPathFactory):
@@ -31,4 +32,5 @@ def test_registry_items_available(synthesized_llrs_with_interval: LLRData, tmp_p
             assert isinstance(obj, Aggregation), f"registry item is not an instance of `Aggregation`: {name}"
 
             # generate output
-            obj.report(synthesized_llrs_with_interval, {})
+            lrsystem = BinaryLRSystem(name="lrsystem", pipeline=Identity())
+            obj.report(AggregationData(llrdata=synthesized_llrs_with_interval, lrsystem=lrsystem, parameters={}))

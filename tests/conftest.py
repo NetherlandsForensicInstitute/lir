@@ -10,8 +10,8 @@ from lir.transform import as_transformer
 @pytest.fixture
 def synthesized_normal_data() -> SynthesizedNormalBinaryData:
     data_classes = {
-        1: SynthesizedNormalDataClass(mean=1, std=1, size=100),  # H1
-        0: SynthesizedNormalDataClass(mean=-1, std=1, size=100),  # H2
+        1: SynthesizedNormalDataClass(mean=0, std=1, size=100),  # H1
+        0: SynthesizedNormalDataClass(mean=2, std=1, size=100),  # H2
     }
 
     return SynthesizedNormalBinaryData(data_classes=data_classes, seed=42)

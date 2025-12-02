@@ -74,7 +74,6 @@ output:
   nbe: lir.aggregation.plot_nbe
   tipett: lir.aggregation.plot_tipett
   calibrator_fit: lir.aggregation.plot_calibrator_fit
-  score_distribution: lir.aggregation.plot_score_distribution
 pairing:
   instance_pairs: lir.transform.pairing.InstancePairing
   source_pairs: lir.transform.pairing.SourcePairing

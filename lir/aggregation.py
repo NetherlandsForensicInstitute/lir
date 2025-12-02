@@ -12,7 +12,7 @@ from lir.algorithms.bayeserror import plot_nbe as nbe
 from lir.config.base import ContextAwareDict, config_parser
 from lir.data.models import LLRData
 from lir.lrsystems.lrsystems import LRSystem
-from lir.plotting import calibrator_fit, llr_interval, lr_histogram, pav, score_distribution, tippett
+from lir.plotting import calibrator_fit, llr_interval, lr_histogram, pav, tippett
 from lir.plotting.expected_calibration_error import plot_ece as ece
 
 
@@ -108,11 +108,6 @@ def plot_tipett(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
 @config_parser
 def plot_calibrator_fit(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
     return AggregatePlot(output_dir=output_dir, plot_fn=calibrator_fit)
-
-
-@config_parser
-def plot_score_distribution(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    return AggregatePlot(output_dir=output_dir, plot_fn=score_distribution)
 
 
 class WriteMetricsToCsv(Aggregation):

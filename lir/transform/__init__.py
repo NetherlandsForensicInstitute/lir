@@ -76,7 +76,7 @@ class BinaryClassifierTransformer(Transformer):
         # get probabilities from the estimator
         probabilities = self.estimator.predict_proba(instances.features)[:, 1]
         # return a copy of `instances` with the `features` attribute replaced by the newly obtained probabilities
-        return instances.replace(features=probabilities)
+        return instances.replace(features=probabilities.reshape(-1, 1))
 
 
 class SklearnTransformer(Transformer):

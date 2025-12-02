@@ -245,6 +245,8 @@ class FeatureData(InstanceData):
 
     @model_validator(mode='after')
     def check_features(self) -> Self:
+        if len(self.features.shape) < 2:
+            raise ValueError(f'expected at least 2d features; found shape: {self.features.shape}')
         if not np.issubdtype(self.features.dtype, np.number):
             raise ValueError(f'features should be numeric; found: {self.features.dtype}')
         return self

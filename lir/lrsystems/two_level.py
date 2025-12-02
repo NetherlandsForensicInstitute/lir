@@ -83,7 +83,7 @@ class TwoLevelModelNormalKDE:
         """
         assert self.model_fitted, 'fit() must be called before transform()'
         log10_lr_score = self._predict_log10_lr_score(X_trace, X_ref)
-        return log10_lr_score
+        return log10_lr_score.reshape(-1, 1)
 
     def predict_proba(self, X_trace: np.ndarray, X_ref: np.ndarray) -> np.ndarray:
         """

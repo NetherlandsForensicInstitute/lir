@@ -66,7 +66,7 @@ def test_static_bounder(
 ):
     bounder = StaticBounder(lower_bound, upper_bound)
     labels = np.concatenate([np.zeros(1), np.ones(llrs.shape[0] - 1)])
-    llrs = LLRData(features=llrs, labels=labels)
+    llrs = LLRData(features=llrs.reshape(-1, 1), labels=labels)
     assert np.all(expected_result == bounder.transform(llrs).llrs)
     assert np.all(expected_result == bounder.fit_transform(llrs).llrs)
     assert np.all(expected_result == bounder.fit(llrs).transform(llrs).llrs)

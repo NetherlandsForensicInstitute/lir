@@ -26,4 +26,4 @@ class AlcoholBreathAnalyser(DataSet):
             ]
         )
         y = np.concatenate([np.zeros(1000), np.ones(100)])
-        return LLRData(features=np.log10(lrs), labels=y)
+        return LLRData(features=np.log10(lrs).reshape(-1, 1), labels=y)

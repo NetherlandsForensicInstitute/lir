@@ -183,4 +183,4 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
         log10_compensator = np.log10(self.numerator / self.denominator)
         LLRs_output[el] = log10_compensator + log10_dif
 
-        return LLRs_output.flatten()
+        return LLRs_output

@@ -19,7 +19,7 @@ class UnboundLRs(DataSet):
 
         llrs = np.append(llrs_h1, llrs_h2)
         y = np.append(np.ones((len(llrs_h1), 1)), np.zeros((len(llrs_h2), 1)))
-        return LLRData(features=llrs, labels=y)
+        return LLRData(features=llrs.reshape(-1, 1), labels=y)
 
 
 class BoundingExample4(UnboundLRs):

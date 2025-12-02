@@ -1,10 +1,17 @@
+import logging
 from abc import ABC, abstractmethod
+from typing import Self
 
 import numpy as np
-from sklearn.base import TransformerMixin
+
+from lir import Transformer
+from lir.data.models import FeatureData, LLRData
 
 
-class LLRBounder(TransformerMixin, ABC):
+LOG = logging.getLogger(__name__)
+
+
+class LLRBounder(Transformer, ABC):
     """
     Base class for LLR bounders.
 
@@ -28,29 +35,25 @@ class LLRBounder(TransformerMixin, ABC):
         raise NotImplementedError
 
     @staticmethod
-    def _validate(llrs: np.ndarray, labels: np.ndarray) -> None:
-        if len(llrs.shape) != 1:
-            raise ValueError(f'llrs argument should be 1-dimensional; dimensions found: {len(llrs.shape)}')
-        if len(labels.shape) != 1:
-            raise ValueError(f'labels argument should be 1-dimensional; dimensions found: {len(labels.shape)}')
-        if llrs.shape[0] != labels.shape[0]:
-            raise ValueError(
-                f'number of labels does not match the number of llrs ({labels.shape[0]} != {llrs.shape[0]})'
-            )
-        if list(np.unique(labels)) != [0, 1]:
-            raise ValueError(f'labels expected: 0, 1; found: {np.unique(labels)}')
+    def _validate(instances: FeatureData) -> LLRData:
+        if not isinstance(instances, LLRData):
+            LOG.info(f'casting `{type(instances)}` to `LLRData`')
+            instances = instances.replace_as(LLRData)
+        return instances
 
-    def fit(self, llrs: np.ndarray, labels: np.ndarray) -> 'LLRBounder':
+    def fit(self, instances: FeatureData) -> Self:
         """
         Configures this bounder by calculating bounds.
 
         assuming that y=1 corresponds to Hp, y=0 to Hd
         """
-        # validate the input
-        self._validate(llrs, labels)
+        instances = self._validate(instances)
+
+        if instances.labels is None:
+            raise ValueError(f'{type(self)}.fit() requires labeled data')
 
         # calculate the bounds
-        self.lower_llr_bound, self.upper_llr_bound = self.calculate_bounds(llrs, labels)
+        self.lower_llr_bound, self.upper_llr_bound = self.calculate_bounds(instances.llrs, instances.labels)
 
         # check the sanity of the bounds
         if (
@@ -65,15 +68,18 @@ class LLRBounder(TransformerMixin, ABC):
 
         return self
 
-    def transform(self, llrs: np.ndarray) -> np.ndarray:
+    def transform(self, instances: FeatureData) -> LLRData:
         """
         a transform entails calling the first step calibrator and applying the bounds found
         """
+        instances = self._validate(instances)
+
+        llrs = instances.features
         if self.lower_llr_bound is not None:
             llrs = np.where(self.lower_llr_bound < llrs, llrs, self.lower_llr_bound)
         if self.upper_llr_bound is not None:
             llrs = np.where(self.upper_llr_bound > llrs, llrs, self.upper_llr_bound)
-        return llrs
+        return instances.replace(features=llrs)
 
 
 class StaticBounder(LLRBounder):

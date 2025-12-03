@@ -94,8 +94,6 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
                     'Invalid output configuration; expected a string or a mapping with a "method" field.',
                 )
 
-            args['output_dir'] = self._output_dir
-
             parser: ConfigParser = registry.get(
                 class_name,
                 default_config_parser=GenericConfigParser,

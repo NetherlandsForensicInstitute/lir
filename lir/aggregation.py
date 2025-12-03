@@ -2,7 +2,6 @@ import csv
 from abc import ABC, abstractmethod
 from collections import OrderedDict
 from collections.abc import Callable, Mapping
-from functools import partial
 from pathlib import Path
 from typing import IO, Any, NamedTuple
 
@@ -52,9 +51,10 @@ class Aggregation(ABC):
 class AggregatePlot(Aggregation):
     """Aggregation that generates plots by repeatedly calling a plotting function."""
 
-    def __init__(self, plot_fn: Callable, output_dir: Path | None = None) -> None:
+    def __init__(self, plot_fn: Callable, plot_name: str, output_dir: Path | None = None) -> None:
         self.output_path = output_dir
-        self.plot_fn = partial(plot_fn)
+        self.plot_fn = plot_fn
+        self.plot_name = plot_name
 
     def report(self, data: AggregationData) -> None:
         """Plot the data when new results are available."""
@@ -69,7 +69,7 @@ class AggregatePlot(Aggregation):
         if self.output_path is not None:
             dir_name = self.output_path
             param_string = '__'.join(f'{k}={v}' for k, v in parameters.items())
-            file_name = dir_name / param_string / f'{self.__class__.__name__}.png'
+            file_name = dir_name / param_string / f'{self.plot_name}.png'
             dir_name.mkdir(exist_ok=True, parents=True)
 
             fig.savefig(file_name)
@@ -77,37 +77,37 @@ class AggregatePlot(Aggregation):
 
 @config_parser
 def plot_pav(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    return AggregatePlot(output_dir=output_dir, plot_fn=pav)
+    return AggregatePlot(output_dir=output_dir, plot_fn=pav, plot_name='PAV')
 
 
 @config_parser
 def plot_ece(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    return AggregatePlot(output_dir=output_dir, plot_fn=ece)
+    return AggregatePlot(output_dir=output_dir, plot_fn=ece, plot_name='ECE')
 
 
 @config_parser
 def plot_lr_histogram(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    return AggregatePlot(output_dir=output_dir, plot_fn=lr_histogram)
+    return AggregatePlot(output_dir=output_dir, plot_fn=lr_histogram, plot_name='LR_Histogram')
 
 
 @config_parser
 def plot_llr_interval(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    return AggregatePlot(output_dir=output_dir, plot_fn=llr_interval)
+    return AggregatePlot(output_dir=output_dir, plot_fn=llr_interval, plot_name='LLR_Interval')
 
 
 @config_parser
 def plot_nbe(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    return AggregatePlot(output_dir=output_dir, plot_fn=nbe)
+    return AggregatePlot(output_dir=output_dir, plot_fn=nbe, plot_name='NBE')
 
 
 @config_parser
 def plot_tipett(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    return AggregatePlot(output_dir=output_dir, plot_fn=tippett)
+    return AggregatePlot(output_dir=output_dir, plot_fn=tippett, plot_name='Tipett')
 
 
 @config_parser
 def plot_calibrator_fit(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    return AggregatePlot(output_dir=output_dir, plot_fn=calibrator_fit)
+    return AggregatePlot(output_dir=output_dir, plot_fn=calibrator_fit, plot_name='Calibrator_Fit')
 
 
 class WriteMetricsToCsv(Aggregation):

@@ -12,24 +12,26 @@ data:
 lr_system:
   architecture: score_based
   preprocessing:
-    scaler:
-      method: standard_scaler
+    steps:
+      scaler:
+        method: standard_scaler
   pairing:
     method: instance_pairs
     ratio_limit: 1
   comparing:
-    scoring:
-      method: abs_diff
-    clf:
-      method: logistic_regression
-      random_state: 0
-    to_llr:
-      method: probabilities_to_logodds
-    calibration:
-      method: kde
-      bandwidth: 1
-    bounding:
-      method: elub_bounder
+    steps:
+      scoring:
+        method: abs_diff
+      clf:
+        method: logistic_regression
+        random_state: 0
+      to_llr:
+        method: probabilities_to_logodds
+      calibration:
+        method: kde
+        bandwidth: 1
+      bounding:
+        method: elub_bounder
 
 experiments:
   # The hyperparameter we want to optimize is the bandwidth value for KDE calibration.
@@ -57,12 +59,12 @@ experiments:
     # - log -- sample for the log space if True; otherwise sample from linear space
     #
     hyperparameters:
-      - path: comparing.calibration.bandwidth
+      - path: comparing.steps.calibration.bandwidth
         type: float
         low: .01
         high: 2
         log: True
-      - path: comparing.clf
+      - path: comparing.steps.clf
         type: categorical
         options:
           - option_name: logit

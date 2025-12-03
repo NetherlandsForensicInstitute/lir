@@ -1,14 +1,15 @@
 import csv
 from abc import ABC, abstractmethod
 from collections import OrderedDict
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 from typing import IO, Any, NamedTuple
 
 from matplotlib import pyplot as plt
 
 from lir.algorithms.bayeserror import plot_nbe as nbe
-from lir.config.base import ContextAwareDict, config_parser
+from lir.config.base import ContextAwareDict, YamlParseError, config_parser, pop_field
+from lir.config.metrics import parse_metric
 from lir.data.models import LLRData
 from lir.lrsystems.lrsystems import LRSystem
 from lir.plotting import llr_interval, lr_histogram, pav, tippett
@@ -128,3 +129,16 @@ class WriteMetricsToCsv(Aggregation):
     def close(self) -> None:
         if self._file:
             self._file.close()
+
+
+@config_parser
+def metrics_csv(config: ContextAwareDict, output_dir: Path) -> WriteMetricsToCsv:
+    metrics = pop_field(config, 'columns', required=True)
+    if not isinstance(metrics, Sequence):
+        raise YamlParseError(
+            config.context,
+            'Invalid metrics configuration; expected a list of metric names.',
+        )
+
+    metrics = {name: parse_metric(name, output_dir, config.context) for name in metrics}
+    return WriteMetricsToCsv(output_dir, metrics)

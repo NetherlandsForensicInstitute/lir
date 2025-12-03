@@ -7,14 +7,12 @@ from pathlib import Path
 import confidence
 
 from lir import registry
-from lir.aggregation import Aggregation, WriteMetricsToCsv
+from lir.aggregation import Aggregation
 from lir.config.base import (
     ConfigParser,
     GenericConfigParser,
-    GenericFunctionConfigParser,
     YamlParseError,
     check_is_empty,
-    config_parser,
     pop_field,
 )
 from lir.config.data_strategies import parse_data_strategy
@@ -22,6 +20,7 @@ from lir.config.lrsystem_architectures import (
     parse_augmented_lrsystem,
     parse_lrsystem,
 )
+from lir.config.metrics import parse_metric
 from lir.config.substitution import (
     ContextAwareDict,
     Hyperparameter,
@@ -31,32 +30,6 @@ from lir.config.substitution import (
 from lir.data.models import DataStrategy
 from lir.experiment import Experiment, PredefinedExperiment
 from lir.optuna import OptunaExperiment
-from lir.registry import ComponentNotFoundError
-
-
-def parse_metric(name: str, output_path: Path, context: list[str]) -> Callable:
-    try:
-        parser = registry.get(
-            name,
-            default_config_parser=GenericFunctionConfigParser,
-            search_path=['metrics'],
-        )
-        return parser.parse(ContextAwareDict(context), output_path)
-    except ComponentNotFoundError as e:
-        raise YamlParseError(context, str(e))
-
-
-@config_parser
-def metrics_csv(config: ContextAwareDict, output_dir: Path) -> WriteMetricsToCsv:
-    metrics = pop_field(config, 'columns', required=True)
-    if not isinstance(metrics, Sequence):
-        raise YamlParseError(
-            config.context,
-            'Invalid metrics configuration; expected a list of metric names.',
-        )
-
-    metrics = {name: parse_metric(name, output_dir, config.context) for name in metrics}
-    return WriteMetricsToCsv(output_dir, metrics)
 
 
 class ExperimentStrategyConfigParser(ConfigParser, ABC):

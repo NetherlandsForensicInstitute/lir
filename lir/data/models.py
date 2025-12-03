@@ -95,7 +95,7 @@ class InstanceData(BaseModel, ABC):
         return True
 
     def combine(
-        self, others: 'list[InstanceData] | InstanceData | None', fn: Callable, *args: Any, **kwargs: dict[str, Any]
+        self, others: 'list[InstanceData] | InstanceData', fn: Callable, *args: Any, **kwargs: dict[str, Any]
     ) -> Self:
         """
         Apply a custom combination function to InstanceData objects.
@@ -103,9 +103,7 @@ class InstanceData(BaseModel, ABC):
         All objects must have the same types and fields, and the same values for all non-numpy array
         fields, or an error is raised. Numpy fields are concatenated using `fn`. Other fields are copied as-is.
         """
-        if others is None:
-            others = []
-        elif isinstance(others, InstanceData):
+        if isinstance(others, InstanceData):
             others = [others]
 
         # initialize the dictionary of fields to be updated
@@ -144,15 +142,28 @@ class InstanceData(BaseModel, ABC):
 
         return self.replace(**data)
 
-    def apply(
-        self, fn: Callable, *args: Any, _others: list['InstanceData'] | None = None, **kwargs: dict[str, Any]
-    ) -> Self:
+    def apply(self, fn: Callable, *args: Any, **kwargs: dict[str, Any]) -> Self:
         """
         Apply a custom function to this InstanceData object.
 
         The function `fn` is applied to all Numpy fields. Other fields are copied as-is.
         """
-        return self.combine(None, fn, *args, **kwargs)
+        # initialize the dictionary of fields to be updated
+        data: dict[str, np.ndarray | None] = {}
+
+        for field in self.all_fields:
+            values = getattr(self, field)
+            if isinstance(values, np.ndarray):
+                # we have a numpy array field -> update required
+
+                if field == 'labels' and len(values.shape) != 1:
+                    # drop labels if they are in bad shape
+                    data[field] = None
+                else:
+                    # apply the function and store the value to be updated later
+                    data[field] = fn(values, *args, **kwargs)
+
+        return self.replace(**data)
 
     def __eq__(self, other: Any) -> bool:
         """

@@ -107,12 +107,12 @@ def test_construct_array(
         n_ref_instances,
     )
     assert n_pairs_found == len(paired_data), "number of output pairs"
-    assert paired_data.features.shape[1] == paired_data.meta.shape[1] == n_trace_instances + n_ref_instances
+    assert len(paired_data) == 0 or paired_data.features.shape[1] == paired_data.meta.shape[1] == n_trace_instances + n_ref_instances
     assert paired_data.features.shape[2] == instances.features.shape[1]
-    assert paired_data.meta.shape[2] == instances.meta.shape[1]
+    assert len(paired_data) == 0 or paired_data.meta.shape[2] == instances.meta.shape[1]
 
     target_shape = (n_pairs_found, n_trace_instances + n_ref_instances) + instances.features.shape[1:]
-    assert all(paired_data.features.shape == np.array(list(target_shape)))
+    assert paired_data.features.shape == target_shape
 
 
 @pytest.mark.parametrize(

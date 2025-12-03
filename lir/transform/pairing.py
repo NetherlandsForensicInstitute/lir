@@ -87,7 +87,6 @@ class SourcePairing(PairingMethod):
         n_trace_instances: int,
         n_ref_instances: int,
     ) -> PairedFeatureData | None:
-        target_shape = (n_trace_instances + n_ref_instances,) + instances.features.shape[1:]
         result_features: list[FeatureData] = []
         for trace_label, ref_label in label_pairs:
             if trace_label == ref_label:
@@ -98,9 +97,7 @@ class SourcePairing(PairingMethod):
                 )
                 if pair_instances is not None:
                     pair_instances = pair_instances.replace(labels=None)
-                    result_features.append(
-                        pair_instances.apply(np.reshape, (1,) + target_shape).replace(labels=np.ones(1))
-                    )
+                    result_features.append(pair_instances.apply(np.expand_dims, axis=0).replace(labels=np.ones(1)))
             else:
                 # construct a different-source pair
                 trace_instances = self._get_random_subset(
@@ -113,21 +110,22 @@ class SourcePairing(PairingMethod):
                 )
                 if trace_instances and ref_instances:
                     pair_instances = (trace_instances + ref_instances).replace(labels=None)
-                    result_features.append(
-                        pair_instances.apply(np.reshape, (1,) + pair_instances.features.shape).replace(
-                            labels=np.zeros(1)
-                        )
-                    )
+                    result_features.append(pair_instances.apply(np.expand_dims, axis=0).replace(labels=np.zeros(1)))
 
         if result_features:
             paired_features = concatenate_instances(*result_features)
+            return paired_features.replace_as(
+                PairedFeatureData, n_trace_instances=n_trace_instances, n_ref_instances=n_ref_instances
+            )
         else:
             # construct an empty set of pairs
-            paired_features = instances[:0].apply(np.reshape, (0,) + target_shape)
-
-        return paired_features.replace_as(
-            PairedFeatureData, n_trace_instances=n_trace_instances, n_ref_instances=n_ref_instances
-        )
+            target_shape = (0, n_trace_instances + n_ref_instances) + instances.features.shape[1:]
+            return PairedFeatureData(
+                n_trace_instances=n_trace_instances,
+                n_ref_instances=n_ref_instances,
+                features=np.empty(target_shape),
+                labels=np.array([]),
+            )
 
     def pair(
         self,

@@ -280,11 +280,15 @@ def _assign(struct: ContextAwareDict | ContextAwareList, path: list[str], value:
     """
     if isinstance(struct, list):
         index = int(path[0])
+        if index not in struct:
+            raise YamlParseError(struct.context, f'trying to substitute invalid index: {index}')
         if len(path) == 1:
             struct[index] = _expand(struct.context + [str(index)], value)
         else:
             _assign(struct[index], path[1:], value)
     else:
+        if path[0] not in struct:
+            raise YamlParseError(struct.context, f'trying to substitute non-existent field: {path[0]}')
         if len(path) == 1:
             struct[path[0]] = _expand(struct.context + [path[0]], value)
         else:
@@ -326,7 +330,10 @@ def substitute_hyperparameters(
         LOG.debug(f'base system: {json.dumps(base_config)}')
         augmented_config = base_config.clone(context)
         for key, value in hyperparameters.items():
-            _assign(augmented_config, key.split('.'), value)
+            try:
+                _assign(augmented_config, key.split('.'), value)
+            except Exception as e:
+                raise ValueError(f'error while trying to substitute {key} in {".".join(base_config.context)}: {e}')
 
     LOG.debug(f'augmented system: {json.dumps(augmented_config)}')
     return augmented_config

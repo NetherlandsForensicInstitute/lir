@@ -70,7 +70,7 @@ class AggregatePlot(Aggregation):
         if self.output_path is not None:
             dir_name = self.output_path
             param_string = '__'.join(f'{k}={v}' for k, v in parameters.items())
-            file_name = dir_name / param_string / f'{self.plot_name}.png'
+            file_name = dir_name / f'{param_string}_{self.plot_name}.png'
             dir_name.mkdir(exist_ok=True, parents=True)
 
             fig.savefig(file_name)

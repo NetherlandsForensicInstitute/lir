@@ -4,8 +4,7 @@ data_splits:
   strategy: binary_train_test_split
   test_size: 0.5
   source: 
-    provider: external_modules.ExampleExternalDataset
-    name: example
+    provider: tests.resources.external_modules.ExampleExternalDataset
 
 lr_system:
   architecture: specific_source
@@ -15,12 +14,7 @@ lr_system:
       to_llr: probabilities_to_logodds
 
 experiments:
-
   exp2:
     strategy: single_run
     lr_system: ${lr_system}
     data: ${data_splits}
-    output:
-      - method: csv
-        columns:
-        - cllr

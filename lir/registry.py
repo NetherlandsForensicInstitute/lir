@@ -19,9 +19,12 @@ def _get_attribute_by_name(name: str) -> Any:
     """Resolve the corresponding function or class in this project from the configuration string."""
     parts = name.split('.')
 
+    logging.debug(f'resolving class name from key: {name}')
+
     # split the full name into a module name and a class name
     for class_name_index in range(1, len(parts) + 1):
         try:
+            logging.debug(f'trying to import: {". ".join(parts[:class_name_index])}')
             if class_name_index < len(parts):
                 attr = __import__(
                     '.'.join(parts[:class_name_index]),
@@ -32,9 +35,11 @@ def _get_attribute_by_name(name: str) -> Any:
             else:
                 attr = __import__('.'.join(parts))
 
+            logging.debug(f'successfully imported: {name}. Found {attr}')
             return attr
 
         except (ModuleNotFoundError, AttributeError):
+            logging.debug(f'failed to import: {". ".join(parts[:class_name_index])}.')
             pass
 
     raise ComponentNotFoundError(name)
@@ -149,10 +154,13 @@ class FederatedLoader(ConfigParserLoader):
 def _load_package_registry() -> 'YamlRegistry':
     registry_file = importlib.resources.files(package_resources) / 'registry.yaml'
     with registry_file.open('r') as f:
+        logging.debug(f'loading registry from package resource: {registry_file}')
         lib_registry = confidence.load(f)
 
     user_registry = confidence.load_name('registry')
     merged_registry = confidence.Configuration(lib_registry, user_registry)
+
+    logging.debug(f'loaded registry with entries: {list(YamlRegistry(merged_registry))}')
 
     return YamlRegistry(merged_registry)
 
@@ -227,12 +235,18 @@ class YamlRegistry(ConfigParserLoader):
         return parser
 
     def _find(self, key: str, search_path: list[str] | None) -> Any:
+        """Locate the value for a given key name in the YAML-based registry.
+
+        The search path is used to prefix the key name with possible
+        domain (for example: 'modules' or 'data_provider')."""
         try_keys = [key]
+
         if search_path is not None:
             try_keys += [f'{path_prefix}.{key}' for path_prefix in search_path]
 
         for try_key in try_keys:
             if try_key in self._cfg:
+                logging.debug(f'found registry entry for key `{try_key}`')
                 return self._cfg.get(try_key)
 
         raise ComponentNotFoundError(f'component not found: {key} (tried: {", ".join(try_keys)})')

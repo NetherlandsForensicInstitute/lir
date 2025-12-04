@@ -7,11 +7,10 @@ from pathlib import Path
 import confidence
 
 from lir import registry
-from lir.aggregation import AggregatePlot, Aggregation, WriteMetricsToCsv
+from lir.aggregation import Aggregation
 from lir.config.base import (
     ConfigParser,
-    ContextAwareList,
-    GenericFunctionConfigParser,
+    GenericConfigParser,
     YamlParseError,
     check_is_empty,
     pop_field,
@@ -21,44 +20,16 @@ from lir.config.lrsystem_architectures import (
     parse_augmented_lrsystem,
     parse_lrsystem,
 )
+from lir.config.metrics import parse_metric
 from lir.config.substitution import (
     ContextAwareDict,
     Hyperparameter,
     _expand,
     parse_hyperparameter,
 )
-from lir.config.visualization import parse_visualizations
 from lir.data.models import DataStrategy
 from lir.experiment import Experiment, PredefinedExperiment
 from lir.optuna import OptunaExperiment
-from lir.registry import ComponentNotFoundError
-
-
-def parse_metric(name: str, output_path: Path, context: list[str]) -> Callable:
-    try:
-        parser = registry.get(
-            name,
-            default_config_parser=GenericFunctionConfigParser,
-            search_path=['metrics'],
-        )
-        return parser.parse(ContextAwareDict(context), output_path)
-    except ComponentNotFoundError as e:
-        raise YamlParseError(context, str(e))
-
-
-def parse_metrics_aggregation(config: ContextAwareList, output_path: Path) -> Aggregation:
-    """Parse the metrics section from the configuration.
-
-    A resulting mapping of metric name and corresponding function is returned.
-
-    Each metric function takes two arguments:
-        (1) a numpy array of lrs, and;
-        (2) a numpy array of labels.
-    The metric function should return the value of the metric.
-    The metrics are looked up by their name in the registry.
-    """
-    metric_dict = {metric_name: parse_metric(metric_name, output_path, config.context) for metric_name in config}
-    return WriteMetricsToCsv(output_path / 'metrics.csv', metric_dict)
 
 
 class ExperimentStrategyConfigParser(ConfigParser, ABC):
@@ -77,31 +48,41 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         metric_name = pop_field(self._config, 'primary_metric')
         return parse_metric(metric_name, self._output_dir, self._config.context)
 
-    def aggregations(self) -> Sequence[Aggregation]:
-        aggregation = pop_field(self._config, 'aggregation', required=False)
-        if not aggregation:
+    def output_list(self) -> Sequence[Aggregation]:
+        config: ContextAwareDict = pop_field(self._config, 'output', required=False)
+        if not config:
             return []
 
         results: list[Aggregation] = []
+        for i, item in enumerate(config):
+            # Normalise configuration into (class_name, args)
+            if isinstance(item, str):
+                class_name, args = item, ContextAwareDict(config.context + [str(i)])
+            elif isinstance(item, ContextAwareDict):
+                class_name = pop_field(item, 'method')
+                args = item
+            else:
+                raise YamlParseError(
+                    config.context,
+                    'Invalid output configuration; expected a string or a mapping with a "method" field.',
+                )
 
-        if 'metrics' in aggregation:
-            metrics = parse_metrics_aggregation(pop_field(aggregation, 'metrics'), self._output_dir)
-            results.append(metrics)
-
-        if 'visualization' in aggregation:
-            visualization_functions = parse_visualizations(
-                pop_field(aggregation, 'visualization'),
-                self._output_dir,
+            parser: ConfigParser = registry.get(
+                class_name,
+                default_config_parser=GenericConfigParser,
+                search_path=['output'],
             )
+            parsed_object = parser.parse(args, self._output_dir)
 
-            for vis_func in visualization_functions:
-                results.append(AggregatePlot(vis_func, str(self._output_dir)))
+            if not isinstance(parsed_object, Aggregation):
+                raise YamlParseError(
+                    config.context,
+                    f'Invalid output configuration; expected an Aggregation, found: {type(parsed_object)}.',
+                )
 
-        check_is_empty(aggregation)
+            results.append(parsed_object)  # type: ignore
+
         return results
-
-    def visualization_functions(self) -> list[Callable]:
-        return parse_visualizations(pop_field(self._config, 'visualization', required=False), self._output_dir)
 
     def lrsystem(self) -> tuple[ContextAwareDict, list[Hyperparameter]]:
         baseline_config = pop_field(self._config, 'lr_system')
@@ -147,8 +128,7 @@ class SingleRunStrategy(ExperimentStrategyConfigParser):
         return PredefinedExperiment(
             name,
             self.data(),
-            self.aggregations(),
-            self.visualization_functions(),
+            self.output_list(),
             self._output_dir,
             [lrsystem],
         )
@@ -171,8 +151,7 @@ class GridStrategy(ExperimentStrategyConfigParser):
         return PredefinedExperiment(
             name,
             self.data(),
-            self.aggregations(),
-            self.visualization_functions(),
+            self.output_list(),
             self._output_dir,
             lrsystems,
         )
@@ -187,8 +166,7 @@ class OptunaStrategy(ExperimentStrategyConfigParser):
         return OptunaExperiment(
             name,
             self.data(),
-            self.aggregations(),
-            self.visualization_functions(),
+            self.output_list(),
             self._output_dir,
             baseline_config,
             parameters,

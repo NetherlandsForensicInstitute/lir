@@ -1,15 +1,19 @@
 import csv
 from abc import ABC, abstractmethod
 from collections import OrderedDict
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 from typing import IO, Any, NamedTuple
 
 from matplotlib import pyplot as plt
 
+from lir.algorithms.bayeserror import plot_nbe as nbe
+from lir.config.base import ContextAwareDict, YamlParseError, config_parser, pop_field
+from lir.config.metrics import parse_metric
 from lir.data.models import LLRData
 from lir.lrsystems.lrsystems import LRSystem
-from lir.plotting import Canvas
+from lir.plotting import llr_interval, lr_histogram, pav, tippett
+from lir.plotting.expected_calibration_error import plot_ece as ece
 
 
 class AggregationData(NamedTuple):
@@ -48,36 +52,63 @@ class Aggregation(ABC):
 class AggregatePlot(Aggregation):
     """Aggregation that generates plots by repeatedly calling a plotting function."""
 
-    def __init__(self, plot_function: Callable, output_dir: str) -> None:
-        super().__init__()
-
-        self.f = plot_function
-        self.dir = output_dir
-        self.plot_type = plot_function.__name__
-        self._fig, self._ax = plt.subplots(figsize=(10, 8))
-        self._canvas = Canvas(self._ax)
+    def __init__(self, plot_fn: Callable, plot_name: str, output_dir: Path | None = None) -> None:
+        self.output_path = output_dir
+        self.plot_fn = plot_fn
+        self.plot_name = plot_name
 
     def report(self, data: AggregationData) -> None:
-        self._canvas.plot(
-            [],
-            [],
-            marker='None',
-            linestyle='None',
-            color='white',  # This is necessary to avoid matplotlib from cycling through colours
-            label=', '.join(f'{k}={v}' for k, v in data.parameters.items()),
-        )  # Dummy plot to add legend entry
+        """Plot the data when new results are available."""
+        fig, ax = plt.subplots()
 
-        self.f(None, data.llrdata, self._canvas)
+        llrdata = data.llrdata
+        parameters = data.parameters
 
-    def close(self) -> None:
-        """Generate and save each plot after all results have been reported."""
-        self._ax.set_title(f'Aggregated {self.plot_type}')
-        self._fig.savefig(f'{self.dir}/aggregated_{self.plot_type}.png')
+        self.plot_fn(llrdata=llrdata, ax=ax)
+
+        # Only save the figure when an output path is provided.
+        if self.output_path is not None:
+            dir_name = self.output_path
+            param_string = '__'.join(f'{k}={v}' for k, v in parameters.items())
+            file_name = dir_name / f'{param_string}_{self.plot_name}.png'
+            dir_name.mkdir(exist_ok=True, parents=True)
+
+            fig.savefig(file_name)
+
+
+@config_parser
+def plot_pav(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    return AggregatePlot(output_dir=output_dir, plot_fn=pav, plot_name='PAV')
+
+
+@config_parser
+def plot_ece(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    return AggregatePlot(output_dir=output_dir, plot_fn=ece, plot_name='ECE')
+
+
+@config_parser
+def plot_lr_histogram(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    return AggregatePlot(output_dir=output_dir, plot_fn=lr_histogram, plot_name='LR_Histogram')
+
+
+@config_parser
+def plot_llr_interval(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    return AggregatePlot(output_dir=output_dir, plot_fn=llr_interval, plot_name='LLR_Interval')
+
+
+@config_parser
+def plot_nbe(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    return AggregatePlot(output_dir=output_dir, plot_fn=nbe, plot_name='NBE')
+
+
+@config_parser
+def plot_tipett(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    return AggregatePlot(output_dir=output_dir, plot_fn=tippett, plot_name='Tipett')
 
 
 class WriteMetricsToCsv(Aggregation):
-    def __init__(self, path: Path, metrics: Mapping[str, Callable]):
-        self.path = path
+    def __init__(self, output_dir: Path, metrics: Mapping[str, Callable]):
+        self.path = output_dir / 'metrics.csv'
         self._file: IO[Any] | None = None
         self._writer: csv.DictWriter | None = None
         self.metrics = metrics
@@ -98,3 +129,16 @@ class WriteMetricsToCsv(Aggregation):
     def close(self) -> None:
         if self._file:
             self._file.close()
+
+
+@config_parser
+def metrics_csv(config: ContextAwareDict, output_dir: Path) -> WriteMetricsToCsv:
+    metrics = pop_field(config, 'columns', required=True)
+    if not isinstance(metrics, Sequence):
+        raise YamlParseError(
+            config.context,
+            'Invalid metrics configuration; expected a list of metric names.',
+        )
+
+    metrics = {name: parse_metric(name, output_dir, config.context) for name in metrics}
+    return WriteMetricsToCsv(output_dir, metrics)

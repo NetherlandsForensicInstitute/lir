@@ -65,11 +65,14 @@ modules:
 metrics:
   cllr: lir.metrics.cllr
   cllr_min: lir.metrics.cllr_min
-visualization:
-  pav: lir.visualization.pav
-  ece: lir.visualization.ece
-  lr_histogram: lir.visualization.lr_histogram
-  llr_interval: lir.visualization.llr_interval
+output:
+  csv: lir.aggregation.metrics_csv
+  pav: lir.aggregation.plot_pav
+  ece: lir.aggregation.plot_ece
+  lr_histogram: lir.aggregation.plot_lr_histogram
+  llr_interval: lir.aggregation.plot_llr_interval
+  nbe: lir.aggregation.plot_nbe
+  tipett: lir.aggregation.plot_tipett
 pairing:
   instance_pairs: lir.transform.pairing.InstancePairing
   source_pairs: lir.transform.pairing.SourcePairing

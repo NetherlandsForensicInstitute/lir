@@ -42,8 +42,7 @@ experiments:
   # - lr_system -- the base LR system to evaluate
   # - data -- data for evaluation
   # - parameter -- the parameters to vary
-  # - metrics -- metrics to report to the end user
-  # - visualization -- LR visualization functions
+  # - output -- metrics and visualizations to report to the end user
   #
   optimize_kde_bandwidth:
     strategy: optuna
@@ -72,10 +71,10 @@ experiments:
           - option_name: svm
             method: svm
             probability: True
-    aggregation:
-      metrics:
+    output:
+      - method: csv
+        columns:
         - cllr
         - cllr_min
-    visualization:
       - pav
       - ece

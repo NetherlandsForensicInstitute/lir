@@ -1,3 +1,5 @@
+from typing import Any, Self
+
 import numpy as np
 import sklearn
 
@@ -12,11 +14,11 @@ class AbsDiffTransformer(sklearn.base.TransformerMixin):
         - X has shape (n, f)
     """
 
-    def fit(self, X, y=None):
+    def fit(self, X: Any, y: Any = None) -> Self:
         return self
 
-    def transform(self, X):
+    def transform(self, X: np.ndarray) -> np.ndarray:
         assert len(X.shape) == 3
-        assert X.shape[2] == 2
+        assert X.shape[1] == 2
 
-        return np.abs(X[:, :, 0] - X[:, :, 1])
+        return np.abs(X[:, 0, :] - X[:, 1, :])

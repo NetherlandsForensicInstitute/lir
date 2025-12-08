@@ -7,8 +7,8 @@ See:
     In: Submitted for publication in 2025.
 """
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 
 from lir.bounding import LLRBounder
 from lir.util import logodds_to_odds, odds_to_logodds
@@ -48,20 +48,20 @@ def plot_invariance_delta_functions(
     ax.plot(
         llr_threshold,
         delta_low,
-        "--",
-        label=r"$\Delta_{lower}$ is 0 at " + str(lower_llr),
+        '--',
+        label=r'$\Delta_{lower}$ is 0 at ' + str(lower_llr),
     )
     ax.plot(
         llr_threshold,
         delta_high,
-        "-",
-        label=r"$\Delta_{upper}$ is 0 at " + str(upper_llr),
+        '-',
+        label=r'$\Delta_{upper}$ is 0 at ' + str(upper_llr),
     )
-    ax.axhline(color="k", linestyle="dotted")
+    ax.axhline(color='k', linestyle='dotted')
     # Some more formatting
-    ax.legend(loc="upper left")
-    ax.set_xlabel("log10(LR)")
-    ax.set_ylabel(r"$\Delta$-value")
+    ax.legend(loc='upper left')
+    ax.set_xlabel('log10(LR)')
+    ax.set_ylabel(r'$\Delta$-value')
 
 
 def calculate_invariance_bounds(

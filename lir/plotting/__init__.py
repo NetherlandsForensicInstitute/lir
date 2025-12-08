@@ -1,6 +1,6 @@
-from collections.abc import Iterator
 import logging
-from contextlib import contextmanager, _GeneratorContextManager
+from collections.abc import Iterator
+from contextlib import _GeneratorContextManager, contextmanager
 from functools import partial
 from os import PathLike
 from typing import Any
@@ -8,13 +8,15 @@ from typing import Any
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.axes import Axes
-from matplotlib.axis import Axis
 
 from lir import util
 from lir.algorithms.bayeserror import plot_nbe as nbe
-from .expected_calibration_error import plot_ece as ece
+from lir.data.models import LLRData
+
 from ..algorithms.isotonic_regression import IsotonicCalibrator
 from ..transform import Transformer
+from .expected_calibration_error import plot_ece as ece
+
 
 LOG = logging.getLogger(__name__)
 
@@ -27,10 +29,15 @@ plt.get_xlim = lambda: plt.gca().get_xlim()
 plt.get_ylim = lambda: plt.gca().get_ylim()
 plt.set_xticks = plt.xticks
 plt.set_yticks = plt.yticks
+plt.get_legend = lambda: plt.gca().get_legend()
+
+
+H1_COLOR = 'red'
+H2_COLOR = 'blue'
 
 
 class Canvas:
-    def __init__(self, ax: Axis):
+    def __init__(self, ax: Axes):
         self.ax = ax
 
         self.calibrator_fit = partial(calibrator_fit, ax=ax)
@@ -40,6 +47,7 @@ class Canvas:
         self.pav = partial(pav, ax=ax)
         self.score_distribution = partial(score_distribution, ax=ax)
         self.tippett = partial(tippett, ax=ax)
+        self.llr_interval = partial(llr_interval, ax=ax)
 
     def __getattr__(self, attr: str) -> Any:
         return getattr(self.ax, attr)
@@ -106,8 +114,7 @@ def axes(savefig: PathLike | None = None, show: bool | None = None) -> Iterator[
 
 
 def pav(
-    llrs: np.ndarray,
-    y: np.ndarray,
+    llrdata: LLRData,
     add_misleading: int = 0,
     show_scatter: bool = True,
     ax: Axes = plt,
@@ -130,6 +137,9 @@ def pav(
         defaults to `matplotlib.pyplot`
     ----------
     """
+    llrs = llrdata.llrs
+    y = llrdata.labels
+
     pav = IsotonicCalibrator(add_misleading=add_misleading)
     pav_llrs = pav.fit_transform(llrs, y)
 
@@ -138,8 +148,9 @@ def pav(
         llrs[llrs != np.inf].max() + 0.5,
     ]
 
-    # plot line through origin
-    ax.plot(xrange, yrange)
+    has_legend = ax.get_legend() is not None
+    if not has_legend or 'Consistent system' not in [text.get_text() for text in ax.get_legend().get_texts()]:
+        ax.plot(xrange, yrange, '--', color='gray', label='Consistent system')
 
     # line pre pav llrs x and post pav llrs y
     line_x = np.arange(*xrange, 0.01)
@@ -150,8 +161,8 @@ def pav(
     line_x, line_y = line_x[~np.isnan(line_y)], line_y[~np.isnan(line_y)]
 
     # some values of line_y go beyond the yrange which is problematic when there are infinite values
-    mask_out_of_range = np.logical_and(line_y >= yrange[0], line_y <= yrange[1])
-    ax.plot(line_x[mask_out_of_range], line_y[mask_out_of_range])
+    mask_out_of_range = np.logical_and(line_x >= yrange[0], line_x <= yrange[1])
+    ax.plot(line_x[mask_out_of_range], line_y[mask_out_of_range], label='PAV transform', linewidth=2)
 
     # add points for infinite values
     if np.logical_or(np.isinf(pav_llrs), np.isinf(llrs)).any():
@@ -168,12 +179,12 @@ def pav(
             if neg_inf:
                 axis_range[0] -= step_size
                 ticks = [axis_range[0]] + ticks
-                tick_labels = ["-∞"] + tick_labels
+                tick_labels = ['-∞'] + tick_labels
 
             if pos_inf:
                 axis_range[1] += step_size
                 ticks = ticks + [axis_range[1]]
-                tick_labels = tick_labels + ["+∞"]
+                tick_labels = tick_labels + ['+∞']
 
             return axis_range, ticks, tick_labels
 
@@ -201,21 +212,36 @@ def pav(
         ax.set_yticks(ticks_y, tick_labels_y)
         ax.set_xticks(ticks_x, tick_labels_x)
 
-        ax.scatter(x_inf, y_inf, facecolors="none", edgecolors="#1f77b4", linestyle=":")
+        color = [H1_COLOR if i > 0 else H2_COLOR for i in y_inf]
+        ax.scatter(x_inf, y_inf, color=color, marker='|', linewidth=0.2)
 
     ax.axis(xrange + yrange)
     # pre-/post-calibrated lr fit
 
     if show_scatter:
-        ax.scatter(llrs, pav_llrs)  # scatter plot of measured lrs
+        mask_y = y == 1
+        mask_not_y = ~mask_y
 
-    ax.set_xlabel("pre-calibrated log$_{10}$(LR)")
-    ax.set_ylabel("post-calibrated log$_{10}$(LR)")
+        h1_llrs = np.where(mask_y, llrs, np.nan)
+        h1_pav = np.where(mask_y, pav_llrs, np.nan)
+        h2_llrs = np.where(mask_not_y, llrs, np.nan)
+        h2_pav = np.where(mask_not_y, pav_llrs, np.nan)
+
+        n_h1 = np.count_nonzero(y)
+        n_h2 = len(y) - n_h1
+
+        ax.scatter(h1_llrs, h1_pav, facecolors=H1_COLOR, marker=2, linewidths=0.2, label=f'H1 (n={n_h1})')
+        ax.scatter(h2_llrs, h2_pav, facecolors=H2_COLOR, marker=3, linewidths=0.2, label=f'H2 (n={n_h2})')
+
+        # scatter plot of measured lrs
+
+    ax.set_xlabel('pre-calibrated log$_{10}$(LR)')
+    ax.set_ylabel('post-calibrated log$_{10}$(LR)')
+    ax.legend()
 
 
 def lr_histogram(
-    llrs: np.ndarray,
-    y: np.ndarray,
+    llrdata: LLRData,
     bins: int = 20,
     weighted: bool = True,
     ax: Axes = plt,
@@ -232,16 +258,20 @@ def lr_histogram(
     ax: axes to plot figure to
 
     """
+    llrs = llrdata.llrs
+    y = llrdata.labels
+
     bins = np.histogram_bin_edges(llrs, bins=bins)
     points0, points1 = util.Xy_to_Xn(llrs, y)
     weights0, weights1 = (np.ones_like(points) / len(points) if weighted else None for points in (points0, points1))
-    ax.hist(points1, bins=bins, alpha=0.25, weights=weights1)
-    ax.hist(points0, bins=bins, alpha=0.25, weights=weights0)
-    ax.set_xlabel("log$_{10}$(LR)")
-    ax.set_ylabel("count" if not weighted else "relative frequency")
+    ax.hist(points1, bins=bins, alpha=0.25, weights=weights1, label=f'H1 (n={len(points1)})', color=H1_COLOR)
+    ax.hist(points0, bins=bins, alpha=0.25, weights=weights0, label=f'H2 (n={len(points0)})', color=H2_COLOR)
+    ax.set_xlabel('log$_{10}$(LR)')
+    ax.set_ylabel('count' if not weighted else 'relative frequency')
+    ax.legend()
 
 
-def tippett(llrs: np.ndarray, y: np.ndarray, plot_type: int = 1, ax: Axes = plt) -> None:
+def tippett(llrdata: LLRData, plot_type: int = 1, ax: Axes = plt) -> None:
     """
     plots empirical cumulative distribution functions of same-source and
         different-sources lrs
@@ -256,6 +286,9 @@ def tippett(llrs: np.ndarray, y: np.ndarray, plot_type: int = 1, ax: Axes = plt)
         proportion of lrs smaller than or equal to the x-axis value.
     ax: axes to plot figure to
     """
+    llrs = llrdata.llrs
+    y = llrdata.labels
+
     lr_0, lr_1 = util.Xy_to_Xn(llrs, y)
     xplot0 = np.linspace(np.min(lr_0), np.max(lr_0), 100)
     xplot1 = np.linspace(np.min(lr_1), np.max(lr_1), 100)
@@ -265,14 +298,44 @@ def tippett(llrs: np.ndarray, y: np.ndarray, plot_type: int = 1, ax: Axes = plt)
     elif plot_type == 2:
         perc1 = (sum(i <= xplot1 for i in lr_1) / len(lr_1)) * 100
     else:
-        raise ValueError("plot_type must be either 1 or 2.")
+        raise ValueError('plot_type must be either 1 or 2.')
 
-    ax.plot(xplot1, perc1, color="b", label=r"LRs given $\mathregular{H_1}$")
-    ax.plot(xplot0, perc0, color="r", label=r"LRs given $\mathregular{H_2}$")
-    ax.axvline(x=0, color="k", linestyle="--")
-    ax.set_xlabel("log$_{10}$(LR)")
-    ax.set_ylabel("Cumulative proportion")
+    ax.plot(xplot1, perc1, color='b', label=r'LRs given $\mathregular{H_1}$')
+    ax.plot(xplot0, perc0, color='r', label=r'LRs given $\mathregular{H_2}$')
+    ax.axvline(x=0, color='k', linestyle='--')
+    ax.set_xlabel('log$_{10}$(LR)')
+    ax.set_ylabel('Cumulative proportion')
     ax.legend()
+
+
+def llr_interval(llrdata: LLRData, ax: Axes = plt) -> None:
+    """
+    Plots the lr's on the x-as, with the relative interval score on the y-as.
+
+    Parameters
+    ----------
+    llrdata : LLRData
+        The LLRData object containing the likelihood ratios and interval scores.
+    ax: axes to plot figure to
+
+    """
+    if not llrdata.has_intervals:
+        raise ValueError('LLRData must contain interval scores to plot Score-LR.')
+
+    llr_data = llrdata.features
+    llr_sorted = np.sort(llr_data, axis=0)
+    llrs = llr_sorted[:, 0]
+    interval_scores_low = llr_sorted[:, 1] - llrs
+    interval_scores_high = llr_sorted[:, 2] - llrs
+
+    ax.plot(llrs, interval_scores_high, '|-', linewidth=0.5, color=H1_COLOR, label='Upper interval')
+    ax.plot(llrs, interval_scores_low, '|-', linewidth=0.5, color=H2_COLOR, label='Lower interval')
+
+    ax.axhline(y=0, color='gray', linestyle='--')
+
+    ax.set_xlabel('Likelihood ratio (log$_{10}$)')
+    ax.set_ylabel('Interval around LR (log$_{10}$(LR))')
+    ax.legend(loc=1)
 
 
 def score_distribution(
@@ -301,7 +364,7 @@ def score_distribution(
     """
     if ax is None:
         _, ax = plt.subplots()
-    plt.rcParams.update({"font.size": 15})
+    plt.rcParams.update({'font.size': 15})
 
     bins = np.histogram_bin_edges(scores[np.isfinite(scores)], bins=bins)
     bin_width = bins[1] - bins[0]
@@ -317,8 +380,8 @@ def score_distribution(
 
     # handle inf values
     if np.isinf(scores).any():
-        prop_cycle = plt.rcParams["axes.prop_cycle"]
-        colors = prop_cycle.by_key()["color"]
+        prop_cycle = plt.rcParams['axes.prop_cycle']
+        colors = prop_cycle.by_key()['color']
         x_range = np.linspace(min(bins), max(bins), 6).tolist()
         labels = [str(round(tick, 1)) for tick in x_range]
         step_size = x_range[2] - x_range[1]
@@ -327,7 +390,7 @@ def score_distribution(
 
         if np.isneginf(scores).any():
             x_range = [x_range[0] - step_size] + x_range
-            labels = ["-∞"] + labels
+            labels = ['-∞'] + labels
             for i, s in enumerate(scores_by_class):
                 if np.isneginf(s).any():
                     plot_args_inf.append(
@@ -340,7 +403,7 @@ def score_distribution(
 
         if np.isposinf(scores).any():
             x_range = x_range + [x_range[-1] + step_size]
-            labels.append("∞")
+            labels.append('∞')
             for i, s in enumerate(scores_by_class):
                 if np.isposinf(s).any():
                     plot_args_inf.append(
@@ -354,22 +417,22 @@ def score_distribution(
         ax.set_xticks(x_range, labels)
 
         for color, x_coord, y_coord in plot_args_inf:
-            ax.bar(x_coord, y_coord, width=bar_width, color=color, alpha=0.3, hatch="/")
+            ax.bar(x_coord, y_coord, width=bar_width, color=color, alpha=0.3, hatch='/')
 
-    for cls, weight in zip(y_classes, weights):
+    for cls, weight in zip(y_classes, weights, strict=True):
         ax.hist(
             scores[y == cls],
             bins=bins,
             alpha=0.3,
-            label=f"class {cls}",
+            label=f'class {cls}',
             weights=weight / bin_width if weighted else None,
         )
 
-        ax.set_xlabel("score")
+        ax.set_xlabel('score')
     if weighted:
-        ax.set_ylabel("probability density")
+        ax.set_ylabel('probability density')
     else:
-        ax.set_ylabel("count")
+        ax.set_ylabel('count')
 
 
 def calibrator_fit(
@@ -386,10 +449,10 @@ def calibrator_fit(
     """
     if ax is None:
         _, ax = plt.subplots()
-    plt.rcParams.update({"font.size": 15})
+    plt.rcParams.update({'font.size': 15})
 
     x = np.linspace(score_range[0], score_range[1], resolution)
     calibrator.transform(x)
 
-    ax.plot(x, calibrator.p1, color="tab:blue", label="fit class 1")
-    ax.plot(x, calibrator.p0, color="tab:orange", label="fit class 0")
+    ax.plot(x, calibrator.p1, color='tab:blue', label='fit class 1')
+    ax.plot(x, calibrator.p0, color='tab:orange', label='fit class 0')

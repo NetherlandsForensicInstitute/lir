@@ -16,16 +16,21 @@ data_providers:
   synthesized_normal_multiclass: lir.data.datasets.synthesized_normal_multiclass.synthesized_normal_multiclass
   glass: lir.data.datasets.glass.GlassData
 modules:
+  # pipelines
+  pipeline: lir.transform.pipeline.pipeline
+  debug_pipeline: lir.transform.pipeline.debug_pipeline
+  bootstrap: lir.algorithms.bootstraps.bootstrap
+
   # transformations
   standard_scaler:
     class: sklearn.preprocessing.StandardScaler
-    wrapper: lir.config.numpy_csv_writer
+    wrapper: lir.config.numpy_wrapper
   probabilities_to_odds:
     class: lir.util.probability_to_odds
-    wrapper: lir.config.numpy_csv_writer
+    wrapper: lir.config.numpy_wrapper
   probabilities_to_logodds:
     class: lir.util.probability_to_logodds
-    wrapper: lir.config.numpy_csv_writer
+    wrapper: lir.config.numpy_wrapper
 
   # comparisons
   abs_diff: lir.transform.distance.AbsDiffTransformer
@@ -37,33 +42,38 @@ modules:
   # classifiers
   logistic_regression:
     class: sklearn.linear_model.LogisticRegression
-    wrapper: lir.config.numpy_csv_writer
+    wrapper: lir.config.numpy_wrapper
   svm:
     class: sklearn.svm.SVC
-    wrapper: lir.config.numpy_csv_writer
+    wrapper: lir.config.numpy_wrapper
 
   # calibrators
   kde:
     class: lir.algorithms.kde.KDECalibrator
-    wrapper: lir.config.numpy_csv_writer
+    wrapper: lir.config.numpy_wrapper
   isotonic_calibrator:
     class: lir.algorithms.isotonic_regression.IsotonicRegression
-    wrapper: lir.config.numpy_csv_writer
+    wrapper: lir.config.numpy_wrapper
 
   # bounders
   static_bounder:
     class: lir.bounding.StaticBounder
-    wrapper: lir.config.numpy_csv_writer
+    wrapper: lir.config.numpy_wrapper
   elub_bounder:
     class: lir.algorithms.bayeserror.ELUBBounder
-    wrapper: lir.config.numpy_csv_writer
+    wrapper: lir.config.numpy_wrapper
 metrics:
   cllr: lir.metrics.cllr
   cllr_min: lir.metrics.cllr_min
-visualization:
-  pav: lir.visualization.pav
-  ece: lir.visualization.ece
-  lr_histogram: lir.visualization.lr_histogram
+output:
+  csv: lir.aggregation.metrics_csv
+  pav: lir.aggregation.plot_pav
+  ece: lir.aggregation.plot_ece
+  lr_histogram: lir.aggregation.plot_lr_histogram
+  llr_interval: lir.aggregation.plot_llr_interval
+  nbe: lir.aggregation.plot_nbe
+  tipett: lir.aggregation.plot_tipett
+  save_model: lir.persistence.parse_save_model
 pairing:
   instance_pairs: lir.transform.pairing.InstancePairing
   source_pairs: lir.transform.pairing.SourcePairing

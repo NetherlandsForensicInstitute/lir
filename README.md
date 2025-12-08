@@ -10,7 +10,7 @@ LIR was first released in 2020 and redesigned from scratch in 2025, replacing th
 Installation
 ------------
 
-LIR is compatible with Python 3.10 and later. The easiest way to install LIR is to use `pip`:
+LIR is compatible with Python 3.11 and later. The easiest way to install LIR is to use `pip`:
 
 ```shell
 pip install lir
@@ -58,8 +58,9 @@ Command-line interface
 ----------------------
 
 Evaluate an LR system using the command-line interface as follows:
+
 1. define your data, LR system and experiments in a YAML file;
-2. run `lir --setup <yaml file>`.
+2. run `lir <yaml file>`.
 
 The `examples` folder may be a good starting point for setting up an experiment.
 
@@ -67,7 +68,7 @@ The elements of the experiment configuration YAML are looked up in the registry.
 elements in the registry.
 
 ```commandline
-pdm run benchmark --list-registry
+lir --list-registry
 ```
 
 
@@ -129,6 +130,6 @@ chmod +x .git/hooks/pre-commit
 New dependencies should be installed through `pdm add <dependency_name>`.
 
 When developing locally, the following PDM scripts can be employed:
-- Run linting / formatting / static analysis: `pdm run check`
-- Run tests: `pdm run test`
-- Run all checks and tests: `pdm run all`
+- Run linting / formatting / static analysis: `pdm check`
+- Run tests: `pdm test`
+- Run all checks and tests: `pdm all`

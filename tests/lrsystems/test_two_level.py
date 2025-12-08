@@ -6,6 +6,7 @@ from lir.data.datasets.synthesized_normal_multiclass import (
     SynthesizedNormalMulticlassData,
     SynthesizedDimension,
 )
+from lir.lrsystems.lrsystems import LLRData
 from lir.lrsystems.two_level import TwoLevelSystem
 from lir.transform.pairing import SourcePairing
 
@@ -30,8 +31,10 @@ def _calculate_cllr(
     system = TwoLevelSystem(
         "test_system", None, pairing, None, n_trace_instances=50, n_ref_instances=50
     )
-    system.fit(*training_data)
-    pair_llrs, pair_labels, pair_meta = system.apply(*test_data)
+    system.fit(training_data)
+    llr_data: LLRData = system.apply(test_data)
+    pair_llrs = llr_data.llrs
+    pair_labels = llr_data.labels
 
     return metrics.cllr(pair_llrs, pair_labels)
 

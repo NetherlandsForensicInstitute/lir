@@ -4,7 +4,7 @@ from lir.algorithms.isotonic_regression import IsotonicCalibrator
 from lir.util import Xy_to_Xn, logodds_to_odds
 
 
-def _calcsurface(c1: (float, float), c2: (float, float)) -> float:
+def _calcsurface(c1: tuple[float, float], c2: tuple[float, float]) -> float:
     """
     Helperfunction that calculates the desired surface for two xy-coordinates
     """
@@ -23,7 +23,7 @@ def _calcsurface(c1: (float, float), c2: (float, float)) -> float:
 
     elif a < 0:
         raise ValueError(
-            f"slope is negative; impossible for PAV-transform. Coordinates are {c1} and {c2}. Calculated slope is {a}"
+            f'slope is negative; impossible for PAV-transform. Coordinates are {c1} and {c2}. Calculated slope is {a}'
         )
     else:
         # than xs is finite:
@@ -65,11 +65,11 @@ def _calcsurface(c1: (float, float), c2: (float, float)) -> float:
                 # situation 4 of 4 : this situation should never appear. There is a fourth sibution as situation 3,
                 # but than above the identity line. However, this is impossible by definition of a
                 # PAV-transform (y2 > x1).
-                raise ValueError(f"unexpected coordinate combination: ({x1}, {y1}) and ({x2}, {y2})")
+                raise ValueError(f'unexpected coordinate combination: ({x1}, {y1}) and ({x2}, {y2})')
     return surface
 
 
-def _devpavcalculator(lrs, pav_lrs, y):
+def _devpavcalculator(lrs: np.ndarray, pav_lrs: np.ndarray, y: np.ndarray) -> float:
     """
     function that calculates davPAV for a PAVresult for SSLRs and DSLRs  een PAV transformatie de devPAV uitrekent
     Input: Lrs = np.array met LR-waarden. pav_lrs = np.array met uitkomst van PAV-transformatie op lrs. y = np.array met
@@ -112,8 +112,6 @@ def _devpavcalculator(lrs, pav_lrs, y):
         wh = (Yen > 0) & (Yen < np.inf)
         Xen = np.log10(Xen[wh])
         Yen = np.log10(Yen[wh])
-        # create an empty list with size (len(Xen))
-        devPAVs = [None] * len(Xen)
         # sanity check
         if len(Xen) == 0:
             return np.nan
@@ -122,10 +120,9 @@ def _devpavcalculator(lrs, pav_lrs, y):
         # than calculate devPAV
         else:
             deltaX = Xen[-1] - Xen[0]
-            surface = 0
-            for i in range(1, (len(Xen))):
+            surface = 0.0
+            for i in range(1, len(Xen)):
                 surface = surface + _calcsurface((Xen[i - 1], Yen[i - 1]), (Xen[i], Yen[i]))
-                devPAVs[i - 1] = _calcsurface((Xen[i - 1], Yen[i - 1]), (Xen[i], Yen[i]))
             # return(list(surface/a, PAVresult, Xen, Yen, devPAVs))
             return surface / deltaX
 
@@ -135,7 +132,7 @@ def devpav(llrs: np.ndarray, y: np.ndarray) -> float:
     calculates devPAV for LR data under H1 and H2.
     """
     if all(y) or not any(y):
-        raise ValueError("devpav: illegal input: at least one value is required for each class")
+        raise ValueError('devpav: illegal input: at least one value is required for each class')
     cal = IsotonicCalibrator()
     pavllrs = cal.fit_transform(llrs, y)
     return _devpavcalculator(logodds_to_odds(llrs), logodds_to_odds(pavllrs), y)

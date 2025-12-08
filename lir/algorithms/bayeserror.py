@@ -12,84 +12,95 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from lir.bounding import LLRBounder
-from lir.util import logodds_to_odds, odds_to_logodds
+from lir.data.models import LLRData
+from lir.util import logodds_to_odds
 
 
 def plot_nbe(
-    llrs,
-    y,
-    log_lr_threshold_range=None,
+    llrdata: LLRData,
+    log_lr_threshold_range: tuple[float, float] | None = None,
     add_misleading: int = 1,
     step_size: float = 0.01,
-    ax=plt,
-):
+    ax: plt.Axes = plt,  # type: ignore
+) -> None:
+    llrs = llrdata.llrs
+    y = llrdata.labels
+    if y is None:
+        raise ValueError('LLRData must contain labels to plot NBE.')
+
     if log_lr_threshold_range is None:
         log_lr_threshold_range = (np.min(llrs) - 0.5, np.max(llrs) + 0.5)
 
     log_lr_threshold = np.arange(*log_lr_threshold_range, step_size)
     lr_threshold = np.power(10, log_lr_threshold)
 
-    eu_neutral = calculate_expected_utility(np.ones(len(llrs)), y, lr_threshold)
+    eu_neutral = calculate_expected_utility(np.ones_like(llrs), y, lr_threshold)
     eu_system = calculate_expected_utility(logodds_to_odds(llrs), y, lr_threshold, add_misleading)
 
     ax.plot(log_lr_threshold, np.log10(eu_neutral / eu_system))
 
-    ax.set_xlabel("log$_{10}$(threshold LR)")
-    ax.set_ylabel("log$_{10}$(expected utility ratio)")
+    ax.set_xlabel('log$_{10}$(threshold LR)')
+    ax.set_ylabel('log$_{10}$(expected utility ratio)')
     ax.set_xlim(log_lr_threshold_range)
-    ax.grid(True, linestyle=":")
+    ax.grid(True, linestyle=':')
 
 
 def elub(
-    lrs,
-    y,
+    llrs: np.ndarray,
+    y: np.ndarray,
     add_misleading: int = 1,
     step_size: float = 0.01,
-    substitute_extremes=(np.exp(-20), np.exp(20)),
-):
+    substitute_extremes: tuple[float, float] = (-9, 9),
+) -> tuple[float, float]:
     """
-    Returns the empirical upper and lower bound LRs (ELUB LRs).
+    Returns the empirical upper and lower bound log10-LRs (ELUB LLRs).
 
-    :param lrs: an array of LRs
-    :param y: an array of ground-trugh labels (values 0 for Hd or 1 for Hp);
-        must be of the same length as `lrs`
-    :param add_misleading: the number of consequential misleading LRs to be added
+    :param llrs: an array of log10-LRs
+    :param y: an array of ground-truth labels (values 0 for Hd or 1 for Hp);
+        must be of the same length as `llrs`
+    :param add_misleading: the number of consequential misleading LLRs to be added
         to both sides (labels 0 and 1)
-    :param step_size: required accuracy on a natural logarithmic scale
+    :param step_size: required accuracy on a 10-base logarithmic scale
     :param substitute_extremes: tuple of scalars: substitute for extreme LRs, i.e.
         LRs of 0 and inf are substituted by these values
     """
 
-    # remove LRs of 0 and infinity
-    sanitized_lrs = lrs
-    sanitized_lrs[sanitized_lrs < substitute_extremes[0]] = substitute_extremes[0]
-    sanitized_lrs[sanitized_lrs > substitute_extremes[1]] = substitute_extremes[1]
+    # remove LLRs of -infinity and +infinity
+    sanitized_llrs = llrs
+    sanitized_llrs[sanitized_llrs < substitute_extremes[0]] = substitute_extremes[0]
+    sanitized_llrs[sanitized_llrs > substitute_extremes[1]] = substitute_extremes[1]
 
-    # determine the range of LRs to be considered
-    llrs = np.log(sanitized_lrs)
-    log_lr_threshold_range = (min(0, np.min(llrs)), max(0, np.max(llrs)) + step_size)
-    lr_threshold = np.exp(np.arange(*log_lr_threshold_range, step_size))
+    # determine the range of LLRs to be considered, using dataset sizes: LB > -log10(size(Hp)+1), UB < log10(size(Hd)+1)
+    llr_min = max(np.min(sanitized_llrs), -np.log10(np.sum(y) + 1))
+    llr_max = min(np.max(sanitized_llrs), np.log10(np.sum(1 - y) + 1))
+    llr_steps_min = min(0, int(np.floor_divide(llr_min, step_size)))
+    llr_steps_max = max(0, int((np.floor_divide(llr_max, step_size)) + 1))
+    llr_threshold = np.linspace(llr_steps_min * step_size, llr_steps_max * step_size, llr_steps_max - llr_steps_min + 1)
 
-    eu_neutral = calculate_expected_utility(np.ones(len(sanitized_lrs)), y, lr_threshold)
-    eu_system = calculate_expected_utility(sanitized_lrs, y, lr_threshold, add_misleading)
+    # calculate the ratio of the expected utilities
+    eu_neutral = calculate_expected_utility(np.ones(len(sanitized_llrs)), y, 10**llr_threshold)
+    eu_system = calculate_expected_utility(10**sanitized_llrs, y, 10**llr_threshold, add_misleading)
     eu_ratio = eu_neutral / eu_system
 
-    # find threshold LRs which have utility ratio < 1 (only utility ratio >= 1 is acceptable)
-    eu_negative_left = lr_threshold[(lr_threshold <= 1) & (eu_ratio < 1)]
-    eu_negative_right = lr_threshold[(lr_threshold >= 1) & (eu_ratio < 1)]
+    # find threshold LLRs which have utility ratio < 1 (only utility ratio >= 1 is acceptable)
+    eu_negative_left = llr_threshold[(llr_threshold <= 0) & (eu_ratio < 1)]
+    eu_negative_right = llr_threshold[(llr_threshold >= 0) & (eu_ratio < 1)]
 
-    lower_bound = np.max(eu_negative_left * np.exp(step_size), initial=np.min(lr_threshold))
-    upper_bound = np.min(eu_negative_right / np.exp(step_size), initial=np.max(lr_threshold))
+    # use the most conservative LLR as bound (closest to 0, assuming all are on the expected size of 0)
+    lower_bound = np.max(eu_negative_left + step_size, initial=np.min(llr_threshold))
+    upper_bound = np.min(eu_negative_right - step_size, initial=np.max(llr_threshold))
 
-    # Check for bounds on the wrong side of 1. This may occur for badly
+    # Check for bounds on the wrong side of 0. This may occur for badly
     # performing LR systems, e.g. if expected utility is always below neutral.
-    lower_bound = min(lower_bound, 1)
-    upper_bound = max(upper_bound, 1)
+    lower_bound = min(lower_bound, 0)
+    upper_bound = max(upper_bound, 0)
 
     return lower_bound, upper_bound
 
 
-def calculate_expected_utility(lrs, y, threshold_lrs, add_misleading: int = 0):
+def calculate_expected_utility(
+    lrs: np.ndarray, y: np.ndarray, threshold_lrs: np.ndarray, add_misleading: int = 0
+) -> float:
     """
     Calculates the expected utility of a set of LRs for a given threshold.
 
@@ -151,5 +162,4 @@ class ELUBBounder(LLRBounder):
     """
 
     def calculate_bounds(self, llrs: np.ndarray, labels: np.ndarray) -> tuple[float | None, float | None]:
-        lower_lr_bound, upper_lr_bound = elub(logodds_to_odds(llrs), labels, add_misleading=1)
-        return odds_to_logodds(lower_lr_bound), odds_to_logodds(upper_lr_bound)
+        return elub(llrs, labels, add_misleading=1)

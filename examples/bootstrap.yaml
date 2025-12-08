@@ -1,0 +1,49 @@
+output: output/${timestamp}_bootstrap
+
+data:
+  provider: synthesized_normal_binary
+  seed: 42
+  h1:
+    mean: 1
+    std: 1
+    size: 1000
+  h2:
+    mean: -1
+    std: 1
+    size: 1000
+
+cross_validation_splits:
+  strategy: binary_cross_validation
+  folds: 5
+  seed: 42
+  source: ${data}
+
+lr_system:
+  architecture: specific_source
+  modules:
+    method: bootstrap
+    n_bootstraps: 2
+    seed: 0
+    points: data
+    # n_points: 100
+    steps:
+      kde:
+        method: kde
+        bandwidth:
+          - 0.05  
+          - 0.23 
+      elub: elub_bounder
+        
+experiments:
+  model_selection:
+    strategy: single_run
+    lr_system: ${lr_system}
+    data: ${cross_validation_splits}
+    output:
+      - method: csv
+        columns:
+        - cllr
+        - cllr_min
+      - pav
+      - ece
+      - llr_interval

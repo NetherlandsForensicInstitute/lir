@@ -1,14 +1,15 @@
-from collections.abc import Callable
 import logging
 import math
 import warnings
-from typing import Sized
+from collections.abc import Callable
+from typing import Self
 
 import numpy as np
-from sklearn.base import TransformerMixin, BaseEstimator
+from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.neighbors import KernelDensity
 
-from lir.util import ln_to_log10, Xy_to_Xn, check_misleading_finite
+from lir.util import Xy_to_Xn, check_misleading_finite, ln_to_log10
+
 
 LOG = logging.getLogger(__name__)
 
@@ -19,7 +20,7 @@ def compensate_and_remove_neginf_inf(
     """
     for Gaussian and KDE-calibrator fitting: remove negInf, Inf and compensate
     """
-    X_finite = np.isfinite(log_odds)
+    X_finite = np.isfinite(log_odds).flatten()
     el_H1 = np.logical_and(X_finite, y == 1)
     el_H2 = np.logical_and(X_finite, y == 0)
     n_H1 = np.sum(y)
@@ -28,6 +29,44 @@ def compensate_and_remove_neginf_inf(
     y = y[X_finite]
     log_odds = log_odds[X_finite]
     return log_odds, y, numerator, denominator
+
+
+def parse_bandwidth(
+    bandwidth: Callable | str | float | tuple[float, float] | None,
+) -> Callable:
+    """
+    Returns bandwidth as a tuple of two (optional) floats.
+    Extrapolates a single bandwidth.
+
+    :param bandwidth: provided bandwidth
+    :return: bandwidth used for kde0, bandwidth used for kde1
+    """
+    match bandwidth:
+        case None:
+            raise ValueError('Missing `bandwidth` argument for KDE')
+
+        case Callable():  #  type: ignore[misc]
+            return bandwidth
+
+        # string of specific supported bandwidth function
+        case str():
+            if bandwidth == 'silverman':
+                return KDECalibrator.bandwidth_silverman
+
+            # The given bandwidth method is not supported
+            raise ValueError(f'Invalid input for bandwidth: {bandwidth}')
+
+        # tuple or list
+        case [int() | float() as bandwidth_0, int() | float() as bandwidth_1]:
+            # Lambda function casting input to a tuple of the bandwidth ranges
+            return lambda X, y: (bandwidth_0, bandwidth_1)
+
+        case float() | int():
+            # Lambda function casting input to a tuple of the bandwidth ranges
+            return lambda X, y: (0 + bandwidth, bandwidth)
+
+        case _:
+            raise ValueError(f'Invalid `bandwidth` type: {type(bandwidth)} (value={bandwidth!r})')
 
 
 class KDECalibrator(BaseEstimator, TransformerMixin):
@@ -48,13 +87,14 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
             * If bandwidth is callable, it should accept two arguments, `X` and `y`, and return a tuple of two values
               which are the bandwidths for the two distributions.
         """
-        self.bandwidth: Callable = self._parse_bandwidth(bandwidth)
+        self.bandwidth: Callable = parse_bandwidth(bandwidth)
         self._kde0: KernelDensity | None = None
         self._kde1: KernelDensity | None = None
-        self.numerator, self.denominator = None, None
+        self.numerator: float | None = None
+        self.denominator: float | None = None
 
     @staticmethod
-    def bandwidth_silverman(X, y) -> list[float]:
+    def bandwidth_silverman(X: np.ndarray, y: np.ndarray) -> list[float]:
         """
         Estimates the optimal bandwidth parameter using Silverman's rule of
         thumb.
@@ -68,10 +108,11 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
             if std == 0:
                 # can happen eg if std(values) = 0
                 warnings.warn(
-                    "silverman bandwidth cannot be calculated if standard deviation is 0",
+                    'silverman bandwidth cannot be calculated if standard deviation is 0',
                     RuntimeWarning,
+                    stacklevel=2,
                 )
-                LOG.info("found a silverman bandwidth of 0 (using dummy value)")
+                LOG.info('found a silverman bandwidth of 0 (using dummy value)')
                 std = 1
 
             v = math.pow(std, 5) / len(values) * 4.0 / 3
@@ -79,14 +120,14 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
 
         return bandwidth
 
-    @staticmethod
-    def bandwidth_scott(X, y):
-        """
-        Not implemented.
-        """
-        raise
+    def fit(self, X: np.ndarray, y: np.ndarray) -> Self:
+        # check if we have matching dimensions
+        if np.prod(X.shape) != len(y):
+            raise ValueError(f'invalid shape: expected: ({len(y)},) or ({len(y)}, 1); found: {X.shape}')
 
-    def fit(self, X, y):
+        # make sure we have a 2d array of one column
+        X = X.reshape(-1, 1)
+
         # check if data is sane
         check_misleading_finite(X, y)
 
@@ -95,17 +136,17 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
         # LRs in finite range will be corrected for fractions in transform function
         X, y, self.numerator, self.denominator = compensate_and_remove_neginf_inf(X, y)
         X0, X1 = Xy_to_Xn(X, y)
-        X0 = X0.reshape(-1, 1)
-        X1 = X1.reshape(-1, 1)
 
         bandwidth0, bandwidth1 = self.bandwidth(X, y)
-        self._kde0 = KernelDensity(kernel="gaussian", bandwidth=bandwidth0).fit(X0)
-        self._kde1 = KernelDensity(kernel="gaussian", bandwidth=bandwidth1).fit(X1)
+        self._kde0 = KernelDensity(kernel='gaussian', bandwidth=bandwidth0).fit(X0)
+        self._kde1 = KernelDensity(kernel='gaussian', bandwidth=bandwidth1).fit(X1)
         return self
 
-    def transform(self, X):
+    def transform(self, X: np.ndarray) -> np.ndarray:
         """Provide LLR's as output."""
-        assert self._kde0 is not None, "KDECalibrator.transform() called before fit"
+        if self._kde0 is None or self._kde1 is None or self.numerator is None or self.denominator is None:
+            raise ValueError('KDECalibrator.transform() called before fit')
+
         self.p0 = np.empty(np.shape(X))
         self.p1 = np.empty(np.shape(X))
         # initiate LRs_output
@@ -142,32 +183,4 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
         log10_compensator = np.log10(self.numerator / self.denominator)
         LLRs_output[el] = log10_compensator + log10_dif
 
-        return LLRs_output
-
-    @staticmethod
-    def _parse_bandwidth(
-        bandwidth: Callable | float | tuple[float, float] | None,
-    ) -> Callable:
-        """
-        Returns bandwidth as a tuple of two (optional) floats.
-        Extrapolates a single bandwidth
-        :param bandwidth: provided bandwidth
-        :return: bandwidth used for kde0, bandwidth used for kde1
-        """
-        if bandwidth is None:
-            raise ValueError("missing bandwidth argument for KDE")
-        elif callable(bandwidth):
-            return bandwidth
-        elif bandwidth == "silverman":
-            return KDECalibrator.bandwidth_silverman
-        elif bandwidth == "scott":
-            return KDECalibrator.bandwidth_scott
-        elif isinstance(bandwidth, str):
-            raise ValueError(f"invalid input for bandwidth: {bandwidth}")
-        elif isinstance(bandwidth, Sized):
-            assert (
-                len(bandwidth) == 2
-            ), f"bandwidth should have two elements; found {len(bandwidth)}; bandwidth = {bandwidth}"
-            return lambda X, y: bandwidth
-        else:
-            return lambda X, y: (0 + bandwidth, bandwidth)
+        return LLRs_output.flatten()

@@ -10,40 +10,19 @@ from lir.config.base import (
     pop_field,
 )
 from lir.config.substitution import (
-    substitute_hyperparameters,
-    HyperparameterOption,
     ContextAwareDict,
+    HyperparameterOption,
+    substitute_hyperparameters,
 )
 from lir.config.transform import parse_module
-from lir.lrsystems.lrsystems import LRSystem, Pipeline
+from lir.lrsystems.binary_lrsystem import BinaryLRSystem
+from lir.lrsystems.lrsystems import LRSystem
 from lir.lrsystems.score_based import ScoreBasedSystem
-from lir.lrsystems.specific_source import SpecificSourceSystem
 from lir.lrsystems.two_level import TwoLevelSystem
 from lir.registry import ComponentNotFoundError
 
 
 LOG = logging.getLogger(__name__)
-
-
-def parse_pipeline(modules_config: ContextAwareDict, output_dir: Path) -> Pipeline:
-    """Construct a scikit-learn Pipeline based on the provided configuration."""
-    if modules_config is None:
-        return Pipeline([])
-
-    module_names = list(modules_config.keys())
-    modules = [
-        (
-            module_name,
-            parse_module(
-                pop_field(modules_config, module_name),
-                output_dir,
-                modules_config.context + [module_name],
-            ),
-        )
-        for module_name in module_names
-    ]
-
-    return Pipeline(modules)
 
 
 @config_parser
@@ -53,8 +32,8 @@ def specific_source(config: ContextAwareDict, output_dir: Path) -> LRSystem:
     The `specific_source` function name corresponds with the naming scheme in the
     registry. See for example: `lir.config.lrsystems.specific_source`.
     """
-    pipeline = parse_pipeline(pop_field(config, "modules"), output_dir)
-    return SpecificSourceSystem(output_dir.name, pipeline)
+    pipeline = parse_module(pop_field(config, 'modules'), output_dir, config.context, default_method='pipeline')
+    return BinaryLRSystem(output_dir.name, pipeline)
 
 
 @config_parser
@@ -64,20 +43,26 @@ def score_based(config: ContextAwareDict, output_dir: Path) -> LRSystem:
     The `specific_source` function name corresponds with the naming scheme in the
     registry. See for example: `lir.config.lrsystems.score_based`.
     """
-    preprocessing = parse_pipeline(pop_field(config, "preprocessing"), output_dir)
-    pairing_function = parse_pairing_config(pop_field(config, "pairing"), output_dir, config.context)
-    evaluation = parse_pipeline(pop_field(config, "comparing"), output_dir)
+    preprocessing = parse_module(
+        pop_field(config, 'preprocessing'), output_dir, config.context, default_method='pipeline'
+    )
+    pairing_function = parse_pairing_config(pop_field(config, 'pairing'), output_dir, config.context)
+    evaluation = parse_module(pop_field(config, 'comparing'), output_dir, config.context, default_method='pipeline')
 
     return ScoreBasedSystem(output_dir.name, preprocessing, pairing_function, evaluation)
 
 
 @config_parser
 def two_level(config: ContextAwareDict, output_dir: Path) -> LRSystem:
-    preprocessing = parse_pipeline(pop_field(config, "preprocessing"), output_dir)
-    pairing_function = parse_pairing_config(pop_field(config, "pairing"), output_dir, config.context)
-    postprocessing = parse_pipeline(pop_field(config, "postprocessing"), output_dir)
-    n_trace_instances = pop_field(config, "n_trace_instances", validate=int)
-    n_ref_instances = pop_field(config, "n_ref_instances", validate=int)
+    preprocessing = parse_module(
+        pop_field(config, 'preprocessing'), output_dir, config.context, default_method='pipeline'
+    )
+    pairing_function = parse_pairing_config(pop_field(config, 'pairing'), output_dir, config.context)
+    postprocessing = parse_module(
+        pop_field(config, 'postprocessing'), output_dir, config.context, default_method='pipeline'
+    )
+    n_trace_instances = pop_field(config, 'n_trace_instances', validate=int)
+    n_ref_instances = pop_field(config, 'n_ref_instances', validate=int)
 
     return TwoLevelSystem(
         output_dir.name,
@@ -94,12 +79,12 @@ def parse_lrsystem(config: ContextAwareDict, output_dir: Path) -> LRSystem:
 
     LR systems are provided under the `architectures` key.
     """
-    architecture = pop_field(config, "architecture")
+    architecture = pop_field(config, 'architecture')
 
     try:
-        parser = registry.get(architecture, search_path=["lrsystem_architectures"])
+        parser = registry.get(architecture, search_path=['lrsystem_architectures'])
     except ComponentNotFoundError as e:
-        raise YamlParseError(config.context, f"{e}")
+        raise YamlParseError(config.context, f'{e}')
 
     return parser.parse(config, output_dir)
 
@@ -108,7 +93,7 @@ def parse_augmented_lrsystem(
     baseline_lrsystem_config: ContextAwareDict,
     hyperparameters: dict[str, HyperparameterOption],
     output_dir: Path,
-    dirname_prefix: str = "",
+    dirname_prefix: str = '',
 ) -> LRSystem:
     """
     Parses an augmented LR system.
@@ -126,12 +111,12 @@ def parse_augmented_lrsystem(
     """
     substitutions = dict(itertools.chain(*[opt.substitutions.items() for opt in hyperparameters.values()]))
 
-    name = "__".join([f"{key}={value}" for key, value in hyperparameters.items()])
-    context = baseline_lrsystem_config.context + [f"substitution[{name}]"]
+    name = '__'.join([f'{key}={value}' for key, value in hyperparameters.items()])
+    context = baseline_lrsystem_config.context + [f'substitution[{name}]']
     augmented_config = substitute_hyperparameters(baseline_lrsystem_config, substitutions, context)
     lrsystem = parse_lrsystem(
         augmented_config,
-        output_dir / f"{dirname_prefix}{name}",
+        output_dir / f'{dirname_prefix}{name}',
     )
     lrsystem.parameters = hyperparameters
     return lrsystem

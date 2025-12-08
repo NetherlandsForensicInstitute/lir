@@ -1,63 +1,35 @@
-from collections.abc import Callable, Mapping, Sequence
 import datetime
-from abc import abstractmethod, ABC
+from abc import ABC, abstractmethod
+from collections.abc import Callable, Mapping, Sequence
 from itertools import product
 from pathlib import Path
 
 import confidence
 
 from lir import registry
-from lir.aggregation import WriteMetricsToCsv, Aggregation
+from lir.aggregation import Aggregation
 from lir.config.base import (
+    ConfigParser,
+    GenericConfigParser,
     YamlParseError,
     check_is_empty,
     pop_field,
-    GenericFunctionConfigParser,
-    ConfigParser,
-    ContextAwareList,
 )
 from lir.config.data_strategies import parse_data_strategy
 from lir.config.lrsystem_architectures import (
-    parse_lrsystem,
     parse_augmented_lrsystem,
+    parse_lrsystem,
 )
+from lir.config.metrics import parse_metric
 from lir.config.substitution import (
-    Hyperparameter,
-    parse_hyperparameter,
-    _expand,
     ContextAwareDict,
+    Hyperparameter,
+    _expand,
+    parse_hyperparameter,
 )
-from lir.config.visualization import parse_visualizations
 from lir.data.models import DataStrategy
 from lir.experiment import Experiment, PredefinedExperiment
 from lir.optuna import OptunaExperiment
-from lir.registry import ComponentNotFoundError
-
-
-def parse_metric(name: str, output_path: Path, context: list[str]) -> Callable:
-    try:
-        parser = registry.get(
-            name,
-            default_config_parser=GenericFunctionConfigParser,
-            search_path=["metrics"],
-        )
-        return parser.parse(ContextAwareDict(context), output_path)
-    except ComponentNotFoundError as e:
-        raise YamlParseError(context, str(e))
-
-
-def parse_metrics_section(config: ContextAwareList, output_path: Path) -> Mapping[str, Callable]:
-    """Parse the metrics section from the configuration.
-
-    A resulting mapping of metric name and corresponding function is returned.
-
-    Each metric function takes two arguments:
-        (1) a numpy array of lrs, and;
-        (2) a numpy array of labels.
-    The metric function should return the value of the metric.
-    The metrics are looked up by their name in the registry.
-    """
-    return {metric_name: parse_metric(metric_name, output_path, config.context) for metric_name in config}
 
 
 class ExperimentStrategyConfigParser(ConfigParser, ABC):
@@ -70,27 +42,56 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         self._output_dir: Path
 
     def data(self) -> DataStrategy:
-        return parse_data_strategy(pop_field(self._config, "data"), self._output_dir)
+        return parse_data_strategy(pop_field(self._config, 'data'), self._output_dir)
 
     def primary_metric(self) -> Callable:
-        metric_name = pop_field(self._config, "primary_metric")
+        metric_name = pop_field(self._config, 'primary_metric')
         return parse_metric(metric_name, self._output_dir, self._config.context)
 
-    def aggregations(self) -> Sequence[Aggregation]:
-        metrics = parse_metrics_section(pop_field(self._config, "metrics"), self._output_dir)
-        return [WriteMetricsToCsv(self._output_dir / "metrics.csv", metrics)]
+    def output_list(self) -> Sequence[Aggregation]:
+        config: ContextAwareDict = pop_field(self._config, 'output', required=False)
+        if not config:
+            return []
 
-    def visualization_functions(self) -> list[Callable]:
-        return parse_visualizations(pop_field(self._config, "visualization"), self._output_dir)
+        results: list[Aggregation] = []
+        for i, item in enumerate(config):
+            # Normalise configuration into (class_name, args)
+            if isinstance(item, str):
+                class_name, args = item, ContextAwareDict(config.context + [str(i)])
+            elif isinstance(item, ContextAwareDict):
+                class_name = pop_field(item, 'method')
+                args = item
+            else:
+                raise YamlParseError(
+                    config.context,
+                    'Invalid output configuration; expected a string or a mapping with a "method" field.',
+                )
+
+            parser: ConfigParser = registry.get(
+                class_name,
+                default_config_parser=GenericConfigParser,
+                search_path=['output'],
+            )
+            parsed_object = parser.parse(args, self._output_dir)
+
+            if not isinstance(parsed_object, Aggregation):
+                raise YamlParseError(
+                    config.context,
+                    f'Invalid output configuration; expected an Aggregation, found: {type(parsed_object)}.',
+                )
+
+            results.append(parsed_object)  # type: ignore
+
+        return results
 
     def lrsystem(self) -> tuple[ContextAwareDict, list[Hyperparameter]]:
-        baseline_config = pop_field(self._config, "lr_system")
+        baseline_config = pop_field(self._config, 'lr_system')
         if baseline_config is None:
-            baseline_config = ContextAwareDict(self._config.context + ["lr_system"])
+            baseline_config = ContextAwareDict(self._config.context + ['lr_system'])
 
         parameters = []
-        if "hyperparameters" in self._config.keys():
-            parameters = self._config.pop("hyperparameters")
+        if 'hyperparameters' in self._config:
+            parameters = self._config.pop('hyperparameters')
             parameters = [
                 parse_hyperparameter(
                     variable,
@@ -122,13 +123,12 @@ class SingleRunStrategy(ExperimentStrategyConfigParser):
     """Prepare Experiment consisting of a single run using configuration values."""
 
     def get_experiment(self, name: str) -> Experiment:
-        lrsystem = parse_lrsystem(pop_field(self._config, "lr_system"), self._output_dir)
+        lrsystem = parse_lrsystem(pop_field(self._config, 'lr_system'), self._output_dir)
 
         return PredefinedExperiment(
             name,
             self.data(),
-            self.aggregations(),
-            self.visualization_functions(),
+            self.output_list(),
             self._output_dir,
             [lrsystem],
         )
@@ -144,15 +144,14 @@ class GridStrategy(ExperimentStrategyConfigParser):
         names = [param.name for param in parameters]
         values = [param.options() for param in parameters]
         for value_set in product(*values):
-            substitutions = dict(zip(names, value_set))
+            substitutions = dict(zip(names, value_set, strict=True))
             lrsystem = parse_augmented_lrsystem(baseline_config, substitutions, self._output_dir)
             lrsystems.append(lrsystem)
 
         return PredefinedExperiment(
             name,
             self.data(),
-            self.aggregations(),
-            self.visualization_functions(),
+            self.output_list(),
             self._output_dir,
             lrsystems,
         )
@@ -163,12 +162,11 @@ class OptunaStrategy(ExperimentStrategyConfigParser):
 
     def get_experiment(self, name: str) -> Experiment:
         baseline_config, parameters = self.lrsystem()
-        n_trials = pop_field(self._config, "n_trials", validate=int)
+        n_trials = pop_field(self._config, 'n_trials', validate=int)
         return OptunaExperiment(
             name,
             self.data(),
-            self.aggregations(),
-            self.visualization_functions(),
+            self.output_list(),
             self._output_dir,
             baseline_config,
             parameters,
@@ -182,10 +180,10 @@ def parse_experiment_strategy(config: ContextAwareDict, output_path: Path) -> Ex
 
     A corresponding Experiment class is returned.
     """
-    strategy_name = pop_field(config, "strategy")
+    strategy_name = pop_field(config, 'strategy')
     if strategy_name is None:
-        raise YamlParseError(config.context, "Missing strategy name.")
-    strategy_parser = registry.get(strategy_name, search_path=["experiment_strategies"])
+        raise YamlParseError(config.context, 'Missing strategy name.')
+    strategy_parser = registry.get(strategy_name, search_path=['experiment_strategies'])
     return strategy_parser.parse(config, output_path / config.context[-1])
 
 
@@ -198,12 +196,12 @@ def parse_experiments(cfg: ContextAwareDict, output_path: Path) -> Mapping[str, 
     :return: a mapping of names to experiments
     """
     experiments: dict[str, Experiment] = {}
-    experiments_config_section = pop_field(cfg, "experiments")
+    experiments_config_section = pop_field(cfg, 'experiments')
     if not experiments_config_section:
         return experiments
 
     if not isinstance(experiments_config_section, Mapping):
-        raise YamlParseError(cfg.context, "invalid value for experiments")
+        raise YamlParseError(cfg.context, 'invalid value for experiments')
 
     for exp_name, exp_config in experiments_config_section.items():
         experiment = parse_experiment_strategy(
@@ -228,9 +226,9 @@ def parse_experiments_setup(
     :param cfg: a `Configuration` object describing the experiments
     :return: a tuple with two elements: (1) mapping of names to experiments; (2) path to output directory
     """
-    cfg = confidence.Configuration(cfg, {"timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")})
+    cfg = confidence.Configuration(cfg, {'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')})  # noqa: DTZ005
 
     cfg = _expand([], cfg)
 
-    output_dir = pop_field(cfg, "output", validate=Path)
+    output_dir = pop_field(cfg, 'output', validate=Path)
     return parse_experiments(cfg, output_dir), output_dir

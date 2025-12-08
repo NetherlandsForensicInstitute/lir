@@ -6,10 +6,10 @@ import optuna
 from lir.aggregation import Aggregation
 from lir.config.lrsystem_architectures import parse_augmented_lrsystem
 from lir.config.substitution import (
-    Hyperparameter,
-    FloatHyperparameter,
-    HyperparameterOption,
     ContextAwareDict,
+    FloatHyperparameter,
+    Hyperparameter,
+    HyperparameterOption,
 )
 from lir.data.models import DataStrategy
 from lir.experiment import Experiment
@@ -22,15 +22,14 @@ class OptunaExperiment(Experiment):
         self,
         name: str,
         data: DataStrategy,
-        aggregations: Sequence[Aggregation],
-        visualization_functions: list[Callable],
+        outputs: Sequence[Aggregation],
         output_path: Path,
         baseline_config: ContextAwareDict,
         hyperparameters: list[Hyperparameter],
         n_trials: int,
         metric_function: Callable,
     ):
-        super().__init__(name, data, aggregations, visualization_functions, output_path)
+        super().__init__(name, data, outputs, output_path)
         self.baseline_config = baseline_config
         self.hyperparameters = hyperparameters
         self.n_trials = n_trials
@@ -65,21 +64,21 @@ class OptunaExperiment(Experiment):
             self.baseline_config,
             assignments,
             self.output_path,
-            dirname_prefix=f"{trial.number:03d}__",
+            dirname_prefix=f'{trial.number:03d}__',
         )
 
         # add optuna values as system parameters
         lrsystem.parameters.update(
             {
                 # trial.number is a sequence number, starting at 0
-                "trial": trial.number,
+                'trial': trial.number,
                 # the best trial is known only at the second run, since the first trial results are not available yet
-                "best_trial": trial.study.best_trial.number if trial.number > 0 else "",
+                'best_trial': trial.study.best_trial.number if trial.number > 0 else '',
             }
         )
 
-        llrs, labels = self._run_lrsystem(lrsystem)
-        return self.metric_function(llrs, labels)
+        llrs = self._run_lrsystem(lrsystem)
+        return self.metric_function(llrs.llrs, llrs.labels)
 
     def _generate_and_run(self) -> None:
         study = optuna.create_study()  # Create a new study.

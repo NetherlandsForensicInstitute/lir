@@ -17,8 +17,9 @@ class TestECE(unittest.TestCase):
 
 
     def test_cllr(self):
+        breath = AlcoholBreathAnalyser(ill_calibrated=True).get_instances()
         data = [
-            AlcoholBreathAnalyser(ill_calibrated=True).get_instances()[:2],
+            (breath.features, breath.labels),
             (np.array([-1, 1, np.inf]), np.array([0, 1, 1])),
             (np.array([-1, 1, np.inf]), np.array([0, 1, 0])),
             (np.array([-1, 1, -np.inf]), np.array([0, 1, 1])),

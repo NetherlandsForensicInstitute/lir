@@ -2,20 +2,31 @@ import numpy as np
 import unittest
 from sklearn.linear_model import LogisticRegression
 
-from sklearn.pipeline import Pipeline
-
 from lir.algorithms import invariance_bounds
 from lir.algorithms.invariance_bounds import IVBounder
 from lir.data.datasets.alcohol_breath_analyser import AlcoholBreathAnalyser
-from lir.transform import BinaryClassifierTransformer, FunctionTransformer
+from lir.data.models import FeatureData
+from lir.transform.pipeline import Pipeline
 from lir.util import Xn_to_Xy, probability_to_logodds, logodds_to_odds
+from tests.data.datasets.lr_bounding import BoundingExample4, BoundingExample5
 
 
 class TestBounding(unittest.TestCase):
     def test_breath(self):
-        llrs, y, meta = AlcoholBreathAnalyser(ill_calibrated=True).get_instances()
-        bounds = invariance_bounds.calculate_invariance_bounds(logodds_to_odds(llrs), y)
+        llrs = AlcoholBreathAnalyser(ill_calibrated=True).get_instances()
+        bounds = invariance_bounds.calculate_invariance_bounds(logodds_to_odds(llrs.llrs), llrs.labels)
         np.testing.assert_almost_equal((0.1052741, 85.3731634), bounds[:2])
+
+    def test_iv_paper_examples(self):
+        llr_threshold = np.arange(-2, 3, 0.001)
+
+        llrs = BoundingExample4().get_instances()
+        bounds = invariance_bounds.calculate_invariance_bounds(logodds_to_odds(llrs.llrs), llrs.labels, llr_threshold)
+        np.testing.assert_almost_equal((0.2382319, 2.7861212), bounds[:2])
+
+        llrs = BoundingExample5().get_instances()
+        bounds = invariance_bounds.calculate_invariance_bounds(logodds_to_odds(llrs.llrs), llrs.labels, llr_threshold)
+        np.testing.assert_almost_equal((0.1412538, 38.1944271), bounds[:2])
 
     def test_extreme_smallset(self):
         lrs = np.array([np.inf, 0])
@@ -77,12 +88,12 @@ class TestBounding(unittest.TestCase):
         bounder = IVBounder()
         pipeline = Pipeline(
             [
-                ("logit", BinaryClassifierTransformer(LogisticRegression())),
-                ("to_logodds", FunctionTransformer(probability_to_logodds)),
+                ("logit", LogisticRegression()),
+                ("to_logodds", probability_to_logodds),
                 ("iv", bounder),
             ]
         )
-        pipeline.fit(X, y)
+        pipeline.fit(FeatureData(features=X, labels=y))
         bounds = (bounder.lower_llr_bound, bounder.upper_llr_bound)
         np.testing.assert_almost_equal((-1.6170015, 2.1899985), bounds)
 

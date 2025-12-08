@@ -3,6 +3,7 @@ import unittest
 import numpy as np
 import pytest
 
+from lir.data.models import FeatureData
 from lir.transform.pairing import InstancePairing, SourcePairing
 from lir.data.datasets.synthesized_normal_multiclass import (
     SynthesizedNormalMulticlassData,
@@ -18,23 +19,15 @@ def test_instance_pairing_seed():
         dimensions, population_size=100, sources_size=2, seed=0
     )
 
-    pairing0 = InstancePairing()
-    pairing1 = InstancePairing()
-    for values in zip(
-        pairing0.pair(*data.get_instances()), pairing1.pair(*data.get_instances())
-    ):
-        np.all(values[0] == values[1])
+    pairing0 = InstancePairing(seed=1)
+    pairing1 = InstancePairing(seed=1)
+    instances = data.get_instances()
+    assert pairing0.pair(instances) == pairing1.pair(instances)
 
-    pairing0 = InstancePairing(ratio_limit=1)
-    pairing1 = InstancePairing(ratio_limit=1)
-    for values in zip(
-        pairing0.pair(*data.get_instances()), pairing0.pair(*data.get_instances())
-    ):
-        np.all(values[0] == values[1])
-    for values in zip(
-        pairing0.pair(*data.get_instances()), pairing1.pair(*data.get_instances())
-    ):
-        np.all(values[0] == values[1])
+    pairing0 = InstancePairing(seed=1, ratio_limit=1)
+    pairing1 = InstancePairing(seed=1, ratio_limit=1)
+    assert pairing0.pair(instances) == pairing0.pair(instances)
+    assert pairing0.pair(instances) == pairing1.pair(instances)
 
 
 @pytest.mark.parametrize(
@@ -106,34 +99,20 @@ def test_construct_array(
     n_trace_instances: int,
     n_ref_instances: int,
 ):
-    meta = features
-    pair_features, pair_labels, pair_meta = SourcePairing()._construct_array(
+    instances = FeatureData(features=features, labels=labels, meta=features)
+    paired_data = SourcePairing()._construct_array(
         pairing,
-        features,
-        labels,
-        meta,
+        instances,
         n_trace_instances,
         n_ref_instances,
     )
-    assert (
-        n_pairs_found
-        == pair_features.shape[0]
-        == pair_labels.shape[0]
-        == pair_meta.shape[0]
-    ), "number of output pairs"
-    assert (
-        pair_features.shape[1]
-        == pair_meta.shape[1]
-        == n_trace_instances + n_ref_instances
-    )
-    assert pair_features.shape[2] == features.shape[1]
-    assert pair_meta.shape[2] == meta.shape[1]
-    assert np.all(
-        pair_features.shape
-        == np.array(
-            (n_pairs_found, n_trace_instances + n_ref_instances) + features.shape[1:]
-        )
-    )
+    assert n_pairs_found == len(paired_data), "number of output pairs"
+    assert len(paired_data) == 0 or paired_data.features.shape[1] == paired_data.meta.shape[1] == n_trace_instances + n_ref_instances
+    assert paired_data.features.shape[2] == instances.features.shape[1]
+    assert len(paired_data) == 0 or paired_data.meta.shape[2] == instances.meta.shape[1]
+
+    target_shape = (n_pairs_found, n_trace_instances + n_ref_instances) + instances.features.shape[1:]
+    assert paired_data.features.shape == target_shape
 
 
 @pytest.mark.parametrize(
@@ -190,92 +169,94 @@ def test_source_level_pairing(
     n_trace_instances: int,
     n_ref_instances: int,
 ):
-    pair_features, pair_labels, pair_meta = SourcePairing().pair(
-        features, labels, features, n_trace_instances, n_ref_instances
-    )
-    assert len(pair_labels) == n_pairs_expected
+    instances = FeatureData(features=features, labels=labels)
+    paired_data = SourcePairing().pair(instances, n_trace_instances, n_ref_instances)
+    assert len(paired_data) == n_pairs_expected
     assert np.all(
-        pair_features.shape
+        paired_data.features.shape
         == np.array(
-            (n_pairs_expected, n_trace_instances + n_ref_instances) + features.shape[1:]
+            (n_pairs_expected, n_trace_instances + n_ref_instances) + instances.features.shape[1:]
         )
     )
 
 
 class TestPairing(unittest.TestCase):
-    X = np.arange(30).reshape(10, 3)
-    y = np.concatenate([np.arange(5), np.arange(5)])
+    instances = FeatureData(features=np.arange(30).reshape(10, 3), labels=np.concatenate([np.arange(5), np.arange(5)]))
 
-    def test_pairing(self):
+    def test_pairing1(self):
         pairing = InstancePairing()
-        X_pairs, y_pairs = pairing._transform(self.X, self.y)
+        pairs = pairing.pair(self.instances)
 
-        self.assertEqual(np.sum(y_pairs == 1), 5, "number of same source pairs")
+        self.assertEqual(np.sum(pairs.labels == 1), 5, "number of same source pairs")
         self.assertEqual(
-            np.sum(y_pairs == 0),
+            np.sum(pairs.labels == 0),
             2 * (8 + 6 + 4 + 2),
             "number of different source pairs",
         )
 
+    def test_pairing2(self):
         pairing = InstancePairing(ratio_limit=1)
-        X_pairs, y_pairs = pairing._transform(self.X, self.y)
+        pairs = pairing.pair(self.instances)
 
-        self.assertEqual(np.sum(y_pairs == 1), 5, "number of same source pairs")
-        self.assertEqual(np.sum(y_pairs == 0), 5, "number of different source pairs")
+        self.assertEqual(np.sum(pairs.labels == 1), 5, "number of same source pairs")
+        self.assertEqual(np.sum(pairs.labels == 0), 5, "number of different source pairs")
 
-        self.assertTrue(
-            np.all(pairing.pairing[:, 0] != pairing.pairing[:, 1]), "identity in pairs"
-        )
+        assert np.all(pairs.instance_indices[:, 0] != pairs.instance_indices[:, 1]), "identity in pairs"
 
-    def test_pairing_ratio(self):
+    def test_pairing_ratio1(self):
         # test ratio
         ratio_limit = 7
         pairing_ratio = InstancePairing(ratio_limit=ratio_limit)
-        X_pairs, y_pairs = pairing_ratio._transform(self.X, self.y)
-        ratio = np.sum(y_pairs == 0) / np.sum(y_pairs == 1)
+        pairs = pairing_ratio.pair(self.instances)
+        ratio = np.sum(pairs.labels == 0) / np.sum(pairs.labels == 1)
         self.assertEqual(ratio, ratio_limit, "ratio ss ds pairs not correct")
 
+    def test_pairing_ratio2(self):
         # if ratio_limit exceeds highest possible ratio, all ds pairs are selected
         ratio_limit = 1_000
         pairing_ratio_max = InstancePairing(ratio_limit=ratio_limit)
-        X_pairs, y_pairs = pairing_ratio_max._transform(self.X, self.y)
-        ratio = np.sum(y_pairs == 0) / np.sum(y_pairs == 1)
+        pairs = pairing_ratio_max.pair(self.instances)
+        ratio = np.sum(pairs.labels == 0) / np.sum(pairs.labels == 1)
         self.assertLess(
             ratio,
             ratio_limit,
             "realised ratio should be less or equal than ratio_limit",
         )
         self.assertEqual(
-            np.sum(y_pairs == 0),
+            np.sum(pairs.labels == 0),
             2 * (8 + 6 + 4 + 2),
             "all different source pairs should be selected",
         )
 
+    def test_pairing_ratio3(self):
         # test ratio with same_source_limit
         ratio_limit = 5
         same_source_limit = 3
         pairing_ratio_ss_lim = InstancePairing(
             ratio_limit=ratio_limit, same_source_limit=same_source_limit
         )
-        X_pairs, y_pairs = pairing_ratio_ss_lim._transform(self.X, self.y)
-        ratio = np.sum(y_pairs == 0) / np.sum(y_pairs == 1)
+        pairs = pairing_ratio_ss_lim.pair(self.instances)
+        ratio = np.sum(pairs.labels == 0) / np.sum(pairs.labels == 1)
         self.assertEqual(ratio, ratio_limit, "ratio ss ds pairs not correct")
-        self.assertEqual(same_source_limit, np.sum(y_pairs == 1), "ss pairs limit")
+        self.assertEqual(same_source_limit, np.sum(pairs.labels == 1), "ss pairs limit")
 
+    def test_pairing_ratio4(self):
         # test ratio with different_source_limit
         ratio_limit = 5
         different_source_limit = 20
         pairing_ratio_ds_lim = InstancePairing(
             ratio_limit=ratio_limit, different_source_limit=different_source_limit
         )
-        X_pairs, y_pairs = pairing_ratio_ds_lim._transform(self.X, self.y)
-        ratio = np.sum(y_pairs == 0) / np.sum(y_pairs == 1)
+        pairs = pairing_ratio_ds_lim.pair(self.instances)
+        ratio = np.sum(pairs.labels == 0) / np.sum(pairs.labels == 1)
         self.assertLessEqual(ratio, ratio_limit, "ratio ss ds pairs not correct")
         self.assertLessEqual(
-            np.sum(y_pairs == 0), different_source_limit, "ds pairs limit"
+            np.sum(pairs.labels == 0), different_source_limit, "ds pairs limit"
         )
 
+    def test_pairing_ratio5(self):
         # test ratio with same_source_limit and different_source_limit
+        ratio_limit = 5
         same_source_limit = 9
         different_source_limit = 30
         pairing_ratio_ds_lim = InstancePairing(
@@ -283,25 +264,23 @@ class TestPairing(unittest.TestCase):
             same_source_limit=same_source_limit,
             different_source_limit=different_source_limit,
         )
-        X_pairs, y_pairs = pairing_ratio_ds_lim._transform(self.X, self.y)
-        ratio = np.sum(y_pairs == 0) / np.sum(y_pairs == 1)
+        pairs = pairing_ratio_ds_lim.pair(self.instances)
+        ratio = np.sum(pairs.labels == 0) / np.sum(pairs.labels == 1)
         self.assertLessEqual(ratio, ratio_limit, "ratio_limit ss and ds pairs exceeded")
-        self.assertLessEqual(np.sum(y_pairs == 1), same_source_limit, "ss pairs limit")
+        self.assertLessEqual(np.sum(pairs.labels == 1), same_source_limit, "ss pairs limit")
         self.assertLessEqual(
-            np.sum(y_pairs == 0), different_source_limit, "ds pairs limit"
+            np.sum(pairs.labels == 0), different_source_limit, "ds pairs limit"
         )
 
     def test_pairing_seed(self):
         pairing_seed_1 = InstancePairing(ratio_limit=1, seed=123)
-        X_pairs_1, y_pairs_1 = pairing_seed_1._transform(self.X, self.y)
+        pairs1 = pairing_seed_1.pair(self.instances)
 
         pairing_seed_2 = InstancePairing(ratio_limit=1, seed=123)
-        X_pairs_2, y_pairs_2 = pairing_seed_2._transform(self.X, self.y)
+        pairs2 = pairing_seed_2.pair(self.instances)
 
         pairing_seed_3 = InstancePairing(ratio_limit=1, seed=456)
-        X_pairs_3, y_pairs_3 = pairing_seed_3._transform(self.X, self.y)
+        pairs3 = pairing_seed_3.pair(self.instances)
 
-        self.assertTrue(np.all(X_pairs_1 == X_pairs_2), "same seed, same X pairs")
-        self.assertTrue(
-            np.any(X_pairs_1 != X_pairs_3), "different seed, different X pairs"
-        )
+        assert np.all(pairs1.features == pairs2.features), "same seed, same X pairs"
+        assert np.any(pairs1.features != pairs3.features), "different seed, different X pairs"

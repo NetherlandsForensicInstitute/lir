@@ -3,18 +3,18 @@ from pathlib import Path
 
 from lir import registry
 from lir.config.base import (
+    GenericConfigParser,
     YamlParseError,
+    check_is_empty,
     config_parser,
     pop_field,
-    check_is_empty,
-    GenericConfigParser,
 )
 from lir.config.data_providers import parse_data_provider
 from lir.config.substitution import ContextAwareDict
 from lir.data.data_strategies import (
     BinaryCrossValidation,
-    MulticlassCrossValidation,
     BinaryTrainTestSplit,
+    MulticlassCrossValidation,
     MulticlassTrainTestSplit,
 )
 from lir.data.models import DataStrategy
@@ -25,9 +25,9 @@ def _parse_train_test_split(
     output_path: Path,
     constructor: Callable,
 ) -> DataStrategy:
-    data_source = parse_data_provider(pop_field(config, "source"), output_path)
-    test_size = pop_field(config, "test_size")
-    seed = config.pop("seed", None)
+    data_source = parse_data_provider(pop_field(config, 'source'), output_path)
+    test_size = pop_field(config, 'test_size')
+    seed = config.pop('seed', None)
     check_is_empty(config)
     return constructor(data_source, test_size, seed)
 
@@ -54,8 +54,8 @@ def _parse_cross_validation(
     constructor: Callable,
     extra_args: Sequence[str],
 ) -> DataStrategy:
-    folds = int(pop_field(config, "folds"))
-    data_source = parse_data_provider(pop_field(config, "source"), output_path)
+    folds = int(pop_field(config, 'folds'))
+    data_source = parse_data_provider(pop_field(config, 'source'), output_path)
     check_is_empty(config, extra_args)
     return constructor(data_source, folds, **config)
 
@@ -86,7 +86,7 @@ def binary_cross_validation(config: ContextAwareDict, output_path: Path) -> Data
         data: ${binary_cross_validation_splits}
         ...
     """
-    return _parse_cross_validation(config, output_path, BinaryCrossValidation, ["seed"])
+    return _parse_cross_validation(config, output_path, BinaryCrossValidation, ['seed'])
 
 
 @config_parser
@@ -129,18 +129,18 @@ def parse_data_strategy(cfg: ContextAwareDict, output_path: Path) -> DataStrateg
 
     Data setup configuration is provided under the `data_setup` key.
     """
-    strategy = pop_field(cfg, "strategy")
+    strategy = pop_field(cfg, 'strategy')
 
     try:
         parser = registry.get(
             strategy,
-            search_path=["data_strategies"],
+            search_path=['data_strategies'],
             default_config_parser=GenericConfigParser,
         )
     except Exception as e:
         raise YamlParseError(
             cfg.context,
-            f"no parser available for data type `{strategy}`; the error was: {e}",
+            f'no parser available for data type `{strategy}`; the error was: {e}',
         )
 
     return parser.parse(cfg, output_path)

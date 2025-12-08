@@ -1,5 +1,5 @@
-from collections.abc import Callable
 import logging
+from collections.abc import Callable
 from functools import partial
 
 import numpy as np
@@ -8,10 +8,10 @@ from scipy.optimize import minimize
 from sklearn.base import BaseEstimator, TransformerMixin
 
 from lir.util import (
-    ln_to_log10,
-    probability_to_logodds,
     Bind,
     check_misleading_finite,
+    ln_to_log10,
+    probability_to_logodds,
 )
 
 
@@ -27,9 +27,9 @@ class LogitCalibrator(BaseEstimator, TransformerMixin):
     """
 
     def __init__(self, **kwargs: dict):
-        self._logit = sklearn.linear_model.LogisticRegression(class_weight="balanced", **kwargs)
+        self._logit = sklearn.linear_model.LogisticRegression(class_weight='balanced', **kwargs)
 
-    def fit(self, X: np.ndarray, y: np.ndarray) -> "LogitCalibrator":
+    def fit(self, X: np.ndarray, y: np.ndarray) -> 'LogitCalibrator':
         # sanity check
         check_misleading_finite(X, y)
 
@@ -51,15 +51,15 @@ class LogitCalibrator(BaseEstimator, TransformerMixin):
         self.p1 = np.empty(np.shape(X))
 
         # get boundary log_odds values
-        zero_elements = np.where(X == -1 * np.inf)
-        ones_elements = np.where(X == np.inf)
+        zero_elements = np.where(-1 * np.inf == X)
+        ones_elements = np.where(np.inf == X)
 
         # assign desired output for these boundary values to llrs_output
         llrs_output[zero_elements] = np.multiply(-1, np.inf)
         llrs_output[ones_elements] = np.inf
 
         # get elements with values between negInf and Inf (the boundary values)
-        between_elements = np.all(np.array([X != np.inf, X != -1 * np.inf]), axis=0)
+        between_elements = np.all(np.array([np.inf != X, -1 * np.inf != X]), axis=0)
 
         # get LLRs for X[between_elements]
         lnlrs = self._logit.intercept_ + self._logit.coef_ * X[between_elements]
@@ -104,7 +104,7 @@ class FourParameterLogisticCalibrator:
         self.coef_ = None
         self.model: Callable
 
-    def fit(self, X: np.ndarray, y: np.ndarray) -> "FourParameterLogisticCalibrator":
+    def fit(self, X: np.ndarray, y: np.ndarray) -> 'FourParameterLogisticCalibrator':
         # check for negative inf for '1'-labels or inf for '0'-labels
         estimate_c = np.any(np.isneginf(X[y == 1]))
         estimate_d = np.any(np.isposinf(X[y == 0]))
@@ -117,22 +117,22 @@ class FourParameterLogisticCalibrator:
             self.model = self._four_pl_model
             bounds.extend([(10**-10, 1 - 10**-10), (10**-10, np.inf)])
             LOG.debug(
-                "There were -Inf lrs for the same source samples and Inf lrs for the different source samples "
-                ", therefore a 4pl calibrator was fitted."
+                'There were -Inf lrs for the same source samples and Inf lrs for the different source samples '
+                ', therefore a 4pl calibrator was fitted.'
             )
         elif estimate_c:
             # then define 3-PL logistic model. Set 'd' to 0
             self.model = partial(self._four_pl_model, d=0)
             # use very small values since limits result in -inf llh
             bounds.append((10**-10, 1 - 10**-10))
-            LOG.debug("There were -Inf lrs for the same source samples, therefore a 3pl calibrator was fitted.")
+            LOG.debug('There were -Inf lrs for the same source samples, therefore a 3pl calibrator was fitted.')
         elif estimate_d:
             # then define 3-PL logistic model. Set 'c' to 0
             # use bind since 'c' is intermediate variable. In that case partial does not work.
             self.model = Bind(self._four_pl_model, ..., ..., ..., 0, ...)
             # use very small value since limits result in -inf llh
             bounds.append((10**-10, np.inf))
-            LOG.debug("There were Inf lrs for the different source samples, therefore a 3pl calibrator was fitted.")
+            LOG.debug('There were Inf lrs for the different source samples, therefore a 3pl calibrator was fitted.')
         else:
             # define ordinary logistic model (no regularization, so maximum likelihood estimates)
             self.model = partial(self._four_pl_model, c=0, d=0)
@@ -150,7 +150,7 @@ class FourParameterLogisticCalibrator:
             bounds=bounds,
         )
         if not result.success:
-            raise Exception("The optimizer did not converge for the calibrator, please check your data.")
+            raise Exception('The optimizer did not converge for the calibrator, please check your data.')
         assert result.success
         self.coef_ = result.x
 

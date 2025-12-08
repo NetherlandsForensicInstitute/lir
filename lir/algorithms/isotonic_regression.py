@@ -1,6 +1,7 @@
 import numpy as np
-from sklearn.base import BaseEstimator, TransformerMixin
 import sklearn.isotonic
+from numpy.typing import ArrayLike
+from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.utils import check_array, check_consistent_length
 
 from lir.util import probability_to_logodds
@@ -13,7 +14,7 @@ class IsotonicRegression(sklearn.isotonic.IsotonicRegression):
     prevents the error being thrown when Inf or -Inf values are provided.
     """
 
-    def fit(self, X, y, sample_weight=None) -> "IsotonicRegression":
+    def fit(self, X: ArrayLike, y: ArrayLike, sample_weight: ArrayLike | tuple | None = None) -> 'IsotonicRegression':
         """Fit the model using X, y as training data.
 
         Parameters
@@ -38,7 +39,7 @@ class IsotonicRegression(sklearn.isotonic.IsotonicRegression):
         X is stored for future use, as :meth:`transform` needs X to interpolate
         new input data.
         """
-        check_params = dict(accept_sparse=False, ensure_2d=False, ensure_all_finite=False)
+        check_params = dict(accept_sparse=False, ensure_2d=False, ensure_all_finite=False)  # noqa: C408
         X = check_array(X, dtype=[np.float64, np.float32], **check_params)
         y = check_array(y, dtype=X.dtype, **check_params)
         check_consistent_length(X, y, sample_weight)
@@ -57,7 +58,7 @@ class IsotonicRegression(sklearn.isotonic.IsotonicRegression):
         self._build_f(X, y)
         return self
 
-    def transform(self, T):
+    def transform(self, T: ArrayLike) -> np.ndarray:
         """Transform new data by linear interpolation
 
         Parameters
@@ -71,23 +72,20 @@ class IsotonicRegression(sklearn.isotonic.IsotonicRegression):
             The transformed data
         """
 
-        if hasattr(self, "_necessary_X_"):
-            dtype = self._necessary_X_.dtype
-        else:
-            dtype = np.float64
+        dtype = self._necessary_X_.dtype if hasattr(self, '_necessary_X_') else np.float64
 
         T = check_array(T, dtype=dtype, ensure_2d=False, ensure_all_finite=False)
 
         if len(T.shape) != 1:
-            raise ValueError("Isotonic regression input should be a 1d array")
+            raise ValueError('Isotonic regression input should be a 1d array')
 
         # Handle the out_of_bounds argument by clipping if needed
-        if self.out_of_bounds not in ["raise", "nan", "clip"]:
+        if self.out_of_bounds not in ['raise', 'nan', 'clip']:
             raise ValueError(
-                "The argument ``out_of_bounds`` must be in 'nan', 'clip', 'raise'; got {0}".format(self.out_of_bounds)
+                f"The argument ``out_of_bounds`` must be in 'nan', 'clip', 'raise'; got {self.out_of_bounds}"
             )
 
-        if self.out_of_bounds == "clip":
+        if self.out_of_bounds == 'clip':
             T = np.clip(T, self.X_min_, self.X_max_)
 
         res = self.f_(T)
@@ -108,16 +106,16 @@ class IsotonicCalibrator(BaseEstimator, TransformerMixin):
     - outputs logodds instead of probabilities
     """
 
-    def __init__(self, add_misleading=0):
+    def __init__(self, add_misleading: int = 0):
         """
 
         :param add_misleading:
         """
         self.add_misleading = add_misleading
-        self._ir = IsotonicRegression(out_of_bounds="clip")
+        self._ir = IsotonicRegression(out_of_bounds='clip')
 
-    def fit(self, X: np.ndarray, y: np.ndarray) -> "IsotonicCalibrator":
-        assert np.all(np.unique(y) == np.arange(2)), "y labels must be 0 and 1"
+    def fit(self, X: np.ndarray, y: np.ndarray) -> 'IsotonicCalibrator':
+        assert np.all(np.unique(y) == np.arange(2)), 'y labels must be 0 and 1'
 
         # prevent extreme LRs
         if self.add_misleading > 0:

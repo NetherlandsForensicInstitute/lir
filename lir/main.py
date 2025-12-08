@@ -12,7 +12,7 @@ from lir.config.base import YamlParseError
 from lir.config.experiment_strategies import parse_experiments_setup
 
 
-LOG = logging.getLogger(__file__)
+LOG = logging.getLogger(__name__)
 DEFAULT_LOGLEVEL = logging.WARNING
 
 
@@ -34,7 +34,7 @@ def setup_logging(file_path: str, level_increase: int) -> None:
     ch.setLevel(loglevel)
     logging.getLogger().addHandler(ch)
 
-    logging.getLogger('').setLevel(logging.DEBUG)
+    logging.getLogger().setLevel(logging.DEBUG)
 
 
 def initialize_logfile(output_dir: Path) -> None:

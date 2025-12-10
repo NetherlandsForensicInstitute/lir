@@ -1,14 +1,28 @@
-from pathlib import Path
+import pytest
 
-import confidence
-
+from lir.config.base import GenericConfigParser, YamlParseError
 from lir.config.experiment_strategies import parse_experiments_setup
+from lir import registry
 
 
-def test_parse_examples():
-    examples_dir = Path(__file__).parent / 'resources'
-    for yaml_file in examples_dir.rglob('*.yaml'):
-        try:
-            parse_experiments_setup(confidence.loadf(yaml_file))
-        except Exception as e:
-            raise ValueError(f'{yaml_file}: {e}')
+def test_parse_external_directly():
+    """Test that an external module can be used directly in the configuration.
+
+    In this case, the external module is `tests.resources.external_modules.ExampleExternalData`,
+    which points to the `ExampleExternalData` class defined in tests/resources/external_modules.py.
+
+    Two tests are performed: one on a DataStrategy and one on a DataSet.
+    """
+    try:
+        registry.get('tests.resources.external_modules.ExampleExternalData',            
+                    search_path=['data_strategies'],
+                    default_config_parser=GenericConfigParser)
+    except registry.ComponentNotFoundError:
+        pytest.fail("Failed to parse external DataStrategy module.")
+    
+    try:
+        registry.get('tests.resources.external_modules.ExampleExternalData',            
+                     search_path=['data_sets'],
+                    default_config_parser=GenericConfigParser)
+    except registry.ComponentNotFoundError:
+        pytest.fail("Failed to parse external DataSet module.")

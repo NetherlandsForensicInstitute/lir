@@ -19,12 +19,11 @@ def _get_attribute_by_name(name: str) -> Any:
     """Resolve the corresponding function or class in this project from the configuration string."""
     parts = name.split('.')
 
-    logging.debug(f'resolving class name from key: {name}')
+    LOG.debug(f'resolving class name from key: {name}')
 
     # split the full name into a module name and a class name
     for class_name_index in range(1, len(parts) + 1):
         try:
-            logging.debug(f'trying to import: {". ".join(parts[:class_name_index])}')
             if class_name_index < len(parts):
                 attr = __import__(
                     '.'.join(parts[:class_name_index]),
@@ -35,11 +34,14 @@ def _get_attribute_by_name(name: str) -> Any:
             else:
                 attr = __import__('.'.join(parts))
 
-            logging.debug(f'successfully imported: {name}. Found {attr}')
+            LOG.debug(f'import successful: {name}. Found {attr}')
             return attr
 
         except (ModuleNotFoundError, AttributeError):
-            logging.debug(f'failed to import: {". ".join(parts[:class_name_index])}.')
+            LOG.debug(
+                f'import failed: {". ".join(parts[:class_name_index])}\
+                      from package {". ".join(parts[class_name_index:])}.'
+            )
             pass
 
     raise ComponentNotFoundError(name)
@@ -144,6 +146,7 @@ class FederatedLoader(ConfigParserLoader):
         errors = []
         for r in self.registries:
             try:
+                LOG.debug(f'trying to load {key} from {r} (search_path={search_path})')
                 return r.get(key, default_config_parser, search_path)
             except ComponentNotFoundError as e:
                 errors.append(e)
@@ -154,13 +157,13 @@ class FederatedLoader(ConfigParserLoader):
 def _load_package_registry() -> 'YamlRegistry':
     registry_file = importlib.resources.files(package_resources) / 'registry.yaml'
     with registry_file.open('r') as f:
-        logging.debug(f'loading registry from package resource: {registry_file}')
+        LOG.debug(f'loading registry from package resource: {registry_file}')
         lib_registry = confidence.load(f)
 
     user_registry = confidence.load_name('registry')
     merged_registry = confidence.Configuration(lib_registry, user_registry)
 
-    logging.debug(f'loaded registry with entries: {list(YamlRegistry(merged_registry))}')
+    LOG.debug(f'loaded registry with entries: {list(YamlRegistry(merged_registry))}')
 
     return YamlRegistry(merged_registry)
 
@@ -206,6 +209,9 @@ class YamlRegistry(ConfigParserLoader):
             for component in self._cfg.get(toplevel):
                 yield f'{toplevel}.{component}'
 
+    def __str__(self) -> str:
+        return f'YamlRegistry({self._cfg})'
+
     @staticmethod
     def _parse(key: str, spec: Mapping[str, str], default_config_parser: Callable | None) -> ConfigParser:
         if 'class' not in spec:
@@ -246,7 +252,7 @@ class YamlRegistry(ConfigParserLoader):
 
         for try_key in try_keys:
             if try_key in self._cfg:
-                logging.debug(f'found registry entry for key `{try_key}`')
+                LOG.debug(f'found registry entry for key `{try_key}`')
                 return self._cfg.get(try_key)
 
         raise ComponentNotFoundError(f'component not found: {key} (tried: {", ".join(try_keys)})')

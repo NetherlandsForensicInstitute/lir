@@ -21,7 +21,7 @@ cross_validation_splits:
 lr_system:
   architecture: specific_source
   modules:
-    method: debug_pipeline
+    method: logging_pipeline
     steps:
       scaler: standard_scaler
       clf:

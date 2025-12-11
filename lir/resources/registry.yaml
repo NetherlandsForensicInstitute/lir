@@ -18,7 +18,7 @@ data_providers:
 modules:
   # pipelines
   pipeline: lir.transform.pipeline.pipeline
-  debug_pipeline: lir.transform.pipeline.debug_pipeline
+  logging_pipeline: lir.transform.pipeline.logging_pipeline
   bootstrap: lir.algorithms.bootstraps.bootstrap
 
   # transformations

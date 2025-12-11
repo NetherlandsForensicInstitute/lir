@@ -25,7 +25,7 @@ lr_system:
     method: instance_pairs
     ratio_limit: 1
   comparing:
-    method: debug_pipeline
+    method: logging_pipeline
     steps:
       scoring: abs_diff
       clf:

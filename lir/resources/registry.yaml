@@ -72,7 +72,7 @@ output:
   lr_histogram: lir.aggregation.plot_lr_histogram
   llr_interval: lir.aggregation.plot_llr_interval
   nbe: lir.aggregation.plot_nbe
-  tipett: lir.aggregation.plot_tipett
+  tippett: lir.aggregation.plot_tippett
   save_model: lir.persistence.parse_save_model
 pairing:
   instance_pairs: lir.transform.pairing.InstancePairing

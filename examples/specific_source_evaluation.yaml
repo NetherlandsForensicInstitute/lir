@@ -1,4 +1,4 @@
-output: output/${timestamp}_specific_source
+output_path: output/${timestamp}_specific_source
 
 data:
   provider: synthesized_normal_binary

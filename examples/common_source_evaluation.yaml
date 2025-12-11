@@ -1,4 +1,4 @@
-output: output/${timestamp}_common_source
+output_path: output/${timestamp}_common_source
 
 data:
   provider: synthesized_normal_multiclass

@@ -3,7 +3,7 @@
 # This example uses the `optuna` experiment strategy to demonstrate how to find the best hypoerparameter values for an
 # LR system.
 
-output: output/${timestamp}_optuna_example
+output_path: output/${timestamp}_optuna_example
 
 data:
   strategy: data_providers.glass

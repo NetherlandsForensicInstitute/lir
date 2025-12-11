@@ -9,7 +9,7 @@
 # Output will be written to the folder specified below. There will be a sub folder for each experiment. The sub folders
 # each contain a file named `metrics.csv` which contains the metrics for each LR system that is tested, and for each LR
 # system there is a folder that may contain visualizations and other by products.
-output: output/${timestamp}_glass_example
+output_path: output/${timestamp}_glass_example
 
 # We use a pre-defined dataset of LA-ICP-MS measurements of elemental concentration from floatglass. For more
 # information on the dataset, see: https://github.com/NetherlandsForensicInstitute/elemental_composition_glass

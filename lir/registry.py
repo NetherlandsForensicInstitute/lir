@@ -39,8 +39,8 @@ def _get_attribute_by_name(name: str) -> Any:
 
         except (ModuleNotFoundError, AttributeError):
             LOG.debug(
-                f'import failed: {". ".join(parts[:class_name_index])}\
-                      from package {". ".join(parts[class_name_index:])}.'
+                f'import failed: {". ".join(parts[:class_name_index])}'
+                f'from package {". ".join(parts[class_name_index:])}.'
             )
             pass
 

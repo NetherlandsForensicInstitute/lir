@@ -41,3 +41,17 @@ def cllr_min(llrs: np.ndarray, y: np.ndarray, weights: tuple[float, float] = (1,
     cal = IsotonicCalibrator()
     llrmin = cal.fit_transform(llrs, y)
     return cllr(llrmin, y, weights)
+
+
+def cllr_cal(llrs: np.ndarray, y: np.ndarray, weights: tuple[float, float] = (1, 1)) -> float:
+    """
+    Calculates the difference between the C_llr before and after isotonic calibration.
+
+    :param llrs: a numpy array of LLRs
+    :param y: a numpy array of labels (0 or 1)
+    :param weights: the relative weights of the classes
+    :return: CLLR_cal, the difference after isotonic calibration
+    """
+    cllr_min_val = cllr_min(llrs, y, weights)
+    cllr_val = cllr(llrs, y, weights)
+    return cllr_val - cllr_min_val

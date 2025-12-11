@@ -65,6 +65,7 @@ modules:
 metrics:
   cllr: lir.metrics.cllr
   cllr_min: lir.metrics.cllr_min
+  cllr_cal: lir.metrics.cllr_cal
 output:
   csv: lir.aggregation.metrics_csv
   pav: lir.aggregation.plot_pav

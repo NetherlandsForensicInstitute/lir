@@ -14,7 +14,7 @@ data:
 cross_validation_splits:
   strategy: multiclass_cross_validation
   folds: 5
-  source: ${data}
+  data_origin: ${data}
 
 lr_system:
   architecture: score_based

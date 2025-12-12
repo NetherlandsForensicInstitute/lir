@@ -188,6 +188,7 @@ experiments:
         columns:
         - cllr
         - cllr_min
+        - cllr_cal
       - pav
       - ece
 
@@ -212,6 +213,7 @@ experiments:
         columns:
         - cllr
         - cllr_min
+        - cllr_cal
       - pav
       - lr_histogram
 
@@ -224,6 +226,7 @@ experiments:
         columns:
         - cllr
         - cllr_min
+        - cllr_cal
       - pav
       - ece
       - save_model

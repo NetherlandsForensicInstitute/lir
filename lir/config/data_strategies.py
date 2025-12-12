@@ -25,7 +25,7 @@ def _parse_train_test_split(
     output_path: Path,
     constructor: Callable,
 ) -> DataStrategy:
-    data_source = parse_data_provider(pop_field(config, 'source'), output_path)
+    data_source = parse_data_provider(pop_field(config, 'data_origin'), output_path)
     test_size = pop_field(config, 'test_size')
     seed = config.pop('seed', None)
     check_is_empty(config)
@@ -55,7 +55,7 @@ def _parse_cross_validation(
     extra_args: Sequence[str],
 ) -> DataStrategy:
     folds = int(pop_field(config, 'folds'))
-    data_source = parse_data_provider(pop_field(config, 'source'), output_path)
+    data_source = parse_data_provider(pop_field(config, 'data_origin'), output_path)
     check_is_empty(config, extra_args)
     return constructor(data_source, folds, **config)
 
@@ -74,7 +74,7 @@ def binary_cross_validation(config: ContextAwareDict, output_path: Path) -> Data
     ```
     binary_cross_validation_splits:
         setup: binary_cross_validation
-        source: ${data}
+        data_origin: ${data}
     ```
 
     which is ultimately passed through the benchmark definition:
@@ -83,7 +83,7 @@ def binary_cross_validation(config: ContextAwareDict, output_path: Path) -> Data
       model_selection_run:
         strategy: grid
         lr_system: ${lr_system}
-        data: ${binary_cross_validation_splits}
+        data_origin: ${binary_cross_validation_splits}
         ...
     """
     return _parse_cross_validation(config, output_path, BinaryCrossValidation, ['seed'])
@@ -104,7 +104,7 @@ def multiclass_cross_validation(config: ContextAwareDict, output_path: Path) -> 
     cross_validation_splits:
         setup: multiclass_cross_validation
         folds: 5
-        source: ${data}
+        data_origin: ${data}
     ```
 
     which is ultimately passed through the benchmark definition:

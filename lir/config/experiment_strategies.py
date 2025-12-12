@@ -230,5 +230,5 @@ def parse_experiments_setup(
 
     cfg = _expand([], cfg)
 
-    output_dir = pop_field(cfg, 'output', validate=Path)
+    output_dir = pop_field(cfg, 'output_path', validate=Path)
     return parse_experiments(cfg, output_dir), output_dir

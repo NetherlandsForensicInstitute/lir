@@ -158,7 +158,7 @@ class DebugPipeline(Pipeline):
 
 
 @config_parser
-def debug_pipeline(config: ContextAwareDict, output_dir: Path) -> Pipeline:
+def logging_pipeline(config: ContextAwareDict, output_dir: Path) -> Pipeline:
     """Construct a scikit-learn Pipeline based on the provided configuration."""
     if config is None:
         return Pipeline([])

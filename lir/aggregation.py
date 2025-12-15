@@ -133,7 +133,7 @@ class WriteMetricsToCsv(Aggregation):
 
 @config_parser
 def metrics_csv(config: ContextAwareDict, output_dir: Path) -> WriteMetricsToCsv:
-    metrics = pop_field(config, 'columns', required=True)
+    metrics = pop_field(config, 'columns', default=['cllr', 'cllr_min'])
     if not isinstance(metrics, Sequence):
         raise YamlParseError(
             config.context,

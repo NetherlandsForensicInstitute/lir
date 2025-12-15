@@ -57,10 +57,6 @@ experiments:
     lr_system: ${lr_system}
     data: ${cross_validation_splits}
     output:
-      - method: csv
-        columns:
-        - cllr
-        - cllr_min
-        - cllr_cal
+      - csv
       - pav
       - ece

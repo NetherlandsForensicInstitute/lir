@@ -222,11 +222,12 @@ experiments:
     lr_system: ${score_based_lr_system}
     data: ${data}
     output:
-      - method: csv
-        columns:
-        - cllr
-        - cllr_min
-        - cllr_cal
+      - csv
+      # A shorthand notation is used here. This is equivalent to:
+      # - method: csv
+      #   columns:
+      #   - cllr
+      #   - cllr_min 
       - pav
       - ece
       - save_model

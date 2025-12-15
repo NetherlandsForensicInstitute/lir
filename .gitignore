@@ -18,3 +18,6 @@ dist/
 /.pdm-python
 /.python-version
 .testmondata
+
+# MKdocs
+/docs_html

@@ -82,7 +82,7 @@ def pipeline(config: ContextAwareDict, output_dir: Path) -> Pipeline:
     return Pipeline(steps)
 
 
-class DebugPipeline(Pipeline):
+class LoggingPipeline(Pipeline):
     """
     A pipeline that writes debugging output to a CSV file.
     """
@@ -166,4 +166,4 @@ def logging_pipeline(config: ContextAwareDict, output_dir: Path) -> Pipeline:
     steps = parse_steps(pop_field(config, 'steps'), output_dir)
     output_file = output_dir / pop_field(config, 'output_file', default=f'{config.context[-1]}.csv')
 
-    return DebugPipeline(steps, output_file, **config)
+    return LoggingPipeline(steps, output_file, **config)

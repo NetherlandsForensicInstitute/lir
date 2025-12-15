@@ -1,4 +1,4 @@
-output: output/${timestamp}_specific_source
+output_path: output/${timestamp}_specific_source
 
 data:
   provider: synthesized_normal_binary
@@ -16,12 +16,12 @@ cross_validation_splits:
   strategy: binary_cross_validation
   folds: 5
   seed: 42
-  source: ${data}
+  data_origin: ${data}
 
 lr_system:
   architecture: specific_source
   modules:
-    method: debug_pipeline
+    method: logging_pipeline
     steps:
       scaler: standard_scaler
       clf:
@@ -48,6 +48,7 @@ experiments:
         columns:
         - cllr
         - cllr_min
+        - cllr_cal
       - pav
       - ece
 

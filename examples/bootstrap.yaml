@@ -1,4 +1,4 @@
-output: output/${timestamp}_bootstrap
+output_path: output/${timestamp}_bootstrap
 
 data:
   provider: synthesized_normal_binary
@@ -16,7 +16,7 @@ cross_validation_splits:
   strategy: binary_cross_validation
   folds: 5
   seed: 42
-  source: ${data}
+  data_origin: ${data}
 
 lr_system:
   architecture: specific_source
@@ -44,6 +44,7 @@ experiments:
         columns:
         - cllr
         - cllr_min
+        - cllr_cal
       - pav
       - ece
       - llr_interval

@@ -1,4 +1,4 @@
-output: output/${timestamp}_common_source
+output_path: output/${timestamp}_common_source
 
 data:
   provider: synthesized_normal_multiclass
@@ -14,7 +14,7 @@ data:
 cross_validation_splits:
   strategy: multiclass_cross_validation
   folds: 5
-  source: ${data}
+  data_origin: ${data}
 
 lr_system:
   architecture: score_based
@@ -25,7 +25,7 @@ lr_system:
     method: instance_pairs
     ratio_limit: 1
   comparing:
-    method: debug_pipeline
+    method: logging_pipeline
     steps:
       scoring: abs_diff
       clf:
@@ -64,5 +64,6 @@ experiments:
         columns:
         - cllr
         - cllr_min
+        - cllr_cal
       - pav
       - ece

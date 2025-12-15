@@ -102,8 +102,8 @@ def plot_nbe(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
 
 
 @config_parser
-def plot_tipett(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    return AggregatePlot(output_dir=output_dir, plot_fn=tippett, plot_name='Tipett')
+def plot_tippett(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    return AggregatePlot(output_dir=output_dir, plot_fn=tippett, plot_name='tippett')
 
 
 class WriteMetricsToCsv(Aggregation):

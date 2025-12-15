@@ -9,7 +9,7 @@
 # Output will be written to the folder specified below. There will be a sub folder for each experiment. The sub folders
 # each contain a file named `metrics.csv` which contains the metrics for each LR system that is tested, and for each LR
 # system there is a folder that may contain visualizations and other by products.
-output: output/${timestamp}_glass_example
+output_path: output/${timestamp}_glass_example
 
 # We use a pre-defined dataset of LA-ICP-MS measurements of elemental concentration from floatglass. For more
 # information on the dataset, see: https://github.com/NetherlandsForensicInstitute/elemental_composition_glass
@@ -49,7 +49,7 @@ score_based_lr_system:
   architecture: score_based
 
   preprocessing:
-    method: debug_pipeline  # generate a CSV file containing the output of each processing step
+    method: logging_pipeline  # generate a CSV file containing the output of each processing step
     steps:
       scaler: standard_scaler  # apply the scikit-learn `StandardScaler` with default arguments
 
@@ -58,7 +58,7 @@ score_based_lr_system:
     ratio_limit: 1  # limit the number of different-source pairs to the number of same-source pairs
 
   comparing:
-    method: debug_pipeline
+    method: logging_pipeline
     steps:
       scoring: abs_diff  # calculate the absolute difference between the two instances for each feature
       clf: logistic_regression  # use scikit-learn `LogisticRegression` to estimate probabilities
@@ -82,7 +82,7 @@ two_level_lr_system:
     method: source_pairs
     ratio_limit: 1
   postprocessing:
-    method: debug_pipeline
+    method: logging_pipeline
     steps:
       bound_llr: elub_bounder
   seed: 42
@@ -188,6 +188,7 @@ experiments:
         columns:
         - cllr
         - cllr_min
+        - cllr_cal
       - pav
       - ece
 
@@ -212,6 +213,7 @@ experiments:
         columns:
         - cllr
         - cllr_min
+        - cllr_cal
       - pav
       - lr_histogram
 

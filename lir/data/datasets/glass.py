@@ -34,10 +34,10 @@ class GlassData(DataSet, DataStrategy):
 
     def _load_data(self, file: str) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
-        Returns a tuple of features, source_ids and meta data.
+        Returns a tuple of features, source_ids and instance_ids.
         """
         source_ids = []
-        origins = []
+        instance_ids = []
         values = []
         with self.resources.open(file, 'r') as f:
             reader = csv.DictReader(f)
@@ -46,10 +46,10 @@ class GlassData(DataSet, DataStrategy):
                 row_number = i + 2
 
                 source_ids.append(int(row['Item']))
-                origins.append(f'{file}:{row_number}')
+                instance_ids.append(f'{file}:{row_number}')
                 values.append(np.array(list(map(float, row.values()))[3:]))
 
-        return np.array(values), np.array(source_ids), np.array(origins).reshape(-1, 1)
+        return np.array(values), np.array(source_ids), np.array(instance_ids)
 
     def __iter__(self) -> Iterator[tuple[FeatureData, FeatureData]]:
         """
@@ -59,22 +59,20 @@ class GlassData(DataSet, DataStrategy):
         The test data is read from `duplo.csv` and `triplo.csv` and has a total of five instances per source.
 
         The data are returned as an iterator over training/test set combinations.
-
-        TODO: rename `meta` to `instance_ids`
         """
         training_data = self._load_data('training.csv')
         training_data = FeatureData(
             features=training_data[0],
             source_ids=training_data[1],
-            meta=training_data[2],  # type: ignore
+            instance_ids=training_data[2],  # type: ignore
         )
-        test_features, test_source_ids, test_meta = zip(
+        test_features, test_source_ids, test_instance_ids = zip(
             self._load_data('duplo.csv'), self._load_data('triplo.csv'), strict=True
         )
         test_data = FeatureData(
             features=np.concatenate(test_features),
             source_ids=np.concatenate(test_source_ids),
-            meta=np.concatenate(test_meta),  # type: ignore
+            instance_ids=np.concatenate(test_instance_ids),  # type: ignore
         )
         return iter([(training_data, test_data)])
 
@@ -88,7 +86,8 @@ class GlassData(DataSet, DataStrategy):
         The source_ids are unique identifiers of a glass particle. Each particle is from a different reference window.
         An instance is a replicate measurement on a glass particle.
 
-        The meta values of an instance are a concatenation of the filename and a row number, e.g. "training.csv:22".
+        The instance_ids values of an instance are a concatenation of the filename and a row number,
+        e.g. "training.csv:22".
         """
-        features, source_ids, meta = self._load_data('training.csv')
-        return FeatureData(features=features, source_ids=source_ids, meta=meta)  # type: ignore
+        features, source_ids, instance_ids = self._load_data('training.csv')
+        return FeatureData(features=features, source_ids=source_ids, instance_ids=instance_ids)  # type: ignore

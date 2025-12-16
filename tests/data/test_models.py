@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 from pydantic import ValidationError
 
+import lir.data.models
 from lir.data.models import InstanceData, FeatureData, LLRData, concatenate_instances, PairedFeatureData
 
 
@@ -121,25 +122,32 @@ def test_sourceids():
 
 
 def test_llr_data():
-    LLRData(features=np.ones((10,)))
     LLRData(features=np.ones((10, 1)))
     LLRData(features=np.ones((10, 3)))
-    LLRData(features=np.ones((10,)), labels=np.ones(10))
+    LLRData(features=np.ones((10, 1)), labels=np.ones(10))
+
+    # TODO: for now, 1d features are silently converted to 2d instead of raising an error
+    # with pytest.raises(ValidationError):
+    #     LLRData(features=np.ones((10,)))
+    #     pytest.fail("features must have 2 dimensions")
 
     with pytest.raises(ValidationError):
         LLRData(features=np.ones((10, 2)))
+        pytest.fail("LLRs must have 1 column (without interval) or 3 columns (with interval)")
 
     with pytest.raises(ValidationError):
         LLRData(features=np.ones((10, 4)))
+        pytest.fail("LLRs must have 1 column (without interval) or 3 columns (with interval)")
 
     with pytest.raises(ValidationError):
         LLRData(features=np.ones((10, 3, 1)))
+        pytest.fail("invalid dimensions for features")
 
     with pytest.raises(ValidationError):
         LLRData(features=np.ones((10,)), labels=np.ones(11))
+        pytest.fail("dimensions do not match")
 
     llr_values = np.arange(30).reshape(10, 3)
     assert np.all(LLRData(features=llr_values).llrs == llr_values[:, 0])
-    assert np.all(LLRData(features=llr_values[:, 0]).llrs == llr_values[:, 0])
     assert np.all(LLRData(features=llr_values[:, 0:1]).llrs == llr_values[:, 0])
     assert np.all(LLRData(features=llr_values).llr_intervals == llr_values[:, 1:3])

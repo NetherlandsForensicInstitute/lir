@@ -31,11 +31,14 @@ class LogitCalibrator(BaseEstimator, TransformerMixin):
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> 'LogitCalibrator':
         # sanity check
+        if X.size != y.size:
+            raise ValueError(f'unsupported or non-matching dimensions; X.shape={X.shape}, y.shape={y.shape}')
+
         check_misleading_finite(X, y)
 
         # if data is sane, remove Inf under H1 and minInf under H2 from the data if present (if present, these prevent
         # logistic regression to train while the loss is zero, so they can be safely removed)
-        el = np.isfinite(X)
+        el = np.isfinite(X.reshape(-1))
         y = y[el]
         X = X[el]
 

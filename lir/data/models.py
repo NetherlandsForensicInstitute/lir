@@ -1,9 +1,13 @@
+import logging
 from abc import ABC, abstractmethod
 from collections.abc import Callable, Iterable
 from typing import Annotated, Any, Self, TypeVar
 
 import numpy as np
 from pydantic import AfterValidator, BaseModel, ConfigDict, model_validator
+
+
+LOG = logging.getLogger(__name__)
 
 
 def _validate_labels(labels: np.ndarray | None) -> np.ndarray | None:
@@ -238,6 +242,15 @@ class InstanceData(BaseModel, ABC):
         return datatype(**args)
 
 
+def _validate_features(features: np.ndarray) -> np.ndarray:
+    """Check if labels have the correct shape."""
+    if len(features.shape) < 2:
+        LOG.debug(f'1d features are silently converted to 2d; found shape: {features.shape}')
+        features = np.expand_dims(features, axis=1)
+
+    return features
+
+
 class FeatureData(InstanceData):
     """
     Data class for feature data.
@@ -246,7 +259,7 @@ class FeatureData(InstanceData):
     - features: an array of instance features, with one row per instance
     """
 
-    features: np.ndarray
+    features: Annotated[np.ndarray, AfterValidator(_validate_features)]
 
     def __len__(self) -> int:
         return self.features.shape[0]

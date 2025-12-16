@@ -20,7 +20,6 @@ def synthesized_normal_data() -> SynthesizedNormalBinaryData:
 @pytest.fixture
 def synthesized_llrs(synthesized_normal_data: SynthesizedNormalBinaryData) -> LLRData:
     data = synthesized_normal_data.get_instances()
-    data = data.replace(features=data.features.flatten())  # TODO: this line should be removed with issue #96
     return as_transformer(LogitCalibrator()).fit_transform(data).replace_as(LLRData)
 
 
@@ -28,5 +27,4 @@ def synthesized_llrs(synthesized_normal_data: SynthesizedNormalBinaryData) -> LL
 def synthesized_llrs_with_interval(synthesized_normal_data: SynthesizedNormalBinaryData) -> LLRData:
     bootstrap = BootstrapAtData(steps=[("clf", LogitCalibrator())])
     data = synthesized_normal_data.get_instances()
-    data = data.replace(features=data.features.flatten())  # TODO: this line should be removed with issue #96
     return bootstrap.fit_transform(data)

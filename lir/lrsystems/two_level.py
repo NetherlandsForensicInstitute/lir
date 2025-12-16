@@ -438,8 +438,11 @@ class TwoLevelSystem(LRSystem):
         self.n_ref_instances = n_ref_instances
 
     def fit(self, instances: FeatureData) -> 'LRSystem':
+        if instances.source_ids is None:
+            raise ValueError('fit() requires source_ids')
+
         instances = self.preprocessing_pipeline.fit_transform(instances)
-        self.model.fit_on_unpaired_instances(instances.features, instances.labels)
+        self.model.fit_on_unpaired_instances(instances.features, instances.source_ids)
 
         pairs = self.pairing_function.pair(instances)
         pair_llrs = pairs.replace_as(LLRData, features=self.model.transform(pairs.features_trace, pairs.features_ref))
@@ -449,12 +452,9 @@ class TwoLevelSystem(LRSystem):
 
     def apply(self, instances: FeatureData) -> LLRData:
         """
-        Applies the two level LR system on a set of instances., optionally with corresponding labels,
+        Applies the two level LR system on a set of instances,
         and returns a representation of the calculated LLR data through the `LLRData` tuple.
         """
-        if instances.has_labels is None:
-            raise ValueError('pairing requires labels')
-
         instances = self.preprocessing_pipeline.transform(instances)
 
         pairs = self.pairing_function.pair(instances)

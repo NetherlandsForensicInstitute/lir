@@ -42,23 +42,11 @@ class PairingMethod(ABC):
 
 class SourcePairing(PairingMethod):
     """
-    Returns paired sources (i.e. classes) from an array of instance features, labels and meta data.
+    Construct pairs of sources (i.e. classes) from an array of instances.
 
     While pairing at instance level results in pairs of instances, some same-source and some different-source, pairing
     at source level results in pairing of multiple instances of source A against multiple instances of source B, where A
     and B can be same-source or different-source.
-
-    If the input has `n` instances with `f` features,
-    - the parameter `n_trace_instances` is the number of trace instances in each pair;
-    - the parameter `n_ref_instances` is the number of reference instances in each pair;
-    - the parameter `instances` has dimensions `(n, f)`;
-    - the parameter `labels` has dimensions `(n,)`;
-    - the parameter `meta` has dimensions `(n, ...)`.
-
-    If the output has `p` pairs, this function returns a tuple of:
-    - an array of instances with dimensions `(p, n_trace_instances+n_ref_instances, f)`;
-    - an array of labels with dimensions `(p,)`;
-    - an array of meta data with dimensions `(p, n_trace_instances+n_ref_instances, ...)`.
     """
 
     def __init__(
@@ -82,35 +70,44 @@ class SourcePairing(PairingMethod):
 
     def _construct_array(
         self,
-        label_pairs: np.ndarray,
+        source_pairs: np.ndarray,
         instances: FeatureData,
         n_trace_instances: int,
         n_ref_instances: int,
     ) -> PairedFeatureData | None:
         result_features: list[FeatureData] = []
-        for trace_label, ref_label in label_pairs:
-            if trace_label == ref_label:
+        for trace_source_id, ref_source_id in source_pairs:
+            pair_source_ids = np.array([[trace_source_id, ref_source_id]])
+            if trace_source_id == ref_source_id:
                 # construct a same-source pair
                 pair_instances = self._get_random_subset(
                     n_trace_instances + n_ref_instances,
-                    instances[instances.labels == trace_label],
+                    instances[instances.source_ids == trace_source_id],
                 )
                 if pair_instances is not None:
-                    pair_instances = pair_instances.replace(labels=None)
-                    result_features.append(pair_instances.apply(np.expand_dims, axis=0).replace(labels=np.ones(1)))
+                    pair_instances = pair_instances.replace(source_ids=None)
+                    result_features.append(
+                        pair_instances.apply(np.expand_dims, axis=0).replace(
+                            labels=np.ones(1), source_ids=pair_source_ids
+                        )
+                    )
             else:
                 # construct a different-source pair
                 trace_instances = self._get_random_subset(
                     n_trace_instances,
-                    instances[instances.labels == trace_label],
+                    instances[instances.source_ids == trace_source_id],
                 )
                 ref_instances = self._get_random_subset(
                     n_ref_instances,
-                    instances[instances.labels == ref_label],
+                    instances[instances.source_ids == ref_source_id],
                 )
                 if trace_instances and ref_instances:
-                    pair_instances = (trace_instances + ref_instances).replace(labels=None)
-                    result_features.append(pair_instances.apply(np.expand_dims, axis=0).replace(labels=np.zeros(1)))
+                    pair_instances = (trace_instances + ref_instances).replace(source_ids=None)
+                    result_features.append(
+                        pair_instances.apply(np.expand_dims, axis=0).replace(
+                            labels=np.zeros(1), source_ids=pair_source_ids
+                        )
+                    )
 
         if result_features:
             paired_features = concatenate_instances(*result_features)
@@ -136,24 +133,30 @@ class SourcePairing(PairingMethod):
         """
         Pairs sources.
 
-        Takes an array of features, labels, and meta, all with one row per instance.
-        Returns an array of features, labels, and meta, all with one row per pair.
-        The second dimension of the returned features and meta indicates the instance.
+        Takes a FeatureData object that contains instances.
+        Returns pairs as a PairedFeatureData object.
 
-        For example, if the input features array has dimensions (x, 5), and the arguments `n_trace_instances` and
-        `n_ref_instances` are both 1, the output features array has dimensions (p, 1+1, 5), with x is the number of
-        input instances and p is the number of output pairs.
+        The input is expected to have source_ids, that govern how pairs are compiled.
+        The input instances may be used in a pair, either as a trace instance or as a reference instance.
+
+        :param instances: the set of instances to be paired
+        :param n_trace_instances: the number of trace instances in each pair
+        :param n_ref_instances: the number of reference instances in each pair
+        :return: paired instances
         """
-        unique_labels = np.unique(instances.labels)
+        if instances.source_ids is None:
+            raise ValueError('pairing requires source_ids')
 
-        label_pairing = np.array(np.meshgrid(unique_labels, unique_labels)).T.reshape(
+        unique_source_ids = np.unique(instances.source_ids)
+
+        source_pairing = np.array(np.meshgrid(unique_source_ids, unique_source_ids)).T.reshape(
             -1, 2
         )  # generate all possible pairs
-        rows_same = label_pairing[:, 0] == label_pairing[:, 1]
-        rows_diff = label_pairing[:, 0] < label_pairing[:, 1]
+        rows_same = source_pairing[:, 0] == source_pairing[:, 1]
+        rows_diff = source_pairing[:, 0] < source_pairing[:, 1]
 
-        same_source_pairs = label_pairing[rows_same]
-        different_source_pairs = label_pairing[rows_diff]
+        same_source_pairs = source_pairing[rows_same]
+        different_source_pairs = source_pairing[rows_diff]
 
         # reduce the number of same source pairs, if necessary
         if self._ss_limit is not None and np.sum(rows_same) > self._ss_limit:
@@ -210,19 +213,9 @@ class InstancePairing(PairingMethod):
         seed=None,
     ):
         """
-        Returns paired instances from an array of instance features, labels and meta data.
+        Construct pairs from a set of instances.
 
-        If the input has `n` instances with `f` features,
-        - the parameter `features` has dimensions `(n, f)`;
-        - the parameter `labels` has dimensions `(n,)`;
-        - the parameter `meta` has dimensions `(n, ...)`.
-
-        If the output has `p` pairs, this function returns a tuple of:
-        - an array of features with dimensions `(p, 2, f)`;
-        - an array of labels with dimensions `(p,)`;
-        - an array of meta data with dimensions `(p, 2, ...)`.
-
-        Note that this transformer may cause performance problems with large datasets,
+        Note that this pairing method may cause performance problems with large datasets,
         even if the number of instances in the output is limited.
 
         :param same_source_limit: the maximum number of same source pairs (None = no limit)
@@ -253,6 +246,17 @@ class InstancePairing(PairingMethod):
         n_trace_instances: int = 1,
         n_ref_instances: int = 1,
     ) -> PairedFeatureData:
+        """
+        Construct pairs.
+
+        :param instances: the set of instances to be paired
+        :param n_trace_instances: the number of trace instances in each pair (must be 1 for this pairing method)
+        :param n_ref_instances: the number of reference instances in each pair (must be 1 for this pairing method)
+        :return: paired instances
+        """
+        if instances.source_ids is None:
+            raise ValueError('pairing requires source_ids')
+
         if n_trace_instances != 1:
             raise ValueError(f'invalid values for `n_trace_instances`; expected: 1; found: {n_trace_instances}')
         if n_ref_instances != 1:
@@ -262,7 +266,7 @@ class InstancePairing(PairingMethod):
         pairing = np.array(np.meshgrid(np.arange(len(instances)), np.arange(len(instances)))).T.reshape(
             -1, 2
         )  # generate all possible pairs
-        same_source = instances.labels[pairing[:, 0]] == instances.labels[pairing[:, 1]]
+        same_source = instances.source_ids[pairing[:, 0]] == instances.source_ids[pairing[:, 1]]
 
         rows_same = np.where((pairing[:, 0] < pairing[:, 1]) & same_source)[
             0

@@ -48,16 +48,15 @@ class SynthesizedNormalMulticlassData(DataSet):
         """
         Return instances with randomly synthesized data and multi-class labels.
 
-        The features are drawn from a normal distribution, as configured. The meta data vector contains, for each
-        instance, the "true" values for its source, without the error that is included in the feature values.
+        The features are drawn from a normal distribution, as configured.
         """
         rng = np.random.default_rng(seed=self.seed)
 
         measurements = [self._generate_dimension(rng, dim) for dim in self.dimensions]
         measurements = np.stack(measurements, axis=1)
-        labels = np.concatenate([np.arange(self.population_size)] * self.sources_size)
+        source_ids = np.concatenate([np.arange(self.population_size)] * self.sources_size)
 
-        return FeatureData(features=measurements, labels=labels)
+        return FeatureData(features=measurements, source_ids=source_ids)
 
 
 @config_parser

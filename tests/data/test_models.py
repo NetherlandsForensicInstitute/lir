@@ -36,8 +36,9 @@ def test_instance_data():
     assert BareData(labels=np.ones((10,)), meta=2) != BareData(labels=np.ones((10,)))
 
     # test slicing
-    assert np.all(BareData(labels=np.arange(10))[:5].labels == np.arange(5))
-    assert BareData(labels=np.arange(10))[8:9].labels == np.array([8])
+    assert np.all(BareData(source_ids=np.arange(10))[:5].source_ids == np.arange(5))
+    assert np.all(BareData(labels=np.repeat([0, 1, 0, 1], 2))[:5].labels == np.array([0, 0, 1, 1, 0]))
+    assert BareData(source_ids=np.arange(10))[8:9].source_ids == np.array([8])
 
     # illegal labels type
     with pytest.raises(ValidationError):
@@ -112,7 +113,7 @@ def test_sourceids():
 
     # invalid dimensions for source_ids
     with pytest.raises(ValueError):
-        FeatureData(features=np.ones((10, 2)), labels=np.ones(10), source_ids=np.ones((10,)))
+        FeatureData(features=np.ones((10, 2)), labels=np.ones(10), source_ids=np.ones((11,)))
 
     # invalid dimensions for source_ids
     with pytest.raises(ValueError):

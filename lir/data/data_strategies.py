@@ -8,9 +8,10 @@ from lir.data.models import DataSet, DataStrategy
 
 
 class BinaryTrainTestSplit(DataStrategy):
-    """Representation of a regular, binary train/test split fold.
+    """Representation of a train/test split.
 
-    The BinaryTrainTestSplit implementation is aimed at data consisting of two classes.
+    The input data should have class labels. This split assigns instances of both classes to the training set and the
+    test set.
     """
 
     def __init__(self, source: DataSet, test_size: float | int, seed: int | None = None):
@@ -33,7 +34,7 @@ class BinaryTrainTestSplit(DataStrategy):
 class BinaryCrossValidation(DataStrategy):
     """Representation of a K-fold cross validation iterator over each train/test split fold.
 
-    The BinaryCrossValidation implementation is aimed at data consisting of two classes.
+    The input data should have class labels. This split assigns instances of both classes to each "fold" subset.
     """
 
     def __init__(self, source: DataSet, folds: int, seed: int | None = None):
@@ -53,7 +54,8 @@ class BinaryCrossValidation(DataStrategy):
 class MulticlassTrainTestSplit(DataStrategy):
     """Representation of a multi-class train/test split.
 
-    The MulticlassTrainTestSplit implementation is aimed at data consisting of multiple classes.
+    The input data should have source_ids. This split assigns all instances of a source to either the training set or
+    the test set.
     """
 
     def __init__(self, source: DataSet, test_size: float | int, seed: int | None = None):
@@ -65,7 +67,7 @@ class MulticlassTrainTestSplit(DataStrategy):
         """Allow iteration by looping over the resulting train/test split(s)."""
         splitter = GroupShuffleSplit(test_size=self.test_size, n_splits=1, random_state=self.seed)
         instances = self.source.get_instances()
-        ((train_index, test_index),) = splitter.split(instances.features, instances.labels, instances.labels)
+        ((train_index, test_index),) = splitter.split(instances.features, instances.source_ids, instances.source_ids)
 
         yield instances[train_index], instances[test_index]
 
@@ -73,7 +75,7 @@ class MulticlassTrainTestSplit(DataStrategy):
 class MulticlassCrossValidation(DataStrategy):
     """Representation of a K-fold cross validation iterator over each train/test split fold.
 
-    The MulticlassCrossValidation implementation is aimed at classification data consisting of multiple classes.
+    The input data should have source_ids. This split assigns all instances of a source to the same "fold" subset.
     """
 
     def __init__(self, source: DataSet, folds: int):
@@ -85,5 +87,5 @@ class MulticlassCrossValidation(DataStrategy):
         kf = GroupKFold(n_splits=self.folds)
 
         instances = self.source.get_instances()
-        for _i, (train_index, test_index) in enumerate(kf.split(instances.features, groups=instances.labels)):
+        for _i, (train_index, test_index) in enumerate(kf.split(instances.features, groups=instances.source_ids)):
             yield instances[train_index], instances[test_index]

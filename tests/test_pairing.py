@@ -31,7 +31,7 @@ def test_instance_pairing_seed():
 
 
 @pytest.mark.parametrize(
-    "pairing,n_pairs_found,features,labels,n_trace_instances,n_ref_instances",
+    "pairing,n_pairs_found,features,source_ids,n_trace_instances,n_ref_instances",
     [
         (
             np.array([[0, 1]]),  # pair indices
@@ -95,11 +95,11 @@ def test_construct_array(
     pairing: np.ndarray,
     n_pairs_found: int,
     features: np.ndarray,
-    labels: np.ndarray,
+    source_ids: np.ndarray,
     n_trace_instances: int,
     n_ref_instances: int,
 ):
-    instances = FeatureData(features=features, labels=labels, meta=features)
+    instances = FeatureData(features=features, source_ids=source_ids, meta=features)
     paired_data = SourcePairing()._construct_array(
         pairing,
         instances,
@@ -116,7 +116,7 @@ def test_construct_array(
 
 
 @pytest.mark.parametrize(
-    "n_pairs_expected,features,labels,n_trace_instances,n_ref_instances",
+    "n_pairs_expected,features,source_ids,n_trace_instances,n_ref_instances",
     [
         (
             3,
@@ -165,11 +165,11 @@ def test_construct_array(
 def test_source_level_pairing(
     n_pairs_expected: int,
     features: np.ndarray,
-    labels: np.ndarray,
+    source_ids: np.ndarray,
     n_trace_instances: int,
     n_ref_instances: int,
 ):
-    instances = FeatureData(features=features, labels=labels)
+    instances = FeatureData(features=features, source_ids=source_ids)
     paired_data = SourcePairing().pair(instances, n_trace_instances, n_ref_instances)
     assert len(paired_data) == n_pairs_expected
     assert np.all(
@@ -181,7 +181,7 @@ def test_source_level_pairing(
 
 
 class TestPairing(unittest.TestCase):
-    instances = FeatureData(features=np.arange(30).reshape(10, 3), labels=np.concatenate([np.arange(5), np.arange(5)]))
+    instances = FeatureData(features=np.arange(30).reshape(10, 3), source_ids=np.concatenate([np.arange(5), np.arange(5)]))
 
     def test_pairing1(self):
         pairing = InstancePairing()

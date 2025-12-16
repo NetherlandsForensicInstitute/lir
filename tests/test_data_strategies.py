@@ -15,10 +15,10 @@ def test_multiclass_train_test_split():
     strategy = MulticlassTrainTestSplit(data, test_size=0.5, seed=0)
     instances = data.get_instances()
     for data_train, data_test in strategy:
-        assert len(np.unique(data_train.labels)) + len(np.unique(data_test.labels)) == len(
-            np.unique(instances.labels)
+        assert len(np.unique(data_train.source_ids)) + len(np.unique(data_test.source_ids)) == len(
+            np.unique(instances.source_ids)
         )
-        assert len(data_train.labels) + len(data_test.labels) == len(instances.labels)
+        assert len(data_train.source_ids) + len(data_test.source_ids) == len(instances.source_ids)
 
 
 def test_multiclass_train_test_split_seed():

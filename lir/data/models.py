@@ -8,10 +8,16 @@ from pydantic import AfterValidator, BaseModel, ConfigDict, model_validator
 
 def _validate_labels(labels: np.ndarray | None) -> np.ndarray | None:
     """Check if labels have the correct shape."""
-    if labels is None or len(labels.shape) == 1:
+    if labels is None:
         return labels
 
-    raise ValueError(f'labels must be 1-dimensional; shape: {labels.shape}')
+    if len(labels.shape) != 1:
+        raise ValueError(f'labels must be 1-dimensional; shape: {labels.shape}')
+
+    if np.any((labels != 0) & (labels != 1)):
+        raise ValueError(f'labels allowed: 0, 1; found: {np.unique(labels)}')
+
+    return labels
 
 
 class InstanceData(BaseModel, ABC):
@@ -40,8 +46,12 @@ class InstanceData(BaseModel, ABC):
 
     @model_validator(mode='after')
     def check_sourceid_shape(self) -> Self:
-        if self.source_ids is not None and (len(self.source_ids.shape) != 2 or self.source_ids.shape[1] != 1):
-            raise ValueError(f'source_ids should be 2-dimensional with 1 column; found shape {self.source_ids.shape}')
+        if self.source_ids is None:
+            return self
+
+        # TODO: validate shape
+        # if len(self.source_ids.shape) != 2 or self.source_ids.shape[1] != 1:
+        #    raise ValueError(f'source_ids should be 2-dimensional with 1 column; found shape {self.source_ids.shape}')
         return self
 
     @abstractmethod
@@ -356,8 +366,6 @@ class LLRData(FeatureData):
             raise ValueError(
                 f'features must be 1-dimensional or 2-dimensional with 1 or 3 columns; shape: {self.features.shape}'
             )
-        if self.labels is not None and np.any((self.labels != 0) & (self.labels != 1)):
-            raise ValueError(f'labels allowed: 0, 1; found: {np.unique(self.labels)}')
 
         return self
 

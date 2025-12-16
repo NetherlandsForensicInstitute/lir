@@ -34,9 +34,9 @@ class GlassData(DataSet, DataStrategy):
 
     def _load_data(self, file: str) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
-        Returns a tuple of instances, labels and meta data.
+        Returns a tuple of features, source_ids and meta data.
         """
-        labels = []
+        source_ids = []
         origins = []
         values = []
         with self.resources.open(file, 'r') as f:
@@ -45,49 +45,50 @@ class GlassData(DataSet, DataStrategy):
                 # the first measurement is at row 2, since row 1 is the header
                 row_number = i + 2
 
-                labels.append(int(row['Item']))
+                source_ids.append(int(row['Item']))
                 origins.append(f'{file}:{row_number}')
                 values.append(np.array(list(map(float, row.values()))[3:]))
 
-        return np.array(values), np.array(labels), np.array(origins).reshape(-1, 1)
+        return np.array(values), np.array(source_ids), np.array(origins).reshape(-1, 1)
 
-    def __iter__(self) -> Iterator:
+    def __iter__(self) -> Iterator[tuple[FeatureData, FeatureData]]:
         """
         Returns an iterator over a single combination of training data and test data.
 
         The training data is read from `training.csv` and has three instances (replicates) per source.
         The test data is read from `duplo.csv` and `triplo.csv` and has a total of five instances per source.
 
-        The data are returned as a tuple of features, labels, and metadata, similar to `get_instances()`.
+        The data are returned as an iterator over training/test set combinations.
+
+        TODO: rename `meta` to `instance_ids`
         """
         training_data = self._load_data('training.csv')
         training_data = FeatureData(
             features=training_data[0],
-            labels=training_data[1],
+            source_ids=training_data[1],
             meta=training_data[2],  # type: ignore
         )
-        test_features, test_labels, test_meta = zip(
+        test_features, test_source_ids, test_meta = zip(
             self._load_data('duplo.csv'), self._load_data('triplo.csv'), strict=True
         )
         test_data = FeatureData(
             features=np.concatenate(test_features),
-            labels=np.concatenate(test_labels),
+            source_ids=np.concatenate(test_source_ids),
             meta=np.concatenate(test_meta),  # type: ignore
         )
         return iter([(training_data, test_data)])
 
     def get_instances(self) -> FeatureData:
         """
-        Returns `training.csv` data with three instances (replicates) per source, as a tuple of features, labels and
-        metadata.
+        Returns `training.csv` data with three instances (replicates) per source.
 
         The features are elemental concentrations on a log_10 basis, and normalized to Si.
         The elements are: K39, Ti49, Mn55, Rb85, Sr88, Zr90, Ba137, La139, Ce140, Pb208
 
-        The labels are unique identifiers of a glass particle. Each particle is from a different reference window. An
-        instance is a replicate measurement on a glass particle.
+        The source_ids are unique identifiers of a glass particle. Each particle is from a different reference window.
+        An instance is a replicate measurement on a glass particle.
 
         The meta values of an instance are a concatenation of the filename and a row number, e.g. "training.csv:22".
         """
-        features, labels, meta = self._load_data('training.csv')
-        return FeatureData(features=features, labels=labels, meta=meta)  # type: ignore
+        features, source_ids, meta = self._load_data('training.csv')
+        return FeatureData(features=features, source_ids=source_ids, meta=meta)  # type: ignore

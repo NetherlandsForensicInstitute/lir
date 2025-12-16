@@ -53,7 +53,7 @@ def error(msg: str, e: Exception | None = None) -> None:
 
 
 def main(args: list[str] | None = None) -> None:
-    app_name = 'benchmark'
+    app_name = 'lir'
 
     parser = argparse.ArgumentParser(description='Run all or some of the parts of project')
 
@@ -94,6 +94,13 @@ def main(args: list[str] | None = None) -> None:
 
     if not args.setup:
         parser.error('missing FILENAME argument')
+
+    # Add directories (setup file and current folder) to sys.path for custom components.
+    sys.path.append(str(Path(args.setup).resolve().parent))
+    LOG.debug(f'added {Path(args.setup).resolve().parent} to sys.path')
+
+    sys.path.append(str(Path().resolve()))
+    LOG.debug(f'added {Path().resolve()} to sys.path')
 
     try:
         experiments, output_dir = parse_experiments_setup(confidence.loadf(args.setup))

@@ -1,6 +1,7 @@
 # score-based-common-source.yaml - a template yaml for setting up an LR system and a validation experiment.
 #
 # This file features a score-based common-source system.
+#
 # Below, you can adapt the information to your own needs.
 # You will need to specify:
 # - output folder
@@ -22,219 +23,107 @@ output_path: output/${timestamp}_score_based_common_source  # <-- adapt this val
 # An example dataset of LA-ICP-MS measurements of elemental concentration from floatglass is provided. For more
 # information on the dataset, see: https://github.com/NetherlandsForensicInstitute/elemental_composition_glass
 #
-# This requires internet access on first run to fetch the data. Subsequent runs will use the cached data in `cache_dir`.
-# The data consist of a pre-defined training/test set combination. The training data has three instances per source; the
-# test data has five instances per source, from which to draw two-to-three pairs for LR calculations.
-#
-data:
-  strategy: data_providers.glass
-  cache_dir: cache/glass
+# This example is only provided to give working default values for the information you need to enter for your own data. 
+# You should give a path to your data. If your data is in the default format, the default parser should work.
+# If your data is not in the default format you can either write a new parser (the hard option) 
+# or, if possible, reformat your data (the easy option).
 
-# This defines a score-based LR system. We may later experiment with different parameter values by augmenting this
-# system.
-score_based_lr_system:
-  # The `score_based` architecture takes three arguments:
-  # - `preprocessing`: a pipeline of modules that takes instance features as input and may do some preprocessing;
+data:
+  input_path: examples/example_glass_data.csv # <-- adapt this
+  data_parser: TODO # <-- adapt this only if you have written your own parser.
+
+
+# This will describe which data is used to train the system and which to test (validate) the system. 
+data_splits:
+  data_origin: ${data}           #<-- this refers to the data defined above
+
+# You may choose a simple split, where some data is assigned the role of training data and some is assigned the role of validation data.
+# If you want that, you use 'multiclass_train_test_split' for 'strategy' and you specify what the size of the test data with 'test_size'.
+# All the rest will be used as training data. The test size can be a float between 0 and 1, which will be used as a percentage.
+# It can also be an integer, that will be used as an absolute number of sources. 
+# You also specify a seed for the random assignment of sources to the train or test category.
+
+# Uncomment the next three lines and remove the other strategy below to use this:
+
+#  strategy: multiclass_train_test_split
+#  seed: 42
+#  test_size: 0.3
+
+# Alternatively, you may choose a cross-design, in which the data is divided into folds. Each fold is used as validation data sequentially,
+# and for each of the folds an LR system is trained with all the other folds. The outcomes for all folds are then pooled into one set.
+
+  strategy: multiclass_cross_validation
+  folds: 5
+  
+# Now we will define the score-based common source LR system.
+
+score_based_lr_system:        # <-- this is the name of your LR system. You may rename it to your preferred name.
+  logging: extensive          # <-- if you want csv output for every step in your LR system, use 'extensive'. Otherwise, use 'limited'.
+  
+  architecture: score_based   # Since this is the yaml for a score based system, we specify the architecture to be 'score_based'.
+  
+  # This architecture takes three arguments:
+  # - `preprocessing`: a series of steps that take your features as input and do some preprocessing;
   # - `pairing`: a pairing method that takes instances as input and produces same-source and different-source pairs;
-  # - `comparing`: a pipeline of modules that takes pairs as input and produces LLRs.
+  # - `comparing`: a series of steps that takes the pairs as input and produces LLRs.
   #
-  # A module may be a scikit-learn-style transformer, an estimator or a function.
-  # A module always has a `method` argument which defines the module class, which may be a scikit-learn-style
-  # transformer, estimator or a plain function. All other arguments are passed to the module class on instantiation,
-  # like this:
+  # A step may be a scikit-learn-style transformer, an estimator or a function.
+  # A step has a name that you give it and specifies a `method` argument which defines the module class,
+  # which may be a scikit-learn-style transformer, estimator or a plain function. 
+  # All other arguments are passed to the module class on instantiation, like this:
   #
-  # scaler:
-  #   method: standard_scaler
-  #   with_mean: False
+  # scaler:                        <-- the name of your step
+  #   method: standard_scaler      <-- the name of the transformer / estimator / function
+  #   with_mean: False             <-- any arguments your specific function needs
   #
   # Alternatively, if the module needs no arguments, the module class can be entered directly. The modules `scaler1` and
   # `scaler2` in the following snippet are equivalent.
   #
-  # scaler1:
-  #   method: standard_scaler
-  # scaler2: standard_scaler
+  # scaler1:                      <-- the name of your step
+  #   method: standard_scaler     <-- the pointer to the right function
   #
-  architecture: score_based
-
-  preprocessing:
-    method: logging_pipeline  # generate a CSV file containing the output of each processing step
+  # scaler2: standard_scaler      <-- the notation shortcut that is possible because no arguments are needed
+  #
+  
+  preprocessing:             
+  # LOGGING NU NAAR BOVEN GEMIGREERD, CHECKEN OF DAT NU WEL KON
+  # define your preprocessing pipeline here by adding steps.
+  # This is before pairing, so the steps should be applicable per instance.
     steps:
       scaler: standard_scaler  # apply the scikit-learn `StandardScaler` with default arguments
 
   pairing:
+  # define the way you want to pair your data. UITLEG MOGELIJKE PAIRING METHODES
     method: instance_pairs
-    ratio_limit: 1  # limit the number of different-source pairs to the number of same-source pairs
+    ratio_limit: 2  # limit the number of different-source pairs to the number of same-source pairs
 
   comparing:
-    method: logging_pipeline
+  # define the way you want to make scores from your features and to make LLRs from those scores.
+  # This is after pairing, so the steps should be applicable per pair.
     steps:
-      scoring: abs_diff  # calculate the absolute difference between the two instances for each feature
-      clf: logistic_regression  # use scikit-learn `LogisticRegression` to estimate probabilities
-      to_llr: probabilities_to_logodds  # convert probabilities to their log-odds values
-      calibration:  # calibrate the log-odds to LLRs using KDE
+      scoring: abs_diff                         # calculate the absolute difference between the two instances for each feature
+      clf: logistic_regression                  # use scikit-learn `LogisticRegression` to estimate probabilities
+      to_llr: probabilities_to_logodds          # convert probabilities to their log-odds values
+      calibration:                              # calibrate the log-odds to LLRs using KDE.
+                                                # Another sensible choice is 'logistic_regression', there you can suffice with 'calibration: logistic_regression'
         method: kde
         bandwidth: silverman
-      bounding: elub_bounder  # prevent excessive extrapolation by applying an LLR bounder
+      bounding: elub_bounder                    # prevent excessive extrapolation by applying an LLR bounder
 
-two_level_lr_system:
-  # The `two_level` architecture takes three arguments:
-  # - `preprocessing`: a pipeline that takes instance features as input and may do some preprocessing;
-  # - `pairing`: a pairing method that takes instances as input and produces same-source and different-source pairs;
-  # - `postprocessing`: a pipeline that takes LLRs as input and may do some postprocessing.
-  architecture: two_level
+# You have defined your LR system. Below we define how the LR system should be evaluated.
+# It is possible to set up experiments where multiple design choices are involved, so that parameter selection and model selection can be done.
+# To find out how more complex designs should be set up, see here LINK
+# For now, we define a single simple validation experiment:
 
-  n_trace_instances: 2
-  n_ref_instances: 3
-  preprocessing: standard_scaler
-  pairing:
-    method: source_pairs
-    ratio_limit: 1
-  postprocessing:
-    method: logging_pipeline
-    steps:
-      bound_llr: elub_bounder
-  seed: 42
-
-# Below we define how the LR system should be evaluated. We define three experiments:
-#
-# - `model_selection` does a grid search on parameters of the score-based system;
-# - `architecture_evaluation` compares the two architectures, score-based and two-level (feature-based);
-# - `validation` evaluates just a single LR system.
-#
-experiments:
-
-  # Each experiment has a required argument `strategy`. All other values are parameters of the strategy. The grid search
-  # strategy `grid` takes the following arguments:
-  #
-  # - `lr_system` -- the base LR system
-  # - `data` -- the data to be used for evaluation
-  # - `hyperparameters` -- the hyperparameters that are varied
-  # - `output` -- the metrics and visualization functions (in the registry) to be applied
-  #
-  # The hyperparameter block has a list of hyperparameters. Each hyperparameter has a list of *options*, and their
-  # values are substituted in the base configuration of the LR system. Where exactly the values are substituted is
-  # defined by the *path* in the base configuration.
-  #
-  # For example, the path to the `standard_scaler` in the `score_based_lr_system` is "preprocessing.steps.scaler". The scaler
-  # can be defined as a categorical hyperparameter as follows.
-  #
-  # ```
-  # hyperparameters:
-  #   - name: scaling method  # optional, defaults to `path`
-  #     path: preprocessing.steps.scaler
-  #     options:
-  #       - standard_scaler
-  #       - min_max_scaler
-  # ```
-  #
-  # Alternatively, you may want to substitute several paths as a *cluster*. For example, the calibration settings may
-  # depend on which classifier is used. In this case, don't include the `path` under the hyperparameter definition, but
-  # declare *substitutions* for each option, like so.
-  #
-  # ```
-  # hyperparameters:
-  #   - name: clf
-  #     options:
-  #       - option_name: svm_and_kde
-  #         substitutions:
-  #           - path: comparing.steps.clf
-  #             value:
-  #               method: svm
-  #               probability: True
-  #           - path: comparing.steps.calibration
-  #             value:
-  #               method: kde
-  #               bandwidth: silverman
-  #       - option_name: logit
-  #         substitutions:
-  #           - path: comparing.steps.clf
-  #             value: logistic_regression
-  #           - path: comparing.steps.calibration
-  #             value: csv_writer
-  # ```
-  #
-  # The hyperparameter value may also be numerical, as follows.
-  #
-  # ```
-  # hyperparameters:
-  #   - name: kde_bandwidth
-  #     path: comparing.steps.calibration.bandwidth
-  #     low: .1
-  #     high: 1
-  #     log: False
-  #     step: .1
-  # ```
-  #
-  # The appropriate hyperparameter type is inferred from its declaration. It may also be declared explicitly by adding
-  # a `type` field with the corresponding value `categorical`, `cluster`, or `float`.
-  model_selection:
-    strategy: grid  # use a grid search
-    lr_system: ${score_based_lr_system}  # refer the the previously defined `score_based_lr_system`
-    data: ${data}  # refer to the previously defined data
-
-    hyperparameters:
-      - name: clf
-        options:
-          - option_name: svm_and_kde
-            substitutions:
-              - path: comparing.steps.clf
-                value:
-                  method: svm
-                  probability: True
-              - path: comparing.steps.calibration
-                value:
-                  method: kde
-                  bandwidth: silverman
-          - option_name: logit
-            substitutions:
-              - path: comparing.steps.clf
-                value: logistic_regression
-              - path: comparing.steps.calibration
-                value: csv_writer
-    output:
-      - method: csv
-        columns:
-        - cllr
-        - cllr_min
-        - cllr_cal
-      - pav
-      - ece
-
-  architecture_evaluation:
-    strategy: grid
-    lr_system:  # do not specify any base LR system at this point; it will be substituted anyway
-    data: ${data}
-    hyperparameters:
-      # to vary the architecture, we substitute the entire LR system, whose path is referred to by the empty string ""
-      - name: architecture
-        options:
-          - option_name: score_based
-            substitutions:
-              - path: ""
-                value: ${score_based_lr_system}
-          - option_name: tlm
-            substitutions:
-              - path: ""
-                value: ${two_level_lr_system}
-    output:
-      - method: csv
-        columns:
-        - cllr
-        - cllr_min
-        - cllr_cal
-      - pav
-      - lr_histogram
-
-  validation:
-    strategy: single_run
-    lr_system: ${score_based_lr_system}
-    data: ${data}
-    output:
-      - method: csv
-        columns:
-        - cllr
-        - cllr_min
-        - cllr_cal
+experiments:                             
+  my_validation_run:                     # This is the name of the experiment, use your own preferred value.
+    strategy: single_run                 # For a single validation experiment, use 'single_run'.
+    lr_system: ${score_based_lr_system}  # This refers to the lr system defined above, make sure to use the name you used above.
+    data: ${data}                        # This refers to the data defined above, make sure to use the name you used above.
+    data_splits: ${data_splits}          # BIJ NADER INZIEN LIJKT DIT ME HET MEEST INTUITIEF
+    output:                              # Here you define what output you want. The output will at least include a copy of this yaml and statistics like number of sources and instances.
+      - metrics                          # EVEN OVERLEGGEN HOE WE DIT OOKWEER HADDEN BEDACHT
       - pav
       - ece
       - save_model
+      - lr_histogram

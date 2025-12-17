@@ -1,3 +1,7 @@
+TODO: standaardparsers maken
+TODO: template-yamls maken
+
+
 # How to use this repository to make an LR system from your data
 
 This page is written for researchers that have collected data and wish to make an LR system using that data.
@@ -12,13 +16,14 @@ Typically, an LR system will model variants of these two hypotheses:
 - Hypothesis 2: the trace is from another source than the reference 
 
 This document will help you choose a 'yaml-file' where you can make design choices and put in the specifics and which will let you run an experiment using the LR system.
-The yaml-files are pre-made and can be found in this repository. 
+A yaml-file is a text file in which you write what the code will do for you. The yaml-files are pre-made and can be found in this repository. 
+The pre-made yaml-files are templates, for you to adapt to your situation.
 
 To choose which yaml-file is appropriate for you, you need to answer some questions about the data you have and which type of LR system you need.
 Then, you will be instructed to organize your data. This ensures the data is in a format that can be parsed by the repository.
 Next, you can go to the yaml-file, where you can build you LR system and set up an experiment. You will be guided by comments in the yaml-file.
 
-Before you begin, make sure that you have a working version of LiR. Here's how: [installation guide](index.html).
+Before you begin, make sure that you have a [working version of LiR](index.html).
 
 - Do you have one specific (case-related) reference source along with data from other sources, and do you want to model the first hypothesis exlusively with data from that source?
 
@@ -36,63 +41,63 @@ Before you begin, make sure that you have a working version of LiR. Here's how: 
       
   - Does your data contain single instances of traces / references and measurements / features of those traces?
 
-    --> You want a 'score-based common source' LR system or a 'feature-based common source' LR system:
+    --> You want a 'score-based common source' LR system or a 'feature-based common source' LR system, go here: [common source system](#common-source-system).
 
-      - [score-based common source system](#common-source-system)
-      - [feature based common source system](#common-source-system)
- 
-    If you don't know what that distinction means, you can:
-      - choose 'score-based' and you will build an LR system similar to [here] (link to practitioner's guide).
-      - ask advice (link met e-mail van Ivo)
-
-    If you do know what the distinction means but you are unsure what is best for your data, you can use this repository to build multiple LR systems, perform validation and compare the results.
 
 ## Specific source system
 
-In this LR system, you will model hypothesis 1 'trace and reference come from the same source'
-(frida)
+In this LR system, you will:
+model Hypothesis 1 'trace and reference come from the same source' with data from one specific source.
+model Hypothesis 2 'trace and reference come from different sources' with data from other sources.
 
-(uitleggen use case)
+You'll need your data in csv or txt-format.
 
-(organiseer je data)
+Here's a minimal example of data that would work:
+'hypothesis_label,feature1,feature2,feature3'
 
-(Build an LR system)
+It is also possible to use sourceIDs instead of hypothesis label and some other columns are optional, for more information see HERE
 
-(Set up an experiment)
-
-## Feature-based common source system
-
-glass.yaml
-
-(uitleggen wat is feature-based)
-
-(organiseer je data)
-
-(Build an LR system)
-
-(Set up an experiment)
-
-## Score-based common source system
-
-glass.yaml
-
-(uitleggen wat is score-based)
-
-(organiseer je data)
-
-(Build an LR system)
-
-(Set up an experiment)
+The template-yaml that you should use is: [specific-source.yaml](specific-source.yaml)
 
 ## Pre-scored common source system
 
-(vocalise/scratch scores, of toch ook frida?)
+In this LR system, you will:
+model Hypothesis 1 'trace and reference come from the same source' with data pairs from multiple sources.
+model Hypothesis 2 'trace and reference come from different sources' with data pairs from multiple sources.
 
-(uitleggen use case)
+The rows in your data describe source comparisons, and not measurements or features of individual instances. Typically you will have one numerical value per comparison.
+The pairs could be made up of sources or of instances from sources.
 
-(organiseer je data)
+You'll need your data in csv or txt-format.
 
-(Build an LR system)
+Here's a minimal example of data that would work:
+'sourceID1,sourceID2,score'
 
-(Set up an experiment)
+sourceID1 and sourceID2 will be the same value for same-source-comparisons. Some other columns are optional, for more information see HERE
+The template-yaml that you should use is: [pre-scored-common-source-system.yaml](pre-scored-common-source-system.yaml)
+
+## Common source system
+
+In this LR system, you will:
+model Hypothesis 1 'trace and reference come from the same source' with data pairs from multiple sources.
+model Hypothesis 2 'trace and reference come from different sources' with data pairs from multiple sources.
+
+You'll need your data in csv or txt-format.
+
+Here's a minimal example of data that would work:
+'sourceID,feature1,feature2,feature3'
+
+Some other columns are optional, for more information see HERE
+
+It is possible to make a score-based common-source LR system or a feature-based common-source LR system.
+
+If you don't know what that distinction means, you can:
+- choose 'score-based' and you will build an LR system similar to [here] (link to practitioner's guide).
+- ask advice from your favourite forensic statistician.
+
+If you do know what the distinction means but you are unsure what is best for your data, you can use this repository to build multiple LR systems, perform validation and compare the results.
+
+The template-yaml that you could use is: [score-based-common-source.yaml](score-based-common-source.yaml)
+The template-yaml that you could use is: [feature-based-common-source.yaml](feature-based-common-source.yaml)
+
 

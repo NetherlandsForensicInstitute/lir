@@ -5,17 +5,6 @@ Toolkit for developing, optimising and evaluating Likelihood Ratio (LR) systems.
 on different datasets, investigating impact of different sampling schemes or techniques, and doing case-based validation
 and computation of case LRs.
 
-LIR was first released in 2020 and redesigned from scratch in 2025, replacing the [previous repository](https://github.com/NetherlandsForensicInstitute/lir-deprecated).
-
-Installation
-------------
-
-LIR is compatible with Python 3.11 and later. The easiest way to install LIR is to use `pip`:
-
-```shell
-pip install lir
-```
-
 Terminology
 -----------
 
@@ -46,30 +35,6 @@ Terminology
 - **experiment**: A series of one or more runs to calculate lrs, to measure system performance, to evaluate the effect of
   varying system parameters, or to optimize system parameters.
 - **experiment strategy**: A strategy for specifying system parameter values, e.g. single run, grid search, etc.
-
-
-Usage
------
-
-This repository offers both a Python API and a command-line interface.
-
-
-Command-line interface
-----------------------
-
-Evaluate an LR system using the command-line interface as follows:
-
-1. define your data, LR system and experiments in a YAML file;
-2. run `lir <yaml file>`.
-
-The `examples` folder may be a good starting point for setting up an experiment.
-
-The elements of the experiment configuration YAML are looked up in the registry. The following lists all available
-elements in the registry.
-
-```commandline
-lir --list-registry
-```
 
 
 Datasets

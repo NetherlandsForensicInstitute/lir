@@ -19,7 +19,7 @@ def _get_attribute_by_name(name: str) -> Any:
     """Resolve the corresponding function or class in this project from the configuration string."""
     parts = name.split('.')
 
-    LOG.debug(f'resolving class name from key: {name}')
+    LOG.debug(f'{name} is being resolved')
 
     # split the full name into a module name and a class name
     for class_name_index in range(1, len(parts) + 1):
@@ -34,7 +34,7 @@ def _get_attribute_by_name(name: str) -> Any:
             else:
                 attr = __import__('.'.join(parts))
 
-            LOG.debug(f'import successful: {name}. Found {attr}')
+            LOG.debug(f'{name} imported. Found {attr}')
             return attr
 
         except (ModuleNotFoundError, AttributeError):
@@ -252,7 +252,7 @@ class YamlRegistry(ConfigParserLoader):
 
         for try_key in try_keys:
             if try_key in self._cfg:
-                LOG.debug(f'found registry entry for key `{try_key}`')
+                LOG.debug(f'{try_key}: registry entry found')
                 return self._cfg.get(try_key)
 
         raise ComponentNotFoundError(f'component not found: {key} (tried: {", ".join(try_keys)})')

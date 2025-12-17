@@ -73,7 +73,7 @@ def binary_cross_validation(config: ContextAwareDict, output_path: Path) -> Data
     In the benchmark configuration YAML, this validation can be referenced as follows:
     ```
     binary_cross_validation_splits:
-        setup: binary_cross_validation
+        strategy: binary_cross_validation
         data_origin: ${data}
     ```
 
@@ -102,7 +102,7 @@ def multiclass_cross_validation(config: ContextAwareDict, output_path: Path) -> 
     In the benchmark configuration YAML, this validation can be referenced as follows:
     ```
     cross_validation_splits:
-        setup: multiclass_cross_validation
+        strategy: multiclass_cross_validation
         folds: 5
         data_origin: ${data}
     ```

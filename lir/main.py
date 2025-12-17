@@ -2,6 +2,7 @@
 
 import argparse
 import logging
+import shutil
 import sys
 from pathlib import Path
 
@@ -43,6 +44,11 @@ def initialize_logfile(output_dir: Path) -> None:
     fh.setFormatter(logging.Formatter('[%(asctime)-15s %(levelname)s] %(name)s: %(message)s'))
     fh.setLevel(logging.DEBUG)
     logging.getLogger().addHandler(fh)
+
+
+def copy_yaml_definition(output_dir: Path, config_yaml_path: Path) -> None:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(config_yaml_path, output_dir / 'config.yaml')
 
 
 def error(msg: str, e: Exception | None = None) -> None:
@@ -109,6 +115,7 @@ def main(args: list[str] | None = None) -> None:
         raise  # this statement is not reachable, but helps code validation
 
     initialize_logfile(output_dir)
+    copy_yaml_definition(output_dir, Path(args.setup))
 
     if args.list_experiments:
         for name, _experiment in experiments.items():

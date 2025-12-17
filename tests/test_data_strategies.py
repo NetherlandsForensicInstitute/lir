@@ -1,10 +1,11 @@
 import numpy as np
 
-from lir.data.data_strategies import MulticlassTrainTestSplit
+from lir.data.data_strategies import MulticlassTrainTestSplit, PredefinedTrainTestSplit
 from lir.data.datasets.synthesized_normal_multiclass import (
     SynthesizedDimension,
     SynthesizedNormalMulticlassData,
 )
+from lir.data.models import FeatureData, DataSet, InstanceData
 
 
 def test_multiclass_train_test_split():
@@ -45,3 +46,25 @@ def test_multiclass_train_test_split_seed():
     for data_train, data_test in strategy:
         assert not data_train == ref_train
         assert not data_test == ref_test
+
+
+class _MemoryDataProvider(DataSet):
+    def __init__(self, instances: InstanceData):
+        self.instances = instances
+
+    def get_instances(self) -> InstanceData:
+        return self.instances
+
+
+def test_predefined_role_splitter():
+    instances = FeatureData(features=np.arange(16).reshape(-1, 2), role_assignments=np.array(["train", "test"]).repeat(4))
+    splitter = PredefinedTrainTestSplit(_MemoryDataProvider(instances))
+    splits = list(splitter)
+    assert len(splits) == 1, "exactly one split"
+
+    training_set, test_set = splits[0]
+    expected_training_features = np.arange(8).reshape(-1, 2)
+    expected_test_features = expected_training_features + 8
+    assert training_set == FeatureData(features=expected_training_features, role_assignments=np.array(["train"] * 4))
+    assert test_set == FeatureData(features=expected_test_features, role_assignments=np.array(["test"] * 4))
+

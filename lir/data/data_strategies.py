@@ -1,10 +1,14 @@
 from collections.abc import Iterator
+from enum import Enum
+from pathlib import Path
 
 import numpy as np
 import sklearn
 from sklearn.model_selection import GroupKFold, GroupShuffleSplit, KFold
 
-from lir.data.models import DataSet, DataStrategy
+from lir.config.base import ContextAwareDict, check_is_empty, config_parser, pop_field
+from lir.config.data_providers import parse_data_provider
+from lir.data.models import DataSet, DataStrategy, FeatureData
 
 
 class BinaryTrainTestSplit(DataStrategy):
@@ -89,3 +93,46 @@ class MulticlassCrossValidation(DataStrategy):
         instances = self.source.get_instances()
         for _i, (train_index, test_index) in enumerate(kf.split(instances.features, groups=instances.source_ids)):
             yield instances[train_index], instances[test_index]
+
+
+class RoleAssignment(Enum):
+    TRAIN = 'train'
+    TEST = 'test'
+
+
+class PredefinedTrainTestSplit(DataStrategy):
+    """
+    Splits data into a training set and a test set, according to pre-existing assignments in the data.
+
+    Presumes a `role_assignments` field in the data, which has the value "train" for instances that will be part of the
+    training set, and "test" for instances in the test set.
+    """
+
+    def __init__(self, data_provider: DataSet):
+        self.data_provider = data_provider
+
+    def __iter__(self) -> Iterator[tuple[FeatureData, FeatureData]]:
+        instances = self.data_provider.get_instances()
+        if 'role_assignments' not in instances.all_fields:
+            raise ValueError('`role_assignments` field is missing')
+
+        training_set = instances[instances.role_assignments == RoleAssignment.TRAIN.value]  # type: ignore
+        test_set = instances[instances.role_assignments == RoleAssignment.TEST.value]  # type: ignore
+        yield training_set, test_set
+
+
+@config_parser
+def predefined_train_test_split(config: ContextAwareDict, output_path: Path) -> DataStrategy:
+    """
+    Initialize a train/test splitter, PredefinedTrainTestSplitter.
+
+    In the benchmark configuration YAML, this validation can be referenced as follows:
+    ```
+    cross_validation_splits:
+        strategy: predefined_train_test_split
+        data_origin: ${data}
+    ```
+    """
+    data_provider = parse_data_provider(pop_field(config, 'data_origin'), output_path)
+    check_is_empty(config)
+    return PredefinedTrainTestSplit(data_provider)

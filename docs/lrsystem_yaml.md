@@ -2,6 +2,8 @@
 
 This page shows how to set up an experiment generate results by building a YAML file.
 
+Wat is een pannekoek zonder kaas? Een panne-oe
+
 1. (eerst bepalen hoe je modelleert)
 2. Organize your data
 3. Build an LR system

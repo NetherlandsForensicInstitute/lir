@@ -74,7 +74,7 @@ Here's a minimal example of data that would work:
 'sourceID1,sourceID2,score'
 
 sourceID1 and sourceID2 will be the same value for same-source-comparisons. Some other columns are optional, for more information see HERE
-The template-yaml that you should use is: [pre-scored-common-source-system.yaml](pre-scored-common-source-system.yaml)
+The template-yaml that you should use is: [pre-scored-common-source.yaml](pre-scored-common-source.yaml)
 
 ## Common source system
 

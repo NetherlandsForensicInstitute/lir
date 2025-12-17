@@ -34,11 +34,9 @@ data:
   input_path: examples/example_glass_data.csv # <-- adapt this
   data_provider: TODO # <-- adapt this only if you have written your own parser.
 
-
 # This will describe which data is used to train the system and which to test (validate) the system. 
+
 data_splits:
-  data_origin: ${data}           #<-- this refers to the data defined above
-  
   strategy: multiclass_cross_validation
   folds: 5
 
@@ -121,7 +119,7 @@ score_based_lr_system:        # <-- this is the name of your LR system. You may 
 # For now, we define a single simple validation experiment:
 
 experiments:                             
-  my_validation_run:                     # This is the name of the experiment, use your own preferred value.
+  - name: my_validation_run              # This is the name of the experiment, use your own preferred value.
     strategy: single_run                 # For a single validation experiment, use 'single_run'.
     lr_system: ${score_based_lr_system}  # This refers to the lr system defined above, make sure to use the name you used above.
     data: ${data}                        # This refers to the data defined above, make sure to use the name you used above.
@@ -132,3 +130,4 @@ experiments:
       - ece
       - save_model
       - lr_histogram
+  

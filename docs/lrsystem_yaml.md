@@ -98,6 +98,7 @@ If you don't know what that distinction means, you can:
 If you do know what the distinction means but you are unsure what is best for your data, you can use this repository to build multiple LR systems, perform validation and compare the results.
 
 The template-yaml that you could use is: [score-based-common-source.yaml](score-based-common-source.yaml)
+
 The template-yaml that you could use is: [feature-based-common-source.yaml](feature-based-common-source.yaml)
 
 

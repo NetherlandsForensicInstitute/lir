@@ -3,9 +3,11 @@
 # This file features a score-based common-source system.
 #
 # Below, you can adapt the information to your own needs.
+#
 # You will need to specify:
 # - output folder
 # - path to data & how to parse it
+# - how to assign training and testing roles to your data
 # - the design of the lr system itself
 # - the validation experiment you run for your lr system
 #
@@ -36,6 +38,13 @@ data:
 # This will describe which data is used to train the system and which to test (validate) the system. 
 data_splits:
   data_origin: ${data}           #<-- this refers to the data defined above
+  
+  strategy: multiclass_cross_validation
+  folds: 5
+
+#  strategy: multiclass_train_test_split
+#  seed: 42
+#  test_size: 0.3
 
 # You may choose a simple split, where some data is assigned the role of training data and some is assigned the role of validation data.
 # If you want that, you use 'multiclass_train_test_split' for 'strategy' and you specify what the size of the test data with 'test_size'.
@@ -43,23 +52,17 @@ data_splits:
 # It can also be an integer, that will be used as an absolute number of sources. 
 # You also specify a seed for the random assignment of sources to the train or test category.
 
-# Uncomment the next three lines and remove the other strategy below to use this:
-
-#  strategy: multiclass_train_test_split
-#  seed: 42
-#  test_size: 0.3
-
 # Alternatively, you may choose a cross-design, in which the data is divided into folds. Each fold is used as validation data sequentially,
 # and for each of the folds an LR system is trained with all the other folds. The outcomes for all folds are then pooled into one set.
 
-  strategy: multiclass_cross_validation
-  folds: 5
-  
-# Now we will define the score-based common source LR system.
+# Cross-validation is given as default, you can switch strategy by commenting out the lines with cross validation and folds, and by uncommenting the three lines below them.
+
+
+# Next, the score-based common source LR system will be defined.
 
 score_based_lr_system:        # <-- this is the name of your LR system. You may rename it to your preferred name.
   logging: extensive          # <-- if you want csv output for every step in your LR system, use 'extensive'. Otherwise, use 'limited'.
-  
+                              # CHECK OF DIT VIABLE IS VOOR DE CODE
   architecture: score_based   # Since this is the yaml for a score based system, we specify the architecture to be 'score_based'.
   
   # This architecture takes three arguments:
@@ -89,6 +92,7 @@ score_based_lr_system:        # <-- this is the name of your LR system. You may 
   # LOGGING NU NAAR BOVEN GEMIGREERD, CHECKEN OF DAT NU WEL KON
   # define your preprocessing pipeline here by adding steps.
   # This is before pairing, so the steps should be applicable per instance.
+  
     steps:
       scaler: standard_scaler  # apply the scikit-learn `StandardScaler` with default arguments
 
@@ -104,14 +108,15 @@ score_based_lr_system:        # <-- this is the name of your LR system. You may 
       scoring: abs_diff                         # calculate the absolute difference between the two instances for each feature
       clf: logistic_regression                  # use scikit-learn `LogisticRegression` to estimate probabilities
       to_llr: probabilities_to_logodds          # convert probabilities to their log-odds values
-      calibration:                              # calibrate the log-odds to LLRs using KDE.
-                                                # Another sensible choice is 'logistic_regression', there you can suffice with 'calibration: logistic_regression'
+      calibration:                              
         method: kde
         bandwidth: silverman
+                                                # The three lines above calibrate the log-odds to LLRs using KDE.
+                                                # Another sensible choice is 'logistic_regression', there you can suffice with 'calibration: logistic_regression'
       bounding: elub_bounder                    # prevent excessive extrapolation by applying an LLR bounder
 
 # You have defined your LR system. Below we define how the LR system should be evaluated.
-# It is possible to set up experiments where multiple design choices are involved, so that parameter selection and model selection can be done.
+# It is possible to set up experiments where multiple design choices are involved, to enable parameter and model selection.
 # To find out how more complex designs should be set up, see here LINK
 # For now, we define a single simple validation experiment:
 

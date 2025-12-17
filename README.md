@@ -7,6 +7,12 @@ and computation of case LRs.
 
 LIR was first released in 2020 and redesigned from scratch in 2025, replacing the [previous repository](https://github.com/NetherlandsForensicInstitute/lir-deprecated).
 
+Documentation
+-------------
+
+Please consult [the dedicated documentation](https://netherlandsforensicinstitute.github.io/lir/) for a comprehensive overview of LiR, terminology and more on developing LR systems.
+
+
 Installation
 ------------
 

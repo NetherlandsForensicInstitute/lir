@@ -11,6 +11,7 @@ data_strategies:
   binary_cross_validation: lir.config.data_strategies.binary_cross_validation
   multiclass_train_test_split: lir.config.data_strategies.multiclass_train_test_split
   multiclass_cross_validation: lir.config.data_strategies.multiclass_cross_validation
+  predefined_train_test_split: lir.data.data_strategies.predefined_train_test_split
 data_providers:
   synthesized_normal_binary: lir.data.datasets.synthesized_normal_binary.synthesized_normal_binary
   synthesized_normal_multiclass: lir.data.datasets.synthesized_normal_multiclass.synthesized_normal_multiclass

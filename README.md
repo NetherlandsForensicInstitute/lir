@@ -13,6 +13,14 @@ Documentation
 Please consult [the dedicated documentation](https://netherlandsforensicinstitute.github.io/lir/) for a comprehensive overview of LiR, terminology and more on developing LR systems.
 
 
+Practitioner's Guide notebook
+-----------------------------
+
+- There is a dedicated Jupyter Notebook which uses LiR to develop LR systems for the comparison of glass measurements, accompanying the paper ["From data to a validated score-based LR system: A practitioner’s guide" - Leegwater et al.](https://doi.org/10.1016/j.forsciint.2024.111994)
+- The notebook resides on the [practitioner_guide](https://github.com/NetherlandsForensicInstitute/lir/tree/practitioner_guide) branch.
+- The notebook is also available on [Google Colab](https://colab.research.google.com/github/NetherlandsForensicInstitute/lir/blob/practitioner_guide/practitioners_guide_glass.ipynb)
+
+
 Installation
 ------------
 

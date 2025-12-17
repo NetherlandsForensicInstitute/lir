@@ -32,7 +32,7 @@ output_path: output/${timestamp}_score_based_common_source  # <-- adapt this val
 
 data:
   input_path: examples/example_glass_data.csv # <-- adapt this
-  data_parser: TODO # <-- adapt this only if you have written your own parser.
+  data_provider: TODO # <-- adapt this only if you have written your own parser.
 
 
 # This will describe which data is used to train the system and which to test (validate) the system. 

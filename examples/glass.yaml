@@ -223,6 +223,7 @@ experiments:
         - cllr
         - cllr_min
         - cllr_cal
+        - llr_bounds
       - pav
       - lr_histogram
 

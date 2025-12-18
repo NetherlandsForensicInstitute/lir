@@ -8,7 +8,7 @@ from sklearn.model_selection import GroupKFold, GroupShuffleSplit, KFold
 
 from lir.config.base import ContextAwareDict, check_is_empty, config_parser, pop_field
 from lir.config.data_providers import parse_data_provider
-from lir.data.models import DataSet, DataStrategy, FeatureData
+from lir.data.models import DataProvider, DataStrategy, FeatureData
 
 
 class BinaryTrainTestSplit(DataStrategy):
@@ -18,7 +18,7 @@ class BinaryTrainTestSplit(DataStrategy):
     test set.
     """
 
-    def __init__(self, source: DataSet, test_size: float | int, seed: int | None = None):
+    def __init__(self, source: DataProvider, test_size: float | int, seed: int | None = None):
         self.source = source
         self.test_size = test_size
         self.seed = seed
@@ -41,7 +41,7 @@ class BinaryCrossValidation(DataStrategy):
     The input data should have class labels. This split assigns instances of both classes to each "fold" subset.
     """
 
-    def __init__(self, source: DataSet, folds: int, seed: int | None = None):
+    def __init__(self, source: DataProvider, folds: int, seed: int | None = None):
         self.source = source
         self.folds = folds
         self.seed = seed
@@ -62,7 +62,7 @@ class MulticlassTrainTestSplit(DataStrategy):
     the test set.
     """
 
-    def __init__(self, source: DataSet, test_size: float | int, seed: int | None = None):
+    def __init__(self, source: DataProvider, test_size: float | int, seed: int | None = None):
         self.source = source
         self.test_size = test_size
         self.seed = seed
@@ -82,7 +82,7 @@ class MulticlassCrossValidation(DataStrategy):
     The input data should have source_ids. This split assigns all instances of a source to the same "fold" subset.
     """
 
-    def __init__(self, source: DataSet, folds: int):
+    def __init__(self, source: DataProvider, folds: int):
         self.source = source
         self.folds = folds
 
@@ -108,7 +108,7 @@ class PredefinedTrainTestSplit(DataStrategy):
     training set, and "test" for instances in the test set.
     """
 
-    def __init__(self, data_provider: DataSet):
+    def __init__(self, data_provider: DataProvider):
         self.data_provider = data_provider
 
     def __iter__(self) -> Iterator[tuple[FeatureData, FeatureData]]:

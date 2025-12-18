@@ -1,10 +1,10 @@
 import os
 import numpy as np
 
-from lir.data.models import DataSet, LLRData
+from lir.data.models import DataProvider, LLRData
 
 
-class UnboundLRs(DataSet):
+class UnboundLRs(DataProvider):
     """"
     Examples from paper:
         A transparent method to determine limit values for Likelihood Ratio systems, by

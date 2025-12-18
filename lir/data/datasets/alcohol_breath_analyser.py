@@ -1,9 +1,9 @@
 import numpy as np
 
-from lir.data.models import DataSet, LLRData
+from lir.data.models import DataProvider, LLRData
 
 
-class AlcoholBreathAnalyser(DataSet):
+class AlcoholBreathAnalyser(DataProvider):
     """
     Example from paper:
         Peter Vergeer, Andrew van Es, Arent de Jongh, Ivo Alberink and Reinoud

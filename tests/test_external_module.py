@@ -11,7 +11,7 @@ def test_parse_external_directly():
     In this case, the external module is `tests.resources.external_modules.ExampleExternalData`,
     which points to the `ExampleExternalData` class defined in tests/resources/external_modules.py.
 
-    Two tests are performed: one on a DataStrategy and one on a DataSet.
+    Two tests are performed: one on a DataStrategy and one on a DataProvider.
     """
     try:
         registry.get('tests.resources.external_modules.ExampleExternalData',            
@@ -25,4 +25,4 @@ def test_parse_external_directly():
                      search_path=['data_sets'],
                     default_config_parser=GenericConfigParser)
     except registry.ComponentNotFoundError:
-        pytest.fail("Failed to parse external DataSet module.")
+        pytest.fail("Failed to parse external DataProvider module.")

@@ -44,7 +44,7 @@ class Experiment(ABC):
         # Placeholders for numpy array's of LLRs and labels obtained from each train/test split
         llr_sets: list[LLRData] = []
 
-        # Split the data into a train / test subset, according to the provided DataSetup. This could
+        # Split the data into a train / test subset, according to the provided DataStrategy. This could
         # for example be a simple binary split or a multiple fold cross validation split.
         for training_data, test_data in self.data:
             lrsystem.fit(training_data)

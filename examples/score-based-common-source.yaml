@@ -1,0 +1,133 @@
+# score-based-common-source.yaml - a template yaml for setting up an LR system and a validation experiment.
+#
+# This file features a score-based common-source system.
+#
+# Below, you can adapt the information to your own needs.
+#
+# You will need to specify:
+# - output folder
+# - path to data & how to parse it
+# - how to assign training and testing roles to your data
+# - the design of the lr system itself
+# - the validation experiment you run for your lr system
+#
+# When you are done, you can run it all using:
+# Usage: pdm run lir --setup examples/score-based-common-source.yaml
+#
+
+# Output will be written to the folder specified below. There will be a sub folder for each experiment. The sub folders
+# each contain a file named `metrics.csv` which contains the metrics for each LR system that is tested, and for each LR
+# system there is a folder that may contain visualizations and other by products.
+# It is great practice to use a timestamp in the folder name so it is easier to keep track of experiment results.
+
+output_path: output/${timestamp}_score_based_common_source  # <-- adapt this value to your preference 
+
+# An example dataset of LA-ICP-MS measurements of elemental concentration from floatglass is provided. For more
+# information on the dataset, see: https://github.com/NetherlandsForensicInstitute/elemental_composition_glass
+#
+# This example is only provided to give working default values for the information you need to enter for your own data. 
+# You should give a path to your data. If your data is in the default format, the default parser should work.
+# If your data is not in the default format you can either write a new parser (the hard option) 
+# or, if possible, reformat your data (the easy option).
+
+data:
+  input_path: examples/example_glass_data.csv # <-- adapt this
+  data_provider: TODO # <-- adapt this only if you have written your own parser.
+
+# This will describe which data is used to train the system and which to test (validate) the system. 
+
+data_splits:
+  strategy: multiclass_cross_validation
+  folds: 5
+
+#  strategy: multiclass_train_test_split
+#  seed: 42
+#  test_size: 0.3
+
+# You may choose a simple split, where some data is assigned the role of training data and some is assigned the role of validation data.
+# If you want that, you use 'multiclass_train_test_split' for 'strategy' and you specify what the size of the test data with 'test_size'.
+# All the rest will be used as training data. The test size can be a float between 0 and 1, which will be used as a percentage.
+# It can also be an integer, that will be used as an absolute number of sources. 
+# You also specify a seed for the random assignment of sources to the train or test category.
+
+# Alternatively, you may choose a cross-design, in which the data is divided into folds. Each fold is used as validation data sequentially,
+# and for each of the folds an LR system is trained with all the other folds. The outcomes for all folds are then pooled into one set.
+
+# Cross-validation is given as default, you can switch strategy by commenting out the lines with cross validation and folds, and by uncommenting the three lines below them.
+
+
+# Next, the score-based common source LR system will be defined.
+
+score_based_lr_system:        # <-- this is the name of your LR system. You may rename it to your preferred name.
+  logging: extensive          # <-- if you want csv output for every step in your LR system, use 'extensive'. Otherwise, use 'limited'.
+                              # CHECK OF DIT VIABLE IS VOOR DE CODE
+  architecture: score_based   # Since this is the yaml for a score based system, we specify the architecture to be 'score_based'.
+  
+  # This architecture takes three arguments:
+  # - `preprocessing`: a series of steps that take your features as input and do some preprocessing;
+  # - `pairing`: a pairing method that takes instances as input and produces same-source and different-source pairs;
+  # - `comparing`: a series of steps that takes the pairs as input and produces LLRs.
+  #
+  # A step may be a scikit-learn-style transformer, an estimator or a function.
+  # A step has a name that you give it and specifies a `method` argument which defines the module class,
+  # which may be a scikit-learn-style transformer, estimator or a plain function. 
+  # All other arguments are passed to the module class on instantiation, like this:
+  #
+  # scaler:                        <-- the name of your step
+  #   method: standard_scaler      <-- the name of the transformer / estimator / function
+  #   with_mean: False             <-- any arguments your specific function needs
+  #
+  # Alternatively, if the module needs no arguments, the module class can be entered directly. The modules `scaler1` and
+  # `scaler2` in the following snippet are equivalent.
+  #
+  # scaler1:                      <-- the name of your step
+  #   method: standard_scaler     <-- the pointer to the right function
+  #
+  # scaler2: standard_scaler      <-- the notation shortcut that is possible because no arguments are needed
+  #
+  
+  preprocessing:             
+  # LOGGING NU NAAR BOVEN GEMIGREERD, CHECKEN OF DAT NU WEL KON
+  # define your preprocessing pipeline here by adding steps.
+  # This is before pairing, so the steps should be applicable per instance.
+  
+    steps:
+      scaler: standard_scaler  # apply the scikit-learn `StandardScaler` with default arguments
+
+  pairing:
+  # define the way you want to pair your data. UITLEG MOGELIJKE PAIRING METHODES
+    method: instance_pairs
+    ratio_limit: 2  # limit the number of different-source pairs to the number of same-source pairs
+
+  comparing:
+  # define the way you want to make scores from your features and to make LLRs from those scores.
+  # This is after pairing, so the steps should be applicable per pair.
+    steps:
+      scoring: abs_diff                         # calculate the absolute difference between the two instances for each feature
+      clf: logistic_regression                  # use scikit-learn `LogisticRegression` to estimate probabilities
+      to_llr: probabilities_to_logodds          # convert probabilities to their log-odds values
+      calibration:                              
+        method: kde
+        bandwidth: silverman
+                                                # The three lines above calibrate the log-odds to LLRs using KDE.
+                                                # Another sensible choice is 'logistic_regression', there you can suffice with 'calibration: logistic_regression'
+      bounding: elub_bounder                    # prevent excessive extrapolation by applying an LLR bounder
+
+# You have defined your LR system. Below we define how the LR system should be evaluated.
+# It is possible to set up experiments where multiple design choices are involved, to enable parameter and model selection.
+# To find out how more complex designs should be set up, see here LINK
+# For now, we define a single simple validation experiment:
+
+experiments:                             
+  - name: my_validation_run              # This is the name of the experiment, use your own preferred value.
+    strategy: single_run                 # For a single validation experiment, use 'single_run'.
+    lr_system: ${score_based_lr_system}  # This refers to the lr system defined above, make sure to use the name you used above.
+    data: ${data}                        # This refers to the data defined above, make sure to use the name you used above.
+    data_splits: ${data_splits}          # BIJ NADER INZIEN LIJKT DIT ME HET MEEST INTUITIEF
+    output:                              # Here you define what output you want. The output will at least include a copy of this yaml and statistics like number of sources and instances.
+      - metrics                          # EVEN OVERLEGGEN HOE WE DIT OOKWEER HADDEN BEDACHT
+      - pav
+      - ece
+      - save_model
+      - lr_histogram
+  

@@ -28,11 +28,11 @@ output_path: output/${timestamp}_score_based_common_source  # <-- adapt this val
 # This example is only provided to give working default values for the information you need to enter for your own data. 
 # You should give a path to your data. If your data is in the default format, the default parser should work.
 # If your data is not in the default format you can either write a new parser (the hard option) or, if possible, reformat your data (the easy option).
-# If you want to know how to use the default csv parser, go HERE
+# If you want to know how to use the default csv parser, go here. <TODO>
 
 data:
   input_path: examples/example_glass_data.csv # <-- adapt this
-  provider: TODO # <-- adapt this only if you have written your own parser.
+  provider: <TODO> # <-- adapt this only if you have written your own parser.
 
 #3. ASSIGNING TEST AND TRAIN DATA ROLES
 # This will describe which data is used to train the system and which to test (validate) the system. 
@@ -60,8 +60,7 @@ data_roles:                                # <-- adapt this name to your own pre
 # Next, the score-based common source LR system will be defined.
 
 score_based_lr_system:        # <-- this is a custom name of your LR system that you can adapt. It will be referred to later.
-  logging: extensive          # <-- if you want csv output for every step in your LR system, use 'extensive'. Otherwise, use 'limited'.
-                              # CHECK OF DIT VIABLE IS VOOR DE CODE
+  intermediate_output: True   # <-- if you want csv output for every step in your LR system, use 'True'. Otherwise, use 'False'
   architecture: score_based   # Since this is the yaml for a score based system, we specify the architecture to be 'score_based'.
   
   # This 'score-based' architecture takes three arguments:
@@ -88,7 +87,7 @@ score_based_lr_system:        # <-- this is a custom name of your LR system that
   #
   
   preprocessing:             
-  # LOGGING NU NAAR BOVEN GEMIGREERD, CHECKEN OF DAT NU WEL KON
+  # LOGGING NU NAAR BOVEN GEMIGREERD, CHECKEN OF DAT NU WEL KON <TODO>
   # define your preprocessing pipeline here by adding steps.
   # This is before pairing, so the steps should be applicable per instance.
   
@@ -96,7 +95,7 @@ score_based_lr_system:        # <-- this is a custom name of your LR system that
       scaler: standard_scaler  # apply the scikit-learn `StandardScaler` with default arguments
 
   pairing:
-  # define the way you want to pair your data. UITLEG MOGELIJKE PAIRING METHODES
+  # define the way you want to pair your data. UITLEG MOGELIJKE PAIRING METHODES <TODO>
     method: instance_pairs
     ratio_limit: 2  # limit the number of different-source pairs to the number of same-source pairs
 
@@ -116,7 +115,7 @@ score_based_lr_system:        # <-- this is a custom name of your LR system that
 
 # You have defined your LR system. Below we define how the LR system should be evaluated.
 # It is possible to set up experiments where multiple design choices are involved, to enable parameter and model selection.
-# To find out how more complex designs should be set up, see here LINK
+# To find out how more complex designs should be set up, see here LINK <TODO>
 # For now, we define a single simple validation experiment:
 
 # 5. THE VALIDATION EXPERIMENT
@@ -128,7 +127,7 @@ experiments:
     data: ${data}                        # This refers to the data defined above, make sure to use the name you used above.
     data_roles: ${data_roles}            # This refers to the data roles defined above, make sure to use the name you used above.
     output:                              # Here you define what output you want. The output will at least include a copy of this yaml and statistics like number of sources and instances.
-      - metrics                          # If you want to know more about the types of output that are possible, go HERE
+      - metrics                          # If you want to know more about the types of output that are possible, go HERE <TODO>
       - pav
       - ece
       - save_model

@@ -9,7 +9,7 @@ from matplotlib import pyplot as plt
 
 from lir.algorithms.bayeserror import plot_nbe as nbe
 from lir.config.base import ContextAwareDict, YamlParseError, config_parser, pop_field
-from lir.config.metrics import parse_metric
+from lir.config.metrics import parse_individual_metric
 from lir.data.models import LLRData
 from lir.lrsystems.lrsystems import LRSystem
 from lir.plotting import llr_interval, lr_histogram, pav, tippett
@@ -107,15 +107,15 @@ def plot_tippett(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
 
 
 class WriteMetricsToCsv(Aggregation):
-    def __init__(self, output_dir: Path, metrics: Mapping[str, Callable]):
+    def __init__(self, output_dir: Path, columns: Mapping[str, Callable]):
         self.path = output_dir / 'metrics.csv'
         self._file: IO[Any] | None = None
         self._writer: csv.DictWriter | None = None
-        self.metrics = metrics
+        self.columns = columns
 
     def report(self, data: AggregationData) -> None:
-        metrics = [(key, metric(data.llrdata.llrs, data.llrdata.labels)) for key, metric in self.metrics.items()]
-        results = OrderedDict(list(data.parameters.items()) + metrics)
+        columns = [(key, metric(data.llrdata.llrs, data.llrdata.labels)) for key, metric in self.columns.items()]
+        results = OrderedDict(list(data.parameters.items()) + columns)
 
         # Record column header names only once to the CSV
         if self._writer is None:
@@ -133,12 +133,12 @@ class WriteMetricsToCsv(Aggregation):
 
 @config_parser
 def metrics_csv(config: ContextAwareDict, output_dir: Path) -> WriteMetricsToCsv:
-    metrics = pop_field(config, 'columns', default=['cllr', 'cllr_min'])
-    if not isinstance(metrics, Sequence):
+    columns = pop_field(config, 'columns', default=['cllr', 'cllr_min'])
+    if not isinstance(columns, Sequence):
         raise YamlParseError(
             config.context,
             'Invalid metrics configuration; expected a list of metric names.',
         )
 
-    metrics = {name: parse_metric(name, output_dir, config.context) for name in metrics}
-    return WriteMetricsToCsv(output_dir, metrics)
+    columns = {name: parse_individual_metric(name, output_dir, config.context) for name in columns}
+    return WriteMetricsToCsv(output_dir, columns)

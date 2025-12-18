@@ -6,12 +6,12 @@ from lir.config.base import ContextAwareDict, GenericFunctionConfigParser, YamlP
 from lir.registry import ComponentNotFoundError
 
 
-def parse_metric(name: str, output_path: Path, context: list[str]) -> Callable:
+def parse_individual_metric(name: str, output_path: Path, context: list[str]) -> Callable:
     try:
         parser = registry.get(
             name,
             default_config_parser=GenericFunctionConfigParser,
-            search_path=['metrics'],
+            search_path=['individual_metrics'],
         )
         return parser.parse(ContextAwareDict(context), output_path)
     except ComponentNotFoundError as e:

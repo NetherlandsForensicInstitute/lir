@@ -38,7 +38,7 @@ experiments:
             method: svm
             probability: True
     output:
-      - method: csv
+      - method: metrics
         columns:
         - cllr
 
@@ -47,6 +47,6 @@ experiments:
     lr_system: ${lr_system}
     data: ${data_splits}
     output:
-      - method: csv
+      - method: metrics
         columns:
         - cllr

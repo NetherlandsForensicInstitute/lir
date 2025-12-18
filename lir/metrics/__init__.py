@@ -69,3 +69,14 @@ def cllr_cal(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
     cllr_min_val = cllr_min(LLRData(features=llrs, labels=y), weights)
     cllr_val = cllr(LLRData(features=llrs, labels=y), weights)
     return cllr_val - cllr_min_val
+
+
+def llr_bounds(llrs: LLRData) -> tuple[float, float]:
+    """
+    Calculates the minimum and maximum log likelihood ratios from a collection of
+    log likelihood ratios.
+
+    :param llrs: a numpy array of LLRs
+    :return: a tuple (min_llr, max_llr)
+    """
+    return llrs.llr_bounds

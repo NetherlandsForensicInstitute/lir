@@ -114,7 +114,7 @@ class WriteMetricsToCsv(Aggregation):
         self.columns = columns
 
     def report(self, data: AggregationData) -> None:
-        columns = [(key, metric(data.llrdata.llrs, data.llrdata.labels)) for key, metric in self.columns.items()]
+        columns = [(key, metric(data.llrdata)) for key, metric in self.columns.items()]
         results = OrderedDict(list(data.parameters.items()) + columns)
 
         # Record column header names only once to the CSV

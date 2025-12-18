@@ -1,10 +1,11 @@
 import numpy as np
 
 from lir.algorithms.isotonic_regression import IsotonicCalibrator
+from lir.data.models import LLRData
 from lir.util import Xy_to_Xn, logodds_to_odds
 
 
-def cllr(llrs: np.ndarray, y: np.ndarray, weights: tuple[float, float] = (1, 1)) -> float:
+def cllr(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
     """
     Calculates a log likelihood ratio cost (C_llr) for a series of log likelihood
     ratios.
@@ -21,6 +22,11 @@ def cllr(llrs: np.ndarray, y: np.ndarray, weights: tuple[float, float] = (1, 1))
     # ignore errors:
     #   divide -> ignore divide by zero
     #   over -> ignore scalar overflow
+
+    llrs, y = llr_data.llrs, llr_data.labels
+    if y is None:
+        raise ValueError('Labels are required to compute C_llr')
+
     lrs = logodds_to_odds(llrs)
     with np.errstate(divide='ignore', over='ignore'):
         lrs0, lrs1 = Xy_to_Xn(lrs, y)
@@ -29,7 +35,7 @@ def cllr(llrs: np.ndarray, y: np.ndarray, weights: tuple[float, float] = (1, 1))
         return float((cllr0 + cllr1) / sum(weights))
 
 
-def cllr_min(llrs: np.ndarray, y: np.ndarray, weights: tuple[float, float] = (1, 1)) -> float:
+def cllr_min(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
     """
     Estimates the discriminative power from a collection of log likelihood ratios.
 
@@ -38,12 +44,16 @@ def cllr_min(llrs: np.ndarray, y: np.ndarray, weights: tuple[float, float] = (1,
     :param weights: the relative weights of the classes
     :return: CLLR_min, a measure of discrimination
     """
+    llrs, y = llr_data.llrs, llr_data.labels
+    if y is None:
+        raise ValueError('Labels are required to compute C_llr')
+
     cal = IsotonicCalibrator()
     llrmin = cal.fit_transform(llrs, y)
-    return cllr(llrmin, y, weights)
+    return cllr(LLRData(features=llrmin, labels=y), weights)
 
 
-def cllr_cal(llrs: np.ndarray, y: np.ndarray, weights: tuple[float, float] = (1, 1)) -> float:
+def cllr_cal(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
     """
     Calculates the difference between the C_llr before and after isotonic calibration.
 
@@ -52,6 +62,10 @@ def cllr_cal(llrs: np.ndarray, y: np.ndarray, weights: tuple[float, float] = (1,
     :param weights: the relative weights of the classes
     :return: CLLR_cal, the difference after isotonic calibration
     """
-    cllr_min_val = cllr_min(llrs, y, weights)
-    cllr_val = cllr(llrs, y, weights)
+    llrs, y = llr_data.llrs, llr_data.labels
+    if y is None:
+        raise ValueError('Labels are required to compute C_llr')
+
+    cllr_min_val = cllr_min(LLRData(features=llrs, labels=y), weights)
+    cllr_val = cllr(LLRData(features=llrs, labels=y), weights)
     return cllr_val - cllr_min_val

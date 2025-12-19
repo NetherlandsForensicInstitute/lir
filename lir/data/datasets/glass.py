@@ -1,27 +1,24 @@
 import csv
-from collections.abc import Iterator
 from os import PathLike
 from pathlib import Path
 
 import numpy as np
 
+from lir.data.data_strategies import RoleAssignment
 from lir.data.io import RemoteResource
-from lir.data.models import DataProvider, DataStrategy
+from lir.data.models import DataProvider
 from lir.lrsystems.lrsystems import FeatureData
 
 
-class GlassData(DataProvider, DataStrategy):
+class GlassData(DataProvider):
     """
     LA-ICP-MS measurements of elemental concentration from floatglass.
 
     The measurements are from reference glass from casework, collected in the past 10 years or so.
     For more info on the DataProvider, see: https://github.com/NetherlandsForensicInstitute/elemental_composition_glass
 
-    This class is a `DataProvider` as well as a `DataStrategy`, as it implements both `get_instances()` and `__iter__()`
-    When used as a `DataProvider`, it uses `get_instances()` which returns a dataset of three instances per source.
-    When used as a `DataStrategy`, it uses `__iter__()` which returns a training/test set combination. In that case,
-    the training set is identical to the data returned by `get_instances()`. The test set has a total of five instances
-    per source.
+    This data provider has a pre-defined train/test split, with a training set of three instances per source, and a test
+    set of five instances per source.
 
     Data are retrieved from the web as needed and stored locally for later use.
     """
@@ -32,7 +29,7 @@ class GlassData(DataProvider, DataStrategy):
             Path(cache_dir),
         )
 
-    def _load_data(self, file: str) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def _load_data(self, file: str, role: RoleAssignment) -> FeatureData:
         """
         Returns a tuple of features, source_ids and instance_ids.
         """
@@ -45,49 +42,43 @@ class GlassData(DataProvider, DataStrategy):
                 # the first measurement is at row 2, since row 1 is the header
                 row_number = i + 2
 
-                source_ids.append(int(row['Item']))
+                source_ids.append(f'{role.value}{row["Item"]}')
                 instance_ids.append(f'{file}:{row_number}')
                 values.append(np.array(list(map(float, row.values()))[3:]))
 
-        return np.array(values), np.array(source_ids), np.array(instance_ids)
-
-    def __iter__(self) -> Iterator[tuple[FeatureData, FeatureData]]:
-        """
-        Returns an iterator over a single combination of training data and test data.
-
-        The training data is read from `training.csv` and has three instances (replicates) per source.
-        The test data is read from `duplo.csv` and `triplo.csv` and has a total of five instances per source.
-
-        The data are returned as an iterator over training/test set combinations.
-        """
-        training_data = self._load_data('training.csv')
-        training_data = FeatureData(
-            features=training_data[0],
-            source_ids=training_data[1],
-            instance_ids=training_data[2],  # type: ignore
+        return FeatureData(
+            features=np.array(values),
+            source_ids=np.array(source_ids),
+            instance_ids=np.array(instance_ids),  # type: ignore
+            role_assignments=np.array([role.value] * len(values)),  # type: ignore
         )
-        test_features, test_source_ids, test_instance_ids = zip(
-            self._load_data('duplo.csv'), self._load_data('triplo.csv'), strict=True
-        )
-        test_data = FeatureData(
-            features=np.concatenate(test_features),
-            source_ids=np.concatenate(test_source_ids),
-            instance_ids=np.concatenate(test_instance_ids),  # type: ignore
-        )
-        return iter([(training_data, test_data)])
 
     def get_instances(self) -> FeatureData:
         """
-        Returns `training.csv` data with three instances (replicates) per source.
+        Returns data with pre-defined assignments of training data and test data.
+
+        The training data is read from `training.csv` and has three instances (replicates) per source.
+        The test data is read from `duplo.csv` and `triplo.csv` and has a total of five instances per source.
 
         The features are elemental concentrations on a log_10 basis, and normalized to Si.
         The elements are: K39, Ti49, Mn55, Rb85, Sr88, Zr90, Ba137, La139, Ce140, Pb208
 
         The source_ids are unique identifiers of a glass particle. Each particle is from a different reference window.
-        An instance is a replicate measurement on a glass particle.
+        An instance is a replicate measurement on a glass particle. Source ids are prefixed with the role assignment,
+        e.g. 'test-123' and 'train-123'. The ids 'test-123' and 'train-123' refer to different glass particles (and
+        therefore different reference windows).
 
         The instance_ids values of an instance are a concatenation of the filename and a row number,
         e.g. "training.csv:22".
+
+        The data are returned as a FeatureData object with the following properties:
+        - features: an (n, 10) array of feature values
+        - source_ids: a 1d array of source ids (str)
+        - instance_ids: a 1d array of unique instance ids (str)
+        - role_assignments: a 1d array of role assignments (values "train" or "test")
         """
-        features, source_ids, instance_ids = self._load_data('training.csv')
-        return FeatureData(features=features, source_ids=source_ids, instance_ids=instance_ids)  # type: ignore
+        training_data = self._load_data('training.csv', RoleAssignment.TRAIN)
+        duplo = self._load_data('duplo.csv', RoleAssignment.TEST)
+        triplo = self._load_data('triplo.csv', RoleAssignment.TEST)
+
+        return training_data + duplo + triplo

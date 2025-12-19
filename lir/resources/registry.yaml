@@ -16,7 +16,8 @@ data_providers:
   synthesized_normal_binary: lir.data.datasets.synthesized_normal_binary.synthesized_normal_binary
   synthesized_normal_multiclass: lir.data.datasets.synthesized_normal_multiclass.synthesized_normal_multiclass
   glass: lir.data.datasets.glass.GlassData
-  feature_data_csv: lir.data.datasets.feature_data_csv.FeatureDataCsvParser
+  feature_data_csv_file: lir.data.datasets.feature_data_csv.FeatureDataCsvFileParser
+  feature_data_csv_http: lir.data.datasets.feature_data_csv.feature_data_csv_http_parser
 modules:
   # pipelines
   pipeline: lir.transform.pipeline.pipeline

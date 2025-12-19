@@ -5,7 +5,8 @@ import numpy as np
 import pytest
 
 from lir.data.data_strategies import RoleAssignment
-from lir.data.datasets.feature_data_csv import FeatureDataCsvParser
+from lir.data.datasets.feature_data_csv import FeatureDataCsvParser, FeatureDataCsvFileParser, \
+    FeatureDataCsvStreamParser
 from lir.data.models import FeatureData
 
 
@@ -88,9 +89,9 @@ from lir.data.models import FeatureData
     ]
 )
 def test_csv_parser(file_contents: str, parser_args: dict[str, str], expected_result: FeatureData, description: str):
-    f = io.StringIO(file_contents)
+    fp = io.StringIO(file_contents)
     try:
-        parser = FeatureDataCsvParser(path=f, **parser_args)
+        parser = FeatureDataCsvStreamParser(fp=fp, **parser_args)
         actual_result = parser.get_instances()
         if expected_result is not None:
             assert actual_result == expected_result
@@ -99,13 +100,3 @@ def test_csv_parser(file_contents: str, parser_args: dict[str, str], expected_re
     except Exception as e:
         if expected_result is not None:
             pytest.fail(f"while parsing '{description}': {e}", e)
-
-
-@pytest.mark.parametrize("path,expected_full_path", [
-    ("tests", Path(__file__).parent.parent.parent.parent / "tests"),
-    ("lir/config", Path(__file__).parent.parent.parent.parent / "lir/config"),
-    ("lir/non_existent", "lir/non_existent"),
-])
-def test_search_path(path: str, expected_full_path: str):
-    full_path = FeatureDataCsvParser._search_path(Path(path))
-    assert full_path == Path(expected_full_path).resolve()

@@ -1,5 +1,6 @@
 import csv
 import logging
+import sys
 import urllib.request
 from itertools import chain
 from pathlib import Path
@@ -74,3 +75,25 @@ class DataFileBuilderCsv:
 
             for row in zip(*self._all_data, strict=True):
                 writer.writerow(chain(*row))
+
+
+def search_path(path: Path) -> Path:
+    """
+    Searches the python path for a file.
+
+    If `path` is absolute, it is normalized by `Path.resolve()` and returned.
+
+    If `path` is relative, the file is searched in `sys.path`. The path is interpreted as relative to `sys.path`
+    elements one by one, and if it exists, it is normalized by `Path.resolve()` and returned.
+
+    If the file is not found, it is normalized and made absolute by `Path.resolve()` and returned.
+    """
+    if path.is_absolute():
+        return path.resolve()
+
+    for search_path_element in sys.path:
+        full_path = Path(search_path_element) / path
+        if full_path.exists():
+            return full_path.resolve()
+
+    return path.resolve()

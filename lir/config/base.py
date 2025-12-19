@@ -179,6 +179,13 @@ def check_not_none(v: Any) -> Any:
     return v
 
 
+def check_type(type_class: Any, v: Any) -> Any:
+    if isinstance(v, type_class):
+        return v
+    else:
+        raise ValueError(f'expected type: {type_class}; found: {type(v)}')
+
+
 def pop_field(
     config: ContextAwareDict | Any,
     field: str,

@@ -9,7 +9,6 @@ from lir.config.base import (
     config_parser,
     pop_field,
 )
-from lir.config.data_providers import parse_data_provider
 from lir.config.substitution import ContextAwareDict
 from lir.data.data_strategies import (
     BinaryCrossValidation,
@@ -22,30 +21,28 @@ from lir.data.models import DataStrategy
 
 def _parse_train_test_split(
     config: ContextAwareDict,
-    output_path: Path,
     constructor: Callable,
 ) -> DataStrategy:
-    data_source = parse_data_provider(pop_field(config, 'data_origin'), output_path)
     test_size = pop_field(config, 'test_size')
     seed = config.pop('seed', None)
     check_is_empty(config)
-    return constructor(data_source, test_size, seed)
+    return constructor(test_size, seed)
 
 
 @config_parser
-def binary_train_test_split(config: ContextAwareDict, output_path: Path) -> DataStrategy:
+def binary_train_test_split(config: ContextAwareDict, _: Path) -> DataStrategy:
     """
     Parse settings for a train/test split strategy for binary data.
     """
-    return _parse_train_test_split(config, output_path, BinaryTrainTestSplit)
+    return _parse_train_test_split(config, BinaryTrainTestSplit)
 
 
 @config_parser
-def multiclass_train_test_split(config: ContextAwareDict, output_path: Path) -> DataStrategy:
+def multiclass_train_test_split(config: ContextAwareDict, _: Path) -> DataStrategy:
     """
     Parse settings for a train/test split strategy for multiclass data.
     """
-    return _parse_train_test_split(config, output_path, MulticlassTrainTestSplit)
+    return _parse_train_test_split(config, MulticlassTrainTestSplit)
 
 
 def _parse_cross_validation(
@@ -55,9 +52,8 @@ def _parse_cross_validation(
     extra_args: Sequence[str],
 ) -> DataStrategy:
     folds = int(pop_field(config, 'folds'))
-    data_source = parse_data_provider(pop_field(config, 'data_origin'), output_path)
     check_is_empty(config, extra_args)
-    return constructor(data_source, folds, **config)
+    return constructor(folds, **config)
 
 
 @config_parser

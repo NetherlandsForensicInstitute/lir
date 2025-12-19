@@ -22,11 +22,11 @@ def _calculate_cllr(
     }
 
     data = SynthesizedNormalMulticlassData(**params)
-    data = MulticlassCrossValidation(data, 2)
+    splitter = MulticlassCrossValidation(2)
 
     pairing = SourcePairing(seed=0)
 
-    training_data, test_data = next(iter(data))
+    training_data, test_data = next(iter(splitter.apply(data.get_instances())))
 
     system = TwoLevelSystem(
         "test_system", None, pairing, None, n_trace_instances=50, n_ref_instances=50

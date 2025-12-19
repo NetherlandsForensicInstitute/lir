@@ -1,21 +1,21 @@
 output_path: output/${timestamp}_specific_source
 
 data:
-  provider: synthesized_normal_binary
-  seed: 42
-  h1:
-    mean: 1
-    std: 1
-    size: 100
-  h2:
-    mean: -1
-    std: 1
-    size: 100
+  provider:
+    method: synthesized_normal_binary
+    seed: 42
+    h1:
+      mean: 1
+      std: 1
+      size: 100
+    h2:
+      mean: -1
+      std: 1
+      size: 100
 
-data_splits:
-  strategy: binary_train_test_split
-  test_size: 0.5
-  data_origin: ${data}
+  splits:
+    strategy: binary_train_test_split
+    test_size: 0.5
 
 lr_system:
   architecture: specific_source
@@ -28,7 +28,7 @@ experiments:
   exp1:
     strategy: grid
     lr_system: ${lr_system}
-    data: ${data_splits}
+    data: ${data}
     hyperparameters:
       - path: modules.steps.clf
         options:
@@ -45,7 +45,7 @@ experiments:
   exp2:
     strategy: single_run
     lr_system: ${lr_system}
-    data: ${data_splits}
+    data: ${data}
     output:
       - method: csv
         columns:

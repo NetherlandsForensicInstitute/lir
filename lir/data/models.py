@@ -412,15 +412,16 @@ class DataProvider(ABC):
         raise NotImplementedError
 
 
-class DataStrategy(ABC, Iterable[tuple[FeatureData, FeatureData]]):
+class DataStrategy(ABC):
     """
-    General representation of a data setup strategy.
-
-    All subclasses must implement a `__iter__()` method.
-
-    The custom __iter__() method should return an iterator over tuples
-    of a training set and a test set. Both the training set and the test
-    is represented by an `InstanceData` object.
+    Base class for data strategies.
     """
 
-    pass
+    @abstractmethod
+    def apply(self, instances: FeatureData) -> Iterable[tuple[FeatureData, FeatureData]]:
+        """
+        Returns an iterator over tuples of a training set and a test set. Both the training set and the test
+        is represented by an `InstanceData` object.
+        """
+
+        raise NotImplementedError

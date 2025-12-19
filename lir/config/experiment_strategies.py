@@ -156,6 +156,8 @@ class GridStrategy(ExperimentStrategyConfigParser):
 
         data_provider, data_splitter = self.data()
 
+        data_provider, data_splitter = self.data()
+
         return PredefinedExperiment(
             name,
             data_provider,

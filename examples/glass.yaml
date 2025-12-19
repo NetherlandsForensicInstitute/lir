@@ -18,9 +18,13 @@ output_path: output/${timestamp}_glass_example
 # The data consist of a pre-defined training/test set combination. The training data has three instances per source; the
 # test data has five instances per source, from which to draw two-to-three pairs for LR calculations.
 #
-data:
-  strategy: data_providers.glass
+data_provider:
+  provider: data_providers.glass
   cache_dir: cache/glass
+
+data:
+  strategy: predefined_train_test_split
+  data_origin: ${data_provider}
 
 # This defines a score-based LR system. We may later experiment with different parameter values by augmenting this
 # system.

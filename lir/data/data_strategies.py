@@ -11,8 +11,8 @@ from lir.data.models import DataStrategy, FeatureData
 class BinaryTrainTestSplit(DataStrategy):
     """Representation of a train/test split.
 
-    The input data should have class labels. This split assigns instances of both classes to the training set and the
-    test set.
+    The input data should have hypothesis labels. This split assigns instances of both classes to the training set and
+    the test set.
     """
 
     def __init__(self, test_size: float | int, seed: int | None = None):
@@ -33,6 +33,18 @@ class BinaryCrossValidation(DataStrategy):
     """Representation of a K-fold cross validation iterator over each train/test split fold.
 
     The input data should have class labels. This split assigns instances of both classes to each "fold" subset.
+
+    This method might be referenced in the YAML registry as follows:
+    ```
+    data_strategies:
+      binary_cross_validation: lir.data.data_strategies.BinaryCrossValidation
+    ```
+
+    In the benchmark configuration YAML, this validation can be referenced as follows:
+    ```
+    splits:
+      strategy: binary_cross_validation
+    ```
     """
 
     def __init__(self, folds: int, seed: int | None = None):
@@ -67,9 +79,25 @@ class MulticlassTrainTestSplit(DataStrategy):
 
 
 class MulticlassCrossValidation(DataStrategy):
-    """Representation of a K-fold cross validation iterator over each train/test split fold.
+    """
+    Representation of a K-fold cross validation iterator over train/test splits.
 
     The input data should have source_ids. This split assigns all instances of a source to the same "fold" subset.
+
+    This method might be referenced in the YAML registry as follows:
+    ```
+    data_strategies:
+      multiclass_cross_validation: lir.data.data_strategies.MulticlassCrossValidation
+    ```
+
+    In the benchmark configuration YAML, this validation can be referenced as follows:
+    ```
+    data:
+      [...]
+      splits:
+        strategy: multiclass_cross_validation
+        folds: 5
+    ```
     """
 
     def __init__(self, folds: int):

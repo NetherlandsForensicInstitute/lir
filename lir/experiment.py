@@ -8,7 +8,7 @@ from tqdm import tqdm
 
 import lir
 from lir.aggregation import Aggregation, AggregationData
-from lir.data.models import DataStrategy, concatenate_instances
+from lir.data.models import DataProvider, DataStrategy, concatenate_instances
 from lir.lrsystems.lrsystems import LLRData, LRSystem
 
 
@@ -21,12 +21,14 @@ class Experiment(ABC):
     def __init__(
         self,
         name: str,
-        data: DataStrategy,
+        data_provider: DataProvider,
+        splitter: DataStrategy,
         outputs: Sequence[Aggregation],
         output_path: Path,
     ):
         self.name = name
-        self.data = data
+        self.data_provider = data_provider
+        self.splitter = splitter
         self.outputs = outputs
         self.output_path = output_path
 
@@ -47,7 +49,7 @@ class Experiment(ABC):
 
         # Split the data into a train / test subset, according to the provided DataStrategy. This could
         # for example be a simple binary split or a multiple fold cross validation split.
-        for training_data, test_data in self.data:
+        for training_data, test_data in self.splitter.apply(self.data_provider.get_instances()):
             lrsystem.fit(training_data)
             subset_llr_results: LLRData = lrsystem.apply(test_data)
 
@@ -88,12 +90,13 @@ class PredefinedExperiment(Experiment):
     def __init__(
         self,
         name: str,
-        data: DataStrategy,
+        data_provider: DataProvider,
+        splitter: DataStrategy,
         outputs: Sequence[Aggregation],
         output_path: Path,
         lrsystems: Iterable[tuple[LRSystem, dict[str, Any]]],
     ):
-        super().__init__(name, data, outputs, output_path)
+        super().__init__(name, data_provider, splitter, outputs, output_path)
         self.lrsystems = lrsystems
 
     def _generate_and_run(self) -> None:

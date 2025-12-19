@@ -15,6 +15,7 @@ from lir.config.base import (
     check_type,
     pop_field,
 )
+from lir.config.data_providers import parse_data_provider
 from lir.config.data_strategies import parse_data_strategy
 from lir.config.lrsystem_architectures import (
     parse_augmented_lrsystem,
@@ -26,7 +27,7 @@ from lir.config.substitution import (
     Hyperparameter,
     parse_hyperparameter,
 )
-from lir.data.models import DataStrategy
+from lir.data.models import DataProvider, DataStrategy
 from lir.experiment import Experiment, PredefinedExperiment
 from lir.optuna import OptunaExperiment
 
@@ -40,8 +41,12 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         self._config: ContextAwareDict
         self._output_dir: Path
 
-    def data(self) -> DataStrategy:
-        return parse_data_strategy(pop_field(self._config, 'data'), self._output_dir)
+    def data(self) -> tuple[DataProvider, DataStrategy]:
+        data_section = pop_field(self._config, 'data')
+        provider = parse_data_provider(pop_field(data_section, 'provider'), self._output_dir)
+        splitter = parse_data_strategy(pop_field(data_section, 'splits'), self._output_dir)
+        check_is_empty(data_section)
+        return provider, splitter
 
     def primary_metric(self) -> Callable:
         metric_name = pop_field(self._config, 'primary_metric')
@@ -123,10 +128,12 @@ class SingleRunStrategy(ExperimentStrategyConfigParser):
 
     def get_experiment(self, name: str) -> Experiment:
         lrsystem = parse_lrsystem(pop_field(self._config, 'lr_system'), self._output_dir)
+        data_provider, data_splitter = self.data()
 
         return PredefinedExperiment(
             name,
-            self.data(),
+            data_provider,
+            data_splitter,
             self.output_list(),
             self._output_dir,
             [(lrsystem, {})],
@@ -147,9 +154,12 @@ class GridStrategy(ExperimentStrategyConfigParser):
             lrsystem = parse_augmented_lrsystem(baseline_config, substitutions, self._output_dir)
             lrsystems.append((lrsystem, substitutions))
 
+        data_provider, data_splitter = self.data()
+
         return PredefinedExperiment(
             name,
-            self.data(),
+            data_provider,
+            data_splitter,
             self.output_list(),
             self._output_dir,
             lrsystems,
@@ -162,9 +172,12 @@ class OptunaStrategy(ExperimentStrategyConfigParser):
     def get_experiment(self, name: str) -> Experiment:
         baseline_config, parameters = self.lrsystem()
         n_trials = pop_field(self._config, 'n_trials', validate=int)
+        data_provider, data_splitter = self.data()
+
         return OptunaExperiment(
             name,
-            self.data(),
+            data_provider,
+            data_splitter,
             self.output_list(),
             self._output_dir,
             baseline_config,

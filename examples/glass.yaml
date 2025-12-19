@@ -23,13 +23,13 @@ parallel_jobs: 0
 # The data consist of a pre-defined training/test set combination. The training data has three instances per source; the
 # test data has five instances per source, from which to draw two-to-three pairs for LR calculations.
 #
-data_provider:
-  provider: data_providers.glass
-  cache_dir: cache/glass
-
 data:
-  strategy: predefined_train_test_split
-  data_origin: ${data_provider}
+  provider:
+    method: data_providers.glass
+    cache_dir: cache/glass
+
+  splits:
+    strategy: predefined_train_test_split
 
 # This defines a score-based LR system. We may later experiment with different parameter values by augmenting this
 # system.

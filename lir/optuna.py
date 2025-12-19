@@ -12,7 +12,7 @@ from lir.config.substitution import (
     Hyperparameter,
     HyperparameterOption,
 )
-from lir.data.models import DataStrategy
+from lir.data.models import DataProvider, DataStrategy
 from lir.experiment import Experiment
 
 
@@ -22,7 +22,8 @@ class OptunaExperiment(Experiment):
     def __init__(
         self,
         name: str,
-        data: DataStrategy,
+        data_provider: DataProvider,
+        splitter: DataStrategy,
         outputs: Sequence[Aggregation],
         output_path: Path,
         baseline_config: ContextAwareDict,
@@ -30,7 +31,7 @@ class OptunaExperiment(Experiment):
         n_trials: int,
         metric_function: Callable,
     ):
-        super().__init__(name, data, outputs, output_path)
+        super().__init__(name, data_provider, splitter, outputs, output_path)
         self.baseline_config = baseline_config
         self.hyperparameters = hyperparameters
         self.n_trials = n_trials

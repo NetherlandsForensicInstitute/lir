@@ -19,7 +19,7 @@ def parse_data_provider(cfg: ContextAwareDict, output_path: Path) -> DataProvide
 
     Data sources are provided under the `data_sources` key.
     """
-    provider = pop_field(cfg, 'provider')
+    provider = pop_field(cfg, 'method')
 
     try:
         parser = registry.get(

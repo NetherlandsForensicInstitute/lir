@@ -1,22 +1,22 @@
 output_path: output/${timestamp}_bootstrap
 
 data:
-  provider: synthesized_normal_binary
-  seed: 42
-  h1:
-    mean: 1
-    std: 1
-    size: 1000
-  h2:
-    mean: -1
-    std: 1
-    size: 1000
+  provider:
+    method: synthesized_normal_binary
+    seed: 42
+    h1:
+      mean: 1
+      std: 1
+      size: 1000
+    h2:
+      mean: -1
+      std: 1
+      size: 1000
 
-cross_validation_splits:
-  strategy: binary_cross_validation
-  folds: 5
-  seed: 42
-  data_origin: ${data}
+  splits:
+    strategy: binary_cross_validation
+    folds: 5
+    seed: 42
 
 lr_system:
   architecture: specific_source
@@ -38,7 +38,7 @@ experiments:
   model_selection:
     strategy: single_run
     lr_system: ${lr_system}
-    data: ${cross_validation_splits}
+    data: ${data}
     output:
       - method: metrics
         columns:

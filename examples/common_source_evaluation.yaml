@@ -1,20 +1,20 @@
 output_path: output/${timestamp}_common_source
 
 data:
-  provider: synthesized_normal_multiclass
-  seed: 42
-  population:
-    size: 1000
-    instances_per_source: 2
-  dimensions:
-    - mean: 0
-      std: 3
-      error_std: 1
+  provider:
+    method: synthesized_normal_multiclass
+    seed: 42
+    population:
+      size: 1000
+      instances_per_source: 2
+    dimensions:
+      - mean: 0
+        std: 3
+        error_std: 1
 
-cross_validation_splits:
-  strategy: multiclass_cross_validation
-  folds: 5
-  data_origin: ${data}
+  splits:
+    strategy: multiclass_cross_validation
+    folds: 5
 
 lr_system:
   architecture: score_based
@@ -38,7 +38,7 @@ experiments:
   model_selection:
     strategy: grid
     lr_system: ${lr_system}
-    data: ${cross_validation_splits}
+    data: ${data}
     hyperparameters:
       - path: comparing.steps.clf
         options:
@@ -58,7 +58,7 @@ experiments:
   validation:
     strategy: single_run
     lr_system: ${lr_system}
-    data: ${cross_validation_splits}
+    data: ${data}
     output:
       - method: metrics
         columns:

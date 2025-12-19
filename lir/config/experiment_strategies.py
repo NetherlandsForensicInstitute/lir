@@ -1,10 +1,7 @@
-import datetime
 from abc import ABC, abstractmethod
 from collections.abc import Callable, Mapping, Sequence
 from itertools import product
 from pathlib import Path
-
-import confidence
 
 from lir import registry
 from lir.aggregation import Aggregation
@@ -24,7 +21,6 @@ from lir.config.metrics import parse_metric
 from lir.config.substitution import (
     ContextAwareDict,
     Hyperparameter,
-    _expand,
     parse_hyperparameter,
 )
 from lir.data.models import DataStrategy
@@ -211,24 +207,3 @@ def parse_experiments(cfg: ContextAwareDict, output_path: Path) -> Mapping[str, 
         experiments[exp_name] = experiment
 
     return experiments
-
-
-def parse_experiments_setup(
-    cfg: confidence.Configuration,
-) -> tuple[Mapping[str, Experiment], Path]:
-    """
-    Extract which Experiment to run as dictated in the configuration.
-
-    The following pre-defined variables are injected to the configuration:
-
-    - `timestamp`: a formatted timestamp of the current date/time
-
-    :param cfg: a `Configuration` object describing the experiments
-    :return: a tuple with two elements: (1) mapping of names to experiments; (2) path to output directory
-    """
-    cfg = confidence.Configuration(cfg, {'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')})  # noqa: DTZ005
-
-    cfg = _expand([], cfg)
-
-    output_dir = pop_field(cfg, 'output_path', validate=Path)
-    return parse_experiments(cfg, output_dir), output_dir

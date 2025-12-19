@@ -1,7 +1,6 @@
 import pytest
 
-from lir.config.base import GenericConfigParser, YamlParseError
-from lir.config.experiment_strategies import parse_experiments_setup
+from lir.config.base import GenericConfigParser
 from lir import registry
 
 

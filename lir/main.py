@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
 
 import argparse
+import datetime
 import logging
 import shutil
 import sys
+from collections.abc import Mapping
 from pathlib import Path
 
 import confidence
 
 from lir import registry
-from lir.config.base import YamlParseError
-from lir.config.experiment_strategies import parse_experiments_setup
+from lir.config.base import YamlParseError, _expand, pop_field
+from lir.config.experiment_strategies import parse_experiments
+from lir.experiment import Experiment
 
 
 LOG = logging.getLogger(__name__)
@@ -49,6 +52,29 @@ def initialize_logfile(output_dir: Path) -> None:
 def copy_yaml_definition(output_dir: Path, config_yaml_path: Path) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(config_yaml_path, output_dir / 'config.yaml')
+
+
+def initialize_experiments(
+    cfg: confidence.Configuration,
+) -> tuple[Mapping[str, Experiment], Path]:
+    """
+    Extract which Experiment to run as dictated in the configuration.
+
+    The following pre-defined variables are injected to the configuration:
+
+    - `timestamp`: a formatted timestamp of the current date/time
+
+    :param cfg: a `Configuration` object describing the experiments
+    :return: a tuple with two elements: (1) mapping of names to experiments; (2) path to output directory
+    """
+    cfg = confidence.Configuration(cfg, {'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')})  # noqa: DTZ005
+
+    cfg = _expand([], cfg)
+
+    output_dir = pop_field(cfg, 'output_path', validate=Path)
+    initialize_logfile(output_dir)
+
+    return parse_experiments(cfg, output_dir), output_dir
 
 
 def error(msg: str, e: Exception | None = None) -> None:
@@ -109,12 +135,11 @@ def main(args: list[str] | None = None) -> None:
     LOG.debug(f'added {Path().resolve()} to sys.path')
 
     try:
-        experiments, output_dir = parse_experiments_setup(confidence.loadf(args.setup))
+        experiments, output_dir = initialize_experiments(confidence.loadf(args.setup))
     except YamlParseError as e:
         error(f'error while parsing {args.setup}: {str(e)}', e)
         raise  # this statement is not reachable, but helps code validation
 
-    initialize_logfile(output_dir)
     copy_yaml_definition(output_dir, Path(args.setup))
 
     if args.list_experiments:

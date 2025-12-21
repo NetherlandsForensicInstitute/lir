@@ -206,7 +206,7 @@ def calc_fiducial_density_functions(
     else:
         raise ValueError('Unsupported type of density function specified: only cdf and pdf are supported.')
     dfs_extended_grid = savgol_filter(
-        cdfs_extended_grid,
+        cdfs_extended_grid,  # type: ignore
         window_length,
         polyorder=2,
         axis=0,

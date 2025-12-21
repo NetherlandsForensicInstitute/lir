@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any, Self
 
@@ -63,8 +64,8 @@ class Bootstrap(Pipeline, ABC):
         self.n_bootstraps = n_bootstraps
         self.seed = seed
 
-        self.f_delta_interval_lower = None
-        self.f_delta_interval_upper = None
+        self.f_delta_interval_lower: Callable | None = None
+        self.f_delta_interval_upper: Callable | None = None
 
     @abstractmethod
     def get_bootstrap_data(self, instances: FeatureData) -> FeatureData:

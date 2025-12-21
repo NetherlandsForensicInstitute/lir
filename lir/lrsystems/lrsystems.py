@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import Any
 
 from lir.data.models import FeatureData, LLRData
 
@@ -9,7 +8,6 @@ class LRSystem(ABC):
 
     def __init__(self, name: str):
         self.name = name
-        self.parameters: dict[str, Any] = {}
 
     def fit(self, instances: FeatureData) -> 'LRSystem':
         """

@@ -118,5 +118,4 @@ def parse_augmented_lrsystem(
         augmented_config,
         output_dir / f'{dirname_prefix}{name}',
     )
-    lrsystem.parameters = hyperparameters
     return lrsystem

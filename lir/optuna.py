@@ -1,5 +1,6 @@
 from collections.abc import Callable, Sequence
 from pathlib import Path
+from typing import Any
 
 import optuna
 
@@ -68,7 +69,8 @@ class OptunaExperiment(Experiment):
         )
 
         # add optuna values as system parameters
-        lrsystem.parameters.update(
+        hyperparamters: dict[str, Any] = assignments
+        hyperparamters.update(
             {
                 # trial.number is a sequence number, starting at 0
                 'trial': trial.number,
@@ -77,7 +79,7 @@ class OptunaExperiment(Experiment):
             }
         )
 
-        llrs = self._run_lrsystem(lrsystem)
+        llrs = self._run_lrsystem(lrsystem, hyperparamters)
         return self.metric_function(llrs.llrs, llrs.labels)
 
     def _generate_and_run(self) -> None:

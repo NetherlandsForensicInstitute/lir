@@ -126,7 +126,7 @@ class SingleRunStrategy(ExperimentStrategyConfigParser):
             self.data(),
             self.output_list(),
             self._output_dir,
-            [lrsystem],
+            [(lrsystem, {})],
         )
 
 
@@ -142,7 +142,7 @@ class GridStrategy(ExperimentStrategyConfigParser):
         for value_set in product(*values):
             substitutions = dict(zip(names, value_set, strict=True))
             lrsystem = parse_augmented_lrsystem(baseline_config, substitutions, self._output_dir)
-            lrsystems.append(lrsystem)
+            lrsystems.append((lrsystem, substitutions))
 
         return PredefinedExperiment(
             name,

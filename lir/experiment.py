@@ -2,6 +2,7 @@ import logging
 from abc import ABC, abstractmethod
 from collections.abc import Iterable, Sequence
 from pathlib import Path
+from typing import Any
 
 from tqdm import tqdm
 
@@ -29,7 +30,7 @@ class Experiment(ABC):
         self.outputs = outputs
         self.output_path = output_path
 
-    def _run_lrsystem(self, lrsystem: LRSystem) -> LLRData:
+    def _run_lrsystem(self, lrsystem: LRSystem, hyperparameters: dict[str, Any]) -> LLRData:
         """Run experiment on a single LR system configuration using the provided data(setup).
 
         First, the data is split into a training and testing subset, according to the provided
@@ -56,12 +57,10 @@ class Experiment(ABC):
         # Combine collected numpy array's after iteration over the train/test split(s)
         combined_llrs: LLRData = concatenate_instances(*llr_sets)
 
-        # Generate output as configured by `outputs` and write these output to
-        # the `output_path`.
-        output_dir = self.output_path / lrsystem.name
-        LOG.debug(f'writing outputs to {output_dir}')
+        # Collect and report results as configured by `outputs`
+        results = AggregationData(llrdata=combined_llrs, lrsystem=lrsystem, parameters=hyperparameters)
         for output in self.outputs:
-            output.report(AggregationData(llrdata=combined_llrs, lrsystem=lrsystem, parameters=lrsystem.parameters))
+            output.report(results)
 
         return combined_llrs
 
@@ -92,11 +91,11 @@ class PredefinedExperiment(Experiment):
         data: DataStrategy,
         outputs: Sequence[Aggregation],
         output_path: Path,
-        lrsystems: Iterable[LRSystem],
+        lrsystems: Iterable[tuple[LRSystem, dict[str, Any]]],
     ):
         super().__init__(name, data, outputs, output_path)
         self.lrsystems = lrsystems
 
     def _generate_and_run(self) -> None:
-        for lrsystem in tqdm(self.lrsystems, desc=self.name, disable=not lir.is_interactive()):
-            self._run_lrsystem(lrsystem)
+        for lrsystem, hyperparameters in tqdm(self.lrsystems, desc=self.name, disable=not lir.is_interactive()):
+            self._run_lrsystem(lrsystem, hyperparameters)

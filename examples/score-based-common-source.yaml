@@ -31,8 +31,12 @@ output_path: output/${timestamp}_score_based_common_source  # <-- adapt this val
 # If you want to know how to use the default csv parser, go here. <TODO>
 
 data:
-  input_path: examples/example_glass_data.csv # <-- adapt this
-  provider: <TODO> # <-- adapt this only if you have written your own parser.
+  provider: feature_data_csv_http
+  url: https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/main/training.csv
+  instance_id_column: id
+  source_id_column: Item
+  ignore_columns:
+    - Piece
 
 #3. ASSIGNING TEST AND TRAIN DATA ROLES
 # This will describe which data is used to train the system and which to test (validate) the system. 

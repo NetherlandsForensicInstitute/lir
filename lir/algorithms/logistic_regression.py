@@ -104,7 +104,7 @@ class FourParameterLogisticCalibrator:
     """
 
     def __int__(self) -> None:
-        self.coef_ = None
+        self.coef_: np.ndarray | None = None
         self.model: Callable
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> 'FourParameterLogisticCalibrator':
@@ -148,7 +148,7 @@ class FourParameterLogisticCalibrator:
         )
 
         result = minimize(
-            objective_function,
+            objective_function,  # type: ignore
             np.array([0.1] * (2 + estimate_d + estimate_c)),
             bounds=bounds,
         )

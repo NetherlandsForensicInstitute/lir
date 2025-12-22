@@ -2,6 +2,7 @@ import logging
 from collections.abc import Iterator
 from contextlib import _GeneratorContextManager, contextmanager
 from functools import partial
+from math import ceil, floor
 from os import PathLike
 from typing import Any
 
@@ -170,11 +171,14 @@ def pav(
         def adjust_ticks_labels_and_range(
             neg_inf: bool, pos_inf: bool, axis_range: list
         ) -> tuple[list[Any], Any, list[str]]:
-            ticks = np.linspace(axis_range[0], axis_range[1], 6).tolist()
-            tick_labels = [str(round(tick, 1)) for tick in ticks]
-            step_size = ticks[2] - ticks[1]
+            # We want a maximum of 10 ticks on the axis. If the range is larger,
+            # we adjust the step_size accordingly. We devide by 9 because the range
+            # is inclusive, so 10 ticks means 9 steps.
+            step_size = (axis_range[1] - axis_range[0]) / 9
 
-            axis_range = list(axis_range)
+            ticks = list(range(floor(axis_range[0]), ceil(axis_range[1]) + 1, ceil(step_size)))
+            tick_labels = list(map(str, ticks))
+            step_size = ticks[2] - ticks[1]
 
             if neg_inf:
                 axis_range[0] -= step_size
@@ -211,6 +215,10 @@ def pav(
 
         ax.set_yticks(ticks_y, tick_labels_y)
         ax.set_xticks(ticks_x, tick_labels_x)
+
+        # Create lines at x=0 and y=0 to indicate the quadrants.
+        ax.axhline(y=0, color='gray', linewidth=0.5, linestyle=':')
+        ax.axvline(x=0, color='gray', linewidth=0.5, linestyle=':')
 
         color = [H1_COLOR if i > 0 else H2_COLOR for i in y_inf]
         ax.scatter(x_inf, y_inf, color=color, marker='|', linewidth=0.2)

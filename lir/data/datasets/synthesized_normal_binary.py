@@ -6,7 +6,7 @@ import numpy as np
 import numpy.random
 
 from lir.config.base import ContextAwareDict, config_parser, pop_field
-from lir.data.models import DataSet
+from lir.data.models import DataProvider
 from lir.lrsystems.lrsystems import FeatureData
 
 
@@ -29,7 +29,7 @@ class SynthesizedNormalDataClass:
         return rng.normal(loc=self.mean, scale=self.std, size=self.size)
 
 
-class SynthesizedNormalBinaryData(DataSet):
+class SynthesizedNormalBinaryData(DataProvider):
     """Implementation of a data source generating normally distributed binary class data."""
 
     def __init__(self, data_classes: Mapping[Any, SynthesizedNormalDataClass], seed: int):
@@ -52,7 +52,7 @@ class SynthesizedNormalBinaryData(DataSet):
 
 
 @config_parser
-def synthesized_normal_binary(config: ContextAwareDict, _: Path) -> DataSet:
+def synthesized_normal_binary(config: ContextAwareDict, _: Path) -> DataProvider:
     """Set up (binary class) data source class to obtain normally distributed data from configuration."""
     seed = pop_field(config, 'seed')
     h1 = pop_field(config, 'h1')

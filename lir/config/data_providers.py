@@ -7,11 +7,11 @@ from lir.config.base import (
     pop_field,
 )
 from lir.config.substitution import ContextAwareDict
-from lir.data.models import DataSet
+from lir.data.models import DataProvider
 
 
-def parse_data_provider(cfg: ContextAwareDict, output_path: Path) -> DataSet:
-    """Instantiate specific implementation of `DataSetup` as configured.
+def parse_data_provider(cfg: ContextAwareDict, output_path: Path) -> DataProvider:
+    """Instantiate specific implementation of `DataProvider` as configured.
 
     The `type` field is parsed, which is expected to refer to a name in
     the registry. See for example `lir.config.data_sources.synthesized_normal_binary`

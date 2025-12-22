@@ -6,19 +6,19 @@ from pathlib import Path
 import numpy as np
 
 from lir.data.io import RemoteResource
-from lir.data.models import DataSet, DataStrategy
+from lir.data.models import DataProvider, DataStrategy
 from lir.lrsystems.lrsystems import FeatureData
 
 
-class GlassData(DataSet, DataStrategy):
+class GlassData(DataProvider, DataStrategy):
     """
     LA-ICP-MS measurements of elemental concentration from floatglass.
 
     The measurements are from reference glass from casework, collected in the past 10 years or so.
-    For more info on the dataset, see: https://github.com/NetherlandsForensicInstitute/elemental_composition_glass
+    For more info on the DataProvider, see: https://github.com/NetherlandsForensicInstitute/elemental_composition_glass
 
-    This class is a `DataSet` as well as a `DataStrategy`, as it implements both `get_instances()` and `__iter__()`.
-    When used as a `DataSet`, it uses `get_instances()` which returns a dataset of three instances per source.
+    This class is a `DataProvider` as well as a `DataStrategy`, as it implements both `get_instances()` and `__iter__()`
+    When used as a `DataProvider`, it uses `get_instances()` which returns a dataset of three instances per source.
     When used as a `DataStrategy`, it uses `__iter__()` which returns a training/test set combination. In that case,
     the training set is identical to the data returned by `get_instances()`. The test set has a total of five instances
     per source.

@@ -5,7 +5,7 @@ from lir.data.datasets.synthesized_normal_multiclass import (
     SynthesizedDimension,
     SynthesizedNormalMulticlassData,
 )
-from lir.data.models import FeatureData, DataSet, InstanceData
+from lir.data.models import FeatureData, DataProvider, InstanceData
 
 
 def test_multiclass_train_test_split():
@@ -48,7 +48,7 @@ def test_multiclass_train_test_split_seed():
         assert not data_test == ref_test
 
 
-class _MemoryDataProvider(DataSet):
+class _MemoryDataProvider(DataProvider):
     def __init__(self, instances: InstanceData):
         self.instances = instances
 

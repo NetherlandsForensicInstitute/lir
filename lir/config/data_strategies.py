@@ -121,7 +121,7 @@ def multiclass_cross_validation(config: ContextAwareDict, output_path: Path) -> 
 
 
 def parse_data_strategy(cfg: ContextAwareDict, output_path: Path) -> DataStrategy:
-    """Instantiate specific implementation of `DataSetup` as configured.
+    """Instantiate specific implementation of `DataStrategy` as configured.
 
     The `setup` field is parsed, which is expected to refer to a name in
     the registry. See for example `lir.data_setup.binary_cross_validation`

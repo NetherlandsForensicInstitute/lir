@@ -8,13 +8,13 @@ from typing import IO, Any
 import numpy as np
 
 from lir.data.data_strategies import RoleAssignment
-from lir.data.models import DataSet, FeatureData
+from lir.data.models import DataProvider, FeatureData
 
 
 LOG = logging.getLogger(__name__)
 
 
-class FeatureDataCsvParser(DataSet):
+class FeatureDataCsvParser(DataProvider):
     """
     Parses a csv file into a FeatureData object.
 

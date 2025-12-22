@@ -5,7 +5,7 @@ import numpy as np
 
 from lir.config.base import config_parser, pop_field
 from lir.config.substitution import ContextAwareDict
-from lir.data.models import DataSet
+from lir.data.models import DataProvider
 from lir.lrsystems.lrsystems import FeatureData
 
 
@@ -15,7 +15,7 @@ class SynthesizedDimension(NamedTuple):
     sources_std: float
 
 
-class SynthesizedNormalMulticlassData(DataSet):
+class SynthesizedNormalMulticlassData(DataProvider):
     """Implementation of a data source generating normally distributed multiclass data."""
 
     def __init__(
@@ -60,7 +60,7 @@ class SynthesizedNormalMulticlassData(DataSet):
 
 
 @config_parser
-def synthesized_normal_multiclass(config: ContextAwareDict, _: Path) -> DataSet:
+def synthesized_normal_multiclass(config: ContextAwareDict, _: Path) -> DataProvider:
     """Set up (multiple class) data source class to obtain normally distributed data from configuration."""
     seed = pop_field(config, 'seed', validate=int, required=False)
 

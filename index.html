@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="None" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>LiR Documentation</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "LIR Python Likelihood Ratio Toolkit";
+        var mkdocs_page_input_path = "index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="." class="icon icon-home"> LiR Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">LIR Python Likelihood Ratio Toolkit</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#terminology">Terminology</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#datasets">Datasets</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#simulations">Simulations</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#development">Development</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#installation">Installation</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#contributing">Contributing</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="lr_calculation/">[TODO] Calculation of LR's from scores</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href=".">LiR Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">LIR Python Likelihood Ratio Toolkit</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/NetherlandsForensicInstitute/lir/edit/main/docs/index.md">Edit on LiR</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="lir-python-likelihood-ratio-toolkit">LIR Python Likelihood Ratio Toolkit</h1>
+<p>Toolkit for developing, optimising and evaluating Likelihood Ratio (LR) systems. This allows benchmarking of LR systems
+on different datasets, investigating impact of different sampling schemes or techniques, and doing case-based validation
+and computation of case LRs.</p>
+<h2 id="terminology">Terminology</h2>
+<ul>
+<li><strong>lr system</strong>: An algorithm to calculate likelihood ratios.</li>
+<li><strong>lr system architecture</strong>: A way to compose an LR system, e.g. feature based, specific source, etc.</li>
+<li><strong>source</strong>: Something that can generate instances, or where instances are derived from. This is typically the level
+  relevant to the forensic question and the hypotheses. Examples**: a glass pane, a person whose face may be pictured, a
+  speaker of the voice, a shoe.</li>
+<li><strong>instance</strong>: A single manifestation of a source. Traces and reference samples are instances of a source. In a feature
+  based system, instances are used as the building blocks for modeling hypotheses. Examples**: the measurements on a
+  fragment of glass, a face image, a voice recording, a shoe print.</li>
+<li><strong>pair</strong>: A combination of two groups of instances. The instance groups may be same source or different source. In a
+  common-source system, pairs are used as the building blocks for modeling hypotheses. A group may contain of only one
+  instance, or it may consist of multiple repeated measurements of the same source that are compared as one unit.</li>
+<li><strong>data set</strong>: A set of instances and/or pairs, labeled or unlabeled, that may be used for calculating likelihood ratios.</li>
+<li><strong>label</strong>: The ground-truth value for an instance or a pair. The label may be on the level of the hypothesis (e.g. H1,
+  H2), or on the level of the source (e.g. Speaker1, Speaker2). Hypothesis labels may derived from source labels.
+  In case of a labeled data set, the ground truth (i.e. labels) is known. This will typically be the data that is used
+  for development, analysis or validation of an LR system. Unlabeled data has no ground truth. This will typically be
+  the application data, or case data in a forensic setting.</li>
+<li><strong>binary data</strong>: A data set with exactly two different labels, for specific source evaluation (e.g. H1, H2).</li>
+<li><strong>multiclass data</strong>: A data set with an arbitrary number of labels, for common source evaluation or for reduction to
+  binary data for specific source evaluation.</li>
+<li><strong>data strategy</strong>: The way in which the data are assigned to different applications (validation, calibration, etc.) within
+  the lr system. Well known strategies are train/test split, cross-validation, leave-one-out.</li>
+<li><strong>data provider</strong>: A method for making a data set available, e.g. by reading from disk.</li>
+<li><strong>run</strong>: Calculations for an lr system on a specific data set, as part of an experiment.</li>
+<li><strong>experiment</strong>: A series of one or more runs to calculate lrs, to measure system performance, to evaluate the effect of
+  varying system parameters, or to optimize system parameters.</li>
+<li><strong>experiment strategy</strong>: A strategy for specifying system parameter values, e.g. single run, grid search, etc.</li>
+</ul>
+<h2 id="datasets">Datasets</h2>
+<p>There are currently a number of datasets implemented for this project:</p>
+<ul>
+<li>glass: LA-ICP-MS measurements of elemental concentration from floatglass. The data will be downloaded automatically from https://github.com/NetherlandsForensicInstitute/elemental_composition_glass when used in the pipeline for the first time.</li>
+</ul>
+<h3 id="simulations">Simulations</h3>
+<p>It is straightforward to simulate data for experimentation. Currently two very simple simulations
+<code>synthesized_normal_binary</code> and <code>synthesized_normal_multiclass</code> are available, with sources and measurements drawn from
+normal distributions.</p>
+<h2 id="development">Development</h2>
+<h3 id="installation">Installation</h3>
+<p>To install LiR, install the latest version from PyPI: <code>pip install lir</code> in your virtual environment. For more detailed instructions of the CLI please refer to the project <a href="https://github.com/NetherlandsForensicInstitute/lir/blob/main/README.md#installation">README.md</a>.</p>
+<h3 id="contributing">Contributing</h3>
+<p>If you want to contribute to the LiR project, please follow the <a href="https://github.com/NetherlandsForensicInstitute/lir/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a> guidelines, which include the instructions to set up LiR for local development.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="lr_calculation/" class="btn btn-neutral float-right" title="[TODO] Calculation of LR's from scores">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/NetherlandsForensicInstitute/lir" class="fa fa-code-fork" style="color: #fcfcfc"> LiR</a>
+        </span>
+    
+    
+    
+      <span><a href="lr_calculation/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.6.1
+Build Date UTC : 2025-12-22 09:39:27.452086+00:00
+-->

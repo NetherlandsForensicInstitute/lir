@@ -52,49 +52,8 @@ normal distributions.
 Development
 -----------
 
-### Source code
+### Installation
+To install LiR, install the latest version from PyPI: `pip install lir` in your virtual environment. For more detailed instructions of the CLI please refer to the project [README.md](https://github.com/NetherlandsForensicInstitute/lir/blob/main/README.md#installation).
 
-Clone the repository as follows:
-
-```shell
-git clone https://github.com/NetherlandsForensicInstitute/lir.git
-```
-
-This project uses [pdm](https://pdm-project.org/en/latest/) as a dependency manager. For installation of PDM, please consult the
-[PDM project website](https://pdm-project.org/en/latest/#installation).
-
-Having PDM installed, install all dependencies of the project, run the following command to install the project
-dependencies.
-
-```shell
-pdm install
-```
-
-A `.venv` directory will be created and used by PDM by default to run the python code as defined in the PDM run scripts.
-
-This will give you the command to launch LIR with all settings in place:
-
-```shell
-pdm lir --help
-```
-
-### Setting up git pre-commit hook
-To run all checks before committing, you can add a git pre-commit hook which ensures all checks and balances are green
-before making a new commit.
-
-Copy the `pre-commit.example` file to the `.git/hooks` folder within this project and rename it to `pre-commit`. 
-Next, make sure the `pre-commit` file is executable. You can run the following shell commands in the (PyCharm) terminal
-from the root of the project:
-
-```shell
-cp pre-commit.example .git/hooks/pre-commit
-chmod +x .git/hooks/pre-commit
-```
-
-### Adding new dependencies
-New dependencies should be installed through `pdm add <dependency_name>`.
-
-When developing locally, the following PDM scripts can be employed:
-- Run linting / formatting / static analysis: `pdm check`
-- Run tests: `pdm test`
-- Run all checks and tests: `pdm all`
+### Contributing
+If you want to contribute to the LiR project, please follow the [CONTRIBUTING.md](https://github.com/NetherlandsForensicInstitute/lir/blob/main/CONTRIBUTING.md) guidelines, which include the instructions to set up LiR for local development.

@@ -77,6 +77,10 @@ You can contribute in several ways:
 - Improving documentation
 - Submitting code via pull requests
 - Testing or reviewing existing PRs
+- Donate a forensic dataset or link an existing dataset
+- Share your story of using this package
+- Cite this package in publications or presentations
+
 
 ### 1. Issues
 

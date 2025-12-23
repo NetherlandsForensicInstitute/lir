@@ -30,34 +30,36 @@ output_path: output/${timestamp}_score_based_common_source  # <-- adapt this val
 # If your data is not in the default format you can either write a new parser (the hard option) or, if possible, reformat your data (the easy option).
 # If you want to know how to use the default csv parser, go here. <TODO>
 
-data:
-  provider: feature_data_csv_http
+data_provider:
+  method: feature_data_csv_http
   url: https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/main/training.csv
   instance_id_column: id
   source_id_column: Item
   ignore_columns:
     - Piece
 
+
 #3. ASSIGNING TEST AND TRAIN DATA ROLES
-# This will describe which data is used to train the system and which to test (validate) the system. 
+# This will describe which data is used to train the system and which to test (validate) the system.
 
 # You may choose a cross-design, in which the data is divided into folds. Each fold is used as validation data sequentially,
 # and for each of the folds an LR system is trained with all the other folds. The outcomes for all folds are then pooled into one set.
 
-data_roles:                                # <-- adapt this name to your own preference, you will need it later when setting up the validation experiment
+data_splits:             # <-- adapt this name to your own preference, you will need it later when setting up the validation experiment
   strategy: multiclass_cross_validation
   folds: 5
 
-  # Alternatively, you may choose a simple split, where some data is assigned the role of training data and some is assigned the role of validation data.
-  # If you want that, you use 'multiclass_train_test_split' for 'strategy' and you specify what the size of the test data with 'test_size'.
-  # All the rest will be used as training data. The test size can be a float between 0 and 1, which will be used as a percentage.
-  # It can also be an integer, that will be used as an absolute number of sources. 
-  # You also specify a seed for the random assignment of sources to the train or test category.
-  # If you want this, uncomment the next 3 lines and comment out the two lines above. 
+# Alternatively, you may choose a simple split, where some data is assigned the role of training data and some is assigned the role of validation data.
+# If you want that, you use 'multiclass_train_test_split' for 'strategy' and you specify what the size of the test data with 'test_size'.
+# All the rest will be used as training data. The test size can be a float between 0 and 1, which will be used as a percentage.
+# It can also be an integer, that will be used as an absolute number of sources.
+# You also specify a seed for the random assignment of sources to the train or test category.
+# If you want this, uncomment the next 3 lines and comment out the two lines above.
 
-  #strategy: multiclass_train_test_split
-  #seed: 42
-  #test_size: 0.3
+#data_splits:
+#  strategy: multiclass_train_test_split
+#  seed: 42
+#  test_size: 0.3
 
 
 # 4. LR SYSTEM DESIGN
@@ -128,13 +130,13 @@ experiments:
   - name: my_validation_run              # This is the name of the experiment, use your own preferred value.
     strategy: single_run                 # For a single validation experiment, use 'single_run'.
     lr_system: ${score_based_lr_system}  # This refers to the lr system defined above, make sure to use the name you used above.
-    data: ${data}                        # This refers to the data defined above, make sure to use the name you used above.
-    data_roles: ${data_roles}            # This refers to the data roles defined above, make sure to use the name you used above.
+    data:
+      provider: ${data_provider}         # This refers to the data defined above, make sure to use the name you used above.
+      splits: ${data_splits}             # This refers to the data roles defined above, make sure to use the name you used above.
     output:                              # Here you define what output you want. The output will at least include a copy of this yaml and statistics like number of sources and instances.
       - metrics                          # If you want to know more about the types of output that are possible, go HERE <TODO>
       - pav
       - ece
       - save_model
       - lr_histogram
-      
-  
+

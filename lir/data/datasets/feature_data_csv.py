@@ -12,10 +12,11 @@ import numpy as np
 import requests
 from requests_cache import CachedSession
 
-from lir.config.base import ContextAwareDict, check_type, config_parser, pop_field
+from lir.config.base import ContextAwareDict, config_parser, pop_field
 from lir.data.data_strategies import RoleAssignment
 from lir.data.io import search_path
 from lir.data.models import DataProvider, FeatureData
+from lir.util import check_type
 
 
 LOG = logging.getLogger(__name__)

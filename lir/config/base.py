@@ -179,11 +179,40 @@ def check_not_none(v: Any) -> Any:
     return v
 
 
-def check_type(type_class: Any, v: Any) -> Any:
+YamlValueType = ContextAwareDict | ContextAwareList | None | int | float | str
+
+
+_YAML_TYPES: dict = {
+    ContextAwareDict: dict,
+    ContextAwareList: list,
+}
+
+
+def check_type(type_class: type[Any], v: YamlValueType, message: str | None = None) -> Any:
+    """
+    Check whether a value is an instance of a type.
+
+    Returns the value if successful, raises an exception otherwise.
+
+    Value types that may be found in YAML configurations:
+    - dict
+    - list
+    - int
+    - float
+    - str
+    - NoneType
+
+    :param type_class: the target type
+    :param v: the value to check
+    :param message: an optional message that is used in case of an error
+    :return: the value
+    """
     if isinstance(v, type_class):
         return v
     else:
-        raise ValueError(f'expected type: {type_class}; found: {type(v)}')
+        message = message or f'expected type: {type_class.__name__}'
+        actual_type = _YAML_TYPES.get(type(v), type(v))  # translate types to python built-in types
+        raise ValueError(f'{message}; found: {actual_type.__name__}')
 
 
 def pop_field(

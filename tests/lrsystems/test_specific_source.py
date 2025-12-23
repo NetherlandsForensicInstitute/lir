@@ -16,7 +16,7 @@ from lir.transform.pipeline import Pipeline
 
 def test_specific_source_pipeline(synthesized_normal_data: SynthesizedNormalBinaryData):
     """Check that a simple Specific Source LR system can be utilized through a SKLearn pipeline."""
-    data = BinaryTrainTestSplit(synthesized_normal_data, 0.2, seed=0)
+    splitter = BinaryTrainTestSplit(0.2, seed=0)
 
     steps = [
         ("preprocessing", StandardScaler()),
@@ -25,7 +25,7 @@ def test_specific_source_pipeline(synthesized_normal_data: SynthesizedNormalBina
     pipeline = Pipeline(steps)
 
     specific_source_system = BinaryLRSystem("test_system", pipeline)
-    data_train, data_test = next(iter(data))
+    data_train, data_test = next(iter(splitter.apply(synthesized_normal_data.get_instances())))
     specific_source_system.fit(data_train)
     llr_data: LLRData = specific_source_system.apply(data_test)
 

@@ -1,0 +1,26 @@
+name: Test package
+
+on:
+  push:
+    branches: ['practitioner_guide']
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pdm-project/setup-pdm@v4
+        with:
+          python-version: '3.14'
+          cache: true
+          cache-dependency-path: 'pdm.lock'
+      - name: Install necessary dependencies
+        run: pdm sync
+      - name: Run tests
+        run: pdm test

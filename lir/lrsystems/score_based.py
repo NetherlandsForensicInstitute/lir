@@ -1,4 +1,7 @@
+from typing import Self
+
 from lir import Transformer
+from lir.data.models import InstanceData
 from lir.lrsystems.lrsystems import FeatureData, LLRData, LRSystem
 from lir.transform.pairing import PairingMethod
 from lir.transform.pipeline import Pipeline
@@ -25,7 +28,7 @@ class ScoreBasedSystem(LRSystem):
         self.pairing_function = pairing_function
         self.evaluation_pipeline = evaluation_pipeline or Pipeline([])
 
-    def fit(self, instances: FeatureData) -> 'LRSystem':
+    def fit(self, instances: InstanceData) -> Self:
         instances = self.preprocessing_pipeline.fit_transform(instances)
         pairs = self.pairing_function.pair(instances, 1, 1)
         self.evaluation_pipeline.fit(pairs)

@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
+from collections import OrderedDict
 from collections.abc import Callable, Mapping, Sequence
+from functools import partial
 from itertools import product
 from pathlib import Path
 
@@ -10,6 +12,7 @@ from lir.config.base import (
     GenericConfigParser,
     YamlParseError,
     check_is_empty,
+    check_type,
     pop_field,
 )
 from lir.config.data_strategies import parse_data_strategy
@@ -191,14 +194,9 @@ def parse_experiments(cfg: ContextAwareDict, output_path: Path) -> Mapping[str, 
     :param output_path: the filesystem path to the results directory
     :return: a mapping of names to experiments
     """
-    experiments: dict[str, Experiment] = {}
-    experiments_config_section = pop_field(cfg, 'experiments')
-    if not experiments_config_section:
-        return experiments
+    experiments_config_section = pop_field(cfg, 'experiments', validate=partial(check_type, dict))
 
-    if not isinstance(experiments_config_section, Mapping):
-        raise YamlParseError(cfg.context, 'invalid value for experiments')
-
+    experiments: OrderedDict[str, Experiment] = OrderedDict()
     for exp_name, exp_config in experiments_config_section.items():
         experiment = parse_experiment_strategy(
             exp_config,

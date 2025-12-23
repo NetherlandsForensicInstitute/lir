@@ -5,6 +5,7 @@ import unittest
 
 from lir import metrics
 from lir.data.datasets.alcohol_breath_analyser import AlcoholBreathAnalyser
+from lir.data.models import LLRData
 from lir.plotting.expected_calibration_error import calculate_ece
 from lir.util import logodds_to_odds
 
@@ -12,7 +13,8 @@ from lir.util import logodds_to_odds
 class TestECE(unittest.TestCase):
     def _compare_ece_cllr(self, llrs, y):
         error = calculate_ece(logodds_to_odds(llrs), y, np.array([.5, .5]))
-        cllr = metrics.cllr(llrs, y)
+        llr_data = LLRData(features=llrs, labels=y)
+        cllr = metrics.cllr(llr_data)
         np.testing.assert_almost_equal(error[0], cllr)
 
 

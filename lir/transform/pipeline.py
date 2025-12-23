@@ -8,8 +8,9 @@ import numpy as np
 from lir.config.base import ContextAwareDict, YamlParseError, check_is_empty, config_parser, pop_field
 from lir.config.transform import parse_module
 from lir.data.io import DataFileBuilderCsv
-from lir.data.models import FeatureData
+from lir.data.models import FeatureData, InstanceData
 from lir.transform import Transformer, as_transformer
+from lir.util import check_type
 
 
 LOG = logging.getLogger(__name__)
@@ -30,7 +31,7 @@ class Pipeline(Transformer):
         """
         self.steps = [(name, as_transformer(module)) for name, module in steps]
 
-    def fit(self, instances: FeatureData) -> Self:
+    def fit(self, instances: InstanceData) -> Self:
         for _name, module in self.steps[:-1]:
             instances = module.fit_transform(instances)
 
@@ -40,12 +41,12 @@ class Pipeline(Transformer):
 
         return self
 
-    def transform(self, instances: FeatureData) -> FeatureData:
+    def transform(self, instances: InstanceData) -> InstanceData:
         for _name, module in self.steps:
             instances = module.transform(instances)
         return instances
 
-    def fit_transform(self, instances: FeatureData) -> FeatureData:
+    def fit_transform(self, instances: InstanceData) -> InstanceData:
         for _name, module in self.steps:
             instances = module.fit_transform(instances)
         return instances
@@ -116,7 +117,7 @@ class LoggingPipeline(Pipeline):
         self.include_input = include_input
         self.n_batches = 0
 
-    def transform(self, instances: FeatureData) -> FeatureData:
+    def transform(self, instances: InstanceData) -> InstanceData:
         # initialize the csv builder
         write_mode = 'w' if self.n_batches == 0 else 'a'
         csv_builder = DataFileBuilderCsv(self.output_file, write_mode=write_mode)
@@ -131,6 +132,7 @@ class LoggingPipeline(Pipeline):
 
         # add columns: features
         if self.include_input:
+            instances = check_type(FeatureData, instances, message='expected FeatureData as pipeline input')
             csv_builder.add_column('features', instances.features)
 
         try:
@@ -139,6 +141,9 @@ class LoggingPipeline(Pipeline):
                 instances = module.transform(instances)
 
                 if module_name in self.include_steps:
+                    instances = check_type(
+                        FeatureData, instances, message=f'expected FeatureData as output of pipeline step {module_name}'
+                    )
                     header = getattr(instances, 'header', None) or module_name
                     csv_builder.add_column(header, instances.features)
 

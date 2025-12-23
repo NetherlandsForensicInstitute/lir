@@ -9,8 +9,9 @@ from tqdm import tqdm
 
 import lir
 from lir.config.base import ContextAwareDict, check_not_none, config_parser, pop_field
-from lir.data.models import FeatureData, LLRData
+from lir.data.models import FeatureData, InstanceData, LLRData
 from lir.transform.pipeline import Pipeline, parse_steps
+from lir.util import check_type
 
 
 class Bootstrap(Pipeline, ABC):
@@ -68,7 +69,7 @@ class Bootstrap(Pipeline, ABC):
         self.f_delta_interval_upper: Callable | None = None
 
     @abstractmethod
-    def get_bootstrap_data(self, instances: FeatureData) -> FeatureData:
+    def get_bootstrap_data(self, instances: InstanceData) -> InstanceData:
         """Get the data points to use for interval estimation.
 
         param instances: FeatureData: The feature data to fit the bootstrap system on.
@@ -76,7 +77,7 @@ class Bootstrap(Pipeline, ABC):
         """
         raise NotImplementedError
 
-    def transform(self, instances: FeatureData) -> LLRData:
+    def transform(self, instances: InstanceData) -> LLRData:
         """Transform the provided instances to include the best estimate and confidence intervals.
 
         param instances: FeatureData: The feature data to transform.
@@ -86,6 +87,7 @@ class Bootstrap(Pipeline, ABC):
             raise ValueError('Bootstrap intervals have not been computed. Please fit the bootstrap first.')
 
         best_estimate = super().transform(instances)
+        best_estimate = check_type(FeatureData, best_estimate, message='bootstrap pipeline should produce LLRs')
         best_1d_estimate = best_estimate.features.reshape(-1)
         interval_lower = best_1d_estimate + self.f_delta_interval_lower(best_1d_estimate)
         interval_upper = best_1d_estimate + self.f_delta_interval_upper(best_1d_estimate)
@@ -94,7 +96,7 @@ class Bootstrap(Pipeline, ABC):
             LLRData, features=np.stack([best_1d_estimate, interval_lower, interval_upper], axis=1)
         )
 
-    def fit_transform(self, instances: FeatureData) -> LLRData:
+    def fit_transform(self, instances: InstanceData) -> LLRData:
         """Combine fitting and transforming in one step.
 
         param instances: FeatureData: The feature data to fit and transform.
@@ -102,7 +104,7 @@ class Bootstrap(Pipeline, ABC):
         """
         return self.fit(instances).transform(instances)
 
-    def fit(self, instances: FeatureData) -> Self:
+    def fit(self, instances: InstanceData) -> Self:
         """Fit the bootstrap system to the provided instances.
 
         param instances: FeatureData: The feature data to fit the bootstrap system on.
@@ -124,7 +126,9 @@ class Bootstrap(Pipeline, ABC):
             sample_index = rng.choice(len(instances), size=len(instances))
             samples = instances[sample_index]
             super().fit(samples)
-            all_vals.append(super().transform(bootstrap_data).features.reshape(-1))
+            all_llrs = super().transform(bootstrap_data)
+            all_llrs = check_type(FeatureData, all_llrs, 'bootstrap pipeline should produce LLRs')
+            all_vals.append(all_llrs.features.reshape(-1))
 
         all_vals = np.stack(all_vals, axis=1)
 
@@ -132,6 +136,9 @@ class Bootstrap(Pipeline, ABC):
 
         super().fit(instances)
         best_estimate_bootstrap_data = super().transform(bootstrap_data)
+        best_estimate_bootstrap_data = check_type(
+            FeatureData, best_estimate_bootstrap_data, 'bootstrap pipeline should produce LLRs'
+        )
         x_vals = best_estimate_bootstrap_data.features.reshape(-1)
 
         lower = intervals[0] - x_vals
@@ -148,7 +155,7 @@ class BootstrapAtData(Bootstrap):
     See the Bootstrap class for more details.
     """
 
-    def get_bootstrap_data(self, instances: FeatureData) -> FeatureData:
+    def get_bootstrap_data(self, instances: InstanceData) -> InstanceData:
         """Get the data points to use for interval estimation. The original training data points are used.
 
         param instances: FeatureData: The feature data to fit the bootstrap system on.
@@ -183,13 +190,14 @@ class BootstrapEquidistant(Bootstrap):
         super().__init__(steps, n_bootstraps, interval, seed)
         self.n_points = n_points
 
-    def get_bootstrap_data(self, instances: FeatureData) -> FeatureData:
+    def get_bootstrap_data(self, instances: InstanceData) -> FeatureData:
         """Get the data points to use for interval estimation. This is done by creating equidistant points
         within the range of the training data.
 
         param instances: FeatureData: The feature data to fit the bootstrap system on.
         return FeatureData: The feature data to use for interval estimation.
         """
+        instances = check_type(FeatureData, instances)
         if instances.features.ndim != 2 or instances.features.shape[1] != 1:
             raise ValueError(f'expected 2D feature array with 1 column; found shape: {instances.features.shape}')
 

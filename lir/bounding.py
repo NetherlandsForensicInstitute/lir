@@ -5,7 +5,8 @@ from typing import Self
 import numpy as np
 
 from lir import Transformer
-from lir.data.models import FeatureData, LLRData
+from lir.data.models import FeatureData, InstanceData, LLRData
+from lir.util import check_type
 
 
 LOG = logging.getLogger(__name__)
@@ -35,13 +36,14 @@ class LLRBounder(Transformer, ABC):
         raise NotImplementedError
 
     @staticmethod
-    def _validate(instances: FeatureData) -> LLRData:
+    def _validate(instances: InstanceData) -> LLRData:
+        instances = check_type(FeatureData, instances)
         if not isinstance(instances, LLRData):
             LOG.info(f'casting `{type(instances)}` to `LLRData`')
             instances = instances.replace_as(LLRData)
         return instances
 
-    def fit(self, instances: FeatureData) -> Self:
+    def fit(self, instances: InstanceData) -> Self:
         """
         Configures this bounder by calculating bounds.
 
@@ -68,7 +70,7 @@ class LLRBounder(Transformer, ABC):
 
         return self
 
-    def transform(self, instances: FeatureData) -> LLRData:
+    def transform(self, instances: InstanceData) -> LLRData:
         """
         a transform entails calling the first step calibrator and applying the bounds found
         """

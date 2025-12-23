@@ -10,6 +10,17 @@ import numpy as np
 LR = collections.namedtuple('LR', ['lr', 'p0', 'p1'])
 
 
+AnyType = TypeVar('AnyType', bound=Any)
+
+
+def check_type(type_class: type[AnyType], v: Any, message: str | None = None) -> AnyType:
+    if isinstance(v, type_class):
+        return v
+    else:
+        message = message or f'expected type: {type_class}'
+        raise ValueError(f'{message}; found: {type(v)}')
+
+
 def get_classes_from_Xy(X: np.ndarray, y: np.ndarray, classes: list[Any] | None = None) -> np.ndarray:
     assert len(X.shape) >= 1, f'expected: X has at least 1 dimensions; found: {len(X.shape)} dimensions'
     assert len(y.shape) == 1, f'expected: y is a 1-dimensional array; found: {len(y.shape)} dimensions'

@@ -3,8 +3,9 @@ from typing import Any
 
 import numpy as np
 
-from lir.data.models import PairedFeatureData, concatenate_instances
+from lir.data.models import InstanceData, PairedFeatureData, concatenate_instances
 from lir.lrsystems.lrsystems import FeatureData
+from lir.util import check_type
 
 
 class PairingMethod(ABC):
@@ -17,9 +18,9 @@ class PairingMethod(ABC):
     @abstractmethod
     def pair(
         self,
-        instances: FeatureData,
-        n_trace_instances: int = 1,
-        n_ref_instances: int = 1,
+        instances: InstanceData,
+        n_trace_instances: int,
+        n_ref_instances: int,
     ) -> PairedFeatureData:
         """
         Takes instances as input, and returns pairs.
@@ -126,7 +127,7 @@ class SourcePairing(PairingMethod):
 
     def pair(
         self,
-        instances: FeatureData,
+        instances: InstanceData,
         n_trace_instances: int = 1,
         n_ref_instances: int = 1,
     ) -> PairedFeatureData:
@@ -144,6 +145,8 @@ class SourcePairing(PairingMethod):
         :param n_ref_instances: the number of reference instances in each pair
         :return: paired instances
         """
+        instances = check_type(FeatureData, instances)
+
         if instances.source_ids is None:
             raise ValueError('pairing requires source_ids')
 
@@ -242,7 +245,7 @@ class InstancePairing(PairingMethod):
 
     def pair(
         self,
-        instances: FeatureData,
+        instances: InstanceData,
         n_trace_instances: int = 1,
         n_ref_instances: int = 1,
     ) -> PairedFeatureData:
@@ -254,6 +257,7 @@ class InstancePairing(PairingMethod):
         :param n_ref_instances: the number of reference instances in each pair (must be 1 for this pairing method)
         :return: paired instances
         """
+        instances = check_type(FeatureData, instances)
         if instances.source_ids is None:
             raise ValueError('pairing requires source_ids')
 

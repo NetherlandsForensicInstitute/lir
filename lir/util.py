@@ -10,11 +10,15 @@ import numpy as np
 LR = collections.namedtuple('LR', ['lr', 'p0', 'p1'])
 
 
-def check_type(type_class: Any, v: Any) -> Any:
+AnyType = TypeVar('AnyType', bound=Any)
+
+
+def check_type(type_class: type[AnyType], v: Any, message: str | None = None) -> AnyType:
     if isinstance(v, type_class):
         return v
     else:
-        raise ValueError(f'expected type: {type_class}; found: {type(v)}')
+        message = message or f'expected type: {type_class}'
+        raise ValueError(f'{message}; found: {type(v)}')
 
 
 def get_classes_from_Xy(X: np.ndarray, y: np.ndarray, classes: list[Any] | None = None) -> np.ndarray:

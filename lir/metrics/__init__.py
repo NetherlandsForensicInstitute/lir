@@ -26,7 +26,7 @@ def cllr(llrs: np.ndarray, y: np.ndarray, weights: tuple[float, float] = (1, 1))
         lrs0, lrs1 = Xy_to_Xn(lrs, y)
         cllr0 = weights[0] * np.mean(np.log2(1 + lrs0)) if weights[0] > 0 else 0
         cllr1 = weights[1] * np.mean(np.log2(1 + 1 / lrs1)) if weights[1] > 0 else 0
-        return (cllr0 + cllr1) / sum(weights)
+        return float((cllr0 + cllr1) / sum(weights))
 
 
 def cllr_min(llrs: np.ndarray, y: np.ndarray, weights: tuple[float, float] = (1, 1)) -> float:

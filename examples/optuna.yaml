@@ -72,7 +72,7 @@ experiments:
             method: svm
             probability: True
     output:
-      - method: csv
+      - method: metrics
         columns:
         - cllr
         - cllr_min

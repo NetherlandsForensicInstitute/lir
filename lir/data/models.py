@@ -383,14 +383,11 @@ class LLRData(FeatureData):
             return None
 
     @property
-    def llr_bounds(self) -> tuple[float, float]:
+    def llr_bounds(self) -> tuple[float | None, float | None]:
         """
         :return: a tuple (min_llr, max_llr)
         """
-        return (
-            self.llr_lower_bound if self.llr_lower_bound is not None else np.min(self.llrs),
-            self.llr_upper_bound if self.llr_upper_bound is not None else np.max(self.llrs),
-        )
+        return (self.llr_lower_bound, self.llr_upper_bound)
 
     @model_validator(mode='after')
     def check_features_are_llrs(self) -> Self:

@@ -72,6 +72,8 @@ metric:
   cllr: lir.metrics.cllr
   cllr_min: lir.metrics.cllr_min
   cllr_cal: lir.metrics.cllr_cal
+  llr_lower_bound: lir.metrics.llr_lower_bound
+  llr_upper_bound: lir.metrics.llr_upper_bound
   llr_bounds: lir.metrics.llr_bounds
 output:
   metrics: lir.aggregation.metrics_csv

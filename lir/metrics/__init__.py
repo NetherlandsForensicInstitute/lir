@@ -18,16 +18,15 @@ def cllr(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
     :param weights: the relative weights of the classes
     :return: CLLR, the log likelihood ratio cost
     """
-
-    # ignore errors:
-    #   divide -> ignore divide by zero
-    #   over -> ignore scalar overflow
-
     llrs, y = llr_data.llrs, llr_data.labels
     if y is None:
         raise ValueError('Labels are required to compute C_llr')
 
     lrs = logodds_to_odds(llrs)
+
+    # ignore errors:
+    #   divide -> ignore divide by zero
+    #   over -> ignore scalar overflow
     with np.errstate(divide='ignore', over='ignore'):
         lrs0, lrs1 = Xy_to_Xn(lrs, y)
         cllr0 = weights[0] * np.mean(np.log2(1 + lrs0)) if weights[0] > 0 else 0
@@ -46,10 +45,11 @@ def cllr_min(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
     """
     llrs, y = llr_data.llrs, llr_data.labels
     if y is None:
-        raise ValueError('Labels are required to compute C_llr')
+        raise ValueError('Labels are required to compute C_llr_min')
 
     cal = IsotonicCalibrator()
     llrmin = cal.fit_transform(llrs, y)
+
     return cllr(LLRData(features=llrmin, labels=y), weights)
 
 
@@ -62,21 +62,37 @@ def cllr_cal(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
     :param weights: the relative weights of the classes
     :return: CLLR_cal, the difference after isotonic calibration
     """
-    llrs, y = llr_data.llrs, llr_data.labels
-    if y is None:
-        raise ValueError('Labels are required to compute C_llr')
+    cllr_min_val = cllr_min(llr_data, weights)
+    cllr_val = cllr(llr_data, weights)
 
-    cllr_min_val = cllr_min(LLRData(features=llrs, labels=y), weights)
-    cllr_val = cllr(LLRData(features=llrs, labels=y), weights)
     return cllr_val - cllr_min_val
 
 
-def llr_bounds(llrs: LLRData) -> tuple[float, float]:
+def llr_bounds(llrs: LLRData) -> tuple[float | None, float | None]:
     """
-    Calculates the minimum and maximum log likelihood ratios from a collection of
-    log likelihood ratios.
+    When an LLRData object contains bounds, return them. If not, return None.
 
     :param llrs: a numpy array of LLRs
     :return: a tuple (min_llr, max_llr)
     """
     return llrs.llr_bounds
+
+
+def llr_upper_bound(llrs: LLRData) -> float | None:
+    """
+    When an LLRData object contains an upper bound, return it. If not, return None.
+
+    :param llrs: a numpy array of LLRs
+    :return: max_llr
+    """
+    return llrs.llr_upper_bound
+
+
+def llr_lower_bound(llrs: LLRData) -> float | None:
+    """
+        When an LLRData object contains a lower bound, return it. If not, return None.
+    s
+        :param llrs: a numpy array of LLRs
+        :return: min_llr
+    """
+    return llrs.llr_lower_bound

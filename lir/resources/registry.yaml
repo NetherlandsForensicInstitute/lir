@@ -64,7 +64,7 @@ modules:
   elub_bounder:
     class: lir.algorithms.bayeserror.ELUBBounder
     wrapper: lir.config.numpy_wrapper
-individual_metrics:
+metric:
   cllr: lir.metrics.cllr
   cllr_min: lir.metrics.cllr_min
   cllr_cal: lir.metrics.cllr_cal

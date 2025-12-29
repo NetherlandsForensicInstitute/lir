@@ -169,28 +169,28 @@ def pav(
     if np.logical_or(np.isinf(pav_llrs), np.isinf(llrs)).any():
 
         def adjust_ticks_labels_and_range(
-            neg_inf: bool, pos_inf: bool, axis_range: list
-        ) -> tuple[list[Any], Any, list[str]]:
+            neg_inf: bool, pos_inf: bool, axis_lower: float, axis_upper: float
+        ) -> tuple[tuple[float, float], list, list[str]]:
             # We want a maximum of 10 ticks on the axis. If the range is larger,
             # we adjust the step_size accordingly. We devide by 9 because the range
             # is inclusive, so 10 ticks means 9 steps.
-            step_size = (axis_range[1] - axis_range[0]) / 9
+            step_size = (axis_upper - axis_lower) / 9
 
-            ticks = list(range(floor(axis_range[0]), ceil(axis_range[1]) + 1, ceil(step_size)))
+            ticks = list(range(floor(axis_lower), ceil(axis_upper) + 1, ceil(step_size)))
             tick_labels = list(map(str, ticks))
             step_size = ticks[2] - ticks[1]
 
             if neg_inf:
-                axis_range[0] -= step_size
-                ticks = [axis_range[0]] + ticks
+                axis_lower -= step_size
+                ticks = [axis_lower] + ticks
                 tick_labels = ['-∞'] + tick_labels
 
             if pos_inf:
-                axis_range[1] += step_size
-                ticks = ticks + [axis_range[1]]
+                axis_upper += step_size
+                ticks = ticks + [axis_upper]
                 tick_labels = tick_labels + ['+∞']
 
-            return axis_range, ticks, tick_labels
+            return (axis_lower, axis_upper), ticks, tick_labels
 
         def replace_values_out_of_range(values, min_range, max_range):
             # create margin for point so no overlap with axis line
@@ -203,10 +203,10 @@ def pav(
             )
 
         yrange, ticks_y, tick_labels_y = adjust_ticks_labels_and_range(
-            np.isneginf(pav_llrs).any(), np.isposinf(pav_llrs).any(), yrange
+            np.isneginf(pav_llrs).any(), np.isposinf(pav_llrs).any(), yrange[0], yrange[1]
         )
         xrange, ticks_x, tick_labels_x = adjust_ticks_labels_and_range(
-            np.isneginf(llrs).any(), np.isposinf(llrs).any(), xrange
+            np.isneginf(llrs).any(), np.isposinf(llrs).any(), xrange[0], xrange[1]
         )
 
         mask_not_inf = np.logical_or(np.isinf(llrs), np.isinf(pav_llrs))

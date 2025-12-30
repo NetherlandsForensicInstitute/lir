@@ -82,8 +82,10 @@ output:
   llr_interval: lir.aggregation.plot_llr_interval
   llr_overestimation: lir.aggregation.plot_llr_overestimation
   nbe: lir.aggregation.plot_nbe
+  invariance_delta_function: lir.aggregation.plot_invariance_delta_function
   tippett: lir.aggregation.plot_tippett
   save_model: lir.persistence.parse_save_model
+  
 pairing:
   instance_pairs: lir.transform.pairing.InstancePairing
   source_pairs: lir.transform.pairing.SourcePairing

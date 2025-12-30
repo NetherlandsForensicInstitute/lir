@@ -8,6 +8,7 @@ from typing import IO, Any, NamedTuple
 from matplotlib import pyplot as plt
 
 from lir.algorithms.bayeserror import plot_nbe as nbe
+from lir.algorithms.invariance_bounds import plot_invariance_delta_functions
 from lir.config.base import ContextAwareDict, YamlParseError, config_parser, pop_field
 from lir.config.metrics import parse_metric
 from lir.data.models import LLRData
@@ -52,10 +53,11 @@ class Aggregation(ABC):
 class AggregatePlot(Aggregation):
     """Aggregation that generates plots by repeatedly calling a plotting function."""
 
-    def __init__(self, plot_fn: Callable, plot_name: str, output_dir: Path | None = None) -> None:
+    def __init__(self, plot_fn: Callable, plot_name: str, output_dir: Path | None = None, **kwargs: Any) -> None:
         self.output_path = output_dir
         self.plot_fn = plot_fn
         self.plot_name = plot_name
+        self.kwargs = kwargs
 
     def report(self, data: AggregationData) -> None:
         """Plot the data when new results are available."""
@@ -64,13 +66,15 @@ class AggregatePlot(Aggregation):
         llrdata = data.llrdata
         parameters = data.parameters
 
-        self.plot_fn(llrdata=llrdata, ax=ax)
+        self.plot_fn(llrdata=llrdata, ax=ax, **self.kwargs)
 
         # Only save the figure when an output path is provided.
         if self.output_path is not None:
             dir_name = self.output_path
-            param_string = '__'.join(f'{k}={v}' for k, v in parameters.items())
-            file_name = dir_name / f'{param_string}_{self.plot_name}.png'
+            param_string = '__'.join(f'{k}={v}' for k, v in parameters.items()) + '_' if parameters else ''
+            plot_arguments = '_' + '_'.join(f'{k}={v}' for k, v in self.kwargs.items()) if self.kwargs else ''
+
+            file_name = dir_name / f'{param_string}{self.plot_name}{plot_arguments}.png'
             dir_name.mkdir(exist_ok=True, parents=True)
 
             fig.savefig(file_name)
@@ -83,7 +87,7 @@ def plot_pav(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
 
 @config_parser
 def plot_ece(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    return AggregatePlot(output_dir=output_dir, plot_fn=ece, plot_name='ECE')
+    return AggregatePlot(output_dir=output_dir, plot_fn=ece, plot_name='ECE', **config)
 
 
 @config_parser
@@ -103,7 +107,16 @@ def plot_nbe(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
 
 @config_parser
 def plot_tippett(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    return AggregatePlot(output_dir=output_dir, plot_fn=tippett, plot_name='tippett')
+    return AggregatePlot(output_dir=output_dir, plot_fn=tippett, plot_name='tippett', **config)
+
+
+@config_parser
+def plot_invariance_delta_function(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    return AggregatePlot(
+        output_dir=output_dir,
+        plot_fn=plot_invariance_delta_functions,
+        plot_name='Invariance_Delta_Functions',
+    )
 
 
 class WriteMetricsToCsv(Aggregation):

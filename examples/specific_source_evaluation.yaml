@@ -50,7 +50,12 @@ experiments:
         - cllr_min
         - cllr_cal
       - pav
-      - ece
+      - method: ece
+        show_pav: false
+      - method: ece
+        show_pav: true
+        ylim: zoomed
+
 
   validation:
     strategy: single_run
@@ -60,3 +65,9 @@ experiments:
       - csv
       - pav
       - ece
+      - method: tippett
+        plot_type: 1
+      - method: tippett
+        plot_type: 2
+
+

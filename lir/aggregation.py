@@ -8,6 +8,7 @@ from typing import IO, Any, NamedTuple
 from matplotlib import pyplot as plt
 
 from lir.algorithms.bayeserror import plot_nbe as nbe
+from lir.algorithms.invariance_bounds import plot_invariance_delta_functions
 from lir.config.base import ContextAwareDict, YamlParseError, config_parser, pop_field
 from lir.config.metrics import parse_metric
 from lir.data.models import LLRData
@@ -104,6 +105,15 @@ def plot_nbe(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
 @config_parser
 def plot_tippett(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
     return AggregatePlot(output_dir=output_dir, plot_fn=tippett, plot_name='tippett')
+
+
+@config_parser
+def plot_invariance_delta_function(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    return AggregatePlot(
+        output_dir=output_dir,
+        plot_fn=plot_invariance_delta_functions,
+        plot_name='Invariance_Delta_Functions',
+    )
 
 
 class WriteMetricsToCsv(Aggregation):

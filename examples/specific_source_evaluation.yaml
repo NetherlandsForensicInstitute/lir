@@ -54,6 +54,7 @@ experiments:
         show_pav: false
       - method: ece
         show_pav: true
+        ylim: zoomed
 
 
   validation:

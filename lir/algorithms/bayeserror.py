@@ -46,8 +46,7 @@ def plot_nbe(
 
 
 def elub(
-    llrs: np.ndarray,
-    y: np.ndarray,
+    llrdata: LLRData,
     add_misleading: int = 1,
     step_size: float = 0.01,
     substitute_extremes: tuple[float, float] = (-9, 9),
@@ -64,7 +63,10 @@ def elub(
     :param substitute_extremes: tuple of scalars: substitute for extreme LRs, i.e.
         LRs of 0 and inf are substituted by these values
     """
-
+    llrs = llrdata.llrs
+    y = llrdata.labels
+    if y is None:
+        raise ValueError('LLRData must contain labels to calculate ELUB bounds.')
     # remove LLRs of -infinity and +infinity
     sanitized_llrs = llrs
     sanitized_llrs[sanitized_llrs < substitute_extremes[0]] = substitute_extremes[0]
@@ -161,5 +163,5 @@ class ELUBBounder(LLRBounder):
     # empirical_bounds=[min(a) max(a)]
     """
 
-    def calculate_bounds(self, llrs: np.ndarray, labels: np.ndarray) -> tuple[float | None, float | None]:
-        return elub(llrs, labels, add_misleading=1)
+    def calculate_bounds(self, llrdata: LLRData) -> tuple[float | None, float | None]:
+        return elub(llrdata, add_misleading=1)

@@ -28,7 +28,7 @@ class LLRBounder(Transformer, ABC):
         self.upper_llr_bound = upper_llr_bound
 
     @abstractmethod
-    def calculate_bounds(self, llrs: np.ndarray, labels: np.ndarray) -> tuple[float | None, float | None]:
+    def calculate_bounds(self, llrdata: LLRData) -> tuple[float | None, float | None]:
         """
         Calculates and returns appropriate bounds for a set of LLRs and their labels.
         """
@@ -53,7 +53,7 @@ class LLRBounder(Transformer, ABC):
             raise ValueError(f'{type(self)}.fit() requires labeled data')
 
         # calculate the bounds
-        self.lower_llr_bound, self.upper_llr_bound = self.calculate_bounds(instances.llrs, instances.labels)
+        self.lower_llr_bound, self.upper_llr_bound = self.calculate_bounds(instances)
 
         # check the sanity of the bounds
         if (
@@ -92,5 +92,5 @@ class StaticBounder(LLRBounder):
     def __init__(self, lower_llr_bound: float, upper_llr_bound: float):
         super().__init__(lower_llr_bound, upper_llr_bound)
 
-    def calculate_bounds(self, llrs: np.ndarray, y: np.ndarray) -> tuple[float | None, float | None]:
+    def calculate_bounds(self, llrdata: LLRData) -> tuple[float | None, float | None]:
         return self.lower_llr_bound, self.upper_llr_bound

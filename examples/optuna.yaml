@@ -6,8 +6,12 @@
 output_path: output/${timestamp}_optuna_example
 
 data:
-  strategy: data_providers.glass
-  cache_dir: cache/glass
+  provider:
+    method: data_providers.glass
+    cache_dir: cache/glass
+
+  splits:
+    strategy: predefined_train_test_split
 
 lr_system:
   architecture: score_based

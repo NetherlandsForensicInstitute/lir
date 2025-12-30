@@ -99,7 +99,7 @@ def plot_pav(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
 
 @config_parser
 def plot_ece(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    return AggregatePlot(output_dir=output_dir, plot_fn=ece, plot_name='ECE')
+    return AggregatePlot(output_dir=output_dir, plot_fn=ece, plot_name='ECE', **config)
 
 
 @config_parser

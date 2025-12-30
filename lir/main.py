@@ -9,6 +9,7 @@ from collections.abc import Mapping
 from pathlib import Path
 
 import confidence
+from joblib import Parallel, delayed
 
 from lir import registry
 from lir.config.base import YamlParseError, _expand, pop_field
@@ -56,7 +57,7 @@ def copy_yaml_definition(output_dir: Path, config_yaml_path: Path) -> None:
 
 def initialize_experiments(
     cfg: confidence.Configuration,
-) -> tuple[Mapping[str, Experiment], Path]:
+) -> tuple[Mapping[str, Experiment], Path, int]:
     """
     Extract which Experiment to run as dictated in the configuration.
 
@@ -74,7 +75,10 @@ def initialize_experiments(
     output_dir = pop_field(cfg, 'output_path', validate=Path)
     initialize_logfile(output_dir)
 
-    return parse_experiments(cfg, output_dir), output_dir
+    parallel_cores = pop_field(cfg, 'parallel_cores', validate=int, default=0)
+    LOG.debug(f'parallel_cores set to: {parallel_cores}')
+
+    return parse_experiments(cfg, output_dir), output_dir, parallel_cores
 
 
 def error(msg: str, e: Exception | None = None) -> None:
@@ -135,7 +139,7 @@ def main(args: list[str] | None = None) -> None:
     LOG.debug(f'added {Path().resolve()} to sys.path')
 
     try:
-        experiments, output_dir = initialize_experiments(confidence.loadf(args.setup))
+        experiments, output_dir, parallel_cores = initialize_experiments(confidence.loadf(args.setup))
     except YamlParseError as e:
         error(f'error while parsing {args.setup}: {str(e)}', e)
         raise  # this statement is not reachable, but helps code validation
@@ -155,8 +159,14 @@ def main(args: list[str] | None = None) -> None:
         for name in set(args.experiment):
             experiments[name].run()
     else:
-        for experiment in experiments.values():
-            experiment.run()
+        if parallel_cores > 1 or parallel_cores < 0:
+            # Whilst joblib can handle 1 parallel core, it is more efficient to just run sequentially.
+            LOG.info(f'Running selected experiments in parallel using {parallel_cores} cores.')
+            Parallel(n_jobs=parallel_cores)(delayed(experiment.run)() for experiment in experiments.values())
+        else:
+            LOG.info('Running selected experiments sequentially.')
+            for experiment in experiments.values():
+                experiment.run()
 
 
 if __name__ == '__main__':

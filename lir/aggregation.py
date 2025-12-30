@@ -8,6 +8,7 @@ from typing import IO, Any, NamedTuple
 from matplotlib import pyplot as plt
 
 from lir.algorithms.bayeserror import plot_nbe as nbe
+from lir.algorithms.llr_overestimation import llr_overestimation
 from lir.config.base import ContextAwareDict, YamlParseError, config_parser, pop_field
 from lir.config.metrics import parse_individual_metric
 from lir.data.models import LLRData
@@ -99,6 +100,11 @@ def plot_lr_histogram(config: ContextAwareDict, output_dir: Path) -> AggregatePl
 @config_parser
 def plot_llr_interval(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
     return AggregatePlot(output_dir=output_dir, plot_fn=llr_interval, plot_name='LLR_Interval')
+
+
+@config_parser
+def plot_llr_overestimation(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    return AggregatePlot(output_dir=output_dir, plot_fn=llr_overestimation, plot_name='LLR_Overestimation')
 
 
 @config_parser

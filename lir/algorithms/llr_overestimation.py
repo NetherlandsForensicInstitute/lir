@@ -6,10 +6,11 @@ from KDEpy import NaiveKDE
 from scipy.interpolate import interp1d
 from scipy.signal import savgol_filter
 
+from lir.data.models import LLRData
 
-def plot_llr_overestimation(
-    llrs: np.ndarray,
-    y: np.ndarray,
+
+def llr_overestimation(
+    llrdata: LLRData,
     num_fids: int = 1000,
     ax: plt.Axes = plt,  # type: ignore
     **kwargs: Any,
@@ -29,22 +30,25 @@ def plot_llr_overestimation(
     :param kwargs: additional arguments to pass to :func:`calc_llr_overestimation`
         and/or :func:`calc_fiducial_density_functions`
     """
+    llrs, y = llrdata.llrs, llrdata.labels
+    if y is None:
+        raise ValueError('LLR-overestimation cannot be calculated: no labels available in the LLRData.')
 
-    # Calculate all required numbers
     llr_grid, llr_overestimation, llr_overestimation_interval = calc_llr_overestimation(llrs, y, num_fids, **kwargs)
-    if llr_grid and llr_overestimation and llr_overestimation_interval:
-        llr_misestimation = np.mean(np.abs(llr_overestimation))
+    if llr_grid is None or llr_overestimation is None or llr_overestimation_interval is None:
+        raise ValueError('LLR-overestimation could not be calculated: no overlap between H1- and H2-distributions.')
+    llr_misestimation = np.mean(np.abs(llr_overestimation))
 
-        # Make the LLR-overestimation plot
-        label_text = 'mean(abs) = ' + str(np.round(llr_misestimation, 2))
-        line = ax.plot(llr_grid, llr_overestimation, label=label_text)
-        if num_fids > 0:
-            ax.plot(
-                llr_grid,
-                llr_overestimation_interval[:, (0, 2)],
-                linestyle=':',
-                color=line[0].get_color(),
-            )
+    # Make the LLR-overestimation plot
+    label_text = 'mean(abs) = ' + str(np.round(llr_misestimation, 2))
+    line = ax.plot(llr_grid, llr_overestimation, label=label_text)
+    if num_fids > 0:
+        ax.plot(
+            llr_grid,
+            llr_overestimation_interval[:, (0, 2)],
+            linestyle=':',
+            color=line[0].get_color(),
+        )
 
     ax.axhline(color='k', linestyle='dotted')
     ax.set_xlabel('log$_{10}$(system LR)')
@@ -144,7 +148,8 @@ def calc_llr_overestimation(
         lrs_system_2d = np.tile(np.expand_dims(lrs_system, 1), (1, len(percentages)))
         llr_overestimation_interval = np.log10(lrs_system_2d / lrs_empirical_interval)
     else:
-        llr_overestimation_interval = np.nan
+        llr_overestimation_interval = np.empty((len(llr_grid), 3))
+        llr_overestimation_interval.fill(np.nan)
     return llr_grid, llr_overestimation, llr_overestimation_interval
 
 

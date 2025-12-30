@@ -29,7 +29,9 @@ from lir.util import (
 )
 
 
-def plot_ece(llrdata: LLRData, log_prior_odds_range: tuple[float, float] = (-3, 3), ax: Any = plt) -> None:
+def plot_ece(
+    llrdata: LLRData, log_prior_odds_range: tuple[float, float] = (-3, 3), ax: Any = plt, show_pav: bool = True
+) -> None:
     """
     Generates an ECE plot for a set of LRs and corresponding ground-truth
     labels.
@@ -39,11 +41,11 @@ def plot_ece(llrdata: LLRData, log_prior_odds_range: tuple[float, float] = (-3, 
     line), (2) the set of LR values (line), and (3) the set of LR values after
     PAV-transformation (Pool Adjacent Violators, dashed line).
 
-    :param lrs: an array of LRs
-    :param labels: an array of ground-truth labels (values 0 for Hd or 1 for Hp);
-        must be of the same length as `lrs`
+    :param llrdata: the LLR data containing LLRs and labels.
     :param log_prior_odds_range: the range of prior odds (tuple of two values,
         indicating both ends of the range on the x-axis)
+    :param ax: the matplotlib axis to plot on
+    :param show_pav: whether to show the PAV-transformed LRs in the plot
     """
     llrs = llrdata.llrs
     labels = llrdata.labels
@@ -70,14 +72,15 @@ def plot_ece(llrdata: LLRData, log_prior_odds_range: tuple[float, float] = (-3, 
         label='LRs',
     )
 
-    # plot PAV LRs
-    pav_llrs = IsotonicCalibrator().fit_transform(llrs, labels)
-    ax.plot(
-        log_prior_odds,
-        calculate_ece(logodds_to_odds(pav_llrs), labels, odds_to_probability(prior_odds)),
-        linestyle='--',
-        label='PAV LRs',
-    )
+    if show_pav:
+        # plot PAV LRs
+        pav_llrs = IsotonicCalibrator().fit_transform(llrs, labels)
+        ax.plot(
+            log_prior_odds,
+            calculate_ece(logodds_to_odds(pav_llrs), labels, odds_to_probability(prior_odds)),
+            linestyle='--',
+            label='PAV LRs',
+        )
 
     ax.set_xlabel('prior log$_{10}$(odds)')
     ax.set_ylabel('empirical cross-entropy')

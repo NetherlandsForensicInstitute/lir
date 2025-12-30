@@ -30,7 +30,11 @@ from lir.util import (
 
 
 def plot_ece(
-    llrdata: LLRData, log_prior_odds_range: tuple[float, float] = (-3, 3), ax: Any = plt, show_pav: bool = True
+    llrdata: LLRData,
+    log_prior_odds_range: tuple[float, float] = (-3, 3),
+    ax: Any = plt,
+    show_pav: bool = True,
+    ylim: str = 'neutral',
 ) -> None:
     """
     Generates an ECE plot for a set of LRs and corresponding ground-truth
@@ -46,6 +50,8 @@ def plot_ece(
         indicating both ends of the range on the x-axis)
     :param ax: the matplotlib axis to plot on
     :param show_pav: whether to show the PAV-transformed LRs in the plot
+    :param ylim: the y-axis limits; either 'neutral' (starts at 0) or 'zoomed'
+        (starts at 0 and ends slightly above the maximum ECE value of the LRs)
     """
     llrs = llrdata.llrs
     labels = llrdata.labels
@@ -65,9 +71,10 @@ def plot_ece(
         )
 
     # plot LRs
+    ece_values = calculate_ece(logodds_to_odds(llrs), labels, odds_to_probability(prior_odds))
     ax.plot(
         log_prior_odds,
-        calculate_ece(logodds_to_odds(llrs), labels, odds_to_probability(prior_odds)),
+        ece_values,
         linestyle='-',
         label='LRs',
     )
@@ -84,7 +91,15 @@ def plot_ece(
 
     ax.set_xlabel('prior log$_{10}$(odds)')
     ax.set_ylabel('empirical cross-entropy')
-    ax.set_ylim((0, None))
+
+    if ylim == 'neutral':
+        ax.set_ylim((0, None))
+    elif ylim == 'zoomed':
+        ylim_value = max(ece_values) * 1.1
+        ax.set_ylim((0, ylim_value))
+    else:
+        raise ValueError(f"ylim must be one of ['neutral', 'zoomed'], but got `{ylim}`")
+
     ax.set_xlim(log_prior_odds_range)
     ax.legend()
     ax.grid(True, linestyle=':')

@@ -21,11 +21,10 @@ LOG = logging.getLogger(__name__)
 DEFAULT_LOGLEVEL = logging.WARNING
 
 
-def setup_logging(file_path: str, level_increase: int) -> None:
+def setup_logging(level_increase: int) -> None:
     """
     Setup logging to stderr and to a file.
 
-    :param file_path: target file
     :param level_increase: log level for stderr, relative to the default log level
     """
     loglevel = max(logging.DEBUG, min(logging.CRITICAL, DEFAULT_LOGLEVEL - level_increase * 10))
@@ -119,7 +118,7 @@ def main(args: list[str] | None = None) -> None:
     parser.add_argument('-q', help='decreases verbosity', action='count', default=0)
     args = parser.parse_args(args)
 
-    setup_logging(f'{app_name}.log', args.v - args.q)
+    setup_logging(args.v - args.q)
 
     if args.list_registry:
         for name in registry.registry():

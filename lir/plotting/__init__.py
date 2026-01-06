@@ -2,6 +2,7 @@ import logging
 from collections.abc import Iterator
 from contextlib import _GeneratorContextManager, contextmanager
 from functools import partial
+from math import ceil, floor
 from os import PathLike
 from typing import Any
 
@@ -168,25 +169,28 @@ def pav(
     if np.logical_or(np.isinf(pav_llrs), np.isinf(llrs)).any():
 
         def adjust_ticks_labels_and_range(
-            neg_inf: bool, pos_inf: bool, axis_range: list
-        ) -> tuple[list[Any], Any, list[str]]:
-            ticks = np.linspace(axis_range[0], axis_range[1], 6).tolist()
-            tick_labels = [str(round(tick, 1)) for tick in ticks]
+            neg_inf: bool, pos_inf: bool, axis_lower: float, axis_upper: float
+        ) -> tuple[tuple[float, float], list, list[str]]:
+            # We want a maximum of 10 ticks on the axis. If the range is larger,
+            # we adjust the step_size accordingly. We devide by 9 because the range
+            # is inclusive, so 10 ticks means 9 steps.
+            step_size = (axis_upper - axis_lower) / 9
+
+            ticks = list(range(floor(axis_lower), ceil(axis_upper) + 1, ceil(step_size)))
+            tick_labels = list(map(str, ticks))
             step_size = ticks[2] - ticks[1]
 
-            axis_range = list(axis_range)
-
             if neg_inf:
-                axis_range[0] -= step_size
-                ticks = [axis_range[0]] + ticks
+                axis_lower -= step_size
+                ticks = [axis_lower] + ticks
                 tick_labels = ['-∞'] + tick_labels
 
             if pos_inf:
-                axis_range[1] += step_size
-                ticks = ticks + [axis_range[1]]
+                axis_upper += step_size
+                ticks = ticks + [axis_upper]
                 tick_labels = tick_labels + ['+∞']
 
-            return axis_range, ticks, tick_labels
+            return (axis_lower, axis_upper), ticks, tick_labels
 
         def replace_values_out_of_range(values, min_range, max_range):
             # create margin for point so no overlap with axis line
@@ -199,10 +203,9 @@ def pav(
             )
 
         yrange, ticks_y, tick_labels_y = adjust_ticks_labels_and_range(
-            np.isneginf(pav_llrs).any(), np.isposinf(pav_llrs).any(), yrange
-        )
+            np.isneginf(pav_llrs).any(), np.isposinf(pav_llrs).any(), *yrange)
         xrange, ticks_x, tick_labels_x = adjust_ticks_labels_and_range(
-            np.isneginf(llrs).any(), np.isposinf(llrs).any(), xrange
+            np.isneginf(llrs).any(), np.isposinf(llrs).any(), *xrange
         )
 
         mask_not_inf = np.logical_or(np.isinf(llrs), np.isinf(pav_llrs))
@@ -211,6 +214,10 @@ def pav(
 
         ax.set_yticks(ticks_y, tick_labels_y)
         ax.set_xticks(ticks_x, tick_labels_x)
+
+        # Create lines at x=0 and y=0 to indicate the quadrants.
+        ax.axhline(y=0, color='gray', linewidth=0.5, linestyle=':')
+        ax.axvline(x=0, color='gray', linewidth=0.5, linestyle=':')
 
         color = [H1_COLOR if i > 0 else H2_COLOR for i in y_inf]
         ax.scatter(x_inf, y_inf, color=color, marker='|', linewidth=0.2)

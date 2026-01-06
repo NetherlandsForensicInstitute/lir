@@ -73,7 +73,7 @@ class AggregatePlot(Aggregation):
         try:
             self.plot_fn(llrdata=llrdata, ax=ax)
         except ValueError as e:
-            LOG.error(f'Could not generate plot {self.plot_name} for parameters {parameters}: {e}')
+            LOG.warning(f'Could not generate plot {self.plot_name} for parameters {parameters}: {e}')
             return
 
         # Only save the figure when an output path is provided.

@@ -71,7 +71,7 @@ class AggregatePlot(Aggregation):
         parameters = data.parameters
 
         try:
-            self.plot_fn(llrdata=llrdata, ax=ax)
+            self.plot_fn(llrdata=llrdata, ax=ax, **self.plot_fn_args)
         except ValueError as e:
             LOG.warning(f'Could not generate plot {self.plot_name} for parameters {parameters}: {e}')
             return

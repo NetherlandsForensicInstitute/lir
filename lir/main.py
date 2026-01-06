@@ -87,9 +87,7 @@ def error(msg: str, e: Exception | None = None) -> None:
     sys.exit(1)
 
 
-def main(args: list[str] | None = None) -> None:
-    app_name = 'lir'
-
+def main(input_args: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description='Run all or some of the parts of project')
 
     parser.add_argument(
@@ -116,7 +114,7 @@ def main(args: list[str] | None = None) -> None:
 
     parser.add_argument('-v', help='increases verbosity', action='count', default=0)
     parser.add_argument('-q', help='decreases verbosity', action='count', default=0)
-    args = parser.parse_args(args)
+    args = parser.parse_args(input_args)
 
     setup_logging(args.v - args.q)
 

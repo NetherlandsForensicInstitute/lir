@@ -42,7 +42,7 @@ def _get_attribute_by_name(name: str) -> Any:
                 f'{name}: import failed: {".".join(parts[class_name_index:])}'
                 f' from package {".".join(parts[:class_name_index])}'
             )
-            pass
+
 
     raise ComponentNotFoundError(name)
 

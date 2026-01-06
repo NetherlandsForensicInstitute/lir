@@ -17,7 +17,7 @@ class LLRBounder(Transformer, ABC):
     Base class for LLR bounders.
 
     A bounder updates any LLRs that are out of bounds. Any LLR values within bounds remain unchanged. LLR values that
-    are out-of-bounds are updated tot the nearest bound.
+    are out-of-bounds are updated to the nearest bound.
     """
 
     def __init__(

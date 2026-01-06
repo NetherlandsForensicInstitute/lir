@@ -76,43 +76,42 @@ def calculate_invariance_bounds(
     """
     Returns the upper and lower Invariance Verification bounds of the LRs.
 
-    :param lrs: an array of LRs
-    :param y: an array of ground-truth labels (values 0 for Hd or 1 for Hp);
-        must be of the same length as `lrs`
+    :param lrdata: an instance of LLRData containing LLRs and ground-truth labels
     :param llr_threshold: predefined values of LLRs as possible bounds
     :param step_size: required accuracy on a base-10 logarithmic scale
-    :param substitute_extremes: (tuple of scalars) substitute for extreme LRs, i.e.
-        LRs of 0 and inf are substituted by these values
+    :param substitute_extremes: (tuple of scalars) substitute for extreme LLRs, i.e.
+        LLRs smaller than the lower value or greater than the upper value are clipped
     """
     llrs, y = llrdata.llrs, llrdata.labels
-    # remove LRs of 0 and infinity
-    sanitized_lrs = llrs
-    sanitized_lrs[sanitized_lrs < substitute_extremes[0]] = substitute_extremes[0]
-    sanitized_lrs[sanitized_lrs > substitute_extremes[1]] = substitute_extremes[1]
 
-    # determine the range of LRs to be considered
+    # remove LLRs that are too extreme by clipping them to the substitute extremes
+    sanitized_llrs = llrs.copy()
+    np.clip(sanitized_llrs, substitute_extremes[0], substitute_extremes[1], out=sanitized_llrs)
+
+    # determine the range of LLRs to be considered
     if llr_threshold is None:
-        llr_threshold_range = (min(0, np.min(llrs)), max(0, np.max(llrs)) + step_size)
+        llr_threshold_range = (min(0, np.min(sanitized_llrs)), max(0, np.max(sanitized_llrs)) + step_size)
         llr_threshold = np.arange(*llr_threshold_range, step_size)
 
     # calculate the two delta functions
-    delta_low, delta_high = calculate_invariance_delta_functions(llrdata, llr_threshold)
+    sanitized_llrdata = LLRData(features=sanitized_llrs, labels=y)
+    delta_low, delta_high = calculate_invariance_delta_functions(sanitized_llrdata, llr_threshold)
 
     # find the LLRs closest to LLR=0 where the functions become negative & convert them to LRs
     # if no negatives are found, use the maximum H1-LR in case of upper bound & minimum H2-LR in case of lower bound
     delta_high_negative = np.where(delta_high < 0)[0]
     if not any(delta_high_negative):
-        upper_bound = np.max(llrs[y == 1])
+        upper_bound = np.max(sanitized_llrs[y == 1])
     else:
-        pst_upper_bound = delta_high_negative[0] - 1
-        upper_bound = llr_threshold[pst_upper_bound]
+        upper_bound_index = delta_high_negative[0] - 1
+        upper_bound = llr_threshold[upper_bound_index]
+
     delta_low_negative = np.where(delta_low < 0)[0]
     if not any(delta_low_negative):
-        lower_bound = np.min(llrs[y == 0])
-
+        lower_bound = np.min(sanitized_llrs[y == 0])
     else:
-        pst_lower_bound = delta_low_negative[-1] + 1
-        lower_bound = llr_threshold[pst_lower_bound]
+        lower_bound_index = delta_low_negative[-1] + 1
+        lower_bound = llr_threshold[lower_bound_index]
 
     # Check for bounds on the wrong side of 0 (or 1 in LR-space). This may occur for badly
     # performing LR systems, e.g. if the delta function is always below zero.
@@ -137,16 +136,16 @@ def calculate_invariance_delta_functions(llrdata: LLRData, llr_threshold: np.nda
     beta_parameter = 1 / 2
 
     # for all possible llr_threshold values, count how many of the lrs are larger or equal to them for both h1 and h2
-    lrs_h1 = llrs[y == 1]
-    lrs_h2 = llrs[y == 0]
-    llr_h1_2d = np.tile(np.expand_dims(lrs_h1, 1), (1, llr_threshold.shape[0]))
-    llr_h2_2d = np.tile(np.expand_dims(lrs_h2, 1), (1, llr_threshold.shape[0]))
+    llrs_h1 = llrs[y == 1]
+    llrs_h2 = llrs[y == 0]
+    llr_h1_2d = np.tile(np.expand_dims(llrs_h1, 1), (1, llr_threshold.shape[0]))
+    llr_h2_2d = np.tile(np.expand_dims(llrs_h2, 1), (1, llr_threshold.shape[0]))
     success_h1 = np.sum(llr_h1_2d >= llr_threshold, axis=0)
     success_h2 = np.sum(llr_h2_2d >= llr_threshold, axis=0)
 
     # use the as inputs for calculations of the probabilities
-    prob_h1_above_grid = (success_h1 + beta_parameter) / (len(lrs_h1) + 2 * beta_parameter)
-    prob_h2_above_grid = (success_h2 + beta_parameter) / (len(lrs_h2) + 2 * beta_parameter)
+    prob_h1_above_grid = (success_h1 + beta_parameter) / (len(llrs_h1) + 2 * beta_parameter)
+    prob_h2_above_grid = (success_h2 + beta_parameter) / (len(llrs_h2) + 2 * beta_parameter)
     prob_h1_below_grid = 1 - prob_h1_above_grid
     prob_h2_below_grid = 1 - prob_h2_above_grid
 
@@ -167,5 +166,5 @@ class IVBounder(LLRBounder):
     """
 
     def calculate_bounds(self, llrdata: LLRData) -> tuple[float | None, float | None]:
-        lower_lr_bound, upper_lr_bound = calculate_invariance_bounds(llrdata)[:2]
-        return lower_lr_bound, upper_lr_bound
+        lower_llr_bound, upper_llr_bound = calculate_invariance_bounds(llrdata)[:2]
+        return lower_llr_bound, upper_llr_bound

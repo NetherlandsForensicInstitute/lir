@@ -306,8 +306,7 @@ def tippett(llrdata: LLRData, plot_type: int = 1, ax: Axes = plt) -> None:
     elif plot_type == 2:
         perc1 = (sum(i <= xplot1 for i in lr_1) / len(lr_1)) * 100
     else:
-        raise ValueError('plot_type must be either 1 or 2.')
-
+        raise ValueError(f'Argument plot_type in tippett() must be either 1 or 2, got `{plot_type}`.')
     ax.plot(xplot1, perc1, color='b', label=r'LRs given $\mathregular{H_1}$')
     ax.plot(xplot0, perc0, color='r', label=r'LRs given $\mathregular{H_2}$')
     ax.axvline(x=0, color='k', linestyle='--')

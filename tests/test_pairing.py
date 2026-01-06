@@ -220,7 +220,7 @@ class TestPairing(unittest.TestCase):
         self.assertLess(
             ratio,
             ratio_limit,
-            "realised ratio should be less or equal than ratio_limit",
+            "realised ratio should be less than or equal to ratio_limit",
         )
         self.assertEqual(
             np.sum(pairs.labels == 0),

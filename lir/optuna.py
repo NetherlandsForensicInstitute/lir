@@ -53,7 +53,7 @@ class OptunaExperiment(Experiment):
             selected_option_name = trial.suggest_categorical(param.name, list(options.keys()))
             return options[selected_option_name]
 
-    def _get_hypparameter_substitutions(self, trial: optuna.Trial) -> dict[str, HyperparameterOption]:
+    def _get_hyperparameter_substitutions(self, trial: optuna.Trial) -> dict[str, HyperparameterOption]:
         assignments = {}
         for param in self.hyperparameters:
             assignments[param.name] = self._get_parameter_value(trial, param)
@@ -61,7 +61,7 @@ class OptunaExperiment(Experiment):
         return assignments
 
     def _objective(self, trial: optuna.Trial) -> float:
-        assignments = self._get_hypparameter_substitutions(trial)
+        assignments = self._get_hyperparameter_substitutions(trial)
         lrsystem = parse_augmented_lrsystem(
             self.baseline_config,
             assignments,
@@ -70,8 +70,8 @@ class OptunaExperiment(Experiment):
         )
 
         # add optuna values as system parameters
-        hyperparamters: dict[str, Any] = assignments
-        hyperparamters.update(
+        hyperparameters: dict[str, Any] = assignments
+        hyperparameters.update(
             {
                 # trial.number is a sequence number, starting at 0
                 'trial': trial.number,
@@ -80,7 +80,7 @@ class OptunaExperiment(Experiment):
             }
         )
 
-        llrs = self._run_lrsystem(lrsystem, hyperparamters)
+        llrs = self._run_lrsystem(lrsystem, hyperparameters)
         return self.metric_function(llrs.llrs, llrs.labels)
 
     def _generate_and_run(self) -> None:

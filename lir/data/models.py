@@ -132,7 +132,7 @@ class InstanceData(BaseModel, ABC):
                 values = [first_value]
                 for instances in others:
                     if not self.has_same_type(instances):
-                        raise ValueError('instances to concatinate must have the same types and fields')
+                        raise ValueError('instances to concatenate must have the same types and fields')
                     values.append(getattr(instances, field))
 
                 # apply the function

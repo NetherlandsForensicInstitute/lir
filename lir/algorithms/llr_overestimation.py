@@ -9,7 +9,7 @@ from scipy.signal import savgol_filter
 from lir.data.models import LLRData
 
 
-def llr_overestimation(
+def plot_llr_overestimation(
     llrdata: LLRData,
     num_fids: int = 1000,
     ax: plt.Axes = plt,  # type: ignore

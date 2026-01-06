@@ -93,7 +93,7 @@ class StaticBounder(LLRBounder):
     This bounder takes arguments for a lower and upper bound, which may take `None` in which case no bounds are applied.
     """
 
-    def __init__(self, lower_llr_bound: float, upper_llr_bound: float):
+    def __init__(self, lower_llr_bound: float | None, upper_llr_bound: float | None):
         super().__init__(lower_llr_bound, upper_llr_bound)
 
     def calculate_bounds(self, llrs: np.ndarray, y: np.ndarray) -> tuple[float | None, float | None]:

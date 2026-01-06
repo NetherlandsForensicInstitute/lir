@@ -38,6 +38,8 @@ dev = [
     "mypy>=1.18.2",
     "ruff>=0.14.3",
     "mkdocs>=1.6.1",
+    "types-requests>=2.32.4.20250913",
+    "requests-cache>=1.2.1",
 ]
 
 [tool.pdm]

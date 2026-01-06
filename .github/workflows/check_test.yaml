@@ -20,8 +20,10 @@ jobs:
           python-version: '3.12'
           cache: true
           cache-dependency-path: 'pdm.lock'
+      - name: Check lock file
+        run: pdm lock --check
       - name: Install necessary dependencies
-        run: pdm install --group dev
+        run: pdm sync --group dev
       - name: Run checks
         run: pdm run check
   test:
@@ -39,6 +41,6 @@ jobs:
           cache: true
           cache-dependency-path: 'pdm.lock'
       - name: Install necessary dependencies
-        run: pdm install --group dev
+        run: pdm sync --group dev
       - name: Run tests
         run: pdm run test

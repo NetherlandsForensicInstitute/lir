@@ -203,10 +203,9 @@ def pav(
             )
 
         yrange, ticks_y, tick_labels_y = adjust_ticks_labels_and_range(
-            np.isneginf(pav_llrs).any(), np.isposinf(pav_llrs).any(), yrange[0], yrange[1]
-        )
+            np.isneginf(pav_llrs).any(), np.isposinf(pav_llrs).any(), *yrange)
         xrange, ticks_x, tick_labels_x = adjust_ticks_labels_and_range(
-            np.isneginf(llrs).any(), np.isposinf(llrs).any(), xrange[0], xrange[1]
+            np.isneginf(llrs).any(), np.isposinf(llrs).any(), *xrange
         )
 
         mask_not_inf = np.logical_or(np.isinf(llrs), np.isinf(pav_llrs))

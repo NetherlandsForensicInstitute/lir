@@ -68,16 +68,6 @@ def cllr_cal(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
     return cllr_val - cllr_min_val
 
 
-def llr_bounds(llrs: LLRData) -> tuple[float | None, float | None]:
-    """
-    When an LLRData object contains bounds, return them. If not, return None.
-
-    :param llrs: a numpy array of LLRs
-    :return: a tuple (min_llr, max_llr)
-    """
-    return llrs.llr_bounds
-
-
 def llr_upper_bound(llrs: LLRData) -> float | None:
     """
     When an LLRData object contains an upper bound, return it. If not, return None.
@@ -90,9 +80,9 @@ def llr_upper_bound(llrs: LLRData) -> float | None:
 
 def llr_lower_bound(llrs: LLRData) -> float | None:
     """
-        When an LLRData object contains a lower bound, return it. If not, return None.
-    s
-        :param llrs: a numpy array of LLRs
-        :return: min_llr
+    When an LLRData object contains a lower bound, return it. If not, return None.
+
+    :param llrs: a numpy array of LLRs
+    :return: min_llr
     """
     return llrs.llr_lower_bound

@@ -114,7 +114,6 @@ class WriteMetricsToCsv(Aggregation):
         self.columns = columns
 
     def report(self, data: AggregationData) -> None:
-
         columns = [(key, metric(data.llrdata)) for key, metric in self.columns.items()]
         metrics = []
         for name, value in columns:

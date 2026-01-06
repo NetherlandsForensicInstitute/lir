@@ -77,10 +77,9 @@ class LLRBounder(Transformer, ABC):
         instances = self._validate(instances)
 
         llrs = instances.features
-        if self.lower_llr_bound is not None:
-            llrs = np.where(self.lower_llr_bound < llrs, llrs, self.lower_llr_bound)
-        if self.upper_llr_bound is not None:
-            llrs = np.where(self.upper_llr_bound > llrs, llrs, self.upper_llr_bound)
+
+        # Clip the LLRs to the bounds, where np.clip handles the None values correctly.
+        llrs = np.clip(llrs, self.lower_llr_bound, self.upper_llr_bound)
 
         return instances.replace(
             features=llrs, llr_upper_bound=self.upper_llr_bound, llr_lower_bound=self.lower_llr_bound

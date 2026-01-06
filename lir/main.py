@@ -75,10 +75,10 @@ def initialize_experiments(
     output_dir = pop_field(cfg, 'output_path', validate=Path)
     initialize_logfile(output_dir)
 
-    parallel_cores = pop_field(cfg, 'parallel_cores', validate=int, default=0)
-    LOG.debug(f'parallel_cores set to: {parallel_cores}')
+    parallel_jobs = pop_field(cfg, 'parallel_jobs', validate=int, default=0)
+    LOG.debug(f'parallel_jobs set to: {parallel_jobs}')
 
-    return parse_experiments(cfg, output_dir), output_dir, parallel_cores
+    return parse_experiments(cfg, output_dir), output_dir, parallel_jobs
 
 
 def error(msg: str, e: Exception | None = None) -> None:
@@ -139,7 +139,7 @@ def main(args: list[str] | None = None) -> None:
     LOG.debug(f'added {Path().resolve()} to sys.path')
 
     try:
-        experiments, output_dir, parallel_cores = initialize_experiments(confidence.loadf(args.setup))
+        experiments, output_dir, parallel_jobs = initialize_experiments(confidence.loadf(args.setup))
     except YamlParseError as e:
         error(f'error while parsing {args.setup}: {str(e)}', e)
         raise  # this statement is not reachable, but helps code validation
@@ -159,10 +159,10 @@ def main(args: list[str] | None = None) -> None:
         for name in set(args.experiment):
             experiments[name].run()
     else:
-        if parallel_cores > 1 or parallel_cores < 0:
+        if parallel_jobs > 1 or parallel_jobs < 0:
             # Whilst joblib can handle 1 parallel core, it is more efficient to just run sequentially.
-            LOG.info(f'Running selected experiments in parallel using {parallel_cores} cores.')
-            Parallel(n_jobs=parallel_cores)(delayed(experiment.run)() for experiment in experiments.values())
+            LOG.info(f'Running selected experiments in parallel using {parallel_jobs} cores.')
+            Parallel(n_jobs=parallel_jobs)(delayed(experiment.run)() for experiment in experiments.values())
         else:
             LOG.info('Running selected experiments sequentially.')
             for experiment in experiments.values():

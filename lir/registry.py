@@ -43,7 +43,6 @@ def _get_attribute_by_name(name: str) -> Any:
                 f' from package {".".join(parts[:class_name_index])}'
             )
 
-
     raise ComponentNotFoundError(name)
 
 
@@ -71,7 +70,7 @@ class ConfigParserLoader(ABC, Iterable):
             return default_config_parser(result_type)
         else:
             raise InvalidRegistryEntryError(
-                f'unable instantiate {result_type}: '
+                f'unable to instantiate {result_type}: '
                 'not a ConfigParser and there is no default configuration parser in this context'
             )
 
@@ -233,7 +232,7 @@ class YamlRegistry(ConfigParserLoader):
                 wrapper = _get_attribute_by_name(spec.get('wrapper'))  # type: ignore[arg-type]
             except Exception as e:
                 raise InvalidRegistryEntryError(
-                    f'unable instantiate class {spec["class"]}: '
+                    f'unable to instantiate class {spec["class"]}: '
                     f'error while instantiating wrapper class: {spec["wrapper"]}: {e}'
                 )
             parser = wrapper(parser)

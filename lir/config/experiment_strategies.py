@@ -20,7 +20,7 @@ from lir.config.lrsystem_architectures import (
     parse_augmented_lrsystem,
     parse_lrsystem,
 )
-from lir.config.metrics import parse_metric
+from lir.config.metrics import parse_individual_metric
 from lir.config.substitution import (
     ContextAwareDict,
     Hyperparameter,
@@ -45,7 +45,7 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
 
     def primary_metric(self) -> Callable:
         metric_name = pop_field(self._config, 'primary_metric')
-        return parse_metric(metric_name, self._output_dir, self._config.context)
+        return parse_individual_metric(metric_name, self._output_dir, self._config.context)
 
     def output_list(self) -> Sequence[Aggregation]:
         config: ContextAwareDict = pop_field(self._config, 'output', required=False)

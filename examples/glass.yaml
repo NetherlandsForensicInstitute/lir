@@ -193,7 +193,7 @@ experiments:
               - path: comparing.steps.calibration
                 value: csv_writer
     output:
-      - method: csv
+      - method: metrics
         columns:
         - cllr
         - cllr_min
@@ -218,7 +218,7 @@ experiments:
               - path: ""
                 value: ${two_level_lr_system}
     output:
-      - method: csv
+      - method: metrics
         columns:
         - cllr
         - cllr_min
@@ -231,9 +231,9 @@ experiments:
     lr_system: ${score_based_lr_system}
     data: ${data}
     output:
-      - csv
+      - metrics
       # A shorthand notation is used here. This is equivalent to:
-      # - method: csv
+      # - method: metrics
       #   columns:
       #   - cllr
       #   - cllr_min 

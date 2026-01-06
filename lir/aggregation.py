@@ -1,4 +1,5 @@
 import csv
+import logging
 from abc import ABC, abstractmethod
 from collections import OrderedDict
 from collections.abc import Callable, Mapping, Sequence
@@ -15,6 +16,9 @@ from lir.data.models import LLRData
 from lir.lrsystems.lrsystems import LRSystem
 from lir.plotting import llr_interval, lr_histogram, pav, tippett
 from lir.plotting.expected_calibration_error import plot_ece as ece
+
+
+LOG = logging.getLogger(__name__)
 
 
 class AggregationData(NamedTuple):
@@ -66,7 +70,11 @@ class AggregatePlot(Aggregation):
         llrdata = data.llrdata
         parameters = data.parameters
 
-        self.plot_fn(llrdata=llrdata, ax=ax, **self.plot_fn_args)
+        try:
+            self.plot_fn(llrdata=llrdata, ax=ax)
+        except ValueError as e:
+            LOG.error(f'Could not generate plot {self.plot_name} for parameters {parameters}: {e}')
+            return
 
         # Only save the figure when an output path is provided.
         if self.output_path is not None:
@@ -79,6 +87,7 @@ class AggregatePlot(Aggregation):
             file_name = dir_name / f'{param_string}{self.plot_name}{plot_arguments}.png'
             dir_name.mkdir(exist_ok=True, parents=True)
 
+            LOG.info(f'Saving plot {self.plot_name} for parameters {parameters} to {file_name}')
             fig.savefig(file_name)
 
 

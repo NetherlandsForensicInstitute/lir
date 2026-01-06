@@ -56,7 +56,7 @@ class AggregatePlot(Aggregation):
         self.output_path = output_dir
         self.plot_fn = plot_fn
         self.plot_name = plot_name
-        self.kwargs = kwargs
+        self.plot_fn_args = kwargs
 
     def report(self, data: AggregationData) -> None:
         """Plot the data when new results are available."""
@@ -65,13 +65,15 @@ class AggregatePlot(Aggregation):
         llrdata = data.llrdata
         parameters = data.parameters
 
-        self.plot_fn(llrdata=llrdata, ax=ax, **self.kwargs)
+        self.plot_fn(llrdata=llrdata, ax=ax, **self.plot_fn_args)
 
         # Only save the figure when an output path is provided.
         if self.output_path is not None:
             dir_name = self.output_path
             param_string = '__'.join(f'{k}={v}' for k, v in parameters.items()) + '_' if parameters else ''
-            plot_arguments = '_' + '_'.join(f'{k}={v}' for k, v in self.kwargs.items()) if self.kwargs else ''
+            plot_arguments = (
+                '_' + '_'.join(f'{k}={v}' for k, v in self.plot_fn_args.items()) if self.plot_fn_args else ''
+            )
 
             file_name = dir_name / f'{param_string}{self.plot_name}{plot_arguments}.png'
             dir_name.mkdir(exist_ok=True, parents=True)

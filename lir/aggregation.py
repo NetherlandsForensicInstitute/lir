@@ -1,4 +1,5 @@
 import csv
+import logging
 from abc import ABC, abstractmethod
 from collections import OrderedDict
 from collections.abc import Callable, Mapping, Sequence
@@ -8,12 +9,16 @@ from typing import IO, Any, NamedTuple
 from matplotlib import pyplot as plt
 
 from lir.algorithms.bayeserror import plot_nbe as nbe
+from lir.algorithms.llr_overestimation import plot_llr_overestimation as llr_overestimation
 from lir.config.base import ContextAwareDict, YamlParseError, config_parser, pop_field
 from lir.config.metrics import parse_individual_metric
 from lir.data.models import LLRData
 from lir.lrsystems.lrsystems import LRSystem
 from lir.plotting import llr_interval, lr_histogram, pav, tippett
 from lir.plotting.expected_calibration_error import plot_ece as ece
+
+
+LOG = logging.getLogger(__name__)
 
 
 class AggregationData(NamedTuple):
@@ -65,7 +70,11 @@ class AggregatePlot(Aggregation):
         llrdata = data.llrdata
         parameters = data.parameters
 
-        self.plot_fn(llrdata=llrdata, ax=ax, **self.plot_fn_args)
+        try:
+            self.plot_fn(llrdata=llrdata, ax=ax)
+        except ValueError as e:
+            LOG.warning(f'Could not generate plot {self.plot_name} for parameters {parameters}: {e}')
+            return
 
         # Only save the figure when an output path is provided.
         if self.output_path is not None:
@@ -78,6 +87,7 @@ class AggregatePlot(Aggregation):
             file_name = dir_name / f'{param_string}{self.plot_name}{plot_arguments}.png'
             dir_name.mkdir(exist_ok=True, parents=True)
 
+            LOG.info(f'Saving plot {self.plot_name} for parameters {parameters} to {file_name}')
             fig.savefig(file_name)
 
 
@@ -99,6 +109,11 @@ def plot_lr_histogram(config: ContextAwareDict, output_dir: Path) -> AggregatePl
 @config_parser
 def plot_llr_interval(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
     return AggregatePlot(output_dir=output_dir, plot_fn=llr_interval, plot_name='LLR_Interval')
+
+
+@config_parser
+def plot_llr_overestimation(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    return AggregatePlot(output_dir=output_dir, plot_fn=llr_overestimation, plot_name='LLR_Overestimation')
 
 
 @config_parser

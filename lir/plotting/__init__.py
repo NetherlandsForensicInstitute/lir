@@ -203,7 +203,8 @@ def pav(
             )
 
         yrange, ticks_y, tick_labels_y = adjust_ticks_labels_and_range(
-            np.isneginf(pav_llrs).any(), np.isposinf(pav_llrs).any(), *yrange)
+            np.isneginf(pav_llrs).any(), np.isposinf(pav_llrs).any(), *yrange
+        )
         xrange, ticks_x, tick_labels_x = adjust_ticks_labels_and_range(
             np.isneginf(llrs).any(), np.isposinf(llrs).any(), *xrange
         )

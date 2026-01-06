@@ -4,6 +4,7 @@ import unittest
 import pytest
 
 from lir import metrics
+from lir.data.models import LLRData
 from lir.metrics.devpav import devpav, _devpavcalculator, _calcsurface
 from lir.util import Xn_to_Xy, odds_to_logodds
 
@@ -25,7 +26,8 @@ from lir.util import Xn_to_Xy, odds_to_logodds
 def test_calculate_cllr(expected: float, h1_lrs: list[float], h2_lrs: list[float]):
     lrs, labels = Xn_to_Xy(np.array(h1_lrs), np.array(h2_lrs))
     llrs = odds_to_logodds(lrs)
-    pytest.approx(expected, metrics.cllr(llrs, labels))
+    llr_data = LLRData(features=llrs, labels=labels)
+    pytest.approx(expected, metrics.cllr(llr_data))
 
 
 @pytest.mark.parametrize("expected,h1_llrs,h2_llrs", [
@@ -40,7 +42,8 @@ def test_calculate_cllr(expected: float, h1_lrs: list[float], h2_lrs: list[float
 ])
 def test_extreme_cllr(expected: float, h1_llrs: list[float], h2_llrs: list[float]):
     llrs, labels = Xn_to_Xy(np.array(h1_llrs), np.array(h2_llrs))
-    pytest.approx(expected, metrics.cllr(llrs, labels))
+    llr_data = LLRData(features=llrs, labels=labels)
+    pytest.approx(expected, metrics.cllr(llr_data))
 
 
 @pytest.mark.parametrize("h1_llrs,h2_llrs", [
@@ -50,7 +53,8 @@ def test_extreme_cllr(expected: float, h1_llrs: list[float], h2_llrs: list[float
 ])
 def test_illegal_cllr(h1_llrs, h2_llrs):
     llrs, labels = Xn_to_Xy(np.array(h1_llrs), np.array(h2_llrs))
-    assert np.isnan(metrics.cllr(llrs, labels))
+    llr_data = LLRData(features=llrs, labels=labels)
+    assert np.isnan(metrics.cllr(llr_data))
 
 
 class TestDevPAV(unittest.TestCase):

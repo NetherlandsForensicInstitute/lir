@@ -342,7 +342,18 @@ class PairedFeatureData(FeatureData):
 class LLRData(FeatureData):
     """
     Representation of calculated LLR values.
+
+    Attributes:
+    - llrs: 1-dimensional numpy array of LLR values
+    - has_intervals: indicate whether the LLR's have intervals
+    - llr_intervals: numpy array of LLR values of dimensions (n, 2), or `None` if the LLR's have no intervals
+    - llr_upper_bound: upper bound applied to the LLRs, or `None` if no upper bound was applied
+    - llr_lower_bound: lower bound applied to the LLRs, or `None` if no lower bound was applied
+
     """
+
+    llr_upper_bound: float | None = None
+    llr_lower_bound: float | None = None
 
     @property
     def llrs(self) -> np.ndarray:
@@ -370,6 +381,13 @@ class LLRData(FeatureData):
             return self.features[:, 1:]
         else:
             return None
+
+    @property
+    def llr_bounds(self) -> tuple[float | None, float | None]:
+        """
+        :return: a tuple (min_llr, max_llr)
+        """
+        return (self.llr_lower_bound, self.llr_upper_bound)
 
     @model_validator(mode='after')
     def check_features_are_llrs(self) -> Self:

@@ -3,8 +3,8 @@ import pytest
 from lir import metrics
 from lir.data.data_strategies import MulticlassCrossValidation
 from lir.data.datasets.synthesized_normal_multiclass import (
-    SynthesizedNormalMulticlassData,
     SynthesizedDimension,
+    SynthesizedNormalMulticlassData,
 )
 from lir.lrsystems.lrsystems import LLRData
 from lir.lrsystems.two_level import TwoLevelSystem
@@ -15,10 +15,10 @@ def _calculate_cllr(
     mean: float = 0.0, std: float = 1.0, error_std: float = 1.0
 ) -> float:
     params = {
-        "population_size": 20,
-        "sources_size": 6,
-        "dimensions": [SynthesizedDimension(mean, std, error_std)],
-        "seed": 0,
+        'population_size': 20,
+        'sources_size': 6,
+        'dimensions': [SynthesizedDimension(mean, std, error_std)],
+        'seed': 0,
     }
 
     data = SynthesizedNormalMulticlassData(**params)
@@ -29,14 +29,12 @@ def _calculate_cllr(
     training_data, test_data = next(iter(data))
 
     system = TwoLevelSystem(
-        "test_system", None, pairing, None, n_trace_instances=50, n_ref_instances=50
+        'test_system', None, pairing, None, n_trace_instances=50, n_ref_instances=50
     )
     system.fit(training_data)
     llr_data: LLRData = system.apply(test_data)
-    pair_llrs = llr_data.llrs
-    pair_labels = llr_data.labels
 
-    return metrics.cllr(pair_llrs, pair_labels)
+    return metrics.cllr(llr_data)
 
 
 def test_two_level_system():

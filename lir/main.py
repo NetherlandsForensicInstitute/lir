@@ -144,7 +144,7 @@ def main(input_args: list[str] | None = None) -> None:
     copy_yaml_definition(output_dir, Path(args.setup))
 
     if args.list_experiments:
-        for name, _experiment in experiments.items():
+        for name in experiments:
             print(name)
         return
 

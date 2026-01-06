@@ -96,5 +96,5 @@ class StaticBounder(LLRBounder):
     def __init__(self, lower_llr_bound: float | None, upper_llr_bound: float | None):
         super().__init__(lower_llr_bound, upper_llr_bound)
 
-    def calculate_bounds(self, llrs: np.ndarray, y: np.ndarray) -> tuple[float | None, float | None]:
+    def calculate_bounds(self, llrs: np.ndarray, labels: np.ndarray) -> tuple[float | None, float | None]:
         return self.lower_llr_bound, self.upper_llr_bound

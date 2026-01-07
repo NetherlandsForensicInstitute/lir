@@ -2,7 +2,7 @@ import logging
 import math
 import warnings
 from collections.abc import Callable
-from typing import Self
+from typing import Any, Self
 
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
@@ -33,7 +33,7 @@ def compensate_and_remove_neginf_inf(
 
 def parse_bandwidth(
     bandwidth: Callable | str | float | tuple[float, float] | None,
-) -> Callable:
+) -> Callable[[Any, Any], tuple[float, float]]:
     """
     Returns bandwidth as a tuple of two (optional) floats.
     Extrapolates a single bandwidth.

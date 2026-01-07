@@ -94,7 +94,7 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
         self.denominator: float | None = None
 
     @staticmethod
-    def bandwidth_silverman(X: np.ndarray, y: np.ndarray) -> list[float]:
+    def bandwidth_silverman(X: np.ndarray, y: np.ndarray) -> tuple[float, float]:
         """
         Estimates the optimal bandwidth parameter using Silverman's rule of
         thumb.
@@ -118,7 +118,7 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
             v = math.pow(std, 5) / len(values) * 4.0 / 3
             bandwidth.append(math.pow(v, 0.2))
 
-        return bandwidth
+        return tuple(bandwidth)
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> Self:
         # check if we have matching dimensions

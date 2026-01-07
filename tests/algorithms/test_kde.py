@@ -138,7 +138,7 @@ class TestKDECalibrator(unittest.TestCase):
     ([1, 2], (1, 2)),  # list input (`Sized` type)
     ((1, 2), (1, 2)),  # tuple input (`Sized` type)
     (lambda X, y: (1234, 5678), (1234, 5678)),  # callable function
-    ('silverman', []),  # Silverman algorithm
+    ('silverman', ()),  # Silverman algorithm
     (123.45,  (123.45, 123.45)),  # float
     (12, (12, 12)),  # integer
 ])

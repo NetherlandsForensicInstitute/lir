@@ -220,7 +220,7 @@ def pop_field(
     field: str,
     default: Any = None,
     required: bool | None = None,
-    validate: Callable | None = None,
+    validate: Callable[[Any], Any] | None = None,
 ) -> Any:
     """
     Validate and retrieve the value for a given field, after which it is removed from the configuration.

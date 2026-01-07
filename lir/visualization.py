@@ -6,7 +6,7 @@ from lir.data.models import LLRData
 from lir.plotting import savefig
 
 
-def _save_or_plot(ax: Any | None, base_path: Path | None, filename: str, plot_func: Callable, *args: Any) -> None:
+def _save_or_plot(ax: Any | None, base_path: Path | None, filename: str, plot_func: Callable[[Any, Any], None], *args: Any) -> None:
     """Internal helper to either plot to an axis or save a plot to file."""
     if ax is not None:
         plot_func(ax, *args)

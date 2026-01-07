@@ -63,7 +63,9 @@ class ConfigParserLoader(ABC, Iterable):
     """
 
     @staticmethod
-    def _get_config_parser(result_type: Any, default_config_parser: Callable[[Any], ConfigParser] | None) -> ConfigParser:
+    def _get_config_parser(
+        result_type: Any, default_config_parser: Callable[[Any], ConfigParser] | None
+    ) -> ConfigParser:
         if inspect.isclass(result_type) and issubclass(result_type, ConfigParser):
             return result_type()
         elif default_config_parser is not None:
@@ -212,7 +214,9 @@ class YamlRegistry(ConfigParserLoader):
         return f'YamlRegistry({self._cfg})'
 
     @staticmethod
-    def _parse(key: str, spec: Mapping[str, str], default_config_parser: Callable[[Any], ConfigParser] | None) -> ConfigParser:
+    def _parse(
+        key: str, spec: Mapping[str, str], default_config_parser: Callable[[Any], ConfigParser] | None
+    ) -> ConfigParser:
         if 'class' not in spec:
             raise InvalidRegistryEntryError(f'missing value for `class` in registry entry: {key}')
         if not isinstance(spec.get('class'), str):

@@ -151,9 +151,7 @@ class InstanceData(BaseModel, ABC):
 
         return True
 
-    def combine(
-        self, others: 'list[InstanceData] | InstanceData', fn: Callable, *args: Any, **kwargs: dict[str, Any]
-    ) -> Self:
+    def combine(self, others: 'list[InstanceData] | InstanceData', fn: Callable, *args: Any, **kwargs: Any) -> Self:
         """
         Apply a custom combination function to InstanceData objects.
 
@@ -199,7 +197,7 @@ class InstanceData(BaseModel, ABC):
 
         return self.replace(**data)
 
-    def apply(self, fn: Callable, *args: Any, **kwargs: dict[str, Any]) -> Self:
+    def apply(self, fn: Callable, *args: Any, **kwargs: Any) -> Self:
         """
         Apply a custom function to this InstanceData object.
 

@@ -188,7 +188,7 @@ _YAML_TYPES: dict = {
 }
 
 
-def check_type(type_class: type[Any], v: YamlValueType, message: str | None = None) -> Any:
+def check_type(type_class: Any, v: YamlValueType, message: str | None = None) -> Any:
     """
     Check whether a value is an instance of a type.
 

@@ -63,7 +63,7 @@ def test_deserialize_trained_lr_system(trained_lr_system: LRSystem, sample_featu
     deserialized_model = load_model(model_file_path)
 
     # The deserialized model and the model it originated from should be of the same type of LR system
-    assert type(trained_lr_system) == type(trained_lr_system)
+    assert type(trained_lr_system) is type(deserialized_model)
 
     # The calculated LLR output should be identical to the LR system output of the serialized model
     expected_llr_data = trained_lr_system.apply(sample_feature_data)

@@ -57,7 +57,7 @@ def copy_yaml_definition(output_dir: Path, config_yaml_path: Path) -> None:
 
 def initialize_experiments(
     cfg: confidence.Configuration,
-) -> tuple[Mapping[str, Experiment], Path, int]:
+) -> tuple[Mapping[str, Experiment], Path]:
     """
     Extract which Experiment to run as dictated in the configuration.
 
@@ -75,10 +75,7 @@ def initialize_experiments(
     output_dir = pop_field(cfg, 'output_path', validate=Path)
     initialize_logfile(output_dir)
 
-    parallel_jobs = pop_field(cfg, 'parallel_jobs', validate=int, default=0)
-    LOG.debug(f'parallel_jobs set to: {parallel_jobs}')
-
-    return parse_experiments(cfg, output_dir), output_dir, parallel_jobs
+    return parse_experiments(cfg, output_dir), output_dir
 
 
 def error(msg: str, e: Exception | None = None) -> None:
@@ -114,9 +111,19 @@ def main(args: list[str] | None = None) -> None:
         help='prints a list of registered components',
         action='store_true',
     )
+    parser.add_argument(
+        '--n-jobs',
+        help='Enable parallel execution of experiments. Use 0 or 1 to disable parallelism, or -1 to use all available'
+        ' cores, -2 to use all but one core, etc. The parallelism is at the experiment level, so each experiment will'
+        ' be run in its own process. For more information, see the joblib documentation:'
+        ' https://joblib.readthedocs.io/en/latest/parallel.html',
+        type=int,
+        default=0,
+    )
 
     parser.add_argument('-v', help='increases verbosity', action='count', default=0)
     parser.add_argument('-q', help='decreases verbosity', action='count', default=0)
+
     args = parser.parse_args(args)
 
     setup_logging(f'{app_name}.log', args.v - args.q)
@@ -139,7 +146,7 @@ def main(args: list[str] | None = None) -> None:
     LOG.debug(f'added {Path().resolve()} to sys.path')
 
     try:
-        experiments, output_dir, parallel_jobs = initialize_experiments(confidence.loadf(args.setup))
+        experiments, output_dir = initialize_experiments(confidence.loadf(args.setup))
     except YamlParseError as e:
         error(f'error while parsing {args.setup}: {str(e)}', e)
         raise  # this statement is not reachable, but helps code validation
@@ -159,11 +166,13 @@ def main(args: list[str] | None = None) -> None:
         for name in set(args.experiment):
             experiments[name].run()
     else:
-        if parallel_jobs > 1 or parallel_jobs < 0:
-            # Whilst joblib can handle 1 parallel core, it is more efficient to just run sequentially.
-            LOG.info(f'Running selected experiments in parallel using {parallel_jobs} cores.')
-            Parallel(n_jobs=parallel_jobs)(delayed(experiment.run)() for experiment in experiments.values())
+        n_jobs = args.n_jobs
+        if n_jobs not in (0, 1):
+            # Run in parallel using joblib. Whilst joblib can handle 1 job, it is more efficient to run sequentially.
+            LOG.info(f'Running selected experiments in parallel using {n_jobs} cores.')
+            Parallel(n_jobs=n_jobs)(delayed(experiment.run)() for experiment in experiments.values())
         else:
+            # Run sequentially.
             LOG.info('Running selected experiments sequentially.')
             for experiment in experiments.values():
                 experiment.run()

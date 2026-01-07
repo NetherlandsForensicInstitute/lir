@@ -11,11 +11,6 @@
 # system there is a folder that may contain visualizations and other by products.
 output_path: output/${timestamp}_glass_example
 
-# Enable parallel execution of experiments. Remove this line, or set it to 0 or 1 to disable parallelism, or -1 to use all 
-# available cores, -2 to use all but one core, etc. The parallelism is at the experiment level, so each experiment will
-# be run in its own process. For more information, see the joblib documentation: https://joblib.readthedocs.io/en/latest/parallel.html
-parallel_jobs: 0
-
 # We use a pre-defined dataset of LA-ICP-MS measurements of elemental concentration from floatglass. For more
 # information on the dataset, see: https://github.com/NetherlandsForensicInstitute/elemental_composition_glass
 #

@@ -19,8 +19,8 @@ class PairingMethod(ABC):
     def pair(
         self,
         instances: InstanceData,
-        n_trace_instances: int,
-        n_ref_instances: int,
+        n_trace_instances: int = 1,
+        n_ref_instances: int = 1,
     ) -> PairedFeatureData:
         """
         Takes instances as input, and returns pairs.

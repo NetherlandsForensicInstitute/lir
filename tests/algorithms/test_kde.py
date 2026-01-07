@@ -138,19 +138,19 @@ class TestKDECalibrator(unittest.TestCase):
     ([1, 2], (1, 2)),  # list input (`Sized` type)
     ((1, 2), (1, 2)),  # tuple input (`Sized` type)
     (lambda X, y: (1234, 5678), (1234, 5678)),  # callable function
-    ('silverman', ()),  # Silverman algorithm
+    ('silverman', (1.05922384, 0.46105395)),  # Silverman algorithm
     (123.45,  (123.45, 123.45)),  # float
     (12, (12, 12)),  # integer
 ])
 def test_kde_bandwidth_parsing_supported_types(bandwidth_definition, expected_bandwidth):
     bandwidth_fn = parse_bandwidth(bandwidth_definition)
 
-    samples_one_feature = [[1], [2], [3]]
-    labels = np.ndarray([0, 1, 0])
+    samples_one_feature = np.asarray([[1], [2], [3]])
+    labels = np.asarray([0, 1,1]) 
 
     bandwidth = bandwidth_fn(X=samples_one_feature, y=labels)
 
-    assert bandwidth == expected_bandwidth
+    assert np.allclose(bandwidth, expected_bandwidth)
 
 
 @pytest.mark.parametrize('bandwidth_definition', [

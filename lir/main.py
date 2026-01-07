@@ -21,11 +21,10 @@ LOG = logging.getLogger(__name__)
 DEFAULT_LOGLEVEL = logging.WARNING
 
 
-def setup_logging(file_path: str, level_increase: int) -> None:
+def setup_logging(level_increase: int) -> None:
     """
     Setup logging to stderr and to a file.
 
-    :param file_path: target file
     :param level_increase: log level for stderr, relative to the default log level
     """
     loglevel = max(logging.DEBUG, min(logging.CRITICAL, DEFAULT_LOGLEVEL - level_increase * 10))
@@ -85,9 +84,7 @@ def error(msg: str, e: Exception | None = None) -> None:
     sys.exit(1)
 
 
-def main(args: list[str] | None = None) -> None:
-    app_name = 'lir'
-
+def main(input_args: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description='Run all or some of the parts of project')
 
     parser.add_argument(
@@ -123,10 +120,9 @@ def main(args: list[str] | None = None) -> None:
 
     parser.add_argument('-v', help='increases verbosity', action='count', default=0)
     parser.add_argument('-q', help='decreases verbosity', action='count', default=0)
+    args = parser.parse_args(input_args)
 
-    args = parser.parse_args(args)
-
-    setup_logging(f'{app_name}.log', args.v - args.q)
+    setup_logging(args.v - args.q)
 
     if args.list_registry:
         for name in registry.registry():
@@ -154,7 +150,7 @@ def main(args: list[str] | None = None) -> None:
     copy_yaml_definition(output_dir, Path(args.setup))
 
     if args.list_experiments:
-        for name, _experiment in experiments.items():
+        for name in experiments:
             print(name)
         return
 

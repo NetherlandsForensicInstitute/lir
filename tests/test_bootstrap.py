@@ -61,7 +61,7 @@ def test_traindata_bootstrap(sample_steps_and_data):
     if not steps:
         return
 
-    # Check that the llr values are within the inteval it has calculated.
+    # Check that the llr values are within the interval that was calculated.
     assert np.all(results_data.llrs >= results_data.llr_intervals[:, 0])
     assert np.all(results_data.llrs <= results_data.llr_intervals[:, 1])
 

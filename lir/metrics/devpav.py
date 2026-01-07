@@ -6,19 +6,19 @@ from lir.util import Xy_to_Xn, logodds_to_odds
 
 def _calcsurface(c1: tuple[float, float], c2: tuple[float, float]) -> float:
     """
-    Helperfunction that calculates the desired surface for two xy-coordinates
+    Helper function that calculates the desired surface for two xy-coordinates
     """
     # step 1: calculate intersection (xs, ys) of straight line through coordinates with identity line (if slope (a) = 1,
-    # there is no intersection and surface of this parrellogram is equal to deltaY * deltaX)
+    # there is no intersection and surface of this parallelogram is equal to deltaY * deltaX)
 
     x1, y1 = c1
     x2, y2 = c2
     a = (y2 - y1) / (x2 - x1)
 
     if a == 1:
-        # dan xs equals +/- Infinite en is er there is no intersection with the identity line
+        # then xs equals +/- Infinite and there is no intersection with the identity line
 
-        # the surface of the parallellogram is:
+        # the surface of the parallelogram is:
         surface = (x2 - x1) * np.abs(y1 - x1)
 
     elif a < 0:
@@ -26,15 +26,14 @@ def _calcsurface(c1: tuple[float, float], c2: tuple[float, float]) -> float:
             f'slope is negative; impossible for PAV-transform. Coordinates are {c1} and {c2}. Calculated slope is {a}'
         )
     else:
-        # than xs is finite:
+        # then xs is finite:
         b = y1 - a * x1
         xs = b / (1 - a)
-        # xs
 
         # step 2: check if intersection is located within line segment c1 and c2.
         if x1 < xs and x2 >= xs:
             # then intersection is within
-            # (situation 1 of 2) if y1 <= x1 than surface is:
+            # (situation 1 of 2) if y1 <= x1 then surface is:
             if y1 <= x1:
                 surface = (
                     0.5 * (xs - y1) * (xs - x1)
@@ -43,14 +42,14 @@ def _calcsurface(c1: tuple[float, float], c2: tuple[float, float]) -> float:
                     - 0.5 * (x2 - xs) * (x2 - xs)
                 )
             else:
-                # (situation 2 of 2) than y1 > x1, and surface is:
+                # (situation 2 of 2) then y1 > x1, and surface is:
                 surface = (
                     0.5 * (xs - x1) ** 2
                     - 0.5 * (xs - y1) * (xs - x1)
                     + 0.5 * (x2 - xs) ** 2
                     - 0.5 * (x2 - xs) * (y2 - xs)
                 )
-                # dit is the same as 0.5 * (xs - x1) * (xs - y1) - 0.5 * (xs - y1) * (xs - y1)
+                # this is the same as 0.5 * (xs - x1) * (xs - y1) - 0.5 * (xs - y1) * (xs - y1)
                 # + 0.5 * (y2 - xs) * (x2 - xs) - 0.5 * (y2 - xs) * (y2 - xs) + 0.5 * (y1 - x1) * (y1 - x1)
                 # + 0.5 * (x2 - y2) * (x2 -y2)
         else:  # then intersection is not within line segment
@@ -62,8 +61,8 @@ def _calcsurface(c1: tuple[float, float], c2: tuple[float, float]) -> float:
             elif y1 <= x1 and y2 > x1:  # (situation 3 of 4). This should be the last possibility.
                 surface = 0.5 * (y2 - y1) * (x2 - x1) - 0.5 * (y2 - x1) * (y2 - x1) + 0.5 * (x2 - y2) * (x2 - y2)
             else:
-                # situation 4 of 4 : this situation should never appear. There is a fourth sibution as situation 3,
-                # but than above the identity line. However, this is impossible by definition of a
+                # situation 4 of 4 : this situation should never appear. There is a fourth situation as situation 3,
+                # but then above the identity line. However, this is impossible by definition of a
                 # PAV-transform (y2 > x1).
                 raise ValueError(f'unexpected coordinate combination: ({x1}, {y1}) and ({x2}, {y2})')
     return surface
@@ -71,60 +70,62 @@ def _calcsurface(c1: tuple[float, float], c2: tuple[float, float]) -> float:
 
 def _devpavcalculator(lrs: np.ndarray, pav_lrs: np.ndarray, y: np.ndarray) -> float:
     """
-    function that calculates davPAV for a PAVresult for SSLRs and DSLRs  een PAV transformatie de devPAV uitrekent
-    Input: Lrs = np.array met LR-waarden. pav_lrs = np.array met uitkomst van PAV-transformatie op lrs. y = np.array met
-        labels (1 voor H1 en 0 voor H2)
-    Output: devPAV value
+    Calculate devPAV for PAV-transformed LRs.
+
+    Parameters:
+    - lrs: np.ndarray of LR values.
+    - pav_lrs: np.ndarray of LRs after PAV transformation.
+    - y: np.ndarray of labels (1 for H1 and 0 for H2).
+
+    Returns:
+    - float: devPAV value
 
     """
-    DSLRs, SSLRs = Xy_to_Xn(lrs, y)
-    DSPAVLRs, SSPAVLRs = Xy_to_Xn(pav_lrs, y)
-    PAVresult = np.concatenate([SSPAVLRs, DSPAVLRs])
-    Xen = np.concatenate([SSLRs, DSLRs])
+    # split same-source and different-source LRs and PAV-LRs
+    ds_lrs, ss_lrs = Xy_to_Xn(lrs, y)
+    ds_pav_lrs, ss_pav_lrs = Xy_to_Xn(pav_lrs, y)
+    pav_result = np.concatenate([ss_pav_lrs, ds_pav_lrs])
+    X = np.concatenate([ss_lrs, ds_lrs])
 
     # order coordinates based on x's then y's and filtering out identical datapoints
-    data = np.unique(np.array([Xen, PAVresult]), axis=1)
-    Xen = data[0, :]
-    Yen = data[1, :]
+    data = np.unique(np.array([X, pav_result]), axis=1)
+    X = data[0, :]
+    Y = data[1, :]
 
-    # pathological cases
-    # first one of four: PAV-transform has a horizonal line to log(X) = -Inf as to log(X) = Inf
-    if Yen[0] != 0 and Yen[-1] != np.inf and Xen[-1] == np.inf and Xen[-1] == np.inf:
+    # Check for pathological cases where devPAV is infinite or undefined.
+    # PAV-transform has a horizontal line from log(X) = -Inf to log(X) = Inf
+    if Y[0] != 0 and Y[-1] != np.inf and X[-1] == np.inf and X[-1] == np.inf:
         return np.inf
 
-    # second of four: PAV-transform has a horizontal line to log(X) = -Inf
-    if Yen[0] != 0 and Xen[0] == 0 and Yen[-1] == np.inf:
+    # PAV-transform has a horizontal line to log(X) = -Inf
+    if Y[0] != 0 and X[0] == 0 and Y[-1] == np.inf:
         return np.inf
 
-    # third of four: PAV-transform has a horizontal line to log(X) = Inf
-    if Yen[0] == 0 and Yen[-1] != np.inf and Xen[-1] == np.inf:
+    # PAV-transform has a horizontal line to log(X) = Inf
+    if Y[0] == 0 and Y[-1] != np.inf and X[-1] == np.inf:
         return np.inf
 
-    # forth of four: PAV-transform has one vertical line from log(Y) = -Inf to log(Y) = Inf
-    wh = (Yen == 0) | (Yen == np.inf)
-    if np.sum(wh) == len(Yen):
+    # PAV-transform has one vertical line from log(Y) = -Inf to log(Y) = Inf
+    wh = (Y == 0) | (np.inf == Y)
+    if np.sum(wh) == len(Y):
         return np.nan
 
-    else:
-        # then it is not a  pathological case with weird X-values and devPAV can be calculated
+    # filtering out -Inf or 0 Y's
+    within_range_index = (Y > 0) & (np.inf > Y)
+    X = np.log10(X[within_range_index])
+    Y = np.log10(Y[within_range_index])
 
-        # filtering out -Inf or 0 Y's
-        wh = (Yen > 0) & (Yen < np.inf)
-        Xen = np.log10(Xen[wh])
-        Yen = np.log10(Yen[wh])
-        # sanity check
-        if len(Xen) == 0:
-            return np.nan
-        elif len(Xen) == 1:
-            return abs(Xen - Yen)
-        # than calculate devPAV
-        else:
-            deltaX = Xen[-1] - Xen[0]
-            surface = 0.0
-            for i in range(1, len(Xen)):
-                surface = surface + _calcsurface((Xen[i - 1], Yen[i - 1]), (Xen[i], Yen[i]))
-            # return(list(surface/a, PAVresult, Xen, Yen, devPAVs))
-            return surface / deltaX
+    if len(X) == 0:
+        return np.nan
+
+    if len(X) == 1:
+        return abs(X - Y)
+
+    # Actual devPAV calculation
+    surface = sum(_calcsurface((X[i - 1], Y[i - 1]), (X[i], Y[i])) for i in range(1, len(X)))
+
+    deltaX = X[-1] - X[0]
+    return surface / deltaX
 
 
 def devpav(llrs: np.ndarray, y: np.ndarray) -> float:

@@ -17,11 +17,11 @@ The pre-made yaml-files are templates, for you to adapt to your situation.
 
 To choose which yaml-file is appropriate for you, you need to answer some questions about the data you have and which type of LR system you need.
 Then, you will be instructed to organize your data. This ensures the data is in a format that can be parsed by the repository.
-Next, you can go to the yaml-file, where you can build you LR system and set up an experiment. You will be guided by comments in the yaml-file.
+Next, you can go to the yaml-file, where you can build your LR system and set up an experiment. You will be guided by comments in the yaml-file.
 
 Before you begin, make sure that you have a [working version of LiR](index.html).
 
-- Do you have one specific (case-related) reference source along with data from other sources, and do you want to model the first hypothesis exlusively with data from that source?
+- Do you have one specific (case-related) reference source along with data from other sources, and do you want to model the first hypothesis exclusively with data from that source?
 
   --> You probably want a 'specific source' LR system. Go here: [specific source system](#specific-source-system)
   

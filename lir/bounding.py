@@ -17,7 +17,7 @@ class LLRBounder(Transformer, ABC):
     Base class for LLR bounders.
 
     A bounder updates any LLRs that are out of bounds. Any LLR values within bounds remain unchanged. LLR values that
-    are out-of-bounds are updated tot the nearest bound.
+    are out-of-bounds are updated to the nearest bound.
     """
 
     def __init__(
@@ -77,10 +77,9 @@ class LLRBounder(Transformer, ABC):
         instances = self._validate(instances)
 
         llrs = instances.features
-        if self.lower_llr_bound is not None:
-            llrs = np.where(self.lower_llr_bound < llrs, llrs, self.lower_llr_bound)
-        if self.upper_llr_bound is not None:
-            llrs = np.where(self.upper_llr_bound > llrs, llrs, self.upper_llr_bound)
+
+        # Clip the LLRs to the bounds, where np.clip handles the None values correctly.
+        llrs = np.clip(llrs, self.lower_llr_bound, self.upper_llr_bound)
 
         return instances.replace(
             features=llrs, llr_upper_bound=self.upper_llr_bound, llr_lower_bound=self.lower_llr_bound
@@ -94,8 +93,8 @@ class StaticBounder(LLRBounder):
     This bounder takes arguments for a lower and upper bound, which may take `None` in which case no bounds are applied.
     """
 
-    def __init__(self, lower_llr_bound: float, upper_llr_bound: float):
+    def __init__(self, lower_llr_bound: float | None, upper_llr_bound: float | None):
         super().__init__(lower_llr_bound, upper_llr_bound)
 
-    def calculate_bounds(self, llrs: np.ndarray, y: np.ndarray) -> tuple[float | None, float | None]:
+    def calculate_bounds(self, llrs: np.ndarray, labels: np.ndarray) -> tuple[float | None, float | None]:
         return self.lower_llr_bound, self.upper_llr_bound

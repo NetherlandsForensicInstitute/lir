@@ -40,11 +40,11 @@ class Experiment(ABC):
         subsequently used to determine LLRs for the test subset data. The results are stored in
         a temporary list which contains the determined data of each test / train split.
 
-        Metrics are collected as specified in the `metrics` mapping and returned after the experiment run.
-        Visual representations of the obtained results for the specific LR system are generated as specified
-        through the `visualization_functions` and stored in the `output_path` directory.
+        The collected results are combined and passed to the configured `outputs` aggregations,
+        which may write metrics and visualizations to the `output_path` directory. The combined
+        LLR data is returned.
         """
-        # Placeholders for numpy array's of LLRs and labels obtained from each train/test split
+        # Placeholders for numpy arrays of LLRs and labels obtained from each train/test split
         llr_sets: list[LLRData] = []
 
         # Split the data into a train / test subset, according to the provided DataStrategy. This could
@@ -56,7 +56,7 @@ class Experiment(ABC):
             # Store results (numpy arrays) into the placeholder lists
             llr_sets.append(subset_llr_results)
 
-        # Combine collected numpy array's after iteration over the train/test split(s)
+        # Combine collected numpy arrays after iteration over the train/test split(s)
         combined_llrs: LLRData = concatenate_instances(*llr_sets)
 
         # Collect and report results as configured by `outputs`

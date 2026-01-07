@@ -106,21 +106,21 @@ def _devpavcalculator(lrs: np.ndarray, pav_lrs: np.ndarray, y: np.ndarray) -> fl
         return np.inf
 
     # PAV-transform has one vertical line from log(Y) = -Inf to log(Y) = Inf
-    wh = (Y == 0) | (Y == np.inf)
+    wh = (Y == 0) | (np.inf == Y)
     if np.sum(wh) == len(Y):
         return np.nan
 
     # filtering out -Inf or 0 Y's
-    within_range_index = (Y > 0) & (Y < np.inf)
+    within_range_index = (Y > 0) & (np.inf > Y)
     X = np.log10(X[within_range_index])
     Y = np.log10(Y[within_range_index])
 
     if len(X) == 0:
         return np.nan
-    
+
     if len(X) == 1:
         return abs(X - Y)
-    
+
     # Actual devPAV calculation
     surface = sum(_calcsurface((X[i - 1], Y[i - 1]), (X[i], Y[i])) for i in range(1, len(X)))
 

@@ -81,54 +81,51 @@ def _devpavcalculator(lrs: np.ndarray, pav_lrs: np.ndarray, y: np.ndarray) -> fl
     - float: devPAV value
 
     """
-    DSLRs, SSLRs = Xy_to_Xn(lrs, y)
-    DSPAVLRs, SSPAVLRs = Xy_to_Xn(pav_lrs, y)
-    PAVresult = np.concatenate([SSPAVLRs, DSPAVLRs])
-    Xen = np.concatenate([SSLRs, DSLRs])
+    # split same-source and different-source LRs and PAV-LRs
+    ds_lrs, ss_lrs = Xy_to_Xn(lrs, y)
+    ds_pav_lrs, ss_pav_lrs = Xy_to_Xn(pav_lrs, y)
+    pav_result = np.concatenate([ss_pav_lrs, ds_pav_lrs])
+    X = np.concatenate([ss_lrs, ds_lrs])
 
     # order coordinates based on x's then y's and filtering out identical datapoints
-    data = np.unique(np.array([Xen, PAVresult]), axis=1)
-    Xen = data[0, :]
-    Yen = data[1, :]
+    data = np.unique(np.array([X, pav_result]), axis=1)
+    X = data[0, :]
+    Y = data[1, :]
 
-    # pathological cases
-    # first of four: PAV-transform has a horizontal line from log(X) = -Inf to log(X) = Inf
-    if Yen[0] != 0 and Yen[-1] != np.inf and Xen[-1] == np.inf and Xen[-1] == np.inf:
+    # Check for pathological cases where devPAV is infinite or undefined.
+    # PAV-transform has a horizontal line from log(X) = -Inf to log(X) = Inf
+    if Y[0] != 0 and Y[-1] != np.inf and X[-1] == np.inf and X[-1] == np.inf:
         return np.inf
 
-    # second of four: PAV-transform has a horizontal line to log(X) = -Inf
-    if Yen[0] != 0 and Xen[0] == 0 and Yen[-1] == np.inf:
+    # PAV-transform has a horizontal line to log(X) = -Inf
+    if Y[0] != 0 and X[0] == 0 and Y[-1] == np.inf:
         return np.inf
 
-    # third of four: PAV-transform has a horizontal line to log(X) = Inf
-    if Yen[0] == 0 and Yen[-1] != np.inf and Xen[-1] == np.inf:
+    # PAV-transform has a horizontal line to log(X) = Inf
+    if Y[0] == 0 and Y[-1] != np.inf and X[-1] == np.inf:
         return np.inf
 
-    # fourth of four: PAV-transform has one vertical line from log(Y) = -Inf to log(Y) = Inf
-    wh = (Yen == 0) | (Yen == np.inf)
-    if np.sum(wh) == len(Yen):
+    # PAV-transform has one vertical line from log(Y) = -Inf to log(Y) = Inf
+    wh = (Y == 0) | (Y == np.inf)
+    if np.sum(wh) == len(Y):
         return np.nan
 
-    else:
-        # then it is not a pathological case with weird X-values and devPAV can be calculated
+    # filtering out -Inf or 0 Y's
+    within_range_index = (Y > 0) & (Y < np.inf)
+    X = np.log10(X[within_range_index])
+    Y = np.log10(Y[within_range_index])
 
-        # filtering out -Inf or 0 Y's
-        wh = (Yen > 0) & (Yen < np.inf)
-        Xen = np.log10(Xen[wh])
-        Yen = np.log10(Yen[wh])
-        # sanity check
-        if len(Xen) == 0:
-            return np.nan
-        elif len(Xen) == 1:
-            return abs(Xen - Yen)
-        # then calculate devPAV
-        else:
-            deltaX = Xen[-1] - Xen[0]
-            surface = 0.0
-            for i in range(1, len(Xen)):
-                surface = surface + _calcsurface((Xen[i - 1], Yen[i - 1]), (Xen[i], Yen[i]))
-            # return(list(surface/a, PAVresult, Xen, Yen, devPAVs))
-            return surface / deltaX
+    if len(X) == 0:
+        return np.nan
+    
+    if len(X) == 1:
+        return abs(X - Y)
+    
+    # Actual devPAV calculation
+    surface = sum(_calcsurface((X[i - 1], Y[i - 1]), (X[i], Y[i])) for i in range(1, len(X)))
+
+    deltaX = X[-1] - X[0]
+    return surface / deltaX
 
 
 def devpav(llrs: np.ndarray, y: np.ndarray) -> float:

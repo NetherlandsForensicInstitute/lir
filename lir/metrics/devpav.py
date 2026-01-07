@@ -29,7 +29,6 @@ def _calcsurface(c1: tuple[float, float], c2: tuple[float, float]) -> float:
         # then xs is finite:
         b = y1 - a * x1
         xs = b / (1 - a)
-        # xs
 
         # step 2: check if intersection is located within line segment c1 and c2.
         if x1 < xs and x2 >= xs:

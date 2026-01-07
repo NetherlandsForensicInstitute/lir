@@ -127,7 +127,7 @@ class Bind(partial):
     def __call__(self, *args: Any, **keywords: Any) -> Any:
         keywords = {**self.keywords, **keywords}
         iargs = iter(args)
-        args = (next(iargs) if arg is ... else arg for arg in self.args)
+        args = tuple(next(iargs) if arg is ... else arg for arg in self.args)
         return self.func(*args, *iargs, **keywords)
 
 

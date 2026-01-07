@@ -114,8 +114,8 @@ def calculate_invariance_bounds(
 
     # Check for bounds on the wrong side of 1. This may occur for badly
     # performing LR systems, e.g. if the delta function is always below zero.
-    lower_bound = min(lower_bound, 1)
-    upper_bound = max(upper_bound, 1)
+    lower_bound = float(min(lower_bound, 1.0))
+    upper_bound = float(max(upper_bound, 1.0))
 
     return lower_bound, upper_bound, delta_low, delta_high
 

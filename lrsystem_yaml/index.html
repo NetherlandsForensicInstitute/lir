@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>How to use this repository to make an LR system from your data - LiR Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "How to use this repository to make an LR system from your data";
+        var mkdocs_page_input_path = "lrsystem_yaml.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> LiR Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">LIR Python Likelihood Ratio Toolkit</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../lr_calculation/">[TODO] Calculation of LR's from scores</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">How to use this repository to make an LR system from your data</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#specific-source-system">Specific source system</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#pre-scored-common-source-system">Pre-scored common source system</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#common-source-system">Common source system</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">LiR Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">How to use this repository to make an LR system from your data</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/NetherlandsForensicInstitute/lir/edit/main/docs/lrsystem_yaml.md">Edit on LiR</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="how-to-use-this-repository-to-make-an-lr-system-from-your-data">How to use this repository to make an LR system from your data</h1>
+<p>This page is written for researchers that have collected data and wish to make an LR system using that data.</p>
+<p>An LR system is an automated statistical method in which two hypotheses are modeled and which can produce LRs for the hypothesis pair.
+These LRs can be made based on validation data for which it is known what the true hypothesis is, so that the LR system can be validated.
+Alternatively, LRs can be produced for data for which the true hypothesis is unknown, e.g. case data.</p>
+<p>Typically, an LR system will model variants of these two hypotheses:</p>
+<ul>
+<li>Hypothesis 1: the trace is from the same source as the reference</li>
+<li>Hypothesis 2: the trace is from another source than the reference </li>
+</ul>
+<p>This document will help you choose a 'yaml-file' where you can make design choices and put in the specifics and which will let you run an experiment using the LR system.
+A yaml-file is a text file in which you write what the code will do for you. The yaml-files are pre-made and can be found in this repository. 
+The pre-made yaml-files are templates, for you to adapt to your situation.</p>
+<p>To choose which yaml-file is appropriate for you, you need to answer some questions about the data you have and which type of LR system you need.
+Then, you will be instructed to organize your data. This ensures the data is in a format that can be parsed by the repository.
+Next, you can go to the yaml-file, where you can build your LR system and set up an experiment. You will be guided by comments in the yaml-file.</p>
+<p>Before you begin, make sure that you have a <a href="index.html">working version of LiR</a>.</p>
+<ul>
+<li>Do you have one specific (case-related) reference source along with data from other sources, and do you want to model the first hypothesis exclusively with data from that source?</li>
+</ul>
+<p>--&gt; You probably want a 'specific source' LR system. Go here: <a href="#specific-source-system">specific source system</a></p>
+<ul>
+<li>Do you have data from multiple sources that are not case-related?</li>
+</ul>
+<p>--&gt; You probably want a 'common source' LR system.</p>
+<p>Answer the follow up questions:</p>
+<ul>
+<li>
+<p>Does your data contain trace / reference pairs and some score for each pair?</p>
+<p>--&gt; You probably want a 'common source - pre-scored' LR system. Go here: <a href="#pre-scored-common-source-system">pre-scored system</a></p>
+</li>
+<li>
+<p>Does your data contain single instances of traces / references and measurements / features of those traces?</p>
+<p>--&gt; You want a 'score-based common source' LR system or a 'feature-based common source' LR system, go here: <a href="#common-source-system">common source system</a>.</p>
+</li>
+</ul>
+<h2 id="specific-source-system">Specific source system</h2>
+<p>In this LR system, you will:
+model Hypothesis 1 'trace and reference come from the same source' with data from one specific source.
+model Hypothesis 2 'trace and reference come from different sources' with data from other sources.</p>
+<p>You'll need your data in csv or txt-format.</p>
+<p>Here's a minimal example of data that would work:
+'hypothesis_label,feature1,feature2,feature3'</p>
+<p>It is also possible to use sourceIDs instead of hypothesis label and some other columns are optional, for more information see HERE</p>
+<p>The template-yaml that you should use is: <a href="https://raw.githubusercontent.com/NetherlandsForensicInstitute/lir/refs/heads/main/examples/specificsource.yaml">specificsource.yaml (TODO)</a></p>
+<h2 id="pre-scored-common-source-system">Pre-scored common source system</h2>
+<p>In this LR system, you will:
+model Hypothesis 1 'trace and reference come from the same source' with data pairs from multiple sources.
+model Hypothesis 2 'trace and reference come from different sources' with data pairs from multiple sources.</p>
+<p>The rows in your data describe source comparisons, and not measurements or features of individual instances. Typically you will have one numerical value per comparison.
+The pairs could be made up of sources or of instances from sources.</p>
+<p>You'll need your data in csv or txt-format.</p>
+<p>Here's a minimal example of data that would work:
+'sourceID1,sourceID2,score'</p>
+<p>sourceID1 and sourceID2 will be the same value for same-source-comparisons. Some other columns are optional, for more information see HERE
+The template-yaml that you should use is: <a href="https://raw.githubusercontent.com/NetherlandsForensicInstitute/lir/refs/heads/main/examples/prescored_commonsource.yaml">prescored_commonsource.yaml (TODO)</a></p>
+<h2 id="common-source-system">Common source system</h2>
+<p>In this LR system, you will:
+model Hypothesis 1 'trace and reference come from the same source' with data pairs from multiple sources.
+model Hypothesis 2 'trace and reference come from different sources' with data pairs from multiple sources.</p>
+<p>You'll need your data in csv or txt-format.</p>
+<p>Here's a minimal example of data that would work:
+'sourceID,feature1,feature2,feature3'</p>
+<p>Some other columns are optional, for more information see HERE</p>
+<p>It is possible to make a score-based common-source LR system or a feature-based common-source LR system.</p>
+<p>If you don't know what that distinction means, you can:
+- choose 'score-based' and you will build an LR system similar to [here] (link to practitioner's guide).
+- ask advice from your favourite forensic statistician.</p>
+<p>If you do know what the distinction means but you are unsure what is best for your data, you can use this repository to build multiple LR systems, perform validation and compare the results.</p>
+<p>The template-yaml that you could use is: <a href="https://raw.githubusercontent.com/NetherlandsForensicInstitute/lir/refs/heads/main/examples/scorebased_commonsource.yaml">scorebased_commonsource.yaml (TODO)</a></p>
+<p>The template-yaml that you could use is: <a href="https://raw.githubusercontent.com/NetherlandsForensicInstitute/lir/refs/heads/main/examples/featurebased_commonsource.yaml">featurebased_commonsource.yaml (TODO)</a></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../lr_calculation/" class="btn btn-neutral float-left" title="[TODO] Calculation of LR's from scores"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/NetherlandsForensicInstitute/lir" class="fa fa-code-fork" style="color: #fcfcfc"> LiR</a>
+        </span>
+    
+    
+      <span><a href="../lr_calculation/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

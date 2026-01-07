@@ -63,7 +63,9 @@ class ConfigParserLoader(ABC, Iterable):
     """
 
     @staticmethod
-    def _get_config_parser(result_type: Any, default_config_parser: Callable | None) -> ConfigParser:
+    def _get_config_parser(
+        result_type: Any, default_config_parser: Callable[[Any], ConfigParser] | None
+    ) -> ConfigParser:
         if inspect.isclass(result_type) and issubclass(result_type, ConfigParser):
             return result_type()
         elif default_config_parser is not None:
@@ -78,7 +80,7 @@ class ConfigParserLoader(ABC, Iterable):
     def get(
         self,
         key: str,
-        default_config_parser: Callable | None = None,
+        default_config_parser: Callable[[Any], ConfigParser] | None = None,
         search_path: list[str] | None = None,
     ) -> ConfigParser:
         """
@@ -107,7 +109,7 @@ class ClassLoader(ConfigParserLoader):
     def get(
         self,
         key: str,
-        default_config_parser: Callable | None = None,
+        default_config_parser: Callable[[Any], ConfigParser] | None = None,
         search_path: list[str] | None = None,
     ) -> ConfigParser:
         parts = key.split('.')
@@ -139,7 +141,7 @@ class FederatedLoader(ConfigParserLoader):
     def get(
         self,
         key: str,
-        default_config_parser: Callable | None = None,
+        default_config_parser: Callable[[Any], ConfigParser] | None = None,
         search_path: list[str] | None = None,
     ) -> ConfigParser:
         errors = []
@@ -182,7 +184,7 @@ def registry() -> ConfigParserLoader:
 
 def get(
     name: str,
-    default_config_parser: Callable | None = None,
+    default_config_parser: Callable[[Any], ConfigParser] | None = None,
     search_path: list[str] | None = None,
 ) -> ConfigParser:
     """Retrieve corresponding value for a given key name from the central registry."""
@@ -212,7 +214,9 @@ class YamlRegistry(ConfigParserLoader):
         return f'YamlRegistry({self._cfg})'
 
     @staticmethod
-    def _parse(key: str, spec: Mapping[str, str], default_config_parser: Callable | None) -> ConfigParser:
+    def _parse(
+        key: str, spec: Mapping[str, str], default_config_parser: Callable[[Any], ConfigParser] | None
+    ) -> ConfigParser:
         if 'class' not in spec:
             raise InvalidRegistryEntryError(f'missing value for `class` in registry entry: {key}')
         if not isinstance(spec.get('class'), str):
@@ -259,7 +263,7 @@ class YamlRegistry(ConfigParserLoader):
     def get(
         self,
         key: str,
-        default_config_parser: Callable | None = None,
+        default_config_parser: Callable[[Any], ConfigParser] | None = None,
         search_path: list[str] | None = None,
     ) -> ConfigParser:
         """Retrieve a value for a given key name from the YAML-based registry.

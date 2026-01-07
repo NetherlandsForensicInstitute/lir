@@ -188,7 +188,7 @@ _YAML_TYPES: dict = {
 }
 
 
-def check_type(type_class: type[Any], v: YamlValueType, message: str | None = None) -> Any:
+def check_type(type_class: Any, v: YamlValueType, message: str | None = None) -> Any:
     """
     Check whether a value is an instance of a type.
 
@@ -220,7 +220,7 @@ def pop_field(
     field: str,
     default: Any = None,
     required: bool | None = None,
-    validate: Callable | None = None,
+    validate: Callable[[Any], Any] | None = None,
 ) -> Any:
     """
     Validate and retrieve the value for a given field, after which it is removed from the configuration.

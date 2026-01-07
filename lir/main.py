@@ -167,12 +167,12 @@ def main(args: list[str] | None = None) -> None:
             experiments[name].run()
     else:
         n_jobs = args.n_jobs
-
-        if n_jobs > 1 or n_jobs < 0:
-            # Whilst joblib can handle 1 parallel core, it is more efficient to just run sequentially.
+        if n_jobs not in (0, 1):
+            # Run in parallel using joblib. Whilst joblib can handle 1 job, it is more efficient to run sequentially.
             LOG.info(f'Running selected experiments in parallel using {n_jobs} cores.')
             Parallel(n_jobs=n_jobs)(delayed(experiment.run)() for experiment in experiments.values())
         else:
+            # Run sequentially.
             LOG.info('Running selected experiments sequentially.')
             for experiment in experiments.values():
                 experiment.run()

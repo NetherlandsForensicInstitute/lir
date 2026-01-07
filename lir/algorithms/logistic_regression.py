@@ -144,11 +144,11 @@ class FourParameterLogisticCalibrator:
             _negative_log_likelihood_balanced,
             X,
             y,
-            self.model,  # type: ignore
+            self.model,
         )
 
         result = minimize(
-            objective_function,  # type: ignore
+            objective_function,
             np.array([0.1] * (2 + estimate_d + estimate_c)),
             bounds=bounds,
         )

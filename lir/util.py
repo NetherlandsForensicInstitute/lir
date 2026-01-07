@@ -36,9 +36,9 @@ def Xn_to_Xy(*Xn: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     Xn is a format where samples are divided into separate variables based on class.
     Xy is a format where all samples are concatenated, with an equal length variable y indicating class.
     """
-    Xn = [np.asarray(X) for X in Xn]
-    X = np.concatenate(Xn)
-    y = np.concatenate([np.ones((X.shape[0],), dtype=np.int8) * i for i, X in enumerate(Xn)])
+    split_Xn = [np.asarray(X) for X in Xn]
+    X = np.concatenate(split_Xn)
+    y = np.concatenate([np.ones((X.shape[0],), dtype=np.int8) * i for i, X in enumerate(split_Xn)])
     return X, y
 
 
@@ -53,8 +53,8 @@ def Xy_to_Xn(X: np.ndarray, y: np.ndarray, classes: list[int] | None = None) -> 
     if classes is None:
         classes = [0, 1]
 
-    classes = get_classes_from_Xy(X, y, classes)
-    return [X[y == yvalue] for yvalue in classes]
+    new_classes = get_classes_from_Xy(X, y, classes)
+    return [X[y == yvalue] for yvalue in new_classes]
 
 
 FloatOrArray = TypeVar('FloatOrArray', np.ndarray, float)

@@ -85,7 +85,50 @@ class InstanceData(BaseModel, ABC):
         return self.replace(**data)
 
     def __add__(self, other: 'InstanceData') -> Self:
-        return self.combine(other, np.concatenate)
+        return self.concatenate(other)
+
+    @classmethod
+    def _concatenate_field(cls, field: str, values: list[Any]) -> Any:
+        if len(values) == 0:
+            raise ValueError('no values to concatenate')
+
+        if isinstance(values[0], np.ndarray):
+            # we have a numpy array field -> use np.concatenate()
+            return np.concatenate(values)
+
+        # we have a non-numpy array field -> check if they have the same value
+        all_equal = all(values[0] == other for other in values[1:])
+        if not all_equal:
+            raise ValueError(
+                f'unable to combine field `{field}` because it is not a numpy array and not all values are equal'
+            )
+
+        # return the value, which is the same for all objects
+        return values[0]
+
+    def concatenate(self, *others: 'InstanceData') -> Self:
+        """
+        Concatenate instances from InstanceData objects.
+
+        All concatenated objects must have the same types and fields. How fields are concatenated may depend on the
+        subclass. By default, they must have the same values for all non-numpy array fields, or an error is raised.
+        Numpy fields are concatenated using `np.concatenate`. Other fields are copied as-is.
+
+        Returns a new object with the concatenated instances.
+        """
+        for instances in others:
+            if not self.has_same_type(instances):
+                raise ValueError('instances to concatenate must have the same types and fields')
+
+        # initialize the dictionary of fields to be updated
+        data: dict[str, np.ndarray | None] = {}
+
+        for field in self.all_fields:
+            all_values = [getattr(self, field)]
+            all_values.extend([getattr(instances, field) for instances in others])
+            data[field] = self._concatenate_field(field, all_values)
+
+        return self.replace(**data)
 
     def has_same_type(self, other: Any) -> bool:
         """
@@ -400,6 +443,20 @@ class LLRData(FeatureData):
 
         return self
 
+    @classmethod
+    def _concatenate_field(cls, field: str, values: list[Any]) -> Any:
+        """
+        The fields `llr_upper_bound` and `llr_lower_bound` may have different values which is not allowed by default.
+        Remove them instead of trying to combine them.
+        """
+        match field:
+            case 'llr_upper_bound':
+                return None
+            case 'llr_lower_bound':
+                return None
+            case _:
+                return super()._concatenate_field(field, values)
+
 
 InstanceDataType = TypeVar('InstanceDataType', bound=InstanceData)
 FeatureDataType = TypeVar('FeatureDataType', bound=FeatureData)
@@ -409,10 +466,9 @@ def concatenate_instances(first: InstanceDataType, *others: InstanceDataType) ->
     """
     Concatenate the results of the InstanceData objects.
 
-    All concatenated objects must have the same types and fields, and the same values for all non-numpy array fields,
-    or an error is raised. Numpy fields are concatenated using `np.concatenate`. Other fields are copied as-is.
+    Alias for `first.concatenate(*others)`.
     """
-    return first.combine(list(others), np.concatenate)
+    return first.concatenate(*others)
 
 
 class DataProvider(ABC):

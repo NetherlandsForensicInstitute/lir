@@ -29,7 +29,13 @@ from lir.util import (
 )
 
 
-def plot_ece(llrdata: LLRData, log_prior_odds_range: tuple[float, float] = (-3, 3), ax: Any = plt) -> None:
+def plot_ece(
+    llrdata: LLRData,
+    log_prior_odds_range: tuple[float, float] = (-3, 3),
+    ax: Any = plt,
+    show_pav: bool = True,
+    ylim: str = 'neutral',
+) -> None:
     """
     Generates an ECE plot for a set of LRs and corresponding ground-truth
     labels.
@@ -39,11 +45,16 @@ def plot_ece(llrdata: LLRData, log_prior_odds_range: tuple[float, float] = (-3, 
     line), (2) the set of LR values (line), and (3) the set of LR values after
     PAV-transformation (Pool Adjacent Violators, dashed line).
 
-    :param lrs: an array of LRs
-    :param labels: an array of ground-truth labels (values 0 for Hd or 1 for Hp);
-        must be of the same length as `lrs`
+    :param llrdata: the LLR data containing LLRs and labels.
     :param log_prior_odds_range: the range of prior odds (tuple of two values,
         indicating both ends of the range on the x-axis)
+    :param ax: the matplotlib axis to plot on
+    :param show_pav: whether to show the PAV-transformed LRs in the plot
+    :param ylim: the y-axis limits. Valid values are:
+        - 'neutral':  starts at 0, and ends automatically. In practice, this means that the upper limit is set slightly
+                      above the maximum of the 'non-informative' reference.
+        - 'zoomed':   starts at 0 and ends slightly (10%) above the maximum ECE value of the LRs. This may cut off part
+                       of the 'non-informative' reference line.
     """
     llrs = llrdata.llrs
     labels = llrdata.labels
@@ -63,25 +74,35 @@ def plot_ece(llrdata: LLRData, log_prior_odds_range: tuple[float, float] = (-3, 
         )
 
     # plot LRs
+    ece_values = calculate_ece(logodds_to_odds(llrs), labels, odds_to_probability(prior_odds))
     ax.plot(
         log_prior_odds,
-        calculate_ece(logodds_to_odds(llrs), labels, odds_to_probability(prior_odds)),
+        ece_values,
         linestyle='-',
         label='LRs',
     )
 
-    # plot PAV LRs
-    pav_llrs = IsotonicCalibrator().fit_transform(llrs, labels)
-    ax.plot(
-        log_prior_odds,
-        calculate_ece(logodds_to_odds(pav_llrs), labels, odds_to_probability(prior_odds)),
-        linestyle='--',
-        label='PAV LRs',
-    )
+    if show_pav:
+        # plot PAV LRs
+        pav_llrs = IsotonicCalibrator().fit_transform(llrs, labels)
+        ax.plot(
+            log_prior_odds,
+            calculate_ece(logodds_to_odds(pav_llrs), labels, odds_to_probability(prior_odds)),
+            linestyle='--',
+            label='PAV LRs',
+        )
 
     ax.set_xlabel('prior log$_{10}$(odds)')
     ax.set_ylabel('empirical cross-entropy')
-    ax.set_ylim((0, None))
+
+    if ylim == 'neutral':
+        ax.set_ylim((0, None))
+    elif ylim == 'zoomed':
+        ylim_value = max(ece_values) * 1.1
+        ax.set_ylim((0, ylim_value))
+    else:
+        raise ValueError(f"ylim must be one of ['neutral', 'zoomed'], but got `{ylim}`")
+
     ax.set_xlim(log_prior_odds_range)
     ax.legend()
     ax.grid(True, linestyle=':')

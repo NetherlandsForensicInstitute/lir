@@ -50,8 +50,11 @@ def plot_ece(
         indicating both ends of the range on the x-axis)
     :param ax: the matplotlib axis to plot on
     :param show_pav: whether to show the PAV-transformed LRs in the plot
-    :param ylim: the y-axis limits; either 'neutral' (starts at 0) or 'zoomed'
-        (starts at 0 and ends slightly above the maximum ECE value of the LRs)
+    :param ylim: the y-axis limits. Valid values are:
+        - 'neutral':  starts at 0, and ends automatically. In practice, this means that the upper limit is set slightly
+                      above the maximum of the 'non-informative' reference.
+        - 'zoomed':   starts at 0 and ends slightly (10%) above the maximum ECE value of the LRs. This may cut off part
+                       of the 'non-informative' reference line.
     """
     llrs = llrdata.llrs
     labels = llrdata.labels

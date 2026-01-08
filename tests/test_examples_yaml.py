@@ -1,3 +1,6 @@
+import os
+import shutil
+
 from pathlib import Path
 
 import confidence
@@ -15,3 +18,24 @@ def test_parse_examples():
             initialize_experiments(confidence.loadf(yaml_file))
         except Exception as e:
             raise ValueError(f"{yaml_file}: {e}")
+
+
+def test_run_examples():
+    output_path = Path('tests/yaml_output')
+
+    # Start from a clean slate
+    shutil.rmtree(output_path); os.makedirs(output_path)
+
+    for i, yaml_file in enumerate(EXAMPLE_FILES):
+            configuration = confidence.Configuration(
+                confidence.loadf(yaml_file),
+                {'output_path': f'{output_path}/{i}'},
+            )
+
+            experiments, _ = initialize_experiments(configuration)
+
+            for name, experiment_definition in experiments.items():
+                try:
+                    experiment_definition.run()
+                except Exception as e:
+                    raise RuntimeError(f"Experiment '{name}' in '{yaml_file}' failed to run: {e}")

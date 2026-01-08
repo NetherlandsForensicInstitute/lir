@@ -31,7 +31,7 @@ output_path: output/${timestamp}_score_based_common_source  # <-- adapt this val
 # If you want to know how to use the default csv parser, go here. <TODO>
 
 data_provider:
-  method: feature_data_csv_http
+  method: parse_features_from_csv_url
   url: https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/main/training.csv
   instance_id_column: id
   source_id_column: Item

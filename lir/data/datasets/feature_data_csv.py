@@ -157,15 +157,15 @@ class FeatureDataCsvParser(DataProvider, ABC):
 
 
 class FeatureDataCsvFileParser(FeatureDataCsvParser):
-    def __init__(self, path: PathLike, **kwargs: Any):
+    def __init__(self, file: PathLike, **kwargs: Any):
         """
         Initializes the CSV parser that reads data from a file.
 
-        :param path: the path to the csv file
+        :param file: the path to the csv file
         :param kwargs: arguments passed to FeatureDataCsvParser
         """
-        super().__init__(**kwargs, message_prefix=f'{path}: ')
-        self.path = Path(path)
+        super().__init__(**kwargs, message_prefix=f'{file}: ')
+        self.path = Path(file)
 
     def get_instances(self) -> FeatureData:
         path = search_path(self.path)

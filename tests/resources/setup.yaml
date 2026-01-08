@@ -25,7 +25,7 @@ lr_system:
       to_llr: probabilities_to_logodds
 
 experiments:
-  exp1:
+  - name: exp1
     strategy: grid
     lr_system: ${lr_system}
     data: ${data}
@@ -42,7 +42,7 @@ experiments:
         columns:
         - cllr
 
-  exp2:
+  - name: exp2
     strategy: single_run
     lr_system: ${lr_system}
     data: ${data}

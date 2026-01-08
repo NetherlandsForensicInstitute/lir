@@ -163,7 +163,7 @@ experiments:
   #
   # The appropriate hyperparameter type is inferred from its declaration. It may also be declared explicitly by adding
   # a `type` field with the corresponding value `categorical`, `cluster`, or `float`.
-  model_selection:
+  - name: model_selection
     strategy: grid  # use a grid search
     lr_system: ${score_based_lr_system}  # refer the the previously defined `score_based_lr_system`
     data: ${data}  # refer to the previously defined data
@@ -196,7 +196,7 @@ experiments:
       - pav
       - ece
 
-  architecture_evaluation:
+  - name: architecture_evaluation
     strategy: grid
     lr_system:  # do not specify any base LR system at this point; it will be substituted anyway
     data: ${data}
@@ -223,7 +223,7 @@ experiments:
       - pav
       - lr_histogram
 
-  validation:
+  - name: validation
     strategy: single_run
     lr_system: ${score_based_lr_system}
     data: ${data}

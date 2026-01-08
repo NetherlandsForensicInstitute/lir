@@ -48,7 +48,7 @@ experiments:
   # - parameter -- the parameters to vary
   # - output -- metrics and visualizations to report to the end user
   #
-  optimize_kde_bandwidth:
+  - name: optimize_kde_bandwidth
     strategy: optuna
     primary_metric: cllr
     n_trials: 20

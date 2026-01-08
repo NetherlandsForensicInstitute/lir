@@ -35,7 +35,7 @@ lr_system:
       bounding: elub_bounder
 
 experiments:
-  model_selection:
+  - name: model_selection
     strategy: grid
     lr_system: ${lr_system}
     data: ${data}
@@ -55,7 +55,7 @@ experiments:
       - pav
       - ece
 
-  validation:
+  - name: validation
     strategy: single_run
     lr_system: ${lr_system}
     data: ${data}

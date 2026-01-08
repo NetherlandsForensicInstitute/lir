@@ -118,7 +118,9 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         self._config = config
         self._output_dir = output_dir
 
-        exp = self.get_experiment(self._config.context[-1])
+        experiment_name = pop_field(config, 'name', default=f'unnamed_experiment{config.context[-1]}')
+        exp = self.get_experiment(experiment_name)
+
         check_is_empty(config)
         return exp
 
@@ -207,14 +209,18 @@ def parse_experiments(cfg: ContextAwareDict, output_path: Path) -> Mapping[str, 
     :param output_path: the filesystem path to the results directory
     :return: a mapping of names to experiments
     """
-    experiments_config_section = pop_field(cfg, 'experiments', validate=partial(check_type, dict))
+    experiments_config_section = pop_field(cfg, 'experiments', validate=partial(check_type, list))
 
     experiments: OrderedDict[str, Experiment] = OrderedDict()
-    for exp_name, exp_config in experiments_config_section.items():
+    for exp_config in experiments_config_section:
         experiment = parse_experiment_strategy(
             exp_config,
             output_path,
         )
-        experiments[exp_name] = experiment
+
+        if experiment.name in experiments:
+            raise ValueError(f'experiment {experiment.name} already exists')
+
+        experiments[experiment.name] = experiment
 
     return experiments

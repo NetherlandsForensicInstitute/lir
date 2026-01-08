@@ -11,12 +11,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from lir.bounding import LLRBounder
-from lir.util import logodds_to_odds, odds_to_logodds
+from lir.data.models import LLRData
 
 
 def plot_invariance_delta_functions(
-    lrs: np.ndarray,
-    y: np.ndarray,
+    llrdata: LLRData,
     llr_threshold_range: tuple[float, float] | None = None,
     step_size: float = 0.001,
     ax: plt.Axes | None = None,
@@ -31,20 +30,24 @@ def plot_invariance_delta_functions(
     :param step_size: required accuracy on a base-10 logarithmic scale
     :param ax: matplotlib axes
     """
+
+    llrs, y = llrdata.llrs, llrdata.labels
+    if y is None:
+        raise ValueError('Ground-truth labels are required to plot invariance delta functions.')
+
     if ax is None:
         _, ax = plt.subplots()
 
     if llr_threshold_range is None:
-        llrs = np.log10(lrs)
         llr_threshold_range = (np.min(llrs) - 0.5, np.max(llrs) + 0.5)
 
     llr_threshold = np.arange(*llr_threshold_range, step_size)
 
-    lower_bound, upper_bound, delta_low, delta_high = calculate_invariance_bounds(lrs, y, llr_threshold=llr_threshold)
+    lower_bound, upper_bound, delta_low, delta_high = calculate_invariance_bounds(llrdata, llr_threshold)
 
     # plot the delta-functions and the 0-line
-    lower_llr = np.round(np.log10(lower_bound), 2)
-    upper_llr = np.round(np.log10(upper_bound), 2)
+    lower_llr = np.round(lower_bound, 2)
+    upper_llr = np.round(upper_bound, 2)
     ax.plot(
         llr_threshold,
         delta_low,
@@ -65,64 +68,60 @@ def plot_invariance_delta_functions(
 
 
 def calculate_invariance_bounds(
-    lrs: np.ndarray,
-    y: np.ndarray,
+    llrdata: LLRData,
     llr_threshold: np.ndarray | None = None,
     step_size: float = 0.001,
-    substitute_extremes: tuple[float, float] = (np.exp(-20), np.exp(20)),
+    substitute_extremes: tuple[float, float] = (-20, 20),
 ) -> tuple[float, float, np.ndarray, np.ndarray]:
     """
     Returns the upper and lower Invariance Verification bounds of the LRs.
 
-    :param lrs: an array of LRs
-    :param y: an array of ground-truth labels (values 0 for Hd or 1 for Hp);
-        must be of the same length as `lrs`
+    :param lrdata: an instance of LLRData containing LLRs and ground-truth labels
     :param llr_threshold: predefined values of LLRs as possible bounds
     :param step_size: required accuracy on a base-10 logarithmic scale
-    :param substitute_extremes: (tuple of scalars) substitute for extreme LRs, i.e.
-        LRs of 0 and inf are substituted by these values
+    :param substitute_extremes: (tuple of scalars) substitute for extreme LLRs, i.e.
+        LLRs smaller than the lower value or greater than the upper value are clipped
     """
+    llrs, y = llrdata.llrs, llrdata.labels
 
-    # remove LRs of 0 and infinity
-    sanitized_lrs = lrs
-    sanitized_lrs[sanitized_lrs < substitute_extremes[0]] = substitute_extremes[0]
-    sanitized_lrs[sanitized_lrs > substitute_extremes[1]] = substitute_extremes[1]
+    # remove LLRs that are too extreme by clipping them to the substitute extremes
+    sanitized_llrs = llrs.copy()
+    np.clip(sanitized_llrs, substitute_extremes[0], substitute_extremes[1], out=sanitized_llrs)
 
-    # determine the range of LRs to be considered
+    # determine the range of LLRs to be considered
     if llr_threshold is None:
-        llrs = np.log10(sanitized_lrs)
-        llr_threshold_range = (min(0, np.min(llrs)), max(0, np.max(llrs)) + step_size)
+        llr_threshold_range = (min(0, np.min(sanitized_llrs)), max(0, np.max(sanitized_llrs)) + step_size)
         llr_threshold = np.arange(*llr_threshold_range, step_size)
 
     # calculate the two delta functions
-    delta_low, delta_high = calculate_invariance_delta_functions(lrs, y, llr_threshold)
+    sanitized_llrdata = LLRData(features=sanitized_llrs, labels=y)
+    delta_low, delta_high = calculate_invariance_delta_functions(sanitized_llrdata, llr_threshold)
 
     # find the LLRs closest to LLR=0 where the functions become negative & convert them to LRs
     # if no negatives are found, use the maximum H1-LR in case of upper bound & minimum H2-LR in case of lower bound
     delta_high_negative = np.where(delta_high < 0)[0]
     if not any(delta_high_negative):
-        upper_bound = np.max(lrs[y == 1])
+        upper_bound = np.max(sanitized_llrs[y == 1])
     else:
-        pst_upper_bound = delta_high_negative[0] - 1
-        upper_bound = 10 ** llr_threshold[pst_upper_bound]
+        upper_bound_index = delta_high_negative[0] - 1
+        upper_bound = llr_threshold[upper_bound_index]
+
     delta_low_negative = np.where(delta_low < 0)[0]
     if not any(delta_low_negative):
-        lower_bound = np.min(lrs[y == 0])
+        lower_bound = np.min(sanitized_llrs[y == 0])
     else:
-        pst_lower_bound = delta_low_negative[-1] + 1
-        lower_bound = 10 ** llr_threshold[pst_lower_bound]
+        lower_bound_index = delta_low_negative[-1] + 1
+        lower_bound = llr_threshold[lower_bound_index]
 
-    # Check for bounds on the wrong side of 1. This may occur for badly
+    # Check for bounds on the wrong side of 0 (or 1 in LR-space). This may occur for badly
     # performing LR systems, e.g. if the delta function is always below zero.
-    lower_bound = min(lower_bound, 1)
-    upper_bound = max(upper_bound, 1)
+    lower_bound = min(lower_bound, 0)
+    upper_bound = max(upper_bound, 0)
 
     return lower_bound, upper_bound, delta_low, delta_high
 
 
-def calculate_invariance_delta_functions(
-    lrs: np.ndarray, y: np.ndarray, llr_threshold: np.ndarray
-) -> tuple[np.ndarray, np.ndarray]:
+def calculate_invariance_delta_functions(llrdata: LLRData, llr_threshold: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     """
     Calculates the Invariance Verification delta functions for a set of LRs at given threshold values.
 
@@ -132,21 +131,21 @@ def calculate_invariance_delta_functions(
     :param llr_threshold: an array of threshold LLRs
     :returns: two arrays of delta-values, at all threshold LR values
     """
-
+    llrs, y = llrdata.llrs, llrdata.labels
     # fix the value used for the beta distributions at 1/2 (Jeffreys prior)
     beta_parameter = 1 / 2
 
     # for all possible llr_threshold values, count how many of the lrs are larger or equal to them for both h1 and h2
-    lrs_h1 = lrs[y == 1]
-    lrs_h2 = lrs[y == 0]
-    llr_h1_2d = np.tile(np.expand_dims(np.log10(lrs_h1), 1), (1, llr_threshold.shape[0]))
-    llr_h2_2d = np.tile(np.expand_dims(np.log10(lrs_h2), 1), (1, llr_threshold.shape[0]))
+    llrs_h1 = llrs[y == 1]
+    llrs_h2 = llrs[y == 0]
+    llr_h1_2d = np.tile(np.expand_dims(llrs_h1, 1), (1, llr_threshold.shape[0]))
+    llr_h2_2d = np.tile(np.expand_dims(llrs_h2, 1), (1, llr_threshold.shape[0]))
     success_h1 = np.sum(llr_h1_2d >= llr_threshold, axis=0)
     success_h2 = np.sum(llr_h2_2d >= llr_threshold, axis=0)
 
     # use the as inputs for calculations of the probabilities
-    prob_h1_above_grid = (success_h1 + beta_parameter) / (len(lrs_h1) + 2 * beta_parameter)
-    prob_h2_above_grid = (success_h2 + beta_parameter) / (len(lrs_h2) + 2 * beta_parameter)
+    prob_h1_above_grid = (success_h1 + beta_parameter) / (len(llrs_h1) + 2 * beta_parameter)
+    prob_h2_above_grid = (success_h2 + beta_parameter) / (len(llrs_h2) + 2 * beta_parameter)
     prob_h1_below_grid = 1 - prob_h1_above_grid
     prob_h2_below_grid = 1 - prob_h2_above_grid
 
@@ -166,7 +165,6 @@ class IVBounder(LLRBounder):
     In: Submitted for publication in 2025.
     """
 
-    def calculate_bounds(self, llrs: np.ndarray, labels: np.ndarray) -> tuple[float | None, float | None]:
-        lrs = logodds_to_odds(llrs)
-        lower_lr_bound, upper_lr_bound = calculate_invariance_bounds(lrs, labels)[:2]
-        return odds_to_logodds(lower_lr_bound), odds_to_logodds(upper_lr_bound)
+    def calculate_bounds(self, llrdata: LLRData) -> tuple[float | None, float | None]:
+        lower_llr_bound, upper_llr_bound = calculate_invariance_bounds(llrdata)[:2]
+        return lower_llr_bound, upper_llr_bound

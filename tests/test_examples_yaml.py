@@ -5,9 +5,12 @@ import confidence
 from lir.main import initialize_experiments
 
 
+EXAMPLE_DIR = Path(__file__).parent.parent / "examples"
+EXAMPLE_FILES = list(EXAMPLE_DIR.rglob("*.yaml"))
+
+
 def test_parse_examples():
-    examples_dir = Path(__file__).parent.parent / 'examples'
-    for yaml_file in examples_dir.rglob('*.yaml'):
+    for yaml_file in EXAMPLE_FILES:
         try:
             initialize_experiments(confidence.loadf(yaml_file))
         except Exception as e:

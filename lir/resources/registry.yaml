@@ -36,7 +36,8 @@ modules:
     wrapper: lir.config.numpy_wrapper
 
   # comparisons
-  abs_diff: lir.transform.distance.AbsDiffTransformer
+  element_wise_difference: lir.transform.distance.ElementWiseDifference
+  manhattan_distance: lir.transform.distance.ManhattanDistance
 
   # utility modules
   tee: lir.config.util.TeeParser

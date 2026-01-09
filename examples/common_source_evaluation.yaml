@@ -27,7 +27,7 @@ lr_system:
   comparing:
     method: logging_pipeline
     steps:
-      scoring: abs_diff
+      scoring: element_wise_difference
       clf:
         method: logistic_regression
         C: 1

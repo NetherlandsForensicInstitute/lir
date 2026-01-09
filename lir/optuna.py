@@ -12,7 +12,7 @@ from lir.config.substitution import (
     Hyperparameter,
     HyperparameterOption,
 )
-from lir.data.models import DataProvider, DataStrategy
+from lir.data.models import DataProvider, DataStrategy, LLRData
 from lir.experiment import Experiment
 
 
@@ -80,8 +80,9 @@ class OptunaExperiment(Experiment):
             }
         )
 
-        llrs = self._run_lrsystem(lrsystem, hyperparameters)
-        return self.metric_function(llrs.llrs, llrs.labels)
+        llr_data: LLRData = self._run_lrsystem(lrsystem, hyperparameters)
+
+        return self.metric_function(llr_data)
 
     def _generate_and_run(self) -> None:
         study = optuna.create_study()  # Create a new study.

@@ -43,4 +43,4 @@ jobs:
       - name: Install necessary dependencies
         run: pdm sync --group dev
       - name: Run tests
-        run: pdm run test
+        run: pdm run test-ci

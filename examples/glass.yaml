@@ -64,7 +64,7 @@ score_based_lr_system:
   comparing:
     method: logging_pipeline
     steps:
-      scoring: abs_diff  # calculate the absolute difference between the two instances for each feature
+      scoring: element_wise_difference  # calculate the absolute difference between the two instances for each feature
       clf: logistic_regression  # use scikit-learn `LogisticRegression` to estimate probabilities
       to_llr: probabilities_to_logodds  # convert probabilities to their log-odds values
       calibration:  # calibrate the log-odds to LLRs using KDE

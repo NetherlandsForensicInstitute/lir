@@ -120,7 +120,7 @@ my_score_based_lr_system:        # <-- this is a custom name of your LR system t
   # Define the way you want to make scores from your features and to make LLRs from those scores.
   # This is after pairing, so the steps should be applicable per pair.
     steps:
-      scoring: abs_diff                         # calculate the absolute difference between the two instances for each feature
+      scoring: element_wise_difference          # calculate the absolute difference between the two instances for each feature
       clf: logistic_regression                  # use scikit-learn `LogisticRegression` to estimate probabilities
       to_llr: probabilities_to_logodds          # convert probabilities to their log-odds values
       calibration:                              

@@ -1,24 +1,53 @@
-from typing import Any, Self
-
 import numpy as np
-import sklearn
+
+from lir import Transformer
+from lir.data.models import FeatureData, InstanceData, PairedFeatureData
+from lir.util import check_type
 
 
-class AbsDiffTransformer(sklearn.base.TransformerMixin):
+class ElementWiseDifference(Transformer):
     """
     Takes an array of sample pairs and returns the element-wise absolute difference.
 
     Expects:
-        - X is of shape (n,f,2) with n=number of pairs; f=number of features; 2=number of samples per pair;
+        - a PairedFeatureData object with n_trace_instances=1 and n_ref_instances=1;
     Returns:
-        - X has shape (n, f)
+        - a copy of the FeatureData object with features of shape (n, f)
     """
 
-    def fit(self, X: Any, y: Any = None) -> Self:
-        return self
+    def transform(self, instances: InstanceData) -> FeatureData:
+        instances = check_type(PairedFeatureData, instances)
+        if instances.n_ref_instances != 1 or instances.n_trace_instances != 1:
+            raise ValueError(
+                f'{self.__class__.__name__} must have exactly one reference instance and one trace instance;'
+                f' found: n_ref_instances={instances.n_ref_instances}, n_trace_instances={instances.n_trace_instances}'
+            )
 
-    def transform(self, X: np.ndarray) -> np.ndarray:
-        assert len(X.shape) == 3
-        assert X.shape[1] == 2
+        return instances.replace_as(FeatureData, features=np.abs(instances.features[:, 0] - instances.features[:, 1]))
 
-        return np.abs(X[:, 0, :] - X[:, 1, :])
+
+class ManhattanDistance(Transformer):
+    """
+    Takes a PairedFeatureData object or a FeatureData object and returns the manhattan distance.
+
+    If the input is a PairedFeatureData object, the distance is computed as the manhattan distance, i.e. the sum of the
+    element-wise difference between both sides of the pairs, for all features.
+
+    If the input is a FeatureData object, it is assumed that it contains the element-wise differences, and the sum over
+    these differences is calculated.
+
+    :returns: a FeatureData object with features of shape (n, 1)
+    """
+
+    def transform(self, instances: InstanceData) -> FeatureData:
+        instances = check_type(FeatureData, instances)
+
+        # if the data are paired instances, calculate the element wise difference first
+        if isinstance(instances, PairedFeatureData):
+            instances = ElementWiseDifference().transform(instances)
+
+        # the feature axes are all axes except the first
+        feature_axes = tuple(range(1, len(instances.features.shape)))
+
+        # manhattan distance is the sum over all feature axes
+        return instances.replace(features=np.sum(instances.features, axis=feature_axes))

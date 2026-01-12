@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
-import warnings
 
-import numpy as np
 import unittest
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pytest
 
 from lir import plotting
 from lir.algorithms.logistic_regression import LogitCalibrator
 from lir.data.models import LLRData
-from lir.util import odds_to_probability, odds_to_logodds
+from lir.util import odds_to_logodds, odds_to_probability
 
 
 class TestPlotting(unittest.TestCase):
@@ -19,7 +18,6 @@ class TestPlotting(unittest.TestCase):
         llrs = odds_to_logodds(lrs)
         y = np.array([0, 0, 1, 0, 1, 0, 1, 1])
         llr_data = LLRData(features=llrs.reshape(-1, 1), labels=y)
-
 
         # inside context
         with plotting.axes() as ax:
@@ -71,7 +69,7 @@ class TestPlotting(unittest.TestCase):
         cal.fit(scores, y)
 
         # Test that plots with invalid data raise exceptions.
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             # This should fail because of infinite LLRs.
             with plotting.axes() as ax:
                 ax.nbe(llr_data)

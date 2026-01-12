@@ -1,34 +1,32 @@
-import numpy as np
+import math
 import unittest
 import warnings
 
-import math
+import numpy as np
 
 from lir.algorithms.isotonic_regression import IsotonicCalibrator
-from lir.algorithms.kde import KDECalibrator
 from lir.algorithms.logistic_regression import LogitCalibrator
 from lir.util import (
     Xn_to_Xy,
     Xy_to_Xn,
+    logodds_to_odds,
     odds_to_probability,
     probability_to_logodds,
-    logodds_to_odds,
 )
 
-warnings.simplefilter("error")
+
+warnings.simplefilter('error')
 
 
 def _cllr(lr0, lr1):
-    with np.errstate(divide="ignore"):
+    with np.errstate(divide='ignore'):
         cllr0 = np.mean(np.log2(1 + lr0))
         cllr1 = np.mean(np.log2(1 + 1 / lr1))
         return 0.5 * (cllr0 + cllr1)
 
 
 def _pdf(X, mu, sigma):
-    return np.exp(-np.power(X - mu, 2) / (2 * sigma * sigma)) / math.sqrt(
-        2 * math.pi * sigma * sigma
-    )
+    return np.exp(-np.power(X - mu, 2) / (2 * sigma * sigma)) / math.sqrt(2 * math.pi * sigma * sigma)
 
 
 class TestIsotonicRegression(unittest.TestCase):
@@ -80,12 +78,8 @@ class TestIsotonicRegression(unittest.TestCase):
         lr0, lr1 = Xy_to_Xn(logodds_to_odds(llrs), y)
         self.assertEqual(score_class0.shape, lr0.shape)
         self.assertEqual(score_class1.shape, lr1.shape)
-        np.testing.assert_almost_equal(
-            lr0, np.concatenate([[0], [1.0] * (lr0.shape[0] - 1)])
-        )
-        np.testing.assert_almost_equal(
-            lr1, np.concatenate([[1.0] * (lr1.shape[0] - 1), [np.inf]])
-        )
+        np.testing.assert_almost_equal(lr0, np.concatenate([[0], [1.0] * (lr0.shape[0] - 1)]))
+        np.testing.assert_almost_equal(lr1, np.concatenate([[1.0] * (lr1.shape[0] - 1), [np.inf]]))
 
 
 class TestLogitCalibrator(unittest.TestCase):
@@ -206,5 +200,5 @@ class TestLogitCalibrator(unittest.TestCase):
         np.testing.assert_allclose(logodds_to_odds(llrs_cal), desired, rtol=1e-2)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

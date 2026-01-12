@@ -1,5 +1,6 @@
-import numpy as np
 import unittest
+
+import numpy as np
 from sklearn.linear_model import LogisticRegression
 
 from lir.algorithms import invariance_bounds
@@ -7,7 +8,7 @@ from lir.algorithms.invariance_bounds import IVBounder
 from lir.data.datasets.alcohol_breath_analyser import AlcoholBreathAnalyser
 from lir.data.models import FeatureData, LLRData
 from lir.transform.pipeline import Pipeline
-from lir.util import Xn_to_Xy, probability_to_logodds, logodds_to_odds
+from lir.util import Xn_to_Xy, probability_to_logodds
 from tests.data.datasets.lr_bounding import BoundingExample4, BoundingExample5
 
 
@@ -27,14 +28,14 @@ class TestBounding(unittest.TestCase):
         llrs = BoundingExample5().get_instances()
         bounds = invariance_bounds.calculate_invariance_bounds(llrs, llr_threshold)
         np.testing.assert_almost_equal(np.log10((0.1412538, 38.1944271)), bounds[:2])
-        
+
     def test_extreme_smallset(self):
         lrs = np.array([np.inf, 0])
         y = np.array([1, 0])
         data = LLRData(features=np.log10(lrs), labels=y)
 
         bounds = invariance_bounds.calculate_invariance_bounds(data)
-        np.testing.assert_almost_equal((-0.477,  0.477), bounds[:2])
+        np.testing.assert_almost_equal((-0.477, 0.477), bounds[:2])
 
     def test_extreme(self):
         lrs = np.array([np.inf, np.inf, np.inf, 0, 0, 0])
@@ -58,7 +59,7 @@ class TestBounding(unittest.TestCase):
         )
 
         np.testing.assert_almost_equal((0, 0), bounds_bad[:2])
-        np.testing.assert_almost_equal((-0.823,  0.574), bounds_good1[:2])
+        np.testing.assert_almost_equal((-0.823, 0.574), bounds_good1[:2])
         np.testing.assert_almost_equal((-0.574, 0.823), bounds_good2[:2])
 
     def test_neutral_smallset(self):
@@ -97,9 +98,9 @@ class TestBounding(unittest.TestCase):
         bounder = IVBounder()
         pipeline = Pipeline(
             [
-                ("logit", LogisticRegression()),
-                ("to_logodds", probability_to_logodds),
-                ("iv", bounder),
+                ('logit', LogisticRegression()),
+                ('to_logodds', probability_to_logodds),
+                ('iv', bounder),
             ]
         )
         pipeline.fit(FeatureData(features=X, labels=y))
@@ -107,5 +108,5 @@ class TestBounding(unittest.TestCase):
         np.testing.assert_almost_equal((-1.6170015, 2.1899985), bounds)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

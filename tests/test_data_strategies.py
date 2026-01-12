@@ -5,14 +5,12 @@ from lir.data.datasets.synthesized_normal_multiclass import (
     SynthesizedDimension,
     SynthesizedNormalMulticlassData,
 )
-from lir.data.models import FeatureData, DataProvider, InstanceData
+from lir.data.models import FeatureData
 
 
 def test_multiclass_train_test_split():
     dimensions = [SynthesizedDimension(0, 1, 0.2), SynthesizedDimension(0, 1, 0.2)]
-    data = SynthesizedNormalMulticlassData(
-        population_size=100, sources_size=3, seed=0, dimensions=dimensions
-    )
+    data = SynthesizedNormalMulticlassData(population_size=100, sources_size=3, seed=0, dimensions=dimensions)
     strategy = MulticlassTrainTestSplit(test_size=0.5, seed=0)
     instances = data.get_instances()
     for data_train, data_test in strategy.apply(instances):
@@ -44,19 +42,20 @@ def test_multiclass_train_test_split_seed():
     # - another MulticlassTrainTestSplit instance with another seed should yield different results
     strategy = MulticlassTrainTestSplit(test_size=0.5, seed=1)
     for data_train, data_test in strategy.apply(data):
-        assert not data_train == ref_train
-        assert not data_test == ref_test
+        assert data_train != ref_train
+        assert data_test != ref_test
 
 
 def test_predefined_role_splitter():
-    instances = FeatureData(features=np.arange(16).reshape(-1, 2), role_assignments=np.array(["train", "test"]).repeat(4))
+    instances = FeatureData(
+        features=np.arange(16).reshape(-1, 2), role_assignments=np.array(['train', 'test']).repeat(4)
+    )
     splitter = PredefinedTrainTestSplit()
     splits = list(splitter.apply(instances))
-    assert len(splits) == 1, "exactly one split"
+    assert len(splits) == 1, 'exactly one split'
 
     training_set, test_set = splits[0]
     expected_training_features = np.arange(8).reshape(-1, 2)
     expected_test_features = expected_training_features + 8
-    assert training_set == FeatureData(features=expected_training_features, role_assignments=np.array(["train"] * 4))
-    assert test_set == FeatureData(features=expected_test_features, role_assignments=np.array(["test"] * 4))
-
+    assert training_set == FeatureData(features=expected_training_features, role_assignments=np.array(['train'] * 4))
+    assert test_set == FeatureData(features=expected_test_features, role_assignments=np.array(['test'] * 4))

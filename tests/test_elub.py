@@ -1,5 +1,6 @@
-import numpy as np
 import unittest
+
+import numpy as np
 from sklearn.linear_model import LogisticRegression
 
 from lir.algorithms import bayeserror
@@ -7,7 +8,7 @@ from lir.data.datasets.alcohol_breath_analyser import AlcoholBreathAnalyser
 from lir.data.models import FeatureData, LLRData
 from lir.transform import BinaryClassifierTransformer, FunctionTransformer
 from lir.transform.pipeline import Pipeline
-from lir.util import Xn_to_Xy, probability_to_logodds, logodds_to_odds
+from lir.util import Xn_to_Xy, probability_to_logodds
 
 
 class TestElub(unittest.TestCase):
@@ -59,23 +60,17 @@ class TestElub(unittest.TestCase):
         y1 = np.concatenate([np.ones(9), np.zeros(1)])
         data1 = LLRData(features=np.log10(lrs1), labels=y1)
 
-        np.testing.assert_almost_equal(
-            (1, 1), np.pow(10, bayeserror.elub(data1, add_misleading=1))
-        )
+        np.testing.assert_almost_equal((1, 1), np.pow(10, bayeserror.elub(data1, add_misleading=1)))
 
         lrs2 = np.concatenate([np.ones(10) * 10, np.ones(1)])
         y2 = np.concatenate([np.ones(10), np.zeros(1)])
         data2 = LLRData(features=np.log10(lrs2), labels=y2)
-        np.testing.assert_almost_equal(
-            (1, 1.7782794), np.pow(10, bayeserror.elub(data2, add_misleading=1))
-        )
+        np.testing.assert_almost_equal((1, 1.7782794), np.pow(10, bayeserror.elub(data2, add_misleading=1)))
 
         lrs3 = np.concatenate([np.ones(10) * 1000, np.ones(1) * 1.1])
         y3 = np.concatenate([np.ones(10), np.zeros(1)])
         data3 = LLRData(features=np.log10(lrs3), labels=y3)
-        np.testing.assert_almost_equal(
-            (1, 1), np.pow(10, bayeserror.elub(data3, add_misleading=1))
-        )
+        np.testing.assert_almost_equal((1, 1), np.pow(10, bayeserror.elub(data3, add_misleading=1)))
 
     def test_bounded_calibrated_scorer(self):
         rng = np.random.default_rng(seed=0)
@@ -87,9 +82,9 @@ class TestElub(unittest.TestCase):
         bounder = bayeserror.ELUBBounder()
         pipeline = Pipeline(
             [
-                ("logit", BinaryClassifierTransformer(LogisticRegression())),
-                ("to_logodds", FunctionTransformer(probability_to_logodds)),
-                ("elub", bounder),
+                ('logit', BinaryClassifierTransformer(LogisticRegression())),
+                ('to_logodds', FunctionTransformer(probability_to_logodds)),
+                ('elub', bounder),
             ]
         )
         pipeline.fit(FeatureData(features=X, labels=y))
@@ -97,5 +92,5 @@ class TestElub(unittest.TestCase):
         np.testing.assert_almost_equal((-1.53, 2.02), bounds)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

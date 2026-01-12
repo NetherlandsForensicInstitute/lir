@@ -1,11 +1,11 @@
 import math
-import pytest
-
-import numpy as np
 import unittest
 
+import numpy as np
+import pytest
+
 from lir.algorithms.kde import KDECalibrator, parse_bandwidth
-from lir.util import logodds_to_odds, probability_to_logodds, odds_to_probability, Xn_to_Xy
+from lir.util import Xn_to_Xy, logodds_to_odds, odds_to_probability, probability_to_logodds
 
 
 def test_kde_dimensions():
@@ -17,30 +17,36 @@ def test_kde_dimensions():
     kde.fit(features.flatten(), labels).transform(features.flatten())
 
 
-# the X-data for TestKDECalibrator,  TestGaussianCalibrator, TestLogitCalibrator comes from random draws of perfectly calibrated LLR-distributions with mu_s = 6. For larger datasets it is confirmed that the calibration function approaches the line Y = X. The data under H1 and H0 are the 1:10 elements..
+# the X-data for TestKDECalibrator,  TestGaussianCalibrator, TestLogitCalibrator comes from random draws of perfectly
+# calibrated LLR-distributions with mu_s = 6. For larger datasets it is confirmed that the calibration function
+# approaches the line Y = X. The data under H1 and H0 are the 1:10 elements.
 class TestKDECalibrator(unittest.TestCase):
-    score_class0 = np.array([
-        9.10734621e-02,
-        1.37045394e-06,
-        7.09420701e-07,
-        5.71489514e-07,
-        2.44360004e-02,
-        5.53264987e-02,
-        6.40338659e-04,
-        8.22553310e-09,
-        2.57792725e-06,
-    ])
-    score_class1 = np.array([
-        2.42776744e05,
-        5.35255527e03,
-        1.50355963e03,
-        1.08776892e03,
-        2.19083530e01,
-        7.13508826e02,
-        2.23486401e03,
-        5.52239060e03,
-        1.12077833e07,
-    ])
+    score_class0 = np.array(
+        [
+            9.10734621e-02,
+            1.37045394e-06,
+            7.09420701e-07,
+            5.71489514e-07,
+            2.44360004e-02,
+            5.53264987e-02,
+            6.40338659e-04,
+            8.22553310e-09,
+            2.57792725e-06,
+        ]
+    )
+    score_class1 = np.array(
+        [
+            2.42776744e05,
+            5.35255527e03,
+            1.50355963e03,
+            1.08776892e03,
+            2.19083530e01,
+            7.13508826e02,
+            2.23486401e03,
+            5.52239060e03,
+            1.12077833e07,
+        ]
+    )
 
     def test_kde_calibrator(self):
         X, y = Xn_to_Xy(self.score_class0, self.score_class1)
@@ -66,7 +72,7 @@ class TestKDECalibrator(unittest.TestCase):
             2.64913149e02,
             1.49097168e05,
         ]
-        calibrator = KDECalibrator(bandwidth="silverman")
+        calibrator = KDECalibrator(bandwidth='silverman')
         calibrator.fit(X, y)
         llrs_cal = calibrator.transform(X)
         np.testing.assert_allclose(logodds_to_odds(llrs_cal), desired)
@@ -128,41 +134,47 @@ class TestKDECalibrator(unittest.TestCase):
             2.846712755553574,
             math.inf,
         ]
-        calibrator = KDECalibrator(bandwidth="silverman")
+        calibrator = KDECalibrator(bandwidth='silverman')
         calibrator.fit(X, y)
         llrs_cal = calibrator.transform(X)
         np.testing.assert_allclose(logodds_to_odds(llrs_cal), desired)
 
 
-@pytest.mark.parametrize('bandwidth_definition,expected_bandwidth', [
-    ([1, 2], (1, 2)),  # list input (`Sized` type)
-    ((1, 2), (1, 2)),  # tuple input (`Sized` type)
-    (lambda X, y: (1234, 5678), (1234, 5678)),  # callable function
-    ('silverman', (1.05922384, 0.46105395)),  # Silverman algorithm
-    (123.45,  (123.45, 123.45)),  # float
-    (12, (12, 12)),  # integer
-])
+@pytest.mark.parametrize(
+    'bandwidth_definition,expected_bandwidth',
+    [
+        ([1, 2], (1, 2)),  # list input (`Sized` type)
+        ((1, 2), (1, 2)),  # tuple input (`Sized` type)
+        (lambda X, y: (1234, 5678), (1234, 5678)),  # callable function
+        ('silverman', (1.05922384, 0.46105395)),  # Silverman algorithm
+        (123.45, (123.45, 123.45)),  # float
+        (12, (12, 12)),  # integer
+    ],
+)
 def test_kde_bandwidth_parsing_supported_types(bandwidth_definition, expected_bandwidth):
     bandwidth_fn = parse_bandwidth(bandwidth_definition)
 
     samples_one_feature = np.asarray([[1], [2], [3]])
-    labels = np.asarray([0, 1,1]) 
+    labels = np.asarray([0, 1, 1])
 
     bandwidth = bandwidth_fn(X=samples_one_feature, y=labels)
 
     assert np.allclose(bandwidth, expected_bandwidth)
 
 
-@pytest.mark.parametrize('bandwidth_definition', [
-    None,  # undefined
-    (1, 2, 3),  # tuples of size 3
-    [1, 2, 3],  # lists of size 3
-    (1,),  # tuples of size 1
-    [1],  # lists of size 1
-    'inexistent',  # unsupported bandwidth methods
-    {1, 2},  # set
-    {'a': 1, 'b': 2},  # dict
-])
+@pytest.mark.parametrize(
+    'bandwidth_definition',
+    [
+        None,  # undefined
+        (1, 2, 3),  # tuples of size 3
+        [1, 2, 3],  # lists of size 3
+        (1,),  # tuples of size 1
+        [1],  # lists of size 1
+        'inexistent',  # unsupported bandwidth methods
+        {1, 2},  # set
+        {'a': 1, 'b': 2},  # dict
+    ],
+)
 def test_kde_bandwidth_parsing_unsupported_types(bandwidth_definition):
     with pytest.raises(ValueError):
-        bandwidth_fn = parse_bandwidth(bandwidth_definition)
+        parse_bandwidth(bandwidth_definition)

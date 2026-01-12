@@ -68,7 +68,7 @@ my_data_splits:             # <-- adapt this name to your own preference, you wi
 # You also specify a seed for the random assignment of sources to the train or test category.
 # If you want this, uncomment the next four lines and comment out the three lines above.
 
-#data_splits:
+#my_data_splits:
 #  strategy: multiclass_train_test_split
 #  seed: 42
 #  test_size: 0.3

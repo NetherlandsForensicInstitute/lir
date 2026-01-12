@@ -67,7 +67,7 @@ class DataFileBuilderCsv:
         if write_header is None:
             write_header = self.write_mode == 'w' or not self.path.exists()
 
-        with open(self.path, self.write_mode) as f:
+        with open(self.path, self.write_mode, newline='') as f:
             writer = csv.writer(f)
 
             if write_header:

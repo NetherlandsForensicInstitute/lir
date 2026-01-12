@@ -47,8 +47,8 @@ def test_traindata_bootstrap(sample_steps_and_data):
     """Test TrainDataBootstrap with a simple logistic regression model."""
     steps, feature_data = sample_steps_and_data
 
-    model_data = BootstrapAtData(steps).fit(feature_data)
-    model_equidistant = BootstrapEquidistant(steps).fit(feature_data)
+    model_data = BootstrapAtData(steps, n_bootstraps=50).fit(feature_data)
+    model_equidistant = BootstrapEquidistant(steps, n_bootstraps=50).fit(feature_data)
 
     results_data = model_data.transform(feature_data)
     results_equidistant = model_equidistant.transform(feature_data)
@@ -73,7 +73,7 @@ def test_interval_extrapolation(sample_steps_and_data):
     """Test that the bootstrap intervals are reasonable."""
     steps, feature_data = sample_steps_and_data
 
-    model_equidistant = BootstrapEquidistant(steps).fit(feature_data)
+    model_equidistant = BootstrapEquidistant(steps, n_bootstraps=50).fit(feature_data)
 
     mn = np.min(feature_data.features)
     mx = np.max(feature_data.features)

@@ -2,7 +2,6 @@ from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Any
 
-import numpy as np
 import optuna
 
 from lir.aggregation import Aggregation
@@ -30,7 +29,7 @@ class OptunaExperiment(Experiment):
         baseline_config: ContextAwareDict,
         hyperparameters: list[Hyperparameter],
         n_trials: int,
-        metric_function: Callable[[np.ndarray, np.ndarray | None], float],
+        metric_function: Callable[[LLRData], float],
     ):
         super().__init__(name, data_provider, splitter, outputs, output_path)
         self.baseline_config = baseline_config

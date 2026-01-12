@@ -94,46 +94,50 @@ class AggregatePlot(Aggregation):
 
 @config_parser
 def plot_pav(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    return AggregatePlot(output_dir=output_dir, plot_fn=pav, plot_name='PAV')
+    plot_name = pop_field(config, 'plot_name', default='PAV')
+    return AggregatePlot(output_dir=output_dir, plot_fn=pav, plot_name=plot_name, **config)
 
 
 @config_parser
 def plot_ece(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    return AggregatePlot(output_dir=output_dir, plot_fn=ece, plot_name='ECE', **config)
+    plot_name = pop_field(config, 'plot_name', default='ECE')
+    return AggregatePlot(output_dir=output_dir, plot_fn=ece, plot_name=plot_name, **config)
 
 
 @config_parser
 def plot_lr_histogram(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    return AggregatePlot(output_dir=output_dir, plot_fn=lr_histogram, plot_name='LR_Histogram')
+    plot_name = pop_field(config, 'plot_name', default='LR_Histogram')
+    return AggregatePlot(output_dir=output_dir, plot_fn=lr_histogram, plot_name=plot_name, **config)
 
 
 @config_parser
 def plot_llr_interval(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    return AggregatePlot(output_dir=output_dir, plot_fn=llr_interval, plot_name='LLR_Interval')
+    plot_name = pop_field(config, 'plot_name', default='LLR_Interval')
+    return AggregatePlot(output_dir=output_dir, plot_fn=llr_interval, plot_name=plot_name, **config)
 
 
 @config_parser
 def plot_llr_overestimation(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    return AggregatePlot(output_dir=output_dir, plot_fn=llr_overestimation, plot_name='LLR_Overestimation')
+    plot_name = pop_field(config, 'plot_name', default='LLR_Overestimation')
+    return AggregatePlot(output_dir=output_dir, plot_fn=llr_overestimation, plot_name=plot_name, **config)
 
 
 @config_parser
 def plot_nbe(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    return AggregatePlot(output_dir=output_dir, plot_fn=nbe, plot_name='NBE')
+    plot_name = pop_field(config, 'plot_name', default='NBE')
+    return AggregatePlot(output_dir=output_dir, plot_fn=nbe, plot_name=plot_name, **config)
 
 
 @config_parser
 def plot_tippett(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    return AggregatePlot(output_dir=output_dir, plot_fn=tippett, plot_name='tippett', **config)
+    plot_name = pop_field(config, 'plot_name', default='Tippett')
+    return AggregatePlot(output_dir=output_dir, plot_fn=tippett, plot_name=plot_name, **config)
 
 
 @config_parser
 def plot_invariance_delta_function(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    return AggregatePlot(
-        output_dir=output_dir,
-        plot_fn=plot_invariance_delta_functions,
-        plot_name='Invariance_Delta_Functions',
-    )
+    plot_name = pop_field(config, 'plot_name', default='Invariance_Delta_Functions')
+    return AggregatePlot(output_dir=output_dir, plot_fn=plot_invariance_delta_functions, plot_name=plot_name, **config)
 
 
 class WriteMetricsToCsv(Aggregation):

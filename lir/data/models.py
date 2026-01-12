@@ -428,16 +428,22 @@ class LLRData(FeatureData):
         """
         :return: a tuple (min_llr, max_llr)
         """
-        return (self.llr_lower_bound, self.llr_upper_bound)
+        return self.llr_lower_bound, self.llr_upper_bound
 
     @model_validator(mode='after')
     def check_features_are_llrs(self) -> Self:
         if len(self.features.shape) > 2:
             raise ValueError(f'features must have 1 or 2 dimensions; shape: {self.features.shape}')
+
         if len(self.features.shape) == 2 and self.features.shape[1] != 3 and self.features.shape[1] != 1:
             raise ValueError(
                 f'features must be 1-dimensional or 2-dimensional with 1 or 3 columns; shape: {self.features.shape}'
             )
+
+        if self.has_intervals and (
+            np.all(self.features[:, 1] > self.features[:, 0]) or np.all(self.features[:, 2] < self.features[:, 0])
+        ):
+            raise ValueError('LLRs should not exceed their own intervals')
 
         return self
 

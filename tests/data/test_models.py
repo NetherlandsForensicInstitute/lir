@@ -167,6 +167,11 @@ def test_llr_data():
         pytest.fail('dimensions do not match')
 
     llr_values = np.arange(30).reshape(10, 3)
+    with pytest.raises(ValidationError):
+        LLRData(features=llr_values)
+        pytest.fail('llrs outside their intervals')
+
+    llr_values = llr_values[:, [1, 0, 2]]  # rearrange columns
     assert np.all(LLRData(features=llr_values).llrs == llr_values[:, 0])
     assert np.all(LLRData(features=llr_values[:, 0:1]).llrs == llr_values[:, 0])
     assert np.all(LLRData(features=llr_values).llr_intervals == llr_values[:, 1:3])

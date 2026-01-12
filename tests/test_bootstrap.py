@@ -1,14 +1,14 @@
 from pathlib import Path
 
+import numpy as np
+import pytest
 from sklearn.linear_model import LogisticRegression
 
 from lir.algorithms.bayeserror import ELUBBounder
+from lir.algorithms.bootstraps import BootstrapAtData, BootstrapEquidistant, bootstrap
 from lir.algorithms.kde import KDECalibrator
 from lir.config.base import _expand
 from lir.data.datasets.synthesized_normal_binary import SynthesizedNormalBinaryData, SynthesizedNormalDataClass
-from lir.algorithms.bootstraps import BootstrapAtData, BootstrapEquidistant, bootstrap
-import numpy as np
-import pytest
 from lir.data.models import FeatureData, LLRData
 
 

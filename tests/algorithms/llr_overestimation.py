@@ -5,8 +5,7 @@ from lir.metrics.overestimation import llr_overestimation
 
 
 def test_llr_overestimation_metric():
-
-    lnlr_mean = np.log(10 ** 2)
+    lnlr_mean = np.log(10**2)
     lnlr_sigma = np.sqrt(2 * lnlr_mean)
 
     # small perfect system
@@ -27,8 +26,8 @@ def test_llr_overestimation_metric():
 
     # big shifted system
     rng = np.random.default_rng(42)
-    lr_h1 = np.exp(rng.normal(+lnlr_mean, lnlr_sigma, 1000) + np.log(10 ** 1))
-    lr_h2 = np.exp(rng.normal(-lnlr_mean, lnlr_sigma, 1000) + np.log(10 ** 1))
+    lr_h1 = np.exp(rng.normal(+lnlr_mean, lnlr_sigma, 1000) + np.log(10**1))
+    lr_h2 = np.exp(rng.normal(-lnlr_mean, lnlr_sigma, 1000) + np.log(10**1))
     llrs = np.log10(np.concatenate((lr_h1, lr_h2)))
     y = np.concatenate((np.ones(len(lr_h1)), np.zeros(len(lr_h2))))
     np.testing.assert_almost_equal(0.9678462, llr_overestimation(llrs, y, seed=42))
@@ -43,7 +42,7 @@ def test_llr_overestimation_metric():
 
 
 def test_llr_overestimation_interval():
-    lnlr_mean = np.log(10 ** 2)
+    lnlr_mean = np.log(10**2)
     lnlr_sigma = np.sqrt(2 * lnlr_mean)
 
     # small system
@@ -53,7 +52,7 @@ def test_llr_overestimation_interval():
     llrs = np.log10(np.concatenate((lr_h1, lr_h2)))
     y = np.concatenate((np.ones(len(lr_h1)), np.zeros(len(lr_h2))))
     llr_overestimation_interval = calc_llr_overestimation(llrs, y, seed=42)[2]
-    interval_width = llr_overestimation_interval[:,2] - llr_overestimation_interval[:,0]
+    interval_width = llr_overestimation_interval[:, 2] - llr_overestimation_interval[:, 0]
     np.testing.assert_almost_equal(1.5305846, np.nanmean(np.abs(interval_width)))
 
     # big system
@@ -63,5 +62,5 @@ def test_llr_overestimation_interval():
     llrs = np.log10(np.concatenate((lr_h1, lr_h2)))
     y = np.concatenate((np.ones(len(lr_h1)), np.zeros(len(lr_h2))))
     llr_overestimation_interval = calc_llr_overestimation(llrs, y, seed=42)[2]
-    interval_width = llr_overestimation_interval[:,2] - llr_overestimation_interval[:,0]
+    interval_width = llr_overestimation_interval[:, 2] - llr_overestimation_interval[:, 0]
     np.testing.assert_almost_equal(0.7807411, np.nanmean(np.abs(interval_width)))

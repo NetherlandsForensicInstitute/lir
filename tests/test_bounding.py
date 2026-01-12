@@ -6,7 +6,7 @@ from lir.data.models import LLRData
 
 
 @pytest.mark.parametrize(
-    "lower_bound,upper_bound,llrs,expected_result",
+    'lower_bound,upper_bound,llrs,expected_result',
     [
         (
             -1,
@@ -73,7 +73,7 @@ def test_static_bounder(
 
 
 @pytest.mark.parametrize(
-    "lower_bound,upper_bound,llrs,labels",
+    'lower_bound,upper_bound,llrs,labels',
     [
         (  # no labels argument
             -1,
@@ -131,9 +131,7 @@ def test_static_bounder(
         ),
     ],
 )
-def test_static_bounder_illegal_input(
-    lower_bound: float, upper_bound: float, llrs: np.ndarray, labels: np.ndarray
-):
+def test_static_bounder_illegal_input(lower_bound: float, upper_bound: float, llrs: np.ndarray, labels: np.ndarray):
     bounder = StaticBounder(lower_bound, upper_bound)
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         bounder.fit(llrs, labels).transform(llrs)

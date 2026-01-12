@@ -1,7 +1,7 @@
 import pytest
 
-from lir.config.base import GenericConfigParser
 from lir import registry
+from lir.config.base import GenericConfigParser
 
 
 def test_parse_external_directly():
@@ -13,15 +13,19 @@ def test_parse_external_directly():
     Two tests are performed: one on a DataStrategy and one on a DataProvider.
     """
     try:
-        registry.get('tests.resources.external_modules.ExampleExternalData',            
-                    search_path=['data_strategies'],
-                    default_config_parser=GenericConfigParser)
+        registry.get(
+            'tests.resources.external_modules.ExampleExternalData',
+            search_path=['data_strategies'],
+            default_config_parser=GenericConfigParser,
+        )
     except registry.ComponentNotFoundError:
-        pytest.fail("Failed to parse external DataStrategy module.")
-    
+        pytest.fail('Failed to parse external DataStrategy module.')
+
     try:
-        registry.get('tests.resources.external_modules.ExampleExternalData',            
-                     search_path=['data_sets'],
-                    default_config_parser=GenericConfigParser)
+        registry.get(
+            'tests.resources.external_modules.ExampleExternalData',
+            search_path=['data_sets'],
+            default_config_parser=GenericConfigParser,
+        )
     except registry.ComponentNotFoundError:
-        pytest.fail("Failed to parse external DataProvider module.")
+        pytest.fail('Failed to parse external DataProvider module.')

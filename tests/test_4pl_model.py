@@ -1,17 +1,17 @@
 import csv
-import os
 import unittest
+from pathlib import Path
 
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 
 from lir.algorithms.logistic_regression import FourParameterLogisticCalibrator
 from lir.metrics.devpav import devpav
-from lir.util import odds_to_probability, Xn_to_Xy, probability_to_logodds, logodds_to_odds
+from lir.util import Xn_to_Xy, odds_to_probability, probability_to_logodds
 
 
 def read_data(path):
-    with open(path, "r") as file:
+    with open(path, 'r') as file:
         r = csv.reader(file)
         next(r)
         data = np.array([float(value) for _, value in r])
@@ -19,9 +19,9 @@ def read_data(path):
 
 
 class TestFourParameterLogisticCalibrator(unittest.TestCase):
-    dirname = os.path.dirname(__file__)
-    X_diff = read_data(os.path.join(dirname, 'resources/LRsdifferentnormalLLRdistribmu_s=1N_ss=300.csv'))
-    X_same = read_data(os.path.join(dirname, 'resources/LRssamenormalLLRdistribmu_s=1N_ss=300.csv'))
+    dirname = Path(__file__).parent
+    X_diff = read_data(dirname / 'resources/LRsdifferentnormalLLRdistribmu_s=1N_ss=300.csv')
+    X_same = read_data(dirname / 'resources/LRssamenormalLLRdistribmu_s=1N_ss=300.csv')
 
     def test_compare_to_logistic(self):
         X, y = Xn_to_Xy(self.X_diff, self.X_same)
@@ -47,8 +47,8 @@ class TestFourParameterLogisticCalibrator(unittest.TestCase):
         np.testing.assert_almost_equal(devpav(logodds, y), 0.12029952948152635, decimal=5)
 
     def test_pl_0_is_1(self):
-        X_same = np.concatenate([self.X_same, [1, 1 - 10 ** -10]])
-        X_diff = np.concatenate([self.X_diff, [1, 1 - 10 ** -10]])
+        X_same = np.concatenate([self.X_same, [1, 1 - 10**-10]])
+        X_diff = np.concatenate([self.X_diff, [1, 1 - 10**-10]])
         X, y = Xn_to_Xy(X_diff, X_same)
         X = probability_to_logodds(X)
 
@@ -59,8 +59,8 @@ class TestFourParameterLogisticCalibrator(unittest.TestCase):
         np.testing.assert_almost_equal(devpav(logodds, y), 0.15273304557837525, decimal=5)
 
     def test_pl_0_is_1_and_pl_1_is_0(self):
-        X_same = np.concatenate([self.X_same, [0, 10 ** -10, 1, 1 - 10 ** -10]])
-        X_diff = np.concatenate([self.X_diff, [0, 10 ** -10, 1, 1 - 10 ** -10]])
+        X_same = np.concatenate([self.X_same, [0, 10**-10, 1, 1 - 10**-10]])
+        X_diff = np.concatenate([self.X_diff, [0, 10**-10, 1, 1 - 10**-10]])
         X, y = Xn_to_Xy(X_diff, X_same)
         X = probability_to_logodds(X)
 

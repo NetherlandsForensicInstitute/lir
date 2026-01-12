@@ -28,16 +28,28 @@ output_path: output/${timestamp}_score_based_common_source  # <-- adapt this val
 # This example is only provided to give working default values for the information you need to enter for your own data. 
 # You should give a path to your data. If your data is in the default format, the default parser should work.
 # If your data is not in the default format you can either write a new parser (the hard option) or, if possible, reformat your data (the easy option).
-# If you want to know how to use the default csv parser, go here. <TODO>
+#
+# You can inspect the [example default data](https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/main/duplo.csv).
+# You can choose to download that csv and store it next to this yaml and point to it under 'my_data_provider' below. You can also let the data provider
+# refer to the URL.
+#
+# The parser expects a csv with columns with a header row. To help the parser, you need to specify the meaning of the columns:
+# - A source_id-column, where labels for each of the sources of your data are given.
+# - An instance_id-column, where labels for each of the instances exist. This may be a measurementID, a fileID or something else that is meaningful to
+#     you and is distinct for all instances in your set, across different sources.
+# - ignore_columns: Columns to ignore. These may contain metadata that is helpful for you, but do not need to be interpreted as features or measurements.
+# - All other columns that are found in your file will be interpreted as feature data. Note that the data needs to be numerical. If not, the process will crash.
 
-data_provider:
+my_data_provider:                             # <-- adapt this name to your own preference, you will refer to it later when setting up your experiment
+  # The following two lines will download the example data from the specified URL.
   method: parse_features_from_csv_url
-  url: https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/main/training.csv
-  instance_id_column: id
-  source_id_column: Item
-  ignore_columns:
+  url: https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/main/duplo.csv
+  #method: parse_features_from_csv_file       # <-- uncomment these two lines (and comment the two above) if you are working from a file.
+  #file: duplo.csv
+  source_id_column: Item                      # <-- these terms 'Item', 'id' and 'Piece' refer to the specific columns in the default example data.
+  instance_id_column: id                      # Change them to your own column names as appropriate. Note that 'ignore_columns' is a list, because it can
+  ignore_columns:                             # have multiple values.
     - Piece
-
 
 #3. ASSIGNING TEST AND TRAIN DATA ROLES
 # This will describe which data is used to train the system and which to test (validate) the system.
@@ -45,7 +57,7 @@ data_provider:
 # You may choose a cross-design, in which the data is divided into folds. Each fold is used as validation data sequentially,
 # and for each of the folds an LR system is trained with all the other folds. The outcomes for all folds are then pooled into one set.
 
-data_splits:             # <-- adapt this name to your own preference, you will need it later when setting up the validation experiment
+my_data_splits:             # <-- adapt this name to your own preference, you will refer to it later when setting up your experiment
   strategy: multiclass_cross_validation
   folds: 5
 
@@ -54,7 +66,7 @@ data_splits:             # <-- adapt this name to your own preference, you will 
 # All the rest will be used as training data. The test size can be a float between 0 and 1, which will be used as a percentage.
 # It can also be an integer, that will be used as an absolute number of sources.
 # You also specify a seed for the random assignment of sources to the train or test category.
-# If you want this, uncomment the next 3 lines and comment out the two lines above.
+# If you want this, uncomment the next four lines and comment out the three lines above.
 
 #data_splits:
 #  strategy: multiclass_train_test_split
@@ -65,9 +77,9 @@ data_splits:             # <-- adapt this name to your own preference, you will 
 # 4. LR SYSTEM DESIGN
 # Next, the score-based common source LR system will be defined.
 
-score_based_lr_system:        # <-- this is a custom name of your LR system that you can adapt. It will be referred to later.
-  intermediate_output: True   # <-- if you want csv output for every step in your LR system, use 'True'. Otherwise, use 'False'
-  architecture: score_based   # Since this is the yaml for a score based system, we specify the architecture to be 'score_based'.
+my_score_based_lr_system:        # <-- this is a custom name of your LR system that you can adapt. You will refer to it later when setting up your experiment
+  intermediate_output: True      # <-- if you want csv output for every step in your LR system, use 'True'. Otherwise, use 'False'. TODO: implement this
+  architecture: score_based      # Since this is the yaml for a score based system, we specify the architecture to be 'score_based'.
   
   # This 'score-based' architecture takes three arguments:
   # - `preprocessing`: a series of steps that take your features as input and do some preprocessing, before pairs are formed;
@@ -93,20 +105,19 @@ score_based_lr_system:        # <-- this is a custom name of your LR system that
   #
   
   preprocessing:             
-  # LOGGING NU NAAR BOVEN GEMIGREERD, CHECKEN OF DAT NU WEL KON <TODO>
-  # define your preprocessing pipeline here by adding steps.
-  # This is before pairing, so the steps should be applicable per instance.
-  
+  # Define your preprocessing pipeline here by adding steps.
+  # This is before pairing, so the steps here should be applicable per instance.
     steps:
       scaler: standard_scaler  # apply the scikit-learn `StandardScaler` with default arguments
 
   pairing:
-  # define the way you want to pair your data. UITLEG MOGELIJKE PAIRING METHODES <TODO>
+  # Define the way you want to pair your data.
+  # 'instance_pairs' will make a pair by pairing all instances. It will produce n*(n-1)/2 pairs. For other pairing types and explanations, see HERE
     method: instance_pairs
-    ratio_limit: 2  # limit the number of different-source pairs to the number of same-source pairs
+    ratio_limit: 2  # limit the number of different-source pairs to the number of same-source pairs. Use 'None' or delete the line to not use a limit
 
   comparing:
-  # define the way you want to make scores from your features and to make LLRs from those scores.
+  # Define the way you want to make scores from your features and to make LLRs from those scores.
   # This is after pairing, so the steps should be applicable per pair.
     steps:
       scoring: abs_diff                         # calculate the absolute difference between the two instances for each feature
@@ -119,7 +130,7 @@ score_based_lr_system:        # <-- this is a custom name of your LR system that
                                                 # Another sensible choice is 'logistic_regression', there you can suffice with 'calibration: logistic_regression'
       bounding: elub_bounder                    # prevent excessive extrapolation by applying an LLR bounder
 
-# You have defined your LR system. Below we define how the LR system should be evaluated.
+# Rejoice, you have defined your LR system. Below we define how the LR system should be evaluated.
 # It is possible to set up experiments where multiple design choices are involved, to enable parameter and model selection.
 # To find out how more complex designs should be set up, see here LINK <TODO>
 # For now, we define a single simple validation experiment:
@@ -127,14 +138,13 @@ score_based_lr_system:        # <-- this is a custom name of your LR system that
 # 5. THE VALIDATION EXPERIMENT
 
 experiments:                             
-  - name: my_validation_run              # This is the name of the experiment, use your own preferred value.
-    strategy: single_run                 # For a single validation experiment, use 'single_run'.
-    lr_system: ${score_based_lr_system}  # This refers to the lr system defined above, make sure to use the name you used above.
-    data:
-      provider: ${data_provider}         # This refers to the data defined above, make sure to use the name you used above.
-      splits: ${data_splits}             # This refers to the data roles defined above, make sure to use the name you used above.
-    output:                              # Here you define what output you want. The output will at least include a copy of this yaml and statistics like number of sources and instances.
-      - metrics                          # If you want to know more about the types of output that are possible, go HERE <TODO>
+  - name: my_validation_run                 # This is the name of the experiment, use your own preferred value.
+    strategy: single_run                    # For a single validation experiment, use 'single_run'.
+    lr_system: ${my_score_based_lr_system}  # This refers to the lr system defined above, make sure to use the name you used above.
+    provider: ${data_provider}              # This refers to the data defined above, make sure to use the name you used above.
+    data_splits: ${my_data_splits}          # This refers to the data roles defined above, make sure to use the name you used above.
+    output:                                 # Here you define what output you want. The output will at least include a copy of this yaml and statistics like number of sources and instances.
+      - metrics                             # If you want to know more about the types of output that are possible, go HERE <TODO>
       - pav
       - ece
       - save_model

@@ -116,9 +116,10 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         output_dir: Path,
     ) -> Experiment:
         self._config = config
-        self._output_dir = output_dir
 
         experiment_name = pop_field(config, 'name', default=f'unnamed_experiment{config.context[-1]}')
+
+        self._output_dir = output_dir / experiment_name
         exp = self.get_experiment(experiment_name)
 
         check_is_empty(config)
@@ -195,10 +196,8 @@ def parse_experiment_strategy(config: ContextAwareDict, output_path: Path) -> Ex
     A corresponding Experiment class is returned.
     """
     strategy_name = pop_field(config, 'strategy')
-    if strategy_name is None:
-        raise YamlParseError(config.context, 'Missing strategy name.')
     strategy_parser = registry.get(strategy_name, search_path=['experiment_strategies'])
-    return strategy_parser.parse(config, output_path / config.context[-1])
+    return strategy_parser.parse(config, output_path)
 
 
 def parse_experiments(cfg: ContextAwareDict, output_path: Path) -> Mapping[str, Experiment]:

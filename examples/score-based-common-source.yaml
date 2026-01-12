@@ -141,8 +141,9 @@ experiments:
   - name: my_validation_run                 # This is the name of the experiment, use your own preferred value.
     strategy: single_run                    # For a single validation experiment, use 'single_run'.
     lr_system: ${my_score_based_lr_system}  # This refers to the lr system defined above, make sure to use the name you used above.
-    data.provider: ${my_data_provider}      # This refers to the data provider defined above, make sure to use the name you used above.
-    data.splits: ${my_data_splits}          # This refers to the data splits defined above, make sure to use the name you used above.
+    data:
+      provider: ${my_data_provider}      # This refers to the data provider defined above, make sure to use the name you used above.
+      splits: ${my_data_splits}          # This refers to the data splits defined above, make sure to use the name you used above.
     output:                                 # Here you define what output you want. The output will at least include a copy of this yaml and statistics like number of sources and instances.
       - metrics                             # If you want to know more about the types of output that are possible, go HERE <TODO>
       - pav

@@ -295,9 +295,11 @@ def tippett(llrdata: LLRData, plot_type: int = 1, ax: Axes = plt) -> None:
     ax: axes to plot figure to
     """
     llrs = llrdata.llrs
-    y = llrdata.labels
+    labels = llrdata.labels
+    if labels is None:
+        raise ValueError('Labels are required to create a Tippet plot.')
 
-    lr_0, lr_1 = util.Xy_to_Xn(llrs, y)
+    lr_0, lr_1 = util.Xy_to_Xn(llrs, labels)
     xplot0 = np.linspace(np.min(lr_0), np.max(lr_0), 100)
     xplot1 = np.linspace(np.min(lr_1), np.max(lr_1), 100)
     perc0 = (sum(i >= xplot0 for i in lr_0) / len(lr_0)) * 100

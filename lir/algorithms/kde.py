@@ -2,7 +2,7 @@ import logging
 import math
 import warnings
 from collections.abc import Callable
-from typing import Self
+from typing import Any, Self
 
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
@@ -33,7 +33,7 @@ def compensate_and_remove_neginf_inf(
 
 def parse_bandwidth(
     bandwidth: Callable | str | float | tuple[float, float] | None,
-) -> Callable:
+) -> Callable[[Any, Any], tuple[float, float]]:
     """
     Returns bandwidth as a tuple of two (optional) floats.
     Extrapolates a single bandwidth.
@@ -94,12 +94,12 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
         self.denominator: float | None = None
 
     @staticmethod
-    def bandwidth_silverman(X: np.ndarray, y: np.ndarray) -> list[float]:
+    def bandwidth_silverman(X: np.ndarray, y: np.ndarray) -> tuple[float, float]:
         """
         Estimates the optimal bandwidth parameter using Silverman's rule of
         thumb.
         """
-        assert len(X) > 0
+        assert len(X) > 0 and len(y) > 0
 
         bandwidth = []
         for label in np.unique(y):
@@ -118,7 +118,10 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
             v = math.pow(std, 5) / len(values) * 4.0 / 3
             bandwidth.append(math.pow(v, 0.2))
 
-        return bandwidth
+        if len(bandwidth) != 2:
+            raise ValueError(f'expected 2 classes; found: {len(bandwidth)} classes: {y}')
+
+        return bandwidth[0], bandwidth[1]
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> Self:
         # check if we have matching dimensions

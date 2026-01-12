@@ -29,7 +29,7 @@ class OptunaExperiment(Experiment):
         baseline_config: ContextAwareDict,
         hyperparameters: list[Hyperparameter],
         n_trials: int,
-        metric_function: Callable,
+        metric_function: Callable[[LLRData], float],
     ):
         super().__init__(name, data_provider, splitter, outputs, output_path)
         self.baseline_config = baseline_config

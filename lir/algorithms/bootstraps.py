@@ -213,7 +213,7 @@ class BootstrapEquidistant(Bootstrap):
 
 
 @config_parser
-def bootstrap(modules_config: ContextAwareDict, output_dir: Path) -> BootstrapAtData:
+def bootstrap(modules_config: ContextAwareDict, output_dir: Path) -> Bootstrap:
     """
     Transitional function to parse a bootstrapping pipeline.
 

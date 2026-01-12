@@ -272,7 +272,7 @@ class CsvWriter(Transformer):
             write_mode = 'w'
             write_header = True
 
-        with open(self.path, write_mode) as f:
+        with open(self.path, write_mode, newline='') as f:
             writer = csv.writer(f)
             self._write_rows(writer, instances, write_header)
 

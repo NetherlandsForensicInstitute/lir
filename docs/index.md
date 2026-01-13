@@ -1,5 +1,5 @@
-LIR Python Likelihood Ratio Toolkit
-===================================
+Getting started
+===============
 
 Toolkit for developing, optimising and evaluating Likelihood Ratio (LR) systems. This allows benchmarking of LR systems
 on different datasets, investigating impact of different sampling schemes or techniques, and doing case-based validation

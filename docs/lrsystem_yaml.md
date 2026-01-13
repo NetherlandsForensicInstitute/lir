@@ -1,6 +1,9 @@
-# How to use this repository to make an LR system from your data
+LR System selection helper
+==============================================================
 
 This page is written for researchers that have collected data and wish to make an LR system using that data.
+
+Before you begin, make sure that you have a [working version of LiR](index.html).
 
 An LR system is an automated statistical method in which two hypotheses are modeled and which can produce LRs for the hypothesis pair.
 These LRs can be made based on validation data for which it is known what the true hypothesis is, so that the LR system can be validated.
@@ -16,28 +19,24 @@ A yaml-file is a text file in which you write what the code will do for you. The
 The pre-made yaml-files are templates, for you to adapt to your situation.
 
 To choose which yaml-file is appropriate for you, you need to answer some questions about the data you have and which type of LR system you need.
-Then, you will be instructed to organize your data. This ensures the data is in a format that can be parsed by the repository.
+Then, you will be instructed to organize your data. This ensures the data is in a format that can be processed by LiR.
 Next, you can go to the yaml-file, where you can build your LR system and set up an experiment. You will be guided by comments in the yaml-file.
-
-Before you begin, make sure that you have a [working version of LiR](index.html).
 
 - Do you have one specific (case-related) reference source along with data from other sources, and do you want to model the first hypothesis exclusively with data from that source?
 
-  --> You probably want a 'specific source' LR system. Go here: [specific source system](#specific-source-system)
+  YES: You probably want a 'specific source' LR system. Go here: [specific source system](#specific-source-system)
   
-- Do you have data from multiple sources that are not case-related?
+  NO: You probably have data from multiple sources that are not case-related.
+  That means you probably want a 'common source' LR system.
 
-  --> You probably want a 'common source' LR system.
-
-  Answer the follow up questions:
+Answer the following questions:
   
   - Does your data contain trace / reference pairs and some score for each pair?
 
-    --> You probably want a 'common source - pre-scored' LR system. Go here: [pre-scored system](#pre-scored-common-source-system)
-      
-  - Does your data contain single instances of traces / references and measurements / features of those traces?
-
-    --> You want a 'score-based common source' LR system or a 'feature-based common source' LR system, go here: [common source system](#common-source-system).
+    YES: You probably want a 'common source - pre-scored' LR system. Go here: [pre-scored system](#pre-scored-common-source-system)
+    
+    NO: Your data probably contain single instances of traces / references and measurements / features of those traces. You want a 'score-based common 
+    source' LR system or a 'feature-based common source' LR system, go here: [common source system](#common-source-system).
 
 
 ## Specific source system
@@ -88,8 +87,8 @@ Some other columns are optional, for more information see HERE
 It is possible to make a score-based common-source LR system or a feature-based common-source LR system.
 
 If you don't know what that distinction means, you can:
-- choose 'score-based' and you will build an LR system similar to [here] (link to practitioner's guide).
-- ask advice from your favourite forensic statistician.
+  - choose 'score-based' and you will build an LR system similar to [here] (link to practitioner's guide).
+  - ask advice from your favourite forensic statistician.
 
 If you do know what the distinction means but you are unsure what is best for your data, you can use this repository to build multiple LR systems, perform validation and compare the results.
 

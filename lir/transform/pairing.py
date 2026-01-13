@@ -3,8 +3,7 @@ from typing import Any
 
 import numpy as np
 
-from lir.data.models import InstanceData, PairedFeatureData, concatenate_instances
-from lir.lrsystems.lrsystems import FeatureData
+from lir.data.models import FeatureData, InstanceData, PairedFeatureData, concatenate_instances
 from lir.util import check_type
 
 

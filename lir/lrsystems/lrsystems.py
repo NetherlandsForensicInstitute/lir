@@ -1,12 +1,13 @@
 from abc import ABC, abstractmethod
+from typing import Self
 
-from lir.data.models import FeatureData, LLRData
+from lir.data.models import InstanceData, LLRData
 
 
 class LRSystem(ABC):
     """General representation of an LR system."""
 
-    def fit(self, instances: FeatureData) -> 'LRSystem':
+    def fit(self, instances: InstanceData) -> Self:
         """
         Fits the LR system on a set of features and corresponding labels.
 
@@ -15,7 +16,7 @@ class LRSystem(ABC):
         return self
 
     @abstractmethod
-    def apply(self, instances: FeatureData) -> LLRData:
+    def apply(self, instances: InstanceData) -> LLRData:
         """
         Applies the LR system on a set of instances, optionally with corresponding labels, and returns a
         representation of the calculated LLR data through the `LLRData` tuple.

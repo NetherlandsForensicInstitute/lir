@@ -2,7 +2,7 @@ from typing import Self
 
 from lir import Transformer
 from lir.data.models import InstanceData
-from lir.lrsystems.lrsystems import FeatureData, LLRData, LRSystem
+from lir.lrsystems.lrsystems import LLRData, LRSystem
 from lir.transform.pairing import PairingMethod
 from lir.transform.pipeline import Pipeline
 
@@ -32,7 +32,7 @@ class ScoreBasedSystem(LRSystem):
         self.evaluation_pipeline.fit(pairs)
         return self
 
-    def apply(self, instances: FeatureData) -> LLRData:
+    def apply(self, instances: InstanceData) -> LLRData:
         """
         Applies the score-based LR system on a set of instances, optionally with corresponding labels, and returns a
         representation of the calculated LLR data through the `LLRData` tuple.

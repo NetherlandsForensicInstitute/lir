@@ -5,8 +5,7 @@ import numpy as np
 
 from lir.config.base import config_parser, pop_field
 from lir.config.substitution import ContextAwareDict
-from lir.data.models import DataProvider
-from lir.lrsystems.lrsystems import FeatureData
+from lir.data.models import DataProvider, FeatureData
 
 
 class SynthesizedDimension(NamedTuple):

@@ -1,0 +1,3 @@
+# Override specific values from the example YAML for testing convenience
+
+output_path: tests/yaml_output

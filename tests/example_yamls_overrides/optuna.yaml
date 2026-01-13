@@ -1,0 +1,13 @@
+# Override specific values from the example YAML for testing convenience
+
+output_path: tests/yaml_output
+
+data.provider.cache_dir: tests/example_yamls_overrides/cache/glass
+
+experiments:
+  - name: optimize_kde_bandwidth
+    strategy: optuna
+    primary_metric: cllr
+    n_trials: 1
+    lr_system: ${lr_system}
+    data: ${data}

@@ -33,7 +33,7 @@ def specific_source(config: ContextAwareDict, output_dir: Path) -> LRSystem:
     registry. See for example: `lir.config.lrsystems.specific_source`.
     """
     pipeline = parse_module(pop_field(config, 'modules'), output_dir, config.context, default_method='pipeline')
-    return BinaryLRSystem(output_dir.name, pipeline)
+    return BinaryLRSystem(pipeline)
 
 
 @config_parser
@@ -49,7 +49,7 @@ def score_based(config: ContextAwareDict, output_dir: Path) -> LRSystem:
     pairing_function = parse_pairing_config(pop_field(config, 'pairing'), output_dir, config.context)
     evaluation = parse_module(pop_field(config, 'comparing'), output_dir, config.context, default_method='pipeline')
 
-    return ScoreBasedSystem(output_dir.name, preprocessing, pairing_function, evaluation)
+    return ScoreBasedSystem(preprocessing, pairing_function, evaluation)
 
 
 @config_parser
@@ -65,7 +65,6 @@ def two_level(config: ContextAwareDict, output_dir: Path) -> LRSystem:
     n_ref_instances = pop_field(config, 'n_ref_instances', validate=int)
 
     return TwoLevelSystem(
-        output_dir.name,
         preprocessing,
         pairing_function,
         postprocessing,

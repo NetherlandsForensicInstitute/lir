@@ -18,12 +18,10 @@ class ScoreBasedSystem(LRSystem):
 
     def __init__(
         self,
-        name: str,
         preprocessing_pipeline: Transformer | None,
         pairing_function: PairingMethod,
         evaluation_pipeline: Transformer | None,
     ):
-        super().__init__(name)
         self.preprocessing_pipeline = preprocessing_pipeline or Pipeline([])
         self.pairing_function = pairing_function
         self.evaluation_pipeline = evaluation_pipeline or Pipeline([])

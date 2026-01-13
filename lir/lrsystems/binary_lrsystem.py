@@ -13,8 +13,7 @@ class BinaryLRSystem(LRSystem):
     afterward calculate corresponding LLR's for given feature vectors.
     """
 
-    def __init__(self, name: str, pipeline: Transformer):
-        super().__init__(name)
+    def __init__(self, pipeline: Transformer):
         self.pipeline = pipeline
 
     def fit(self, instances: FeatureData) -> 'LRSystem':

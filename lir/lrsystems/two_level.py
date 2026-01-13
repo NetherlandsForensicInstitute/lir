@@ -423,7 +423,6 @@ class TwoLevelSystem(LRSystem):
 
     def __init__(
         self,
-        name: str,
         preprocessing_pipeline: Transformer | None,
         pairing_function: PairingMethod,
         postprocessing_pipeline: Transformer | None,
@@ -432,14 +431,12 @@ class TwoLevelSystem(LRSystem):
     ):
         """
 
-        :param name: the name of the LR system
         :param preprocessing_pipeline: a preprocessing pipeline that is applied on unpaired instances
         :param pairing_function: a function to generate same-source and different-source pairs
         :param postprocessing_pipeline: a postprocessing pipeline that is applied *after* applying the two level model;
             it takes LLRs as input.
         """
 
-        super().__init__(name)
         self.preprocessing_pipeline = preprocessing_pipeline or Pipeline([])
         self.pairing_function = pairing_function
         self.postprocessing_pipeline = postprocessing_pipeline or Pipeline([])

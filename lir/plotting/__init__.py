@@ -15,7 +15,6 @@ from lir.algorithms.bayeserror import plot_nbe as nbe
 from lir.data.models import LLRData
 
 from ..algorithms.isotonic_regression import IsotonicCalibrator
-from ..transform import Transformer
 from .expected_calibration_error import plot_ece as ece
 
 
@@ -41,7 +40,6 @@ class Canvas:
     def __init__(self, ax: Axes):
         self.ax = ax
 
-        self.calibrator_fit = partial(calibrator_fit, ax=ax)
         self.ece = partial(ece, ax=ax)
         self.lr_histogram = partial(lr_histogram, ax=ax)
         self.nbe = partial(nbe, ax=ax)
@@ -442,26 +440,3 @@ def score_distribution(
         ax.set_ylabel('probability density')
     else:
         ax.set_ylabel('count')
-
-
-def calibrator_fit(
-    calibrator: Transformer,
-    score_range: tuple[float, float] = (0, 1),
-    resolution: int = 100,
-    ax: Axes | None = None,
-) -> None:
-    """
-    plots the fitted score distributions/score-to-posterior map
-    (Note - for ELUBbounder calibrator is the firststepcalibrator)
-
-    TODO: plot multiple calibrators at once
-    """
-    if ax is None:
-        _, ax = plt.subplots()
-    plt.rcParams.update({'font.size': 15})
-
-    x = np.linspace(score_range[0], score_range[1], resolution)
-    calibrator.transform(x)
-
-    ax.plot(x, calibrator.p1, color='tab:blue', label='fit class 1')
-    ax.plot(x, calibrator.p0, color='tab:orange', label='fit class 0')

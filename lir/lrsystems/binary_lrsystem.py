@@ -1,5 +1,8 @@
+from typing import Self
+
 from lir import Transformer
-from lir.lrsystems.lrsystems import FeatureData, LLRData, LRSystem
+from lir.data.models import InstanceData
+from lir.lrsystems.lrsystems import LLRData, LRSystem
 
 
 class BinaryLRSystem(LRSystem):
@@ -16,11 +19,11 @@ class BinaryLRSystem(LRSystem):
     def __init__(self, pipeline: Transformer):
         self.pipeline = pipeline
 
-    def fit(self, instances: FeatureData) -> 'LRSystem':
+    def fit(self, instances: InstanceData) -> Self:
         self.pipeline.fit(instances)
         return self
 
-    def apply(self, instances: FeatureData) -> LLRData:
+    def apply(self, instances: InstanceData) -> LLRData:
         """
         Applies the specific source LR system on a set of instances, optionally with corresponding labels, and returns a
         representation of the calculated LLR data through the `LLRData` tuple.

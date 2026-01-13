@@ -1,9 +1,12 @@
+from typing import Self
+
 import numpy as np
 import pandas as pd
 from scipy.special import logsumexp
 
 from lir import Transformer
-from lir.lrsystems.lrsystems import FeatureData, LLRData, LRSystem
+from lir.data.models import InstanceData
+from lir.lrsystems.lrsystems import LLRData, LRSystem
 from lir.transform.pairing import PairingMethod
 from lir.transform.pipeline import Pipeline
 
@@ -434,7 +437,7 @@ class TwoLevelSystem(LRSystem):
         self.n_trace_instances = n_trace_instances
         self.n_ref_instances = n_ref_instances
 
-    def fit(self, instances: FeatureData) -> 'LRSystem':
+    def fit(self, instances: InstanceData) -> Self:
         if instances.source_ids is None:
             raise ValueError('fit() requires source_ids')
 
@@ -447,7 +450,7 @@ class TwoLevelSystem(LRSystem):
 
         return self
 
-    def apply(self, instances: FeatureData) -> LLRData:
+    def apply(self, instances: InstanceData) -> LLRData:
         """
         Applies the two level LR system on a set of instances,
         and returns a representation of the calculated LLR data through the `LLRData` tuple.

@@ -6,8 +6,7 @@ import numpy as np
 
 from lir.data.data_strategies import RoleAssignment
 from lir.data.io import RemoteResource
-from lir.data.models import DataProvider
-from lir.lrsystems.lrsystems import FeatureData
+from lir.data.models import DataProvider, FeatureData
 
 
 class GlassData(DataProvider):

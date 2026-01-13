@@ -6,8 +6,7 @@ import numpy as np
 import numpy.random
 
 from lir.config.base import ContextAwareDict, config_parser, pop_field
-from lir.data.models import DataProvider
-from lir.lrsystems.lrsystems import FeatureData
+from lir.data.models import DataProvider, FeatureData
 
 
 class SynthesizedNormalDataClass:

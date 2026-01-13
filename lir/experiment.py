@@ -4,10 +4,13 @@ from collections.abc import Iterable, Sequence
 from pathlib import Path
 from typing import Any
 
+import confidence
 from tqdm import tqdm
 
 import lir
 from lir.aggregation import Aggregation, AggregationData
+from lir.config.lrsystem_architectures import ParsedLRSystem
+from lir.config.util import simplify_data_structure
 from lir.data.models import DataProvider, DataStrategy, concatenate_instances
 from lir.lrsystems.lrsystems import LLRData, LRSystem
 
@@ -32,7 +35,7 @@ class Experiment(ABC):
         self.outputs = outputs
         self.output_path = output_path
 
-    def _run_lrsystem(self, lrsystem: LRSystem, hyperparameters: dict[str, Any]) -> LLRData:
+    def _run_lrsystem(self, lrsystem: ParsedLRSystem, hyperparameters: dict[str, Any]) -> LLRData:
         """Run experiment on a single LR system configuration using the provided data(setup).
 
         First, the data is split into a training and testing subset, according to the provided
@@ -44,6 +47,11 @@ class Experiment(ABC):
         which may write metrics and visualizations to the `output_path` directory. The combined
         LLR data is returned.
         """
+        # write the full lr system configuration to the output folder
+        lrsystem_config = confidence.Configuration(simplify_data_structure(lrsystem.config))
+        lrsystem.output_dir.mkdir(exist_ok=True, parents=True)
+        confidence.dumpf(lrsystem_config, lrsystem.output_dir / 'lrsystem.yaml')
+
         # Placeholders for numpy arrays of LLRs and labels obtained from each train/test split
         llr_sets: list[LLRData] = []
 

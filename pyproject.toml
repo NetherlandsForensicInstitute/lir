@@ -1,0 +1,28 @@
+[project]
+name = "practitioners_guide"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "Netherlands Forensics Institute", email = "netherlandsforensicinstitute@users.noreply.github.com"},
+]
+requires-python = ">=3.11"
+readme = "README.md"
+license = {text = "Apache Software License 2.0"}
+dependencies = [
+    "lir>=1.3.1",
+    "seaborn>=0.13.2",
+    "jupyter>=1.1.1",
+    "pytest>=9.0.2",
+    "pre-commit>=4.5.1",
+]
+
+[project.urls]
+homepage = "https://github.com/NetherlandsForensicInstitute/lir/"
+
+[tool.pdm]
+distribution = false
+
+[tool.pdm.scripts]
+test = "pytest"
+notebook = "jupyter notebook practitioners_guide_glass.ipynb"
+clean = "jupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace practitioners_guide_glass.ipynb"

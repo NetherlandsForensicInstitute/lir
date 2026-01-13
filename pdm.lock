@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:c6a538398b71d0d24f3d9c90a0e147ee93dbec13e372a8e23f3c212b3681e412"
+content_hash = "sha256:83afd78ee6d088096ee3f7db5647d113ef159bd7ba077f609f1312f02e102d8d"
 
 [[metadata.targets]]
 requires_python = ">=3.11"
@@ -46,7 +46,7 @@ name = "attrs"
 version = "25.4.0"
 requires_python = ">=3.9"
 summary = "Classes Without Boilerplate"
-groups = ["dev"]
+groups = ["default"]
 files = [
     {file = "attrs-25.4.0-py3-none-any.whl", hash = "sha256:adcf7e2a1fb3b36ac48d97835bb6d8ade15b8dcce26aba8bf1d14847b57a3373"},
     {file = "attrs-25.4.0.tar.gz", hash = "sha256:16d5969b87f0859ef33a48b35d55ac1be6e42ae49d5e853b597db70c35c57e11"},
@@ -57,7 +57,7 @@ name = "cattrs"
 version = "25.3.0"
 requires_python = ">=3.9"
 summary = "Composable complex class support for attrs and dataclasses."
-groups = ["dev"]
+groups = ["default"]
 dependencies = [
     "attrs>=25.4.0",
     "exceptiongroup>=1.1.1; python_version < \"3.11\"",
@@ -73,7 +73,7 @@ name = "certifi"
 version = "2026.1.4"
 requires_python = ">=3.7"
 summary = "Python package for providing Mozilla's CA Bundle."
-groups = ["dev"]
+groups = ["default"]
 files = [
     {file = "certifi-2026.1.4-py3-none-any.whl", hash = "sha256:9943707519e4add1115f44c2bc244f782c0249876bf51b6599fee1ffbedd685c"},
     {file = "certifi-2026.1.4.tar.gz", hash = "sha256:ac726dd470482006e014ad384921ed6438c457018f4b3d204aea4281258b2120"},
@@ -84,7 +84,7 @@ name = "charset-normalizer"
 version = "3.4.4"
 requires_python = ">=3.7"
 summary = "The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet."
-groups = ["dev"]
+groups = ["default"]
 files = [
     {file = "charset_normalizer-3.4.4-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:6e1fcf0720908f200cd21aa4e6750a48ff6ce4afe7ff5a79a90d5ed8a08296f8"},
     {file = "charset_normalizer-3.4.4-cp311-cp311-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:5f819d5fe9234f9f82d75bdfa9aef3a3d72c4d24a6e57aeaebba32a704553aa0"},
@@ -508,7 +508,7 @@ name = "idna"
 version = "3.11"
 requires_python = ">=3.8"
 summary = "Internationalized Domain Names in Applications (IDNA)"
-groups = ["dev"]
+groups = ["default"]
 files = [
     {file = "idna-3.11-py3-none-any.whl", hash = "sha256:771a87f49d9defaf64091e6e6fe9c18d4833f140bd19464795bc32d966ca37ea"},
     {file = "idna-3.11.tar.gz", hash = "sha256:795dafcc9c04ed0c1fb032c2aa73654d8e8c5023a7df64a53f39190ada629902"},
@@ -1276,7 +1276,7 @@ name = "platformdirs"
 version = "4.5.1"
 requires_python = ">=3.10"
 summary = "A small Python package for determining appropriate platform-specific dirs, e.g. a `user data dir`."
-groups = ["dev"]
+groups = ["default", "dev"]
 files = [
     {file = "platformdirs-4.5.1-py3-none-any.whl", hash = "sha256:d03afa3963c806a9bed9d5125c8f4cb2fdaf74a55ab60e5d59b3fde758104d31"},
     {file = "platformdirs-4.5.1.tar.gz", hash = "sha256:61d5cdcc6065745cdd94f0f878977f8de9437be93de97c1c12f853c9c0cdcbda"},
@@ -1567,7 +1567,7 @@ name = "requests"
 version = "2.32.5"
 requires_python = ">=3.9"
 summary = "Python HTTP for Humans."
-groups = ["dev"]
+groups = ["default"]
 dependencies = [
     "certifi>=2017.4.17",
     "charset-normalizer<4,>=2",
@@ -1584,7 +1584,7 @@ name = "requests-cache"
 version = "1.2.1"
 requires_python = ">=3.8"
 summary = "A persistent cache for python requests"
-groups = ["dev"]
+groups = ["default"]
 dependencies = [
     "attrs>=21.2",
     "cattrs>=22.2",
@@ -1840,7 +1840,7 @@ name = "types-requests"
 version = "2.32.4.20250913"
 requires_python = ">=3.9"
 summary = "Typing stubs for requests"
-groups = ["dev"]
+groups = ["default"]
 dependencies = [
     "urllib3>=2",
 ]
@@ -1890,7 +1890,7 @@ name = "url-normalize"
 version = "2.2.1"
 requires_python = ">=3.8"
 summary = "URL normalization for Python"
-groups = ["dev"]
+groups = ["default"]
 dependencies = [
     "idna>=3.3",
 ]
@@ -1904,7 +1904,7 @@ name = "urllib3"
 version = "2.6.2"
 requires_python = ">=3.9"
 summary = "HTTP library with thread-safe connection pooling, file post, and more."
-groups = ["dev"]
+groups = ["default"]
 files = [
     {file = "urllib3-2.6.2-py3-none-any.whl", hash = "sha256:ec21cddfe7724fc7cb4ba4bea7aa8e2ef36f607a4bab81aa6ce42a13dc3f03dd"},
     {file = "urllib3-2.6.2.tar.gz", hash = "sha256:016f9c98bb7e98085cb2b4b17b87d2c702975664e4f060c6532e64d1c1a5e797"},

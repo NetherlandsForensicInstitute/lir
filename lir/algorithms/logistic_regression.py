@@ -147,11 +147,7 @@ class FourParameterLogisticCalibrator:
             self.model,
         )
 
-        result = minimize(
-            objective_function,
-            np.array([0.1] * (2 + estimate_d + estimate_c)),
-            bounds=bounds,
-        )
+        result = minimize(objective_function, np.array([0.1] * (2 + estimate_d + estimate_c)), bounds=bounds)  # type: ignore
         if not result.success:
             raise Exception('The optimizer did not converge for the calibrator, please check your data.')
         assert result.success

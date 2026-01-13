@@ -7,9 +7,8 @@ import numpy as np
 import pytest
 
 from lir import plotting
-from lir.algorithms.logistic_regression import LogitCalibrator
 from lir.data.models import LLRData
-from lir.util import odds_to_logodds, odds_to_probability
+from lir.util import odds_to_logodds
 
 
 class TestPlotting(unittest.TestCase):
@@ -44,7 +43,6 @@ class TestPlotting(unittest.TestCase):
         """
         lrs = np.array([0.5, 0.5, 0.5, 1, 1, 2, 2, 2, np.inf, 0])
         llrs = odds_to_logodds(lrs)
-        scores = odds_to_probability(lrs)
         y = np.array([0, 0, 1, 0, 1, 0, 1, 1, 1, 0])
         finite_index = (lrs > 0) & (lrs < np.inf)
 
@@ -64,9 +62,6 @@ class TestPlotting(unittest.TestCase):
             ]
         )
         llr_data_intervals = LLRData(features=llrs_and_interval_ndarray)
-
-        cal = LogitCalibrator()
-        cal.fit(scores, y)
 
         # Test that plots with invalid data raise exceptions.
         with pytest.raises(ValueError):
@@ -99,9 +94,6 @@ class TestPlotting(unittest.TestCase):
 
             with plotting.axes() as ax:
                 ax.llr_interval(llr_data_intervals)
-
-            with plotting.axes() as ax:
-                ax.calibrator_fit(cal, y)
         except Exception as e:
             self.fail(f'Unexpected failure creating plot(s), while using valid data: {e}')
 

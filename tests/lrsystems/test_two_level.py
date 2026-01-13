@@ -26,7 +26,7 @@ def _calculate_cllr(mean: float = 0.0, std: float = 1.0, error_std: float = 1.0)
 
     training_data, test_data = next(iter(splitter.apply(data.get_instances())))
 
-    system = TwoLevelSystem('test_system', None, pairing, None, n_trace_instances=1, n_ref_instances=1)
+    system = TwoLevelSystem(None, pairing, None, n_trace_instances=1, n_ref_instances=1)
     system.fit(training_data)
     llr_data: LLRData = system.apply(test_data)
 

@@ -6,9 +6,6 @@ from lir.data.models import FeatureData, LLRData
 class LRSystem(ABC):
     """General representation of an LR system."""
 
-    def __init__(self, name: str):
-        self.name = name
-
     def fit(self, instances: FeatureData) -> 'LRSystem':
         """
         Fits the LR system on a set of features and corresponding labels.
@@ -24,6 +21,3 @@ class LRSystem(ABC):
         representation of the calculated LLR data through the `LLRData` tuple.
         """
         raise NotImplementedError
-
-    def __repr__(self) -> str:
-        return self.name

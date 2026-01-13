@@ -37,7 +37,7 @@ def trained_lr_system(sample_feature_data: FeatureData) -> LRSystem:
             ('to_llr', as_transformer(probability_to_logodds)),
         ]
     )
-    lrsystem = BinaryLRSystem(name='lrsystem', pipeline=pipeline)
+    lrsystem = BinaryLRSystem(pipeline=pipeline)
     lrsystem.fit(sample_feature_data)
 
     return lrsystem

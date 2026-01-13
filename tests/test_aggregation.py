@@ -25,5 +25,5 @@ def test_registry_items_available(synthesized_llrs_with_interval: LLRData, tmp_p
             assert isinstance(obj, Aggregation), f'registry item is not an instance of `Aggregation`: {name}'
 
             # generate output
-            lrsystem = BinaryLRSystem(name='lrsystem', pipeline=Identity())
+            lrsystem = BinaryLRSystem(pipeline=Identity())
             obj.report(AggregationData(llrdata=synthesized_llrs_with_interval, lrsystem=lrsystem, parameters={}))

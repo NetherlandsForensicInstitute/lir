@@ -23,7 +23,7 @@ def test_specific_source_pipeline(synthesized_normal_data: SynthesizedNormalBina
 
     pipeline = Pipeline(steps)
 
-    specific_source_system = BinaryLRSystem('test_system', pipeline)
+    specific_source_system = BinaryLRSystem(pipeline)
     data_train, data_test = next(iter(splitter.apply(synthesized_normal_data.get_instances())))
     specific_source_system.fit(data_train)
     llr_data: LLRData = specific_source_system.apply(data_test)

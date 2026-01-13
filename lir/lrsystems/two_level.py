@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 from scipy.special import logsumexp
 
 from lir import Transformer
@@ -176,22 +175,30 @@ class TwoLevelModelNormalKDE:
         This function calculates a matrix of mean covariances within each of the sources, it does so by grouping the
         data per source, calculating the covariance matrices per source and then taking the mean per feature.
         """
-        # use pandas functionality to allow easy calculation
-        df = pd.DataFrame(X, index=pd.Index(y, name='label'))
+        # Get unique sources
+        unique_sources = np.unique(y)
 
-        # filter out single-repetitions,since they do not contribute to covariance calculations
-        grouped = df.groupby(by='label')
-        filtered = grouped.filter(lambda x: x[0].count() > 1)
+        # Collect covariance matrices for sources with multiple repetitions
+        covariance_matrices = []
 
-        # make groups again by source id and calculate covariance matrices per source
-        grouped = filtered.groupby(by='label')
-        covars = grouped.cov(ddof=1)
+        for source in unique_sources:
+            # Get measurements for this source
+            source_measurements = X[y == source]
 
-        # add index names to allow grouping by feature, group by feature and get mean covariance matrix
-        covars.index.names = ['Source', 'Feature']
-        grouped_by_feature = covars.groupby(['Feature'])
+            # Only include sources with more than one repetition
+            if len(source_measurements) > 1:
+                # Calculate covariance matrix for this source
+                cov_matrix = np.cov(source_measurements, rowvar=False, ddof=1)
+                # Ensure cov_matrix is always 2D (handle single feature case)
+                cov_matrix = np.atleast_2d(cov_matrix)
+                covariance_matrices.append(cov_matrix)
 
-        return np.array(grouped_by_feature.mean())
+        # Calculate mean covariance matrix across all sources
+        if len(covariance_matrices) == 0:
+            # If no sources have multiple repetitions, return zero matrix
+            return np.zeros((X.shape[1], X.shape[1]))
+
+        return np.mean(covariance_matrices, axis=0)
 
     @staticmethod
     def _get_means_per_source(X, y) -> np.ndarray:
@@ -200,14 +207,12 @@ class TwoLevelModelNormalKDE:
         y np 1d-array of labels. For each source a unique identifier (label). Repetitions get the same label.
         returns: means per source in a np.array matrix of size: number of sources * number of features
         """
-        # use pandas functionality to allow easy calculation and group by source
-        df = pd.DataFrame(X, index=pd.Index(y, name='label'))
-        grouped = df.groupby(by='label')
-
-        return np.array(grouped.mean())
+        # Get unique sources and calculate means for each
+        unique_sources = np.unique(y)
+        return np.array([np.mean(X[y == source], axis=0) for source in unique_sources])
 
     @staticmethod
-    def _get_kernel_bandwidth_squared(n_sources: int, n_features_train: int) -> int:
+    def _get_kernel_bandwidth_squared(n_sources: int, n_features_train: int) -> float:
         """
         Reference: 'Density estimation for statistics and data analysis', B.W. Silverman,
             page 86 formula 4.14 with A(K) the second row in the table on page 87
@@ -225,29 +230,34 @@ class TwoLevelModelNormalKDE:
             square matrix with number of features^2 as dimension
         """
 
-        # use pandas functionality to allow easy calculation and
-        df = pd.DataFrame(X, index=pd.Index(y, name='label'))
-        grouped = df.groupby(by='label')
+        # Get unique sources and their repetition counts
+        unique_sources, counts = np.unique(y, return_counts=True)
 
         # calculate kappa; kappa represents the "average" number of repetitions per source
-        # get the repetitions per source
-        reps = np.array(grouped.size()).reshape((-1, 1))
-        # calculate the sum of the repetitions squared and kappa
-        sum_reps_sq = sum(reps**2)
+        # get the repetitions per source as a column vector
+        reps = counts.reshape((-1, 1))
+        sum_reps_sq = np.sum(reps**2)
         kappa = ((reps.sum() - sum_reps_sq / reps.sum()) / (len(reps) - 1)).item()
 
         # calculate sum_of_squares between
         # substitute rows with their corresponding group means
-        group_means = grouped.transform('mean')
+        group_means = np.zeros_like(X)
+        for source in unique_sources:
+            source_mask = y == source
+            source_mean = np.mean(X[source_mask], axis=0)
+            group_means[source_mask] = source_mean
+
         # calculate covariance of measurements
-        cov_between_measurement = group_means.cov(ddof=0)
+        cov_between_measurement = np.cov(group_means, rowvar=False, ddof=0)
+        # Ensure cov_between_measurement is always 2D (handle single feature case)
+        cov_between_measurement = np.atleast_2d(cov_between_measurement)
         sum_squares_between = cov_between_measurement * len(group_means)
 
         # calculate between covariance matrix
         # Kappa converts within variance at measurement level to within variance at mean of source level and
         #   scales the SSQ_between to a mean between variance
 
-        return ((sum_squares_between / (len(reps) - 1) - mean_within_covars) / kappa).to_numpy()
+        return (sum_squares_between / (len(reps) - 1) - mean_within_covars) / kappa
 
     def _predict_covariances_trace_ref(self, X_trace: np.ndarray, X_ref: np.ndarray):
         """

@@ -25,7 +25,7 @@ lr_system:
   comparing:
     steps:
       scoring:
-        method: abs_diff
+        method: element_wise_difference
       clf:
         method: logistic_regression
         random_state: 0

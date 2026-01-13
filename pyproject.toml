@@ -14,7 +14,7 @@ license = {text = "Apache Software License 2.0"}
 dependencies = [
     "confidence>=0.17.1",
     "matplotlib>=3.5",
-    "numpy>=1.22",
+    "numpy>=1.22, <2.4",
     "scikit-learn>=1.2",
     "tqdm>=4.67.1",
     "optuna>=4.4.0",
@@ -40,6 +40,7 @@ dev = [
     "mypy>=1.18.2",
     "ruff>=0.14.3",
     "mkdocs>=1.6.1",
+    "scipy-stubs>=1.17.0.0",
 ]
 
 [tool.pdm]

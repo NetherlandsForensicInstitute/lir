@@ -18,3 +18,20 @@ class TeeParser(ConfigParser):
             transformers.append(parse_module(module_config, output_dir, module_config.context))
 
         return Tee(transformers)
+
+
+def simplify_data_structure(data: Any) -> Any:
+    """
+    Simplify data structure: specialized data types are replaced.
+
+    For example, `ContextAwareDict` is replaced by `dict`.
+    """
+    match data:
+        case dict():
+            return {k: simplify_data_structure(v) for k, v in data.items()}
+        case list() | tuple():
+            return [simplify_data_structure(v) for v in data]
+        case str() | float() | int() | bool() | None:
+            return data
+        case _:
+            raise ValueError(f'unrecognized data type: {data} of type {type(data)}')

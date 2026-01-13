@@ -38,6 +38,15 @@ class InstanceData(BaseModel, ABC):
     labels: Annotated[np.ndarray | None, AfterValidator(_validate_labels)] = None
     source_ids: np.ndarray | None = None
 
+    @property
+    def require_labels(self) -> np.ndarray:
+        """
+        Returns `labels` and guarantee that it is not None (or raise an error).
+        """
+        if self.labels is None:
+            raise ValueError('labels not set')
+        return self.labels
+
     @model_validator(mode='after')
     def check_sourceids_labels_match(self) -> Self:
         if self.labels is not None and self.source_ids is not None and self.labels.shape[0] != self.source_ids.shape[0]:

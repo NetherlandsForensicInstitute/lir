@@ -6,10 +6,12 @@ import numpy as np
 
 from lir.algorithms.isotonic_regression import IsotonicCalibrator
 from lir.algorithms.logistic_regression import LogitCalibrator
+from lir.data.models import LLRData
 from lir.util import (
     Xn_to_Xy,
     Xy_to_Xn,
     logodds_to_odds,
+    odds_to_logodds,
     odds_to_probability,
     probability_to_logodds,
 )
@@ -106,10 +108,12 @@ class TestLogitCalibrator(unittest.TestCase):
         1.12077833e07,
     ]
 
-    def test_prob_version(self):
+    def get_instances(self) -> LLRData:
         X, y = Xn_to_Xy(self.score_class0, self.score_class1)
-        X = odds_to_probability(X)
-        X = probability_to_logodds(X)
+        X = odds_to_logodds(X)
+        return LLRData(features=X.reshape(-1, 1), labels=y)
+
+    def test_prob_version(self):
         desired = [
             0.1794121972972742,
             0.00041466046383887233,
@@ -132,9 +136,9 @@ class TestLogitCalibrator(unittest.TestCase):
         ]
 
         calibrator = LogitCalibrator()
-        calibrator.fit(X, y)
-        llrs_cal = calibrator.transform(X)
-        np.testing.assert_allclose(logodds_to_odds(llrs_cal), desired)
+        calibrator.fit(self.get_instances())
+        llrs_cal = calibrator.transform(self.get_instances())
+        np.testing.assert_allclose(logodds_to_odds(llrs_cal.llrs), desired)
 
     def test_on_extreme_values(self):
         X = np.array(
@@ -194,10 +198,12 @@ class TestLogitCalibrator(unittest.TestCase):
             np.inf,
         ]
 
+        instances = LLRData(features=X.reshape(-1, 1), labels=y)
+
         calibrator = LogitCalibrator()
-        calibrator.fit(X, y)
-        llrs_cal = calibrator.transform(X)
-        np.testing.assert_allclose(logodds_to_odds(llrs_cal), desired, rtol=1e-2)
+        calibrator.fit(instances)
+        llrs_cal = calibrator.transform(instances)
+        np.testing.assert_allclose(logodds_to_odds(llrs_cal.llrs), desired, rtol=1e-2)
 
 
 if __name__ == '__main__':

@@ -77,7 +77,7 @@ class Bootstrap(Pipeline, ABC):
         """
         raise NotImplementedError
 
-    def transform(self, instances: InstanceData) -> LLRData:
+    def apply(self, instances: InstanceData) -> LLRData:
         """Transform the provided instances to include the best estimate and confidence intervals.
 
         param instances: FeatureData: The feature data to transform.
@@ -86,7 +86,7 @@ class Bootstrap(Pipeline, ABC):
         if self.f_delta_interval_lower is None or self.f_delta_interval_upper is None:
             raise ValueError('Bootstrap intervals have not been computed. Please fit the bootstrap first.')
 
-        best_estimate = super().transform(instances)
+        best_estimate = super().apply(instances)
         best_estimate = check_type(FeatureData, best_estimate, message='bootstrap pipeline should produce LLRs')
         best_1d_estimate = best_estimate.features.reshape(-1)
         interval_lower = best_1d_estimate + self.f_delta_interval_lower(best_1d_estimate)
@@ -102,7 +102,7 @@ class Bootstrap(Pipeline, ABC):
         param instances: FeatureData: The feature data to fit and transform.
         return LLRData: The transformed feature data with best estimate and confidence intervals.
         """
-        return self.fit(instances).transform(instances)
+        return self.fit(instances).apply(instances)
 
     def fit(self, instances: InstanceData) -> Self:
         """Fit the bootstrap system to the provided instances.
@@ -126,7 +126,7 @@ class Bootstrap(Pipeline, ABC):
             sample_index = rng.choice(len(instances), size=len(instances))
             samples = instances[sample_index]
             super().fit(samples)
-            all_llrs = super().transform(bootstrap_data)
+            all_llrs = super().apply(bootstrap_data)
             all_llrs = check_type(FeatureData, all_llrs, 'bootstrap pipeline should produce LLRs')
             all_vals.append(all_llrs.features.reshape(-1))
 
@@ -135,7 +135,7 @@ class Bootstrap(Pipeline, ABC):
         intervals = np.quantile(all_vals, self.interval, axis=1)
 
         super().fit(instances)
-        best_estimate_bootstrap_data = super().transform(bootstrap_data)
+        best_estimate_bootstrap_data = super().apply(bootstrap_data)
         best_estimate_bootstrap_data = check_type(
             FeatureData, best_estimate_bootstrap_data, 'bootstrap pipeline should produce LLRs'
         )

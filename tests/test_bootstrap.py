@@ -50,8 +50,8 @@ def test_traindata_bootstrap(sample_steps_and_data):
     model_data = BootstrapAtData(steps, n_bootstraps=50).fit(feature_data)
     model_equidistant = BootstrapEquidistant(steps, n_bootstraps=50).fit(feature_data)
 
-    results_data = model_data.transform(feature_data)
-    results_equidistant = model_equidistant.transform(feature_data)
+    results_data = model_data.apply(feature_data)
+    results_equidistant = model_equidistant.apply(feature_data)
 
     assert results_data.llrs.shape == (feature_data.features.shape[0],)
     assert results_data.has_intervals
@@ -79,7 +79,7 @@ def test_interval_extrapolation(sample_steps_and_data):
     mx = np.max(feature_data.features)
 
     new_data = FeatureData(features=np.array([[mn - 1], [mn], [mx], [mx + 1]]))
-    results: LLRData = model_equidistant.transform(new_data)
+    results: LLRData = model_equidistant.apply(new_data)
     # The difference between the interval at mn and mn-1 should be the same.
     assert np.isclose(
         results.llrs[0] - results.llr_intervals[0, 0],

@@ -40,8 +40,8 @@ class ScoreBasedSystem(LRSystem):
         The system takes instances as input, and calculates LLRs for pairs of instances. That means that there is a 2-1
         relation between input and output data.
         """
-        instances = self.preprocessing_pipeline.transform(instances)
+        instances = self.preprocessing_pipeline.apply(instances)
         pairs = self.pairing_function.pair(instances, 1, 1)
-        pair_llrs = self.evaluation_pipeline.transform(pairs)
+        pair_llrs = self.evaluation_pipeline.apply(pairs)
 
         return LLRData(**pair_llrs.model_dump())

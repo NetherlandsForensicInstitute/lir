@@ -465,10 +465,10 @@ class TwoLevelSystem(LRSystem):
         Applies the two level LR system on a set of instances,
         and returns a representation of the calculated LLR data through the `LLRData` tuple.
         """
-        instances = self.preprocessing_pipeline.transform(instances)
+        instances = self.preprocessing_pipeline.apply(instances)
 
         pairs = self.pairing_function.pair(instances, self.n_trace_instances, self.n_ref_instances)
         pair_llrs = pairs.replace_as(LLRData, features=self.model.transform(pairs.features_trace, pairs.features_ref))
-        pair_llrs = self.postprocessing_pipeline.transform(pair_llrs)
+        pair_llrs = self.postprocessing_pipeline.apply(pair_llrs)
 
         return pair_llrs.replace_as(LLRData)

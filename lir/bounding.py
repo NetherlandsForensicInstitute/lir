@@ -70,7 +70,7 @@ class LLRBounder(Transformer, ABC):
 
         return self
 
-    def transform(self, instances: InstanceData) -> LLRData:
+    def apply(self, instances: InstanceData) -> LLRData:
         """
         a transform entails calling the first step calibrator and applying the bounds found
         """

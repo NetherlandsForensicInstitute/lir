@@ -15,7 +15,7 @@ class ElementWiseDifference(Transformer):
         - a copy of the FeatureData object with features of shape (n, f)
     """
 
-    def transform(self, instances: InstanceData) -> FeatureData:
+    def apply(self, instances: InstanceData) -> FeatureData:
         instances = check_type(PairedFeatureData, instances)
         if instances.n_ref_instances != 1 or instances.n_trace_instances != 1:
             raise ValueError(
@@ -39,12 +39,12 @@ class ManhattanDistance(Transformer):
     :returns: a FeatureData object with features of shape (n, 1)
     """
 
-    def transform(self, instances: InstanceData) -> FeatureData:
+    def apply(self, instances: InstanceData) -> FeatureData:
         instances = check_type(FeatureData, instances)
 
         # if the data are paired instances, calculate the element wise difference first
         if isinstance(instances, PairedFeatureData):
-            instances = ElementWiseDifference().transform(instances)
+            instances = ElementWiseDifference().apply(instances)
 
         # the feature axes are all axes except the first
         feature_axes = tuple(range(1, len(instances.features.shape)))

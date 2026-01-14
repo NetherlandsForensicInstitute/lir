@@ -50,16 +50,16 @@ class Transformer(ABC):
         return self
 
     @abstractmethod
-    def transform(self, instances: InstanceData) -> InstanceData:
+    def apply(self, instances: InstanceData) -> InstanceData:
         """Each transformer should implement a custom `transform()` method."""
         raise NotImplementedError
 
     def fit_transform(self, instances: InstanceData) -> InstanceData:
-        return self.fit(instances).transform(instances)
+        return self.fit(instances).apply(instances)
 
 
 class Identity(Transformer):
-    def transform(self, instances: InstanceDataType) -> InstanceDataType:
+    def apply(self, instances: InstanceDataType) -> InstanceDataType:
         return instances
 
 
@@ -74,7 +74,7 @@ class BinaryClassifierTransformer(Transformer):
         self.estimator.fit(instances.features, instances.labels)
         return self
 
-    def transform(self, instances: InstanceData) -> InstanceData:
+    def apply(self, instances: InstanceData) -> InstanceData:
         instances = check_type(FeatureData, instances)
 
         # get probabilities from the estimator
@@ -94,7 +94,7 @@ class SklearnTransformer(Transformer):
         self.transformer.fit(instances.features, instances.labels)
         return self
 
-    def transform(self, instances: InstanceData) -> InstanceData:
+    def apply(self, instances: InstanceData) -> InstanceData:
         instances = check_type(FeatureData, instances)
         return instances.replace_as(FeatureData, features=self.transformer.transform(instances.features))
 
@@ -111,7 +111,7 @@ class FunctionTransformer(Transformer):
     def __init__(self, func: Callable):
         self.func = func
 
-    def transform(self, instances: InstanceData) -> FeatureData:
+    def apply(self, instances: InstanceData) -> FeatureData:
         instances = check_type(FeatureData, instances)
         return instances.replace(features=self.func(instances.features))
 
@@ -129,9 +129,9 @@ class Tee(Transformer):
 
         return self
 
-    def transform(self, instances: InstanceData) -> InstanceData:
+    def apply(self, instances: InstanceData) -> InstanceData:
         for transformer in self.transformers:
-            transformer.transform(instances)
+            transformer.apply(instances)
 
         return instances
 
@@ -152,8 +152,8 @@ class TransformerWrapper(Transformer):
         self.wrapped_transformer.fit(instances)
         return self
 
-    def transform(self, instances: InstanceData) -> InstanceData:
-        return self.wrapped_transformer.transform(instances)
+    def apply(self, instances: InstanceData) -> InstanceData:
+        return self.wrapped_transformer.apply(instances)
 
 
 class NumpyTransformer(TransformerWrapper):
@@ -163,8 +163,8 @@ class NumpyTransformer(TransformerWrapper):
         super().__init__(transformer)
         self.header = header
 
-    def transform(self, instances: InstanceData) -> InstanceData:
-        instances = super().transform(instances)
+    def apply(self, instances: InstanceData) -> InstanceData:
+        instances = super().apply(instances)
         if self.header:
             instances = instances.replace(header=self.header)
         return instances
@@ -259,7 +259,7 @@ class CsvWriter(Transformer):
     def fit_transform(self, instances: InstanceDataType) -> InstanceDataType:
         return instances
 
-    def transform(self, instances: InstanceData) -> FeatureData:
+    def apply(self, instances: InstanceData) -> FeatureData:
         """Write numpy feature vector to CSV output file."""
         instances = check_type(FeatureData, instances)
 

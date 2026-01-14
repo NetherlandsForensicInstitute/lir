@@ -48,7 +48,7 @@ class LogitCalibrator(Transformer):
         self._logit.fit(finite_instances.llrs.reshape(-1, 1), finite_instances.require_labels)
         return self
 
-    def transform(self, instances: InstanceData) -> LLRData:
+    def apply(self, instances: InstanceData) -> LLRData:
         instances = check_type(FeatureData, instances)
         if not isinstance(FeatureData, LLRData):
             instances = instances.replace_as(LLRData)
@@ -149,7 +149,7 @@ class FourParameterLogisticCalibrator(Transformer):
 
         return self
 
-    def transform(self, instances: InstanceData) -> LLRData:
+    def apply(self, instances: InstanceData) -> LLRData:
         """
         Returns the odds ratio.
         """

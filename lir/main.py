@@ -2,6 +2,7 @@
 
 import argparse
 import datetime
+import importlib
 import logging
 import shutil
 import sys
@@ -53,6 +54,11 @@ def get_parser() -> argparse.ArgumentParser:
         ' https://joblib.readthedocs.io/en/latest/parallel.html',
         type=int,
         default=0,
+    )
+    parser.add_argument(
+        '--copy-templates',
+        help='Copy YAML templates for example LR systems to the current project directory',
+        action='store_true',
     )
 
     parser.add_argument('-v', help='increases verbosity', action='count', default=0)
@@ -117,6 +123,15 @@ def initialize_experiments(
     return parse_experiments(cfg, output_dir), output_dir
 
 
+def copy_example_yamls():
+    destination_directory = Path.cwd()
+
+    with importlib.resources.as_file(
+        importlib.resources.files('lir') / 'examples'
+    ) as example_yaml_directory:
+        shutil.copytree(example_yaml_directory, destination_directory / 'examples')
+        print(f"Copied example YAML files to {destination_directory}/examples")
+
 def error(msg: str, e: Exception | None = None) -> None:
     sys.stderr.write(f'{msg}\n')
     if e and LOG.level <= logging.DEBUG:
@@ -129,6 +144,10 @@ def main(input_args: list[str] | None = None) -> None:
     args = parser.parse_args(input_args)
 
     setup_logging(args.v - args.q)
+
+    # Export example YAML files
+    if args.copy_templates:
+        copy_example_yamls()
 
     if args.list_registry:
         for name in registry.registry():

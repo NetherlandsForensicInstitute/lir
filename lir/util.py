@@ -129,19 +129,3 @@ class Bind(partial):
         iargs = iter(args)
         args = tuple(next(iargs) if arg is ... else arg for arg in self.args)
         return self.func(*args, *iargs, **keywords)
-
-
-def check_misleading_finite(values: np.ndarray, labels: np.ndarray) -> None:
-    """
-    Check whether all values are either finite or not misleading.
-    """
-
-    # give error message if H1's contain zeros and H2's contain ones
-    if np.any(np.isneginf(values[labels == 1])) and np.any(np.isposinf(values[labels == 0])):
-        raise ValueError('invalid input: -inf found for H1 and inf found for H2')
-    # give error message if H1's contain zeros
-    if np.any(np.isneginf(values[labels == 1])):
-        raise ValueError('invalid input: -inf found for H1')
-    # give error message if H2's contain ones
-    if np.any(np.isposinf(values[labels == 0])):
-        raise ValueError('invalid input: inf found for H2')

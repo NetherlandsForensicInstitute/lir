@@ -52,9 +52,7 @@ modules:
     wrapper: lir.config.numpy_wrapper
 
   # calibrators
-  kde:
-    class: lir.algorithms.kde.KDECalibrator
-    wrapper: lir.config.numpy_wrapper
+  kde: lir.algorithms.kde.KDECalibrator
   isotonic_calibrator:
     class: lir.algorithms.isotonic_regression.IsotonicRegression
     wrapper: lir.config.numpy_wrapper

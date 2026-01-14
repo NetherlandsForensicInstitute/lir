@@ -5,10 +5,11 @@ from collections.abc import Callable
 from typing import Any, Self
 
 import numpy as np
-from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.neighbors import KernelDensity
 
-from lir.util import Xy_to_Xn, check_misleading_finite, ln_to_log10
+from lir import Transformer
+from lir.data.models import FeatureData, InstanceData, LLRData
+from lir.util import Xy_to_Xn, check_type, ln_to_log10
 
 
 LOG = logging.getLogger(__name__)
@@ -69,7 +70,7 @@ def parse_bandwidth(
             raise ValueError(f'Invalid `bandwidth` type: {type(bandwidth)} (value={bandwidth!r})')
 
 
-class KDECalibrator(BaseEstimator, TransformerMixin):
+class KDECalibrator(Transformer):
     """
     Calculates a likelihood ratio of a score value, provided it is from one of
     two distributions. Uses kernel density estimation (KDE) for interpolation.
@@ -123,21 +124,19 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
 
         return bandwidth[0], bandwidth[1]
 
-    def fit(self, X: np.ndarray, y: np.ndarray) -> Self:
-        # check if we have matching dimensions
-        if np.prod(X.shape) != len(y):
-            raise ValueError(f'invalid shape: expected: ({len(y)},) or ({len(y)}, 1); found: {X.shape}')
-
-        # make sure we have a 2d array of one column
-        X = X.reshape(-1, 1)
+    def fit(self, instances: InstanceData) -> Self:
+        instances = check_type(FeatureData, instances)
+        instances = instances.replace_as(LLRData)
 
         # check if data is sane
-        check_misleading_finite(X, y)
+        instances.check_misleading_finite()
 
         # KDE needs finite scale. Inf and negInf are treated as point masses at the extremes.
         # Remove them from data for KDE and calculate fraction data that is left.
-        # LRs in finite range will be corrected for fractions in transform function
-        X, y, self.numerator, self.denominator = compensate_and_remove_neginf_inf(X, y)
+        # LRs in finite range will be corrected for fractions in the apply function
+        X, y, self.numerator, self.denominator = compensate_and_remove_neginf_inf(
+            instances.llrs.reshape(-1, 1), instances.require_labels
+        )
         X0, X1 = Xy_to_Xn(X, y)
 
         bandwidth0, bandwidth1 = self.bandwidth(X, y)
@@ -145,45 +144,48 @@ class KDECalibrator(BaseEstimator, TransformerMixin):
         self._kde1 = KernelDensity(kernel='gaussian', bandwidth=bandwidth1).fit(X1)
         return self
 
-    def transform(self, X: np.ndarray) -> np.ndarray:
+    def apply(self, instances: InstanceData) -> LLRData:
         """Provide LLR's as output."""
         if self._kde0 is None or self._kde1 is None or self.numerator is None or self.denominator is None:
-            raise ValueError('KDECalibrator.transform() called before fit')
+            raise ValueError('KDECalibrator.apply() called before fit')
 
-        self.p0 = np.empty(np.shape(X))
-        self.p1 = np.empty(np.shape(X))
+        instances = check_type(FeatureData, instances)
+        instances = instances.replace_as(LLRData)
+
         # initiate LRs_output
-        LLRs_output = np.empty(np.shape(X))
+        llrs_output = np.empty(instances.llrs.shape)
+        p0 = np.empty(instances.llrs.shape)
+        p1 = np.empty(instances.llrs.shape)
 
         # get inf and neginf
-        wh_inf = np.isposinf(X)
-        wh_neginf = np.isneginf(X)
+        wh_inf = np.isposinf(instances.llrs)
+        wh_neginf = np.isneginf(instances.llrs)
 
         # assign hard values for extremes
-        LLRs_output[wh_inf] = np.inf
-        LLRs_output[wh_neginf] = -np.inf
-        self.p0[wh_inf] = 0
-        self.p1[wh_inf] = 1
-        self.p0[wh_neginf] = 1
-        self.p1[wh_neginf] = 0
+        llrs_output[wh_inf] = np.inf
+        llrs_output[wh_neginf] = -np.inf
+        p0[wh_inf] = 0
+        p1[wh_inf] = 1
+        p0[wh_neginf] = 1
+        p1[wh_neginf] = 0
 
         # get elements that are not inf or neginf
-        el = np.isfinite(X)
-        X = X[el]
+        finite_llrs_index = np.isfinite(instances.llrs)
+        finite_llrs = instances.llrs[finite_llrs_index].reshape(-1, 1)
 
         # perform KDE as usual
-        X = X.reshape(-1, 1)
-        ln_H1 = self._kde1.score_samples(X)
-        ln_H2 = self._kde0.score_samples(X)
+        ln_H1 = self._kde1.score_samples(finite_llrs)
+        ln_H2 = self._kde0.score_samples(finite_llrs)
         ln_dif = ln_H1 - ln_H2
         log10_dif = ln_to_log10(ln_dif)
 
         # calculate p0 and p1's (redundant?)
-        self.p0[el] = self.denominator * np.exp(ln_H2)
-        self.p1[el] = self.numerator * np.exp(ln_H1)
+        p0[finite_llrs_index] = self.denominator * np.exp(ln_H2)
+        p1[finite_llrs_index] = self.numerator * np.exp(ln_H1)
 
         # apply correction for fraction of negInf and Inf data
         log10_compensator = np.log10(self.numerator / self.denominator)
-        LLRs_output[el] = log10_compensator + log10_dif
+        llrs_output[finite_llrs_index] = log10_compensator + log10_dif
 
-        return LLRs_output.flatten()
+        probabilities = np.stack([p0, p1], axis=1)
+        return instances.replace(features=llrs_output, probabilities=probabilities)

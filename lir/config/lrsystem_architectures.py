@@ -49,7 +49,9 @@ def specific_source(config: ContextAwareDict, output_dir: Path) -> LRSystem:
     The `specific_source` function name corresponds with the naming scheme in the
     registry. See for example: `lir.config.lrsystems.specific_source`.
     """
-    pipeline = parse_module(pop_field(config, 'modules'), output_dir, config.context, default_method='pipeline')
+    pipeline = parse_module(
+        pop_field(config, 'modules'), output_dir, config.context, default_method=parse_default_pipeline(config)
+    )
     check_is_empty(config)
     return BinaryLRSystem(pipeline)
 
@@ -61,11 +63,15 @@ def score_based(config: ContextAwareDict, output_dir: Path) -> LRSystem:
     The `specific_source` function name corresponds with the naming scheme in the
     registry. See for example: `lir.config.lrsystems.score_based`.
     """
+    default_pipeline = parse_default_pipeline(config)
+
     preprocessing = parse_module(
-        pop_field(config, 'preprocessing'), output_dir, config.context, default_method='pipeline'
+        pop_field(config, 'preprocessing'), output_dir, config.context, default_method=default_pipeline
     )
     pairing_function = parse_pairing_config(pop_field(config, 'pairing'), output_dir, config.context)
-    evaluation = parse_module(pop_field(config, 'comparing'), output_dir, config.context, default_method='pipeline')
+    evaluation = parse_module(
+        pop_field(config, 'comparing'), output_dir, config.context, default_method=default_pipeline
+    )
 
     check_is_empty(config)
     return ScoreBasedSystem(preprocessing, pairing_function, evaluation)
@@ -73,12 +79,14 @@ def score_based(config: ContextAwareDict, output_dir: Path) -> LRSystem:
 
 @config_parser
 def two_level(config: ContextAwareDict, output_dir: Path) -> LRSystem:
+    default_pipeline = parse_default_pipeline(config)
+
     preprocessing = parse_module(
-        pop_field(config, 'preprocessing'), output_dir, config.context, default_method='pipeline'
+        pop_field(config, 'preprocessing'), output_dir, config.context, default_method=default_pipeline
     )
     pairing_function = parse_pairing_config(pop_field(config, 'pairing'), output_dir, config.context)
     postprocessing = parse_module(
-        pop_field(config, 'postprocessing'), output_dir, config.context, default_method='pipeline'
+        pop_field(config, 'postprocessing'), output_dir, config.context, default_method=default_pipeline
     )
     n_trace_instances = pop_field(config, 'n_trace_instances', validate=int)
     n_ref_instances = pop_field(config, 'n_ref_instances', validate=int)
@@ -140,7 +148,29 @@ def parse_augmented_lrsystem(
 
     # build the augmented configuration for the LR system
     augmented_config = substitute_hyperparameters(baseline_lrsystem_config, substitutions, context)
+<<<<<<< HEAD
 
     # construct and return the LR system
     lrsystem_output_dir = output_dir / f'{dirname_prefix}{name}'
     return parse_lrsystem(augmented_config, lrsystem_output_dir)
+=======
+    lrsystem = parse_lrsystem(
+        augmented_config,
+        output_dir / f'{dirname_prefix}{name}',
+    )
+    return lrsystem
+
+
+def parse_default_pipeline(config: ContextAwareDict) -> str:
+    """Parse the intermediate result field from configuration, with the goal of determining the default pipeline method.
+
+    :param config: the configuration dictionary
+    :return: the default method to use ('logging_pipeline' or 'pipeline')
+    """
+    intermediate_output = pop_field(config, 'intermediate_output', required=False, default=False)
+    default_method = 'logging_pipeline' if intermediate_output else 'pipeline'
+    if intermediate_output:
+        LOG.debug('Using logging pipeline by default as `intermediate_output` is set to true.')
+
+    return default_method
+>>>>>>> f7cccc3 (Use 'intermediate_output' in lrsystem prasers)

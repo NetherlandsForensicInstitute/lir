@@ -134,7 +134,7 @@ def parse_default_pipeline(config: ContextAwareDict) -> str:
     :param config: the configuration dictionary
     :return: the default method to use ('logging_pipeline' or 'pipeline')
     """
-    intermediate_output = pop_field(config, 'intermediate_output', required=False, default=False)
+    intermediate_output = pop_field(config, 'intermediate_output', default=False)
     default_method = 'logging_pipeline' if intermediate_output else 'pipeline'
     if intermediate_output:
         LOG.debug('Using logging pipeline by default as `intermediate_output` is set to true.')

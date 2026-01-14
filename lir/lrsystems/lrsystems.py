@@ -1,10 +1,11 @@
 from abc import ABC, abstractmethod
 from typing import Self
 
+from lir import Transformer
 from lir.data.models import InstanceData, LLRData
 
 
-class LRSystem(ABC):
+class LRSystem(Transformer, ABC):
     """General representation of an LR system."""
 
     def fit(self, instances: InstanceData) -> Self:

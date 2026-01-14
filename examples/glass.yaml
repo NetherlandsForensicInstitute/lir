@@ -89,7 +89,6 @@ two_level_lr_system:
     method: logging_pipeline
     steps:
       bound_llr: elub_bounder
-  seed: 42
 
 # Below we define how the LR system should be evaluated. We define three experiments:
 #

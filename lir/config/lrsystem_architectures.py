@@ -5,6 +5,7 @@ from pathlib import Path
 from lir import registry
 from lir.config.base import (
     YamlParseError,
+    check_is_empty,
     config_parser,
     parse_pairing_config,
     pop_field,
@@ -33,6 +34,7 @@ def specific_source(config: ContextAwareDict, output_dir: Path) -> LRSystem:
     registry. See for example: `lir.config.lrsystems.specific_source`.
     """
     pipeline = parse_module(pop_field(config, 'modules'), output_dir, config.context, default_method='pipeline')
+    check_is_empty(config)
     return BinaryLRSystem(pipeline)
 
 
@@ -49,6 +51,7 @@ def score_based(config: ContextAwareDict, output_dir: Path) -> LRSystem:
     pairing_function = parse_pairing_config(pop_field(config, 'pairing'), output_dir, config.context)
     evaluation = parse_module(pop_field(config, 'comparing'), output_dir, config.context, default_method='pipeline')
 
+    check_is_empty(config)
     return ScoreBasedSystem(preprocessing, pairing_function, evaluation)
 
 
@@ -64,6 +67,7 @@ def two_level(config: ContextAwareDict, output_dir: Path) -> LRSystem:
     n_trace_instances = pop_field(config, 'n_trace_instances', validate=int)
     n_ref_instances = pop_field(config, 'n_ref_instances', validate=int)
 
+    check_is_empty(config)
     return TwoLevelSystem(
         preprocessing,
         pairing_function,

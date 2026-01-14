@@ -36,28 +36,84 @@ class DataFileBuilderCsv:
         self._all_headers: list[str] = []
         self._all_data: list[np.ndarray] = []
 
-    def add_column(self, header: str | list[str], data: np.ndarray) -> None:
+    @staticmethod
+    def _get_headers(prefix: str, dimensions: list[int | list[str]]) -> list[str]:
+        """
+        Generate a one-dimensional list of headers for multi-dimensional data.
+
+        The length of the returned list is equal to the product of the dimensions.
+
+        The value of each element corresponds to the coordinates in the data.
+
+        The values of `dimensions` may be a mixture of `int` and `list[str]` types. If any value is an `int`, it is the
+        length of the dimension. If it is `list[str]`, it is a meaningful header for the dimension and its length is
+        equal to the size of the dimension.
+
+        :param prefix: prefix for all headers
+        :param dimensions: dimension of each row in the data
+        :return: a flattened array of headers
+        """
+        full_shape = [d if isinstance(d, int) else len(d) for d in dimensions]
+        full_header = np.full(shape=full_shape, fill_value=prefix)
+
+        for dim, size in enumerate(full_shape):
+            # initialize the axis header
+            shape = [size if dim == i else 1 for i in range(len(dimensions))]
+
+            # build the axis header
+            if isinstance(dimensions[dim], int):
+                if size == 1:
+                    header_indexes = np.full(shape=shape, fill_value='')
+                else:
+                    text_width = np.floor(np.log10(size - 1)) + 1
+                    header_indexes = np.char.mod(f'.%0{text_width}d', np.arange(size)).reshape(*shape)
+            else:
+                header_indexes = np.array(dimensions[dim]).reshape(*shape)
+
+            # extend the index header to all dimensions
+            for broadcast_dimension, broadcast_size in enumerate(full_shape):
+                if broadcast_dimension != dim:
+                    header_indexes = np.repeat(header_indexes, broadcast_size, axis=broadcast_dimension)
+
+            # append to the full header
+            full_header = np.char.add(full_header, header_indexes)
+
+        return list(full_header.reshape(np.prod(full_shape)))
+
+    def add_column(
+        self, data: np.ndarray, header_prefix: str = '', dimension_headers: dict[int, list[str]] | None = None
+    ) -> None:
         """
         Append data and corresponding headers to `self._all_data` and `self._all_headers`.
-        """
-        if len(data.shape) != 2:
-            data = data.reshape(data.shape[0], -1)
-        self._all_data.append(data)
 
-        if isinstance(header, str):
-            if data.shape[1] == 1:
-                self._all_headers.append(header)
-            else:
-                self._all_headers.extend([f'{header}{i}' for i in range(data.shape[1])])
-        elif isinstance(header, list):
-            if len(header) == data.shape[1]:
-                self._all_headers.extend(header)
-            else:
+        The data argument is an arbitrary numpy array. Its first dimension are the rows. Any other dimension will be
+        columns in the CSV output.
+
+        :param header_prefix: the prefix for all headers
+        :param dimension_headers: a mapping from dimensions to its headers; the dimension corresponds to the dimensions
+            of the data. Because dimension 0 corresponds to rows, it should have no headers
+        :param data:
+        """
+        dimension_headers = dimension_headers or {}
+
+        if len(data.shape) < 2:
+            data = data.reshape(-1, 1)
+
+        for dim, header in dimension_headers.items():
+            if dim == 0 or dim >= len(data.shape):
+                raise ValueError(f'dimension index out of bounds: {dim}')
+            if len(header) != data.shape[dim]:
                 raise ValueError(
                     f'the header size does not match the number of columns: {len(header)} != {data.shape[1]}'
                 )
-        else:
-            raise TypeError('argument `header` must be either `str` or `list[str]`')
+
+        dimensions = [dimension_headers.get(dim + 1, size) for dim, size in enumerate(data.shape[1:])]
+        self._all_headers.extend(self._get_headers(header_prefix or '', dimensions))
+
+        if len(data.shape) != 2:
+            data = data.reshape(data.shape[0], -1)
+
+        self._all_data.append(data)
 
     def write(self) -> None:
         LOG.info(f'writing CSV file: {self.path}')

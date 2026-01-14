@@ -68,7 +68,7 @@ def test_static_bounder(
     labels = np.concatenate([np.zeros(1), np.ones(llrs.shape[0] - 1)])
     llrs = LLRData(features=llrs, labels=labels)
     assert np.all(expected_result == bounder.apply(llrs).llrs)
-    assert np.all(expected_result == bounder.fit_transform(llrs).llrs)
+    assert np.all(expected_result == bounder.fit_apply(llrs).llrs)
     assert np.all(expected_result == bounder.fit(llrs).apply(llrs).llrs)
 
 

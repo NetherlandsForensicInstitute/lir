@@ -451,7 +451,7 @@ class TwoLevelSystem(LRSystem):
         if instances.source_ids is None:
             raise ValueError('fit() requires source_ids')
 
-        instances = self.preprocessing_pipeline.fit_transform(instances)
+        instances = self.preprocessing_pipeline.fit_apply(instances)
         self.model.fit_on_unpaired_instances(instances.features, instances.source_ids)
 
         pairs = self.pairing_function.pair(instances, self.n_trace_instances, self.n_ref_instances)

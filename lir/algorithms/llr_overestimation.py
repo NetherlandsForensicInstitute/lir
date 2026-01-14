@@ -187,7 +187,7 @@ def calc_fiducial_density_functions(
     samples_in_grid = np.sum((data >= np.min(grid)) & (data <= np.max(grid)))
     sample_size_correction = 2 ** (np.log10(100 / samples_in_grid) * smoothing_sample_size_correction)
     half_window = int(len(grid) * smoothing_grid_fraction * sample_size_correction)
-    grid_diff = float(np.diff(grid[:2]))
+    grid_diff = np.diff(grid[:2])[0]
     extended_grid = np.concatenate(
         (
             np.linspace(grid[0] - half_window * grid_diff, grid[0] - grid_diff, half_window),

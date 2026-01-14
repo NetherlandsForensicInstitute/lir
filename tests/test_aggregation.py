@@ -1,3 +1,4 @@
+import pytest
 from _pytest.tmpdir import TempPathFactory
 
 from lir import registry
@@ -25,5 +26,8 @@ def test_registry_items_available(synthesized_llrs_with_interval: LLRData, tmp_p
             assert isinstance(obj, Aggregation), f'registry item is not an instance of `Aggregation`: {name}'
 
             # generate output
-            lrsystem = BinaryLRSystem(pipeline=Identity())
-            obj.report(AggregationData(llrdata=synthesized_llrs_with_interval, lrsystem=lrsystem, parameters={}))
+            try:
+                lrsystem = BinaryLRSystem(pipeline=Identity())
+                obj.report(AggregationData(llrdata=synthesized_llrs_with_interval, lrsystem=lrsystem, parameters={}))
+            except Exception as _:
+                pytest.fail(f'generating output failed for registry item `{name}`')

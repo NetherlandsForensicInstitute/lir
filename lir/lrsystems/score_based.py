@@ -27,7 +27,7 @@ class ScoreBasedSystem(LRSystem):
         self.evaluation_pipeline = evaluation_pipeline or Pipeline([])
 
     def fit(self, instances: InstanceData) -> Self:
-        instances = self.preprocessing_pipeline.fit_transform(instances)
+        instances = self.preprocessing_pipeline.fit_apply(instances)
         pairs = self.pairing_function.pair(instances, 1, 1)
         self.evaluation_pipeline.fit(pairs)
         return self

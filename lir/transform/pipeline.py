@@ -33,7 +33,7 @@ class Pipeline(Transformer):
 
     def fit(self, instances: InstanceData) -> Self:
         for _name, module in self.steps[:-1]:
-            instances = module.fit_transform(instances)
+            instances = module.fit_apply(instances)
 
         if len(self.steps) > 0:
             _, last_module = self.steps[-1]
@@ -46,9 +46,9 @@ class Pipeline(Transformer):
             instances = module.apply(instances)
         return instances
 
-    def fit_transform(self, instances: InstanceData) -> InstanceData:
+    def fit_apply(self, instances: InstanceData) -> InstanceData:
         for _name, module in self.steps:
-            instances = module.fit_transform(instances)
+            instances = module.fit_apply(instances)
         return instances
 
 

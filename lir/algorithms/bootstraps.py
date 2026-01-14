@@ -96,7 +96,7 @@ class Bootstrap(Pipeline, ABC):
             LLRData, features=np.stack([best_1d_estimate, interval_lower, interval_upper], axis=1)
         )
 
-    def fit_transform(self, instances: InstanceData) -> LLRData:
+    def fit_apply(self, instances: InstanceData) -> LLRData:
         """Combine fitting and transforming in one step.
 
         param instances: FeatureData: The feature data to fit and transform.

@@ -54,7 +54,7 @@ class Transformer(ABC):
         """Each transformer should implement a custom `transform()` method."""
         raise NotImplementedError
 
-    def fit_transform(self, instances: InstanceData) -> InstanceData:
+    def fit_apply(self, instances: InstanceData) -> InstanceData:
         return self.fit(instances).apply(instances)
 
 
@@ -98,7 +98,7 @@ class SklearnTransformer(Transformer):
         instances = check_type(FeatureData, instances)
         return instances.replace_as(FeatureData, features=self.transformer.transform(instances.features))
 
-    def fit_transform(self, instances: InstanceData) -> FeatureData:
+    def fit_apply(self, instances: InstanceData) -> FeatureData:
         instances = check_type(FeatureData, instances)
         return instances.replace_as(
             FeatureData, features=self.transformer.fit_transform(instances.features, instances.labels)
@@ -169,8 +169,8 @@ class NumpyTransformer(TransformerWrapper):
             instances = instances.replace(header=self.header)
         return instances
 
-    def fit_transform(self, instances: InstanceData) -> InstanceData:
-        instances = super().fit_transform(instances)
+    def fit_apply(self, instances: InstanceData) -> InstanceData:
+        instances = super().fit_apply(instances)
         if self.header:
             instances = instances.replace(header=self.header)
         return instances
@@ -256,7 +256,7 @@ class CsvWriter(Transformer):
         for row in zip(*all_data, strict=True):
             writer.writerow(chain(*row))
 
-    def fit_transform(self, instances: InstanceDataType) -> InstanceDataType:
+    def fit_apply(self, instances: InstanceDataType) -> InstanceDataType:
         return instances
 
     def apply(self, instances: InstanceData) -> FeatureData:

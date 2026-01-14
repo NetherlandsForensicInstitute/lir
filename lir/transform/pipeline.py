@@ -124,16 +124,16 @@ class LoggingPipeline(Pipeline):
 
         # add column: batch
         if self.include_batch_number:
-            csv_builder.add_column('batch', np.ones((len(instances), 1)) * self.n_batches)
+            csv_builder.add_column(np.ones((len(instances), 1)) * self.n_batches, 'batch')
 
         # add column: label
         if self.include_labels and instances.labels is not None:
-            csv_builder.add_column('label', instances.labels)
+            csv_builder.add_column(instances.labels, 'label')
 
         # add columns: features
         if self.include_input:
             instances = check_type(FeatureData, instances, message='expected FeatureData as pipeline input')
-            csv_builder.add_column('features', instances.features)
+            csv_builder.add_column(instances.features, 'features')
 
         try:
             # add columns for the output of each step
@@ -145,14 +145,14 @@ class LoggingPipeline(Pipeline):
                         FeatureData, instances, message=f'expected FeatureData as output of pipeline step {module_name}'
                     )
                     header = getattr(instances, 'header', None) or module_name
-                    csv_builder.add_column(header, instances.features)
+                    csv_builder.add_column(instances.features, header)
 
             # add columns for extra fields
             for field in self.include_fields:
                 values = getattr(instances, field)
                 if not isinstance(values, np.ndarray):
                     raise ValueError(f'expected type: np.ndarray; found: {type(values)}')
-                csv_builder.add_column(field, values)
+                csv_builder.add_column(values, field)
 
         finally:
             # write all data that we accumulated, even if some steps failed

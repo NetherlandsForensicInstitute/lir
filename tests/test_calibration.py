@@ -137,7 +137,7 @@ class TestLogitCalibrator(unittest.TestCase):
 
         calibrator = LogitCalibrator()
         calibrator.fit(self.get_instances())
-        llrs_cal = calibrator.transform(self.get_instances())
+        llrs_cal = calibrator.apply(self.get_instances())
         np.testing.assert_allclose(logodds_to_odds(llrs_cal.llrs), desired)
 
     def test_on_extreme_values(self):
@@ -202,7 +202,7 @@ class TestLogitCalibrator(unittest.TestCase):
 
         calibrator = LogitCalibrator()
         calibrator.fit(instances)
-        llrs_cal = calibrator.transform(instances)
+        llrs_cal = calibrator.apply(instances)
         np.testing.assert_allclose(logodds_to_odds(llrs_cal.llrs), desired, rtol=1e-2)
 
 

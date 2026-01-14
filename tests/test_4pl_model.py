@@ -46,7 +46,7 @@ class TestFourParameterLogisticCalibrator(unittest.TestCase):
 
         four_pl_model = FourParameterLogisticCalibrator()
         four_pl_model.fit(instances)
-        logodds = four_pl_model.transform(instances)
+        logodds = four_pl_model.apply(instances)
 
         np.testing.assert_almost_equal(devpav(logodds.llrs, logodds.labels), 0.12029952948152635, decimal=5)
 
@@ -57,7 +57,7 @@ class TestFourParameterLogisticCalibrator(unittest.TestCase):
 
         four_pl_model = FourParameterLogisticCalibrator()
         four_pl_model.fit(instances)
-        logodds = four_pl_model.transform(instances)
+        logodds = four_pl_model.apply(instances)
 
         np.testing.assert_almost_equal(devpav(logodds.llrs, logodds.labels), 0.15273304557837525, decimal=5)
 
@@ -71,7 +71,7 @@ class TestFourParameterLogisticCalibrator(unittest.TestCase):
         four_pl_model = FourParameterLogisticCalibrator()
         four_pl_model.fit(instances)
 
-        logodds = four_pl_model.transform(instances)
+        logodds = four_pl_model.apply(instances)
         np.testing.assert_almost_equal(devpav(logodds.llrs, logodds.labels), 0.10475112893952891, decimal=5)
 
 

@@ -41,9 +41,9 @@ class Pipeline(Transformer):
 
         return self
 
-    def transform(self, instances: InstanceData) -> InstanceData:
+    def apply(self, instances: InstanceData) -> InstanceData:
         for _name, module in self.steps:
-            instances = module.transform(instances)
+            instances = module.apply(instances)
         return instances
 
     def fit_transform(self, instances: InstanceData) -> InstanceData:
@@ -117,7 +117,7 @@ class LoggingPipeline(Pipeline):
         self.include_input = include_input
         self.n_batches = 0
 
-    def transform(self, instances: InstanceData) -> InstanceData:
+    def apply(self, instances: InstanceData) -> InstanceData:
         # initialize the csv builder
         write_mode = 'w' if self.n_batches == 0 else 'a'
         csv_builder = DataFileBuilderCsv(self.output_file, write_mode=write_mode)
@@ -138,7 +138,7 @@ class LoggingPipeline(Pipeline):
         try:
             # add columns for the output of each step
             for module_name, module in self.steps:
-                instances = module.transform(instances)
+                instances = module.apply(instances)
 
                 if module_name in self.include_steps:
                     instances = check_type(

@@ -67,9 +67,9 @@ def test_static_bounder(
     bounder = StaticBounder(lower_bound, upper_bound)
     labels = np.concatenate([np.zeros(1), np.ones(llrs.shape[0] - 1)])
     llrs = LLRData(features=llrs, labels=labels)
-    assert np.all(expected_result == bounder.transform(llrs).llrs)
+    assert np.all(expected_result == bounder.apply(llrs).llrs)
     assert np.all(expected_result == bounder.fit_transform(llrs).llrs)
-    assert np.all(expected_result == bounder.fit(llrs).transform(llrs).llrs)
+    assert np.all(expected_result == bounder.fit(llrs).apply(llrs).llrs)
 
 
 @pytest.mark.parametrize(
@@ -134,4 +134,4 @@ def test_static_bounder(
 def test_static_bounder_illegal_input(lower_bound: float, upper_bound: float, llrs: np.ndarray, labels: np.ndarray):
     bounder = StaticBounder(lower_bound, upper_bound)
     with pytest.raises(TypeError):
-        bounder.fit(llrs, labels).transform(llrs)
+        bounder.fit(llrs, labels).apply(llrs)

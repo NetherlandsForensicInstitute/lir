@@ -21,6 +21,46 @@ LOG = logging.getLogger(__name__)
 DEFAULT_LOGLEVEL = logging.WARNING
 
 
+def get_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description='Run all or some of the parts of project')
+
+    parser.add_argument(
+        'setup',
+        metavar='FILENAME',
+        help='path to YAML file describing the evaluation setup',
+        nargs='?',
+    )
+    parser.add_argument(
+        '--experiment',
+        help='run a specific experiment (defaults to all experiments)',
+        action='append',
+    )
+    parser.add_argument(
+        '--list-experiments',
+        help='prints a list of configured experiments',
+        action='store_true',
+    )
+    parser.add_argument(
+        '--list-registry',
+        help='prints a list of registered components',
+        action='store_true',
+    )
+    parser.add_argument(
+        '--n-jobs',
+        help='Enable parallel execution of experiments. Use 0 or 1 to disable parallelism, or -1 to use all available'
+        ' cores, -2 to use all but one core, etc. The parallelism is at the experiment level, so each experiment will'
+        ' be run in its own process. For more information, see the joblib documentation:'
+        ' https://joblib.readthedocs.io/en/latest/parallel.html',
+        type=int,
+        default=0,
+    )
+
+    parser.add_argument('-v', help='increases verbosity', action='count', default=0)
+    parser.add_argument('-q', help='decreases verbosity', action='count', default=0)
+
+    return parser
+
+
 def setup_logging(level_increase: int) -> None:
     """
     Setup logging to stderr and to a file.
@@ -85,41 +125,7 @@ def error(msg: str, e: Exception | None = None) -> None:
 
 
 def main(input_args: list[str] | None = None) -> None:
-    parser = argparse.ArgumentParser(description='Run all or some of the parts of project')
-
-    parser.add_argument(
-        'setup',
-        metavar='FILENAME',
-        help='path to YAML file describing the evaluation setup',
-        nargs='?',
-    )
-    parser.add_argument(
-        '--experiment',
-        help='run a specific experiment (defaults to all experiments)',
-        action='append',
-    )
-    parser.add_argument(
-        '--list-experiments',
-        help='prints a list of configured experiments',
-        action='store_true',
-    )
-    parser.add_argument(
-        '--list-registry',
-        help='prints a list of registered components',
-        action='store_true',
-    )
-    parser.add_argument(
-        '--n-jobs',
-        help='Enable parallel execution of experiments. Use 0 or 1 to disable parallelism, or -1 to use all available'
-        ' cores, -2 to use all but one core, etc. The parallelism is at the experiment level, so each experiment will'
-        ' be run in its own process. For more information, see the joblib documentation:'
-        ' https://joblib.readthedocs.io/en/latest/parallel.html',
-        type=int,
-        default=0,
-    )
-
-    parser.add_argument('-v', help='increases verbosity', action='count', default=0)
-    parser.add_argument('-q', help='decreases verbosity', action='count', default=0)
+    parser = get_parser()
     args = parser.parse_args(input_args)
 
     setup_logging(args.v - args.q)

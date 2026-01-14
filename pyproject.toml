@@ -63,6 +63,7 @@ test = "coverage run --branch --source lir --module pytest --strict-markers test
 quicktest = {composite = ["test --testmon"]}
 test-coverage = "coverage report"
 lir = "python run.py"
+generate-docs= {composite = ["sphinx-apidoc -o docs/api lir", "sphinx-build -M html docs build"]}
 
 [tool.ruff]
 format.quote-style = "single"

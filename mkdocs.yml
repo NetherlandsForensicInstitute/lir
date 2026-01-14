@@ -5,3 +5,6 @@ edit_uri: edit/main/docs/
 site_dir: docs_html
 theme:
   name: readthedocs
+plugins:
+  - macros:
+      module_name: mkdocs

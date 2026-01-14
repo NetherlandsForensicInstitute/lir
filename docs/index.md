@@ -62,7 +62,8 @@ Evaluate an LR system using the command-line interface as follows:
 1. define your data, LR system and experiments in a YAML file;
 2. run `lir <yaml file>`.
 
-The `examples` folder may be a good starting point for setting up an experiment.
+The `examples` folder may be a good starting point for setting up an experiment. You have your own data but don't know
+which example to start from? Use the [LR system selection helper](lrsystem_yaml.md).
 
 The elements of the experiment configuration YAML are looked up in the registry. The following lists all available
 elements in the registry.

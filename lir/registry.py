@@ -7,7 +7,7 @@ from typing import Any
 
 import confidence
 
-from lir.config.base import ConfigParser
+from lir.config.base import ConfigParser, GenericConfigParser
 
 from . import resources as package_resources
 
@@ -184,7 +184,7 @@ def registry() -> ConfigParserLoader:
 
 def get(
     name: str,
-    default_config_parser: Callable[[Any], ConfigParser] | None = None,
+    default_config_parser: Callable[[Any], ConfigParser] | None = GenericConfigParser,
     search_path: list[str] | None = None,
 ) -> ConfigParser:
     """Retrieve corresponding value for a given key name from the central registry."""

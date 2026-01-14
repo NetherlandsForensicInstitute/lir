@@ -13,14 +13,11 @@ def cllr(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
     Nico Brümmer and Johan du Preez, Application-independent evaluation of speaker detection, In: Computer Speech and
     Language 20(2-3), 2006.
 
-    :param llrs: a numpy array of LLRs
-    :param y: a numpy array of labels (0 or 1)
+    :param llr_data: LLRs and their metadata, wrapped in an LLRData object
     :param weights: the relative weights of the classes
     :return: CLLR, the log likelihood ratio cost
     """
-    llrs, y = llr_data.llrs, llr_data.labels
-    if y is None:
-        raise ValueError('Labels are required to compute C_llr')
+    llrs, y = llr_data.llrs, llr_data.require_labels
 
     lrs = logodds_to_odds(llrs)
 
@@ -38,14 +35,11 @@ def cllr_min(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
     """
     Estimates the discriminative power from a collection of log likelihood ratios.
 
-    :param llrs: a numpy array of LLRs
-    :param y: a numpy array of labels (0 or 1)
+    :param llr_data: LLRs and their metadata, wrapped in an LLRData object
     :param weights: the relative weights of the classes
     :return: CLLR_min, a measure of discrimination
     """
-    llrs, y = llr_data.llrs, llr_data.labels
-    if y is None:
-        raise ValueError('Labels are required to compute C_llr_min')
+    llrs, y = llr_data.llrs, llr_data.require_labels
 
     cal = IsotonicCalibrator()
     llrmin = cal.fit_transform(llrs, y)
@@ -57,8 +51,7 @@ def cllr_cal(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
     """
     Calculates the difference between the C_llr before and after isotonic calibration.
 
-    :param llrs: a numpy array of LLRs
-    :param y: a numpy array of labels (0 or 1)
+    :param llr_data: LLRs and their metadata, wrapped in an LLRData object
     :param weights: the relative weights of the classes
     :return: CLLR_cal, the difference after isotonic calibration
     """
@@ -72,8 +65,8 @@ def llr_upper_bound(llrs: LLRData) -> float | None:
     """
     When an LLRData object contains an upper bound, return it. If not, return None.
 
-    :param llrs: a numpy array of LLRs
-    :return: max_llr
+    :param llrs: LLRs and their metadata, wrapped in an LLRData object
+    :return: the LLR upper bound, or None
     """
     return llrs.llr_upper_bound
 
@@ -82,7 +75,7 @@ def llr_lower_bound(llrs: LLRData) -> float | None:
     """
     When an LLRData object contains a lower bound, return it. If not, return None.
 
-    :param llrs: a numpy array of LLRs
-    :return: min_llr
+    :param llrs: LLRs and their metadata, wrapped in an LLRData object
+    :return: the LLR lower bound, or None
     """
     return llrs.llr_lower_bound

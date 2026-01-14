@@ -1,3 +1,15 @@
+
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+
+   self
+   lrsystem_yaml
+   lr_calculation
+   API reference <api/lir>
+
+
+
 Getting started
 ===============
 

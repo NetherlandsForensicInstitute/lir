@@ -78,7 +78,7 @@ my_data_splits:             # <-- adapt this name to your own preference, you wi
 # Next, the score-based common source LR system will be defined.
 
 my_score_based_lr_system:        # <-- this is a custom name of your LR system that you can adapt. You will refer to it later when setting up your experiment
-  intermediate_output: True      # <-- if you want csv output for every step in your LR system, use 'True'. Otherwise, use 'False'. TODO: implement this
+  #intermediate_output: True      # <-- if you want csv output for every step in your LR system, use 'True'. Otherwise, use 'False'. TODO: implement this
   architecture: score_based      # Since this is the yaml for a score based system, we specify the architecture to be 'score_based'.
   
   # This 'score-based' architecture takes three arguments:

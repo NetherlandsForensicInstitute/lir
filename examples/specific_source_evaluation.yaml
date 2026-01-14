@@ -21,7 +21,7 @@ data:
 lr_system:
   architecture: specific_source
   modules:
-    method: logging_pipeline
+    intermediate_output: True
     steps:
       scaler: standard_scaler
       clf:

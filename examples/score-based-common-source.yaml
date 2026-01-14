@@ -78,7 +78,6 @@ my_data_splits:             # <-- adapt this name to your own preference, you wi
 # Next, the score-based common source LR system will be defined.
 
 my_score_based_lr_system:        # <-- this is a custom name of your LR system that you can adapt. You will refer to it later when setting up your experiment
-  intermediate_output: True      # <-- if you want csv output for every step in your LR system, use 'True'. Otherwise, use 'False'. TODO: implement this
   architecture: score_based      # Since this is the yaml for a score based system, we specify the architecture to be 'score_based'.
   
   # This 'score-based' architecture takes three arguments:
@@ -107,6 +106,7 @@ my_score_based_lr_system:        # <-- this is a custom name of your LR system t
   preprocessing:             
   # Define your preprocessing pipeline here by adding steps.
   # This is before pairing, so the steps here should be applicable per instance.
+    intermediate_output: True      # <-- if you want csv output for every step in your LR system, use 'True'. Otherwise, remove or use 'False'.
     steps:
       scaler: standard_scaler  # apply the scikit-learn `StandardScaler` with default arguments
 
@@ -119,6 +119,7 @@ my_score_based_lr_system:        # <-- this is a custom name of your LR system t
   comparing:
   # Define the way you want to make scores from your features and to make LLRs from those scores.
   # This is after pairing, so the steps should be applicable per pair.
+    intermediate_output: True      # <-- if you want csv output for every step in your LR system, use 'True'. Otherwise, remove or use 'False'.
     steps:
       scoring: element_wise_difference          # calculate the absolute difference between the two instances for each feature
       clf: logistic_regression                  # use scikit-learn `LogisticRegression` to estimate probabilities

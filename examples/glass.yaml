@@ -53,7 +53,7 @@ score_based_lr_system:
   architecture: score_based
 
   preprocessing:
-    method: logging_pipeline  # generate a CSV file containing the output of each processing step
+    intermediate_output: True  # generate a CSV file containing the output of each processing step
     steps:
       scaler: standard_scaler  # apply the scikit-learn `StandardScaler` with default arguments
 
@@ -62,7 +62,7 @@ score_based_lr_system:
     ratio_limit: 1  # limit the number of different-source pairs to the number of same-source pairs
 
   comparing:
-    method: logging_pipeline
+    intermediate_output: True
     steps:
       scoring: element_wise_difference  # calculate the absolute difference between the two instances for each feature
       clf: logistic_regression  # use scikit-learn `LogisticRegression` to estimate probabilities
@@ -86,7 +86,7 @@ two_level_lr_system:
     method: source_pairs
     ratio_limit: 1
   postprocessing:
-    method: logging_pipeline
+    intermediate_output: True
     steps:
       bound_llr: elub_bounder
   seed: 42

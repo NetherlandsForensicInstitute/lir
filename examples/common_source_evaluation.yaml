@@ -25,7 +25,7 @@ lr_system:
     method: instance_pairs
     ratio_limit: 1
   comparing:
-    method: logging_pipeline
+    intermediate_output: True
     steps:
       scoring: element_wise_difference
       clf:

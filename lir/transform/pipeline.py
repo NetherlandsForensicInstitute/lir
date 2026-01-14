@@ -74,6 +74,10 @@ def parse_steps(config: ContextAwareDict | None, output_dir: Path) -> list[tuple
 @config_parser
 def pipeline(config: ContextAwareDict, output_dir: Path) -> Pipeline:
     """Construct a scikit-learn Pipeline based on the provided configuration."""
+    use_logging_pipeline = pop_field(config, 'intermediate_output', validate=bool, default=False)
+    if use_logging_pipeline:
+        return logging_pipeline().parse(config, output_dir)
+
     if config is None:
         return Pipeline([])
 

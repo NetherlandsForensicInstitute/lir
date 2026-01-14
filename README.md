@@ -7,18 +7,12 @@ and computation of case LRs.
 
 LIR was first released in 2020 and redesigned from scratch in 2025, replacing the [previous repository](https://github.com/NetherlandsForensicInstitute/lir-deprecated).
 
-Documentation
+References
 -------------
 
-Please consult [the dedicated documentation](https://netherlandsforensicinstitute.github.io/lir/) for a comprehensive overview of LiR, terminology and more on developing LR systems.
-
-
-Practitioner's Guide notebook
------------------------------
-
-- There is a dedicated Jupyter Notebook which uses LiR to develop LR systems for the comparison of glass measurements, accompanying the paper ["From data to a validated score-based LR system: A practitioner’s guide" - Leegwater et al.](https://doi.org/10.1016/j.forsciint.2024.111994)
-- The notebook resides on the [practitioner_guide](https://github.com/NetherlandsForensicInstitute/lir/tree/practitioner_guide) branch.
-- The notebook is also available on [Google Colab](https://colab.research.google.com/github/NetherlandsForensicInstitute/lir/blob/practitioner_guide/practitioners_guide_glass.ipynb)
+- [LiR documentation](https://netherlandsforensicinstitute.github.io/lir/): comprehensive overview, terminology and more on developing LR systems
+- Practitioner Guide ([branch](https://github.com/NetherlandsForensicInstitute/lir/tree/practitioner_guide) | [paper](https://doi.org/10.1016/j.forsciint.2024.111994) | [notebook](https://colab.research.google.com/github/NetherlandsForensicInstitute/lir/blob/practitioner_guide/practitioners_guide_glass.ipynb)): case study using LiR to develop an LR system using LiR
+- [Quick Start](https://netherlandsforensicinstitute.github.io/lir/lrsystem_yaml/): selecting / designing the proper LR system based on your data
 
 
 Installation

@@ -11,7 +11,6 @@ from lir import Transformer
 from lir.data.models import FeatureData, InstanceData, LLRData
 from lir.util import (
     Bind,
-    check_misleading_finite,
     check_type,
     ln_to_log10,
     probability_to_logodds,
@@ -37,7 +36,7 @@ class LogitCalibrator(Transformer):
         if not isinstance(FeatureData, LLRData):
             instances = instances.replace_as(LLRData)
 
-        check_misleading_finite(instances.llrs, instances.require_labels)
+        instances.check_misleading_finite()
 
         # if data is sane, remove Inf under H1 and minInf under H2 from the data if present (if present, these prevent
         # logistic regression to train while the loss is zero, so they can be safely removed)

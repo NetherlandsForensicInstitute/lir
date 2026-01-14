@@ -470,6 +470,22 @@ class LLRData(FeatureData):
             case _:
                 return super()._concatenate_field(field, values)
 
+    def check_misleading_finite(self) -> None:
+        """
+        Check whether all values are either finite or not misleading.
+        """
+        values, labels = self.llrs, self.require_labels
+
+        # give error message if H1's contain zeros and H2's contain ones
+        if np.any(np.isneginf(values[labels == 1])) and np.any(np.isposinf(values[labels == 0])):
+            raise ValueError('invalid input: -inf found for H1 and inf found for H2')
+        # give error message if H1's contain zeros
+        if np.any(np.isneginf(values[labels == 1])):
+            raise ValueError('invalid input: -inf found for H1')
+        # give error message if H2's contain ones
+        if np.any(np.isposinf(values[labels == 0])):
+            raise ValueError('invalid input: inf found for H2')
+
 
 InstanceDataType = TypeVar('InstanceDataType', bound=InstanceData)
 FeatureDataType = TypeVar('FeatureDataType', bound=FeatureData)

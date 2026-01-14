@@ -5,6 +5,7 @@ import numpy as np
 import pytest
 
 from lir.algorithms.kde import KDECalibrator, parse_bandwidth
+from lir.data.models import LLRData
 from lir.util import Xn_to_Xy, logodds_to_odds, odds_to_probability, probability_to_logodds
 
 
@@ -13,8 +14,7 @@ def test_kde_dimensions():
     labels = np.array([0, 0, 0, 0, 0, 1, 1, 1, 1, 1])
 
     kde = KDECalibrator(bandwidth=1)
-    kde.fit(features, labels).transform(features)
-    kde.fit(features.flatten(), labels).transform(features.flatten())
+    kde.fit_apply(LLRData(features=features, labels=labels))
 
 
 # the X-data for TestKDECalibrator,  TestGaussianCalibrator, TestLogitCalibrator comes from random draws of perfectly
@@ -73,9 +73,8 @@ class TestKDECalibrator(unittest.TestCase):
             1.49097168e05,
         ]
         calibrator = KDECalibrator(bandwidth='silverman')
-        calibrator.fit(X, y)
-        llrs_cal = calibrator.transform(X)
-        np.testing.assert_allclose(logodds_to_odds(llrs_cal), desired)
+        llrs_cal = calibrator.fit_apply(LLRData(features=X.reshape(-1, 1), labels=y))
+        np.testing.assert_allclose(logodds_to_odds(llrs_cal.llrs), desired)
 
     def test_on_extreme_values(self):
         X = np.array(
@@ -135,9 +134,8 @@ class TestKDECalibrator(unittest.TestCase):
             math.inf,
         ]
         calibrator = KDECalibrator(bandwidth='silverman')
-        calibrator.fit(X, y)
-        llrs_cal = calibrator.transform(X)
-        np.testing.assert_allclose(logodds_to_odds(llrs_cal), desired)
+        llrs_cal = calibrator.fit_apply(LLRData(features=X.reshape(-1, 1), labels=y))
+        np.testing.assert_allclose(logodds_to_odds(llrs_cal.llrs), desired)
 
 
 @pytest.mark.parametrize(

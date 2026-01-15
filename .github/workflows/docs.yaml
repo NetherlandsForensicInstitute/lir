@@ -12,15 +12,22 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v5
+      - uses: pdm-project/setup-pdm@v4
         with:
-          python-version: 3.x
-      - uses: actions/cache@v3
+          python-version: '3.12'
+          cache: true
+          cache-dependency-path: 'pdm.lock'
+      - name: Check lock file
+        run: pdm lock --check
+      - name: Install dev dependencies
+        run: pdm sync -G dev
+      - name: Sphinx build HTML docs
+        run: pdm run generate-docs
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          key: mkdocs-${{ github.ref }}
-          path: .cache
-          restore-keys: |
-            mkdocs-
-      - run: pip install mkdocs
-      - run: mkdocs gh-deploy --force
+          publish_branch: gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build/html
+          force_orphan: true

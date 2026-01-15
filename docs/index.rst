@@ -1,3 +1,15 @@
+
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+
+   self
+   lrsystem_yaml
+   lr_calculation
+   API reference <api/lir>
+
+
+
 Getting started
 ===============
 
@@ -5,16 +17,20 @@ Toolkit for developing, optimising and evaluating Likelihood Ratio (LR) systems.
 on different datasets, investigating impact of different sampling schemes or techniques, and doing case-based validation
 and computation of case LRs.
 
-LIR was first released in 2020 and redesigned from scratch in 2025, replacing the [previous repository](https://github.com/NetherlandsForensicInstitute/lir-deprecated).
+LIR was first released in 2020 and redesigned from scratch in 2025, replacing the `previous repository`_.
+
+.. _previous repository: https://github.com/NetherlandsForensicInstitute/lir-deprecated
+
 
 Installation
 ------------
 
-LIR is compatible with Python 3.11 and later. The easiest way to install LIR is to use `pip`:
+LIR is compatible with Python 3.11 and later. The easiest way to install LIR is to use ``pip``:
 
-```shell
-pip install lir
-```
+.. code-block:: bash
+
+   pip install lir
+
 
 Terminology
 -----------
@@ -58,16 +74,16 @@ Command-line interface
 Evaluate an LR system using the command-line interface as follows:
 
 1. define your data, LR system and experiments in a YAML file;
-2. run `lir <yaml file>`.
+2. run ``lir <yaml file>``.
 
-The `examples` folder may be a good starting point for setting up an experiment.
+The ``examples`` folder may be a good starting point for setting up an experiment.
 
 The elements of the experiment configuration YAML are looked up in the registry. The following lists all available
 elements in the registry.
 
-```commandline
-lir --list-registry
-```
+.. code-block:: bash
+
+    lir --list-registry
 
 
 Datasets
@@ -76,18 +92,25 @@ There are currently a number of datasets implemented for this project:
 
 - glass: LA-ICP-MS measurements of elemental concentration from floatglass. The data will be downloaded automatically from https://github.com/NetherlandsForensicInstitute/elemental_composition_glass when used in the pipeline for the first time.
 
-### Simulations
+Simulations
+------------
 It is straightforward to simulate data for experimentation. Currently two very simple simulations
-`synthesized_normal_binary` and `synthesized_normal_multiclass` are available, with sources and measurements drawn from
+``synthesized_normal_binary`` and ``synthesized_normal_multiclass`` are available, with sources and measurements drawn from
 normal distributions.
 
 
 Development
 -----------
 
-### Installation
-To install LiR, install the latest version from PyPI: `pip install lir` in your virtual environment. For more detailed instructions of the CLI please refer to the project [README.md](https://github.com/NetherlandsForensicInstitute/lir/blob/main/README.md#installation).
+Installation
+------------
+To install LiR, install the latest version from PyPI: ``pip install lir`` in your virtual environment. For more detailed instructions of the CLI please refer to the project `README.md`_.
 
-### Contributing
-If you want to contribute to the LiR project, please follow the [CONTRIBUTING.md](https://github.com/NetherlandsForensicInstitute/lir/blob/main/CONTRIBUTING.md) guidelines, which include the instructions to set up LiR for local development.
+.. _README.md: https://github.com/NetherlandsForensicInstitute/lir/blob/main/README.md#installation
 
+
+Contributing
+------------
+If you want to contribute to the LiR project, please follow the `CONTRIBUTING.md`_ guidelines, which include the instructions to set up LiR for local development.
+
+.. _CONTRIBUTING.md: https://github.com/NetherlandsForensicInstitute/lir/blob/main/CONTRIBUTING.md 

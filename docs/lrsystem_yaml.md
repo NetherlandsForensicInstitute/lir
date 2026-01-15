@@ -22,16 +22,14 @@ To choose which yaml-file is appropriate for you, you need to answer some questi
 Then, you will be instructed to organize your data. This ensures the data is in a format that can be processed by LiR.
 Next, you can go to the yaml-file, where you can build your LR system and set up an experiment. You will be guided by comments in the yaml-file.
 
-- Do you have one specific (case-related) reference source along with data from other sources, and do you want to model the first hypothesis exclusively with data from that source?
+- **Do you have one specific (case-related) reference source along with data from other sources, and do you want to model the first hypothesis exclusively with data from that source?**
 
   YES: You probably want a 'specific source' LR system. Go here: [specific source system](#specific-source-system)
   
   NO: You probably have data from multiple sources that are not case-related.
-  That means you probably want a 'common source' LR system.
+  That means you probably want a 'common source' LR system. Continue with the following question:
 
-Answer the following questions:
-  
-  - Does your data contain trace / reference pairs and some score for each pair?
+  - **Does your data contain trace / reference pairs and some score for each pair?**
 
     YES: You probably want a 'common source - pre-scored' LR system. Go here: [pre-scored system](#pre-scored-common-source-system)
     
@@ -92,7 +90,7 @@ If you don't know what that distinction means, you can:
 
 If you do know what the distinction means but you are unsure what is best for your data, you can use this repository to build multiple LR systems, perform validation and compare the results.
 
-The template-yaml that you could use is: [scorebased_commonsource.yaml (TODO)](https://raw.githubusercontent.com/NetherlandsForensicInstitute/lir/refs/heads/main/examples/scorebased_commonsource.yaml)
+The template-yaml that you could use is: [scorebased_commonsource.yaml (TODO)](https://raw.githubusercontent.com/NetherlandsForensicInstitute/lir/refs/heads/main/examples/score-based-common-source.yaml)
 
 The template-yaml that you could use is: [featurebased_commonsource.yaml (TODO)](https://raw.githubusercontent.com/NetherlandsForensicInstitute/lir/refs/heads/main/examples/featurebased_commonsource.yaml)
 

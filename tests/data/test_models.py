@@ -175,3 +175,10 @@ def test_llr_data():
     assert np.all(LLRData(features=llr_values).llrs == llr_values[:, 0])
     assert np.all(LLRData(features=llr_values[:, 0:1]).llrs == llr_values[:, 0])
     assert np.all(LLRData(features=llr_values).llr_intervals == llr_values[:, 1:3])
+
+
+def test_indexing():
+    features = FeatureData(features=np.ones((10, 1)), labels=np.ones(10))
+    assert len(features[:2]) == 2
+    assert len(features[1]) == 1
+    assert len(features[-1]) == 1

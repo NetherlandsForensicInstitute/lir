@@ -88,6 +88,10 @@ class InstanceData(BaseModel, ABC):
         for field in self.all_fields:
             values = getattr(self, field)
             if isinstance(values, np.ndarray):
+                # If indexes is an int, convert to array. This ensures the result is still an array, even if a single
+                # index is provided.
+                if isinstance(indexes, int):
+                    indexes = np.array([indexes])
                 data[field] = values[indexes]
             else:
                 data[field] = values

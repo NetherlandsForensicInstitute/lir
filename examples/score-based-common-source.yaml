@@ -1,42 +1,51 @@
 # score-based-common-source.yaml - a template yaml for setting up an LR system and a validation experiment.
+# This text is meant to be a yaml-file on your own system.
+# Make sure to save this as a file in your project directory so you can edit it to your own preferences.
 #
 # Below is a complete working example. If you want to adapt the setup to your own needs, you may want to specify:
 #
 # 1. Output folder
-# 2. Path to data & how to parse it
+# 2. Path to data & how to process it
 # 3. How to assign training and testing roles to your data
 # 4. The design of the lr system itself
 # 5. The validation experiment you run for your lr system
 #
 # When you are done, you can run it all using:
-# pdm run lir --setup examples/score-based-common-source.yaml
+# lir score-based-common-source.yaml
 #
 
 # 1. OUTPUT FOLDER
 # You will create an LR system and design a validation experiment. The output of the experiment will be written to the folder specified below.
 # The output will be intermediate results, metrics and graphical representations. 
-# There will be a sub folder for each experiment. The sub folders each contain a file named `metrics.csv` which contains the metrics for each
+# There will be a subfolder for each experiment. The subfolders each contain a file named `metrics.csv` which contains the metrics for each
 # LR system that is tested, and for each LR system there is a folder that may contain visualizations and other by products.
+# Note that when using the default yaml only one experiment is defined and only one subfolder will be created.
 # It is great practice to use a timestamp in the folder name so it is easier to keep track of experiment results (and to avoid overwriting earlier results).
 
 output_path: output/${timestamp}_score_based_common_source  # <-- adapt this value to your preference 
 
-# 2. PATH TO DATA AND HOW TO PARSE IT
+# 2. PATH TO DATA AND HOW TO PROCESS IT
 # An example dataset of LA-ICP-MS measurements of elemental concentration from floatglass is provided as a default dataset. For more
 # information on the dataset, see: https://github.com/NetherlandsForensicInstitute/elemental_composition_glass
 #
 # This example is only provided to give working default values for the information you need to enter for your own data. 
-# You should give a path to your data. If your data is in the default format, the default parser should work.
-# If your data is not in the default format you can either write a new parser (the hard option) or, if possible, reformat your data (the easy option).
+#
+# You should give a path to your data.
+# Next, you should check what shape your data has. If your data meets the following criteria, then LiR will be able to process it:
+# - comma separated values
+# - columns with column headers
+# - one instance per line and one line per instance
+#
+# If your data is not in this format you can either write a new parser (the hard option) or, if possible, reformat your data (the easy option).
 #
 # You can inspect the [example default data](https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/main/duplo.csv).
 # You can choose to download that csv and store it next to this yaml and point to it under 'my_data_provider' below. You can also let the data provider
 # refer to the URL.
 #
-# The parser expects a csv with columns with a header row. To help the parser, you need to specify the meaning of the columns:
+# LiR expects a csv with columns with a header row. To help interpretation, you need to specify the meaning of the columns:
 # - A source_id-column, where labels for each of the sources of your data are given.
 # - An instance_id-column, where labels for each of the instances exist. This may be a measurementID, a fileID or something else that is meaningful to
-#     you and is distinct for all instances in your set, across different sources.
+#     you and is distinct for all instances in your set, across different sources. This column is optional.
 # - ignore_columns: Columns to ignore. These may contain metadata that is helpful for you, but do not need to be interpreted as features or measurements.
 # - All other columns that are found in your file will be interpreted as feature data. Note that the data needs to be numerical. If not, the process will crash.
 
@@ -44,7 +53,7 @@ my_data_provider:                             # <-- adapt this name to your own 
   # The following two lines will download the example data from the specified URL.
   method: parse_features_from_csv_url
   url: https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/main/duplo.csv
-  #method: parse_features_from_csv_file       # <-- uncomment these two lines (and comment the two above) if you are working from a file.
+  #method: parse_features_from_csv_file       # <-- remove the # from these two lines (and add # to the two above) if you are working from a file.
   #file: duplo.csv
   source_id_column: Item                      # <-- these terms 'Item', 'id' and 'Piece' refer to the specific columns in the default example data.
   instance_id_column: id                      # Change them to your own column names as appropriate. Note that 'ignore_columns' is a list, because it can
@@ -65,8 +74,8 @@ my_data_splits:             # <-- adapt this name to your own preference, you wi
 # If you want that, you use 'multiclass_train_test_split' for 'strategy' and you specify what the size of the test data with 'test_size'.
 # All the rest will be used as training data. The test size can be a float between 0 and 1, which will be used as a percentage.
 # It can also be an integer, that will be used as an absolute number of sources.
-# You also specify a seed for the random assignment of sources to the train or test category.
-# If you want this, uncomment the next four lines and comment out the three lines above.
+# You should also specify a seed for the random assignment of sources to the train or test category.
+# If you want this, remove the # from the next four lines and put # before the three lines above.
 
 #my_data_splits:
 #  strategy: multiclass_train_test_split
@@ -87,34 +96,41 @@ my_score_based_lr_system:        # <-- this is a custom name of your LR system t
   # - `comparing`: a series of steps that takes the pairs as input and produces LLRs.
   #
   # A step may be a scikit-learn-style transformer, an estimator or a function.
-  # A step has a name that you give it and specifies a `method` argument which defines the module class,
-  # which may be a scikit-learn-style transformer, estimator or a plain function. 
-  # All other arguments are passed to the module class on instantiation, like this:
+  # A step has a name that you give it and specifies a `method` argument which points to the right transformer / estimator / function.
+  # All other arguments are passed to the transformer / estimator / function, like this:
   #
   # scaler:                        <-- a, custom, descriptive name of your step, used to refer to later on
-  #   method: standard_scaler      <-- the name of the transformer / estimator / function
+  #   method: standard_scaler      <-- the pointer to the right transformer / estimator / function
   #   with_mean: False             <-- any arguments your specific function needs
   #
-  # Alternatively, if the module needs no arguments, the module class can be entered directly. The modules `scaler1` and
+  # Alternatively, if no arguments are needed, the method can be entered directly. The modules `scaler1` and
   # `scaler2` in the following snippet are equivalent.
   #
   # scaler1:                      <-- the name of your step
-  #   method: standard_scaler     <-- the pointer to the right function
+  #   method: standard_scaler     <-- the pointer to the right transformer / estimator / function
   #
   # scaler2: standard_scaler      <-- the notation shortcut that is possible because no arguments are needed
   #
+  # To find which steps you can use, you can look in the LiR registry. This can be found by typing 'lir --list-registry' in the terminal
+  # or by looking at registry.yaml in lir/resources in the lir repository on GitHub.
   
-  preprocessing:             
+  preprocessing:
   # Define your preprocessing pipeline here by adding steps.
   # This is before pairing, so the steps here should be applicable per instance.
-    steps:
-      scaler: standard_scaler  # apply the scikit-learn `StandardScaler` with default arguments
+  # If you don't need any preprocessing steps, you can add # to the next few lines.
+  #  steps:
+  #   scaler: standard_scaler  # apply the scikit-learn `StandardScaler` with default arguments
 
   pairing:
   # Define the way you want to pair your data.
-  # 'instance_pairs' will make a pair by pairing all instances. It will produce n*(n-1)/2 pairs. For other pairing types and explanations, see HERE
+  # 'instance_pairs' will make a pair by pairing all instances exhaustively. It will produce n*(n-1)/2 pairs. For other pairing types and explanations, see HERE
     method: instance_pairs
-    ratio_limit: 2  # limit the number of different-source pairs to the number of same-source pairs. Use 'None' or delete the line to not use a limit
+  # To avoid a large disbalance between the number of pairs for each of the categories same-source and different-source, it is possible to add limits.
+  # "Use same_source_limit: N" or "different_source_limit: N" for an absolute maximum on the number of pairs.
+  # Alternatively, you can limit the number of different source-pairs as a multiple of the number of same-source pairs, using ratio_limit.
+  # Use 'None' or delete the line to not use a limit
+    ratio_limit: 2
+
 
   comparing:
   # Define the way you want to make scores from your features and to make LLRs from those scores.
@@ -137,6 +153,9 @@ my_score_based_lr_system:        # <-- this is a custom name of your LR system t
 
 # 5. THE VALIDATION EXPERIMENT
 
+# This defines one single experiment. There will be one subfolder in the output folder with the name of the experiment.
+# It is possible to define multiple experiments, e.g. by employing multiple data sets or lr_systems, if you defined them above.
+
 experiments:                             
   - name: my_validation_run                 # This is the name of the experiment, use your own preferred value.
     strategy: single_run                    # For a single validation experiment, use 'single_run'.
@@ -151,3 +170,4 @@ experiments:
       - save_model
       - lr_histogram
 
+# When you are ready, type 'lir [yaml-name].yaml' in your terminal and it will run.

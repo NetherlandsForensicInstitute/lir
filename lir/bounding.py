@@ -116,4 +116,7 @@ class NSourceBounder(LLRBounder):
 
         n_sources = np.unique(llrdata.source_ids, sorted=False)
         log_n_sopurces = np.log10(len(n_sources))
+
+        LOG.debug(f'NSourceBounder: number of sources: N={len(n_sources)}')
+        LOG.debug(f'NSourceBounder: calculated bounds: -log(N)={-log_n_sopurces}, log(N)={log_n_sopurces}')
         return -log_n_sopurces, log_n_sopurces

@@ -41,6 +41,8 @@ dev = [
     "ruff>=0.14.3",
     "mkdocs>=1.6.1",
     "scipy-stubs>=1.17.0.0",
+    "sphinx>=9.0.4",
+    "sphinx-rtd-theme>=3.1.0",
 ]
 
 [tool.pdm]

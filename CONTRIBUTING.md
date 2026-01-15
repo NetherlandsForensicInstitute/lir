@@ -113,17 +113,17 @@ You can contribute in several ways:
 
 ### 5. Documentation
 
-Please update the documentation when adding or modifying functionality. The documentation is build from the markdown files
-in the `docs/` directory using [MkDocs](https://www.mkdocs.org/) and published to GitHub pages. The latest version of
+Please update the documentation when adding or modifying functionality. The documentation is build from the ReStructured Text (RST) files
+in the `docs/` directory using [Sphinx](https://www.sphinx-doc.org/) and published to GitHub pages. The latest version of
 the documentation resides at https://netherlandsforensicinstitute.github.io/lir/.
 
-For each Pull Request, please include any relevant updates in the `docs/*.md` files (preferably in a separate commit). The
+For each Pull Request, please include any relevant updates in the `docs/*.rst` files (preferably in a separate commit). The
 documentation will be rebuild upon merging the work into the `main` branch, as part of a GitHub workflow.
 
-The documentation can be generated locally (for inspection) in multiple ways:
- - `pdm run serve` provides a preview webserver to browse through the documentation using a web browser
- - `pdm run mkdocs build` generates a `docs_html` output directory for manual inspection
+The documentation can be generated locally (for inspection) as follows:
+ - `pdm run generate-docs` to regenerate all documentation
 
+The documentation will be saved to the `build/html` directory which can be inspected, by opening the `index.html` file within a browser.
 Please also modify the README, wiki, or inline documentation as needed.
 
 ### 7. Releases

@@ -124,6 +124,10 @@ The documentation can be generated locally (for inspection) as follows:
  - `pdm run generate-docs` to regenerate all documentation
 
 The documentation will be saved to the `build/html` directory which can be inspected, by opening the `index.html` file within a browser.
+
+Alternatively, you can also build and serve the documentation as follows:
+- `pdm run serve-docs` to generate all documentation and start a local webserver (using python http.server) that serves the `build/html` directory.
+
 Please also modify the README, wiki, or inline documentation as needed.
 
 ### 7. Releases

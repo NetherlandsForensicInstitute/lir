@@ -98,3 +98,25 @@ class StaticBounder(LLRBounder):
 
     def calculate_bounds(self, llrdata: LLRData) -> tuple[float | None, float | None]:
         return self.lower_llr_bound, self.upper_llr_bound
+
+
+class NSourceBounder(LLRBounder):
+    """
+    Bound LLRs based on the number of sources.
+
+    This bounder sets the lower LLR bound to -log(N) and the upper bound to log(N), where N is the number of sources.
+
+    In non-log space, this corresponds to bounding likelihood ratios to [1/N, N]. This is a logical consequence of
+    having N sources: no source can provide more than N support for one hypothesis over the other.
+    """
+
+    def calculate_bounds(self, llrdata: LLRData) -> tuple[float | None, float | None]:
+        if llrdata.source_ids is None:
+            raise ValueError(f'{type(self)} requires source IDs to calculate bounds')
+
+        n_sources = np.unique(llrdata.source_ids, sorted=False)
+        log_n_sopurces = np.log10(len(n_sources))
+
+        LOG.debug(f'NSourceBounder: number of sources: N={len(n_sources)}')
+        LOG.debug(f'NSourceBounder: calculated bounds: -log(N)={-log_n_sopurces}, log(N)={log_n_sopurces}')
+        return -log_n_sopurces, log_n_sopurces

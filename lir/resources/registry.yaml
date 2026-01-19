@@ -67,6 +67,9 @@ modules:
   iv_bounder: 
     class: lir.algorithms.invariance_bounds.IVBounder
     wrapper: lir.config.numpy_wrapper
+  n_source_bounder:
+    class: lir.bounding.NSourceBounder
+    wrapper: lir.config.numpy_wrapper
 metric:
   cllr: lir.metrics.cllr
   cllr_min: lir.metrics.cllr_min

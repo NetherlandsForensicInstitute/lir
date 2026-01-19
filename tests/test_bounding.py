@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from lir.bounding import StaticBounder
+from lir.bounding import NSourceBounder, StaticBounder
 from lir.data.models import LLRData
 
 
@@ -135,3 +135,28 @@ def test_static_bounder_illegal_input(lower_bound: float, upper_bound: float, ll
     bounder = StaticBounder(lower_bound, upper_bound)
     with pytest.raises(TypeError):
         bounder.fit(llrs, labels).apply(llrs)
+
+
+def test_n_source_bounder():
+    bounder = NSourceBounder()
+    llrs = LLRData(
+        features=np.array([0.5, -0.2, 1.0, 0.3, -0.7, 0.8]),
+        labels=np.array([1, 0, 1, 0, 0, 1]),
+        source_ids=np.array(['A', 'A', 'B', 'B', 'C', 'C']),
+    )
+
+    # As there are 3 unique source ids, the bounds should be -log10(3) and log10(3)
+    expected_lower_bound = -np.log10(3)
+    expected_upper_bound = np.log10(3)
+
+    applied = bounder.fit_apply(llrs)
+    assert applied.llr_lower_bound == expected_lower_bound
+    assert applied.llr_upper_bound == expected_upper_bound
+    assert np.allclose(
+        applied.llrs,
+        np.clip(
+            llrs.features,
+            expected_lower_bound,
+            expected_upper_bound,
+        ).flatten(),
+    )

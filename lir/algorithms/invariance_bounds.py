@@ -23,9 +23,7 @@ def plot_invariance_delta_functions(
     """
     Returns a figure of the Invariance Verification delta functions along with the upper and lower bounds of the LRs.
 
-    :param lrs: an array of LRs
-    :param y: an array of ground-truth labels (values 0 for Hd or 1 for Hp);
-        must be of the same length as `lrs`
+    :param llrdata: An instance of LLRData containing LLRs and ground-truth labels
     :param llr_threshold_range: lower limit and upper limit for the LLRs to include in the figure
     :param step_size: required accuracy on a base-10 logarithmic scale
     :param ax: matplotlib axes
@@ -76,7 +74,7 @@ def calculate_invariance_bounds(
     """
     Returns the upper and lower Invariance Verification bounds of the LRs.
 
-    :param lrdata: an instance of LLRData containing LLRs and ground-truth labels
+    :param llrdata: an instance of LLRData containing LLRs and ground-truth labels
     :param llr_threshold: predefined values of LLRs as possible bounds
     :param step_size: required accuracy on a base-10 logarithmic scale
     :param substitute_extremes: (tuple of scalars) substitute for extreme LLRs, i.e.
@@ -125,9 +123,7 @@ def calculate_invariance_delta_functions(llrdata: LLRData, llr_threshold: np.nda
     """
     Calculates the Invariance Verification delta functions for a set of LRs at given threshold values.
 
-    :param lrs: an array of LRs
-    :param y: an array of ground-truth labels (values 0 for Hd or 1 for Hp);
-        must be of the same length as `lrs`
+    :param llrdata: An instance of LLRData containing LLRs and ground-truth labels
     :param llr_threshold: an array of threshold LLRs
     :returns: two arrays of delta-values, at all threshold LR values
     """

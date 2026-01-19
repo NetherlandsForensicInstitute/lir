@@ -52,12 +52,11 @@ class Bootstrap(Pipeline, ABC):
         """Initialize the TrainDataBootstrap with the given pipeline steps, number of bootstraps, and interval.
 
         Parameters:
-        param steps: list[tuple[str, Any]]: The steps of the pipeline to be bootstrapped.
-        param n_bootstraps: int: The number of bootstrap samples to generate. Default is 400.
-        param interval: tuple[float, float]: The lower and upper quantiles for the confidence interval.
+        :param steps: list[tuple[str, Any]]: The steps of the pipeline to be bootstrapped.
+        :param n_bootstraps: int: The number of bootstrap samples to generate. Default is 400.
+        :param interval: tuple[float, float]: The lower and upper quantiles for the confidence interval.
                                              Default: (0.05,0.95).
-        param n_points: int | None: The number of equidistant points to use for interval estimation. Default is 1000.
-                                    If None, uses the number of instances in the training data.
+        :param seed: int | None: The random seed for reproducibility. Default is None.
         """
         super().__init__(steps)
 
@@ -72,16 +71,16 @@ class Bootstrap(Pipeline, ABC):
     def get_bootstrap_data(self, instances: InstanceData) -> InstanceData:
         """Get the data points to use for interval estimation.
 
-        param instances: FeatureData: The feature data to fit the bootstrap system on.
-        return FeatureData: The feature data to use for interval estimation.
+        :param instances: FeatureData: The feature data to fit the bootstrap system on.
+        :return FeatureData: The feature data to use for interval estimation.
         """
         raise NotImplementedError
 
     def apply(self, instances: InstanceData) -> LLRData:
         """Transform the provided instances to include the best estimate and confidence intervals.
 
-        param instances: FeatureData: The feature data to transform.
-        return LLRData: The transformed feature data with best estimate and confidence intervals.
+        :param instances: FeatureData: The feature data to transform.
+        :return LLRData: The transformed feature data with best estimate and confidence intervals.
         """
         if self.f_delta_interval_lower is None or self.f_delta_interval_upper is None:
             raise ValueError('Bootstrap intervals have not been computed. Please fit the bootstrap first.')
@@ -99,16 +98,16 @@ class Bootstrap(Pipeline, ABC):
     def fit_apply(self, instances: InstanceData) -> LLRData:
         """Combine fitting and transforming in one step.
 
-        param instances: FeatureData: The feature data to fit and transform.
-        return LLRData: The transformed feature data with best estimate and confidence intervals.
+        :param instances: FeatureData: The feature data to fit and transform.
+        :return LLRData: The transformed feature data with best estimate and confidence intervals.
         """
         return self.fit(instances).apply(instances)
 
     def fit(self, instances: InstanceData) -> Self:
         """Fit the bootstrap system to the provided instances.
 
-        param instances: FeatureData: The feature data to fit the bootstrap system on.
-        return Self: The fitted bootstrap system.
+        :param instances: FeatureData: The feature data to fit the bootstrap system on.
+        :return Self: The fitted bootstrap system.
         """
 
         all_vals = []
@@ -158,8 +157,8 @@ class BootstrapAtData(Bootstrap):
     def get_bootstrap_data(self, instances: InstanceData) -> InstanceData:
         """Get the data points to use for interval estimation. The original training data points are used.
 
-        param instances: FeatureData: The feature data to fit the bootstrap system on.
-        return FeatureData: The feature data to use for interval estimation.
+        :param instances: FeatureData: The feature data to fit the bootstrap system on.
+        :return FeatureData: The feature data to use for interval estimation.
         """
         return instances
 
@@ -180,11 +179,12 @@ class BootstrapEquidistant(Bootstrap):
         """Initialize the instance with the given pipeline steps, number of bootstraps, and interval.
 
         Parameters:
-        param steps: list[tuple[str, Any]]: The steps of the pipeline to be bootstrapped.
-        param n_bootstraps: int: The number of bootstrap samples to generate. Default is 400.
-        param interval: tuple[float, float]: The lower and upper quantiles for the confidence interval.
+        :param steps: list[tuple[str, Any]]: The steps of the pipeline to be bootstrapped.
+        :param n_bootstraps: int: The number of bootstrap samples to generate. Default is 400.
+        :param interval: tuple[float, float]: The lower and upper quantiles for the confidence interval.
                                              Default: (0.05,0.95).
-        param n_points: int | None: The number of equidistant points to use for interval estimation. Default is 1000.
+        :param seed: int | None: The random seed for reproducibility. Default is None.
+        :param n_points: int | None: The number of equidistant points to use for interval estimation. Default is 1000.
                                     If None, uses the number of instances in the training data.
         """
         super().__init__(steps, n_bootstraps, interval, seed)
@@ -194,8 +194,8 @@ class BootstrapEquidistant(Bootstrap):
         """Get the data points to use for interval estimation. This is done by creating equidistant points
         within the range of the training data.
 
-        param instances: FeatureData: The feature data to fit the bootstrap system on.
-        return FeatureData: The feature data to use for interval estimation.
+        :param instances: FeatureData: The feature data to fit the bootstrap system on.
+        :return FeatureData: The feature data to use for interval estimation.
         """
         instances = check_type(FeatureData, instances)
         if instances.features.ndim != 2 or instances.features.shape[1] != 1:

@@ -20,6 +20,12 @@ def compensate_and_remove_neginf_inf(
 ) -> tuple[np.ndarray, np.ndarray, float, float]:
     """
     for Gaussian and KDE-calibrator fitting: remove negInf, Inf and compensate
+
+    :param log_odds: n * 1 np.array of log-odds
+    :param y: n * 1 np.array of labels (Booleans).
+
+    :returns: log_odds (with negInf and Inf removed), y (with negInf and Inf removed),
+                numerator compensator, denominator compensator
     """
     X_finite = np.isfinite(log_odds).flatten()
     el_H1 = np.logical_and(X_finite, y == 1)
@@ -99,6 +105,10 @@ class KDECalibrator(Transformer):
         """
         Estimates the optimal bandwidth parameter using Silverman's rule of
         thumb.
+
+        :param X: n * 1 np.array of scores
+        :param y: n * 1 np.array of labels (Booleans).
+        :returns: bandwidth for class 0, bandwidth for class 1
         """
         assert len(X) > 0 and len(y) > 0
 
@@ -145,7 +155,11 @@ class KDECalibrator(Transformer):
         return self
 
     def apply(self, instances: InstanceData) -> LLRData:
-        """Provide LLR's as output."""
+        """Provide LLR's as output.
+
+        :param instances: InstanceData to apply the calibrator to.
+        :returns: LLRData with calibrated log-likelihood ratios.
+        """
         if self._kde0 is None or self._kde1 is None or self.numerator is None or self.denominator is None:
             raise ValueError('KDECalibrator.apply() called before fit')
 

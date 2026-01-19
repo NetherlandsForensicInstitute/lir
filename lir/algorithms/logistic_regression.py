@@ -70,16 +70,15 @@ class LogitCalibrator(Transformer):
 
 def _negative_log_likelihood_balanced(X: np.ndarray, y: np.ndarray, model: Callable, params: list) -> np.ndarray:
     """
-    calculates neg_llh of probabilistic binary classifier.
+    Calculates the negative log likelihood (llh) of probabilistic binary classifier.
+
     The llh is balanced in the sense that the total weight of '1'-labels is equal to the total weight of '0'-labels.
 
-    inputs:
-        X: n * 1 np.array of scores
-        y: n * 1 np.array of labels (Booleans). H1 --> 1, H2 --> 0.
-        model: model that links score to posterior probabilities
-        params: mapping of parameter names to values of the model.
-    output:
-        neg_llh_balanced: float, balanced negative log likelihood (base = exp)
+    :param X: n * 1 np.array of scores
+    :param y: n * 1 np.array of labels (Booleans). H1 --> 1, H2 --> 0.
+    :param model: model that links score to posterior probabilities
+    :param params: mapping of parameter names to values of the model.
+    :returns: neg_llh_balanced: float, balanced negative log likelihood (base = exp)
     """
 
     probs = model(X, *params)
@@ -98,6 +97,12 @@ class FourParameterLogisticCalibrator(Transformer):
         self.model: Callable
 
     def fit(self, instances: InstanceData) -> Self:
+        """
+        Fit the calibrator to data.
+
+        :param instances: InstanceData to fit the calibrator to.
+        :returns: Self
+        """
         instances = check_type(FeatureData, instances)
         if not isinstance(FeatureData, LLRData):
             instances = instances.replace_as(LLRData)
@@ -150,7 +155,10 @@ class FourParameterLogisticCalibrator(Transformer):
 
     def apply(self, instances: InstanceData) -> LLRData:
         """
-        Returns the odds ratio.
+        Apply the fitted calibrator to new data.
+
+        :param instances: InstanceData to apply the calibrator to.
+        :returns: LLRData with calibrated log-likelihood ratios.
         """
         if self.coef_ is None:
             raise ValueError('trying to use a model before fitting')
@@ -166,14 +174,15 @@ class FourParameterLogisticCalibrator(Transformer):
     @staticmethod
     def _four_pl_model(s: np.ndarray, a: float, b: float, c: float, d: float) -> np.ndarray:
         """
-        inputs:
-                s: n * 1 np.array of scores
-                a,b,c,d,: floats defining 4PL model.
-                    a and b are the familiar logistic parameters.
-                    c and d respectively floor and ceil the posterior probability
-                        the flour probability is c and the ceiling probability is c + (1 - c)/(1 + d)
-        output:
-                p: n * 1 np.array. Posterior probabilities of succes given each s (and a,b,c,d)
+        4-parameter logistic model that links score to posterior probability.
+
+        :param s: n * 1 np.array of scores
+        :param a: logistic parameter
+        :param b: logistic parameter
+        :param c: floor of posterior probability
+        :param d: ceiling of posterior probability
+
+        :returns p: n * 1 np.array. Posterior probabilities of succes.
         """
         p = c + ((1 - c) / (1 + d)) * 1 / (1 + np.exp(-a * s - b))
         return p

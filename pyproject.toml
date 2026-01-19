@@ -42,6 +42,7 @@ dev = [
     "scipy-stubs>=1.17.0.0",
     "sphinx>=9.0.4",
     "sphinx-rtd-theme>=3.1.0",
+    "sphinxcontrib-napoleon>=0.7",
 ]
 
 [tool.pdm]

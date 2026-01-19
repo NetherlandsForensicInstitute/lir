@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:1a8eeceff01074e23b665b28bee8cd7f5b6be6afd18d791ccb6f960d1be61c8f"
+content_hash = "sha256:4764e6e02c87c4210a4c971dd543fcc90801301c3e6ed334dc98a72e9262c81f"
 
 [[metadata.targets]]
 requires_python = ">=3.11"
@@ -1238,6 +1238,19 @@ files = [
 ]
 
 [[package]]
+name = "pockets"
+version = "0.9.1"
+summary = "A collection of helpful Python tools!"
+groups = ["dev"]
+dependencies = [
+    "six>=1.5.2",
+]
+files = [
+    {file = "pockets-0.9.1-py2.py3-none-any.whl", hash = "sha256:68597934193c08a08eb2bf6a1d85593f627c22f9b065cc727a4f03f669d96d86"},
+    {file = "pockets-0.9.1.tar.gz", hash = "sha256:9320f1a3c6f7a9133fe3b571f283bcf3353cd70249025ae8d618e40e9f7e92b3"},
+]
+
+[[package]]
 name = "pydantic"
 version = "2.12.5"
 requires_python = ">=3.9"
@@ -1692,7 +1705,7 @@ name = "six"
 version = "1.17.0"
 requires_python = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
 summary = "Python 2 and 3 compatibility utilities"
-groups = ["default"]
+groups = ["default", "dev"]
 files = [
     {file = "six-1.17.0-py2.py3-none-any.whl", hash = "sha256:4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274"},
     {file = "six-1.17.0.tar.gz", hash = "sha256:ff70335d468e7eb6ec65b95b99d3a2836546063f63acc5171de367e834932a81"},
@@ -1811,6 +1824,20 @@ groups = ["dev"]
 files = [
     {file = "sphinxcontrib-jsmath-1.0.1.tar.gz", hash = "sha256:a9925e4a4587247ed2191a22df5f6970656cb8ca2bd6284309578f2153e0c4b8"},
     {file = "sphinxcontrib_jsmath-1.0.1-py2.py3-none-any.whl", hash = "sha256:2ec2eaebfb78f3f2078e73666b1415417a116cc848b72e5172e596c871103178"},
+]
+
+[[package]]
+name = "sphinxcontrib-napoleon"
+version = "0.7"
+summary = "Sphinx \"napoleon\" extension."
+groups = ["dev"]
+dependencies = [
+    "pockets>=0.3",
+    "six>=1.5.2",
+]
+files = [
+    {file = "sphinxcontrib-napoleon-0.7.tar.gz", hash = "sha256:407382beed396e9f2d7f3043fad6afda95719204a1e1a231ac865f40abcbfcf8"},
+    {file = "sphinxcontrib_napoleon-0.7-py2.py3-none-any.whl", hash = "sha256:711e41a3974bdf110a484aec4c1a556799eb0b3f3b897521a018ad7e2db13fef"},
 ]
 
 [[package]]

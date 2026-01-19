@@ -96,3 +96,4 @@ hyperparameter_types:
   cluster: lir.config.substitution.parse_clustered
   constant: lir.config.substitution.parse_constant
   float: lir.config.substitution.parse_float
+  folder: lir.config.substitution.parse_folder

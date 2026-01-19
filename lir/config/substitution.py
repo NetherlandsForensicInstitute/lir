@@ -240,6 +240,64 @@ def parse_float(spec: ContextAwareDict, output_path: Path) -> 'FloatHyperparamet
     return FloatHyperparameter(path, low, high, step, log)
 
 
+class FolderHyperparameter(Hyperparameter):
+    """
+    A folder hyperparameter that takes all files in a given folder as options.
+
+    A folder hyperparameter has fields in a YAML configuration:
+    - folder: the path of the folder containing the options
+    - ignore_list: a list of file patterns to ignore
+
+    The generated options will have the full path of each file as both name and value.
+
+    A ValueError can be raised in the following situations:
+    - the given folder does not exist
+        applies during initialization
+    - no valid files are found in the folder (after applying the ignore list)
+        applies when calling the `options()` method
+    """
+
+    def __init__(self, path: str, folder: str, ignore_list: list[str] | None = None):
+        super().__init__(path)
+        folder_path = Path(folder)
+
+        if not folder_path.is_dir():
+            raise ValueError(f'folder hyperparameter {path} points to non-existing folder: {folder}')
+
+        self.folder_path = folder_path
+
+        # Setting ignore list as an empty list if None is given helps avoid checks later on.
+        if ignore_list is None:
+            self.ignore_list = []
+        else:
+            self.ignore_list = ignore_list
+
+    def options(self) -> list[HyperparameterOption]:
+        """Generates the options by walking over the folder."""
+        options = []
+        for dirpath, _, filenames in self.folder_path.walk():
+            for filename in filenames:
+                file = dirpath / filename
+
+                # Check the ignore list patterns
+                if not any(file.match(pattern) for pattern in self.ignore_list):
+                    options.append(HyperparameterOption(str(file), {self.name: str(file)}))
+
+        if not options:
+            raise ValueError(f'No (valid) files found in folder hyperparameter at path: {self.folder_path}')
+
+        return options
+
+
+def parse_folder(spec: ContextAwareDict, output_path: Path) -> 'FolderHyperparameter':
+    """Parse the `parameters` section of the configuration into a `FolderHyperparameter` object."""
+    folder = pop_field(spec, 'folder')
+    path = pop_field(spec, 'path')
+    ignore_list = pop_field(spec, 'ignore_list', required=False)
+    check_is_empty(spec)
+    return FolderHyperparameter(path, folder, ignore_list)
+
+
 def parse_hyperparameter(
     spec: ContextAwareDict,
     output_dir: Path,

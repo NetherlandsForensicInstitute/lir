@@ -144,6 +144,8 @@ def test_n_source_bounder():
         labels=np.array([1, 0, 1, 0, 0, 1]),
         source_ids=np.array(['A', 'A', 'B', 'B', 'C', 'C']),
     )
+
+    # As there are 3 unique source ids, the bounds should be -log10(3) and log10(3)
     expected_lower_bound = -np.log10(3)
     expected_upper_bound = np.log10(3)
 

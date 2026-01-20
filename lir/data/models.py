@@ -9,6 +9,8 @@ from pydantic import AfterValidator, BaseModel, ConfigDict, model_validator
 
 LOG = logging.getLogger(__name__)
 
+DataObjectType = TypeVar('DataObjectType', bound='tuple[DataProvider, DataStrategy]')
+
 
 def _validate_labels(labels: np.ndarray | None) -> np.ndarray | None:
     """Check if labels have the correct shape."""

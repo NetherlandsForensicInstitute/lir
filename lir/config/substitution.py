@@ -299,6 +299,7 @@ class FolderHyperparameter(Hyperparameter):
 
         return options
 
+
 @config_parser
 def parse_folder(spec: ContextAwareDict, output_path: Path) -> 'FolderHyperparameter':
     """Parse the `parameters` section of the configuration into a `FolderHyperparameter` object."""
@@ -309,7 +310,7 @@ def parse_folder(spec: ContextAwareDict, output_path: Path) -> 'FolderHyperparam
     return FolderHyperparameter(path, folder, ignore_files)
 
 
-def parse_hyperparameter(
+def parse_parameter(
     spec: ContextAwareDict,
     output_dir: Path,
 ) -> Hyperparameter:
@@ -377,11 +378,12 @@ def _path_exists(struct: dict | list, path: list[str]) -> bool:
         return index in struct and _path_exists(struct[index], path[1:])  # type: ignore
 
 
-def substitute_hyperparameters(
+def substitute_parameters(
     base_config: ContextAwareDict, hyperparameters: Mapping[str, Any], context: list[str]
 ) -> ContextAwareDict:
     """
-    Substitute hyperparameters in an LR system configuration and return the updated configuration.
+    Substitute parameters (i.e. hyperparameters or dataparameters) in an LR system configuration and return the updated
+    configuration.
 
     :param base_config: the original LR system configuration
     :param hyperparameters: the hyperparameters and their values

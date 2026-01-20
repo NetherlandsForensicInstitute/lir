@@ -9,10 +9,12 @@ from tqdm import tqdm
 
 import lir
 from lir.aggregation import Aggregation, AggregationData
+from lir.config.base import ContextAwareDict
+from lir.config.data import parse_data_object
 from lir.config.lrsystem_architectures import ParsedLRSystem
 from lir.config.util import simplify_data_structure
-from lir.data.models import DataProvider, DataStrategy, concatenate_instances
-from lir.lrsystems.lrsystems import LLRData, LRSystem
+from lir.data.models import FeatureData, concatenate_instances
+from lir.lrsystems.lrsystems import LLRData
 
 
 LOG = logging.getLogger(__name__)
@@ -24,20 +26,18 @@ class Experiment(ABC):
     def __init__(
         self,
         name: str,
-        splitter: DataStrategy,
         outputs: Sequence[Aggregation],
         output_path: Path,
     ):
         self.name = name
-        self.splitter = splitter
         self.outputs = outputs
         self.output_path = output_path
 
     def _run_lrsystem(
-            self,
-            lrsystem: ParsedLRSystem,
-            hyperparameters: dict[str, Any],
-            dataprovider: DataProvider,
+        self,
+        lrsystem: ParsedLRSystem,
+        hyperparameters: dict[str, Any],
+        split_data: Iterable[tuple[FeatureData, FeatureData]],
     ) -> LLRData:
         """Run experiment on a single LR system configuration using the provided data(setup).
 
@@ -60,7 +60,7 @@ class Experiment(ABC):
 
         # Split the data into a train / test subset, according to the provided DataStrategy. This could
         # for example be a simple binary split or a multiple fold cross validation split.
-        for training_data, test_data in self.splitter.apply(dataprovider.get_instances()):
+        for training_data, test_data in split_data:
             lrsystem.fit(training_data)
             subset_llr_results: LLRData = lrsystem.apply(test_data)
 
@@ -101,23 +101,29 @@ class PredefinedExperiment(Experiment):
     def __init__(
         self,
         name: str,
-        dataproviders: Iterable[tuple[DataProvider, dict[str, Any]]],
-        splitter: DataStrategy,
+        data_configs: list[tuple[ContextAwareDict, dict[str, Any]]],
         outputs: Sequence[Aggregation],
         output_path: Path,
-        lrsystems: Iterable[tuple[LRSystem, dict[str, Any]]],
+        lrsystems: list[tuple[ParsedLRSystem, dict[str, Any]]],
     ):
-        super().__init__(name, splitter, outputs, output_path)
+        super().__init__(name, outputs, output_path)
         self.lrsystems = lrsystems
-        self.dataproviders = dataproviders
+        self.data_configs = data_configs
 
     def _generate_and_run(self) -> None:
-        for dataprovider, dataparameter in self.dataproviders:
+        # Only display the data configuration progress bar when running interactively and
+        # there are multiple data configurations to evaluate.
+        disable_data_tqdm = not lir.is_interactive() or len(self.data_configs) == 1
+        
+        for data_config, _parameter in tqdm(self.data_configs, disable=disable_data_tqdm, desc=self.name):
+            # Parse the data configuration. This is done here to ensure that data
+            # parsing is only done once per data configuration, even when multiple
+            # LR systems are being evaluated on the same data setup.
+            provider, splitter = parse_data_object(data_config, self.output_path)
+            split_data = splitter.apply(provider.get_instances())
 
-            provider = parse_data_provider(pop_field(data_section, 'provider'), self._output_dir)
-            splitter = parse_data_strategy(pop_field(data_section, 'splits'), self._output_dir)
-            check_is_empty(data_section)
-            return provider, splitter
-
-            for lrsystem, hyperparameters in tqdm(self.lrsystems, desc=self.name, disable=not lir.is_interactive()):
-                self._run_lrsystem(lrsystem, hyperparameters, dataprovider)
+            # Only display the LR system configuration progress bar when running interactively, and 
+            # the data_tqdm is not disabled, and there are multiple LR systems to evaluate.
+            disable_lrsystem_tqdm = not lir.is_interactive() or not disable_data_tqdm or len(self.lrsystems) == 1
+            for lrsystem, hyperparameters in tqdm(self.lrsystems, desc=self.name, disable=disable_lrsystem_tqdm):
+                self._run_lrsystem(lrsystem, hyperparameters, split_data)

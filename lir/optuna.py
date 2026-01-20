@@ -5,7 +5,7 @@ from typing import Any
 import optuna
 
 from lir.aggregation import Aggregation
-from lir.config.lrsystem_architectures import parse_augmented_lrsystem
+from lir.config.lrsystem_architectures import parse_augmented_config
 from lir.config.substitution import (
     ContextAwareDict,
     FloatHyperparameter,
@@ -62,7 +62,7 @@ class OptunaExperiment(Experiment):
 
     def _objective(self, trial: optuna.Trial) -> float:
         assignments = self._get_hyperparameter_substitutions(trial)
-        lrsystem = parse_augmented_lrsystem(
+        lrsystem = parse_augmented_config(
             self.baseline_config,
             assignments,
             self.output_path,

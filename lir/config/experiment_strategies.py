@@ -15,19 +15,16 @@ from lir.config.base import (
     check_type,
     pop_field,
 )
-from lir.config.data_providers import parse_data_provider
-from lir.config.data_strategies import parse_data_strategy
 from lir.config.lrsystem_architectures import (
-    parse_augmented_lrsystem,
+    parse_augmented_config,
     parse_lrsystem,
 )
 from lir.config.metrics import parse_individual_metric
 from lir.config.substitution import (
     ContextAwareDict,
     Hyperparameter,
-    parse_hyperparameter,
+    parse_parameter,
 )
-from lir.data.models import DataProvider, DataStrategy
 from lir.experiment import Experiment, PredefinedExperiment
 from lir.optuna import OptunaExperiment
 
@@ -39,11 +36,11 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         self._config: ContextAwareDict
         self._output_dir: Path
 
-    def data(self) -> tuple[DataProvider, DataStrategy]:
+    def data_config(self) -> tuple[ContextAwareDict, list[Hyperparameter]]:
         """Prepare the data provider and data strategy from the configuration.
 
         The (hyper)parameters to vary for the data provider and data strategy are also parsed.
-        """
+        """       
         baseline_config = pop_field(self._config, 'data')
         if baseline_config is None:
             baseline_config = ContextAwareDict(self._config.context + ['data'])
@@ -52,7 +49,7 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         if 'dataparameters' in self._config:
             parameters = self._config.pop('dataparameters')
             parameters = [
-                parse_hyperparameter(
+                parse_parameter(
                     variable,
                     self._output_dir,
                 )
@@ -121,7 +118,7 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         if 'hyperparameters' in self._config:
             parameters = self._config.pop('hyperparameters')
             parameters = [
-                parse_hyperparameter(
+                parse_parameter(
                     variable,
                     self._output_dir,
                 )
@@ -158,12 +155,10 @@ class SingleRunStrategy(ExperimentStrategyConfigParser):
     def get_experiment(self, name: str) -> Experiment:
         """Get an experiment for a single run, based on its name."""
         lrsystem = parse_lrsystem(pop_field(self._config, 'lr_system'), self._output_dir)
-        data_provider, data_splitter = self.data()
 
         return PredefinedExperiment(
             name,
-            [(data_provider, {})],
-            data_splitter,
+            self.data_config(),
             self.output_list(),
             self._output_dir,
             [(lrsystem, {})],
@@ -181,24 +176,23 @@ class GridStrategy(ExperimentStrategyConfigParser):
         values = [param.options() for param in hyperparameters]
         for value_set in product(*values):
             substitutions = dict(zip(names, value_set, strict=True))
-            lrsystem = parse_augmented_lrsystem(baseline_config, substitutions, self._output_dir)
+            lrsystem = parse_lrsystem(parse_augmented_config(baseline_config, substitutions), self._output_dir)
             lrsystems.append((lrsystem, substitutions))
 
-
-        dataconfig, dataparameters = self.data()
+        dataconfig, dataparameters = self.data_config()
         # Data objects is a combination of the data provider and the data splitter / strategy
-        data_objects = []
+        data_configs = []
         names = [param.name for param in dataparameters]
         values = [param.options() for param in dataparameters]
+
         for value_set in product(*values):
             substitutions = dict(zip(names, value_set, strict=True))
-            lrsystem = parse_augmented_lrsystem(baseline_config, substitutions, self._output_dir)
-            lrsystems.append((lrsystem, substitutions))
+            data_config = parse_augmented_config(dataconfig, substitutions)
+            data_configs.append((data_config, substitutions))
 
         return PredefinedExperiment(
             name,
-            data_provider,
-            data_splitter,
+            data_configs,
             self.output_list(),
             self._output_dir,
             lrsystems,
@@ -212,7 +206,7 @@ class OptunaStrategy(ExperimentStrategyConfigParser):
         """Get experiment for the optuna run, based on its name."""
         baseline_config, parameters = self.lrsystem()
         n_trials = pop_field(self._config, 'n_trials', validate=int)
-        data_provider, data_splitter = self.data()
+        data_provider, data_splitter = self.data_config()
 
         return OptunaExperiment(
             name,

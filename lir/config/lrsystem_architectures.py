@@ -48,6 +48,12 @@ def specific_source(config: ContextAwareDict, output_dir: Path) -> LRSystem:
 
     The `specific_source` function name corresponds with the naming scheme in the
     registry. See for example: `lir.config.lrsystems.specific_source`.
+
+    The config can contain:
+     - modules: module configuration for the pipeline
+     - intermediate_output: boolean flag to determine whether to use logging pipeline as default
+
+    If any other fields are present, an exception is raised.
     """
     pipeline = parse_module(
         pop_field(config, 'modules'), output_dir, config.context, default_method=parse_default_pipeline(config)
@@ -58,10 +64,18 @@ def specific_source(config: ContextAwareDict, output_dir: Path) -> LRSystem:
 
 @config_parser
 def score_based(config: ContextAwareDict, output_dir: Path) -> LRSystem:
-    """Construct a specific-source LR system based on the provided configuration.
+    """Construct a score-based LR system based on the provided configuration.
 
-    The `specific_source` function name corresponds with the naming scheme in the
+    The `score_based` function name corresponds with the naming scheme in the
     registry. See for example: `lir.config.lrsystems.score_based`.
+
+    The config can contain:
+     - preprocessing: module configuration for preprocessing
+     - pairing: module configuration for pairing
+     - comparing: module configuration for comparing between scores
+     - intermediate_output: boolean flag to determine whether to use logging pipeline as default
+
+    If any other fields are present, an exception is raised.
     """
     default_pipeline = parse_default_pipeline(config)
 
@@ -78,7 +92,22 @@ def score_based(config: ContextAwareDict, output_dir: Path) -> LRSystem:
 
 
 @config_parser
-def two_level(config: ContextAwareDict, output_dir: Path) -> LRSystem:
+def two_level(config: ContextAwareDict, output_dir: Path) -> TwoLevelSystem:
+    """Construct a two-level LR system based on the provided configuration.
+
+    The `two_level` function name corresponds with the naming scheme in the
+    registry. See for example: `lir.config.lrsystems.two_level`.
+
+    The config can contain:
+    - preprocessing: module for preprocessing trace and reference data
+    - pairing: configuration for pairing function
+    - postprocessing: module for postprocessing scores to LLRs
+    - n_trace_instances: number of trace instances to use
+    - n_ref_instances: number of reference instances to use
+    - intermediate_output: boolean flag to determine whether to use logging pipeline as default
+
+    If any other fields are present, an exception is raised.
+    """
     default_pipeline = parse_default_pipeline(config)
 
     preprocessing = parse_module(

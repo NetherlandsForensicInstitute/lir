@@ -85,6 +85,14 @@ lint.ignore = [
     "B904",
     # do not enforce use of all() inside `for()` loop
     "SIM110",
+    # do not enforce a docstring for each module
+    "D100", "D104",
+    # allow undocumented magic methods (e.g. `__call___`)
+    "D105",
+    # do not enforce writing doc strings for `__init__()` methods
+    "D107",
+    # allow non-imperative moods for doc strings (TEMPORARY: see issue #256 on GitHub)
+    "D401",
 ]
 lint.isort.lines-after-imports = 2
 # List of enabled linting rules, for a complete

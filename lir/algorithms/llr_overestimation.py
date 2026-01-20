@@ -23,8 +23,7 @@ def plot_llr_overestimation(
      - See documentation on :func:`calc_llr_overestimation` for more details on the LLR-overestimation.
      - An interval around the LLR-overestimation can be calculated using fiducial distributions.
      - The average absolute LLR-overestimation can be used as single metric.
-    :param llrs: the log likelihood ratios (LLRs), as calculated by the LR-system
-    :param y: the corresponding labels (0 for H2 or Hd, 1 for H1 or Hp)
+    :param llrdata: An instance of LLRData containing LLRs and ground-truth labels
     :param num_fids: number of fiducial distributions to base the interval on; use 0 for no interval
     :param ax: matplotlib axes to plot into
     :param kwargs: additional arguments to pass to :func:`calc_llr_overestimation`

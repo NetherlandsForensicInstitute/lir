@@ -54,9 +54,7 @@ def elub(
     """
     Returns the empirical upper and lower bound log10-LRs (ELUB LLRs).
 
-    :param llrs: an array of log10-LRs
-    :param y: an array of ground-truth labels (values 0 for Hd or 1 for Hp);
-        must be of the same length as `llrs`
+    :param llrdata: An instance of LLRData containing LLRs and ground-truth labels
     :param add_misleading: the number of consequential misleading LLRs to be added
         to both sides (labels 0 and 1)
     :param step_size: required accuracy on a 10-base logarithmic scale
@@ -110,6 +108,7 @@ def calculate_expected_utility(
     :param y: an array of ground-truth labels (values 0 for Hd or 1 for Hp);
         must be of the same length as `lrs`
     :param threshold_lrs: an array of threshold lrs: minimum LR for acceptance
+    :param add_misleading: the number of consequential misleading LRs to be added.
     :returns: an array of utility values, one element for each threshold LR
     """
     m_accept = lrs.reshape(len(lrs), 1) > threshold_lrs.reshape(1, len(threshold_lrs))

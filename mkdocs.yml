@@ -1,7 +1,0 @@
-site_name: LiR Documentation
-repo_url: https://github.com/NetherlandsForensicInstitute/lir
-repo_name: LiR
-edit_uri: edit/main/docs/
-site_dir: docs_html
-theme:
-  name: readthedocs

@@ -1,10 +1,12 @@
+import tempfile
 from pathlib import Path
 from typing import Any
 
 import confidence
 import pytest
 
-from lir.config.substitution import HyperparameterOption, _expand, parse_hyperparameter
+from lir.config.substitution import FolderHyperparameter, HyperparameterOption, _expand, parse_hyperparameter
+from lir.data.io import search_path
 
 
 @pytest.mark.parametrize(
@@ -87,3 +89,43 @@ def test_substitution(desc, yaml: str, expected_options: list[Any]):
     cfg = _expand([], confidence.loads(yaml))
     param = parse_hyperparameter(cfg, Path('/'))
     assert param.options() == expected_options, desc
+
+
+def test_folder_hyperparameter():
+    tmp_folder = tempfile.mkdtemp()
+    for i in range(3):
+        (Path(tmp_folder) / f'file_{i}.txt').touch()
+    folders = FolderHyperparameter('name', str(tmp_folder))
+
+    # We expect three files in the temporary folder
+    assert len(folders.options()) == 3
+
+    # Check that the names correspond to the created files
+    expected_names = {str(search_path(Path(tmp_folder) / f'file_{i}.txt')) for i in range(3)}
+    actual_names = {list(opt.substitutions.values())[0] for opt in folders.options()}
+    assert actual_names == expected_names
+
+
+def test_folder_hyperparameter_ignore():
+    tmp_folder = tempfile.mkdtemp()
+    for i in range(3):
+        (Path(tmp_folder) / f'file_{i}.txt').touch()
+    folders = FolderHyperparameter('name', str(tmp_folder), ignore_files=['*1.txt'])
+
+    # We expect two files in the temporary folder, as file_1.txt is ignored.
+    assert len(folders.options()) == 2
+
+    # Check that the names correspond to the created files
+    expected_names = {str(search_path(Path(tmp_folder) / f'file_{i}.txt')) for i in (0, 2)}
+    actual_names = {list(opt.substitutions.values())[0] for opt in folders.options()}
+    assert actual_names == expected_names
+
+
+def test_folder_hyperparameter_value_errors():
+    with pytest.raises(ValueError):
+        FolderHyperparameter('name', '/path/does/not/exist')
+
+    tmp_folder = tempfile.mkdtemp()
+    FolderHyperparameter('name', tmp_folder)
+    with pytest.raises(ValueError):
+        FolderHyperparameter('name', tmp_folder).options()

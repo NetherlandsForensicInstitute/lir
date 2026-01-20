@@ -13,7 +13,7 @@ LR = collections.namedtuple('LR', ['lr', 'p0', 'p1'])
 AnyType = TypeVar('AnyType', bound=Any)
 
 
-def check_type(type_class: type[AnyType], v: Any, message: str | None = None) -> AnyType:
+def check_type[AnyType: Any](type_class: type[AnyType], v: Any, message: str | None = None) -> AnyType:
     if isinstance(v, type_class):
         return v
     else:
@@ -60,7 +60,7 @@ def Xy_to_Xn(X: np.ndarray, y: np.ndarray, classes: list[int] | None = None) -> 
 FloatOrArray = TypeVar('FloatOrArray', np.ndarray, float)
 
 
-def odds_to_probability(odds: FloatOrArray) -> FloatOrArray:
+def odds_to_probability[FloatOrArray: (np.ndarray, float)](odds: FloatOrArray) -> FloatOrArray:
     """
     Converts odds to a probability
 
@@ -76,7 +76,7 @@ def odds_to_probability(odds: FloatOrArray) -> FloatOrArray:
     return p
 
 
-def probability_to_odds(p: FloatOrArray) -> FloatOrArray:
+def probability_to_odds[FloatOrArray: (np.ndarray, float)](p: FloatOrArray) -> FloatOrArray:
     """
     Converts a probability to odds
     """
@@ -84,7 +84,7 @@ def probability_to_odds(p: FloatOrArray) -> FloatOrArray:
         return p / (1 - p)
 
 
-def probability_to_logodds(p: FloatOrArray) -> FloatOrArray:
+def probability_to_logodds[FloatOrArray: (np.ndarray, float)](p: FloatOrArray) -> FloatOrArray:
     """
     Converts probability values to their log odds with base 10.
     """
@@ -93,20 +93,20 @@ def probability_to_logodds(p: FloatOrArray) -> FloatOrArray:
         return np.log10(p) - np.log10(complement)
 
 
-def logodds_to_probability(log_odds: FloatOrArray) -> FloatOrArray:
+def logodds_to_probability[FloatOrArray: (np.ndarray, float)](log_odds: FloatOrArray) -> FloatOrArray:
     return odds_to_probability(logodds_to_odds(log_odds))
 
 
-def logodds_to_odds(log_odds: FloatOrArray) -> FloatOrArray:
+def logodds_to_odds[FloatOrArray: (np.ndarray, float)](log_odds: FloatOrArray) -> FloatOrArray:
     with np.errstate(divide='ignore'):
         return 10**log_odds
 
 
-def odds_to_logodds(odds: FloatOrArray) -> FloatOrArray:
+def odds_to_logodds[FloatOrArray: (np.ndarray, float)](odds: FloatOrArray) -> FloatOrArray:
     return np.log10(odds)
 
 
-def ln_to_log10(ln_data: FloatOrArray) -> FloatOrArray:
+def ln_to_log10[FloatOrArray: (np.ndarray, float)](ln_data: FloatOrArray) -> FloatOrArray:
     return np.log10(np.e) * ln_data
 
 

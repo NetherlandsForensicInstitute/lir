@@ -15,8 +15,8 @@ def plot_llr_overestimation(
     ax: plt.Axes = plt,  # type: ignore
     **kwargs: Any,
 ) -> None:
-    """
-    Plot the LLR-overestimation as function of the system LLR.
+    """Plot the LLR-overestimation as function of the system LLR.
+
      The LLR-overestimation is defined as the log-10 of the ratio between
         (1) the system LRs; the outputs of the LR-system, and
         (2) the empirical LRs; the ratio's between the relative frequencies of the H1-LLRs and H2-LLRs.
@@ -64,8 +64,8 @@ def calc_llr_overestimation(
     alpha: float = 0.05,
     **kwargs: Any,
 ) -> tuple[np.ndarray | None, np.ndarray | None, np.ndarray | None]:
-    """
-    Calculate the LLR-overestimation as function of the system LLR.
+    """Calculate the LLR-overestimation as function of the system LLR.
+
      The LLR-overestimation is defined as the log-10 of the ratio between
         (1) the system LRs; the outputs of the LR-system, and
         (2) the empirical LRs; the ratio's between the relative frequencies of the H1-LLRs and H2-LLRs.
@@ -160,8 +160,8 @@ def calc_fiducial_density_functions(
     smoothing_sample_size_correction: float = 1,
     seed: None | int = None,
 ) -> np.ndarray:
-    """
-    Calculate (smoothed) density functions of fiducial distributions of a dataset.
+    """Calculate (smoothed) density functions of fiducial distributions of a dataset.
+
     :param data: 1-dimensional array of data points
     :param grid: 1-dimensional array of equally spaced grid points, at which to calculate the density functions
     :param df_type: type of density function (df) to generate: either probability ('pdf') or cumulative ('cdf')

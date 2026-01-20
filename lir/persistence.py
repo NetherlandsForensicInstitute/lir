@@ -30,6 +30,7 @@ class SaveModel(Aggregation):
         self.path = path
 
     def report(self, data: AggregationData) -> None:
+        """Write the trained LR system model to file."""
         save_model(self.path, data.lrsystem)
 
 

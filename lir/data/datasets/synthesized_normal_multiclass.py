@@ -9,6 +9,8 @@ from lir.data.models import DataProvider, FeatureData
 
 
 class SynthesizedDimension(NamedTuple):
+    """Representation of a data distribution."""
+
     population_mean: float
     population_std: float
     sources_std: float

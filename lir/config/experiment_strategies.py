@@ -40,6 +40,10 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         self._output_dir: Path
 
     def data(self) -> tuple[DataProvider, DataStrategy]:
+        """Parse the data section of the configuration.
+
+        The corresponding data provider and splitting strategy instances are provided.
+        """
         data_section = pop_field(self._config, 'data')
         provider = parse_data_provider(pop_field(data_section, 'provider'), self._output_dir)
         splitter = parse_data_strategy(pop_field(data_section, 'splits'), self._output_dir)
@@ -47,10 +51,16 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         return provider, splitter
 
     def primary_metric(self) -> Callable:
+        """Parse the `primary_metric` field."""
         metric_name = pop_field(self._config, 'primary_metric')
         return parse_individual_metric(metric_name, self._output_dir, self._config.context)
 
     def output_list(self) -> Sequence[Aggregation]:
+        """Initialize corresponding aggregation classes based on the `output` section.
+
+        The initialized aggregation classes are returned as a sequence, to be iterated over in a
+        later stage.
+        """
         config: ContextAwareDict = pop_field(self._config, 'output', required=False)
         if not config:
             return []
@@ -87,6 +97,11 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         return results
 
     def lrsystem(self) -> tuple[ContextAwareDict, list[Hyperparameter]]:
+        """Parse the LR System section including hyperparameters.
+
+        The baseline configuration is provided along with the specified parameters to vary (the
+        defined hyperparameters).
+        """
         baseline_config = pop_field(self._config, 'lr_system')
         if baseline_config is None:
             baseline_config = ContextAwareDict(self._config.context + ['lr_system'])
@@ -106,6 +121,7 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
 
     @abstractmethod
     def get_experiment(self, name: str) -> Experiment:
+        """Get the experiment by `name` for the defined LR system."""
         raise NotImplementedError
 
     def parse(
@@ -113,6 +129,7 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         config: ContextAwareDict,
         output_dir: Path,
     ) -> Experiment:
+        """Parse the experiment section of the configuration."""
         self._config = config
 
         experiment_name = pop_field(config, 'name', default=f'unnamed_experiment{config.context[-1]}')
@@ -128,6 +145,7 @@ class SingleRunStrategy(ExperimentStrategyConfigParser):
     """Prepare Experiment consisting of a single run using configuration values."""
 
     def get_experiment(self, name: str) -> Experiment:
+        """Get an experiment for a single run, based on its name."""
         lrsystem = parse_lrsystem(pop_field(self._config, 'lr_system'), self._output_dir)
         data_provider, data_splitter = self.data()
 
@@ -142,9 +160,10 @@ class SingleRunStrategy(ExperimentStrategyConfigParser):
 
 
 class GridStrategy(ExperimentStrategyConfigParser):
-    """Prepare Excperiment consisting of multiple runs using configuration values."""
+    """Prepare Experiment consisting of multiple runs using configuration values."""
 
     def get_experiment(self, name: str) -> Experiment:
+        """Get experiment for the grid strategy run, based on its name."""
         baseline_config, parameters = self.lrsystem()
 
         lrsystems = []
@@ -168,9 +187,10 @@ class GridStrategy(ExperimentStrategyConfigParser):
 
 
 class OptunaStrategy(ExperimentStrategyConfigParser):
-    """Prepare Excperiment for optimizing configuration parameters."""
+    """Prepare Experiment for optimizing configuration parameters."""
 
     def get_experiment(self, name: str) -> Experiment:
+        """Get experiment for the optuna run, based on its name."""
         baseline_config, parameters = self.lrsystem()
         n_trials = pop_field(self._config, 'n_trials', validate=int)
         data_provider, data_splitter = self.data()

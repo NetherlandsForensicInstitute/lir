@@ -23,7 +23,8 @@ LOG = logging.getLogger(__name__)
 
 
 class AggregationData(NamedTuple):
-    """
+    """Representation of aggregated data.
+
     Fields:
     - llrdata: the LLR data containing LLRs and labels.
     - lrsystem: the model that produced the results
@@ -36,6 +37,11 @@ class AggregationData(NamedTuple):
 
 
 class Aggregation(ABC):
+    """Base representation of an aggregated data collection.
+
+    Other classes may extend from this class.
+    """
+
     @abstractmethod
     def report(self, data: AggregationData) -> None:
         """
@@ -94,53 +100,63 @@ class AggregatePlot(Aggregation):
 
 @config_parser
 def plot_pav(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    """Corresponding registry function to generate aggregate PAV plot."""
     plot_name = pop_field(config, 'plot_name', default='PAV')
     return AggregatePlot(pav, plot_name, output_dir, **config)
 
 
 @config_parser
 def plot_ece(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    """Corresponding registry function to generate aggregate ECE plot."""
     plot_name = pop_field(config, 'plot_name', default='ECE')
     return AggregatePlot(ece, plot_name, output_dir, **config)
 
 
 @config_parser
 def plot_lr_histogram(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    """Corresponding registry function to generate aggregate LR Histogram."""
     plot_name = pop_field(config, 'plot_name', default='LR_Histogram')
     return AggregatePlot(lr_histogram, plot_name, output_dir, **config)
 
 
 @config_parser
 def plot_llr_interval(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    """Corresponding registry function to generate aggregate LLR interval plot."""
     plot_name = pop_field(config, 'plot_name', default='LLR_Interval')
     return AggregatePlot(llr_interval, plot_name, output_dir, **config)
 
 
 @config_parser
 def plot_llr_overestimation(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    """Corresponding registry function to generate aggregate LLR overestimation plot."""
     plot_name = pop_field(config, 'plot_name', default='LLR_Overestimation')
     return AggregatePlot(llr_overestimation, plot_name, output_dir, **config)
 
 
 @config_parser
 def plot_nbe(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    """Corresponding registry function to generate aggregate NBE plot."""
     plot_name = pop_field(config, 'plot_name', default='NBE')
     return AggregatePlot(nbe, plot_name, output_dir, **config)
 
 
 @config_parser
 def plot_tippett(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    """Corresponding registry function to generate aggregate Tippett plot."""
     plot_name = pop_field(config, 'plot_name', default='Tippett')
     return AggregatePlot(tippett, plot_name, output_dir, **config)
 
 
 @config_parser
 def plot_invariance_delta_function(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    """Corresponding registry function to generate aggregate invariance delta function plot."""
     plot_name = pop_field(config, 'plot_name', default='Invariance_Delta_Functions')
     return AggregatePlot(invariance_delta_functions, plot_name, output_dir, **config)
 
 
 class WriteMetricsToCsv(Aggregation):
+    """Helper class to write aggregated results to CSV file."""
+
     def __init__(self, output_dir: Path, columns: Mapping[str, Callable]):
         self.path = output_dir / 'metrics.csv'
         self._file: IO[Any] | None = None
@@ -148,6 +164,7 @@ class WriteMetricsToCsv(Aggregation):
         self.columns = columns
 
     def report(self, data: AggregationData) -> None:
+        """Write the metrics to CSV."""
         columns = [(key, metric(data.llrdata)) for key, metric in self.columns.items()]
         metrics = []
         for name, value in columns:
@@ -169,12 +186,14 @@ class WriteMetricsToCsv(Aggregation):
         self._file.flush()  # type: ignore
 
     def close(self) -> None:
+        """Ensure the CSV file is properly closed after writing."""
         if self._file:
             self._file.close()
 
 
 @config_parser
 def metrics_csv(config: ContextAwareDict, output_dir: Path) -> WriteMetricsToCsv:
+    """Corresponding registry function to leverage CSV Writer class to write results to disk."""
     columns = pop_field(config, 'columns', default=['cllr', 'cllr_min'])
     if not isinstance(columns, Sequence):
         raise YamlParseError(

@@ -11,41 +11,43 @@ from lir.transform.pipeline import Pipeline
 
 
 class TwoLevelModelNormalKDE:
-    def __init__(self) -> None:
-        """
-        An implementation of the two-level model as outlined in FSI191(2009)42 by Bolck et al. "Different likelihood
-        ratio approaches to evaluate the strength of evidence of MDMA tablet comparisons".
+    """Implement two-level model as outlined by Bolck et al.
 
-        Model description:
+    An implementation of the two-level model as outlined in FSI191(2009)42 by Bolck et al. "Different likelihood
+       ratio approaches to evaluate the strength of evidence of MDMA tablet comparisons".
 
-        Definitions
-        X_ij = vector, measurement of reference j, ith repetition, with i=1..n
-        Y_kl = vector, measurement of trace l, kth repetition, with k=1..m
+       Model description:
 
-        Model:
+       Definitions
+       X_ij = vector, measurement of reference j, ith repetition, with i=1..n
+       Y_kl = vector, measurement of trace l, kth repetition, with k=1..m
 
-        First level of variance:
-        X_ij ~ N(theta_j, sigma_within)
-        Y_kl ~ N(theta_k, sigma_within)
-        where theta_j is the true but unknown mean of the reference and theta_k the true but unknown mean of the trace.
-        sigma_within is assumed equal for trace and reference (and for repeated measurements of some background data)
+       Model:
 
-        Second level of variance:
-        theta_j ~ theta_k ~ KDE(means background database, h)
-        with h the kernel bandwidth.
+       First level of variance:
+       X_ij ~ N(theta_j, sigma_within)
+       Y_kl ~ N(theta_k, sigma_within)
+       where theta_j is the true but unknown mean of the reference and theta_k the true but unknown mean of the trace.
+       sigma_within is assumed equal for trace and reference (and for repeated measurements of some background data)
 
-        H1: theta_j = theta_k
-        H2: theta_j independent of theta_k
+       Second level of variance:
+       theta_j ~ theta_k ~ KDE(means background database, h)
+       with h the kernel bandwidth.
 
-        Numerator LR = Integral_theta N(X_Mean|theta, sigma_within, n) * N(Y_mean|theta, sigma_within, m) * \
+       H1: theta_j = theta_k
+       H2: theta_j independent of theta_k
+
+       Numerator LR = Integral_theta N(X_Mean|theta, sigma_within, n) * N(Y_mean|theta, sigma_within, m) * \
             KDE(theta|means background database, h)
-        Denominator LR = Integral_theta N(X_Mean|theta, sigma_within, n) * KDE(theta|means background database, h) * \
+       Denominator LR = Integral_theta N(X_Mean|theta, sigma_within, n) * KDE(theta|means background database, h) * \
             Integral_theta N(Y_Mean|theta, sigma_within, m) * KDE(theta|means background database, h)
 
-        In Bolck et al. in the appendix one finds a closed-form solution for the evaluation of these integrals.
+       In Bolck et al. in the appendix one finds a closed-form solution for the evaluation of these integrals.
 
-        sigma_within and h (and other parameters) are estimated from repeated measurements of background data.
-        """
+       sigma_within and h (and other parameters) are estimated from repeated measurements of background data.
+    """
+
+    def __init__(self) -> None:
         self.model_fitted = False
         self.n_features_train = None
         self.n_sources = None
@@ -55,7 +57,8 @@ class TwoLevelModelNormalKDE:
         self.between_covars = None
 
     def fit_on_unpaired_instances(self, X: np.ndarray, y: np.ndarray) -> 'TwoLevelModelNormalKDE':
-        """
+        """Fit the model on unpaired instances.
+
         X np.ndarray of measurements, rows are sources/repetitions, columns are features
         y np 1d-array of labels. For each source a unique identifier (label). Repetitions get the same label.
 
@@ -74,7 +77,8 @@ class TwoLevelModelNormalKDE:
         return self
 
     def transform(self, X_trace: np.ndarray, X_ref: np.ndarray) -> np.ndarray:
-        """
+        """Transform the input data using the fitted model.
+
         Predict odds scores, making use of the parameters constructed during `self.fit()` (which should
         now be stored in `self`).
 
@@ -88,7 +92,8 @@ class TwoLevelModelNormalKDE:
         return log10_lr_score
 
     def predict_proba(self, X_trace: np.ndarray, X_ref: np.ndarray) -> np.ndarray:
-        """
+        """Predict probability scores, using the fitted model.
+
         Predict probability scores, making use of the parameters constructed during `self.fit()` (which should
         now be stored in `self`).
 
@@ -103,7 +108,8 @@ class TwoLevelModelNormalKDE:
         return np.stack([p0, p1], axis=1)
 
     def _predict_log10_lr_score(self, X_trace: np.ndarray, X_ref: np.ndarray) -> np.ndarray:
-        """
+        """Predict natural log LR scores (ln_LR scores) using the fitted model.
+
         Predict ln_LR scores, making use of the parameters constructed during `self.fit()` (which should
                 now be stored in `self`).
 
@@ -158,11 +164,13 @@ class TwoLevelModelNormalKDE:
 
     @staticmethod
     def _get_n_features(X: np.ndarray, feature_ix: int = 2) -> int:
+        """Calculate the number of features in `X`."""
         return X.shape[feature_ix]
 
     @staticmethod
     def _get_n_sources(y) -> int:
-        """
+        """Calculate the number of sources in `y`.
+
         Y np 1d-array of labels. labels from {1, ..., n} with n the number of sources. Repetitions get the same label.
         returns: number of sources in y (int).
         """
@@ -170,7 +178,8 @@ class TwoLevelModelNormalKDE:
 
     @staticmethod
     def _get_mean_covariance_within(X, y) -> np.ndarray:
-        """
+        """Calculates a matrix of mean covariances within each of the sources.
+
         X np.array of measurements, rows are sources/repetitions, columns are features
         y np 1d-array of labels. labels from {1, ..., n} with n the number of sources. Repetitions get the same label.
         returns: mean within covariance matrix, np.array.
@@ -205,7 +214,8 @@ class TwoLevelModelNormalKDE:
 
     @staticmethod
     def _get_means_per_source(X, y) -> np.ndarray:
-        """
+        """Provide numpy array of means per source.
+
         X np.array of measurements, rows are sources/repetitions, columns are features
         y np 1d-array of labels. For each source a unique identifier (label). Repetitions get the same label.
         returns: means per source in a np.array matrix of size: number of sources * number of features.
@@ -216,7 +226,8 @@ class TwoLevelModelNormalKDE:
 
     @staticmethod
     def _get_kernel_bandwidth_squared(n_sources: int, n_features_train: int) -> float:
-        """
+        """Calculate kernel bandwidth and return it.
+
         Reference: 'Density estimation for statistics and data analysis', B.W. Silverman,
             page 86 formula 4.14 with A(K) the second row in the table on page 87.
         """
@@ -226,7 +237,8 @@ class TwoLevelModelNormalKDE:
 
     @staticmethod
     def _get_between_covariance(X, y, mean_within_covars):
-        """
+        """Calculate and return the between covariance.
+
         X np.array of measurements, rows are objects, columns are variables
         y np 1d-array of labels. labels from {1, ..., n} with n the number of objects. Repetitions get the same label.
         returns: estimated covariance of true mean of the features between sources in the population in a np.array
@@ -262,7 +274,8 @@ class TwoLevelModelNormalKDE:
         return (sum_squares_between / (len(reps) - 1) - mean_within_covars) / kappa
 
     def _predict_covariances_trace_ref(self, X_trace: np.ndarray, X_ref: np.ndarray):
-        """
+        """Calculate and return covariances of trace references.
+
         X_tr np.array of measurements of trace object, rows are repetitions, columns are features
         X_ref np.array of measurements of reference object, rows are repetitions, columns features
         returns: covariance matrices of the trace and reference data and their respective inverses needed for
@@ -306,7 +319,8 @@ class TwoLevelModelNormalKDE:
         )
 
     def _predict_updated_ref_mean(self, X_ref, covars_ref_inv):
-        """
+        """Calculate and return bayesian update of reference mean given KDE background means.
+
         X_ref np.array of measurements of reference object, rows are repetitions, columns features
         returns: updated_ref_mean, bayesian update of reference mean given KDE background means.
         """
@@ -326,10 +340,11 @@ class TwoLevelModelNormalKDE:
         return (mu_h_1 + mu_h_2).transpose()
 
     def _predict_ln_num(self, X_trace, X_ref, covars_ref_inv, covars_trace_update_inv, updated_ref_mean):
-        """
-        See Bolck et al formula in appendix. The formula consists of three sum_terms (and some other terms).
+        """Perform calculation to predict natural log of numerator.
+
+        See Bolck et al. formula in appendix. The formula consists of three sum_terms (and some other terms).
         The numerator sum term is calculated here.
-        The numerator is based on the product of two Gaussion PDFs.
+        The numerator is based on the product of two Gaussian PDFs.
         The first PDF: ref_mean ~ N(background_mean, U_hx).
         The second PDF: trace_mean ~ N(updated_ref_mean, U_hn).
         In this function log of the PDF is taken (so the exponentiation is left out and the product becomes a sum).
@@ -356,8 +371,9 @@ class TwoLevelModelNormalKDE:
         return logsumexp(ln_num_terms)
 
     def _predict_ln_den_term(self, X_ref_or_trace, covars_inv):
-        """
-        See Bolck et al formula in appendix. The formula consists of three sum_terms (and some other terms).
+        """Perform calculation and return natural log of a denominator term of the LR-formula.
+
+        See Bolck et al. formula in appendix. The formula consists of three sum_terms (and some other terms).
         A denominator sum term is calculated here.
 
         X_ref_or_trace np.array of measurements of reference or trace object, rows are repetitions, columns are features
@@ -377,7 +393,8 @@ class TwoLevelModelNormalKDE:
     def _predict_log10_LR_from_formula_Bolck(
         self, covars_trace, covars_trace_update, ln_num, ln_den_left, ln_den_right
     ):
-        """
+        """Predict 10-base logarithm LR's from the Bolck formula.
+
         X_trace np.array of measurements of trace object, rows are repetitions, columns are variables
         covars_trace, covars_trace_update, np.arrays as calculated by _predict_covariances_trace_ref
         ln_num, ln_den_left, ln_den_right: terms in big fraction in Bolck et al, as calculated by _predict_ln_num
@@ -398,8 +415,7 @@ class TwoLevelModelNormalKDE:
 
 
 def _split_pairs(pairs: np.ndarray, n_trace: int) -> tuple[np.ndarray, np.ndarray]:
-    """
-    This function splits the input array along the second dimension at position `n_trace`.
+    """Split the input array along the second dimension at position `n_trace`.
 
     :param pairs: a feature array of dimension: (pairs, instances, features)
     :param n_trace: the number of trace instances
@@ -412,8 +428,7 @@ def _split_pairs(pairs: np.ndarray, n_trace: int) -> tuple[np.ndarray, np.ndarra
 
 
 class TwoLevelSystem(LRSystem):
-    """
-    The two level model is a sommon-source feature-based LR system architecture.
+    """Implement two level model, common-source feature-based LR system architecture.
 
     During the training phase, the system calculates statistics on the unpaired instances. On application, it
     calculates LRs for same-source and different-source pairs. Each side of the pair may consist of multiple instances.
@@ -429,7 +444,7 @@ class TwoLevelSystem(LRSystem):
         n_trace_instances: int,
         n_ref_instances: int,
     ):
-        """
+        """Initialize a new TwoLevelSystem instance.
 
         :param preprocessing_pipeline: a preprocessing pipeline that is applied on unpaired instances
         :param pairing_function: a function to generate same-source and different-source pairs
@@ -444,6 +459,7 @@ class TwoLevelSystem(LRSystem):
         self.n_ref_instances = n_ref_instances
 
     def fit(self, instances: InstanceData) -> Self:
+        """Fit the model based on the instance data."""
         if instances.source_ids is None:
             raise ValueError('fit() requires source_ids')
 
@@ -457,7 +473,8 @@ class TwoLevelSystem(LRSystem):
         return self
 
     def apply(self, instances: InstanceData) -> LLRData:
-        """
+        """Apply this LR system on a set of instances and return LLR data.
+
         Applies the two level LR system on a set of instances,
         and returns a representation of the calculated LLR data through the `LLRData` tuple.
         """

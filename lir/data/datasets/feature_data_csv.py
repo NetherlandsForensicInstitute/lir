@@ -157,6 +157,8 @@ class FeatureDataCsvParser(DataProvider, ABC):
 
 
 class FeatureDataCsvFileParser(FeatureDataCsvParser):
+    """Read CSV data from file."""
+
     def __init__(self, file: PathLike, **kwargs: Any):
         """
         Initializes the CSV parser that reads data from a file.
@@ -168,6 +170,7 @@ class FeatureDataCsvFileParser(FeatureDataCsvParser):
         self.path = Path(file)
 
     def get_instances(self) -> FeatureData:
+        """Retrieve FeatureData instances."""
         path = search_path(self.path)
         LOG.debug(f'parsing CSV file: {self.path} as {path}')
         with open(path) as f:
@@ -175,6 +178,8 @@ class FeatureDataCsvFileParser(FeatureDataCsvParser):
 
 
 class FeatureDataCsvStreamParser(FeatureDataCsvParser):
+    """Read data from a streamed CSV."""
+
     def __init__(self, fp: IO, **kwargs: Any):
         """
         Initializes the CSV parser that reads data from a stream.
@@ -186,11 +191,14 @@ class FeatureDataCsvStreamParser(FeatureDataCsvParser):
         self.fp = fp
 
     def get_instances(self) -> FeatureData:
+        """Retrieve FeatureData instances from CSV stream."""
         LOG.debug('parsing CSV stream')
         return self._parse_file(self.fp)
 
 
 class FeatureDataCsvHttpParser(FeatureDataCsvParser):
+    """Read data from a stream."""
+
     def __init__(self, url: str, session: requests.Session, **kwargs: Any):
         """
         Initializes the CSV parser that reads data from a stream.
@@ -207,6 +215,7 @@ class FeatureDataCsvHttpParser(FeatureDataCsvParser):
         self.session = session
 
     def get_instances(self) -> FeatureData:
+        """Retrieve FeatureData from the remote resource."""
         LOG.debug(f'parsing CSV from URL: {self.url}')
         response = self.session.get(self.url, stream=True)
         fp = io.StringIO(response.text)

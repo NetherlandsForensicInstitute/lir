@@ -6,7 +6,8 @@ from lir.util import check_type
 
 
 class ElementWiseDifference(Transformer):
-    """
+    """Calculate the element-wise absolute difference between pairs.
+
     Takes an array of sample pairs and returns the element-wise absolute difference.
 
     Expects:
@@ -18,6 +19,7 @@ class ElementWiseDifference(Transformer):
     """
 
     def apply(self, instances: InstanceData) -> FeatureData:
+        """Calculate the absolute difference between all elements in the instance data (pairs)."""
         instances = check_type(PairedFeatureData, instances)
         if instances.n_ref_instances != 1 or instances.n_trace_instances != 1:
             raise ValueError(
@@ -29,7 +31,8 @@ class ElementWiseDifference(Transformer):
 
 
 class ManhattanDistance(Transformer):
-    """
+    """Calculate the Manhattan distance between pairs.
+
     Takes a PairedFeatureData object or a FeatureData object and returns the manhattan distance.
 
     If the input is a PairedFeatureData object, the distance is computed as the manhattan distance, i.e. the sum of the
@@ -42,6 +45,7 @@ class ManhattanDistance(Transformer):
     """
 
     def apply(self, instances: InstanceData) -> FeatureData:
+        """Calculate the Manhattan distance between all elements in the instance data (pairs)."""
         instances = check_type(FeatureData, instances)
 
         # if the data are paired instances, calculate the element wise difference first

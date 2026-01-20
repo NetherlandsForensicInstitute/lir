@@ -37,6 +37,8 @@ H2_COLOR = 'blue'
 
 
 class Canvas:
+    """Representation of an empty canvas, to be used in plotting multiple visualizations."""
+
     def __init__(self, ax: Axes):
         self.ax = ax
 
@@ -53,8 +55,7 @@ class Canvas:
 
 
 def savefig(path: str) -> _GeneratorContextManager[Canvas]:
-    """
-    Creates a plotting context, write plot when closed.
+    """Create a plotting context, write plot when closed.
 
     Example
     -------
@@ -74,8 +75,7 @@ def savefig(path: str) -> _GeneratorContextManager[Canvas]:
 
 
 def show() -> _GeneratorContextManager[Canvas]:
-    """
-    Creates a plotting context, show plot when closed.
+    """Create a plotting context, show plot when closed.
 
     Example
     -------
@@ -91,8 +91,7 @@ def show() -> _GeneratorContextManager[Canvas]:
 
 @contextmanager
 def axes(savefig: PathLike | None = None, show: bool | None = None) -> Iterator[Canvas]:
-    """
-    Creates a plotting context.
+    """Create a plotting context.
 
     Example
     -------
@@ -118,9 +117,7 @@ def pav(
     show_scatter: bool = True,
     ax: Axes = plt,
 ) -> None:
-    """
-    Generates a plot of pre- versus post-calibrated LRs using Pool Adjacent
-    Violators (PAV).
+    """Generate a plot of pre-calibrated versus post-calibrated LRs using Pool Adjacent Violators (PAV).
 
     Parameters
     ----------
@@ -252,8 +249,7 @@ def lr_histogram(
     weighted: bool = True,
     ax: Axes = plt,
 ) -> None:
-    """
-    Plots the 10log lrs.
+    """Plot the 10log lrs.
 
     Parameters
     ----------
@@ -278,9 +274,7 @@ def lr_histogram(
 
 
 def tippett(llrdata: LLRData, plot_type: int = 1, ax: Axes = plt) -> None:
-    """
-    Plots empirical cumulative distribution functions of same-source and
-        different-sources lrs.
+    """Plot empirical cumulative distribution functions of same-source and different-sources lrs.
 
     Parameters
     ----------
@@ -316,8 +310,7 @@ def tippett(llrdata: LLRData, plot_type: int = 1, ax: Axes = plt) -> None:
 
 
 def llr_interval(llrdata: LLRData, ax: Axes = plt) -> None:
-    """
-    Plots the lr's on the x-as, with the relative interval score on the y-as.
+    """Plot the lr's on the x-as, with the relative interval score on the y-as.
 
     Parameters
     ----------
@@ -352,8 +345,7 @@ def score_distribution(
     weighted: bool = True,
     ax: Axes | None = None,
 ) -> None:
-    """
-    Plots the distributions of scores calculated by the (fitted) lr_system.
+    """Plot the distributions of scores calculated by the (fitted) lr_system.
 
     If `weighted` is `True`, the y-axis represents the probability density
     within the class, and `inf` is the fraction of instances. Otherwise, the

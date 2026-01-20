@@ -7,6 +7,7 @@ from lir.registry import ComponentNotFoundError
 
 
 def parse_individual_metric(name: str, output_path: Path, context: list[str]) -> Callable:
+    """Leverage config parser to interpret `metric` section of the configuration."""
     try:
         parser = registry.get(
             name,

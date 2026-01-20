@@ -6,9 +6,7 @@ from lir.util import Xy_to_Xn, logodds_to_odds
 
 
 def cllr(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
-    """
-    Calculates a log likelihood ratio cost (C_llr) for a series of log likelihood
-    ratios.
+    """Calculate a log likelihood ratio cost (C_llr) for a series of log likelihood ratios.
 
     Nico Brümmer and Johan du Preez, Application-independent evaluation of speaker detection, In: Computer Speech and
     Language 20(2-3), 2006.
@@ -32,8 +30,7 @@ def cllr(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
 
 
 def cllr_min(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
-    """
-    Estimates the discriminative power from a collection of log likelihood ratios.
+    """Estimate the discriminative power from a collection of log likelihood ratios.
 
     :param llr_data: LLRs and their metadata, wrapped in an LLRData object
     :param weights: the relative weights of the classes
@@ -48,8 +45,7 @@ def cllr_min(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
 
 
 def cllr_cal(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
-    """
-    Calculates the difference between the C_llr before and after isotonic calibration.
+    """Calculate the difference between the C_llr before and after isotonic calibration.
 
     :param llr_data: LLRs and their metadata, wrapped in an LLRData object
     :param weights: the relative weights of the classes
@@ -62,7 +58,8 @@ def cllr_cal(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
 
 
 def llr_upper_bound(llrs: LLRData) -> float | None:
-    """
+    """Provide corresponding upper bound for provided LLR data.
+
     When an LLRData object contains an upper bound, return it. If not, return None.
 
     :param llrs: LLRs and their metadata, wrapped in an LLRData object
@@ -72,7 +69,8 @@ def llr_upper_bound(llrs: LLRData) -> float | None:
 
 
 def llr_lower_bound(llrs: LLRData) -> float | None:
-    """
+    """Provide corresponding lower bound for provided LLR data.
+
     When an LLRData object contains a lower bound, return it. If not, return None.
 
     :param llrs: LLRs and their metadata, wrapped in an LLRData object

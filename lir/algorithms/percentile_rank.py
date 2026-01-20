@@ -7,8 +7,8 @@ from scipy.stats import rankdata
 
 
 class PercentileRankTransformer(sklearn.base.TransformerMixin):
-    """
-    Compute the percentile rankings of a dataset, relative to another dataset.
+    """Compute the percentile rankings of a dataset, relative to another dataset.
+
     Rankings are in range [0, 1]. Handling ties: the maximum of the ranks that
     would have been assigned to all the tied values is assigned to each value.
 
@@ -40,6 +40,7 @@ class PercentileRankTransformer(sklearn.base.TransformerMixin):
         self.rank_functions: list[Callable] | None = None
 
     def fit(self, X: np.ndarray, y: np.ndarray | None = None) -> 'PercentileRankTransformer':
+        """Fit the transformer model on the data."""
         X = X.reshape(X.shape[0], -1)
         ranks_X = rankdata(X, method='max', axis=0) / X.shape[0]
         self.rank_functions = [
@@ -48,6 +49,7 @@ class PercentileRankTransformer(sklearn.base.TransformerMixin):
         return self
 
     def transform(self, X: np.ndarray) -> np.ndarray:
+        """Use the fitted model to transform the input data."""
         assert self.rank_functions, 'transform() called before fit()'
         original_shape = X.shape
         X = X.reshape(X.shape[0], -1)

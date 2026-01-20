@@ -20,11 +20,13 @@ class BinaryLRSystem(LRSystem):
         self.pipeline = pipeline
 
     def fit(self, instances: InstanceData) -> Self:
+        """Fit the model on the given instance data."""
         self.pipeline.fit(instances)
         return self
 
     def apply(self, instances: InstanceData) -> LLRData:
-        """
+        """Use LR system to calculate the LLR data from the instance data.
+
         Applies the specific source LR system on a set of instances, optionally with corresponding labels, and returns a
         representation of the calculated LLR data through the `LLRData` tuple.
 

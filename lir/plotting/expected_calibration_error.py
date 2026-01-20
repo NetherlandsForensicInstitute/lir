@@ -1,5 +1,4 @@
-"""
-Empirical Cross Entrpy (ECE).
+"""Empirical Cross Entrpy (ECE).
 
 The discrimination and calibration of the LRs reported by some systems can also
 be measured separately. The empirical cross entropy (ECE) plot is a graphical
@@ -36,9 +35,7 @@ def plot_ece(
     show_pav: bool = True,
     ylim: str = 'neutral',
 ) -> None:
-    """
-    Generates an ECE plot for a set of LRs and corresponding ground-truth
-    labels.
+    """Generate an ECE plot for a set of LRs and corresponding ground-truth labels.
 
     The x-axis indicates the log prior odds of a sample being drawn from class
     1; the y-axis shows the entropy for (1) a non-informative system (dotted
@@ -109,9 +106,7 @@ def plot_ece(
 
 
 def calculate_ece(lrs: np.ndarray, y: np.ndarray, priors: np.ndarray) -> np.ndarray:
-    """
-    Calculates the empirical cross-entropy (ECE) of a set of LRs and
-    corresponding ground-truth labels.
+    """Calculate empirical cross-entropy (ECE) of a set of LRs and corresponding ground-truth labels.
 
     An entropy is calculated for each element of `priors`.
 

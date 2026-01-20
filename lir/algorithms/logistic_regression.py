@@ -21,7 +21,8 @@ LOG = logging.getLogger(__name__)
 
 
 class LogitCalibrator(Transformer):
-    """
+    """Calculate LR from a score, belonging to one of two distributions using Logistic Regression.
+
     Calculates a likelihood ratio of a score value, provided it is from one of
     two distributions. Uses logistic regression for interpolation.
 
@@ -32,6 +33,7 @@ class LogitCalibrator(Transformer):
         self._logit = sklearn.linear_model.LogisticRegression(class_weight='balanced', **kwargs)
 
     def fit(self, instances: InstanceData) -> Self:
+        """Fit the model on the data."""
         instances = check_type(FeatureData, instances)
         if not isinstance(FeatureData, LLRData):
             instances = instances.replace_as(LLRData)
@@ -48,6 +50,7 @@ class LogitCalibrator(Transformer):
         return self
 
     def apply(self, instances: InstanceData) -> LLRData:
+        """Calculate LLR data from the fitted model, using instance data."""
         instances = check_type(FeatureData, instances)
         if not isinstance(FeatureData, LLRData):
             instances = instances.replace_as(LLRData)
@@ -69,8 +72,7 @@ class LogitCalibrator(Transformer):
 
 
 def _negative_log_likelihood_balanced(X: np.ndarray, y: np.ndarray, model: Callable, params: list) -> np.ndarray:
-    """
-    Calculates the negative log likelihood (llh) of probabilistic binary classifier.
+    """Calculate the negative log likelihood (llh) of probabilistic binary classifier.
 
     The llh is balanced in the sense that the total weight of '1'-labels is equal to the total weight of '0'-labels.
 
@@ -86,7 +88,8 @@ def _negative_log_likelihood_balanced(X: np.ndarray, y: np.ndarray, model: Calla
 
 
 class FourParameterLogisticCalibrator(Transformer):
-    """
+    """Calculate LR of a score, belonging to one of two distributions, using a logistic model.
+
     Calculates a likelihood ratio of a score value, provided it is from one of two distributions.
     Depending on the training data, a 2-, 3- or 4-parameter logistic model is used.
     """
@@ -153,8 +156,7 @@ class FourParameterLogisticCalibrator(Transformer):
         return self
 
     def apply(self, instances: InstanceData) -> LLRData:
-        """
-        Apply the fitted calibrator to new data.
+        """Apply the fitted calibrator to new data.
 
         :param instances: InstanceData to apply the calibrator to.
         :returns: LLRData with calibrated log-likelihood ratios.
@@ -172,7 +174,8 @@ class FourParameterLogisticCalibrator(Transformer):
 
     @staticmethod
     def _four_pl_model(s: np.ndarray, a: float, b: float, c: float, d: float) -> np.ndarray:
-        """
+        """Apply the calculation for a given array of scores.
+
         4-parameter logistic model that links score to posterior probability.
 
         :param s: n * 1 np.array of scores

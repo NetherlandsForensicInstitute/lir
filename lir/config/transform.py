@@ -83,6 +83,7 @@ class NumpyWrappingConfigParser(ConfigParser):
         self.module_parser = module_parser
 
     def parse(self, config: ContextAwareDict, output_dir: Path) -> Transformer:
+        """Parse the provided header configuration."""
         header = config.pop('header') if 'header' in config else None
         return NumpyTransformer(
             self.module_parser.parse(config, output_dir),
@@ -96,8 +97,7 @@ def parse_module(
     config_context_path: list[str],
     default_method: str | None = None,
 ) -> Transformer:
-    """
-    Constructs a `Transformer` from a string or configuration section.
+    """Construct a `Transformer` from a string or configuration section.
 
     If the `module_config` argument is `None`, the `Identity` transformer is returned.
 

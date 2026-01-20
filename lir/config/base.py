@@ -16,25 +16,31 @@ class YamlParseError(ValueError):
 
 
 class ContextAwareDict(dict):
+    """Dictionary wrapper which has knowledge about its context."""
+
     def __init__(self, context: list[str], *args: Any, **kwargs: Any):
         super().__init__(*args, **kwargs)
         self.context = context
 
     def clone(self, context: list[str] | None = None) -> 'ContextAwareDict':
+        """Allow creating a new instance of the ContextAware dictionary, keeping the context."""
         return _expand(context if context is not None else self.context, self)
 
 
 class ContextAwareList(list):
+    """List wrapper which has knowledge about its context."""
+
     def __init__(self, context: list[str], *args: Any, **kwargs: Any):
         super().__init__(*args, **kwargs)
         self.context = context
 
     def clone(self, context: list[str] | None = None) -> 'ContextAwareList':
+        """Allow creating a new instance of the ContextAware dictionary, keeping the context."""
         return _expand(context if context is not None else self.context, self)
 
 
 def _expand(context: list[str], cfg: Any) -> Any:
-    """Iteratively unpack the data structure into the appropriate underlying representation."""
+    """Unpack the data structure iteratively into the appropriate underlying representation."""
     if isinstance(cfg, Mapping):
         return ContextAwareDict(context, [(key, _expand(context + [key], value)) for key, value in cfg.items()])
     elif isinstance(cfg, str):
@@ -82,6 +88,7 @@ class GenericFunctionConfigParser(ConfigParser):
         config: ContextAwareDict,
         output_dir: Path,
     ) -> Callable:
+        """Perform the parsing, based on component class."""
         if callable(self.component_class):
             return self.component_class
 
@@ -89,7 +96,7 @@ class GenericFunctionConfigParser(ConfigParser):
 
 
 class GenericConfigParser(ConfigParser):
-    """This parser returns an instantiation of a class, initialized with the specified arguments."""
+    """Return an instantiation of a class, initialized with the specified arguments."""
 
     def __init__(self, component_class: Any):
         super().__init__()
@@ -100,6 +107,7 @@ class GenericConfigParser(ConfigParser):
         config: ContextAwareDict,
         output_dir: Path,
     ) -> Any:
+        """Perform parsing of a class, based on configuration."""
         try:
             return self.component_class(**config)
         except Exception as e:
@@ -110,7 +118,7 @@ class GenericConfigParser(ConfigParser):
 
 
 def config_parser(func: Callable) -> Callable:
-    """Decorator function to wrap parsing functions in a `ConfigParser` object.
+    """Wrap parsing functions in a `ConfigParser` object by providing a decorator.
 
     The `ConfigParser` object exposes a `parse()` method, required by the API.
 
@@ -147,10 +155,8 @@ def parse_pairing_config(
     output_dir: Path,
     context: list[str],
 ) -> PairingMethod:
-    """Generic parser function for the pairing setup.
+    """Parse and delegate pairing to the corresponding function for the defined pairing method.
 
-    This function will not return a pairing module itself. Instead, it delegates this
-    task to the config parser of the pairing method of choice.
     The argument `module_config` defines the pairing method. If its value is a `str`, the registry is queried and the
     corresponding pairing method is returned. If its value is a `dict`, the pairing method is defined
     by the value `module_config["method"]`, and the registry is queried for the config parser of
@@ -172,6 +178,7 @@ def parse_pairing_config(
 
 
 def check_not_none(v: Any) -> Any:
+    """Validate the value to not be equal to None."""
     if v is None:
         raise ValueError('value None is not allowed here')
     return v

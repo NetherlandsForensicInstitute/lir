@@ -23,6 +23,7 @@ def plot_nbe(
     step_size: float = 0.01,
     ax: plt.Axes = plt,  # type: ignore
 ) -> None:
+    """Generate the visual NBE plot using matplotlib."""
     llrs = llrdata.llrs
     y = llrdata.labels
     if y is None:
@@ -51,8 +52,7 @@ def elub(
     step_size: float = 0.01,
     substitute_extremes: tuple[float, float] = (-9, 9),
 ) -> tuple[float, float]:
-    """
-    Returns the empirical upper and lower bound log10-LRs (ELUB LLRs).
+    """Calculate and return the empirical upper and lower bound log10-LRs (ELUB LLRs).
 
     :param llrdata: An instance of LLRData containing LLRs and ground-truth labels
     :param add_misleading: the number of consequential misleading LLRs to be added
@@ -101,8 +101,7 @@ def elub(
 def calculate_expected_utility(
     lrs: np.ndarray, y: np.ndarray, threshold_lrs: np.ndarray, add_misleading: int = 0
 ) -> float:
-    """
-    Calculates the expected utility of a set of LRs for a given threshold.
+    """Calculate the expected utility of a set of LRs for a given threshold.
 
     :param lrs: an array of LRs
     :param y: an array of ground-truth labels (values 0 for Hd or 1 for Hp);
@@ -129,7 +128,8 @@ def calculate_expected_utility(
 
 
 class ELUBBounder(LLRBounder):
-    """
+    """Calculate the Emperical Upper and Lower Bounds for a given LR system.
+
     Class that, given an LR system, outputs the same LRs as the system but bounded by the Empirical Upper and Lower
     Bounds as described in
     P. Vergeer, A. van Es, A. de Jongh, I. Alberink, R.D. Stoel,
@@ -163,4 +163,5 @@ class ELUBBounder(LLRBounder):
     """
 
     def calculate_bounds(self, llrdata: LLRData) -> tuple[float | None, float | None]:
+        """Calculate the LLR emperical upper and lower bounds (ELUB)."""
         return elub(llrdata, add_misleading=1)

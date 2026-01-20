@@ -251,6 +251,17 @@ class FolderHyperparameter(Hyperparameter):
 
     The generated options will have the full path of each file as both name and value.
 
+    An example configuration is as follows:
+    ```
+        hyperparameters:
+          - path: data.provider.path
+            type: folder
+            folder: project_files/my_dataset/
+            ignore_files: # Optional list of file patterns to ignore.
+              - '*.tmp'
+              - 'ignore_this_file.csv'
+    ```
+
     A ValueError can be raised in the following situations:
     - the given folder does not exist
         applies during initialization

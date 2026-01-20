@@ -7,11 +7,11 @@ data:
     h1:
       mean: 1
       std: 1
-      size: 1000
+      size: 10000
     h2:
       mean: -1
       std: 1
-      size: 1000
+      size: 10000
 
   splits:
     strategy: binary_cross_validation
@@ -34,40 +34,11 @@ experiments:
     strategy: grid
     lr_system: ${lr_system}
     data: ${data}
-    hyperparameters:
-      - path: modules.steps.clf
-        options:
-          - option_name: logit
-            method: logistic_regression
-            C: 1
-          - option_name: svm
-            method: svm
-            probability: True
+    dataparameters:
+      - path: provider.h1.std
+        type: float
+        low: 0.5
+        high: 3
+        step: 0.5
     output:
       - method: metrics
-        columns:
-        - cllr
-        - cllr_min
-        - cllr_cal
-      - pav
-      - method: ece
-        show_pav: false
-      - method: ece
-        show_pav: true
-        ylim: zoomed
-
-
-  - name: validation
-    strategy: single_run
-    lr_system: ${lr_system}
-    data: ${data}
-    output:
-      - metrics
-      - pav
-      - ece
-      - method: tippett
-        plot_type: 1
-      - method: tippett
-        plot_type: 2
-
-

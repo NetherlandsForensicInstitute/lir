@@ -100,7 +100,7 @@ def test_folder_hyperparameter():
     assert len(folders.options()) == 3
 
     # Check that the names correspond to the created files
-    expected_names = {str(Path(tmp_folder) / f'file_{i}.txt') for i in range(3)}
+    expected_names = {f'file_{i}.txt' for i in range(3)}
     actual_names = {opt.name for opt in folders.options()}
     assert actual_names == expected_names
 
@@ -109,13 +109,13 @@ def test_folder_hyperparameter_ignore():
     tmp_folder = tempfile.mkdtemp()
     for i in range(3):
         (Path(tmp_folder) / f'file_{i}.txt').touch()
-    folders = FolderHyperparameter('name', str(tmp_folder), ignore_list=['*1.txt'])
+    folders = FolderHyperparameter('name', str(tmp_folder), ignore_files=['*1.txt'])
 
     # We expect two files in the temporary folder, as file_1.txt is ignored.
     assert len(folders.options()) == 2
 
     # Check that the names correspond to the created files
-    expected_names = {str(Path(tmp_folder) / f'file_{i}.txt') for i in (0, 2)}
+    expected_names = {f'file_{i}.txt' for i in (0, 2)}
     actual_names = {opt.name for opt in folders.options()}
     assert actual_names == expected_names
 

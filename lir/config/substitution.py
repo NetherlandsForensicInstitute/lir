@@ -40,6 +40,7 @@ from lir.config.base import (
     config_parser,
     pop_field,
 )
+from lir.data.io import search_path
 
 
 LOG = logging.getLogger(__name__)
@@ -261,7 +262,7 @@ class FolderHyperparameter(Hyperparameter):
         super().__init__(path)
 
         # Search for the folder in the python PATH. Results in an absolute path.
-        folder_path = Path(folder).absolute()
+        folder_path = search_path(Path(folder))
 
         if not folder_path.is_dir():
             raise ValueError(f'folder hyperparameter {path} points to non-existing folder: {folder}')

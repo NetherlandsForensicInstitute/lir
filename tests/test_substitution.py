@@ -6,6 +6,7 @@ import confidence
 import pytest
 
 from lir.config.substitution import FolderHyperparameter, HyperparameterOption, _expand, parse_hyperparameter
+from lir.data.io import search_path
 
 
 @pytest.mark.parametrize(
@@ -100,8 +101,8 @@ def test_folder_hyperparameter():
     assert len(folders.options()) == 3
 
     # Check that the names correspond to the created files
-    expected_names = {f'file_{i}.txt' for i in range(3)}
-    actual_names = {opt.name for opt in folders.options()}
+    expected_names = {str(search_path(Path(tmp_folder) / f'file_{i}.txt')) for i in range(3)}
+    actual_names = {list(opt.substitutions.values())[0] for opt in folders.options()}
     assert actual_names == expected_names
 
 
@@ -115,8 +116,8 @@ def test_folder_hyperparameter_ignore():
     assert len(folders.options()) == 2
 
     # Check that the names correspond to the created files
-    expected_names = {f'file_{i}.txt' for i in (0, 2)}
-    actual_names = {opt.name for opt in folders.options()}
+    expected_names = {str(search_path(Path(tmp_folder) / f'file_{i}.txt')) for i in (0, 2)}
+    actual_names = {list(opt.substitutions.values())[0] for opt in folders.options()}
     assert actual_names == expected_names
 
 

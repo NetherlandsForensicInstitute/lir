@@ -40,15 +40,26 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         self._output_dir: Path
 
     def data(self) -> tuple[DataProvider, DataStrategy]:
-        """Parse the data section of the configuration.
+        """Prepare the data provider and data strategy from the configuration.
 
-        The corresponding data provider and splitting strategy instances are provided.
+        The (hyper)parameters to vary for the data provider and data strategy are also parsed.
         """
-        data_section = pop_field(self._config, 'data')
-        provider = parse_data_provider(pop_field(data_section, 'provider'), self._output_dir)
-        splitter = parse_data_strategy(pop_field(data_section, 'splits'), self._output_dir)
-        check_is_empty(data_section)
-        return provider, splitter
+        baseline_config = pop_field(self._config, 'data')
+        if baseline_config is None:
+            baseline_config = ContextAwareDict(self._config.context + ['data'])
+
+        parameters = []
+        if 'dataparameters' in self._config:
+            parameters = self._config.pop('dataparameters')
+            parameters = [
+                parse_hyperparameter(
+                    variable,
+                    self._output_dir,
+                )
+                for variable in parameters
+            ]
+
+        return baseline_config, parameters
 
     def primary_metric(self) -> Callable:
         """Parse the `primary_metric` field."""
@@ -151,7 +162,7 @@ class SingleRunStrategy(ExperimentStrategyConfigParser):
 
         return PredefinedExperiment(
             name,
-            data_provider,
+            [(data_provider, {})],
             data_splitter,
             self.output_list(),
             self._output_dir,
@@ -164,17 +175,25 @@ class GridStrategy(ExperimentStrategyConfigParser):
 
     def get_experiment(self, name: str) -> Experiment:
         """Get experiment for the grid strategy run, based on its name."""
-        baseline_config, parameters = self.lrsystem()
-
+        baseline_config, hyperparameters = self.lrsystem()
         lrsystems = []
-        names = [param.name for param in parameters]
-        values = [param.options() for param in parameters]
+        names = [param.name for param in hyperparameters]
+        values = [param.options() for param in hyperparameters]
         for value_set in product(*values):
             substitutions = dict(zip(names, value_set, strict=True))
             lrsystem = parse_augmented_lrsystem(baseline_config, substitutions, self._output_dir)
             lrsystems.append((lrsystem, substitutions))
 
-        data_provider, data_splitter = self.data()
+
+        dataconfig, dataparameters = self.data()
+        # Data objects is a combination of the data provider and the data splitter / strategy
+        data_objects = []
+        names = [param.name for param in dataparameters]
+        values = [param.options() for param in dataparameters]
+        for value_set in product(*values):
+            substitutions = dict(zip(names, value_set, strict=True))
+            lrsystem = parse_augmented_lrsystem(baseline_config, substitutions, self._output_dir)
+            lrsystems.append((lrsystem, substitutions))
 
         return PredefinedExperiment(
             name,

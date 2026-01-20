@@ -24,18 +24,21 @@ class Experiment(ABC):
     def __init__(
         self,
         name: str,
-        data_provider: DataProvider,
         splitter: DataStrategy,
         outputs: Sequence[Aggregation],
         output_path: Path,
     ):
         self.name = name
-        self.data_provider = data_provider
         self.splitter = splitter
         self.outputs = outputs
         self.output_path = output_path
 
-    def _run_lrsystem(self, lrsystem: ParsedLRSystem, hyperparameters: dict[str, Any]) -> LLRData:
+    def _run_lrsystem(
+            self,
+            lrsystem: ParsedLRSystem,
+            hyperparameters: dict[str, Any],
+            dataprovider: DataProvider,
+    ) -> LLRData:
         """Run experiment on a single LR system configuration using the provided data(setup).
 
         First, the data is split into a training and testing subset, according to the provided
@@ -57,7 +60,7 @@ class Experiment(ABC):
 
         # Split the data into a train / test subset, according to the provided DataStrategy. This could
         # for example be a simple binary split or a multiple fold cross validation split.
-        for training_data, test_data in self.splitter.apply(self.data_provider.get_instances()):
+        for training_data, test_data in self.splitter.apply(dataprovider.get_instances()):
             lrsystem.fit(training_data)
             subset_llr_results: LLRData = lrsystem.apply(test_data)
 
@@ -98,15 +101,23 @@ class PredefinedExperiment(Experiment):
     def __init__(
         self,
         name: str,
-        data_provider: DataProvider,
+        dataproviders: Iterable[tuple[DataProvider, dict[str, Any]]],
         splitter: DataStrategy,
         outputs: Sequence[Aggregation],
         output_path: Path,
         lrsystems: Iterable[tuple[LRSystem, dict[str, Any]]],
     ):
-        super().__init__(name, data_provider, splitter, outputs, output_path)
+        super().__init__(name, splitter, outputs, output_path)
         self.lrsystems = lrsystems
+        self.dataproviders = dataproviders
 
     def _generate_and_run(self) -> None:
-        for lrsystem, hyperparameters in tqdm(self.lrsystems, desc=self.name, disable=not lir.is_interactive()):
-            self._run_lrsystem(lrsystem, hyperparameters)
+        for dataprovider, dataparameter in self.dataproviders:
+
+            provider = parse_data_provider(pop_field(data_section, 'provider'), self._output_dir)
+            splitter = parse_data_strategy(pop_field(data_section, 'splits'), self._output_dir)
+            check_is_empty(data_section)
+            return provider, splitter
+
+            for lrsystem, hyperparameters in tqdm(self.lrsystems, desc=self.name, disable=not lir.is_interactive()):
+                self._run_lrsystem(lrsystem, hyperparameters, dataprovider)

@@ -186,7 +186,7 @@ experiments:
                 value: logistic_regression
               - path: comparing.steps.calibration
                 value: csv_writer
-    dataparameter:
+    dataparameters:
       - name: filename
         path: data.provider.file
         type: folder

@@ -99,9 +99,7 @@ class ConfigParserLoader(ABC, Iterable):
 
 
 class ClassLoader(ConfigParserLoader):
-    """
-    A configuration parser loader that uses reflection to resolve class names.
-    """
+    """A configuration parser loader that uses reflection to resolve class names."""
 
     def __iter__(self) -> Iterator[str]:
         return iter([])
@@ -127,9 +125,7 @@ class ClassLoader(ConfigParserLoader):
 
 
 class FederatedLoader(ConfigParserLoader):
-    """
-    A configuration parser loader that delegates resolution to other loaders.
-    """
+    """A configuration parser loader that delegates resolution to other loaders."""
 
     def __init__(self, registries: list[ConfigParserLoader]):
         self.registries = registries
@@ -247,7 +243,8 @@ class YamlRegistry(ConfigParserLoader):
         """Locate the value for a given key name in the YAML-based registry.
 
         The search path is used to prefix the key name with possible
-        domain (for example: 'modules' or 'data_provider')."""
+        domain (for example: 'modules' or 'data_provider').
+        """
         try_keys = [key]
 
         if search_path is not None:

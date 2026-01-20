@@ -5,9 +5,7 @@ from lir.util import Xy_to_Xn, logodds_to_odds
 
 
 def _calcsurface(c1: tuple[float, float], c2: tuple[float, float]) -> float:
-    """
-    Helper function that calculates the desired surface for two xy-coordinates
-    """
+    """Helper function that calculates the desired surface for two xy-coordinates."""
     # step 1: calculate intersection (xs, ys) of straight line through coordinates with identity line (if slope (a) = 1,
     # there is no intersection and surface of this parallelogram is equal to deltaY * deltaX)
 
@@ -72,12 +70,14 @@ def _devpavcalculator(lrs: np.ndarray, pav_lrs: np.ndarray, y: np.ndarray) -> fl
     """
     Calculate devPAV for PAV-transformed LRs.
 
-    Parameters:
+    Parameters
+    ----------
     - lrs: np.ndarray of LR values.
     - pav_lrs: np.ndarray of LRs after PAV transformation.
     - y: np.ndarray of labels (1 for H1 and 0 for H2).
 
-    Returns:
+    Returns
+    -------
     - float: devPAV value
 
     """
@@ -129,9 +129,7 @@ def _devpavcalculator(lrs: np.ndarray, pav_lrs: np.ndarray, y: np.ndarray) -> fl
 
 
 def devpav(llrs: np.ndarray, y: np.ndarray) -> float:
-    """
-    calculates devPAV for LR data under H1 and H2.
-    """
+    """Calculates devPAV for LR data under H1 and H2."""
     if all(y) or not any(y):
         raise ValueError('devpav: illegal input: at least one value is required for each class')
     cal = IsotonicCalibrator()

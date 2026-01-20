@@ -29,9 +29,7 @@ class GlassData(DataProvider):
         )
 
     def _load_data(self, file: str, role: RoleAssignment) -> FeatureData:
-        """
-        Returns a tuple of features, source_ids and instance_ids.
-        """
+        """Returns a tuple of features, source_ids and instance_ids."""
         source_ids = []
         instance_ids = []
         values = []

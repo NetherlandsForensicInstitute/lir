@@ -84,9 +84,7 @@ def pipeline(config: ContextAwareDict, output_dir: Path) -> Pipeline:
 
 
 class LoggingPipeline(Pipeline):
-    """
-    A pipeline that writes debugging output to a CSV file.
-    """
+    """A pipeline that writes debugging output to a CSV file."""
 
     def __init__(
         self,

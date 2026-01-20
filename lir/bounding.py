@@ -30,9 +30,7 @@ class LLRBounder(Transformer, ABC):
 
     @abstractmethod
     def calculate_bounds(self, llrdata: LLRData) -> tuple[float | None, float | None]:
-        """
-        Calculates and returns appropriate bounds for a set of LLRs and their labels.
-        """
+        """Calculates and returns appropriate bounds for a set of LLRs and their labels."""
         raise NotImplementedError
 
     @staticmethod
@@ -71,9 +69,7 @@ class LLRBounder(Transformer, ABC):
         return self
 
     def apply(self, instances: InstanceData) -> LLRData:
-        """
-        a transform entails calling the first step calibrator and applying the bounds found
-        """
+        """A transform entails calling the first step calibrator and applying the bounds found."""
         instances = self._validate(instances)
 
         llrs = instances.features

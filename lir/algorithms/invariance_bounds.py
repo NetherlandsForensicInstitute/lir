@@ -1,5 +1,5 @@
 """
-Extrapolation bounds on LRs using the Invariance Verification method by Alberink et al. (2025)
+Extrapolation bounds on LRs using the Invariance Verification method by Alberink et al. (2025).
 
 See:
 [-] A transparent method to determine limit values for Likelihood Ratio systems, by
@@ -28,7 +28,6 @@ def plot_invariance_delta_functions(
     :param step_size: required accuracy on a base-10 logarithmic scale
     :param ax: matplotlib axes
     """
-
     llrs, y = llrdata.llrs, llrdata.labels
     if y is None:
         raise ValueError('Ground-truth labels are required to plot invariance delta functions.')

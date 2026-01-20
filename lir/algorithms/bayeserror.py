@@ -1,5 +1,5 @@
 """
-Normalized Bayes Error-rate (NBE)
+Normalized Bayes Error-rate (NBE).
 
 See:
 [-] Peter Vergeer, Andrew van Es, Arent de Jongh, Ivo Alberink and Reinoud
@@ -135,7 +135,7 @@ class ELUBBounder(LLRBounder):
     P. Vergeer, A. van Es, A. de Jongh, I. Alberink, R.D. Stoel,
     Numerical likelihood ratios outputted by LR systems are often based on extrapolation:
     when to stop extrapolating?
-    Sci. Justics 56 (2016) 482-491
+    Sci. Justics 56 (2016) 482-491.
 
     # MATLAB code from the authors:
 

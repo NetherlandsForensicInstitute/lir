@@ -1,5 +1,5 @@
 """
-Empirical Cross Entrpy (ECE)
+Empirical Cross Entrpy (ECE).
 
 The discrimination and calibration of the LRs reported by some systems can also
 be measured separately. The empirical cross entropy (ECE) plot is a graphical

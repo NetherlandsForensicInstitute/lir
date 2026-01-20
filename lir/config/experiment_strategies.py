@@ -33,9 +33,7 @@ from lir.optuna import OptunaExperiment
 
 
 class ExperimentStrategyConfigParser(ConfigParser, ABC):
-    """
-    Base class for an experiment strategy configuration parser.
-    """
+    """Base class for an experiment strategy configuration parser."""
 
     def __init__(self) -> None:
         self._config: ContextAwareDict

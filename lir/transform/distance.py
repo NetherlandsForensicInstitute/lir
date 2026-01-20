@@ -11,7 +11,9 @@ class ElementWiseDifference(Transformer):
 
     Expects:
         - a PairedFeatureData object with n_trace_instances=1 and n_ref_instances=1;
-    Returns:
+
+    Returns
+    -------
         - a copy of the FeatureData object with features of shape (n, f)
     """
 

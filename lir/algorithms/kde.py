@@ -18,8 +18,7 @@ LOG = logging.getLogger(__name__)
 def compensate_and_remove_neginf_inf(
     log_odds: np.ndarray, y: np.ndarray
 ) -> tuple[np.ndarray, np.ndarray, float, float]:
-    """
-    for Gaussian and KDE-calibrator fitting: remove negInf, Inf and compensate
+    """For Gaussian and KDE-calibrator fitting: remove negInf, Inf and compensate.
 
     :param log_odds: n * 1 np.array of log-odds
     :param y: n * 1 np.array of labels (Booleans).

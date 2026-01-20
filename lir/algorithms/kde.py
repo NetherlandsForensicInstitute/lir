@@ -40,7 +40,8 @@ def compensate_and_remove_neginf_inf(
 def parse_bandwidth(
     bandwidth: Callable | str | float | tuple[float, float] | None,
 ) -> Callable[[Any, Any], tuple[float, float]]:
-    """
+    """Parse and return the corresponding bandwidth based on input type.
+
     Returns bandwidth as a tuple of two (optional) floats.
     Extrapolates a single bandwidth.
 
@@ -76,13 +77,14 @@ def parse_bandwidth(
 
 
 class KDECalibrator(Transformer):
-    """
+    """Calculate LR from a score, belonging to one of two distributions using KDE.
+
     Calculates a likelihood ratio of a score value, provided it is from one of
     two distributions. Uses kernel density estimation (KDE) for interpolation.
     """
 
     def __init__(self, bandwidth: Callable | str | float | tuple[float, float] | None = None):
-        """
+        """Initialize a new KDECalibrator instance.
 
         :param bandwidth:
             * If bandwidth has a float value, this value is used as the bandwidth for both distributions.
@@ -101,9 +103,7 @@ class KDECalibrator(Transformer):
 
     @staticmethod
     def bandwidth_silverman(X: np.ndarray, y: np.ndarray) -> tuple[float, float]:
-        """
-        Estimates the optimal bandwidth parameter using Silverman's rule of
-        thumb.
+        """Estimate the optimal bandwidth parameter using Silverman's rule of thumb.
 
         :param X: n * 1 np.array of scores
         :param y: n * 1 np.array of labels (Booleans).
@@ -134,6 +134,7 @@ class KDECalibrator(Transformer):
         return bandwidth[0], bandwidth[1]
 
     def fit(self, instances: InstanceData) -> Self:
+        """Fit the KDE model on the data."""
         instances = check_type(FeatureData, instances)
         instances = instances.replace_as(LLRData)
 

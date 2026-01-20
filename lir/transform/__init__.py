@@ -19,23 +19,24 @@ class DataWriter(Protocol):
     """Representation of a data writer and necessary methods."""
 
     def writerow(self, row: Any) -> None:
+        """Write row to output."""
         pass
 
 
 class SKLearnPipelineModule(Protocol):
     """Representation of the interface required for estimators by the scikit-learn `Pipeline`."""
 
-    def fit(self, X: np.ndarray, y: np.ndarray | None) -> Self: ...
-    def transform(self, X: np.ndarray) -> Any: ...
-    def predict_proba(self, X: np.ndarray) -> Any: ...
+    def fit(self, X: np.ndarray, y: np.ndarray | None) -> Self: ...  # noqa: D102
+    def transform(self, X: np.ndarray) -> Any: ...  # noqa: D102
+    def predict_proba(self, X: np.ndarray) -> Any: ...  # noqa: D102
 
 
 class SklearnTransformerType(Protocol):
     """Representation of the interface required for transformers by the scikit-learn `Pipeline`."""
 
-    def fit(self, features: np.ndarray, labels: np.ndarray | None) -> Self: ...
-    def transform(self, features: np.ndarray) -> Any: ...
-    def fit_transform(self, features: np.ndarray, labels: np.ndarray | None) -> np.ndarray: ...
+    def fit(self, features: np.ndarray, labels: np.ndarray | None) -> Self: ...  # noqa: D102
+    def transform(self, features: np.ndarray) -> Any: ...  # noqa: D102
+    def fit_transform(self, features: np.ndarray, labels: np.ndarray | None) -> np.ndarray: ...  # noqa: D102
 
 
 class Transformer(ABC):
@@ -47,19 +48,27 @@ class Transformer(ABC):
     """
 
     def fit(self, instances: InstanceData) -> Self:
+        """Perform (optional) fitting of the instance data."""
         return self
 
     @abstractmethod
     def apply(self, instances: InstanceData) -> InstanceData:
-        """Each transformer should implement a custom `transform()` method."""
+        """Convert the instance data based on the (optionally fitted) model."""
         raise NotImplementedError
 
     def fit_apply(self, instances: InstanceData) -> InstanceData:
+        """Combine call to `fit()` with directly following call to `apply()`."""
         return self.fit(instances).apply(instances)
 
 
 class Identity(Transformer):
+    """Represent the Identity function of a transformer.
+
+    When `apply()` is called on such a transformer, it simply returns the instances.
+    """
+
     def apply(self, instances: InstanceDataType) -> InstanceDataType:
+        """Simply provide the instances."""
         return instances
 
 
@@ -70,11 +79,13 @@ class BinaryClassifierTransformer(Transformer):
         self.estimator = estimator
 
     def fit(self, instances: InstanceData) -> Self:
+        """Fit the model on the provided instances."""
         instances = check_type(FeatureData, instances)
         self.estimator.fit(instances.features, instances.labels)
         return self
 
     def apply(self, instances: InstanceData) -> InstanceData:
+        """Convert instances by applying the fitted model."""
         instances = check_type(FeatureData, instances)
 
         # get probabilities from the estimator
@@ -90,15 +101,18 @@ class SklearnTransformer(Transformer):
         self.transformer = transformer
 
     def fit(self, instances: InstanceData) -> Self:
+        """Fit the model on the provided instances."""
         instances = check_type(FeatureData, instances)
         self.transformer.fit(instances.features, instances.labels)
         return self
 
     def apply(self, instances: InstanceData) -> InstanceData:
+        """Convert instances by applying the fitted model."""
         instances = check_type(FeatureData, instances)
         return instances.replace_as(FeatureData, features=self.transformer.transform(instances.features))
 
     def fit_apply(self, instances: InstanceData) -> FeatureData:
+        """Combine call to `.fit()` followed by `.apply()`."""
         instances = check_type(FeatureData, instances)
         return instances.replace_as(
             FeatureData, features=self.transformer.fit_transform(instances.features, instances.labels)
@@ -112,6 +126,7 @@ class FunctionTransformer(Transformer):
         self.func = func
 
     def apply(self, instances: InstanceData) -> FeatureData:
+        """Call the custom defined function on the feature data instances and use output as features."""
         instances = check_type(FeatureData, instances)
         return instances.replace(features=self.func(instances.features))
 
@@ -124,12 +139,14 @@ class Tee(Transformer):
         self.transformers = transformers
 
     def fit(self, instances: InstanceData) -> Self:
+        """Delegate `fit()` to all specified transformers."""
         for transformer in self.transformers:
             transformer.fit(instances)
 
         return self
 
     def apply(self, instances: InstanceData) -> InstanceData:
+        """Delegate `apply()` to all specified transformers."""
         for transformer in self.transformers:
             transformer.apply(instances)
 
@@ -140,7 +157,7 @@ class TransformerWrapper(Transformer):
     """Base class for a transformer wrapper.
 
     This class is derived from `AdvancedTransformer` and has a default implementation of all functions
-    by forwarding the call to the wrapped transformer. A sub class may add or change functionality
+    by forwarding the call to the wrapped transformer. A subclass may add or change functionality
     by overriding functions.
     """
 
@@ -149,10 +166,12 @@ class TransformerWrapper(Transformer):
         self.wrapped_transformer = wrapped_transformer
 
     def fit(self, instances: InstanceData) -> Self:
+        """Delegate calls to underlying wrapped transformer but return the Wrapper instance."""
         self.wrapped_transformer.fit(instances)
         return self
 
     def apply(self, instances: InstanceData) -> InstanceData:
+        """Delegate calls to underlying wrapped transformer but return the Wrapper instance."""
         return self.wrapped_transformer.apply(instances)
 
 
@@ -164,12 +183,14 @@ class NumpyTransformer(TransformerWrapper):
         self.header = header
 
     def apply(self, instances: InstanceData) -> InstanceData:
+        """Extend the instances with the desired header data, call base `apply`."""
         instances = super().apply(instances)
         if self.header:
             instances = instances.replace(header=self.header)
         return instances
 
     def fit_apply(self, instances: InstanceData) -> InstanceData:
+        """Extend the instances with the desired header data, call base `fit_apply`."""
         instances = super().fit_apply(instances)
         if self.header:
             instances = instances.replace(header=self.header)
@@ -257,6 +278,13 @@ class CsvWriter(Transformer):
             writer.writerow(chain(*row))
 
     def fit_apply(self, instances: InstanceDataType) -> InstanceDataType:
+        """Provide required `fit_apply()` and return all instances.
+
+        Since the CsvWriter is implemented as a step (Transformer) in the pipeline, it should support
+        the `fit_apply` method which is called on all transformers of the pipeline.
+
+        We don't need to actually fit or transform anything, so we simply return the instances (as is).
+        """
         return instances
 
     def apply(self, instances: InstanceData) -> FeatureData:
@@ -282,7 +310,8 @@ class CsvWriter(Transformer):
 
 
 def as_transformer(transformer_like: Any) -> Transformer:
-    """
+    """Provide a `Transformer` instance of the provided transformer like input.
+
     For any transformer-like object, wrap if necessary, and return a `Transformer`.
 
     The transformer-like object may be one of the following:

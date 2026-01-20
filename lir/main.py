@@ -22,8 +22,7 @@ DEFAULT_LOGLEVEL = logging.WARNING
 
 
 def setup_logging(level_increase: int) -> None:
-    """
-    Setup logging to stderr and to a file.
+    """Set up logging to stderr and to a file.
 
     :param level_increase: log level for stderr, relative to the default log level
     """
@@ -42,6 +41,7 @@ def setup_logging(level_increase: int) -> None:
 
 
 def initialize_logfile(output_dir: Path) -> None:
+    """Set up logfile for debugging purposes when running experiment."""
     output_dir.mkdir(parents=True, exist_ok=True)
     fh = logging.FileHandler(output_dir / 'log.txt')
     fh.setFormatter(logging.Formatter('[%(asctime)-15s %(levelname)s] %(name)s: %(message)s'))
@@ -50,6 +50,7 @@ def initialize_logfile(output_dir: Path) -> None:
 
 
 def copy_yaml_definition(output_dir: Path, config_yaml_path: Path) -> None:
+    """Copy the YAML definition for a given LR system experiment to persist the used configuration."""
     output_dir.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(config_yaml_path, output_dir / 'config.yaml')
 
@@ -57,8 +58,7 @@ def copy_yaml_definition(output_dir: Path, config_yaml_path: Path) -> None:
 def initialize_experiments(
     cfg: confidence.Configuration,
 ) -> tuple[Mapping[str, Experiment], Path]:
-    """
-    Extract which Experiment to run as dictated in the configuration.
+    """Extract which Experiment to run as dictated in the configuration.
 
     The following pre-defined variables are injected to the configuration:
 
@@ -78,6 +78,7 @@ def initialize_experiments(
 
 
 def error(msg: str, e: Exception | None = None) -> None:
+    """Stop execution with given error message or raise exception."""
     sys.stderr.write(f'{msg}\n')
     if e and LOG.level <= logging.DEBUG:
         raise e
@@ -85,6 +86,7 @@ def error(msg: str, e: Exception | None = None) -> None:
 
 
 def main(input_args: list[str] | None = None) -> None:
+    """Provide Command Line Interface (CLI) to LiR."""
     parser = argparse.ArgumentParser(description='Run all or some of the parts of project')
 
     parser.add_argument(

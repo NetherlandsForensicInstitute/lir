@@ -112,6 +112,8 @@ class MulticlassCrossValidation(DataStrategy):
 
 
 class RoleAssignment(Enum):
+    """Indicate whether the data is part of the train or the test split."""
+
     TRAIN = 'train'
     TEST = 'test'
 
@@ -132,6 +134,7 @@ class PredefinedTrainTestSplit(DataStrategy):
     """
 
     def apply(self, instances: FeatureData) -> Iterable[tuple[FeatureData, FeatureData]]:
+        """Split the FeatureData into a train and a test split."""
         if 'role_assignments' not in instances.all_fields:
             raise ValueError('`role_assignments` field is missing')
 

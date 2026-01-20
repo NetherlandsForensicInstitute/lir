@@ -48,6 +48,7 @@ class InstanceData(BaseModel, ABC):
 
     @model_validator(mode='after')
     def check_sourceids_labels_match(self) -> Self:
+        """Validate the source_ids and labels have matching shapes."""
         if self.labels is not None and self.source_ids is not None and self.labels.shape[0] != self.source_ids.shape[0]:
             raise ValueError(
                 f'dimensions of labels and source_ids do not match; "'
@@ -58,6 +59,7 @@ class InstanceData(BaseModel, ABC):
 
     @model_validator(mode='after')
     def check_sourceid_shape(self) -> Self:
+        """Validate the shape of the source_ids."""
         if self.source_ids is None:
             return self
 
@@ -314,6 +316,7 @@ class FeatureData(InstanceData):
 
     @model_validator(mode='after')
     def check_matching_shapes(self) -> Self:
+        """Validate the shape of the features and the labels are matching."""
         if self.labels is not None and self.labels.shape[0] != self.features.shape[0]:
             raise ValueError(
                 f'dimensions of labels and features do not match; {self.labels.shape[0]} != {self.features.shape[0]}'
@@ -327,6 +330,7 @@ class FeatureData(InstanceData):
 
     @model_validator(mode='after')
     def check_features(self) -> Self:
+        """Validate the features."""
         if not np.issubdtype(self.features.dtype, np.number):
             raise ValueError(f'features should be numeric; found: {self.features.dtype}')
         return self
@@ -355,18 +359,22 @@ class PairedFeatureData(FeatureData):
 
     @property
     def features_trace(self) -> np.ndarray:
+        """Get the features of the trace instances."""
         return self.features[:, : self.n_trace_instances]
 
     @property
     def features_ref(self) -> np.ndarray:
+        """Get the features of the reference instances."""
         return self.features[:, self.n_trace_instances :]  # noqa: E203
 
     @property
     def source_ids_trace(self) -> np.ndarray | None:
+        """Get the source ids of the trace instances."""
         return self.source_ids[:, 0] if self.source_ids else None
 
     @property
     def source_ids_ref(self) -> np.ndarray | None:
+        """Get the source ids of the reference instances."""
         return self.source_ids[:, 1] if self.source_ids else None
 
     @model_validator(mode='after')
@@ -378,6 +386,7 @@ class PairedFeatureData(FeatureData):
 
     @model_validator(mode='after')
     def check_features_dimensions(self) -> Self:
+        """Validate feature dimensions."""
         if len(self.features.shape) < 3:
             raise ValueError(f'features should have 3 or more dimensions; found shape: {self.features.shape}')
         if self.features.shape[1] != self.n_trace_instances + self.n_ref_instances:
@@ -433,6 +442,7 @@ class LLRData(FeatureData):
 
     @model_validator(mode='after')
     def check_features_are_llrs(self) -> Self:
+        """Validate the feature data."""
         if len(self.features.shape) > 2:
             raise ValueError(f'features must have 1 or 2 dimensions; shape: {self.features.shape}')
 
@@ -450,7 +460,8 @@ class LLRData(FeatureData):
 
     @classmethod
     def _concatenate_field(cls, field: str, values: list[Any]) -> Any:
-        """
+        """Remove `llr_upper_bound` and `llr_lower_bound` when having different values.
+
         The fields `llr_upper_bound` and `llr_lower_bound` may have different values which is not allowed by default.
         Remove them instead of trying to combine them.
         """
@@ -482,8 +493,7 @@ FeatureDataType = TypeVar('FeatureDataType', bound=FeatureData)
 
 
 def concatenate_instances(first: InstanceDataType, *others: InstanceDataType) -> InstanceDataType:
-    """
-    Concatenate the results of the InstanceData objects.
+    """Concatenate the results of the InstanceData objects.
 
     Alias for `first.concatenate(*others)`.
     """
@@ -503,11 +513,12 @@ class DataProvider(ABC):
 
 
 class DataStrategy(ABC):
-    """Base class for data strategies."""
+    """Base class for data (splitting) strategies."""
 
     @abstractmethod
     def apply(self, instances: FeatureData) -> Iterable[tuple[FeatureData, FeatureData]]:
-        """
+        """Provide iterator to access training and test set.
+
         Returns an iterator over tuples of a training set and a test set. Both the training set and the test
         is represented by an `InstanceData` object.
         """

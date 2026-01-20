@@ -29,16 +29,20 @@ LOG = logging.getLogger(__name__)
 
 
 class ParsedLRSystem(LRSystem):
+    """Represent a given initialized LR system based on the provided configuration."""
+
     def __init__(self, lrsystem: LRSystem, config: ContextAwareDict, output_dir: Path):
         self.lrsystem = lrsystem
         self.config = config
         self.output_dir = output_dir
 
     def fit(self, instances: InstanceData) -> Self:
+        """Fit the LR system on the instance data."""
         self.lrsystem.fit(instances)
         return self
 
     def apply(self, instances: InstanceData) -> LLRData:
+        """Use the fitted LR system to calculate LLR data for the input instance data."""
         return self.lrsystem.apply(instances)
 
 
@@ -154,8 +158,7 @@ def parse_augmented_lrsystem(
     output_dir: Path,
     dirname_prefix: str = '',
 ) -> ParsedLRSystem:
-    """
-    Parses an augmented LR system.
+    """Parse an augmented LR system.
 
     The LR system is parsed from a base configuration and a set of parameter substitutions that override parts of the
     base configuration. Results are written to a subdirectory of `output_dir` that is named by its parameter

@@ -13,8 +13,7 @@ LOG = logging.getLogger(__name__)
 
 
 class LLRBounder(Transformer, ABC):
-    """
-    Base class for LLR bounders.
+    """Base class for LLR bounders.
 
     A bounder updates any LLRs that are out of bounds. Any LLR values within bounds remain unchanged. LLR values that
     are out-of-bounds are updated to the nearest bound.
@@ -30,7 +29,7 @@ class LLRBounder(Transformer, ABC):
 
     @abstractmethod
     def calculate_bounds(self, llrdata: LLRData) -> tuple[float | None, float | None]:
-        """Calculates and returns appropriate bounds for a set of LLRs and their labels."""
+        """Calculate and returns appropriate bounds for a set of LLRs and their labels."""
         raise NotImplementedError
 
     @staticmethod
@@ -42,8 +41,7 @@ class LLRBounder(Transformer, ABC):
         return instances
 
     def fit(self, instances: InstanceData) -> Self:
-        """
-        Configures this bounder by calculating bounds.
+        """Configure this bounder by calculating bounds.
 
         assuming that y=1 corresponds to Hp, y=0 to Hd
         """
@@ -69,7 +67,7 @@ class LLRBounder(Transformer, ABC):
         return self
 
     def apply(self, instances: InstanceData) -> LLRData:
-        """A transform entails calling the first step calibrator and applying the bounds found."""
+        """Recalculate the LLR data using the first step calibrator and applying the bounds."""
         instances = self._validate(instances)
 
         llrs = instances.features
@@ -83,8 +81,7 @@ class LLRBounder(Transformer, ABC):
 
 
 class StaticBounder(LLRBounder):
-    """
-    Bound LLRs to constant values.
+    """Bound LLRs to constant values.
 
     This bounder takes arguments for a lower and upper bound, which may take `None` in which case no bounds are applied.
     """
@@ -93,12 +90,12 @@ class StaticBounder(LLRBounder):
         super().__init__(lower_llr_bound, upper_llr_bound)
 
     def calculate_bounds(self, llrdata: LLRData) -> tuple[float | None, float | None]:
+        """Calculate and return the lower and upper LLR bounds."""
         return self.lower_llr_bound, self.upper_llr_bound
 
 
 class NSourceBounder(LLRBounder):
-    """
-    Bound LLRs based on the number of sources.
+    """Bound LLRs based on the number of sources.
 
     This bounder sets the lower LLR bound to -log(N) and the upper bound to log(N), where N is the number of sources.
 
@@ -107,6 +104,7 @@ class NSourceBounder(LLRBounder):
     """
 
     def calculate_bounds(self, llrdata: LLRData) -> tuple[float | None, float | None]:
+        """Calculate and return the lower and upper LLR bounds."""
         if llrdata.source_ids is None:
             raise ValueError(f'{type(self)} requires source IDs to calculate bounds')
 

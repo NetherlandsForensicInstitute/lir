@@ -20,8 +20,7 @@ def plot_invariance_delta_functions(
     step_size: float = 0.001,
     ax: plt.Axes | None = None,
 ) -> None:
-    """
-    Returns a figure of the Invariance Verification delta functions along with the upper and lower bounds of the LRs.
+    """Return a figure of the Invariance Verification delta functions along with the upper and lower bounds of the LRs.
 
     :param llrdata: An instance of LLRData containing LLRs and ground-truth labels
     :param llr_threshold_range: lower limit and upper limit for the LLRs to include in the figure
@@ -70,8 +69,7 @@ def calculate_invariance_bounds(
     step_size: float = 0.001,
     substitute_extremes: tuple[float, float] = (-20, 20),
 ) -> tuple[float, float, np.ndarray, np.ndarray]:
-    """
-    Returns the upper and lower Invariance Verification bounds of the LRs.
+    """Return the upper and lower Invariance Verification bounds of the LRs.
 
     :param llrdata: an instance of LLRData containing LLRs and ground-truth labels
     :param llr_threshold: predefined values of LLRs as possible bounds
@@ -119,8 +117,7 @@ def calculate_invariance_bounds(
 
 
 def calculate_invariance_delta_functions(llrdata: LLRData, llr_threshold: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-    """
-    Calculates the Invariance Verification delta functions for a set of LRs at given threshold values.
+    """Calculate the Invariance Verification delta functions for a set of LRs at given threshold values.
 
     :param llrdata: An instance of LLRData containing LLRs and ground-truth labels
     :param llr_threshold: an array of threshold LLRs
@@ -152,7 +149,8 @@ def calculate_invariance_delta_functions(llrdata: LLRData, llr_threshold: np.nda
 
 
 class IVBounder(LLRBounder):
-    """
+    """Calculate Invariance Verification bounds for a given LR system.
+
     Class that, given an LR system, outputs the same LRs as the system but bounded by the Invariance Verification
     bounds as described in:
     A transparent method to determine limit values for Likelihood Ratio systems, by
@@ -161,5 +159,6 @@ class IVBounder(LLRBounder):
     """
 
     def calculate_bounds(self, llrdata: LLRData) -> tuple[float | None, float | None]:
+        """Calculate the Invariance Verification bounds."""
         lower_llr_bound, upper_llr_bound = calculate_invariance_bounds(llrdata)[:2]
         return lower_llr_bound, upper_llr_bound

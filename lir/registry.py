@@ -47,16 +47,19 @@ def _get_attribute_by_name(name: str) -> Any:
 
 
 class ComponentNotFoundError(ValueError):
+    """Representation of an error when a component class can not be found."""
+
     pass
 
 
 class InvalidRegistryEntryError(ValueError):
+    """Representation of an invalid registry entry."""
+
     pass
 
 
 class ConfigParserLoader(ABC, Iterable):
-    """
-    Base class for a configuration parser loader.
+    """Base class for a configuration parser loader.
 
     A configuration parser is able to interpret a dictionary-style configuration loaded from a YAML. Sub classes are
     expected to implement the `get()` method.
@@ -83,8 +86,7 @@ class ConfigParserLoader(ABC, Iterable):
         default_config_parser: Callable[[Any], ConfigParser] | None = None,
         search_path: list[str] | None = None,
     ) -> ConfigParser:
-        """
-        Retrieve a value for a given key name.
+        """Retrieve a value for a given key name.
 
         The key may resolve to a `ConfigParser` class, or it is passed as an argument to `default_config_parser`, which
         in turn returns a `ConfigParser` class.
@@ -110,6 +112,7 @@ class ClassLoader(ConfigParserLoader):
         default_config_parser: Callable[[Any], ConfigParser] | None = None,
         search_path: list[str] | None = None,
     ) -> ConfigParser:
+        """Get the accompanying config parser class from the registry."""
         parts = key.split('.')
         if len(parts) < 2:
             raise ComponentNotFoundError(f'no full class name: {key}')
@@ -140,6 +143,7 @@ class FederatedLoader(ConfigParserLoader):
         default_config_parser: Callable[[Any], ConfigParser] | None = GenericConfigParser,
         search_path: list[str] | None = None,
     ) -> ConfigParser:
+        """Get the accompanying config parser class from the registry."""
         errors = []
         for r in self.registries:
             try:

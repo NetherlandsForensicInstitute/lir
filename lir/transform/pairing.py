@@ -8,8 +8,7 @@ from lir.util import check_type
 
 
 class PairingMethod(ABC):
-    """
-    Base class for pairing methods.
+    """Base class for pairing methods.
 
     A pairing method should implement the `pair()` function.
     """
@@ -41,8 +40,7 @@ class PairingMethod(ABC):
 
 
 class SourcePairing(PairingMethod):
-    """
-    Construct pairs of sources (i.e. classes) from an array of instances.
+    """Construct pairs of sources (i.e. classes) from an array of instances.
 
     While pairing at instance level results in pairs of instances, some same-source and some different-source, pairing
     at source level results in pairing of multiple instances of source A against multiple instances of source B, where A
@@ -130,8 +128,7 @@ class SourcePairing(PairingMethod):
         n_trace_instances: int = 1,
         n_ref_instances: int = 1,
     ) -> PairedFeatureData:
-        """
-        Pairs sources.
+        """Pair sources.
 
         Takes a FeatureData object that contains instances.
         Returns pairs as a PairedFeatureData object.
@@ -207,6 +204,12 @@ class SourcePairing(PairingMethod):
 
 
 class InstancePairing(PairingMethod):
+    """Construct pairs from a set of instances.
+
+    Note that this pairing method may cause performance problems with large datasets,
+    even if the number of instances in the output is limited.
+    """
+
     def __init__(
         self,
         same_source_limit=None,
@@ -238,6 +241,7 @@ class InstancePairing(PairingMethod):
 
     @property
     def rng(self):
+        """Obtain a random number generator using a provided seed."""
         if not self.__rng:
             self.__rng = np.random.default_rng(seed=self._seed)
         return self.__rng
@@ -248,8 +252,7 @@ class InstancePairing(PairingMethod):
         n_trace_instances: int = 1,
         n_ref_instances: int = 1,
     ) -> PairedFeatureData:
-        """
-        Construct pairs.
+        """Construct pairs.
 
         :param instances: the set of instances to be paired
         :param n_trace_instances: the number of trace instances in each pair (must be 1 for this pairing method)

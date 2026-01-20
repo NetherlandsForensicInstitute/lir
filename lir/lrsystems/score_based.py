@@ -8,7 +8,7 @@ from lir.transform.pipeline import Pipeline
 
 
 class ScoreBasedSystem(LRSystem):
-    """Representation of a common source, score-based LR system.
+    """Provide a representation of a common source, score-based LR system.
 
     In this strategy, it is possible to prepare the data within
     a `preprocessing_pipeline`, create corresponding pairs of instances using
@@ -27,13 +27,15 @@ class ScoreBasedSystem(LRSystem):
         self.evaluation_pipeline = evaluation_pipeline or Pipeline([])
 
     def fit(self, instances: InstanceData) -> Self:
+        """Fit the model on the instance data."""
         instances = self.preprocessing_pipeline.fit_apply(instances)
         pairs = self.pairing_function.pair(instances, 1, 1)
         self.evaluation_pipeline.fit(pairs)
         return self
 
     def apply(self, instances: InstanceData) -> LLRData:
-        """
+        """Use LR system to calculate LLR data from the instances.
+
         Applies the score-based LR system on a set of instances, optionally with corresponding labels, and returns a
         representation of the calculated LLR data through the `LLRData` tuple.
 

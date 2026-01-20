@@ -1,4 +1,5 @@
-"""
+"""Substitution module.
+
 This module offers support functions for replacing/modifying components of an LR Benchmark pipeline
 at runtime. For example to compare a logistic regression approach with a support vector approach or to
 optimize a given (hyper)parameter of the system.
@@ -94,6 +95,7 @@ class CategoricalHyperparameter(Hyperparameter):
         self._options = options
 
     def options(self) -> list[HyperparameterOption]:
+        """Provide API access to the options for the hyperparameter."""
         return self._options
 
 
@@ -211,6 +213,7 @@ class FloatHyperparameter(Hyperparameter):
         self.log = log
 
     def options(self) -> list[HyperparameterOption]:
+        """Provide API access to the options for the hyperparameter."""
         if self.step is None:
             raise ValueError(
                 f'unable to generate options for floating point hyperparameter {self.path}: no step size defined'
@@ -335,8 +338,7 @@ def parse_hyperparameter(
 
 
 def _assign(struct: ContextAwareDict | ContextAwareList, path: list[str], value: Any) -> None:
-    """
-    Assigns a new value to a path within an hierarchical `dict` structure.
+    """Assign a new value to a path within an hierarchical `dict` structure.
 
     Parameters
     ----------

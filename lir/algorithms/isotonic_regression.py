@@ -8,7 +8,8 @@ from lir.util import probability_to_logodds
 
 
 class IsotonicRegression(sklearn.isotonic.IsotonicRegression):
-    """
+    """Wrap SKlearn implementation to support infinite values.
+
     Sklearn implementation IsotonicRegression throws an error when values are Inf or -Inf when in fact
     IsotonicRegression can handle infinite values. This wrapper around the sklearn implementation of IsotonicRegression
     prevents the error being thrown when Inf or -Inf values are provided.
@@ -96,7 +97,8 @@ class IsotonicRegression(sklearn.isotonic.IsotonicRegression):
 
 
 class IsotonicCalibrator(BaseEstimator, TransformerMixin):
-    """
+    """Calculate LR from a score belonging to one of two distributions using isotonic regression.
+
     Calculates a likelihood ratio of a score value, provided it is from one of
     two distributions. Uses isotonic regression for interpolation.
 
@@ -111,6 +113,7 @@ class IsotonicCalibrator(BaseEstimator, TransformerMixin):
         self._ir = IsotonicRegression(out_of_bounds='clip')
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> 'IsotonicCalibrator':
+        """Allow fitting the estimator on the given data."""
         assert np.all(np.unique(y) == np.arange(2)), 'y labels must be 0 and 1'
 
         # prevent extreme LRs
@@ -131,6 +134,7 @@ class IsotonicCalibrator(BaseEstimator, TransformerMixin):
         return self
 
     def transform(self, X: np.ndarray) -> np.ndarray:
+        """Transform a given value, using the fitted Isotonic Regression model."""
         self.p1 = self._ir.transform(X)
         self.p0 = 1 - self.p1
         return probability_to_logodds(self.p1)

@@ -152,6 +152,7 @@ class Bootstrap(Pipeline, ABC):
 
 class BootstrapAtData(Bootstrap):
     """Bootstrap system that uses the original training data points for interval estimation.
+
     See the Bootstrap class for more details.
     """
 
@@ -166,6 +167,7 @@ class BootstrapAtData(Bootstrap):
 
 class BootstrapEquidistant(Bootstrap):
     """Bootstrap system that uses equidistant points within the range of the training data for interval estimation.
+
     See the Bootstrap class for more details.
     """
 
@@ -193,8 +195,9 @@ class BootstrapEquidistant(Bootstrap):
         self.n_points = n_points
 
     def get_bootstrap_data(self, instances: InstanceData) -> FeatureData:
-        """Get the data points to use for interval estimation. This is done by creating equidistant points
-        within the range of the training data.
+        """Get the data points to use for interval estimation.
+
+        This is done by creating equidistant points within the range of the training data.
 
         :param instances: FeatureData: The feature data to fit the bootstrap system on.
         :return FeatureData: The feature data to use for interval estimation.

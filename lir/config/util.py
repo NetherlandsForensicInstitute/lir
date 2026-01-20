@@ -7,11 +7,14 @@ from lir.transform import Tee
 
 
 class TeeParser(ConfigParser):
+    """Parse configuration for allowing multiple tasks for given input."""
+
     def parse(
         self,
         config: ContextAwareDict,
         output_dir: Path,
     ) -> Any:
+        """Read configuration for modules section and provide wrapped corresponding transformers."""
         transformers = []
         modules = pop_field(config, 'modules')
         for module_config in modules:
@@ -21,8 +24,7 @@ class TeeParser(ConfigParser):
 
 
 def simplify_data_structure(data: Any) -> Any:
-    """
-    Simplify data structure: specialized data types are replaced.
+    """Simplify data structure: specialized data types are replaced.
 
     For example, `ContextAwareDict` is replaced by `dict`.
     """

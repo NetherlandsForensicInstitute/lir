@@ -14,6 +14,7 @@ AnyType = TypeVar('AnyType', bound=Any)
 
 
 def check_type[AnyType: Any](type_class: type[AnyType], v: Any, message: str | None = None) -> AnyType:
+    """Check if a given input is of the expected, specified type."""
     if isinstance(v, type_class):
         return v
     else:
@@ -22,6 +23,7 @@ def check_type[AnyType: Any](type_class: type[AnyType], v: Any, message: str | N
 
 
 def get_classes_from_Xy(X: np.ndarray, y: np.ndarray, classes: list[Any] | None = None) -> np.ndarray:
+    """Get the classification classes from labeled data."""
     assert len(X.shape) >= 1, f'expected: X has at least 1 dimensions; found: {len(X.shape)} dimensions'
     assert len(y.shape) == 1, f'expected: y is a 1-dimensional array; found: {len(y.shape)} dimensions'
     assert X.shape[0] == y.size, f'dimensions of X and y do not match; found: {X.shape[0]} != {y.size}'
@@ -30,8 +32,7 @@ def get_classes_from_Xy(X: np.ndarray, y: np.ndarray, classes: list[Any] | None 
 
 
 def Xn_to_Xy(*Xn: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-    """
-    Convert Xn to Xy format.
+    """Convert Xn to Xy format.
 
     Xn is a format where samples are divided into separate variables based on class.
     Xy is a format where all samples are concatenated, with an equal length variable y indicating class.
@@ -43,8 +44,7 @@ def Xn_to_Xy(*Xn: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
 
 
 def Xy_to_Xn(X: np.ndarray, y: np.ndarray, classes: list[int] | None = None) -> list[np.ndarray]:
-    """
-    Convert Xy to Xn format.
+    """Convert Xy to Xn format.
 
     Xn is a format where samples are divided into separate variables based on class.
     Xy is a format where all samples are concatenated, with an equal length variable y indicating class.
@@ -60,8 +60,7 @@ FloatOrArray = TypeVar('FloatOrArray', np.ndarray, float)
 
 
 def odds_to_probability[FloatOrArray: (np.ndarray, float)](odds: FloatOrArray) -> FloatOrArray:
-    """
-    Converts odds to a probability.
+    """Converts odds to a probability.
 
     Returns
     -------
@@ -89,23 +88,28 @@ def probability_to_logodds[FloatOrArray: (np.ndarray, float)](p: FloatOrArray) -
 
 
 def logodds_to_probability[FloatOrArray: (np.ndarray, float)](log_odds: FloatOrArray) -> FloatOrArray:
+    """Convert 10-base logarithm of odds to probability."""
     return odds_to_probability(logodds_to_odds(log_odds))
 
 
 def logodds_to_odds[FloatOrArray: (np.ndarray, float)](log_odds: FloatOrArray) -> FloatOrArray:
+    """Convert 10-base logarithm odds to odds."""
     with np.errstate(divide='ignore'):
         return 10**log_odds
 
 
 def odds_to_logodds[FloatOrArray: (np.ndarray, float)](odds: FloatOrArray) -> FloatOrArray:
+    """Convert odds to 10-base logarithm odds."""
     return np.log10(odds)
 
 
 def ln_to_log10[FloatOrArray: (np.ndarray, float)](ln_data: FloatOrArray) -> FloatOrArray:
+    """Convert natural logarithm to 10-base logarithm."""
     return np.log10(np.e) * ln_data
 
 
 def warn_deprecated() -> None:
+    """Provide template message for deprecated functions."""
     warnings.warn(
         f'the function `{inspect.stack()[1].function}` is no longer maintained; '
         'please check documentation for alternatives',
@@ -114,12 +118,13 @@ def warn_deprecated() -> None:
 
 
 class Bind(partial):
-    """
-    An improved version of partial which accepts Ellipsis (...) as a placeholder.
+    """Wrap `partial` to support the ellipsis (...) as a placeholder.
+
     Can be used to fix parameters not at the end of the list of parameters (which is a limitation of partial).
     """
 
     def __call__(self, *args: Any, **keywords: Any) -> Any:
+        """Extends `partial` and accepts the ellipsis as a placeholder."""
         keywords = {**self.keywords, **keywords}
         iargs = iter(args)
         args = tuple(next(iargs) if arg is ... else arg for arg in self.args)

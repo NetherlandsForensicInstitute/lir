@@ -17,21 +17,20 @@ LOG = logging.getLogger(__name__)
 
 
 class Pipeline(Transformer):
-    """
-    A pipeline of processing modules.
+    """A pipeline of processing modules.
 
     A module may be a scikit-learn style transformer, estimator, or a LIR `Transformer`
     """
 
     def __init__(self, steps: list[tuple[str, Transformer | Any]]):
-        """
-        Constructor.
+        """Initialize a new Pipeline object.
 
         :param steps: the steps of the pipeline as a list of (name, module) tuples.
         """
         self.steps = [(name, as_transformer(module)) for name, module in steps]
 
     def fit(self, instances: InstanceData) -> Self:
+        """Fit the model on the instance data."""
         for _name, module in self.steps[:-1]:
             instances = module.fit_apply(instances)
 
@@ -42,17 +41,20 @@ class Pipeline(Transformer):
         return self
 
     def apply(self, instances: InstanceData) -> InstanceData:
+        """Apply the fitted model on the instance data."""
         for _name, module in self.steps:
             instances = module.apply(instances)
         return instances
 
     def fit_apply(self, instances: InstanceData) -> InstanceData:
+        """Combine fitting the transformer/estimator and applying the model to the instances."""
         for _name, module in self.steps:
             instances = module.fit_apply(instances)
         return instances
 
 
 def parse_steps(config: ContextAwareDict | None, output_dir: Path) -> list[tuple[str, Transformer]]:
+    """Parse the defined pipeline steps in the configuration and return the initialized modules as a list."""
     if config is None:
         return []
     if not isinstance(config, ContextAwareDict):
@@ -96,7 +98,8 @@ class LoggingPipeline(Pipeline):
         include_steps: list[str] | None = None,
         include_input: bool = True,
     ):
-        """
+        """Initialize a new LoggingPipeline instance.
+
         :param steps: the steps of the pipeline as a list of (name, module) tuples.
         :param output_file: the name of the generated output file
         :param include_batch_number: (bool) whether the zero-indexed batch number should be included in the output,
@@ -116,6 +119,7 @@ class LoggingPipeline(Pipeline):
         self.n_batches = 0
 
     def apply(self, instances: InstanceData) -> InstanceData:
+        """Apply the pipeline to the incoming instances."""
         # initialize the csv builder
         write_mode = 'w' if self.n_batches == 0 else 'a'
         csv_builder = DataFileBuilderCsv(self.output_file, write_mode=write_mode)

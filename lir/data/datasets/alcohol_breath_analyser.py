@@ -4,7 +4,8 @@ from lir.data.models import DataProvider, LLRData
 
 
 class AlcoholBreathAnalyser(DataProvider):
-    """
+    """Alcohol Breath Analyser example class.
+
     Example from paper:
         Peter Vergeer, Andrew van Es, Arent de Jongh, Ivo Alberink and Reinoud
         Stoel, Numerical likelihood ratios outputted by LR systems are often
@@ -16,6 +17,7 @@ class AlcoholBreathAnalyser(DataProvider):
         self.ill_calibrated = ill_calibrated
 
     def get_instances(self) -> LLRData:
+        """Provide LLR data for example system."""
         positive_lr = 1000 if self.ill_calibrated else 90
         lrs = np.concatenate(
             [

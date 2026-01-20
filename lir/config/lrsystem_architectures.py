@@ -148,17 +148,10 @@ def parse_augmented_lrsystem(
 
     # build the augmented configuration for the LR system
     augmented_config = substitute_hyperparameters(baseline_lrsystem_config, substitutions, context)
-<<<<<<< HEAD
 
     # construct and return the LR system
     lrsystem_output_dir = output_dir / f'{dirname_prefix}{name}'
     return parse_lrsystem(augmented_config, lrsystem_output_dir)
-=======
-    lrsystem = parse_lrsystem(
-        augmented_config,
-        output_dir / f'{dirname_prefix}{name}',
-    )
-    return lrsystem
 
 
 def parse_default_pipeline(config: ContextAwareDict) -> str:
@@ -167,10 +160,9 @@ def parse_default_pipeline(config: ContextAwareDict) -> str:
     :param config: the configuration dictionary
     :return: the default method to use ('logging_pipeline' or 'pipeline')
     """
-    intermediate_output = pop_field(config, 'intermediate_output', required=False, default=False)
+    intermediate_output = pop_field(config, 'intermediate_output', default=False)
     default_method = 'logging_pipeline' if intermediate_output else 'pipeline'
     if intermediate_output:
         LOG.debug('Using logging pipeline by default as `intermediate_output` is set to true.')
 
     return default_method
->>>>>>> f7cccc3 (Use 'intermediate_output' in lrsystem prasers)

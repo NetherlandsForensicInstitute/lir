@@ -92,6 +92,7 @@ lint.isort.lines-after-imports = 2
 lint.select = [
     "A",    # flake8-builtins
     "B",    # flake8-bugbear
+    "D",    # pydocstyle
     "COM",  # flake8-commas
     "C4",   # flake8-comprehensions
     "DTZ",  # flake8-datetimez
@@ -99,11 +100,16 @@ lint.select = [
     "F",    # pyflakes
     "I",    # isort
     "N",    # pep8-naming
+    "PD",   # pandas-vet
     "PTH",  # flake8-use-pathlib
     "Q",    # flake8-quotes
     "SIM",  # flake8-simplify
     "UP",   # pyupgrade
 ]
+lint.per-file-ignores = {"tests/*" = ["D"]}  # ignore missing docstrings in tests
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
 
 [tool.mypy]
 # allow redefinition of inferred / assigned types

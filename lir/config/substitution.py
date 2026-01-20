@@ -281,10 +281,7 @@ class FolderHyperparameter(Hyperparameter):
         self.folder_path = folder_path
 
         # Setting ignore files as an empty list if None is given helps avoid checks later on.
-        if ignore_files is None:
-            self.ignore_files = []
-        else:
-            self.ignore_files = ignore_files
+        self.ignore_files = ignore_files if ignore_files is not None else []
 
     def options(self) -> list[HyperparameterOption]:
         """Generates the options by walking over the folder."""

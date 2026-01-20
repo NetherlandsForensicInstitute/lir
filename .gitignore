@@ -11,6 +11,11 @@ __pycache__
 /.venv
 /build
 
+# Documentation
+# The API documentation is generated on-demand to
+# always show the up-to-date API.
+/docs/api
+
 /.coverage
 dist/
 /tests/yaml_output

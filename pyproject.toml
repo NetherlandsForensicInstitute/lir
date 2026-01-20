@@ -86,7 +86,23 @@ lint.ignore = [
     "SIM110",
 ]
 lint.isort.lines-after-imports = 2
-lint.select = ["A", "B", "COM", "C4", "DTZ", "E", "F", "I", "N", "PTH", "Q", "SIM", "UP"]
+# List of enabled linting rules, for a complete
+# overview, see: https://docs.astral.sh/ruff/rules
+lint.select = [
+    "A",    # flake8-builtins
+    "B",    # flake8-bugbear
+    "COM",  # flake8-commas
+    "C4",   # flake8-comprehensions
+    "DTZ",  # flake8-datetimez
+    "E",    # pydocstyle-error
+    "F",    # pyflakes
+    "I",    # isort
+    "N",    # pep8-naming
+    "PTH",  # flake8-use-pathlib
+    "Q",    # flake8-quotes
+    "SIM",  # flake8-simplify
+    "UP",   # pyupgrade
+]
 
 [tool.mypy]
 # allow redefinition of inferred / assigned types

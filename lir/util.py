@@ -49,7 +49,6 @@ def Xy_to_Xn(X: np.ndarray, y: np.ndarray, classes: list[int] | None = None) -> 
     Xn is a format where samples are divided into separate variables based on class.
     Xy is a format where all samples are concatenated, with an equal length variable y indicating class.
     """
-
     if classes is None:
         classes = [0, 1]
 
@@ -62,7 +61,7 @@ FloatOrArray = TypeVar('FloatOrArray', np.ndarray, float)
 
 def odds_to_probability[FloatOrArray: (np.ndarray, float)](odds: FloatOrArray) -> FloatOrArray:
     """
-    Converts odds to a probability
+    Converts odds to a probability.
 
     Returns
     -------
@@ -77,17 +76,13 @@ def odds_to_probability[FloatOrArray: (np.ndarray, float)](odds: FloatOrArray) -
 
 
 def probability_to_odds[FloatOrArray: (np.ndarray, float)](p: FloatOrArray) -> FloatOrArray:
-    """
-    Converts a probability to odds
-    """
+    """Converts a probability to odds."""
     with np.errstate(divide='ignore'):
         return p / (1 - p)
 
 
 def probability_to_logodds[FloatOrArray: (np.ndarray, float)](p: FloatOrArray) -> FloatOrArray:
-    """
-    Converts probability values to their log odds with base 10.
-    """
+    """Converts probability values to their log odds with base 10."""
     with np.errstate(divide='ignore'):
         complement = 1 - p
         return np.log10(p) - np.log10(complement)

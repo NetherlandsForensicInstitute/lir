@@ -24,9 +24,7 @@ def save_model(path: Path, model: LRSystem) -> None:
 
 
 class SaveModel(Aggregation):
-    """
-    Write the model to a file.
-    """
+    """Write the model to a file."""
 
     def __init__(self, path: Path):
         self.path = path

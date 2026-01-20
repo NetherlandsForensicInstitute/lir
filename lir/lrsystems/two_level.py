@@ -163,8 +163,8 @@ class TwoLevelModelNormalKDE:
     @staticmethod
     def _get_n_sources(y) -> int:
         """
-        y np 1d-array of labels. labels from {1, ..., n} with n the number of sources. Repetitions get the same label.
-        returns: number of sources in y (int)
+        Y np 1d-array of labels. labels from {1, ..., n} with n the number of sources. Repetitions get the same label.
+        returns: number of sources in y (int).
         """
         return len(np.unique(y))
 
@@ -173,7 +173,7 @@ class TwoLevelModelNormalKDE:
         """
         X np.array of measurements, rows are sources/repetitions, columns are features
         y np 1d-array of labels. labels from {1, ..., n} with n the number of sources. Repetitions get the same label.
-        returns: mean within covariance matrix, np.array
+        returns: mean within covariance matrix, np.array.
 
         This function calculates a matrix of mean covariances within each of the sources, it does so by grouping the
         data per source, calculating the covariance matrices per source and then taking the mean per feature.
@@ -208,7 +208,7 @@ class TwoLevelModelNormalKDE:
         """
         X np.array of measurements, rows are sources/repetitions, columns are features
         y np 1d-array of labels. For each source a unique identifier (label). Repetitions get the same label.
-        returns: means per source in a np.array matrix of size: number of sources * number of features
+        returns: means per source in a np.array matrix of size: number of sources * number of features.
         """
         # Get unique sources and calculate means for each
         unique_sources = np.unique(y)
@@ -218,7 +218,7 @@ class TwoLevelModelNormalKDE:
     def _get_kernel_bandwidth_squared(n_sources: int, n_features_train: int) -> float:
         """
         Reference: 'Density estimation for statistics and data analysis', B.W. Silverman,
-            page 86 formula 4.14 with A(K) the second row in the table on page 87
+            page 86 formula 4.14 with A(K) the second row in the table on page 87.
         """
         # calculate kernel bandwidth and square it, using Silverman's rule for multivariate data
         kernel_bandwidth = (4 / ((n_features_train + 2) * n_sources)) ** (1 / (n_features_train + 4))
@@ -230,9 +230,8 @@ class TwoLevelModelNormalKDE:
         X np.array of measurements, rows are objects, columns are variables
         y np 1d-array of labels. labels from {1, ..., n} with n the number of objects. Repetitions get the same label.
         returns: estimated covariance of true mean of the features between sources in the population in a np.array
-            square matrix with number of features^2 as dimension
+            square matrix with number of features^2 as dimension.
         """
-
         # Get unique sources and their repetition counts
         unique_sources, counts = np.unique(y, return_counts=True)
 
@@ -274,9 +273,8 @@ class TwoLevelModelNormalKDE:
             covars_ref is the covariance matrix for the reference data given a KDE background mean (U_hx),
             covars_trace_inv is the inverse of covars_trace,
             covars_trace_update_inv is the inverse of covars_trace_update,
-            covars_ref_inv is the inverse of covars_ref
+            covars_ref_inv is the inverse of covars_ref.
         """
-
         # Number of trace and reference measurements
         n_trace = len(X_trace)
         n_reference = len(X_ref)
@@ -310,7 +308,7 @@ class TwoLevelModelNormalKDE:
     def _predict_updated_ref_mean(self, X_ref, covars_ref_inv):
         """
         X_ref np.array of measurements of reference object, rows are repetitions, columns features
-        returns: updated_ref_mean, bayesian update of reference mean given KDE background means
+        returns: updated_ref_mean, bayesian update of reference mean given KDE background means.
         """
         n_reference = len(X_ref)
         mean_X_reference = np.mean(X_ref, axis=0)
@@ -342,7 +340,6 @@ class TwoLevelModelNormalKDE:
         updated_ref_mean np.array with same dimensions as X, calculated by _predict_updated_ref_mean
         returns: ln_num1, natural log of numerator of the LR-formula in Bolck et al.
         """
-
         mean_X_trace = np.mean(X_trace, axis=0).reshape(1, -1)
         mean_X_reference = np.mean(X_ref, axis=0).reshape(1, -1)
 
@@ -439,7 +436,6 @@ class TwoLevelSystem(LRSystem):
         :param postprocessing_pipeline: a postprocessing pipeline that is applied *after* applying the two level model;
             it takes LLRs as input.
         """
-
         self.preprocessing_pipeline = preprocessing_pipeline or Pipeline([])
         self.pairing_function = pairing_function
         self.postprocessing_pipeline = postprocessing_pipeline or Pipeline([])

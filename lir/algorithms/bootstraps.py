@@ -31,7 +31,8 @@ class Bootstrap(Pipeline, ABC):
     The AtData variant allows for more complex data types, while the Equidistant variant is only suitable for continuous
     features.
 
-    Attributes:
+    Attributes
+    ----------
         steps: The steps of s pipeline to be bootstrapped.
         n_bootstraps: int: The number of bootstrap samples to generate.
         interval: tuple[float, float]: The lower and upper quantiles for the confidence interval.
@@ -51,7 +52,8 @@ class Bootstrap(Pipeline, ABC):
     ):
         """Initialize the TrainDataBootstrap with the given pipeline steps, number of bootstraps, and interval.
 
-        Parameters:
+        Parameters
+        ----------
         :param steps: list[tuple[str, Any]]: The steps of the pipeline to be bootstrapped.
         :param n_bootstraps: int: The number of bootstrap samples to generate. Default is 400.
         :param interval: tuple[float, float]: The lower and upper quantiles for the confidence interval.
@@ -109,7 +111,6 @@ class Bootstrap(Pipeline, ABC):
         :param instances: FeatureData: The feature data to fit the bootstrap system on.
         :return Self: The fitted bootstrap system.
         """
-
         all_vals = []
         rng = np.random.default_rng(self.seed)
 
@@ -178,7 +179,8 @@ class BootstrapEquidistant(Bootstrap):
     ):
         """Initialize the instance with the given pipeline steps, number of bootstraps, and interval.
 
-        Parameters:
+        Parameters
+        ----------
         :param steps: list[tuple[str, Any]]: The steps of the pipeline to be bootstrapped.
         :param n_bootstraps: int: The number of bootstrap samples to generate. Default is 400.
         :param interval: tuple[float, float]: The lower and upper quantiles for the confidence interval.

@@ -253,7 +253,7 @@ def lr_histogram(
     ax: Axes = plt,
 ) -> None:
     """
-    plots the 10log lrs
+    Plots the 10log lrs.
 
     Parameters
     ----------
@@ -279,8 +279,8 @@ def lr_histogram(
 
 def tippett(llrdata: LLRData, plot_type: int = 1, ax: Axes = plt) -> None:
     """
-    plots empirical cumulative distribution functions of same-source and
-        different-sources lrs
+    Plots empirical cumulative distribution functions of same-source and
+        different-sources lrs.
 
     Parameters
     ----------

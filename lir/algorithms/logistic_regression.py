@@ -80,7 +80,6 @@ def _negative_log_likelihood_balanced(X: np.ndarray, y: np.ndarray, model: Calla
     :param params: mapping of parameter names to values of the model.
     :returns: neg_llh_balanced: float, balanced negative log likelihood (base = exp)
     """
-
     probs = model(X, *params)
     neg_llh_balanced = -np.sum(np.log(probs**y * (1 - probs) ** (1 - y)) / (y * np.sum(y) + (1 - y) * np.sum(1 - y)))
     return neg_llh_balanced

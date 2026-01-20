@@ -59,7 +59,7 @@ class IsotonicRegression(sklearn.isotonic.IsotonicRegression):
         return self
 
     def transform(self, T: ArrayLike) -> np.ndarray:
-        """Transform new data by linear interpolation
+        """Transform new data by linear interpolation.
 
         Parameters
         ----------
@@ -71,7 +71,6 @@ class IsotonicRegression(sklearn.isotonic.IsotonicRegression):
         T_ : array, shape=(n_samples,)
             The transformed data
         """
-
         dtype = self._necessary_X_.dtype if hasattr(self, '_necessary_X_') else np.float64
 
         T = check_array(T, dtype=dtype, ensure_2d=False, ensure_all_finite=False)
@@ -107,10 +106,7 @@ class IsotonicCalibrator(BaseEstimator, TransformerMixin):
     """
 
     def __init__(self, add_misleading: int = 0):
-        """
-
-        :param add_misleading:
-        """
+        """:param add_misleading:"""
         self.add_misleading = add_misleading
         self._ir = IsotonicRegression(out_of_bounds='clip')
 

@@ -89,9 +89,7 @@ class GenericFunctionConfigParser(ConfigParser):
 
 
 class GenericConfigParser(ConfigParser):
-    """
-    This parser returns an instantiation of a class, initialized with the specified arguments.
-    """
+    """This parser returns an instantiation of a class, initialized with the specified arguments."""
 
     def __init__(self, component_class: Any):
         super().__init__()
@@ -267,7 +265,8 @@ def check_is_empty(
 
     If any unexpected arguments remain, a `YamlParseError` is raised indicating the
     argument was unexpected and not taken into account (i.e. not parsed). This methodology ensures
-    the user does not assume arguments are parsed that are in fact not recognized."""
+    the user does not assume arguments are parsed that are in fact not recognized.
+    """
     for key in config:
         if not accept_keys or key not in accept_keys:
             raise YamlParseError(config.context, f'unrecognized argument: {key}')

@@ -27,7 +27,7 @@ class AggregationData(NamedTuple):
     Fields:
     - llrdata: the LLR data containing LLRs and labels.
     - lrsystem: the model that produced the results
-    - parameters: parameters that identify the system producing the results
+    - parameters: parameters that identify the system producing the results.
     """
 
     llrdata: LLRData

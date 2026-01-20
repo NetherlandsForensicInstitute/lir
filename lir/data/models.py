@@ -28,7 +28,8 @@ class InstanceData(BaseModel, ABC):
     """
     Base class for data on instances.
 
-    Attributes:
+    Attributes
+    ----------
     - labels: an array of labels, a 1-dimensional array with one value per instance
     - source_ids: an array of source ids, a 2-dimensional array with one column and one value per instance
     """
@@ -40,9 +41,7 @@ class InstanceData(BaseModel, ABC):
 
     @property
     def require_labels(self) -> np.ndarray:
-        """
-        Returns `labels` and guarantee that it is not None (or raise an error).
-        """
+        """Returns `labels` and guarantee that it is not None (or raise an error)."""
         if self.labels is None:
             raise ValueError('labels not set')
         return self.labels
@@ -69,9 +68,7 @@ class InstanceData(BaseModel, ABC):
 
     @abstractmethod
     def __len__(self) -> int:
-        """
-        :return: the number of instances in this dataset
-        """
+        """:return: the number of instances in this dataset"""
         raise NotImplementedError
 
     def __getitem__(self, indexes: np.ndarray | int) -> Self:
@@ -259,9 +256,7 @@ class InstanceData(BaseModel, ABC):
 
     @property
     def all_fields(self) -> list[str]:
-        """
-        :return: a list of all fields, including both mandatory and extra fields
-        """
+        """:return: a list of all fields, including both mandatory and extra fields"""
         all_fields = list(type(self).model_fields.keys())
         if self.model_extra:
             all_fields += list(self.model_extra.keys())
@@ -269,9 +264,7 @@ class InstanceData(BaseModel, ABC):
 
     @property
     def has_labels(self) -> bool:
-        """
-        :return: True iff the instances are labeled
-        """
+        """:return: True iff the instances are labeled"""
         return self.labels is not None
 
     def replace(self, **kwargs: Any) -> Self:
@@ -309,7 +302,8 @@ class FeatureData(InstanceData):
     """
     Data class for feature data.
 
-    Attributes:
+    Attributes
+    ----------
     - features: an array of instance features, with one row per instance
     """
 
@@ -342,7 +336,8 @@ class PairedFeatureData(FeatureData):
     """
     Data class for instance pair data.
 
-    Attributes:
+    Attributes
+    ----------
     - n_trace_instances: the number of trace instances in each pair
     - n_ref_instances: the number of reference instances in each pair
     - features: the features of all instances in the pair, with pairs along the first dimension, and instances along the
@@ -397,7 +392,8 @@ class LLRData(FeatureData):
     """
     Representation of calculated LLR values.
 
-    Attributes:
+    Attributes
+    ----------
     - llrs: 1-dimensional numpy array of LLR values
     - has_intervals: indicate whether the LLR's have intervals
     - llr_intervals: numpy array of LLR values of dimensions (n, 2), or `None` if the LLR's have no intervals
@@ -411,9 +407,7 @@ class LLRData(FeatureData):
 
     @property
     def llrs(self) -> np.ndarray:
-        """
-        :return: 1-dimensional numpy array of LLR values
-        """
+        """:return: 1-dimensional numpy array of LLR values"""
         if len(self.features.shape) == 1:
             return self.features
         else:
@@ -421,16 +415,12 @@ class LLRData(FeatureData):
 
     @property
     def has_intervals(self) -> bool:
-        """
-        :return: indicate whether the LLR's have intervals
-        """
+        """:return: indicate whether the LLR's have intervals"""
         return len(self.features.shape) == 2 and self.features.shape[1] == 3
 
     @property
     def llr_intervals(self) -> np.ndarray | None:
-        """
-        :return: numpy array of LLR values of dimensions (n, 2), or `None` if the LLR's have no intervals
-        """
+        """:return: numpy array of LLR values of dimensions (n, 2), or `None` if the LLR's have no intervals"""
         if self.has_intervals:
             return self.features[:, 1:]
         else:
@@ -438,9 +428,7 @@ class LLRData(FeatureData):
 
     @property
     def llr_bounds(self) -> tuple[float | None, float | None]:
-        """
-        :return: a tuple (min_llr, max_llr)
-        """
+        """:return: a tuple (min_llr, max_llr)"""
         return self.llr_lower_bound, self.llr_upper_bound
 
     @model_validator(mode='after')
@@ -475,9 +463,7 @@ class LLRData(FeatureData):
                 return super()._concatenate_field(field, values)
 
     def check_misleading_finite(self) -> None:
-        """
-        Check whether all values are either finite or not misleading.
-        """
+        """Check whether all values are either finite or not misleading."""
         values, labels = self.llrs, self.require_labels
 
         # give error message if H1's contain zeros and H2's contain ones
@@ -512,17 +498,12 @@ class DataProvider(ABC):
 
     @abstractmethod
     def get_instances(self) -> FeatureData:
-        """
-        Returns an InstanceData object, containing data for a set of instances.
-        """
-
+        """Returns an InstanceData object, containing data for a set of instances."""
         raise NotImplementedError
 
 
 class DataStrategy(ABC):
-    """
-    Base class for data strategies.
-    """
+    """Base class for data strategies."""
 
     @abstractmethod
     def apply(self, instances: FeatureData) -> Iterable[tuple[FeatureData, FeatureData]]:
@@ -530,5 +511,4 @@ class DataStrategy(ABC):
         Returns an iterator over tuples of a training set and a test set. Both the training set and the test
         is represented by an `InstanceData` object.
         """
-
         raise NotImplementedError

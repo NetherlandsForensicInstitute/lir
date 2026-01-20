@@ -27,7 +27,7 @@ def plot_llr_overestimation(
     :param num_fids: number of fiducial distributions to base the interval on; use 0 for no interval
     :param ax: matplotlib axes to plot into
     :param kwargs: additional arguments to pass to :func:`calc_llr_overestimation`
-        and/or :func:`calc_fiducial_density_functions`
+        and/or :func:`calc_fiducial_density_functions`.
     """
     llrs, y = llrdata.llrs, llrdata.labels
     if y is None:
@@ -86,7 +86,6 @@ def calc_llr_overestimation(
     :param kwargs: additional arguments to pass to :func:`calc_fiducial_density_functions`
     :returns: a tuple of LLRs, their overestimation (best estimate), and their overestimation interval
     """
-
     # Convert the LRs to log10 values (LLRs)
     llr_h1 = llrs[y == 1]
     llr_h2 = llrs[y == 0]
@@ -170,9 +169,8 @@ def calc_fiducial_density_functions(
     :param smoothing_grid_fraction: fraction of grid points to use as half window during smoothing
     :param smoothing_sample_size_correction: value to use for sample size correction of smoothing window; 0 is no
         correction
-    :param seed: seed for random number generator used draw samples from a uniform distribution
+    :param seed: seed for random number generator used draw samples from a uniform distribution.
     """
-
     # Generate cdfs of the fiducial distributions: sorted random draws from a uniform distribution
     rng = np.random.default_rng(seed)
     cdfs = np.sort(rng.uniform(size=(len(data), num_fids)), axis=0)

@@ -11,7 +11,9 @@ benchmarks:
   model_selection_run:
     lr_system: ...
     ...
-    parameters:
+
+Parameters
+----------
       - path: comparing.clf
         values:
           - name: logit
@@ -96,10 +98,7 @@ class CategoricalHyperparameter(Hyperparameter):
 
 
 def _parse_categorical_option(spec: Any, path: str, option_index: int | None) -> HyperparameterOption:
-    """
-    Parse a section describing an option value of a categorical hyperparameter.
-    """
-
+    """Parse a section describing an option value of a categorical hyperparameter."""
     name = None
     if isinstance(spec, Mapping):
         # use the explicityly declared name, if any
@@ -313,10 +312,7 @@ def parse_hyperparameter(
     spec: ContextAwareDict,
     output_dir: Path,
 ) -> Hyperparameter:
-    """
-    Parse the parameters section of the configuration into a dedicated value wrapper object.
-    """
-
+    """Parse the parameters section of the configuration into a dedicated value wrapper object."""
     if 'type' in spec:
         parameter_type = pop_field(spec, 'type')  # read from specified configuration
 
@@ -342,7 +338,8 @@ def _assign(struct: ContextAwareDict | ContextAwareList, path: list[str], value:
     """
     Assigns a new value to a path within an hierarchical `dict` structure.
 
-    Parameters:
+    Parameters
+    ----------
         - struct is the `dict` that is modified in-place
         - path is the path within the dict, as a list of `str`
         - value is the value to be assigned
@@ -391,7 +388,6 @@ def substitute_hyperparameters(
     :param context: the context path of the augmented configuration
     :return: the augmented LR system configuration
     """
-
     if '' in hyperparameters:
         # if the root is assigned, don't bother substituting and return the assigned value immediately
         augmented_config = _expand(context, hyperparameters[''])

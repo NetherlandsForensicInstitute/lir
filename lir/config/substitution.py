@@ -299,7 +299,7 @@ class FolderHyperparameter(Hyperparameter):
 
         return options
 
-
+@config_parser
 def parse_folder(spec: ContextAwareDict, output_path: Path) -> 'FolderHyperparameter':
     """Parse the `parameters` section of the configuration into a `FolderHyperparameter` object."""
     folder = pop_field(spec, 'folder')

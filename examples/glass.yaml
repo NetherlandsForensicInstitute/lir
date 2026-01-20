@@ -187,10 +187,10 @@ experiments:
               - path: comparing.steps.calibration
                 value: csv_writer
     dataparameters:
-      - name: filename
-        path: data.provider.file
-        type: folder
-        folder_path: /path/to/content
+      - path: data.provider.file
+        value:
+          type: folder
+          folder: /path/to/content
     output:
       - method: metrics
         columns:

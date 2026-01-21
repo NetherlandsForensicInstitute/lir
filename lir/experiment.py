@@ -38,6 +38,7 @@ class Experiment(ABC):
         lrsystem: ParsedLRSystem,
         hyperparameters: dict[str, Any],
         split_data: Iterable[tuple[FeatureData, FeatureData]],
+        output_dir: Path,
     ) -> LLRData:
         """Run experiment on a single LR system configuration using the provided data(setup).
 
@@ -52,8 +53,8 @@ class Experiment(ABC):
         """
         # write the full lr system configuration to the output folder
         lrsystem_config = confidence.Configuration(simplify_data_structure(lrsystem.config))
-        lrsystem.output_dir.mkdir(exist_ok=True, parents=True)
-        confidence.dumpf(lrsystem_config, lrsystem.output_dir / 'lrsystem.yaml')
+        output_dir.mkdir(exist_ok=True, parents=True)
+        confidence.dumpf(lrsystem_config, output_dir / 'lrsystem.yaml')
 
         # Placeholders for numpy arrays of LLRs and labels obtained from each train/test split
         llr_sets: list[LLRData] = []
@@ -115,7 +116,7 @@ class PredefinedExperiment(Experiment):
         # there are multiple data configurations to evaluate.
         disable_data_tqdm = not lir.is_interactive() or len(self.data_configs) == 1
         
-        for data_config, _parameter in tqdm(self.data_configs, disable=disable_data_tqdm, desc=self.name):
+        for data_config, dataparameter in tqdm(self.data_configs, disable=disable_data_tqdm, desc=self.name):
             # Parse the data configuration. This is done here to ensure that data
             # parsing is only done once per data configuration, even when multiple
             # LR systems are being evaluated on the same data setup.
@@ -126,4 +127,12 @@ class PredefinedExperiment(Experiment):
             # the data_tqdm is not disabled, and there are multiple LR systems to evaluate.
             disable_lrsystem_tqdm = not lir.is_interactive() or not disable_data_tqdm or len(self.lrsystems) == 1
             for lrsystem, hyperparameters in tqdm(self.lrsystems, desc=self.name, disable=disable_lrsystem_tqdm):
-                self._run_lrsystem(lrsystem, hyperparameters, split_data)
+
+                # Combine the data parameter with the LR system hyperparameters to create
+                # a unique name for this experiment configuration.
+                data_name = '__'.join([f'{key}={value}' for key, value in dataparameter.items()]) 
+                lrsystem_name = '__'.join([f'{key}={value}' for key, value in hyperparameters.items()])
+                experiment_name = f'{data_name}{"__" if lrsystem_name and data_name else ""}{lrsystem_name}'
+                experiment_output_dir = self.output_path / experiment_name
+                
+                self._run_lrsystem(lrsystem, hyperparameters, split_data, experiment_output_dir)

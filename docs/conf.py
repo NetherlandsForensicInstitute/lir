@@ -2,6 +2,15 @@
 #
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
+import importlib
+import inspect
+import re
+from pathlib import Path
+from typing import Any
+
+from lir import registry
+from lir.config.base import ConfigParser
+from lir.registry import _get_attribute_by_name
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
@@ -26,6 +35,7 @@ extensions = [
     'sphinx.ext.autosummary',
     'sphinx_rtd_theme',
     'sphinx.ext.napoleon',
+    'sphinx_jinja',
 ]
 
 
@@ -58,3 +68,43 @@ html_theme_options = {
     "navigation_depth": 3,
 }
 html_sidebars = { '**': ['globaltoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html'] }
+
+
+def is_module(name: str) -> bool:
+    source_path = Path(__file__).parent.parent / name.replace('.', '/')
+    return source_path.is_dir()
+
+
+def get_apidocs_uri(class_name: str | ConfigParser) -> str:
+    if isinstance(class_name, ConfigParser):
+        class_name = class_name.reference()
+
+    parts = class_name.split('.')
+    for i in range(1, len(parts)):
+        module_name = '.'.join(parts[:-i])
+        if is_module(module_name):
+            return f'api/{module_name}.html#{class_name}'
+
+    return 'api/lir.html'
+
+
+def get_docstr_short(class_name: str | ConfigParser) -> str:
+    if isinstance(class_name, ConfigParser):
+        class_name = class_name.reference()
+
+    docstr = _get_attribute_by_name(class_name).__doc__ or ''
+    docstr = re.sub('\n.*', '', docstr.strip())
+    return docstr
+
+
+jinja_globals = {
+    'registry': registry.registry(),
+}
+
+jinja_contexts = {
+}
+
+jinja_filters = {
+    'apidocs_uri': lambda class_name: get_apidocs_uri(class_name),
+    'docstr_short': lambda class_name: get_docstr_short(class_name),
+}

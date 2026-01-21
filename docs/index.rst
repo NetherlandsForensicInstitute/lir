@@ -6,6 +6,7 @@
    self
    lrsystem_yaml
    lr_calculation
+   reference
    API reference <api/lir>
 
 

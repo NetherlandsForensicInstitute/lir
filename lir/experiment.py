@@ -115,24 +115,23 @@ class PredefinedExperiment(Experiment):
         # Only display the data configuration progress bar when running interactively and
         # there are multiple data configurations to evaluate.
         disable_data_tqdm = not lir.is_interactive() or len(self.data_configs) == 1
-        
+
         for data_config, dataparameter in tqdm(self.data_configs, disable=disable_data_tqdm, desc=self.name):
             # Parse the data configuration. This is done here to ensure that data
             # parsing is only done once per data configuration, even when multiple
             # LR systems are being evaluated on the same data setup.
             provider, splitter = parse_data_object(data_config, self.output_path)
-            split_data = splitter.apply(provider.get_instances())
+            split_data = list(splitter.apply(provider.get_instances()))
 
-            # Only display the LR system configuration progress bar when running interactively, and 
+            # Only display the LR system configuration progress bar when running interactively, and
             # the data_tqdm is not disabled, and there are multiple LR systems to evaluate.
             disable_lrsystem_tqdm = not lir.is_interactive() or not disable_data_tqdm or len(self.lrsystems) == 1
             for lrsystem, hyperparameters in tqdm(self.lrsystems, desc=self.name, disable=disable_lrsystem_tqdm):
-
                 # Combine the data parameter with the LR system hyperparameters to create
                 # a unique name for this experiment configuration.
-                data_name = '__'.join([f'{key}={value}' for key, value in dataparameter.items()]) 
+                data_name = '__'.join([f'{key}={value}' for key, value in dataparameter.items()])
                 lrsystem_name = '__'.join([f'{key}={value}' for key, value in hyperparameters.items()])
                 experiment_name = f'{data_name}{"__" if lrsystem_name and data_name else ""}{lrsystem_name}'
                 experiment_output_dir = self.output_path / experiment_name
-                
+
                 self._run_lrsystem(lrsystem, hyperparameters, split_data, experiment_output_dir)

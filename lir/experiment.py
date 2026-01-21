@@ -36,9 +36,8 @@ class Experiment(ABC):
     def _run_lrsystem(
         self,
         lrsystem: ParsedLRSystem,
-        hyperparameters: dict[str, Any],
         split_data: Iterable[tuple[FeatureData, FeatureData]],
-        output_dir: Path,
+        experiment_name: str,
     ) -> LLRData:
         """Run experiment on a single LR system configuration using the provided data(setup).
 
@@ -52,6 +51,7 @@ class Experiment(ABC):
         LLR data is returned.
         """
         # write the full lr system configuration to the output folder
+        output_dir = self.output_path / experiment_name
         lrsystem_config = confidence.Configuration(simplify_data_structure(lrsystem.config))
         output_dir.mkdir(exist_ok=True, parents=True)
         confidence.dumpf(lrsystem_config, output_dir / 'lrsystem.yaml')
@@ -72,7 +72,7 @@ class Experiment(ABC):
         combined_llrs: LLRData = concatenate_instances(*llr_sets)
 
         # Collect and report results as configured by `outputs`
-        results = AggregationData(llrdata=combined_llrs, lrsystem=lrsystem, parameters=hyperparameters)
+        results = AggregationData(llrdata=combined_llrs, lrsystem=lrsystem, parameters_str=experiment_name)
         for output in self.outputs:
             output.report(results)
 
@@ -132,6 +132,5 @@ class PredefinedExperiment(Experiment):
                 data_name = '__'.join([f'{key}={value}' for key, value in dataparameter.items()])
                 lrsystem_name = '__'.join([f'{key}={value}' for key, value in hyperparameters.items()])
                 experiment_name = f'{data_name}{"__" if lrsystem_name and data_name else ""}{lrsystem_name}'
-                experiment_output_dir = self.output_path / experiment_name
 
-                self._run_lrsystem(lrsystem, hyperparameters, split_data, experiment_output_dir)
+                self._run_lrsystem(lrsystem, split_data, experiment_name)

@@ -85,7 +85,7 @@ class OptunaExperiment(Experiment):
             }
         )
 
-        llr_data: LLRData = self._run_lrsystem(lrsystem, hyperparameters, self.split_data, self.output_path)
+        llr_data: LLRData = self._run_lrsystem(lrsystem, self.split_data, str(hyperparameters))
 
         return self.metric_function(llr_data)
 

@@ -33,7 +33,7 @@ class AggregationData(NamedTuple):
 
     llrdata: LLRData
     lrsystem: LRSystem
-    parameters: dict[str, Any]
+    parameters_str: str
 
 
 class Aggregation(ABC):
@@ -75,26 +75,24 @@ class AggregatePlot(Aggregation):
         fig, ax = plt.subplots()
 
         llrdata = data.llrdata
-        parameters = data.parameters
+        parameters_str = data.parameters_str
 
         try:
             self.plot_fn(llrdata=llrdata, ax=ax, **self.plot_fn_args)
         except ValueError as e:
-            LOG.warning(f'Could not generate plot {self.plot_name} for parameters {parameters}: {e}')
+            LOG.warning(f'Could not generate plot {self.plot_name} for parameters {parameters_str}: {e}')
             return
 
         # Only save the figure when an output path is provided.
         if self.output_path is not None:
             dir_name = self.output_path
-            param_string = '__'.join(f'{k}={v}' for k, v in parameters.items()) + '_' if parameters else ''
-            plot_arguments = (
-                '_' + '_'.join(f'{k}={v}' for k, v in self.plot_fn_args.items()) if self.plot_fn_args else ''
-            )
+            param_string = parameters_str + '_' if parameters_str else ''
+            plot_arguments = '_'.join(f'{k}={v}' for k, v in self.plot_fn_args.items()) if self.plot_fn_args else ''
 
             file_name = dir_name / f'{param_string}{self.plot_name}{plot_arguments}.png'
             dir_name.mkdir(exist_ok=True, parents=True)
 
-            LOG.info(f'Saving plot {self.plot_name} for parameters {parameters} to {file_name}')
+            LOG.info(f'Saving plot {self.plot_name} for parameters {parameters_str} to {file_name}')
             fig.savefig(file_name)
 
 
@@ -174,7 +172,7 @@ class WriteMetricsToCsv(Aggregation):
             else:
                 metrics.append((name, str(value)))
 
-        results = OrderedDict(list(data.parameters.items()) + metrics)
+        results = OrderedDict([('parameters', data.parameters_str)] + metrics)
 
         # Record column header names only once to the CSV
         if self._writer is None:

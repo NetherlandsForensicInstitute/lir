@@ -5,6 +5,7 @@ from typing import Any
 import optuna
 
 from lir.aggregation import Aggregation
+from lir.config.data import parse_data_object
 from lir.config.lrsystem_architectures import parse_augmented_config, parse_lrsystem
 from lir.config.substitution import (
     ContextAwareDict,
@@ -12,7 +13,7 @@ from lir.config.substitution import (
     Hyperparameter,
     HyperparameterOption,
 )
-from lir.data.models import DataProvider, DataStrategy, LLRData
+from lir.data.models import LLRData
 from lir.experiment import Experiment
 
 
@@ -22,8 +23,7 @@ class OptunaExperiment(Experiment):
     def __init__(
         self,
         name: str,
-        data_provider: DataProvider,
-        splitter: DataStrategy,
+        data_config: ContextAwareDict,
         outputs: Sequence[Aggregation],
         output_path: Path,
         baseline_config: ContextAwareDict,
@@ -32,9 +32,10 @@ class OptunaExperiment(Experiment):
         metric_function: Callable[[LLRData], float],
     ):
         super().__init__(name, outputs, output_path)
-        self.data_provider = data_provider
 
-        self.split_data = splitter.apply(self.data_provider.get_instances())
+        self.data_config = data_config
+        data_provider, splitter = parse_data_object(data_config, output_path)
+        self.split_data = splitter.apply(data_provider.get_instances())
 
         self.baseline_config = baseline_config
         self.hyperparameters = hyperparameters
@@ -85,7 +86,7 @@ class OptunaExperiment(Experiment):
             }
         )
 
-        llr_data: LLRData = self._run_lrsystem(lrsystem, self.split_data, str(hyperparameters))
+        llr_data: LLRData = self._run_lrsystem(lrsystem, self.split_data, str(hyperparameters), self.data_config)
 
         return self.metric_function(llr_data)
 

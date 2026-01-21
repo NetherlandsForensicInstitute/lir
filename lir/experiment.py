@@ -38,6 +38,7 @@ class Experiment(ABC):
         lrsystem: ParsedLRSystem,
         split_data: Iterable[tuple[FeatureData, FeatureData]],
         experiment_name: str,
+        data_config: ContextAwareDict,
     ) -> LLRData:
         """Run experiment on a single LR system configuration using the provided data(setup).
 
@@ -50,11 +51,15 @@ class Experiment(ABC):
         which may write metrics and visualizations to the `output_path` directory. The combined
         LLR data is returned.
         """
-        # write the full lr system configuration to the output folder
+        # write the configuration to the output folder (data and lrsystem)
         output_dir = self.output_path / experiment_name
-        lrsystem_config = confidence.Configuration(simplify_data_structure(lrsystem.config))
+        config_dict = {
+            'lr_system': simplify_data_structure(lrsystem.config),
+            'data': simplify_data_structure(data_config),
+        }
+        output_config = confidence.Configuration(config_dict)
         output_dir.mkdir(exist_ok=True, parents=True)
-        confidence.dumpf(lrsystem_config, output_dir / 'lrsystem.yaml')
+        confidence.dumpf(output_config, output_dir / 'configuration.yaml')
 
         # Placeholders for numpy arrays of LLRs and labels obtained from each train/test split
         llr_sets: list[LLRData] = []
@@ -133,4 +138,4 @@ class PredefinedExperiment(Experiment):
                 lrsystem_name = '__'.join([f'{key}={value}' for key, value in hyperparameters.items()])
                 experiment_name = f'{data_name}{"__" if lrsystem_name and data_name else ""}{lrsystem_name}'
 
-                self._run_lrsystem(lrsystem, split_data, experiment_name)
+                self._run_lrsystem(lrsystem, split_data, experiment_name, data_config)

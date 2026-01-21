@@ -15,7 +15,6 @@ from lir.config.base import (
     check_type,
     pop_field,
 )
-from lir.config.data import parse_data_object
 from lir.config.lrsystem_architectures import (
     parse_augmented_config,
     parse_lrsystem,
@@ -207,18 +206,16 @@ class OptunaStrategy(ExperimentStrategyConfigParser):
         """Get experiment for the optuna run, based on its name."""
         baseline_config, parameters = self.lrsystem()
         n_trials = pop_field(self._config, 'n_trials', validate=int)
-        data_provider, data_splitter = parse_data_object(self.data_config()[0], self._output_dir)
 
         return OptunaExperiment(
-            name,
-            data_provider,
-            data_splitter,
-            self.output_list(),
-            self._output_dir,
-            baseline_config,
-            parameters,
-            n_trials,
-            self.primary_metric(),
+            name=name,
+            data_config=self.data_config()[0],
+            outputs=self.output_list(),
+            output_path=self._output_dir,
+            baseline_config=baseline_config,
+            hyperparameters=parameters,
+            n_trials=n_trials,
+            metric_function=self.primary_metric(),
         )
 
 

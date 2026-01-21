@@ -11,13 +11,19 @@ from lir.data.models import DataProvider, DataStrategy
 
 
 def parse_data_object(cfg: ContextAwareDict, output_path: Path) -> tuple[DataProvider, DataStrategy]:
+    """Parse data provider and data strategy from configuration.
+
+    The `provider` and `splits` fields are parsed, which are expected to refer
+    to specific implementations of `DataProvider` and `DataStrategy`, respectively.
+    See `parse_data_provider` and `parse_data_strategy` for more information.
+    """
     return parse_data_provider(cfg['provider'], output_path), parse_data_strategy(cfg['splits'], output_path)
 
 
 def parse_data_strategy(cfg: ContextAwareDict, output_path: Path) -> DataStrategy:
     """Instantiate specific implementation of `DataStrategy` as configured.
 
-    The `setup` field is parsed, which is expected to refer to a name in
+    The `strategy` field is parsed, which is expected to refer to a name in
     the registry. See for example `lir.data_setup.binary_cross_validation`
     or `lir.data_setup.binary_train_test_split`.
 
@@ -34,7 +40,7 @@ def parse_data_strategy(cfg: ContextAwareDict, output_path: Path) -> DataStrateg
     except Exception as e:
         raise YamlParseError(
             cfg.context,
-            f'no parser available for data type `{strategy}`; the error was: {e}',
+            f'no parser available for data strategy `{strategy}`; the error was: {e}',
         )
 
     return parser.parse(cfg, output_path)
@@ -43,7 +49,7 @@ def parse_data_strategy(cfg: ContextAwareDict, output_path: Path) -> DataStrateg
 def parse_data_provider(cfg: ContextAwareDict, output_path: Path) -> DataProvider:
     """Instantiate specific implementation of `DataProvider` as configured.
 
-    The `type` field is parsed, which is expected to refer to a name in
+    The `method` field is parsed, which is expected to refer to a name in
     the registry. See for example `lir.config.data_sources.synthesized_normal_binary`
     or `lir.config.data_sources.synthesized_normal_multiclass`.
 

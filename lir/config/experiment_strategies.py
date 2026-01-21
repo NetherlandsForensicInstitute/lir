@@ -172,21 +172,21 @@ class GridStrategy(ExperimentStrategyConfigParser):
         """Get experiment for the grid strategy run, based on its name."""
         baseline_config, hyperparameters = self.lrsystem()
         lrsystems = []
-        names = [param.name for param in hyperparameters]
-        values = [param.options() for param in hyperparameters]
-        for value_set in product(*values):
-            substitutions = dict(zip(names, value_set, strict=True))
+        hyperparameter_names = [param.name for param in hyperparameters]
+        hyperparameter_values = [param.options() for param in hyperparameters]
+        for value_set in product(*hyperparameter_values):
+            substitutions = dict(zip(hyperparameter_names, value_set, strict=True))
             lrsystem = parse_lrsystem(parse_augmented_config(baseline_config, substitutions), self._output_dir)
             lrsystems.append((lrsystem, substitutions))
 
         dataconfig, dataparameters = self.data_config()
         # Data objects is a combination of the data provider and the data splitter / strategy
         data_configs = []
-        names = [param.name for param in dataparameters]
-        values = [param.options() for param in dataparameters]
+        dataparameter_names = [param.name for param in dataparameters]
+        dataparameter_values = [param.options() for param in dataparameters]
 
-        for value_set in product(*values):
-            substitutions = dict(zip(names, value_set, strict=True))
+        for value_set in product(*dataparameter_values):
+            substitutions = dict(zip(dataparameter_names, value_set, strict=True))
             data_config = parse_augmented_config(dataconfig, substitutions)
             data_configs.append((data_config, substitutions))
 

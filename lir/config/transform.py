@@ -89,6 +89,9 @@ class NumpyWrappingConfigParser(ConfigParser):
             header=header,
         )
 
+    def reference(self) -> str:
+        return self.module_parser.reference()
+
 
 def parse_module(
     module_config: ContextAwareDict | str | None,

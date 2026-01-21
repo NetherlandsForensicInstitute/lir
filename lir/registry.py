@@ -7,7 +7,7 @@ from typing import Any
 
 import confidence
 
-from lir.config.base import ConfigParser
+from lir.config.base import ConfigParser, GenericConfigParser
 
 from . import resources as package_resources
 
@@ -141,7 +141,7 @@ class FederatedLoader(ConfigParserLoader):
     def get(
         self,
         key: str,
-        default_config_parser: Callable[[Any], ConfigParser] | None = None,
+        default_config_parser: Callable[[Any], ConfigParser] | None = GenericConfigParser,
         search_path: list[str] | None = None,
     ) -> ConfigParser:
         errors = []

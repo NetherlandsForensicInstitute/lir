@@ -69,6 +69,14 @@ class ConfigParser(ABC):
         """
         raise NotImplementedError
 
+    @staticmethod
+    def get_type_name(cls: Any) -> str:
+        module = cls.__module__
+        return f'{module}.{cls.__qualname__}'
+
+    def reference(self) -> str:
+        return self.get_type_name(self.__class__)
+
 
 class GenericFunctionConfigParser(ConfigParser):
     """Parser for callable functions or component classes."""
@@ -86,6 +94,9 @@ class GenericFunctionConfigParser(ConfigParser):
             return self.component_class
 
         raise YamlParseError(config.context, f'unrecognized module type: `{self.component_class}`')
+
+    def reference(self) -> str:
+        return self.get_type_name(self.component_class)
 
 
 class GenericConfigParser(ConfigParser):
@@ -109,6 +120,9 @@ class GenericConfigParser(ConfigParser):
                 config.context,
                 f'unable to initialize {self.component_class}; the error was: {e}',
             )
+
+    def reference(self) -> str:
+        return self.get_type_name(self.component_class)
 
 
 def config_parser(func: Callable) -> Callable:
@@ -140,6 +154,9 @@ def config_parser(func: Callable) -> Callable:
             output_dir: Path,
         ) -> Any:
             return func(config, output_dir)
+
+        def reference(self) -> str:
+            return f'{func.__globals__["__name__"]}.{func.__name__}'
 
     return ConfigParserFunction
 

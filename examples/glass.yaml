@@ -186,11 +186,6 @@ experiments:
                 value: logistic_regression
               - path: comparing.steps.calibration
                 value: csv_writer
-    dataparameters:
-      - path: provider.file
-        value:
-          type: folder
-          folder: /path/to/content
     output:
       - method: metrics
         columns:

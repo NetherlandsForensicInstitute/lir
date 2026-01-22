@@ -12,9 +12,7 @@ benchmarks:
   model_selection_run:
     lr_system: ...
     ...
-
-Parameters
-----------
+    parameters:
       - path: comparing.clf
         values:
           - name: logit
@@ -24,7 +22,7 @@ Parameters
             method: svm
             probability: True
 ```
-"""
+"""  # noqa: D405, D406, D407, D411, D214 (ignores to allow YAML definition)
 
 import json
 import logging

@@ -54,10 +54,10 @@ all = {composite = ["check", "test"]}
 all_with_quicktest = {composite = ["check", "quicktest"]}
 check = {composite = ["format-check", "lint", "mypy"]}
 fix-all = {composite = ["lint-fix", "format-fix"]}
-lint = "ruff check lir tests"
-lint-fix = "ruff check --fix lir tests"
-format-check = "ruff format --diff lir tests"
-format-fix = "ruff format lir tests"
+lint = "ruff check lir tests docs"
+lint-fix = "ruff check --fix lir tests docs"
+format-check = "ruff format --diff lir tests docs"
+format-fix = "ruff format lir tests docs"
 mypy = "mypy lir"
 # If no args are given to 'test', this will run as if '{args}' is an empty string.
 test = "coverage run --branch --source lir --module pytest --strict-markers tests/ {args}"

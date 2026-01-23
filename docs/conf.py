@@ -2,21 +2,19 @@
 #
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
-import importlib
-import inspect
 import re
 from pathlib import Path
-from typing import Any
 
 from lir import registry
 from lir.config.base import ConfigParser
 from lir.registry import _get_attribute_by_name
 
+
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'LiR - Likelihood Ratio Toolkit'
-copyright = '%Y, Netherlands Forensic Institute'
+copyright = '%Y, Netherlands Forensic Institute'  # noqa: A001
 author = 'Netherlands Forensic Institute'
 
 # -- General configuration ---------------------------------------------------
@@ -25,7 +23,7 @@ author = 'Netherlands Forensic Institute'
 # The master toctree document.
 master_doc = 'index'
 
-pygments_style = 'sphinx'       # enable syntax highlighting
+pygments_style = 'sphinx'  # enable syntax highlighting
 
 # A list of ignored prefixes for module index sorting.
 # modindex_common_prefix = ['lir.']
@@ -62,12 +60,12 @@ napoleon_custom_sections = None
 
 
 # -- Options for HTML output -------------------------------------------------
-html_theme = "sphinx_rtd_theme"
+html_theme = 'sphinx_rtd_theme'
 html_theme_options = {
-    "collapse_navigation": False,
-    "navigation_depth": 3,
+    'collapse_navigation': False,
+    'navigation_depth': 3,
 }
-html_sidebars = { '**': ['globaltoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html'] }
+html_sidebars = {'**': ['globaltoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html']}
 
 
 def is_module(name: str) -> bool:
@@ -101,8 +99,7 @@ jinja_globals = {
     'registry': registry.registry(),
 }
 
-jinja_contexts = {
-}
+jinja_contexts = {}
 
 jinja_filters = {
     'apidocs_uri': lambda class_name: get_apidocs_uri(class_name),

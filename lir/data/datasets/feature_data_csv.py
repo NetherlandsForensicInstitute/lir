@@ -2,17 +2,19 @@ import csv
 import io
 import logging
 from abc import ABC
+from collections import defaultdict
 from collections.abc import Callable
 from functools import partial
+from itertools import chain
 from os import PathLike
 from pathlib import Path
-from typing import IO, Any
+from typing import IO, Any, NamedTuple
 
 import numpy as np
 import requests
 from requests_cache import CachedSession
 
-from lir.config.base import ContextAwareDict, config_parser, pop_field
+from lir.config.base import ContextAwareDict, check_is_empty, config_parser, pop_field
 from lir.data.data_strategies import RoleAssignment
 from lir.data.io import search_path
 from lir.data.models import DataProvider, FeatureData
@@ -20,6 +22,29 @@ from lir.util import check_type
 
 
 LOG = logging.getLogger(__name__)
+
+
+class ExtraField(NamedTuple):
+    """Extra field for CSV parsing."""
+
+    name: str
+    column_names: list[str]
+    validate_cell: Callable[[str], Any]
+
+    def parse_row(self, row: dict[str, str]) -> list[Any]:
+        """
+        Take the appropriate values from a dictionary and return them as a list.
+
+        :param row: the CSV line as a dictionary.
+        :return: a list of values.
+        """
+        values = []
+        for colname in self.column_names:
+            try:
+                values.append(self.validate_cell(row[colname]))
+            except Exception as e:
+                raise ValueError(f'parsing value of column `{colname}` failed: {e}')
+        return values
 
 
 class FeatureDataCsvParser(DataProvider, ABC):
@@ -60,6 +85,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
         label_column: str | None = None,
         instance_id_column: str | None = None,
         role_assignment_column: str | None = None,
+        extra_fields: list[ExtraField] | None = None,
         ignore_columns: list[str] | None = None,
         message_prefix: str = '',
     ):
@@ -72,6 +98,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
         :param label_column: the name of the column that contains the hypothesis label (0 or 1)
         :param instance_id_column: the name of the column that contains the instance id (str)
         :param role_assignment_column: the name of the column that contains the role assignment ("train" or "test")
+        :param extra_fields: extra fields to read, in addition to the above
         :param ignore_columns: the names of the columns that should be ignored
         :param message_prefix: a string to prefix to all log and error messages
         """
@@ -79,8 +106,19 @@ class FeatureDataCsvParser(DataProvider, ABC):
         self.label_column = label_column
         self.instance_id_column = instance_id_column
         self.role_assignment_column = role_assignment_column
+        self.extra_fields = extra_fields or []
         self.ignore_columns = ignore_columns or []
         self._message_prefix = message_prefix
+
+        # the "extra field" argument allows for including arbitrary fields
+        # check that they do not conflict with fields that are facilitated otherwise
+        empty_data = FeatureData(features=np.ones((0, 1)))
+        for field in extra_fields or []:
+            if field.name in empty_data.all_fields:
+                raise ValueError(
+                    f'field {field.name} should not be read as an *extra* field; '
+                    'use the appropriate config parameters instead'
+                )
 
     def _parse_value(self, line_num: int, column_name: str, value: str, parse_fn: Callable[[str], Any]) -> Any:
         try:
@@ -120,6 +158,8 @@ class FeatureDataCsvParser(DataProvider, ABC):
             self.instance_id_column,
             self.role_assignment_column,
         ] + self.ignore_columns
+        special_columns += chain(*[field.column_names for field in self.extra_fields])
+
         feature_columns = [fieldname for fieldname in reader.fieldnames if fieldname not in special_columns]
 
         # initialize the result values
@@ -128,6 +168,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
         instance_ids = []
         role_assignments = []
         features = []
+        extra_values = defaultdict(list)
 
         # read the file, row by row
         for row in reader:
@@ -143,6 +184,8 @@ class FeatureDataCsvParser(DataProvider, ABC):
                         reader.line_num, self.role_assignment_column, row[self.role_assignment_column], RoleAssignment
                     ).value
                 )
+            for field in self.extra_fields:
+                extra_values[field.name].append(field.parse_row(row))
             features.append(
                 [self._parse_value(reader.line_num, fieldname, row[fieldname], float) for fieldname in feature_columns]
             )
@@ -153,6 +196,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
             'labels': np.array(labels) if self.label_column is not None else None,
             'features': np.array(features),
         }
+        data.update({k: np.array(v) for k, v in extra_values.items()})
         if self.instance_id_column is not None:
             data['instance_ids'] = np.array(instance_ids)
         if self.role_assignment_column is not None:
@@ -227,8 +271,37 @@ class FeatureDataCsvHttpParser(FeatureDataCsvParser):
         return self._parse_file(fp)
 
 
+def _parse_cell_type(value: str) -> Callable[[str], Any]:
+    try:
+        return {
+            'int': int,
+            'float': float,
+            'str': str,
+        }[value]
+    except KeyError:
+        raise ValueError(f'unknown cell type: {value}')
+
+
+def _parse_extra_field(config: ContextAwareDict) -> ExtraField:
+    name = pop_field(config, 'name')
+    columns = pop_field(config, 'columns', validate=partial(check_type, list))
+    cell_type = pop_field(config, 'cell_type', validate=_parse_cell_type)
+    check_is_empty(config)
+    return ExtraField(name, columns, cell_type)
+
+
+def _parse_feature_data_csv(
+    parser_class: type[FeatureDataCsvParser], config: ContextAwareDict, **kwargs: Any
+) -> FeatureDataCsvParser:
+    extra_fields_config = pop_field(config, 'extra_fields', default=[], validate=partial(check_type, list))
+    extra_fields = [_parse_extra_field(field_config) for field_config in extra_fields_config]
+
+    parser = parser_class(**config, extra_fields=extra_fields, **kwargs)
+    return parser
+
+
 @config_parser
-def feature_data_csv_http_parser(config: ContextAwareDict, output_dir: Path) -> FeatureDataCsvHttpParser:
+def feature_data_csv_http_parser(config: ContextAwareDict, output_dir: Path) -> FeatureDataCsvParser:
     """
     Configuration parser to initialize the CSV parser that reads data from a stream.
 
@@ -236,7 +309,6 @@ def feature_data_csv_http_parser(config: ContextAwareDict, output_dir: Path) -> 
         - use_cache: boolean indicating whether to cache retrieved data
 
     Other arguments are passed directly to `FeatureDataCsvParser`.
-    ```
     """
     use_cache = pop_field(config, 'use_cache', default=True, validate=partial(check_type, bool))
 
@@ -247,5 +319,10 @@ def feature_data_csv_http_parser(config: ContextAwareDict, output_dir: Path) -> 
     else:
         session = requests.Session()
 
-    parser = FeatureDataCsvHttpParser(session=session, **config)
-    return parser
+    return _parse_feature_data_csv(FeatureDataCsvHttpParser, config, session=session)
+
+
+@config_parser
+def feature_data_csv_file_parser(config: ContextAwareDict, output_dir: Path) -> FeatureDataCsvParser:
+    """Configuration parser to initialize the CSV parser that reads data from a stream."""
+    return _parse_feature_data_csv(FeatureDataCsvFileParser, config)

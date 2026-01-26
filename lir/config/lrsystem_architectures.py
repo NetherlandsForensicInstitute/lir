@@ -31,10 +31,9 @@ LOG = logging.getLogger(__name__)
 class ParsedLRSystem(LRSystem):
     """Represent a given initialized LR system based on the provided configuration."""
 
-    def __init__(self, lrsystem: LRSystem, config: ContextAwareDict, output_dir: Path):
+    def __init__(self, lrsystem: LRSystem, config: ContextAwareDict):
         self.lrsystem = lrsystem
         self.config = config
-        self.output_dir = output_dir
 
     def fit(self, instances: InstanceData) -> Self:
         """Fit the LR system on the instance data."""
@@ -149,7 +148,7 @@ def parse_lrsystem(config: ContextAwareDict, output_dir: Path) -> ParsedLRSystem
         raise YamlParseError(config.context, f'{e}')
 
     lrsystem = parser.parse(config, output_dir)
-    return ParsedLRSystem(lrsystem, lrsystem_config, output_dir)
+    return ParsedLRSystem(lrsystem, lrsystem_config)
 
 
 def parse_augmented_config(

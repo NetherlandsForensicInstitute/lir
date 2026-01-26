@@ -12,7 +12,7 @@ import lir
 from lir.aggregation import Aggregation, AggregationData
 from lir.config.base import ContextAwareDict
 from lir.config.data import parse_data_object
-from lir.config.lrsystem_architectures import ParsedLRSystem
+from lir.config.lrsystem_architectures import parse_lrsystem
 from lir.config.util import simplify_data_structure
 from lir.data.models import InstanceData, concatenate_instances
 from lir.lrsystems.lrsystems import LLRData
@@ -36,8 +36,9 @@ class Experiment(ABC):
 
     def _run_lrsystem(
         self,
-        lrsystem: ParsedLRSystem,
+        lrsystem_config: ContextAwareDict,
         split_data: Iterable[tuple[InstanceData, InstanceData]],
+        parameters: dict[str, Any],
         experiment_name: str,
         data_config: ContextAwareDict,
     ) -> LLRData:
@@ -54,6 +55,8 @@ class Experiment(ABC):
         """
         # write the configuration to the output folder (data and lrsystem)
         output_dir = self.output_path / experiment_name
+        lrsystem = parse_lrsystem(deepcopy(lrsystem_config), output_dir)
+
         config_dict = {
             'lr_system': simplify_data_structure(lrsystem.config),
             'data': simplify_data_structure(data_config),
@@ -79,7 +82,9 @@ class Experiment(ABC):
         combined_llrs: LLRData = concatenate_instances(*llr_sets)
 
         # Collect and report results as configured by `outputs`
-        results = AggregationData(llrdata=combined_llrs, lrsystem=lrsystem, parameters_str=experiment_name)
+        results = AggregationData(
+            llrdata=combined_llrs, lrsystem=lrsystem, parameters=parameters, parameters_str=experiment_name
+        )
         for output in self.outputs:
             output.report(results)
 
@@ -112,10 +117,10 @@ class PredefinedExperiment(Experiment):
         data_configs: list[tuple[ContextAwareDict, dict[str, Any]]],
         outputs: Sequence[Aggregation],
         output_path: Path,
-        lrsystems: list[tuple[ParsedLRSystem, dict[str, Any]]],
+        lrsystems: list[tuple[ContextAwareDict, dict[str, Any]]],
     ):
         super().__init__(name, outputs, output_path)
-        self.lrsystems = lrsystems
+        self.lrsystem_config = lrsystems
         self.data_configs = data_configs
 
     def _generate_and_run(self) -> None:
@@ -132,12 +137,21 @@ class PredefinedExperiment(Experiment):
 
             # Only display the LR system configuration progress bar when running interactively, and
             # the data_tqdm is not disabled, and there are multiple LR systems to evaluate.
-            disable_lrsystem_tqdm = not lir.is_interactive() or not disable_data_tqdm or len(self.lrsystems) == 1
-            for lrsystem, hyperparameters in tqdm(self.lrsystems, desc=self.name, disable=disable_lrsystem_tqdm):
+            disable_lrsystem_tqdm = not lir.is_interactive() or not disable_data_tqdm or len(self.lrsystem_config) == 1
+            for lrsystem_config, hyperparameters in tqdm(
+                self.lrsystem_config, desc=self.name, disable=disable_lrsystem_tqdm
+            ):
                 # Combine the data parameter with the LR system hyperparameters to create
                 # a unique name for this experiment configuration.
                 data_name = '__'.join([f'{key}={value}' for key, value in dataparameter.items()])
                 lrsystem_name = '__'.join([f'{key}={value}' for key, value in hyperparameters.items()])
                 experiment_name = f'{data_name}{"__" if lrsystem_name and data_name else ""}{lrsystem_name}'
 
-                self._run_lrsystem(lrsystem, split_data, experiment_name, data_config)
+                # This dictionary contains all parameters for this experiment run, prefixed
+                # by either 'data.' or 'lrsystem.' to avoid naming conflicts. This is used
+                # for reporting purposes in the aggregations.
+                parameters = {f'data.{k}': v for k, v in dataparameter.items()} | {
+                    f'lrsystem.{k}': v for k, v in hyperparameters.items()
+                }
+
+                self._run_lrsystem(lrsystem_config, split_data, parameters, experiment_name, data_config)

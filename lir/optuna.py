@@ -1,4 +1,5 @@
 from collections.abc import Callable, Sequence
+from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
@@ -6,7 +7,7 @@ import optuna
 
 from lir.aggregation import Aggregation
 from lir.config.data import parse_data_object
-from lir.config.lrsystem_architectures import parse_augmented_config, parse_lrsystem
+from lir.config.lrsystem_architectures import parse_augmented_config
 from lir.config.substitution import (
     ContextAwareDict,
     FloatHyperparameter,
@@ -67,13 +68,7 @@ class OptunaExperiment(Experiment):
 
     def _objective(self, trial: optuna.Trial) -> float:
         assignments = self._get_hyperparameter_substitutions(trial)
-        lrsystem = parse_lrsystem(
-            parse_augmented_config(
-                self.baseline_config,
-                assignments,
-            ),
-            self.output_path,
-        )
+        lr_system = parse_augmented_config(deepcopy(self.baseline_config), assignments)
 
         # add optuna values as system parameters
         hyperparameters: dict[str, Any] = assignments
@@ -85,8 +80,15 @@ class OptunaExperiment(Experiment):
                 'best_trial': trial.study.best_trial.number if trial.number > 0 else '',
             }
         )
+        experiment_name = f'{self.name}_trial{trial.number:03d}'
 
-        llr_data: LLRData = self._run_lrsystem(lrsystem, self.split_data, str(hyperparameters), self.data_config)
+        llr_data: LLRData = self._run_lrsystem(
+            lr_system,
+            self.split_data,
+            hyperparameters,
+            experiment_name,
+            self.data_config,
+        )
 
         return self.metric_function(llr_data)
 

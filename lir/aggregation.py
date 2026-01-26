@@ -28,11 +28,13 @@ class AggregationData(NamedTuple):
     Fields:
     - llrdata: the LLR data containing LLRs and labels.
     - lrsystem: the model that produced the results
-    - parameters: parameters that identify the system producing the results.
+    - parameters: parameters that identify the system producing the results
+    - parameters_str: string representation of the parameters
     """
 
     llrdata: LLRData
     lrsystem: LRSystem
+    parameters: dict[str, Any]
     parameters_str: str
 
 
@@ -86,11 +88,10 @@ class AggregatePlot(Aggregation):
         # Only save the figure when an output path is provided.
         if self.output_path is not None:
             dir_name = self.output_path
-            param_string = parameters_str + '_' if parameters_str else ''
             plot_arguments = '_'.join(f'{k}={v}' for k, v in self.plot_fn_args.items()) if self.plot_fn_args else ''
 
-            file_name = dir_name / f'{param_string}{self.plot_name}{plot_arguments}.png'
-            dir_name.mkdir(exist_ok=True, parents=True)
+            file_name = dir_name / parameters_str / f'{self.plot_name}{plot_arguments}.png'
+            (dir_name / parameters_str).mkdir(exist_ok=True, parents=True)
 
             LOG.info(f'Saving plot {self.plot_name} for parameters {parameters_str} to {file_name}')
             fig.savefig(file_name)
@@ -172,7 +173,7 @@ class WriteMetricsToCsv(Aggregation):
             else:
                 metrics.append((name, str(value)))
 
-        results = OrderedDict([('parameters', data.parameters_str)] + metrics)
+        results = OrderedDict(list(data.parameters.items()) + metrics)
 
         # Record column header names only once to the CSV
         if self._writer is None:

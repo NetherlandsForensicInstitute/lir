@@ -17,7 +17,6 @@ from lir.config.base import (
 )
 from lir.config.lrsystem_architectures import (
     parse_augmented_config,
-    parse_lrsystem,
 )
 from lir.config.metrics import parse_individual_metric
 from lir.config.substitution import (
@@ -154,14 +153,13 @@ class SingleRunStrategy(ExperimentStrategyConfigParser):
 
     def get_experiment(self, name: str) -> Experiment:
         """Get an experiment for a single run, based on its name."""
-        lrsystem = parse_lrsystem(pop_field(self._config, 'lr_system'), self._output_dir)
         data_config, _ = self.data_config()
         return PredefinedExperiment(
             name,
             [(data_config, {})],
             self.output_list(),
             self._output_dir,
-            [(lrsystem, {})],
+            [(pop_field(self._config, 'lr_system'), {})],
         )
 
 
@@ -174,9 +172,10 @@ class GridStrategy(ExperimentStrategyConfigParser):
         lrsystems = []
         hyperparameter_names = [param.name for param in hyperparameters]
         hyperparameter_values = [param.options() for param in hyperparameters]
+
         for value_set in product(*hyperparameter_values):
             substitutions = dict(zip(hyperparameter_names, value_set, strict=True))
-            lrsystem = parse_lrsystem(parse_augmented_config(baseline_config, substitutions), self._output_dir)
+            lrsystem = parse_augmented_config(baseline_config, substitutions)
             lrsystems.append((lrsystem, substitutions))
 
         dataconfig, dataparameters = self.data_config()

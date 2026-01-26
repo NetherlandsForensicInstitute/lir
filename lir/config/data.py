@@ -4,6 +4,7 @@ from lir import registry
 from lir.config.base import (
     GenericConfigParser,
     YamlParseError,
+    check_is_empty,
     pop_field,
 )
 from lir.config.substitution import ContextAwareDict
@@ -17,7 +18,12 @@ def parse_data_object(cfg: ContextAwareDict, output_path: Path) -> tuple[DataPro
     to specific implementations of `DataProvider` and `DataStrategy`, respectively.
     See `parse_data_provider` and `parse_data_strategy` for more information.
     """
-    return parse_data_provider(cfg['provider'], output_path), parse_data_strategy(cfg['splits'], output_path)
+    provider, strategy = (
+        parse_data_provider(pop_field(cfg, 'provider'), output_path),
+        parse_data_strategy(pop_field(cfg, 'splits'), output_path),
+    )
+    check_is_empty(cfg)
+    return provider, strategy
 
 
 def parse_data_strategy(cfg: ContextAwareDict, output_path: Path) -> DataStrategy:

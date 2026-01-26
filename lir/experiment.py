@@ -1,6 +1,7 @@
 import logging
 from abc import ABC, abstractmethod
 from collections.abc import Iterable, Sequence
+from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
@@ -13,7 +14,7 @@ from lir.config.base import ContextAwareDict
 from lir.config.data import parse_data_object
 from lir.config.lrsystem_architectures import ParsedLRSystem
 from lir.config.util import simplify_data_structure
-from lir.data.models import FeatureData, concatenate_instances
+from lir.data.models import InstanceData, concatenate_instances
 from lir.lrsystems.lrsystems import LLRData
 
 
@@ -36,7 +37,7 @@ class Experiment(ABC):
     def _run_lrsystem(
         self,
         lrsystem: ParsedLRSystem,
-        split_data: Iterable[tuple[FeatureData, FeatureData]],
+        split_data: Iterable[tuple[InstanceData, InstanceData]],
         experiment_name: str,
         data_config: ContextAwareDict,
     ) -> LLRData:
@@ -57,6 +58,7 @@ class Experiment(ABC):
             'lr_system': simplify_data_structure(lrsystem.config),
             'data': simplify_data_structure(data_config),
         }
+
         output_config = confidence.Configuration(config_dict)
         output_dir.mkdir(exist_ok=True, parents=True)
         confidence.dumpf(output_config, output_dir / 'configuration.yaml')
@@ -125,7 +127,7 @@ class PredefinedExperiment(Experiment):
             # Parse the data configuration. This is done here to ensure that data
             # parsing is only done once per data configuration, even when multiple
             # LR systems are being evaluated on the same data setup.
-            provider, splitter = parse_data_object(data_config, self.output_path)
+            provider, splitter = parse_data_object(deepcopy(data_config), self.output_path)
             split_data = list(splitter.apply(provider.get_instances()))
 
             # Only display the LR system configuration progress bar when running interactively, and

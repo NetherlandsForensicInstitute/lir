@@ -1,11 +1,12 @@
-import io
+from pathlib import Path
 
 import numpy as np
 import pytest
 
+from lir.config.base import _expand
 from lir.data.data_strategies import RoleAssignment
 from lir.data.datasets.feature_data_csv import (
-    FeatureDataCsvStreamParser,
+    feature_data_csv_file_parser,
 )
 from lir.data.models import FeatureData
 
@@ -89,12 +90,37 @@ from lir.data.models import FeatureData
             FeatureData(features=np.array([[2, 3]])),
             '1 row, 2 features, 2 ignored',
         ),
+        (
+            'feature1,feature2,feature3,duration1\n1,2,3,99\n',
+            {'extra_fields': [{'name': 'duration', 'columns': ['duration1'], 'cell_type': 'int'}]},
+            FeatureData(features=np.array([[1, 2, 3]]), duration=np.array([[99]])),
+            '1 row, 3 features, with 1d extra field',
+        ),
+        (
+            'feature1,feature2,feature3,duration1,duration2\n1,2,3,99,98\n',
+            {'extra_fields': [{'name': 'duration', 'columns': ['duration1', 'duration2'], 'cell_type': 'int'}]},
+            FeatureData(features=np.array([[1, 2, 3]]), duration=np.array([[99, 98]])),
+            '1 row, 3 features, with 2d extra field',
+        ),
+        (
+            'feature1,feature2,feature3,duration1\n1,2,3,a\n',
+            {'extra_fields': [{'name': 'duration', 'columns': ['duration1'], 'cell_type': 'int'}]},
+            None,
+            '1 row, 3 features, extra field with bad value',
+        ),
     ],
 )
-def test_csv_parser(file_contents: str, parser_args: dict[str, str], expected_result: FeatureData, description: str):
-    fp = io.StringIO(file_contents)
+def test_csv_parser(
+    tmp_path: Path, file_contents: str, parser_args: dict[str, str], expected_result: FeatureData, description: str
+):
+    csv_file = tmp_path / 'data.csv'
+    with open(csv_file, 'w') as f:
+        f.write(file_contents)
+
+    parser_args['file'] = str(csv_file)
+    parser_args = _expand([], parser_args)
     try:
-        parser = FeatureDataCsvStreamParser(fp=fp, **parser_args)
+        parser = feature_data_csv_file_parser().parse(parser_args, tmp_path)
         actual_result = parser.get_instances()
         if expected_result is not None:
             assert actual_result == expected_result

@@ -42,37 +42,38 @@ class Experiment(ABC):
         run_name: str,
         data_config: ContextAwareDict,
     ) -> LLRData:
-        """Run experiment on a single LR system configuration using the provided data(setup).
+        """Run experiment on a single LR system configuration using the provided data.
 
-        First, the data is split into a training and testing subset, according to the provided
-        data setup strategy. Next, the LR system is fitted using the training subset data and
+        The LR system is fitted using the training subset data and
         subsequently used to determine LLRs for the test subset data. The results are stored in
         a temporary list which contains the determined data of each test / train split.
 
         The collected results are combined and passed to the configured `outputs` aggregations,
         which may write metrics and visualizations to the `output_path` directory. The combined
         LLR data is returned.
-        """
-        # write the configuration to the output folder (data and lrsystem)
-        output_dir = self.output_path / run_name
-        lrsystem = parse_lrsystem(deepcopy(lrsystem_config), output_dir)
 
-        lrsystem_config_dict = simplify_data_structure(lrsystem.config)
+        Next to this, the configuration of both the data and LR system are stored in the output
+        directory for future reference.
+        """
+        run_output_dir = self.output_path / run_name
+        run_output_dir.mkdir(exist_ok=True, parents=True)
+
+        lrsystem = parse_lrsystem(deepcopy(lrsystem_config), run_output_dir)
+
+        # Turn the configurations into dictionaries for writing to YAML files.
+        lrsystem_config_dict = simplify_data_structure(lrsystem_config)
         data_config_dict = simplify_data_structure(data_config)
 
-        # Check that simplify_data_structure returend a dict for type checking.
+        # Check that simplify_data_structure returned a dict for type checking.
         if not isinstance(lrsystem_config_dict, dict) or not isinstance(data_config_dict, dict):
             raise ValueError('simplify_data_structure did not return a dict as expected')
 
-        output_dir.mkdir(exist_ok=True, parents=True)
-        confidence.dumpf(confidence.Configuration(lrsystem_config_dict), output_dir / 'lrsystem.yaml')
-        confidence.dumpf(confidence.Configuration(data_config_dict), output_dir / 'data.yaml')
+        confidence.dumpf(confidence.Configuration(lrsystem_config_dict), run_output_dir / 'lrsystem.yaml')
+        confidence.dumpf(confidence.Configuration(data_config_dict), run_output_dir / 'data.yaml')
 
         # Placeholders for numpy arrays of LLRs and labels obtained from each train/test split
         llr_sets: list[LLRData] = []
 
-        # Split the data into a train / test subset, according to the provided DataStrategy. This could
-        # for example be a simple binary split or a multiple fold cross validation split.
         for training_data, test_data in split_data:
             lrsystem.fit(training_data)
             subset_llr_results: LLRData = lrsystem.apply(test_data)
@@ -95,11 +96,9 @@ class Experiment(ABC):
         raise NotImplementedError
 
     def run(self) -> None:
-        """Run experiment for all configured LR systems.
+        """Run experiment the configured experiment(s).
 
-        Perform the single experiment of all configured LR systems and write the obtained
-        key metrics - results on the performance of the LR system - to the dedicated `metrics.csv`
-        file in the `output_path` directory.
+        This method ensures that all outputs are properly closed after the experiment run.
         """
         try:
             self._generate_and_run()

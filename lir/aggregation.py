@@ -95,6 +95,7 @@ class AggregatePlot(Aggregation):
 
             LOG.info(f'Saving plot {self.plot_name} for run `{run_name}` to {file_name}')
             fig.savefig(file_name)
+            plt.close(fig)
 
 
 @config_parser

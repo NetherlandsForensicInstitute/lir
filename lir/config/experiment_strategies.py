@@ -36,31 +36,6 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         self._config: ContextAwareDict
         self._output_dir: Path
 
-    def data_config(self) -> tuple[ContextAwareDict, list[Hyperparameter]]:
-        """Prepare the data provider and data strategy from the configuration.
-
-        The (hyper)parameters to vary for the data provider and data strategy are also parsed.
-        """
-        baseline_config = pop_field(self._config, 'data')
-        if baseline_config is None:
-            baseline_config = ContextAwareDict(self._config.context + ['data'])
-
-        parameters = []
-        if 'dataparameters' in self._config:
-            parameters = self._config.pop('dataparameters')
-            parameters = [
-                parse_parameter(
-                    variable,
-                    self._output_dir,
-                )
-                for variable in parameters
-            ]
-
-            # Parameters could be None, so ensure parameters is always a list.
-            parameters = parameters or []
-
-        return baseline_config, parameters
-
     def primary_metric(self) -> Callable:
         """Parse the `primary_metric` field."""
         metric_name = pop_field(self._config, 'primary_metric')
@@ -107,33 +82,47 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
 
         return results
 
+    @abstractmethod
+    def get_experiment(self, name: str) -> Experiment:
+        """Get the experiment by `name` for the defined LR system."""
+        raise NotImplementedError
+
+    def _parse_config_with_parameters(
+        self,
+        config_field: str,
+        parameters_field: str,
+    ) -> tuple[ContextAwareDict, list[Hyperparameter]]:
+        """Extract a configuration section and its associated parameters.
+
+        :param config_field: the name of the field containing the baseline configuration
+        :param parameters_field: the name of the field containing the parameters to vary
+        :return: a tuple of (baseline_config, list of hyperparameters)
+        """
+        baseline_config = pop_field(self._config, config_field)
+        if baseline_config is None:
+            baseline_config = ContextAwareDict(self._config.context + [config_field])
+
+        parameters = []
+        if parameters_field in self._config:
+            parameters = self._config.pop(parameters_field)
+            parameters = [parse_parameter(variable, self._output_dir) for variable in parameters]
+
+        return baseline_config, parameters
+
+    def data_config(self) -> tuple[ContextAwareDict, list[Hyperparameter]]:
+        """Prepare the data provider and data strategy from the configuration.
+
+        The (hyper)parameters to vary for the data provider and data strategy are also parsed.
+        """
+        return self._parse_config_with_parameters('data', 'dataparameters')
+
     def lrsystem(self) -> tuple[ContextAwareDict, list[Hyperparameter]]:
         """Parse the LR System section including hyperparameters.
 
         The baseline configuration is provided along with the specified parameters to vary (the
         defined hyperparameters).
         """
-        baseline_config = pop_field(self._config, 'lr_system')
-        if baseline_config is None:
-            baseline_config = ContextAwareDict(self._config.context + ['lr_system'])
-
-        parameters = []
-        if 'hyperparameters' in self._config:
-            parameters = self._config.pop('hyperparameters')
-            parameters = [
-                parse_parameter(
-                    variable,
-                    self._output_dir,
-                )
-                for variable in parameters
-            ]
-
-        return baseline_config, parameters
-
-    @abstractmethod
-    def get_experiment(self, name: str) -> Experiment:
-        """Get the experiment by `name` for the defined LR system."""
-        raise NotImplementedError
+        return self._parse_config_with_parameters('lr_system', 'hyperparameters')
 
     def parse(
         self,

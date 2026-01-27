@@ -79,7 +79,7 @@ class OptunaExperiment(Experiment):
                 'best_trial': trial.study.best_trial.number if trial.number > 0 else '',
             }
         )
-        experiment_name = f'{self.name}_trial{trial.number:03d}'
+        experiment_name = f'trial{trial.number:03d}'
 
         split_data = self.splitter.apply(self.data_provider.get_instances())
         llr_data: LLRData = self._run_lrsystem(

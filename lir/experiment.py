@@ -57,14 +57,16 @@ class Experiment(ABC):
         output_dir = self.output_path / run_name
         lrsystem = parse_lrsystem(deepcopy(lrsystem_config), output_dir)
 
-        config_dict = {
-            'lr_system': simplify_data_structure(lrsystem.config),
-            'data': simplify_data_structure(data_config),
-        }
+        lrsystem_config_dict = simplify_data_structure(lrsystem.config)
+        data_config_dict = simplify_data_structure(data_config)
 
-        output_config = confidence.Configuration(config_dict)
+        # Check that simplify_data_structure returend a dict for type checking.
+        if not isinstance(lrsystem_config_dict, dict) or not isinstance(data_config_dict, dict):
+            raise ValueError('simplify_data_structure did not return a dict as expected')
+
         output_dir.mkdir(exist_ok=True, parents=True)
-        confidence.dumpf(output_config, output_dir / 'configuration.yaml')
+        confidence.dumpf(confidence.Configuration(lrsystem_config_dict), output_dir / 'lrsystem.yaml')
+        confidence.dumpf(confidence.Configuration(data_config_dict), output_dir / 'data.yaml')
 
         # Placeholders for numpy arrays of LLRs and labels obtained from each train/test split
         llr_sets: list[LLRData] = []

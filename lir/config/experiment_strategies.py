@@ -4,6 +4,7 @@ from collections.abc import Callable, Mapping, Sequence
 from functools import partial
 from itertools import product
 from pathlib import Path
+from typing import Any
 
 from lir import registry
 from lir.aggregation import Aggregation
@@ -166,38 +167,49 @@ class SingleRunStrategy(ExperimentStrategyConfigParser):
         )
 
 
+def create_configs_from_hyperparameters(
+    baseline_config: ContextAwareDict,
+    parameters: list[Hyperparameter],
+) -> list[tuple[ContextAwareDict, dict[str, Any]]]:
+    """Create configurations for all combinations of hyperparameter options.
+
+    Generates a Cartesian product of all hyperparameter options and creates a configuration
+    for each combination by substituting the values into the baseline configuration.
+
+    This is used for both dataparameters and lrsystem hyperparameters in grid search.
+
+    :param baseline_config: the baseline configuration to augment
+    :param parameters: the hyperparameters to vary
+    :return: a list of tuples, where each tuple contains:
+        - the augmented configuration with substituted values
+        - a dict mapping parameter names to the substituted values
+    """
+    configs = []
+    parameter_names = [param.name for param in parameters]
+    parameter_values = [param.options() for param in parameters]
+
+    for value_set in product(*parameter_values):
+        substitutions = dict(zip(parameter_names, value_set, strict=True))
+        substituted_config = parse_augmented_config(baseline_config, substitutions)
+        configs.append((substituted_config, substitutions))
+
+    return configs
+
+
 class GridStrategy(ExperimentStrategyConfigParser):
     """Prepare Experiment consisting of multiple runs using configuration values."""
 
     def get_experiment(self, name: str) -> Experiment:
         """Get experiment for the grid strategy run, based on its name."""
-        baseline_config, hyperparameters = self.lrsystem()
-        lrsystems = []
-        hyperparameter_names = [param.name for param in hyperparameters]
-        hyperparameter_values = [param.options() for param in hyperparameters]
-
-        for value_set in product(*hyperparameter_values):
-            substitutions = dict(zip(hyperparameter_names, value_set, strict=True))
-            lrsystem = parse_augmented_config(baseline_config, substitutions)
-            lrsystems.append((lrsystem, substitutions))
-
-        dataconfig, dataparameters = self.data_config()
-        # Data objects is a combination of the data provider and the data splitter / strategy
-        data_configs = []
-        dataparameter_names = [param.name for param in dataparameters]
-        dataparameter_values = [param.options() for param in dataparameters]
-
-        for value_set in product(*dataparameter_values):
-            substitutions = dict(zip(dataparameter_names, value_set, strict=True))
-            data_config = parse_augmented_config(dataconfig, substitutions)
-            data_configs.append((data_config, substitutions))
+        lrsystem_configs = create_configs_from_hyperparameters(*self.lrsystem())
+        data_configs = create_configs_from_hyperparameters(*self.data_config())
 
         return PredefinedExperiment(
             name,
             data_configs,
             self.output_list(),
             self._output_dir,
-            lrsystems,
+            lrsystem_configs,
         )
 
 

@@ -82,9 +82,7 @@ class Experiment(ABC):
         combined_llrs: LLRData = concatenate_instances(*llr_sets)
 
         # Collect and report results as configured by `outputs`
-        results = AggregationData(
-            llrdata=combined_llrs, lrsystem=lrsystem, parameters=parameters, run_name=run_name
-        )
+        results = AggregationData(llrdata=combined_llrs, lrsystem=lrsystem, parameters=parameters, run_name=run_name)
         for output in self.outputs:
             output.report(results)
 

@@ -39,7 +39,7 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         """Prepare the data provider and data strategy from the configuration.
 
         The (hyper)parameters to vary for the data provider and data strategy are also parsed.
-        """       
+        """
         baseline_config = pop_field(self._config, 'data')
         if baseline_config is None:
             baseline_config = ContextAwareDict(self._config.context + ['data'])

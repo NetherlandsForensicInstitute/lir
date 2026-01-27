@@ -29,7 +29,9 @@ def test_registry_items_available(synthesized_llrs_with_interval: LLRData, tmp_p
             try:
                 lrsystem = BinaryLRSystem(pipeline=Identity())
                 obj.report(
-                    AggregationData(llrdata=synthesized_llrs_with_interval, lrsystem=lrsystem, parameters_str='')
+                    AggregationData(
+                        llrdata=synthesized_llrs_with_interval, lrsystem=lrsystem, parameters={}, parameters_str=''
+                    )
                 )
             except Exception as _:
                 pytest.fail(f'generating output failed for registry item `{name}`')

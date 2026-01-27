@@ -35,8 +35,7 @@ class OptunaExperiment(Experiment):
         super().__init__(name, outputs, output_path)
 
         self.data_config = data_config
-        data_provider, splitter = parse_data_object(data_config, output_path)
-        self.split_data = splitter.apply(data_provider.get_instances())
+        self.data_provider, self.splitter = parse_data_object(data_config, output_path)
 
         self.baseline_config = baseline_config
         self.hyperparameters = hyperparameters
@@ -82,9 +81,10 @@ class OptunaExperiment(Experiment):
         )
         experiment_name = f'{self.name}_trial{trial.number:03d}'
 
+        split_data = self.splitter.apply(self.data_provider.get_instances())
         llr_data: LLRData = self._run_lrsystem(
             lr_system,
-            self.split_data,
+            split_data,
             hyperparameters,
             experiment_name,
             self.data_config,

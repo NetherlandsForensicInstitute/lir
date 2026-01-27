@@ -56,6 +56,7 @@ modules:
   isotonic_calibrator:
     class: lir.algorithms.isotonic_regression.IsotonicRegression
     wrapper: lir.config.numpy_wrapper
+  logit: lir.algorithms.logistic_regression.LogitCalibrator
 
   # bounders
   static_bounder:

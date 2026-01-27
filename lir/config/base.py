@@ -77,17 +77,24 @@ class ConfigParser(ABC):
 
     @staticmethod
     def get_type_name(cls: Any) -> str:
+        """Return the full type name of the `cls` argument."""
         module = cls.__module__
         return f'{module}.{cls.__qualname__}'
 
     def reference(self) -> str:
+        """
+        Return the full class name that was used to initialize this parser.
+
+        By default, return the name of this class. In a subclass that was initialized with another class or function
+        that does the actual work, the name of that class is returned.
+        """
         return self.get_type_name(self.__class__)
 
 
 class GenericFunctionConfigParser(ConfigParser):
     """Parser for callable functions or component classes."""
 
-    def __init__(self, component_class: Any):
+    def __init__(self, component_class: Callable):
         super().__init__()
         self.component_class = component_class
 
@@ -103,13 +110,14 @@ class GenericFunctionConfigParser(ConfigParser):
         raise YamlParseError(config.context, f'unrecognized module type: `{self.component_class}`')
 
     def reference(self) -> str:
+        """Return the full name of the `component_class` function argument."""
         return self.get_type_name(self.component_class)
 
 
 class GenericConfigParser(ConfigParser):
     """Return an instantiation of a class, initialized with the specified arguments."""
 
-    def __init__(self, component_class: Any):
+    def __init__(self, component_class: type[Any]):
         super().__init__()
         self.component_class = component_class
 
@@ -128,10 +136,11 @@ class GenericConfigParser(ConfigParser):
             )
 
     def reference(self) -> str:
+        """Return the full name of the `component_class` class argument."""
         return self.get_type_name(self.component_class)
 
 
-def config_parser(func: Callable) -> Callable:
+def config_parser(func: Callable[[ContextAwareDict, Path], Any]) -> Callable:
     """Wrap parsing functions in a `ConfigParser` object by providing a decorator.
 
     The `ConfigParser` object exposes a `parse()` method, required by the API.
@@ -162,6 +171,7 @@ def config_parser(func: Callable) -> Callable:
             return func(config, output_dir)
 
         def reference(self) -> str:
+            """Return the full name of the function argument `func`."""
             return f'{func.__globals__["__name__"]}.{func.__name__}'
 
     return ConfigParserFunction

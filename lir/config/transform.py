@@ -91,6 +91,7 @@ class NumpyWrappingConfigParser(ConfigParser):
         )
 
     def reference(self) -> str:
+        """Return the full name of the `module_parser` class argument."""
         return self.module_parser.reference()
 
 

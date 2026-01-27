@@ -30,7 +30,7 @@ def test_registry_items_available(synthesized_llrs_with_interval: LLRData, tmp_p
                 lrsystem = BinaryLRSystem(pipeline=Identity())
                 obj.report(
                     AggregationData(
-                        llrdata=synthesized_llrs_with_interval, lrsystem=lrsystem, parameters={}, parameters_str=''
+                        llrdata=synthesized_llrs_with_interval, lrsystem=lrsystem, parameters={}, run_name=''
                     )
                 )
             except Exception as _:

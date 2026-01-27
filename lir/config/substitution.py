@@ -382,8 +382,7 @@ def substitute_parameters(
     base_config: ContextAwareDict, hyperparameters: Mapping[str, Any], context: list[str]
 ) -> ContextAwareDict:
     """
-    Substitute parameters (i.e. hyperparameters or dataparameters) in an LR system configuration and return the updated
-    configuration.
+    Substitute parameters in an LR system configuration and return the updated configuration.
 
     :param base_config: the original LR system configuration
     :param hyperparameters: the hyperparameters and their values

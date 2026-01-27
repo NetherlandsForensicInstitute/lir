@@ -39,7 +39,7 @@ class Experiment(ABC):
         lrsystem_config: ContextAwareDict,
         split_data: Iterable[tuple[InstanceData, InstanceData]],
         parameters: dict[str, Any],
-        experiment_name: str,
+        run_name: str,
         data_config: ContextAwareDict,
     ) -> LLRData:
         """Run experiment on a single LR system configuration using the provided data(setup).
@@ -54,7 +54,7 @@ class Experiment(ABC):
         LLR data is returned.
         """
         # write the configuration to the output folder (data and lrsystem)
-        output_dir = self.output_path / experiment_name
+        output_dir = self.output_path / run_name
         lrsystem = parse_lrsystem(deepcopy(lrsystem_config), output_dir)
 
         config_dict = {
@@ -83,7 +83,7 @@ class Experiment(ABC):
 
         # Collect and report results as configured by `outputs`
         results = AggregationData(
-            llrdata=combined_llrs, lrsystem=lrsystem, parameters=parameters, parameters_str=experiment_name
+            llrdata=combined_llrs, lrsystem=lrsystem, parameters=parameters, run_name=run_name
         )
         for output in self.outputs:
             output.report(results)

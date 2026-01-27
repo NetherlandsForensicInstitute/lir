@@ -29,13 +29,13 @@ class AggregationData(NamedTuple):
     - llrdata: the LLR data containing LLRs and labels.
     - lrsystem: the model that produced the results
     - parameters: parameters that identify the system producing the results
-    - parameters_str: string representation of the parameters
+    - run_name: string representation of the run that produced the results
     """
 
     llrdata: LLRData
     lrsystem: LRSystem
     parameters: dict[str, Any]
-    parameters_str: str
+    run_name: str
 
 
 class Aggregation(ABC):
@@ -77,12 +77,12 @@ class AggregatePlot(Aggregation):
         fig, ax = plt.subplots()
 
         llrdata = data.llrdata
-        parameters_str = data.parameters_str
+        run_name = data.run_name
 
         try:
             self.plot_fn(llrdata=llrdata, ax=ax, **self.plot_fn_args)
         except ValueError as e:
-            LOG.warning(f'Could not generate plot {self.plot_name} for parameters {parameters_str}: {e}')
+            LOG.warning(f'Could not generate plot {self.plot_name} for run `{run_name}`: {e}')
             return
 
         # Only save the figure when an output path is provided.
@@ -90,10 +90,10 @@ class AggregatePlot(Aggregation):
             dir_name = self.output_path
             plot_arguments = '_'.join(f'{k}={v}' for k, v in self.plot_fn_args.items()) if self.plot_fn_args else ''
 
-            file_name = dir_name / parameters_str / f'{self.plot_name}{plot_arguments}.png'
-            (dir_name / parameters_str).mkdir(exist_ok=True, parents=True)
+            file_name = dir_name / run_name / f'{self.plot_name}{plot_arguments}.png'
+            file_name.parent.mkdir(exist_ok=True, parents=True)
 
-            LOG.info(f'Saving plot {self.plot_name} for parameters {parameters_str} to {file_name}')
+            LOG.info(f'Saving plot {self.plot_name} for run `{run_name}` to {file_name}')
             fig.savefig(file_name)
 
 

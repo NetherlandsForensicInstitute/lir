@@ -55,6 +55,9 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
                 for variable in parameters
             ]
 
+            # Parameters could be None, so ensure parameters is always a list.
+            parameters = parameters or []
+
         return baseline_config, parameters
 
     def primary_metric(self) -> Callable:

@@ -69,11 +69,13 @@ html_sidebars = {'**': ['globaltoc.html', 'relations.html', 'sourcelink.html', '
 
 
 def is_module(name: str) -> bool:
+    """Check whether the given name corresponds to a module in the lir package."""
     source_path = Path(__file__).parent.parent / name.replace('.', '/')
     return source_path.is_dir()
 
 
 def get_apidocs_uri(class_name: str | ConfigParser) -> str:
+    """Get the URI to the API documentation page for the given class name."""
     if isinstance(class_name, ConfigParser):
         class_name = class_name.reference()
 
@@ -87,6 +89,7 @@ def get_apidocs_uri(class_name: str | ConfigParser) -> str:
 
 
 def get_docstr_short(class_name: str | ConfigParser) -> str:
+    """Get the short form of the docstring for the given class name."""
     if isinstance(class_name, ConfigParser):
         class_name = class_name.reference()
 

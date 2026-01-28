@@ -11,7 +11,7 @@ from matplotlib import pyplot as plt
 from lir.algorithms.bayeserror import plot_nbe as nbe
 from lir.algorithms.invariance_bounds import plot_invariance_delta_functions as invariance_delta_functions
 from lir.algorithms.llr_overestimation import plot_llr_overestimation as llr_overestimation
-from lir.config.base import ContextAwareDict, YamlParseError, config_parser, pop_field
+from lir.config.base import ContextAwareDict, YamlParseError, check_is_empty, config_parser, pop_field
 from lir.config.metrics import parse_individual_metric
 from lir.data.models import LLRData
 from lir.lrsystems.lrsystems import LRSystem
@@ -202,4 +202,6 @@ def metrics_csv(config: ContextAwareDict, output_dir: Path) -> WriteMetricsToCsv
         )
 
     columns = {name: parse_individual_metric(name, output_dir, config.context) for name in columns}
+
+    check_is_empty(config)
     return WriteMetricsToCsv(output_dir, columns)

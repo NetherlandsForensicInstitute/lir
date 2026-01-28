@@ -108,6 +108,11 @@ class FeatureDataCsvParser(DataProvider, ABC):
                     f'{self._message_prefix}{name} specified as `{value}`, but it is not present in the csv file'
                 )
 
+        # Warn if any ignore columns are not found
+        for col in self.ignore_columns:
+            if col not in reader.fieldnames:
+                LOG.warning(f'{self._message_prefix}: `{col}` was given as a ignore_column, but it is not present.')
+
         # identify the feature columns
         special_columns = [
             self.source_id_column,

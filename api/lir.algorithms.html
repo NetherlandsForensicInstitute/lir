@@ -1,0 +1,1048 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.algorithms package &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lir.config package" href="lir.config.html" />
+    <link rel="prev" title="lir package" href="lir.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../lr_calculation.html">[TODO] Calculation of LR’s from scores</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../lr_calculation.html#a-simple-score-based-lr-system">A simple score-based LR system</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="lir.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="lir.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">lir.algorithms package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.config.html">lir.config package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.data.html">lir.data package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.lrsystems.html">lir.lrsystems package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.metrics.html">lir.metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.plotting.html">lir.plotting package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.resources.html">lir.resources package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.transform.html">lir.transform package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lir.html#module-lir.aggregation">lir.aggregation module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.aggregation.AggregatePlot"><code class="docutils literal notranslate"><span class="pre">AggregatePlot</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.aggregation.Aggregation"><code class="docutils literal notranslate"><span class="pre">Aggregation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.aggregation.AggregationData"><code class="docutils literal notranslate"><span class="pre">AggregationData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.aggregation.WriteMetricsToCsv"><code class="docutils literal notranslate"><span class="pre">WriteMetricsToCsv</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir.html#module-lir.bounding">lir.bounding module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.bounding.LLRBounder"><code class="docutils literal notranslate"><span class="pre">LLRBounder</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.bounding.NSourceBounder"><code class="docutils literal notranslate"><span class="pre">NSourceBounder</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.bounding.StaticBounder"><code class="docutils literal notranslate"><span class="pre">StaticBounder</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir.html#module-lir.experiment">lir.experiment module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.experiment.Experiment"><code class="docutils literal notranslate"><span class="pre">Experiment</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.experiment.PredefinedExperiment"><code class="docutils literal notranslate"><span class="pre">PredefinedExperiment</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir.html#module-lir.main">lir.main module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.main.copy_yaml_definition"><code class="docutils literal notranslate"><span class="pre">copy_yaml_definition()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.main.error"><code class="docutils literal notranslate"><span class="pre">error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.main.initialize_experiments"><code class="docutils literal notranslate"><span class="pre">initialize_experiments()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.main.initialize_logfile"><code class="docutils literal notranslate"><span class="pre">initialize_logfile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.main.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.main.setup_logging"><code class="docutils literal notranslate"><span class="pre">setup_logging()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir.html#module-lir.optuna">lir.optuna module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.optuna.OptunaExperiment"><code class="docutils literal notranslate"><span class="pre">OptunaExperiment</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir.html#module-lir.persistence">lir.persistence module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.persistence.SaveModel"><code class="docutils literal notranslate"><span class="pre">SaveModel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.persistence.load_model"><code class="docutils literal notranslate"><span class="pre">load_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.persistence.save_model"><code class="docutils literal notranslate"><span class="pre">save_model()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir.html#module-lir.registry">lir.registry module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.registry.ClassLoader"><code class="docutils literal notranslate"><span class="pre">ClassLoader</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.registry.ComponentNotFoundError"><code class="docutils literal notranslate"><span class="pre">ComponentNotFoundError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.registry.ConfigParserLoader"><code class="docutils literal notranslate"><span class="pre">ConfigParserLoader</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.registry.FederatedLoader"><code class="docutils literal notranslate"><span class="pre">FederatedLoader</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.registry.InvalidRegistryEntryError"><code class="docutils literal notranslate"><span class="pre">InvalidRegistryEntryError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.registry.YamlRegistry"><code class="docutils literal notranslate"><span class="pre">YamlRegistry</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.registry.get"><code class="docutils literal notranslate"><span class="pre">get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.registry.registry"><code class="docutils literal notranslate"><span class="pre">registry()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir.html#module-lir.util">lir.util module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.Bind"><code class="docutils literal notranslate"><span class="pre">Bind</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.LR"><code class="docutils literal notranslate"><span class="pre">LR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.Xn_to_Xy"><code class="docutils literal notranslate"><span class="pre">Xn_to_Xy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.Xy_to_Xn"><code class="docutils literal notranslate"><span class="pre">Xy_to_Xn()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.check_type"><code class="docutils literal notranslate"><span class="pre">check_type()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.get_classes_from_Xy"><code class="docutils literal notranslate"><span class="pre">get_classes_from_Xy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.ln_to_log10"><code class="docutils literal notranslate"><span class="pre">ln_to_log10()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.logodds_to_odds"><code class="docutils literal notranslate"><span class="pre">logodds_to_odds()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.logodds_to_probability"><code class="docutils literal notranslate"><span class="pre">logodds_to_probability()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.odds_to_logodds"><code class="docutils literal notranslate"><span class="pre">odds_to_logodds()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.odds_to_probability"><code class="docutils literal notranslate"><span class="pre">odds_to_probability()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.probability_to_logodds"><code class="docutils literal notranslate"><span class="pre">probability_to_logodds()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.probability_to_odds"><code class="docutils literal notranslate"><span class="pre">probability_to_odds()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.warn_deprecated"><code class="docutils literal notranslate"><span class="pre">warn_deprecated()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir.html#module-lir.visualization">lir.visualization module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.visualization.ece"><code class="docutils literal notranslate"><span class="pre">ece()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.visualization.llr_interval"><code class="docutils literal notranslate"><span class="pre">llr_interval()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.visualization.lr_histogram"><code class="docutils literal notranslate"><span class="pre">lr_histogram()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.visualization.pav"><code class="docutils literal notranslate"><span class="pre">pav()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir.html#module-lir">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="lir.html">lir package</a></li>
+      <li class="breadcrumb-item active">lir.algorithms package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/lir.algorithms.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="lir-algorithms-package">
+<h1>lir.algorithms package<a class="headerlink" href="#lir-algorithms-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-lir.algorithms.bayeserror">
+<span id="lir-algorithms-bayeserror-module"></span><h2>lir.algorithms.bayeserror module<a class="headerlink" href="#module-lir.algorithms.bayeserror" title="Link to this heading"></a></h2>
+<p>Normalized Bayes Error-rate (NBE).</p>
+<p>See:
+[-] Peter Vergeer, Andrew van Es, Arent de Jongh, Ivo Alberink and Reinoud</p>
+<blockquote>
+<div><p>Stoel, Numerical likelihood ratios outputted by LR systems are often based
+on extrapolation: When to stop extrapolating? In: Science and Justice 56
+(2016) 482–491.</p>
+</div></blockquote>
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.algorithms.bayeserror.ELUBBounder">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.algorithms.bayeserror.</span></span><span class="sig-name descname"><span class="pre">ELUBBounder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lower_llr_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_llr_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.algorithms.bayeserror.ELUBBounder" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="lir.html#lir.bounding.LLRBounder" title="lir.bounding.LLRBounder"><code class="xref py py-class docutils literal notranslate"><span class="pre">LLRBounder</span></code></a></p>
+<p>Calculate the Emperical Upper and Lower Bounds for a given LR system.</p>
+<p>Class that, given an LR system, outputs the same LRs as the system but bounded by the Empirical Upper and Lower
+Bounds as described in
+P. Vergeer, A. van Es, A. de Jongh, I. Alberink, R.D. Stoel,
+Numerical likelihood ratios outputted by LR systems are often based on extrapolation:
+when to stop extrapolating?
+Sci. Justics 56 (2016) 482-491.</p>
+<p># MATLAB code from the authors:</p>
+<p># clear all; close all;
+# llrs_hp=csvread(’…’);
+# llrs_hd=csvread(’…’);
+# start=-7; finish=7;
+# rho=start:0.01:finish; theta=10.^rho;
+# nbe=[];
+# for k=1:length(rho)
+#     if rho(k)&lt;0
+#         llrs_hp=[llrs_hp;rho(k)];
+#         nbe=[nbe;(theta(k)^(-1))*mean(llrs_hp&lt;=rho(k))+…
+#             mean(llrs_hd&gt;rho(k))];
+#     else
+#         llrs_hd=[llrs_hd;rho(k)];
+#         nbe=[nbe;theta(k)*mean(llrs_hd&gt;=rho(k))+…
+#             mean(llrs_hp&lt;rho(k))];
+#     end
+# end
+# plot(rho,-log10(nbe)); hold on;
+# plot([start finish],[0 0]);
+# a=rho(-log10(nbe)&gt;0);
+# empirical_bounds=[min(a) max(a)]</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.bayeserror.ELUBBounder.calculate_bounds">
+<span class="sig-name descname"><span class="pre">calculate_bounds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">llrdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">LLRData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.algorithms.bayeserror.ELUBBounder.calculate_bounds" title="Link to this definition"></a></dt>
+<dd><p>Calculate the LLR emperical upper and lower bounds (ELUB).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.algorithms.bayeserror.calculate_expected_utility">
+<span class="sig-prename descclassname"><span class="pre">lir.algorithms.bayeserror.</span></span><span class="sig-name descname"><span class="pre">calculate_expected_utility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lrs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold_lrs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_misleading</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#lir.algorithms.bayeserror.calculate_expected_utility" title="Link to this definition"></a></dt>
+<dd><p>Calculate the expected utility of a set of LRs for a given threshold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lrs</strong> – an array of LRs</p></li>
+<li><p><strong>y</strong> – an array of ground-truth labels (values 0 for Hd or 1 for Hp);
+must be of the same length as <cite>lrs</cite></p></li>
+<li><p><strong>threshold_lrs</strong> – an array of threshold lrs: minimum LR for acceptance</p></li>
+<li><p><strong>add_misleading</strong> – the number of consequential misleading LRs to be added.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>an array of utility values, one element for each threshold LR</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.algorithms.bayeserror.elub">
+<span class="sig-prename descclassname"><span class="pre">lir.algorithms.bayeserror.</span></span><span class="sig-name descname"><span class="pre">elub</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">llrdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">LLRData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_misleading</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">substitute_extremes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(-9,</span> <span class="pre">9)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.algorithms.bayeserror.elub" title="Link to this definition"></a></dt>
+<dd><p>Calculate and return the empirical upper and lower bound log10-LRs (ELUB LLRs).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>llrdata</strong> – An instance of LLRData containing LLRs and ground-truth labels</p></li>
+<li><p><strong>add_misleading</strong> – the number of consequential misleading LLRs to be added
+to both sides (labels 0 and 1)</p></li>
+<li><p><strong>step_size</strong> – required accuracy on a 10-base logarithmic scale</p></li>
+<li><p><strong>substitute_extremes</strong> – tuple of scalars: substitute for extreme LRs, i.e.
+LRs of 0 and inf are substituted by these values</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.algorithms.bayeserror.plot_nbe">
+<span class="sig-prename descclassname"><span class="pre">lir.algorithms.bayeserror.</span></span><span class="sig-name descname"><span class="pre">plot_nbe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">llrdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">LLRData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_lr_threshold_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple[float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">float]</span> <span class="pre">|</span> <span class="pre">None</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_misleading</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;module</span> <span class="pre">'matplotlib.pyplot'</span> <span class="pre">from</span> <span class="pre">'/home/runner/work/lir/lir/.venv/lib/python3.12/site-packages/matplotlib/pyplot.py'&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lir.algorithms.bayeserror.plot_nbe" title="Link to this definition"></a></dt>
+<dd><p>Generate the visual NBE plot using matplotlib.</p>
+</dd></dl>
+
+</section>
+<section id="module-lir.algorithms.bootstraps">
+<span id="lir-algorithms-bootstraps-module"></span><h2>lir.algorithms.bootstraps module<a class="headerlink" href="#module-lir.algorithms.bootstraps" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.algorithms.bootstraps.Bootstrap">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.algorithms.bootstraps.</span></span><span class="sig-name descname"><span class="pre">Bootstrap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bootstraps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0.05,</span> <span class="pre">0.95)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.algorithms.bootstraps.Bootstrap" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="lir.transform.html#lir.transform.pipeline.Pipeline" title="lir.transform.pipeline.Pipeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Bootstrap system that estimates confidence intervals around the best estimate of a pipeline.</p>
+<p>This bootstrap system creates bootstrap samples from the training data, fits the pipeline on each sample,
+and then computes confidence intervals for the pipeline outputs based on the variability across the bootstrap
+samples.</p>
+<p>Computing these intervals is done by creating interpolation functions that map the best estimate to the
+difference between the best estimate and the lower and upper bounds of the confidence interval. To achieve this,
+two subclasses are provided that differ in how the data points for interval estimation are obtained.</p>
+<ul class="simple">
+<li><p>BootstrapAtData: Uses the original training data points for interval estimation.</p></li>
+<li><p>BootstrapEquidistant: Uses equidistant points within the range of the training data for interval estimation.</p></li>
+</ul>
+<p>The AtData variant allows for more complex data types, while the Equidistant variant is only suitable for continuous
+features.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.algorithms.bootstraps.Bootstrap.steps">
+<span class="sig-name descname"><span class="pre">steps</span></span><a class="headerlink" href="#lir.algorithms.bootstraps.Bootstrap.steps" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The steps of s pipeline to be bootstrapped.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.algorithms.bootstraps.Bootstrap.n_bootstraps">
+<span class="sig-name descname"><span class="pre">n_bootstraps</span></span><a class="headerlink" href="#lir.algorithms.bootstraps.Bootstrap.n_bootstraps" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int: The number of bootstrap samples to generate.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.algorithms.bootstraps.Bootstrap.interval">
+<span class="sig-name descname"><span class="pre">interval</span></span><a class="headerlink" href="#lir.algorithms.bootstraps.Bootstrap.interval" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[float, float]: The lower and upper quantiles for the confidence interval.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.algorithms.bootstraps.Bootstrap.seed">
+<span class="sig-name descname"><span class="pre">seed</span></span><a class="headerlink" href="#lir.algorithms.bootstraps.Bootstrap.seed" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int | None: The random seed for reproducibility.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.algorithms.bootstraps.Bootstrap.n_points">
+<span class="sig-name descname"><span class="pre">n_points</span></span><a class="headerlink" href="#lir.algorithms.bootstraps.Bootstrap.n_points" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int | None: Number of equidistant points to use for interval estimation (BootstrapEquidistant only).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.algorithms.bootstraps.Bootstrap.f_delta_interval_lower">
+<span class="sig-name descname"><span class="pre">f_delta_interval_lower</span></span><a class="headerlink" href="#lir.algorithms.bootstraps.Bootstrap.f_delta_interval_lower" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Interpolation function for the lower bound of the interval.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.algorithms.bootstraps.Bootstrap.f_delta_interval_upper">
+<span class="sig-name descname"><span class="pre">f_delta_interval_upper</span></span><a class="headerlink" href="#lir.algorithms.bootstraps.Bootstrap.f_delta_interval_upper" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Interpolation function for the upper bound of the interval.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.bootstraps.Bootstrap.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">LLRData</span></a></span></span><a class="headerlink" href="#lir.algorithms.bootstraps.Bootstrap.apply" title="Link to this definition"></a></dt>
+<dd><p>Transform the provided instances to include the best estimate and confidence intervals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instances</strong> – FeatureData: The feature data to transform.</p>
+</dd>
+<dt class="field-even">Return LLRData<span class="colon">:</span></dt>
+<dd class="field-even"><p>The transformed feature data with best estimate and confidence intervals.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.bootstraps.Bootstrap.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lir.algorithms.bootstraps.Bootstrap.fit" title="Link to this definition"></a></dt>
+<dd><p>Fit the bootstrap system to the provided instances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instances</strong> – FeatureData: The feature data to fit the bootstrap system on.</p>
+</dd>
+<dt class="field-even">Return Self<span class="colon">:</span></dt>
+<dd class="field-even"><p>The fitted bootstrap system.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.bootstraps.Bootstrap.fit_apply">
+<span class="sig-name descname"><span class="pre">fit_apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">LLRData</span></a></span></span><a class="headerlink" href="#lir.algorithms.bootstraps.Bootstrap.fit_apply" title="Link to this definition"></a></dt>
+<dd><p>Combine fitting and transforming in one step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instances</strong> – FeatureData: The feature data to fit and transform.</p>
+</dd>
+<dt class="field-even">Return LLRData<span class="colon">:</span></dt>
+<dd class="field-even"><p>The transformed feature data with best estimate and confidence intervals.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.bootstraps.Bootstrap.get_bootstrap_data">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">get_bootstrap_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">InstanceData</span></a></span></span><a class="headerlink" href="#lir.algorithms.bootstraps.Bootstrap.get_bootstrap_data" title="Link to this definition"></a></dt>
+<dd><p>Get the data points to use for interval estimation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instances</strong> – FeatureData: The feature data to fit the bootstrap system on.</p>
+</dd>
+<dt class="field-even">Return FeatureData<span class="colon">:</span></dt>
+<dd class="field-even"><p>The feature data to use for interval estimation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.algorithms.bootstraps.BootstrapAtData">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.algorithms.bootstraps.</span></span><span class="sig-name descname"><span class="pre">BootstrapAtData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bootstraps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0.05,</span> <span class="pre">0.95)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.algorithms.bootstraps.BootstrapAtData" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.algorithms.bootstraps.Bootstrap" title="lir.algorithms.bootstraps.Bootstrap"><code class="xref py py-class docutils literal notranslate"><span class="pre">Bootstrap</span></code></a></p>
+<p>Bootstrap system that uses the original training data points for interval estimation.</p>
+<p>See the Bootstrap class for more details.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.bootstraps.BootstrapAtData.get_bootstrap_data">
+<span class="sig-name descname"><span class="pre">get_bootstrap_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">InstanceData</span></a></span></span><a class="headerlink" href="#lir.algorithms.bootstraps.BootstrapAtData.get_bootstrap_data" title="Link to this definition"></a></dt>
+<dd><p>Get the data points to use for interval estimation. The original training data points are used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instances</strong> – FeatureData: The feature data to fit the bootstrap system on.</p>
+</dd>
+<dt class="field-even">Return FeatureData<span class="colon">:</span></dt>
+<dd class="field-even"><p>The feature data to use for interval estimation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.algorithms.bootstraps.BootstrapEquidistant">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.algorithms.bootstraps.</span></span><span class="sig-name descname"><span class="pre">BootstrapEquidistant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bootstraps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0.05,</span> <span class="pre">0.95)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.algorithms.bootstraps.BootstrapEquidistant" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.algorithms.bootstraps.Bootstrap" title="lir.algorithms.bootstraps.Bootstrap"><code class="xref py py-class docutils literal notranslate"><span class="pre">Bootstrap</span></code></a></p>
+<p>Bootstrap system that uses equidistant points within the range of the training data for interval estimation.</p>
+<p>See the Bootstrap class for more details.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.bootstraps.BootstrapEquidistant.get_bootstrap_data">
+<span class="sig-name descname"><span class="pre">get_bootstrap_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">FeatureData</span></a></span></span><a class="headerlink" href="#lir.algorithms.bootstraps.BootstrapEquidistant.get_bootstrap_data" title="Link to this definition"></a></dt>
+<dd><p>Get the data points to use for interval estimation.</p>
+<p>This is done by creating equidistant points within the range of the training data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instances</strong> – FeatureData: The feature data to fit the bootstrap system on.</p>
+</dd>
+<dt class="field-even">Return FeatureData<span class="colon">:</span></dt>
+<dd class="field-even"><p>The feature data to use for interval estimation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-lir.algorithms.invariance_bounds">
+<span id="lir-algorithms-invariance-bounds-module"></span><h2>lir.algorithms.invariance_bounds module<a class="headerlink" href="#module-lir.algorithms.invariance_bounds" title="Link to this heading"></a></h2>
+<p>Extrapolation bounds on LRs using the Invariance Verification method by Alberink et al. (2025).</p>
+<p>See:
+[-] A transparent method to determine limit values for Likelihood Ratio systems, by</p>
+<blockquote>
+<div><p>Ivo Alberink, Jeannette Leegwater, Jonas Malmborg, Anders Nordgaard, Marjan Sjerps, Leen van der Ham
+In: Submitted for publication in 2025.</p>
+</div></blockquote>
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.algorithms.invariance_bounds.IVBounder">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.algorithms.invariance_bounds.</span></span><span class="sig-name descname"><span class="pre">IVBounder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lower_llr_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_llr_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.algorithms.invariance_bounds.IVBounder" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="lir.html#lir.bounding.LLRBounder" title="lir.bounding.LLRBounder"><code class="xref py py-class docutils literal notranslate"><span class="pre">LLRBounder</span></code></a></p>
+<p>Calculate Invariance Verification bounds for a given LR system.</p>
+<p>Class that, given an LR system, outputs the same LRs as the system but bounded by the Invariance Verification
+bounds as described in:
+A transparent method to determine limit values for Likelihood Ratio systems, by
+Ivo Alberink, Jeannette Leegwater, Jonas Malmborg, Anders Nordgaard, Marjan Sjerps, Leen van der Ham
+In: Submitted for publication in 2025.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.invariance_bounds.IVBounder.calculate_bounds">
+<span class="sig-name descname"><span class="pre">calculate_bounds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">llrdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">LLRData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.algorithms.invariance_bounds.IVBounder.calculate_bounds" title="Link to this definition"></a></dt>
+<dd><p>Calculate the Invariance Verification bounds.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.algorithms.invariance_bounds.calculate_invariance_bounds">
+<span class="sig-prename descclassname"><span class="pre">lir.algorithms.invariance_bounds.</span></span><span class="sig-name descname"><span class="pre">calculate_invariance_bounds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">llrdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">LLRData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">llr_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">substitute_extremes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(-20,</span> <span class="pre">20)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.algorithms.invariance_bounds.calculate_invariance_bounds" title="Link to this definition"></a></dt>
+<dd><p>Return the upper and lower Invariance Verification bounds of the LRs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>llrdata</strong> – an instance of LLRData containing LLRs and ground-truth labels</p></li>
+<li><p><strong>llr_threshold</strong> – predefined values of LLRs as possible bounds</p></li>
+<li><p><strong>step_size</strong> – required accuracy on a base-10 logarithmic scale</p></li>
+<li><p><strong>substitute_extremes</strong> – (tuple of scalars) substitute for extreme LLRs, i.e.
+LLRs smaller than the lower value or greater than the upper value are clipped</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.algorithms.invariance_bounds.calculate_invariance_delta_functions">
+<span class="sig-prename descclassname"><span class="pre">lir.algorithms.invariance_bounds.</span></span><span class="sig-name descname"><span class="pre">calculate_invariance_delta_functions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">llrdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">LLRData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">llr_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.algorithms.invariance_bounds.calculate_invariance_delta_functions" title="Link to this definition"></a></dt>
+<dd><p>Calculate the Invariance Verification delta functions for a set of LRs at given threshold values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>llrdata</strong> – An instance of LLRData containing LLRs and ground-truth labels</p></li>
+<li><p><strong>llr_threshold</strong> – an array of threshold LLRs</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>two arrays of delta-values, at all threshold LR values</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.algorithms.invariance_bounds.plot_invariance_delta_functions">
+<span class="sig-prename descclassname"><span class="pre">lir.algorithms.invariance_bounds.</span></span><span class="sig-name descname"><span class="pre">plot_invariance_delta_functions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">llrdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">LLRData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">llr_threshold_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lir.algorithms.invariance_bounds.plot_invariance_delta_functions" title="Link to this definition"></a></dt>
+<dd><p>Return a figure of the Invariance Verification delta functions along with the upper and lower bounds of the LRs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>llrdata</strong> – An instance of LLRData containing LLRs and ground-truth labels</p></li>
+<li><p><strong>llr_threshold_range</strong> – lower limit and upper limit for the LLRs to include in the figure</p></li>
+<li><p><strong>step_size</strong> – required accuracy on a base-10 logarithmic scale</p></li>
+<li><p><strong>ax</strong> – matplotlib axes</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-lir.algorithms.isotonic_regression">
+<span id="lir-algorithms-isotonic-regression-module"></span><h2>lir.algorithms.isotonic_regression module<a class="headerlink" href="#module-lir.algorithms.isotonic_regression" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.algorithms.isotonic_regression.IsotonicCalibrator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.algorithms.isotonic_regression.</span></span><span class="sig-name descname"><span class="pre">IsotonicCalibrator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">add_misleading</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.algorithms.isotonic_regression.IsotonicCalibrator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">TransformerMixin</span></code></p>
+<p>Calculate LR from a score belonging to one of two distributions using isotonic regression.</p>
+<p>Calculates a likelihood ratio of a score value, provided it is from one of
+two distributions. Uses isotonic regression for interpolation.</p>
+<p>In contrast to <cite>IsotonicRegression</cite>, this class:
+- has an initialization argument that provides the option of adding misleading data points
+- outputs logodds instead of probabilities</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.isotonic_regression.IsotonicCalibrator.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.algorithms.isotonic_regression.IsotonicCalibrator" title="lir.algorithms.isotonic_regression.IsotonicCalibrator"><span class="pre">IsotonicCalibrator</span></a></span></span><a class="headerlink" href="#lir.algorithms.isotonic_regression.IsotonicCalibrator.fit" title="Link to this definition"></a></dt>
+<dd><p>Allow fitting the estimator on the given data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.isotonic_regression.IsotonicCalibrator.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#lir.algorithms.isotonic_regression.IsotonicCalibrator.transform" title="Link to this definition"></a></dt>
+<dd><p>Transform a given value, using the fitted Isotonic Regression model.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.algorithms.isotonic_regression.IsotonicRegression">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.algorithms.isotonic_regression.</span></span><span class="sig-name descname"><span class="pre">IsotonicRegression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increasing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_of_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'nan'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.algorithms.isotonic_regression.IsotonicRegression" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IsotonicRegression</span></code></p>
+<p>Wrap SKlearn implementation to support infinite values.</p>
+<p>Sklearn implementation IsotonicRegression throws an error when values are Inf or -Inf when in fact
+IsotonicRegression can handle infinite values. This wrapper around the sklearn implementation of IsotonicRegression
+prevents the error being thrown when Inf or -Inf values are provided.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.isotonic_regression.IsotonicRegression.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ArrayLike</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ArrayLike</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ArrayLike</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">tuple</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.algorithms.isotonic_regression.IsotonicRegression" title="lir.algorithms.isotonic_regression.IsotonicRegression"><span class="pre">IsotonicRegression</span></a></span></span><a class="headerlink" href="#lir.algorithms.isotonic_regression.IsotonicRegression.fit" title="Link to this definition"></a></dt>
+<dd><p>Fit the model using X, y as training data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>array-like</em><em> of </em><em>shape</em><em> (</em><em>n_samples</em><em>,</em><em>)</em>) – Training data.</p></li>
+<li><p><strong>y</strong> (<em>array-like</em><em> of </em><em>shape</em><em> (</em><em>n_samples</em><em>,</em><em>)</em>) – Training target.</p></li>
+<li><p><strong>sample_weight</strong> (<em>array-like</em><em> of </em><em>shape</em><em> (</em><em>n_samples</em><em>,</em><em>)</em><em>, </em><em>default=None</em>) – Weights. If set to None, all weights will be set to 1 (equal
+weights).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – Returns an instance of self.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>X is stored for future use, as <a class="reference internal" href="#lir.algorithms.isotonic_regression.IsotonicRegression.transform" title="lir.algorithms.isotonic_regression.IsotonicRegression.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">transform()</span></code></a> needs X to interpolate
+new input data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.isotonic_regression.IsotonicRegression.set_fit_request">
+<span class="sig-name descname"><span class="pre">set_fit_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.algorithms.isotonic_regression.IsotonicRegression" title="lir.algorithms.isotonic_regression.IsotonicRegression"><span class="pre">IsotonicRegression</span></a></span></span><a class="headerlink" href="#lir.algorithms.isotonic_regression.IsotonicRegression.set_fit_request" title="Link to this definition"></a></dt>
+<dd><p>Configure whether metadata should be requested to be passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<p>Note that this method is only relevant when this estimator is used as a
+sub-estimator within a <span class="xref std std-term">meta-estimator</span> and metadata routing is enabled
+with <code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please check the <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sample_weight</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – The updated object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.isotonic_regression.IsotonicRegression.set_score_request">
+<span class="sig-name descname"><span class="pre">set_score_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.algorithms.isotonic_regression.IsotonicRegression" title="lir.algorithms.isotonic_regression.IsotonicRegression"><span class="pre">IsotonicRegression</span></a></span></span><a class="headerlink" href="#lir.algorithms.isotonic_regression.IsotonicRegression.set_score_request" title="Link to this definition"></a></dt>
+<dd><p>Configure whether metadata should be requested to be passed to the <code class="docutils literal notranslate"><span class="pre">score</span></code> method.</p>
+<p>Note that this method is only relevant when this estimator is used as a
+sub-estimator within a <span class="xref std std-term">meta-estimator</span> and metadata routing is enabled
+with <code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please check the <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">score</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">score</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sample_weight</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">score</span></code>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – The updated object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.isotonic_regression.IsotonicRegression.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ArrayLike</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#lir.algorithms.isotonic_regression.IsotonicRegression.transform" title="Link to this definition"></a></dt>
+<dd><p>Transform new data by linear interpolation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>T</strong> (<em>array-like</em><em> of </em><em>shape</em><em> (</em><em>n_samples</em><em>,</em><em>)</em>) – Data to transform.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>T_</strong> – The transformed data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array, shape=(n_samples,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-lir.algorithms.kde">
+<span id="lir-algorithms-kde-module"></span><h2>lir.algorithms.kde module<a class="headerlink" href="#module-lir.algorithms.kde" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.algorithms.kde.KDECalibrator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.algorithms.kde.</span></span><span class="sig-name descname"><span class="pre">KDECalibrator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bandwidth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.algorithms.kde.KDECalibrator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="lir.transform.html#lir.transform.Transformer" title="lir.transform.Transformer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transformer</span></code></a></p>
+<p>Calculate LR from a score, belonging to one of two distributions using KDE.</p>
+<p>Calculates a likelihood ratio of a score value, provided it is from one of
+two distributions. Uses kernel density estimation (KDE) for interpolation.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.kde.KDECalibrator.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">LLRData</span></a></span></span><a class="headerlink" href="#lir.algorithms.kde.KDECalibrator.apply" title="Link to this definition"></a></dt>
+<dd><p>Provide LLR’s as output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instances</strong> – InstanceData to apply the calibrator to.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LLRData with calibrated log-likelihood ratios.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.kde.KDECalibrator.bandwidth_silverman">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">bandwidth_silverman</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.algorithms.kde.KDECalibrator.bandwidth_silverman" title="Link to this definition"></a></dt>
+<dd><p>Estimate the optimal bandwidth parameter using Silverman’s rule of thumb.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> – n * 1 np.array of scores</p></li>
+<li><p><strong>y</strong> – n * 1 np.array of labels (Booleans).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>bandwidth for class 0, bandwidth for class 1</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.kde.KDECalibrator.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lir.algorithms.kde.KDECalibrator.fit" title="Link to this definition"></a></dt>
+<dd><p>Fit the KDE model on the data.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.algorithms.kde.compensate_and_remove_neginf_inf">
+<span class="sig-prename descclassname"><span class="pre">lir.algorithms.kde.</span></span><span class="sig-name descname"><span class="pre">compensate_and_remove_neginf_inf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_odds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.algorithms.kde.compensate_and_remove_neginf_inf" title="Link to this definition"></a></dt>
+<dd><p>For Gaussian and KDE-calibrator fitting: remove negInf, Inf and compensate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>log_odds</strong> – n * 1 np.array of log-odds</p></li>
+<li><p><strong>y</strong> – n * 1 np.array of labels (Booleans).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>log_odds (with negInf and Inf removed), y (with negInf and Inf removed),
+numerator compensator, denominator compensator</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.algorithms.kde.parse_bandwidth">
+<span class="sig-prename descclassname"><span class="pre">lir.algorithms.kde.</span></span><span class="sig-name descname"><span class="pre">parse_bandwidth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bandwidth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.algorithms.kde.parse_bandwidth" title="Link to this definition"></a></dt>
+<dd><p>Parse and return the corresponding bandwidth based on input type.</p>
+<p>Returns bandwidth as a tuple of two (optional) floats.
+Extrapolates a single bandwidth.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>bandwidth</strong> – provided bandwidth</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>bandwidth used for kde0, bandwidth used for kde1</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-lir.algorithms.llr_overestimation">
+<span id="lir-algorithms-llr-overestimation-module"></span><h2>lir.algorithms.llr_overestimation module<a class="headerlink" href="#module-lir.algorithms.llr_overestimation" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.algorithms.llr_overestimation.calc_fiducial_density_functions">
+<span class="sig-prename descclassname"><span class="pre">lir.algorithms.llr_overestimation.</span></span><span class="sig-name descname"><span class="pre">calc_fiducial_density_functions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'pdf'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_fids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing_grid_fraction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing_sample_size_correction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#lir.algorithms.llr_overestimation.calc_fiducial_density_functions" title="Link to this definition"></a></dt>
+<dd><p>Calculate (smoothed) density functions of fiducial distributions of a dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – 1-dimensional array of data points</p></li>
+<li><p><strong>grid</strong> – 1-dimensional array of equally spaced grid points, at which to calculate the density functions</p></li>
+<li><p><strong>df_type</strong> – type of density function (df) to generate: either probability (‘pdf’) or cumulative (‘cdf’)</p></li>
+<li><p><strong>num_fids</strong> – number of fiducial distributions to generate</p></li>
+<li><p><strong>smoothing_grid_fraction</strong> – fraction of grid points to use as half window during smoothing</p></li>
+<li><p><strong>smoothing_sample_size_correction</strong> – value to use for sample size correction of smoothing window; 0 is no
+correction</p></li>
+<li><p><strong>seed</strong> – seed for random number generator used draw samples from a uniform distribution.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.algorithms.llr_overestimation.calc_llr_overestimation">
+<span class="sig-prename descclassname"><span class="pre">lir.algorithms.llr_overestimation.</span></span><span class="sig-name descname"><span class="pre">calc_llr_overestimation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">llrs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_fids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">('silverman',</span> <span class="pre">'silverman')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_grid_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.algorithms.llr_overestimation.calc_llr_overestimation" title="Link to this definition"></a></dt>
+<dd><p>Calculate the LLR-overestimation as function of the system LLR.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>The LLR-overestimation is defined as the log-10 of the ratio between</dt><dd><ol class="arabic simple">
+<li><p>the system LRs; the outputs of the LR-system, and</p></li>
+<li><p>the empirical LRs; the ratio’s between the relative frequencies of the H1-LLRs and H2-LLRs.</p></li>
+</ol>
+</dd>
+</dl>
+<ul class="simple">
+<li><p>It quantifies the deviation from the requirement that ‘the LR of the LR is the LR’: the ‘LR-consistency’.</p></li>
+<li><p>For a perfect LR-system, the LLR-overestimation is 0: the system and empirical LRs are the same.</p></li>
+<li><p>A positive LLR-overestimation indicates that the system LRs are too high, compared to the empirical LRs.</p></li>
+<li><p>An LLR-overestimation of +1 indicates that the system LRs are too high by a factor of 10.</p></li>
+<li><p>An LLR-overestimation of -1 indicates that the system LRs are too low by a factor of 10.</p></li>
+<li><p>The relative frequencies are estimated with KDE using Silverman’s rule-of-thumb for the bandwidths.</p></li>
+<li><p>An interval around the LLR-overestimation can be calculated using fiducial distributions.</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>llrs</strong> – the log-10 likelihood ratios (LLRs), as calculated by the LR-system</p></li>
+<li><p><strong>y</strong> – the corresponding labels (0 for H2 or Hd, 1 for H1 or Hp)</p></li>
+<li><p><strong>num_grid_points</strong> – number of points used in the grid to calculate the LLR-overestimation on</p></li>
+<li><p><strong>bw</strong> – two bandwidths for the KDEs of H1 &amp; H2; for each specify a method (string) or a value (float)</p></li>
+<li><p><strong>num_fids</strong> – number of fiducial distributions to base the interval on; use 0 for no interval</p></li>
+<li><p><strong>alpha</strong> – level of confidence to use for the interval</p></li>
+<li><p><strong>kwargs</strong> – additional arguments to pass to <a class="reference internal" href="#lir.algorithms.llr_overestimation.calc_fiducial_density_functions" title="lir.algorithms.llr_overestimation.calc_fiducial_density_functions"><code class="xref py py-func docutils literal notranslate"><span class="pre">calc_fiducial_density_functions()</span></code></a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a tuple of LLRs, their overestimation (best estimate), and their overestimation interval</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.algorithms.llr_overestimation.plot_llr_overestimation">
+<span class="sig-prename descclassname"><span class="pre">lir.algorithms.llr_overestimation.</span></span><span class="sig-name descname"><span class="pre">plot_llr_overestimation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">llrdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">LLRData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_fids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;module</span> <span class="pre">'matplotlib.pyplot'</span> <span class="pre">from</span> <span class="pre">'/home/runner/work/lir/lir/.venv/lib/python3.12/site-packages/matplotlib/pyplot.py'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lir.algorithms.llr_overestimation.plot_llr_overestimation" title="Link to this definition"></a></dt>
+<dd><p>Plot the LLR-overestimation as function of the system LLR.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>The LLR-overestimation is defined as the log-10 of the ratio between</dt><dd><ol class="arabic simple">
+<li><p>the system LRs; the outputs of the LR-system, and</p></li>
+<li><p>the empirical LRs; the ratio’s between the relative frequencies of the H1-LLRs and H2-LLRs.</p></li>
+</ol>
+</dd>
+</dl>
+<ul class="simple">
+<li><p>See documentation on <a class="reference internal" href="#lir.algorithms.llr_overestimation.calc_llr_overestimation" title="lir.algorithms.llr_overestimation.calc_llr_overestimation"><code class="xref py py-func docutils literal notranslate"><span class="pre">calc_llr_overestimation()</span></code></a> for more details on the LLR-overestimation.</p></li>
+<li><p>An interval around the LLR-overestimation can be calculated using fiducial distributions.</p></li>
+<li><p>The average absolute LLR-overestimation can be used as single metric.</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>llrdata</strong> – An instance of LLRData containing LLRs and ground-truth labels</p></li>
+<li><p><strong>num_fids</strong> – number of fiducial distributions to base the interval on; use 0 for no interval</p></li>
+<li><p><strong>ax</strong> – matplotlib axes to plot into</p></li>
+<li><p><strong>kwargs</strong> – additional arguments to pass to <a class="reference internal" href="#lir.algorithms.llr_overestimation.calc_llr_overestimation" title="lir.algorithms.llr_overestimation.calc_llr_overestimation"><code class="xref py py-func docutils literal notranslate"><span class="pre">calc_llr_overestimation()</span></code></a>
+and/or <a class="reference internal" href="#lir.algorithms.llr_overestimation.calc_fiducial_density_functions" title="lir.algorithms.llr_overestimation.calc_fiducial_density_functions"><code class="xref py py-func docutils literal notranslate"><span class="pre">calc_fiducial_density_functions()</span></code></a>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-lir.algorithms.logistic_regression">
+<span id="lir-algorithms-logistic-regression-module"></span><h2>lir.algorithms.logistic_regression module<a class="headerlink" href="#module-lir.algorithms.logistic_regression" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.algorithms.logistic_regression.FourParameterLogisticCalibrator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.algorithms.logistic_regression.</span></span><span class="sig-name descname"><span class="pre">FourParameterLogisticCalibrator</span></span><a class="headerlink" href="#lir.algorithms.logistic_regression.FourParameterLogisticCalibrator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="lir.transform.html#lir.transform.Transformer" title="lir.transform.Transformer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transformer</span></code></a></p>
+<p>Calculate LR of a score, belonging to one of two distributions, using a logistic model.</p>
+<p>Calculates a likelihood ratio of a score value, provided it is from one of two distributions.
+Depending on the training data, a 2-, 3- or 4-parameter logistic model is used.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.logistic_regression.FourParameterLogisticCalibrator.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">LLRData</span></a></span></span><a class="headerlink" href="#lir.algorithms.logistic_regression.FourParameterLogisticCalibrator.apply" title="Link to this definition"></a></dt>
+<dd><p>Apply the fitted calibrator to new data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instances</strong> – InstanceData to apply the calibrator to.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LLRData with calibrated log-likelihood ratios.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.logistic_regression.FourParameterLogisticCalibrator.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lir.algorithms.logistic_regression.FourParameterLogisticCalibrator.fit" title="Link to this definition"></a></dt>
+<dd><p>Fit the calibrator to data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instances</strong> – InstanceData to fit the calibrator to.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Self</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.algorithms.logistic_regression.LogitCalibrator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.algorithms.logistic_regression.</span></span><span class="sig-name descname"><span class="pre">LogitCalibrator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.algorithms.logistic_regression.LogitCalibrator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="lir.transform.html#lir.transform.Transformer" title="lir.transform.Transformer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transformer</span></code></a></p>
+<p>Calculate LR from a score, belonging to one of two distributions using Logistic Regression.</p>
+<p>Calculates a likelihood ratio of a score value, provided it is from one of
+two distributions. Uses logistic regression for interpolation.</p>
+<p>Infinite values in the input are ignored, except if they are misleading, which is an error.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.logistic_regression.LogitCalibrator.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">LLRData</span></a></span></span><a class="headerlink" href="#lir.algorithms.logistic_regression.LogitCalibrator.apply" title="Link to this definition"></a></dt>
+<dd><p>Calculate LLR data from the fitted model, using instance data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.logistic_regression.LogitCalibrator.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lir.algorithms.logistic_regression.LogitCalibrator.fit" title="Link to this definition"></a></dt>
+<dd><p>Fit the model on the data.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-lir.algorithms.percentile_rank">
+<span id="lir-algorithms-percentile-rank-module"></span><h2>lir.algorithms.percentile_rank module<a class="headerlink" href="#module-lir.algorithms.percentile_rank" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.algorithms.percentile_rank.PercentileRankTransformer">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.algorithms.percentile_rank.</span></span><span class="sig-name descname"><span class="pre">PercentileRankTransformer</span></span><a class="headerlink" href="#lir.algorithms.percentile_rank.PercentileRankTransformer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TransformerMixin</span></code></p>
+<p>Compute the percentile rankings of a dataset, relative to another dataset.</p>
+<p>Rankings are in range [0, 1]. Handling ties: the maximum of the ranks that
+would have been assigned to all the tied values is assigned to each value.</p>
+<p>To be able to compute the rankings of dataset <em>Z</em> relative to dataset <em>X</em>,
+<cite>fit</cite> will create a ranking function for each feature separately, based on
+<em>X</em>. The method <cite>transform</cite> will apply ranking of <em>Z</em> based on dataset <em>X</em>.</p>
+<p>This class has the methods <cite>fit()</cite> and <cite>transform()</cite>, both take a parameter
+<cite>X</cite> with one row per instance, e.g. dimensions (n, f) with n = number of
+measurements, f = number of features. The number of features should be the
+same in <cite>fit()</cite> and <cite>transform()</cite>.</p>
+<p>If the parameter <cite>X</cite> has a <em>pair</em> of measurements per row, i.e. has
+dimensions (n, f, 2), the percentile rank is fitted and applied
+independently for the first and second measurement of the pair.</p>
+<p>Fit:
+Expects:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>X</cite> is a numpy array with one row per instance</p></li>
+</ul>
+</div></blockquote>
+<p>Transform:
+Expects:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>X</cite> is a numpy array with one row per instance</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>a numpy array with the same shape as <cite>X</cite></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.percentile_rank.PercentileRankTransformer.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.algorithms.percentile_rank.PercentileRankTransformer" title="lir.algorithms.percentile_rank.PercentileRankTransformer"><span class="pre">PercentileRankTransformer</span></a></span></span><a class="headerlink" href="#lir.algorithms.percentile_rank.PercentileRankTransformer.fit" title="Link to this definition"></a></dt>
+<dd><p>Fit the transformer model on the data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.percentile_rank.PercentileRankTransformer.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#lir.algorithms.percentile_rank.PercentileRankTransformer.transform" title="Link to this definition"></a></dt>
+<dd><p>Use the fitted model to transform the input data.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-lir.algorithms">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-lir.algorithms" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lir.html" class="btn btn-neutral float-left" title="lir package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lir.config.html" class="btn btn-neutral float-right" title="lir.config package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

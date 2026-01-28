@@ -1,0 +1,45 @@
+lir.data package
+================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   lir.data.datasets
+
+Submodules
+----------
+
+lir.data.data\_strategies module
+--------------------------------
+
+.. automodule:: lir.data.data_strategies
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.data.io module
+------------------
+
+.. automodule:: lir.data.io
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.data.models module
+----------------------
+
+.. automodule:: lir.data.models
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: lir.data
+   :members:
+   :show-inheritance:
+   :undoc-members:

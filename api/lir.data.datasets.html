@@ -1,0 +1,451 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.data.datasets package &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lir.lrsystems package" href="lir.lrsystems.html" />
+    <link rel="prev" title="lir.data package" href="lir.data.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../lr_calculation.html">[TODO] Calculation of LR’s from scores</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../lr_calculation.html#a-simple-score-based-lr-system">A simple score-based LR system</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="lir.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="lir.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lir.algorithms.html">lir.algorithms package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.config.html">lir.config package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="lir.data.html">lir.data package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.lrsystems.html">lir.lrsystems package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.metrics.html">lir.metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.plotting.html">lir.plotting package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.resources.html">lir.resources package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.transform.html">lir.transform package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lir.html#module-lir.aggregation">lir.aggregation module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.aggregation.AggregatePlot"><code class="docutils literal notranslate"><span class="pre">AggregatePlot</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.aggregation.Aggregation"><code class="docutils literal notranslate"><span class="pre">Aggregation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.aggregation.AggregationData"><code class="docutils literal notranslate"><span class="pre">AggregationData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.aggregation.WriteMetricsToCsv"><code class="docutils literal notranslate"><span class="pre">WriteMetricsToCsv</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir.html#module-lir.bounding">lir.bounding module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.bounding.LLRBounder"><code class="docutils literal notranslate"><span class="pre">LLRBounder</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.bounding.NSourceBounder"><code class="docutils literal notranslate"><span class="pre">NSourceBounder</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.bounding.StaticBounder"><code class="docutils literal notranslate"><span class="pre">StaticBounder</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir.html#module-lir.experiment">lir.experiment module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.experiment.Experiment"><code class="docutils literal notranslate"><span class="pre">Experiment</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.experiment.PredefinedExperiment"><code class="docutils literal notranslate"><span class="pre">PredefinedExperiment</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir.html#module-lir.main">lir.main module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.main.copy_yaml_definition"><code class="docutils literal notranslate"><span class="pre">copy_yaml_definition()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.main.error"><code class="docutils literal notranslate"><span class="pre">error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.main.initialize_experiments"><code class="docutils literal notranslate"><span class="pre">initialize_experiments()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.main.initialize_logfile"><code class="docutils literal notranslate"><span class="pre">initialize_logfile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.main.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.main.setup_logging"><code class="docutils literal notranslate"><span class="pre">setup_logging()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir.html#module-lir.optuna">lir.optuna module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.optuna.OptunaExperiment"><code class="docutils literal notranslate"><span class="pre">OptunaExperiment</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir.html#module-lir.persistence">lir.persistence module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.persistence.SaveModel"><code class="docutils literal notranslate"><span class="pre">SaveModel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.persistence.load_model"><code class="docutils literal notranslate"><span class="pre">load_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.persistence.save_model"><code class="docutils literal notranslate"><span class="pre">save_model()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir.html#module-lir.registry">lir.registry module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.registry.ClassLoader"><code class="docutils literal notranslate"><span class="pre">ClassLoader</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.registry.ComponentNotFoundError"><code class="docutils literal notranslate"><span class="pre">ComponentNotFoundError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.registry.ConfigParserLoader"><code class="docutils literal notranslate"><span class="pre">ConfigParserLoader</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.registry.FederatedLoader"><code class="docutils literal notranslate"><span class="pre">FederatedLoader</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.registry.InvalidRegistryEntryError"><code class="docutils literal notranslate"><span class="pre">InvalidRegistryEntryError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.registry.YamlRegistry"><code class="docutils literal notranslate"><span class="pre">YamlRegistry</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.registry.get"><code class="docutils literal notranslate"><span class="pre">get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.registry.registry"><code class="docutils literal notranslate"><span class="pre">registry()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir.html#module-lir.util">lir.util module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.Bind"><code class="docutils literal notranslate"><span class="pre">Bind</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.LR"><code class="docutils literal notranslate"><span class="pre">LR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.Xn_to_Xy"><code class="docutils literal notranslate"><span class="pre">Xn_to_Xy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.Xy_to_Xn"><code class="docutils literal notranslate"><span class="pre">Xy_to_Xn()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.check_type"><code class="docutils literal notranslate"><span class="pre">check_type()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.get_classes_from_Xy"><code class="docutils literal notranslate"><span class="pre">get_classes_from_Xy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.ln_to_log10"><code class="docutils literal notranslate"><span class="pre">ln_to_log10()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.logodds_to_odds"><code class="docutils literal notranslate"><span class="pre">logodds_to_odds()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.logodds_to_probability"><code class="docutils literal notranslate"><span class="pre">logodds_to_probability()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.odds_to_logodds"><code class="docutils literal notranslate"><span class="pre">odds_to_logodds()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.odds_to_probability"><code class="docutils literal notranslate"><span class="pre">odds_to_probability()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.probability_to_logodds"><code class="docutils literal notranslate"><span class="pre">probability_to_logodds()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.probability_to_odds"><code class="docutils literal notranslate"><span class="pre">probability_to_odds()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.util.warn_deprecated"><code class="docutils literal notranslate"><span class="pre">warn_deprecated()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir.html#module-lir.visualization">lir.visualization module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.visualization.ece"><code class="docutils literal notranslate"><span class="pre">ece()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.visualization.llr_interval"><code class="docutils literal notranslate"><span class="pre">llr_interval()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.visualization.lr_histogram"><code class="docutils literal notranslate"><span class="pre">lr_histogram()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.visualization.pav"><code class="docutils literal notranslate"><span class="pre">pav()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir.html#module-lir">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="lir.html">lir package</a></li>
+          <li class="breadcrumb-item"><a href="lir.data.html">lir.data package</a></li>
+      <li class="breadcrumb-item active">lir.data.datasets package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/lir.data.datasets.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="lir-data-datasets-package">
+<h1>lir.data.datasets package<a class="headerlink" href="#lir-data-datasets-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-lir.data.datasets.alcohol_breath_analyser">
+<span id="lir-data-datasets-alcohol-breath-analyser-module"></span><h2>lir.data.datasets.alcohol_breath_analyser module<a class="headerlink" href="#module-lir.data.datasets.alcohol_breath_analyser" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.datasets.alcohol_breath_analyser.AlcoholBreathAnalyser">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.datasets.alcohol_breath_analyser.</span></span><span class="sig-name descname"><span class="pre">AlcoholBreathAnalyser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ill_calibrated</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.data.datasets.alcohol_breath_analyser.AlcoholBreathAnalyser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="lir.data.html#lir.data.models.DataProvider" title="lir.data.models.DataProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataProvider</span></code></a></p>
+<p>Alcohol Breath Analyser example class.</p>
+<dl class="simple">
+<dt>Example from paper:</dt><dd><p>Peter Vergeer, Andrew van Es, Arent de Jongh, Ivo Alberink and Reinoud
+Stoel, Numerical likelihood ratios outputted by LR systems are often
+based on extrapolation: When to stop extrapolating? In: Science and
+Justice 56 (2016) 482–491.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.datasets.alcohol_breath_analyser.AlcoholBreathAnalyser.get_instances">
+<span class="sig-name descname"><span class="pre">get_instances</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">LLRData</span></a></span></span><a class="headerlink" href="#lir.data.datasets.alcohol_breath_analyser.AlcoholBreathAnalyser.get_instances" title="Link to this definition"></a></dt>
+<dd><p>Provide LLR data for example system.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-lir.data.datasets.feature_data_csv">
+<span id="lir-data-datasets-feature-data-csv-module"></span><h2>lir.data.datasets.feature_data_csv module<a class="headerlink" href="#module-lir.data.datasets.feature_data_csv" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv.FeatureDataCsvFileParser">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.datasets.feature_data_csv.</span></span><span class="sig-name descname"><span class="pre">FeatureDataCsvFileParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PathLike</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvFileParser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvParser" title="lir.data.datasets.feature_data_csv.FeatureDataCsvParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureDataCsvParser</span></code></a></p>
+<p>Read CSV data from file.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv.FeatureDataCsvFileParser.get_instances">
+<span class="sig-name descname"><span class="pre">get_instances</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">FeatureData</span></a></span></span><a class="headerlink" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvFileParser.get_instances" title="Link to this definition"></a></dt>
+<dd><p>Retrieve FeatureData instances.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv.FeatureDataCsvHttpParser">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.datasets.feature_data_csv.</span></span><span class="sig-name descname"><span class="pre">FeatureDataCsvHttpParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvHttpParser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvParser" title="lir.data.datasets.feature_data_csv.FeatureDataCsvParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureDataCsvParser</span></code></a></p>
+<p>Read data from a stream.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv.FeatureDataCsvHttpParser.get_instances">
+<span class="sig-name descname"><span class="pre">get_instances</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">FeatureData</span></a></span></span><a class="headerlink" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvHttpParser.get_instances" title="Link to this definition"></a></dt>
+<dd><p>Retrieve FeatureData from the remote resource.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv.FeatureDataCsvParser">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.datasets.feature_data_csv.</span></span><span class="sig-name descname"><span class="pre">FeatureDataCsvParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_id_column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_id_column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">role_assignment_column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvParser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="lir.data.html#lir.data.models.DataProvider" title="lir.data.models.DataProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataProvider</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Parses a csv file into a FeatureData object.</p>
+<p>This is an abstract class with implementations for different sources:
+- for reading from a local file, use <cite>FeatureDataCsvFileParser</cite>;
+- for reading from a URL, use <cite>FeatureDataCsvHttpParser</cite>;
+- for reading from a stream, use <cite>FeatureDataCsvStreamParser</cite>.</p>
+<p>Example: let’s say we have data with two features and source ids.</p>
+<p><code class="docutils literal notranslate"><span class="pre">`csv</span>
+<span class="pre">source_id,feature1,feature2,feature3,name_of_an_irrelevant_column</span>
+<span class="pre">0,1,10,1,sherlock</span>
+<span class="pre">0,1,11,1,holmes</span>
+<span class="pre">1,20,30,1,irene</span>
+<span class="pre">1,18,32,3,adler</span>
+<span class="pre">2,5,10,8,professor</span>
+<span class="pre">2,1,11,8,moriarty</span>
+<span class="pre">`</span></code></p>
+<p>This file can be parsed from the following YAML:
+<a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>yaml
+data:</p>
+<blockquote>
+<div><p>provider: feature_data_csv
+path: path/to/file.csv
+source_id_column: source_id
+ignore_columns:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>name_of_an_irrelevant_column</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+<p><a href="#id5"><span class="problematic" id="id6">``</span></a><a href="#id7"><span class="problematic" id="id8">`</span></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv.FeatureDataCsvStreamParser">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.datasets.feature_data_csv.</span></span><span class="sig-name descname"><span class="pre">FeatureDataCsvStreamParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">IO</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvStreamParser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvParser" title="lir.data.datasets.feature_data_csv.FeatureDataCsvParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureDataCsvParser</span></code></a></p>
+<p>Read data from a streamed CSV.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv.FeatureDataCsvStreamParser.get_instances">
+<span class="sig-name descname"><span class="pre">get_instances</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">FeatureData</span></a></span></span><a class="headerlink" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvStreamParser.get_instances" title="Link to this definition"></a></dt>
+<dd><p>Retrieve FeatureData instances from CSV stream.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-lir.data.datasets.glass">
+<span id="lir-data-datasets-glass-module"></span><h2>lir.data.datasets.glass module<a class="headerlink" href="#module-lir.data.datasets.glass" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.datasets.glass.GlassData">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.datasets.glass.</span></span><span class="sig-name descname"><span class="pre">GlassData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PathLike</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.data.datasets.glass.GlassData" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="lir.data.html#lir.data.models.DataProvider" title="lir.data.models.DataProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataProvider</span></code></a></p>
+<p>LA-ICP-MS measurements of elemental concentration from floatglass.</p>
+<p>The measurements are from reference glass from casework, collected in the past 10 years or so.
+For more info on the DataProvider, see: <a class="reference external" href="https://github.com/NetherlandsForensicInstitute/elemental_composition_glass">https://github.com/NetherlandsForensicInstitute/elemental_composition_glass</a></p>
+<p>This data provider has a pre-defined train/test split, with a training set of three instances per source, and a test
+set of five instances per source.</p>
+<p>Data are retrieved from the web as needed and stored locally for later use.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.datasets.glass.GlassData.get_instances">
+<span class="sig-name descname"><span class="pre">get_instances</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">FeatureData</span></a></span></span><a class="headerlink" href="#lir.data.datasets.glass.GlassData.get_instances" title="Link to this definition"></a></dt>
+<dd><p>Returns data with pre-defined assignments of training data and test data.</p>
+<p>The training data is read from <cite>training.csv</cite> and has three instances (replicates) per source.
+The test data is read from <cite>duplo.csv</cite> and <cite>triplo.csv</cite> and has a total of five instances per source.</p>
+<p>The features are elemental concentrations on a log_10 basis, and normalized to Si.
+The elements are: K39, Ti49, Mn55, Rb85, Sr88, Zr90, Ba137, La139, Ce140, Pb208</p>
+<p>The source_ids are unique identifiers of a glass particle. Each particle is from a different reference window.
+An instance is a replicate measurement on a glass particle. Source ids are prefixed with the role assignment,
+e.g. ‘test-123’ and ‘train-123’. The ids ‘test-123’ and ‘train-123’ refer to different glass particles (and
+therefore different reference windows).</p>
+<p>The instance_ids values of an instance are a concatenation of the filename and a row number,
+e.g. “training.csv:22”.</p>
+<p>The data are returned as a FeatureData object with the following properties:
+- features: an (n, 10) array of feature values
+- source_ids: a 1d array of source ids (str)
+- instance_ids: a 1d array of unique instance ids (str)
+- role_assignments: a 1d array of role assignments (values “train” or “test”)</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-lir.data.datasets.synthesized_normal_binary">
+<span id="lir-data-datasets-synthesized-normal-binary-module"></span><h2>lir.data.datasets.synthesized_normal_binary module<a class="headerlink" href="#module-lir.data.datasets.synthesized_normal_binary" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.datasets.synthesized_normal_binary.SynthesizedNormalBinaryData">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.datasets.synthesized_normal_binary.</span></span><span class="sig-name descname"><span class="pre">SynthesizedNormalBinaryData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#lir.data.datasets.synthesized_normal_binary.SynthesizedNormalDataClass" title="lir.data.datasets.synthesized_normal_binary.SynthesizedNormalDataClass"><span class="pre">SynthesizedNormalDataClass</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.data.datasets.synthesized_normal_binary.SynthesizedNormalBinaryData" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="lir.data.html#lir.data.models.DataProvider" title="lir.data.models.DataProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataProvider</span></code></a></p>
+<p>Implementation of a data source generating normally distributed binary class data.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.datasets.synthesized_normal_binary.SynthesizedNormalBinaryData.get_instances">
+<span class="sig-name descname"><span class="pre">get_instances</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">FeatureData</span></a></span></span><a class="headerlink" href="#lir.data.datasets.synthesized_normal_binary.SynthesizedNormalBinaryData.get_instances" title="Link to this definition"></a></dt>
+<dd><p>Returns instances with randomly synthesized data and binary labels.</p>
+<p>The features are drawn from a normal distribution, as configured. The meta data vector is empty, with
+dimensions <cite>(n, 0)</cite>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.datasets.synthesized_normal_binary.SynthesizedNormalDataClass">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.datasets.synthesized_normal_binary.</span></span><span class="sig-name descname"><span class="pre">SynthesizedNormalDataClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.data.datasets.synthesized_normal_binary.SynthesizedNormalDataClass" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Representation of normally distributed data, leveraging a number generator.</p>
+<p>The generated data can be used to generate normally distributed data and is useful
+for debugging purposes or gaining insight in the effect of varying parts within the
+LR system pipeline.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.datasets.synthesized_normal_binary.SynthesizedNormalDataClass.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Generator</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#lir.data.datasets.synthesized_normal_binary.SynthesizedNormalDataClass.get" title="Link to this definition"></a></dt>
+<dd><p>Draw random samples from a normally distributed data set.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-lir.data.datasets.synthesized_normal_multiclass">
+<span id="lir-data-datasets-synthesized-normal-multiclass-module"></span><h2>lir.data.datasets.synthesized_normal_multiclass module<a class="headerlink" href="#module-lir.data.datasets.synthesized_normal_multiclass" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.datasets.synthesized_normal_multiclass.</span></span><span class="sig-name descname"><span class="pre">SynthesizedDimension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">population_mean</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">population_std</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sources_std</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">NamedTuple</span></code></p>
+<p>Representation of a data distribution.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension.population_mean">
+<span class="sig-name descname"><span class="pre">population_mean</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><a class="headerlink" href="#lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension.population_mean" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension.population_std">
+<span class="sig-name descname"><span class="pre">population_std</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><a class="headerlink" href="#lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension.population_std" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension.sources_std">
+<span class="sig-name descname"><span class="pre">sources_std</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><a class="headerlink" href="#lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension.sources_std" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.datasets.synthesized_normal_multiclass.SynthesizedNormalMulticlassData">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.datasets.synthesized_normal_multiclass.</span></span><span class="sig-name descname"><span class="pre">SynthesizedNormalMulticlassData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension" title="lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension"><span class="pre">SynthesizedDimension</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">population_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sources_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.data.datasets.synthesized_normal_multiclass.SynthesizedNormalMulticlassData" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="lir.data.html#lir.data.models.DataProvider" title="lir.data.models.DataProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataProvider</span></code></a></p>
+<p>Implementation of a data source generating normally distributed multiclass data.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.datasets.synthesized_normal_multiclass.SynthesizedNormalMulticlassData.get_instances">
+<span class="sig-name descname"><span class="pre">get_instances</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">FeatureData</span></a></span></span><a class="headerlink" href="#lir.data.datasets.synthesized_normal_multiclass.SynthesizedNormalMulticlassData.get_instances" title="Link to this definition"></a></dt>
+<dd><p>Return instances with randomly synthesized data and multi-class labels.</p>
+<p>The features are drawn from a normal distribution, as configured.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-lir.data.datasets">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-lir.data.datasets" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lir.data.html" class="btn btn-neutral float-left" title="lir.data package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lir.lrsystems.html" class="btn btn-neutral float-right" title="lir.lrsystems package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

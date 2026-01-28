@@ -1,0 +1,236 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guides &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="LR System selection helper" href="lrsystem_yaml.html" />
+    <link rel="prev" title="Getting started" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Getting started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lr_calculation.html">[TODO] Calculation of LR’s from scores</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lr_calculation.html#a-simple-score-based-lr-system">A simple score-based LR system</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/lir.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/lir.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.algorithms.html">lir.algorithms package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.config.html">lir.config package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.data.html">lir.data package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.lrsystems.html">lir.lrsystems package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.metrics.html">lir.metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.plotting.html">lir.plotting package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.resources.html">lir.resources package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.transform.html">lir.transform package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/lir.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/lir.html#module-lir.aggregation">lir.aggregation module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.aggregation.AggregatePlot"><code class="docutils literal notranslate"><span class="pre">AggregatePlot</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.aggregation.Aggregation"><code class="docutils literal notranslate"><span class="pre">Aggregation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.aggregation.AggregationData"><code class="docutils literal notranslate"><span class="pre">AggregationData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.aggregation.WriteMetricsToCsv"><code class="docutils literal notranslate"><span class="pre">WriteMetricsToCsv</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/lir.html#module-lir.bounding">lir.bounding module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.bounding.LLRBounder"><code class="docutils literal notranslate"><span class="pre">LLRBounder</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.bounding.NSourceBounder"><code class="docutils literal notranslate"><span class="pre">NSourceBounder</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.bounding.StaticBounder"><code class="docutils literal notranslate"><span class="pre">StaticBounder</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/lir.html#module-lir.experiment">lir.experiment module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.experiment.Experiment"><code class="docutils literal notranslate"><span class="pre">Experiment</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.experiment.PredefinedExperiment"><code class="docutils literal notranslate"><span class="pre">PredefinedExperiment</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/lir.html#module-lir.main">lir.main module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.main.copy_yaml_definition"><code class="docutils literal notranslate"><span class="pre">copy_yaml_definition()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.main.error"><code class="docutils literal notranslate"><span class="pre">error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.main.initialize_experiments"><code class="docutils literal notranslate"><span class="pre">initialize_experiments()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.main.initialize_logfile"><code class="docutils literal notranslate"><span class="pre">initialize_logfile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.main.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.main.setup_logging"><code class="docutils literal notranslate"><span class="pre">setup_logging()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/lir.html#module-lir.optuna">lir.optuna module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.optuna.OptunaExperiment"><code class="docutils literal notranslate"><span class="pre">OptunaExperiment</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/lir.html#module-lir.persistence">lir.persistence module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.persistence.SaveModel"><code class="docutils literal notranslate"><span class="pre">SaveModel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.persistence.load_model"><code class="docutils literal notranslate"><span class="pre">load_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.persistence.save_model"><code class="docutils literal notranslate"><span class="pre">save_model()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/lir.html#module-lir.registry">lir.registry module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.registry.ClassLoader"><code class="docutils literal notranslate"><span class="pre">ClassLoader</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.registry.ComponentNotFoundError"><code class="docutils literal notranslate"><span class="pre">ComponentNotFoundError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.registry.ConfigParserLoader"><code class="docutils literal notranslate"><span class="pre">ConfigParserLoader</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.registry.FederatedLoader"><code class="docutils literal notranslate"><span class="pre">FederatedLoader</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.registry.InvalidRegistryEntryError"><code class="docutils literal notranslate"><span class="pre">InvalidRegistryEntryError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.registry.YamlRegistry"><code class="docutils literal notranslate"><span class="pre">YamlRegistry</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.registry.get"><code class="docutils literal notranslate"><span class="pre">get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.registry.registry"><code class="docutils literal notranslate"><span class="pre">registry()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/lir.html#module-lir.util">lir.util module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.util.Bind"><code class="docutils literal notranslate"><span class="pre">Bind</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.util.LR"><code class="docutils literal notranslate"><span class="pre">LR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.util.Xn_to_Xy"><code class="docutils literal notranslate"><span class="pre">Xn_to_Xy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.util.Xy_to_Xn"><code class="docutils literal notranslate"><span class="pre">Xy_to_Xn()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.util.check_type"><code class="docutils literal notranslate"><span class="pre">check_type()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.util.get_classes_from_Xy"><code class="docutils literal notranslate"><span class="pre">get_classes_from_Xy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.util.ln_to_log10"><code class="docutils literal notranslate"><span class="pre">ln_to_log10()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.util.logodds_to_odds"><code class="docutils literal notranslate"><span class="pre">logodds_to_odds()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.util.logodds_to_probability"><code class="docutils literal notranslate"><span class="pre">logodds_to_probability()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.util.odds_to_logodds"><code class="docutils literal notranslate"><span class="pre">odds_to_logodds()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.util.odds_to_probability"><code class="docutils literal notranslate"><span class="pre">odds_to_probability()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.util.probability_to_logodds"><code class="docutils literal notranslate"><span class="pre">probability_to_logodds()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.util.probability_to_odds"><code class="docutils literal notranslate"><span class="pre">probability_to_odds()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.util.warn_deprecated"><code class="docutils literal notranslate"><span class="pre">warn_deprecated()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/lir.html#module-lir.visualization">lir.visualization module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.visualization.ece"><code class="docutils literal notranslate"><span class="pre">ece()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.visualization.llr_interval"><code class="docutils literal notranslate"><span class="pre">llr_interval()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.visualization.lr_histogram"><code class="docutils literal notranslate"><span class="pre">lr_histogram()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.visualization.pav"><code class="docutils literal notranslate"><span class="pre">pav()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/lir.html#module-lir">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Guides</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/guides.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="guides">
+<h1>Guides<a class="headerlink" href="#guides" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="lrsystem_yaml.html">LR System selection helper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lr_calculation.html">[TODO] Calculation of LR’s from scores</a></li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Getting started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lrsystem_yaml.html" class="btn btn-neutral float-right" title="LR System selection helper" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

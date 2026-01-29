@@ -81,7 +81,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
 
     def __init__(
         self,
-        source_id_column: str | None = None,
+        source_id_column: str | list[str] | None = None,
         label_column: str | None = None,
         instance_id_column: str | None = None,
         role_assignment_column: str | None = None,
@@ -92,9 +92,10 @@ class FeatureDataCsvParser(DataProvider, ABC):
         """
         Initializes the parser.
 
-        Special columns can be assigned as such (see below). All other columns are interpreted as feature columns.
+        Special columns can be assigned as such or can be ignored (see below). All other columns are interpreted as
+        feature columns. All arguments are optional.
 
-        :param source_id_column: the name of the column that has the source ids (str)
+        :param source_id_column: the name (or list of two names) of the column that has the source ids
         :param label_column: the name of the column that contains the hypothesis label (0 or 1)
         :param instance_id_column: the name of the column that contains the instance id (str)
         :param role_assignment_column: the name of the column that contains the role assignment ("train" or "test")
@@ -102,7 +103,12 @@ class FeatureDataCsvParser(DataProvider, ABC):
         :param ignore_columns: the names of the columns that should be ignored
         :param message_prefix: a string to prefix to all log and error messages
         """
-        self.source_id_column = source_id_column
+        self.source_id_columns: list[str] = (
+            [source_id_column] if isinstance(source_id_column, str) else source_id_column or []
+        )
+        if len(self.source_id_columns) > 2:
+            raise ValueError(f'the number of source id columns can be at most 2; found: {len(self.source_id_columns)}')
+
         self.label_column = label_column
         self.instance_id_column = instance_id_column
         self.role_assignment_column = role_assignment_column
@@ -134,36 +140,34 @@ class FeatureDataCsvParser(DataProvider, ABC):
         if reader.fieldnames is None:
             raise ValueError(f'{self._message_prefix}empty file')
 
+        # identify the non feature columns
+        non_feature_columns = (
+            [
+                ('label_column', self.label_column),
+                ('instance_id_column', self.instance_id_column),
+                ('role_assignment_column', self.role_assignment_column),
+            ]
+            + [('source_id_column', column_name) for column_name in self.source_id_columns]
+            + [
+                ('extra_fields', column_name)
+                for column_name in chain.from_iterable([field.column_names for field in self.extra_fields])
+            ]
+            + [('ignore_columns', column_name) for column_name in self.ignore_columns]
+        )
+
         # check if all required columns exist in the csv file
-        for name, value in [
-            ('source_id_column', self.source_id_column),
-            ('label_column', self.label_column),
-            ('instance_id_column', self.instance_id_column),
-            ('role_assignment_column', self.role_assignment_column),
-        ]:
+        for name, value in non_feature_columns:
             if value is not None and value not in reader.fieldnames:
                 raise ValueError(
                     f'{self._message_prefix}{name} specified as `{value}`, but it is not present in the csv file'
                 )
 
-        # Warn if any ignore columns are not found
-        for col in self.ignore_columns:
-            if col not in reader.fieldnames:
-                LOG.warning(f'{self._message_prefix}: `{col}` was given as a ignore_column, but it is not present.')
-
         # identify the feature columns
-        special_columns = [
-            self.source_id_column,
-            self.label_column,
-            self.instance_id_column,
-            self.role_assignment_column,
-        ] + self.ignore_columns
-        special_columns += chain(*[field.column_names for field in self.extra_fields])
-
-        feature_columns = [fieldname for fieldname in reader.fieldnames if fieldname not in special_columns]
+        non_feature_column_names = {column_name for _, column_name in non_feature_columns}
+        feature_columns = [fieldname for fieldname in reader.fieldnames if fieldname not in non_feature_column_names]
 
         # initialize the result values
-        source_ids = []
+        source_ids: list[list[Any]] | None = [] if self.source_id_columns else None
         labels = []
         instance_ids = []
         role_assignments = []
@@ -172,8 +176,8 @@ class FeatureDataCsvParser(DataProvider, ABC):
 
         # read the file, row by row
         for row in reader:
-            if self.source_id_column is not None:
-                source_ids.append(row[self.source_id_column])
+            if source_ids is not None:
+                source_ids.append([row[column_name] for column_name in self.source_id_columns])
             if self.label_column is not None:
                 labels.append(self._parse_value(reader.line_num, self.label_column, row[self.label_column], int))
             if self.instance_id_column is not None:
@@ -192,7 +196,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
 
         # finalize the data
         data = {
-            'source_ids': np.array(source_ids) if self.source_id_column is not None else None,
+            'source_ids': np.array(source_ids) if source_ids else None,
             'labels': np.array(labels) if self.label_column is not None else None,
             'features': np.array(features),
         }

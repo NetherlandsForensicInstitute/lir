@@ -64,6 +64,24 @@ from lir.data.models import FeatureData
             '1 row, 2 features, with label, source_id',
         ),
         (
+            'source_id0,source_id1,feature1,feature2\n10,11,1,1\n',
+            {'source_id_column': ['source_id0', 'source_id1']},
+            FeatureData(source_ids=np.array([['10', '11']]), features=np.ones((1, 2))),
+            '1 row, two source_id columns',
+        ),
+        (
+            'source_id0,source_id1,feature1,feature2\n10,11,1,1\n',
+            {'source_id_column': ['source_id0', 'source_id2']},
+            None,
+            '1 row, invalid source_id column',
+        ),
+        (
+            'source_id0,source_id1,source_id2,feature1,feature2\n10,11,12,1,1\n',
+            {'source_id_column': ['source_id0', 'source_id1', 'source_id2']},
+            None,
+            '1 row, three source_id columns',
+        ),
+        (
             'source_id,instance_id,feature1,feature2\n10,11,1,1\n',
             {'instance_id_column': 'instance_id', 'source_id_column': 'source_id'},
             FeatureData(source_ids=np.array(['10']), instance_ids=np.array(['11']), features=np.ones((1, 2))),

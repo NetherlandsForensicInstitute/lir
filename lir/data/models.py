@@ -24,20 +24,43 @@ def _validate_labels(labels: np.ndarray | None) -> np.ndarray | None:
     return labels
 
 
+def _validate_source_ids(source_ids: np.ndarray | None) -> np.ndarray | None:
+    """Check if source_ids have the correct shape."""
+    if source_ids is None:
+        return source_ids
+
+    if len(source_ids.shape) == 1:
+        return source_ids
+
+    # if we have a 2d array with one column, silently reshape it to 1d
+    if len(source_ids.shape) == 2 and source_ids.shape[1] == 1:
+        return source_ids.reshape(-1)
+
+    if len(source_ids.shape) == 2 and source_ids.shape[1] == 2:
+        return source_ids
+
+    raise ValueError(
+        f'source_ids must be either 1-dimensional or 2-dimensional with 2 columns; found shape {source_ids.shape}'
+    )
+
+
 class InstanceData(BaseModel, ABC):
     """
     Base class for data on instances.
 
     Attributes
     ----------
-    - labels: an array of labels, a 1-dimensional array with one value per instance
-    - source_ids: an array of source ids, a 2-dimensional array with one column and one value per instance
+    - `labels`: The hypothesis labels of the instances, as a 1-dimensional array with one value per instance, can be
+      either 0 or 1.
+    - `source_ids`: The ids of all sources that contributed to the instances. Each instance is from a single source,
+      except if it is a pair, in which case it has two sources. The source ids is either a 1-dimensional array or a
+      2-dimensional array with two columns.
     """
 
     model_config = ConfigDict(frozen=True, extra='allow', arbitrary_types_allowed=True)
 
     labels: Annotated[np.ndarray | None, AfterValidator(_validate_labels)] = None
-    source_ids: np.ndarray | None = None
+    source_ids: Annotated[np.ndarray | None, AfterValidator(_validate_source_ids)] = None
 
     @property
     def require_labels(self) -> np.ndarray:
@@ -57,16 +80,14 @@ class InstanceData(BaseModel, ABC):
 
         return self
 
-    @model_validator(mode='after')
-    def check_sourceid_shape(self) -> Self:
-        """Validate the shape of the source_ids."""
+    @property
+    def source_ids_1d(self) -> np.ndarray:
+        """:return: the attribute `source_ids` as a 1-dimensional array, with one source id per instance"""
         if self.source_ids is None:
-            return self
-
-        # TODO: validate shape
-        # if len(self.source_ids.shape) != 2 or self.source_ids.shape[1] != 1:
-        #    raise ValueError(f'source_ids should be 2-dimensional with 1 column; found shape {self.source_ids.shape}')
-        return self
+            raise ValueError('source_ids not available')
+        if len(self.source_ids.shape) != 1:
+            raise ValueError(f'expected one source per instance; source_ids has illegal shape {self.source_ids.shape}')
+        return self.source_ids
 
     @abstractmethod
     def __len__(self) -> int:

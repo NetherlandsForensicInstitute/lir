@@ -34,9 +34,9 @@ def test_instance_data():
     assert BareData(labels=np.ones((10,)), meta=2) != BareData(labels=np.ones((10,)))
 
     # test slicing
-    assert np.all(BareData(source_ids=np.arange(10))[:5].source_ids == np.arange(5))
+    assert np.all(BareData(source_ids=np.arange(10))[:5].source_ids_1d == np.arange(5))
     assert np.all(BareData(labels=np.repeat([0, 1, 0, 1], 2))[:5].labels == np.array([0, 0, 1, 1, 0]))
-    assert BareData(source_ids=np.arange(10))[8:9].source_ids == np.array([8])
+    assert BareData(source_ids=np.arange(10))[8:9].source_ids_1d == np.array([8])
 
     # illegal labels type
     with pytest.raises(ValidationError):

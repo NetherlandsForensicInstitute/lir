@@ -289,7 +289,7 @@ def _parse_cell_type(value: str) -> Callable[[str], Any]:
 def _parse_extra_field(config: ContextAwareDict) -> ExtraField:
     name = pop_field(config, 'name')
     columns = pop_field(config, 'columns', validate=partial(check_type, list))
-    cell_type = pop_field(config, 'cell_type', validate=_parse_cell_type)
+    cell_type = pop_field(config, 'cell_type', validate=_parse_cell_type, default=str)
     check_is_empty(config)
     return ExtraField(name, columns, cell_type)
 

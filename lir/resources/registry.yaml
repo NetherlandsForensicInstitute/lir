@@ -88,6 +88,7 @@ output:
   invariance_delta_function: lir.aggregation.plot_invariance_delta_function
   tippett: lir.aggregation.plot_tippett
   save_model: lir.persistence.parse_save_model
+  by_category: lir.config.aggregation.subset_aggregation
   
 pairing:
   instance_pairs: lir.transform.pairing.InstancePairing

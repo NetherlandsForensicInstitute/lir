@@ -34,6 +34,7 @@ extensions = [
     'sphinx_rtd_theme',
     'sphinx.ext.napoleon',
     'sphinx_jinja',
+    'jupyter_sphinx',
 ]
 
 
@@ -68,28 +69,28 @@ html_theme_options = {
 html_sidebars = {'**': ['globaltoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html']}
 
 
-def is_module(name: str) -> bool:
-    """Check whether the given name corresponds to a module in the lir package."""
+def is_package(name: str) -> bool:
+    """:return: True iff the name refers to a package."""
     source_path = Path(__file__).parent.parent / name.replace('.', '/')
     return source_path.is_dir()
 
 
 def get_apidocs_uri(class_name: str | ConfigParser) -> str:
-    """Get the URI to the API documentation page for the given class name."""
+    """:return: the URI that points to the documentation of the named class or `ConfigParser` object."""
     if isinstance(class_name, ConfigParser):
         class_name = class_name.reference()
 
     parts = class_name.split('.')
     for i in range(1, len(parts)):
         module_name = '.'.join(parts[:-i])
-        if is_module(module_name):
+        if is_package(module_name):
             return f'api/{module_name}.html#{class_name}'
 
     return 'api/lir.html'
 
 
 def get_docstr_short(class_name: str | ConfigParser) -> str:
-    """Get the short form of the docstring for the given class name."""
+    """:return: a short version of the docstr of the named class or `ConfigParser` object."""
     if isinstance(class_name, ConfigParser):
         class_name = class_name.reference()
 

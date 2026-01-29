@@ -17,7 +17,7 @@ from lir.config.base import (
     pop_field,
 )
 from lir.config.lrsystem_architectures import (
-    parse_augmented_config,
+    augment_config,
 )
 from lir.config.metrics import parse_individual_metric
 from lir.config.substitution import (
@@ -116,7 +116,7 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         """
         return self._parse_config_with_parameters('data', 'dataparameters')
 
-    def lrsystem(self) -> tuple[ContextAwareDict, list[Hyperparameter]]:
+    def lrsystem_config(self) -> tuple[ContextAwareDict, list[Hyperparameter]]:
         """Parse the LR System section including hyperparameters.
 
         The baseline configuration is provided along with the specified parameters to vary (the
@@ -146,10 +146,9 @@ class SingleRunStrategy(ExperimentStrategyConfigParser):
 
     def get_experiment(self, name: str) -> Experiment:
         """Get an experiment for a single run, based on its name."""
-        data_config, _ = self.data_config()
         return PredefinedExperiment(
             name,
-            [(data_config, {})],
+            [(pop_field(self._config, 'data'), {})],
             self.output_list(),
             self._output_dir,
             [(pop_field(self._config, 'lr_system'), {})],
@@ -179,7 +178,7 @@ def create_configs_from_hyperparameters(
 
     for value_set in product(*parameter_values):
         substitutions = dict(zip(parameter_names, value_set, strict=True))
-        substituted_config = parse_augmented_config(baseline_config, substitutions)
+        substituted_config = augment_config(baseline_config, substitutions)
         configs.append((substituted_config, substitutions))
 
     return configs
@@ -190,7 +189,7 @@ class GridStrategy(ExperimentStrategyConfigParser):
 
     def get_experiment(self, name: str) -> Experiment:
         """Get experiment for the grid strategy run, based on its name."""
-        lrsystem_configs = create_configs_from_hyperparameters(*self.lrsystem())
+        lrsystem_configs = create_configs_from_hyperparameters(*self.lrsystem_config())
         data_configs = create_configs_from_hyperparameters(*self.data_config())
 
         return PredefinedExperiment(
@@ -207,7 +206,7 @@ class OptunaStrategy(ExperimentStrategyConfigParser):
 
     def get_experiment(self, name: str) -> Experiment:
         """Get experiment for the optuna run, based on its name."""
-        baseline_config, parameters = self.lrsystem()
+        baseline_config, parameters = self.lrsystem_config()
         n_trials = pop_field(self._config, 'n_trials', validate=int)
 
         return OptunaExperiment(

@@ -7,7 +7,7 @@ import optuna
 
 from lir.aggregation import Aggregation
 from lir.config.data import parse_data_object
-from lir.config.lrsystem_architectures import parse_augmented_config
+from lir.config.lrsystem_architectures import augment_config
 from lir.config.substitution import (
     ContextAwareDict,
     FloatHyperparameter,
@@ -67,7 +67,7 @@ class OptunaExperiment(Experiment):
 
     def _objective(self, trial: optuna.Trial) -> float:
         assignments = self._get_hyperparameter_substitutions(trial)
-        lr_system = parse_augmented_config(deepcopy(self.baseline_config), assignments)
+        lr_system = augment_config(deepcopy(self.baseline_config), assignments)
 
         # add optuna values as system parameters
         hyperparameters: dict[str, Any] = assignments

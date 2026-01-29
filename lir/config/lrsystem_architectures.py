@@ -151,7 +151,7 @@ def parse_lrsystem(config: ContextAwareDict, output_dir: Path) -> ParsedLRSystem
     return ParsedLRSystem(lrsystem, lrsystem_config)
 
 
-def parse_augmented_config(
+def augment_config(
     baseline_config: ContextAwareDict, hyperparameters: dict[str, HyperparameterOption]
 ) -> ContextAwareDict:
     """

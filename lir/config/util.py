@@ -23,7 +23,7 @@ class TeeParser(ConfigParser):
         return Tee(transformers)
 
 
-def simplify_data_structure(data: Any) -> Any:
+def simplify_data_structure(data: Any) -> dict | list | str | float | int | bool | None:
     """Simplify data structure: specialized data types are replaced.
 
     For example, `ContextAwareDict` is replaced by `dict`.

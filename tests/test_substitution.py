@@ -5,7 +5,7 @@ from typing import Any
 import confidence
 import pytest
 
-from lir.config.substitution import FolderHyperparameter, HyperparameterOption, _expand, parse_hyperparameter
+from lir.config.substitution import FolderHyperparameter, HyperparameterOption, _expand, parse_parameter
 from lir.data.io import search_path
 
 
@@ -87,7 +87,7 @@ from lir.data.io import search_path
 )
 def test_substitution(desc, yaml: str, expected_options: list[Any]):
     cfg = _expand([], confidence.loads(yaml))
-    param = parse_hyperparameter(cfg, Path('/'))
+    param = parse_parameter(cfg, Path('/'))
     assert param.options() == expected_options, desc
 
 

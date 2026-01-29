@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
-from typing import Any
+from typing import Any, TypeVar
 
 from lir import registry
 from lir.transform.pairing import PairingMethod
@@ -204,10 +204,13 @@ def parse_pairing_config(
     )
 
 
-def check_not_none(v: Any) -> Any:
+AnyType = TypeVar('AnyType')
+
+
+def check_not_none[AnyType](v: AnyType | None, message: str | None = None) -> AnyType:
     """Validate the value to not be equal to None."""
     if v is None:
-        raise ValueError('value None is not allowed here')
+        raise ValueError(message or 'value None is not allowed here')
     return v
 
 

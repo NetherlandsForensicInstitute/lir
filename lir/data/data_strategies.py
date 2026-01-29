@@ -1,10 +1,12 @@
-from collections.abc import Iterable
+from collections.abc import Iterable, Iterator
 from enum import Enum
+from typing import Any
 
 import numpy as np
 import sklearn
 from sklearn.model_selection import GroupKFold, GroupShuffleSplit, KFold
 
+from lir.config.base import check_not_none
 from lir.data.models import DataStrategy, FeatureData
 
 
@@ -109,6 +111,37 @@ class MulticlassCrossValidation(DataStrategy):
 
         for _i, (train_index, test_index) in enumerate(kf.split(instances.features, groups=instances.source_ids)):
             yield instances[train_index], instances[test_index]
+
+
+class PairedInstancesTrainTestSplit(DataStrategy):
+    """A train/test split policy for paired instances.
+
+    The input data should have source_ids with two columns. This split assigns all sources to either the training set or
+    the test set. The pairs are assigned to training or testing if both of their sources have that role. Pairs with
+    mixed roles are omitted.
+    """
+
+    def __init__(self, test_size: float | int, seed: int | None = None):
+        self.test_size = test_size
+        self.seed = seed
+
+    def apply(self, instances: FeatureData) -> Iterator[tuple[FeatureData, FeatureData]]:
+        """Allow iteration by looping over the resulting train/test split(s)."""
+        source_ids_1d = np.unique(check_not_none(instances.source_ids, 'missing field: `source_ids`'))
+        sources_train, sources_test = sklearn.model_selection.train_test_split(
+            source_ids_1d, test_size=self.test_size, shuffle=True, random_state=self.seed
+        )
+
+        sources_train = set(sources_train)
+
+        def use_in_training(value: Any) -> bool:
+            return value in sources_train
+
+        training_source_ids = np.vectorize(use_in_training)(instances.source_ids)
+        training_instances = np.all(training_source_ids, axis=1)
+        test_instances = np.all(~training_source_ids, axis=1)
+
+        yield instances[training_instances], instances[test_instances]
 
 
 class RoleAssignment(Enum):

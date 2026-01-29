@@ -1,11 +1,12 @@
 import numpy as np
 
-from lir.data.data_strategies import MulticlassTrainTestSplit, PredefinedTrainTestSplit
+from lir.data.data_strategies import MulticlassTrainTestSplit, PairedInstancesTrainTestSplit, PredefinedTrainTestSplit
 from lir.data.datasets.synthesized_normal_multiclass import (
     SynthesizedDimension,
     SynthesizedNormalMulticlassData,
 )
 from lir.data.models import FeatureData
+from lir.transform.pairing import InstancePairing
 
 
 def test_multiclass_train_test_split():
@@ -44,6 +45,18 @@ def test_multiclass_train_test_split_seed():
     for data_train, data_test in strategy.apply(data):
         assert data_train != ref_train
         assert data_test != ref_test
+
+
+def test_paired_train_test_split():
+    instances = FeatureData(features=np.ones(20), source_ids=np.arange(10).repeat(2))
+    pairs = InstancePairing().pair(instances)
+    training_pairs, test_pairs = next(iter(PairedInstancesTrainTestSplit(test_size=0.5, seed=0).apply(pairs)))
+    assert len(training_pairs) == len(test_pairs) == 10 * 9 / 2
+    assert len(np.unique(training_pairs.source_ids)) == 5, 'half of the sources are for training'
+    assert len(np.unique(test_pairs.source_ids)) == 5, 'half of the sources are for testing'
+    assert len(np.unique(np.concatenate([test_pairs.source_ids, training_pairs.source_ids]))) == 10, (
+        'all sources are for training or testing'
+    )
 
 
 def test_predefined_role_splitter():

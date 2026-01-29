@@ -4,6 +4,7 @@ from collections.abc import Callable, Mapping, Sequence
 from functools import partial
 from itertools import product
 from pathlib import Path
+from typing import Any
 
 from lir import registry
 from lir.aggregation import Aggregation
@@ -15,19 +16,15 @@ from lir.config.base import (
     check_type,
     pop_field,
 )
-from lir.config.data_providers import parse_data_provider
-from lir.config.data_strategies import parse_data_strategy
 from lir.config.lrsystem_architectures import (
-    parse_augmented_lrsystem,
-    parse_lrsystem,
+    augment_config,
 )
 from lir.config.metrics import parse_individual_metric
 from lir.config.substitution import (
     ContextAwareDict,
     Hyperparameter,
-    parse_hyperparameter,
+    parse_parameter,
 )
-from lir.data.models import DataProvider, DataStrategy
 from lir.experiment import Experiment, PredefinedExperiment
 from lir.optuna import OptunaExperiment
 
@@ -38,17 +35,6 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
     def __init__(self) -> None:
         self._config: ContextAwareDict
         self._output_dir: Path
-
-    def data(self) -> tuple[DataProvider, DataStrategy]:
-        """Parse the data section of the configuration.
-
-        The corresponding data provider and splitting strategy instances are provided.
-        """
-        data_section = pop_field(self._config, 'data')
-        provider = parse_data_provider(pop_field(data_section, 'provider'), self._output_dir)
-        splitter = parse_data_strategy(pop_field(data_section, 'splits'), self._output_dir)
-        check_is_empty(data_section)
-        return provider, splitter
 
     def primary_metric(self) -> Callable:
         """Parse the `primary_metric` field."""
@@ -96,33 +82,47 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
 
         return results
 
-    def lrsystem(self) -> tuple[ContextAwareDict, list[Hyperparameter]]:
+    @abstractmethod
+    def get_experiment(self, name: str) -> Experiment:
+        """Get the experiment by `name` for the defined LR system."""
+        raise NotImplementedError
+
+    def _parse_config_with_parameters(
+        self,
+        config_field: str,
+        parameters_field: str,
+    ) -> tuple[ContextAwareDict, list[Hyperparameter]]:
+        """Extract a configuration section and its associated parameters.
+
+        :param config_field: the name of the field containing the baseline configuration
+        :param parameters_field: the name of the field containing the parameters to vary
+        :return: a tuple of (baseline_config, list of hyperparameters)
+        """
+        baseline_config = pop_field(self._config, config_field)
+        if baseline_config is None:
+            baseline_config = ContextAwareDict(self._config.context + [config_field])
+
+        parameters = []
+        if parameters_field in self._config:
+            parameters = self._config.pop(parameters_field)
+            parameters = [parse_parameter(variable, self._output_dir) for variable in parameters]
+
+        return baseline_config, parameters
+
+    def data_config(self) -> tuple[ContextAwareDict, list[Hyperparameter]]:
+        """Prepare the data provider and data strategy from the configuration.
+
+        The (hyper)parameters to vary for the data provider and data strategy are also parsed.
+        """
+        return self._parse_config_with_parameters('data', 'dataparameters')
+
+    def lrsystem_config(self) -> tuple[ContextAwareDict, list[Hyperparameter]]:
         """Parse the LR System section including hyperparameters.
 
         The baseline configuration is provided along with the specified parameters to vary (the
         defined hyperparameters).
         """
-        baseline_config = pop_field(self._config, 'lr_system')
-        if baseline_config is None:
-            baseline_config = ContextAwareDict(self._config.context + ['lr_system'])
-
-        parameters = []
-        if 'hyperparameters' in self._config:
-            parameters = self._config.pop('hyperparameters')
-            parameters = [
-                parse_hyperparameter(
-                    variable,
-                    self._output_dir,
-                )
-                for variable in parameters
-            ]
-
-        return baseline_config, parameters
-
-    @abstractmethod
-    def get_experiment(self, name: str) -> Experiment:
-        """Get the experiment by `name` for the defined LR system."""
-        raise NotImplementedError
+        return self._parse_config_with_parameters('lr_system', 'hyperparameters')
 
     def parse(
         self,
@@ -146,17 +146,42 @@ class SingleRunStrategy(ExperimentStrategyConfigParser):
 
     def get_experiment(self, name: str) -> Experiment:
         """Get an experiment for a single run, based on its name."""
-        lrsystem = parse_lrsystem(pop_field(self._config, 'lr_system'), self._output_dir)
-        data_provider, data_splitter = self.data()
-
         return PredefinedExperiment(
             name,
-            data_provider,
-            data_splitter,
+            [(pop_field(self._config, 'data'), {})],
             self.output_list(),
             self._output_dir,
-            [(lrsystem, {})],
+            [(pop_field(self._config, 'lr_system'), {})],
         )
+
+
+def create_configs_from_hyperparameters(
+    baseline_config: ContextAwareDict,
+    parameters: list[Hyperparameter],
+) -> list[tuple[ContextAwareDict, dict[str, Any]]]:
+    """Create configurations for all combinations of hyperparameter options.
+
+    Generates a Cartesian product of all hyperparameter options and creates a configuration
+    for each combination by substituting the values into the baseline configuration.
+
+    This is used for both dataparameters and lrsystem hyperparameters in grid search.
+
+    :param baseline_config: the baseline configuration to augment
+    :param parameters: the hyperparameters to vary
+    :return: a list of tuples, where each tuple contains:
+        - the augmented configuration with substituted values
+        - a dict mapping parameter names to the substituted values
+    """
+    configs = []
+    parameter_names = [param.name for param in parameters]
+    parameter_values = [param.options() for param in parameters]
+
+    for value_set in product(*parameter_values):
+        substitutions = dict(zip(parameter_names, value_set, strict=True))
+        substituted_config = augment_config(baseline_config, substitutions)
+        configs.append((substituted_config, substitutions))
+
+    return configs
 
 
 class GridStrategy(ExperimentStrategyConfigParser):
@@ -164,25 +189,15 @@ class GridStrategy(ExperimentStrategyConfigParser):
 
     def get_experiment(self, name: str) -> Experiment:
         """Get experiment for the grid strategy run, based on its name."""
-        baseline_config, parameters = self.lrsystem()
-
-        lrsystems = []
-        names = [param.name for param in parameters]
-        values = [param.options() for param in parameters]
-        for value_set in product(*values):
-            substitutions = dict(zip(names, value_set, strict=True))
-            lrsystem = parse_augmented_lrsystem(baseline_config, substitutions, self._output_dir)
-            lrsystems.append((lrsystem, substitutions))
-
-        data_provider, data_splitter = self.data()
+        lrsystem_configs = create_configs_from_hyperparameters(*self.lrsystem_config())
+        data_configs = create_configs_from_hyperparameters(*self.data_config())
 
         return PredefinedExperiment(
             name,
-            data_provider,
-            data_splitter,
+            data_configs,
             self.output_list(),
             self._output_dir,
-            lrsystems,
+            lrsystem_configs,
         )
 
 
@@ -191,20 +206,18 @@ class OptunaStrategy(ExperimentStrategyConfigParser):
 
     def get_experiment(self, name: str) -> Experiment:
         """Get experiment for the optuna run, based on its name."""
-        baseline_config, parameters = self.lrsystem()
+        baseline_config, parameters = self.lrsystem_config()
         n_trials = pop_field(self._config, 'n_trials', validate=int)
-        data_provider, data_splitter = self.data()
 
         return OptunaExperiment(
-            name,
-            data_provider,
-            data_splitter,
-            self.output_list(),
-            self._output_dir,
-            baseline_config,
-            parameters,
-            n_trials,
-            self.primary_metric(),
+            name=name,
+            data_config=self.data_config()[0],
+            outputs=self.output_list(),
+            output_path=self._output_dir,
+            baseline_config=baseline_config,
+            hyperparameters=parameters,
+            n_trials=n_trials,
+            metric_function=self.primary_metric(),
         )
 
 

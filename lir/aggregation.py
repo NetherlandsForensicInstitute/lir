@@ -28,12 +28,14 @@ class AggregationData(NamedTuple):
     Fields:
     - llrdata: the LLR data containing LLRs and labels.
     - lrsystem: the model that produced the results
-    - parameters: parameters that identify the system producing the results.
+    - parameters: parameters that identify the system producing the results
+    - run_name: string representation of the run that produced the results
     """
 
     llrdata: LLRData
     lrsystem: LRSystem
     parameters: dict[str, Any]
+    run_name: str
 
 
 class Aggregation(ABC):
@@ -75,27 +77,25 @@ class AggregatePlot(Aggregation):
         fig, ax = plt.subplots()
 
         llrdata = data.llrdata
-        parameters = data.parameters
+        run_name = data.run_name
 
         try:
             self.plot_fn(llrdata=llrdata, ax=ax, **self.plot_fn_args)
         except ValueError as e:
-            LOG.warning(f'Could not generate plot {self.plot_name} for parameters {parameters}: {e}')
+            LOG.warning(f'Could not generate plot {self.plot_name} for run `{run_name}`: {e}')
             return
 
         # Only save the figure when an output path is provided.
         if self.output_path is not None:
             dir_name = self.output_path
-            param_string = '__'.join(f'{k}={v}' for k, v in parameters.items()) + '_' if parameters else ''
-            plot_arguments = (
-                '_' + '_'.join(f'{k}={v}' for k, v in self.plot_fn_args.items()) if self.plot_fn_args else ''
-            )
+            plot_arguments = '_'.join(f'{k}={v}' for k, v in self.plot_fn_args.items()) if self.plot_fn_args else ''
 
-            file_name = dir_name / f'{param_string}{self.plot_name}{plot_arguments}.png'
-            dir_name.mkdir(exist_ok=True, parents=True)
+            file_name = dir_name / run_name / f'{self.plot_name}{plot_arguments}.png'
+            file_name.parent.mkdir(exist_ok=True, parents=True)
 
-            LOG.info(f'Saving plot {self.plot_name} for parameters {parameters} to {file_name}')
+            LOG.info(f'Saving plot {self.plot_name} for run `{run_name}` to {file_name}')
             fig.savefig(file_name)
+            plt.close(fig)
 
 
 @config_parser

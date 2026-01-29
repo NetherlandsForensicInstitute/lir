@@ -14,7 +14,7 @@ from lir.config.base import (
 from lir.config.substitution import (
     ContextAwareDict,
     HyperparameterOption,
-    substitute_hyperparameters,
+    substitute_parameters,
 )
 from lir.config.transform import parse_module
 from lir.data.models import InstanceData, LLRData
@@ -31,10 +31,9 @@ LOG = logging.getLogger(__name__)
 class ParsedLRSystem(LRSystem):
     """Represent a given initialized LR system based on the provided configuration."""
 
-    def __init__(self, lrsystem: LRSystem, config: ContextAwareDict, output_dir: Path):
+    def __init__(self, lrsystem: LRSystem, config: ContextAwareDict):
         self.lrsystem = lrsystem
         self.config = config
-        self.output_dir = output_dir
 
     def fit(self, instances: InstanceData) -> Self:
         """Fit the LR system on the instance data."""
@@ -149,22 +148,20 @@ def parse_lrsystem(config: ContextAwareDict, output_dir: Path) -> ParsedLRSystem
         raise YamlParseError(config.context, f'{e}')
 
     lrsystem = parser.parse(config, output_dir)
-    return ParsedLRSystem(lrsystem, lrsystem_config, output_dir)
+    return ParsedLRSystem(lrsystem, lrsystem_config)
 
 
-def parse_augmented_lrsystem(
-    baseline_lrsystem_config: ContextAwareDict,
-    hyperparameters: dict[str, HyperparameterOption],
-    output_dir: Path,
-    dirname_prefix: str = '',
-) -> ParsedLRSystem:
-    """Parse an augmented LR system.
+def augment_config(
+    baseline_config: ContextAwareDict, hyperparameters: dict[str, HyperparameterOption]
+) -> ContextAwareDict:
+    """
+    Parses an augmented LR system.
 
     The LR system is parsed from a base configuration and a set of parameter substitutions that override parts of the
     base configuration. Results are written to a subdirectory of `output_dir` that is named by its parameter
     substitutions and prefixed by `dirname_prefix`.
 
-    :param baseline_lrsystem_config: the base LR system configuration
+    :param baseline_config: the base LR system configuration
     :param hyperparameters: hyperparameter substitutions that override parts of the base configuration
     :param output_dir: the directory where create a results directory
     :param dirname_prefix: the prefix of the created directory name
@@ -176,14 +173,12 @@ def parse_augmented_lrsystem(
     name = '__'.join([f'{key}={value}' for key, value in hyperparameters.items()])
 
     # generate the YAML context, for debugging and error messages
-    context = baseline_lrsystem_config.context + [f'substitution[{name}]']
+    context = baseline_config.context + [f'substitution[{name}]']
 
     # build the augmented configuration for the LR system
-    augmented_config = substitute_hyperparameters(baseline_lrsystem_config, substitutions, context)
+    augmented_config = substitute_parameters(baseline_config, substitutions, context)
 
-    # construct and return the LR system
-    lrsystem_output_dir = output_dir / f'{dirname_prefix}{name}'
-    return parse_lrsystem(augmented_config, lrsystem_output_dir)
+    return augmented_config
 
 
 def parse_default_pipeline(config: ContextAwareDict) -> str:

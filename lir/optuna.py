@@ -1,18 +1,20 @@
 from collections.abc import Callable, Sequence
+from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
 import optuna
 
 from lir.aggregation import Aggregation
-from lir.config.lrsystem_architectures import parse_augmented_lrsystem
+from lir.config.data import parse_data_object
+from lir.config.lrsystem_architectures import augment_config
 from lir.config.substitution import (
     ContextAwareDict,
     FloatHyperparameter,
     Hyperparameter,
     HyperparameterOption,
 )
-from lir.data.models import DataProvider, DataStrategy, LLRData
+from lir.data.models import LLRData
 from lir.experiment import Experiment
 
 
@@ -22,8 +24,7 @@ class OptunaExperiment(Experiment):
     def __init__(
         self,
         name: str,
-        data_provider: DataProvider,
-        splitter: DataStrategy,
+        data_config: ContextAwareDict,
         outputs: Sequence[Aggregation],
         output_path: Path,
         baseline_config: ContextAwareDict,
@@ -31,7 +32,11 @@ class OptunaExperiment(Experiment):
         n_trials: int,
         metric_function: Callable[[LLRData], float],
     ):
-        super().__init__(name, data_provider, splitter, outputs, output_path)
+        super().__init__(name, outputs, output_path)
+
+        self.data_config = data_config
+        self.data_provider, self.splitter = parse_data_object(data_config, output_path)
+
         self.baseline_config = baseline_config
         self.hyperparameters = hyperparameters
         self.n_trials = n_trials
@@ -62,12 +67,7 @@ class OptunaExperiment(Experiment):
 
     def _objective(self, trial: optuna.Trial) -> float:
         assignments = self._get_hyperparameter_substitutions(trial)
-        lrsystem = parse_augmented_lrsystem(
-            self.baseline_config,
-            assignments,
-            self.output_path,
-            dirname_prefix=f'{trial.number:03d}__',
-        )
+        lr_system = augment_config(deepcopy(self.baseline_config), assignments)
 
         # add optuna values as system parameters
         hyperparameters: dict[str, Any] = assignments
@@ -79,8 +79,16 @@ class OptunaExperiment(Experiment):
                 'best_trial': trial.study.best_trial.number if trial.number > 0 else '',
             }
         )
+        experiment_name = f'trial{trial.number:03d}'
 
-        llr_data: LLRData = self._run_lrsystem(lrsystem, hyperparameters)
+        split_data = self.splitter.apply(self.data_provider.get_instances())
+        llr_data: LLRData = self._run_lrsystem(
+            lr_system,
+            split_data,
+            hyperparameters,
+            experiment_name,
+            self.data_config,
+        )
 
         return self.metric_function(llr_data)
 

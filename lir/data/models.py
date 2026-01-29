@@ -1,10 +1,12 @@
 import logging
 from abc import ABC, abstractmethod
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Iterable, Iterator
 from typing import Annotated, Any, Self, TypeVar
 
 import numpy as np
 from pydantic import AfterValidator, BaseModel, ConfigDict, model_validator
+
+from lir.util import check_type
 
 
 LOG = logging.getLogger(__name__)
@@ -523,3 +525,53 @@ class DataStrategy(ABC):
         is represented by an `InstanceData` object.
         """
         raise NotImplementedError
+
+
+def get_instances_by_category[InstanceDataType: InstanceData](
+    instances: InstanceDataType, category_field: str, category_shape: tuple[int] | None = None
+) -> Iterator[tuple[np.ndarray, InstanceDataType]]:
+    """
+    Return subsets of a set of instances by category.
+
+    The `instances` object must have a field by the name of `category_field`. That field is a numpy array with one row
+    per instance. Its values are the categories of each instance. The field may have any shape, as long as the number of
+    rows matches the number of instances.
+
+    If `category_shape` is provided, the shape of the category field is checked against this value.
+
+    The returned value is an iterator with each item being a tuple of the category and the subset of instances of that
+    category.
+
+    :param instances: the set of instances to draw from
+    :param category_field: the name of the field in instances that indicates the categories
+    :param category_shape: the optional shape of the category field
+    :return: tuples of categories and corresponding subsets of instances
+    """
+    # extract the category values from the instances
+    if not hasattr(instances, category_field):
+        raise ValueError(f'missing field: {category_field}')
+    category_values = getattr(instances, category_field)
+
+    # check the category values for sanity
+    check_type(np.ndarray, category_values, 'categories must be a numpy array')
+    if category_values.shape[0] != len(instances):
+        raise ValueError(
+            f'number of categories does not equal number of instances: {category_values.shape[0]} != {len(instances)}'
+        )
+
+    # check for shape, if available
+    if category_shape is not None:
+        expected_category_shape = (len(instances),) + category_shape
+        if category_values.shape != expected_category_shape:
+            raise ValueError(
+                f'expected shape of category field {category_field}: {expected_category_shape}; '
+                f'found: {category_values.shape}'
+            )
+
+    # each unique value is a category
+    unique_values = np.unique(category_values, axis=0)
+
+    # return the subset of instances for each category separately
+    for value in unique_values:
+        current_category_rows = np.all(category_values == value, axis=tuple(range(1, category_values.ndim)))
+        yield value, instances[current_category_rows]

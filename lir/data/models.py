@@ -466,9 +466,11 @@ class LLRData(FeatureData):
         Remove them instead of trying to combine them.
         """
         match field:
-            case 'llr_upper_bound':
-                return None
-            case 'llr_lower_bound':
+            case 'llr_upper_bound' | 'llr_lower_bound':
+                # Check if all values are the same; if so, preserve the value
+                if all(v == values[0] for v in values):
+                    return values[0]
+                # Otherwise, return None when values differ
                 return None
             case _:
                 return super()._concatenate_field(field, values)

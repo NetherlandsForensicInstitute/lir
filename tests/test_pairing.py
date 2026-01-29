@@ -33,7 +33,7 @@ def test_instance_pairing_seed():
             np.array([[0, 1]]),  # pair indices
             1,
             np.ones((3, 1)),  # features
-            np.arange(3),  # labels
+            np.arange(3),  # source_ids
             1,
             1,
         ),
@@ -41,7 +41,7 @@ def test_instance_pairing_seed():
             np.array([[0, 1], [0, 2]]),  # pair indices
             2,
             np.ones((3, 1)),  # features
-            np.arange(3),  # labels
+            np.arange(3),  # source_ids
             1,
             1,
         ),
@@ -49,7 +49,7 @@ def test_instance_pairing_seed():
             np.array([[0, 0]]),  # pair indices
             0,
             np.ones((3, 1)),
-            np.arange(3),
+            np.arange(3),  # source_ids
             1,
             1,
         ),
@@ -57,7 +57,7 @@ def test_instance_pairing_seed():
             np.array([[0, 0]]),  # pair indices
             1,
             np.ones((10, 1)),  # features
-            np.zeros(10),  # labels
+            np.zeros(10),  # source_ids
             1,
             1,
         ),
@@ -65,7 +65,7 @@ def test_instance_pairing_seed():
             np.array([[0, 0], [1, 1]]),  # pair indices
             1,
             np.ones((10, 1)),  # features
-            np.zeros(10),  # labels
+            np.zeros(10),  # source_ids
             1,
             1,
         ),
@@ -73,7 +73,7 @@ def test_instance_pairing_seed():
             np.array([[0, 0]]),  # pair indices
             1,
             np.ones((10, 1)),  # features
-            np.zeros(10),  # labels
+            np.zeros(10),  # source_ids
             4,
             6,
         ),
@@ -81,7 +81,7 @@ def test_instance_pairing_seed():
             np.array([[0, 0]]),  # pair indices
             0,
             np.ones((10, 1)),  # features
-            np.zeros(10),  # labels
+            np.zeros(10),  # source_ids
             5,
             6,
         ),

@@ -2,7 +2,7 @@ from functools import partial
 from pathlib import Path
 
 from lir import registry
-from lir.aggregation import Aggregation
+from lir.aggregation import Aggregation, SubsetAggregation
 from lir.config.base import (
     ConfigParser,
     ContextAwareDict,
@@ -10,6 +10,7 @@ from lir.config.base import (
     GenericConfigParser,
     YamlParseError,
     check_type,
+    config_parser,
     pop_field,
 )
 
@@ -68,3 +69,25 @@ def parse_aggregations(
         return [parse_aggregation(item, output_dir, context) for i, item in enumerate(config)]
     else:
         return [parse_aggregation(config, output_dir, context)]
+
+
+@config_parser
+def subset_aggregation(config: ContextAwareDict, output_dir: Path) -> SubsetAggregation:
+    """
+    Parse a configuration section for a categorized subset aggregation.
+
+    :param config: the configuration section
+    :param output_dir: the output directory
+    :return: a SubsetAggregation object
+    """
+    check_type(dict, config, 'output configuration should be a dictionary')
+    category_field = pop_field(config, 'category_field')
+    subset_output_dir = output_dir / category_field
+
+    aggregation_config = pop_field(config, 'output')
+    if isinstance(aggregation_config, list):
+        aggregation_methods = [parse_aggregation(item, subset_output_dir) for item in aggregation_config]
+    else:
+        aggregation_methods = [parse_aggregation(aggregation_config, subset_output_dir)]
+
+    return SubsetAggregation(aggregation_methods, category_field)

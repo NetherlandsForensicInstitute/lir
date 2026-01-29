@@ -14,7 +14,7 @@ from lir.algorithms.invariance_bounds import plot_invariance_delta_functions as 
 from lir.algorithms.llr_overestimation import plot_llr_overestimation as llr_overestimation
 from lir.config.base import ContextAwareDict, YamlParseError, check_is_empty, config_parser, pop_field
 from lir.config.metrics import parse_individual_metric
-from lir.data.models import LLRData
+from lir.data.models import LLRData, get_instances_by_category
 from lir.lrsystems.lrsystems import LRSystem
 from lir.plotting import llr_interval, lr_histogram, pav, tippett
 from lir.plotting.expected_calibration_error import plot_ece as ece
@@ -224,3 +224,45 @@ def metrics_csv(config: ContextAwareDict, output_dir: Path) -> WriteMetricsToCsv
 
     check_is_empty(config)
     return WriteMetricsToCsv(output_dir / 'metrics.csv', columns)
+
+
+class SubsetAggregation(Aggregation):
+    """
+    Aggregation method that manages data categorization.
+
+    A separate aggregation method is used for each category.
+    """
+
+    def __init__(self, aggregation_methods: list[Aggregation], category_field: str):
+        """
+        Initialize the subset aggregation method.
+
+        :param aggregation_methods: a list of methods to aggregate results by category
+        :param category_field: the name of the category field
+        """
+        self.aggregation_methods = aggregation_methods
+        self.category_field = category_field
+
+    def report(self, data: AggregationData) -> None:
+        """
+        Report that new results are available.
+
+        The data are categorized into subsets and forwarded to the actual aggregation method.
+
+        :param data: a named tuple containing the results
+        """
+        run_name_prefix = f'{data.run_name}/' if data.run_name else ''
+        for category, subset in get_instances_by_category(data.llrdata, self.category_field):
+            category_str = '_'.join(str(v) for v in category.reshape(-1))
+            run_name = f'{run_name_prefix}{category_str}'
+            category_data = AggregationData(
+                subset, data.lrsystem, data.parameters | {self.category_field: category}, run_name
+            )
+
+            for output in self.aggregation_methods:
+                output.report(category_data)
+
+    def close(self) -> None:
+        """Close all subset aggregation methods."""
+        for output in self.aggregation_methods:
+            output.close()

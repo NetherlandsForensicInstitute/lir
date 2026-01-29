@@ -109,7 +109,7 @@ class MulticlassCrossValidation(DataStrategy):
         """Allow iteration by looping over the resulting train/test split(s)."""
         kf = GroupKFold(n_splits=self.folds)
 
-        for _i, (train_index, test_index) in enumerate(kf.split(instances.features, groups=instances.source_ids)):
+        for _i, (train_index, test_index) in enumerate(kf.split(instances.features, groups=instances.source_ids_1d)):
             yield instances[train_index], instances[test_index]
 
 

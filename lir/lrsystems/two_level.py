@@ -460,11 +460,8 @@ class TwoLevelSystem(LRSystem):
 
     def fit(self, instances: InstanceData) -> Self:
         """Fit the model based on the instance data."""
-        if instances.source_ids is None:
-            raise ValueError('fit() requires source_ids')
-
         instances = self.preprocessing_pipeline.fit_apply(instances)
-        self.model.fit_on_unpaired_instances(instances.features, instances.source_ids)
+        self.model.fit_on_unpaired_instances(instances.features, instances.source_ids_1d)
 
         pairs = self.pairing_function.pair(instances, self.n_trace_instances, self.n_ref_instances)
         pair_llrs = pairs.replace_as(LLRData, features=self.model.transform(pairs.features_trace, pairs.features_ref))

@@ -5,4 +5,6 @@ Guides
    :maxdepth: 1
 
    lrsystem_yaml
-   lr_calculation
+   api-overview
+   lrsystem-assessment
+   

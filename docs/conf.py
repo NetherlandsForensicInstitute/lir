@@ -35,6 +35,7 @@ extensions = [
     'sphinx_rtd_theme',
     'sphinx.ext.napoleon',
     'sphinx_jinja',
+    'jupyter_sphinx',
 ]
 
 autodoc2_packages = [
@@ -87,7 +88,7 @@ def is_module(name: str) -> bool:
 
 
 def get_apidocs_uri(class_name: str | ConfigParser) -> str:
-    """Get the URI to the API documentation page for the given class name."""
+    """:return: the URI that points to the documentation of the named class or `ConfigParser` object."""
     if isinstance(class_name, ConfigParser):
         class_name = class_name.reference()
 
@@ -101,7 +102,7 @@ def get_apidocs_uri(class_name: str | ConfigParser) -> str:
 
 
 def get_docstr_short(class_name: str | ConfigParser) -> str:
-    """Get the short form of the docstring for the given class name."""
+    """:return: a short version of the docstr of the named class or `ConfigParser` object."""
     if isinstance(class_name, ConfigParser):
         class_name = class_name.reference()
 

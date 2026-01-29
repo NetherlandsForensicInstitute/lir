@@ -21,7 +21,7 @@ LOG = logging.getLogger(__name__)
 DEFAULT_LOGLEVEL = logging.WARNING
 
 
-def setup_logging(level_increase: int) -> None:
+def setup_logging(level_increase: int) -> int:
     """Set up logging to stderr and to a file.
 
     :param level_increase: log level for stderr, relative to the default log level
@@ -38,6 +38,8 @@ def setup_logging(level_increase: int) -> None:
     logging.getLogger().addHandler(ch)
 
     logging.getLogger().setLevel(logging.DEBUG)
+
+    return loglevel
 
 
 def initialize_logfile(output_dir: Path) -> None:
@@ -77,10 +79,10 @@ def initialize_experiments(
     return parse_experiments(cfg, output_dir), output_dir
 
 
-def error(msg: str, e: Exception | None = None) -> None:
+def error(msg: str, e: Exception | None = None, show_trace: bool = False) -> None:
     """Stop execution with given error message or raise exception."""
     sys.stderr.write(f'{msg}\n')
-    if e and LOG.level <= logging.DEBUG:
+    if e and show_trace:
         raise e
     sys.exit(1)
 
@@ -124,7 +126,7 @@ def main(input_args: list[str] | None = None) -> None:
     parser.add_argument('-q', help='decreases verbosity', action='count', default=0)
     args = parser.parse_args(input_args)
 
-    setup_logging(args.v - args.q)
+    loglevel = setup_logging(args.v - args.q)
 
     if args.list_registry:
         for name in registry.registry():
@@ -146,7 +148,7 @@ def main(input_args: list[str] | None = None) -> None:
     try:
         experiments, output_dir = initialize_experiments(confidence.loadf(args.setup))
     except YamlParseError as e:
-        error(f'error while parsing {args.setup}: {str(e)}', e)
+        error(f'error while parsing {args.setup}: {str(e)}', e, show_trace=loglevel <= logging.DEBUG)
         raise  # this statement is not reachable, but helps code validation
 
     copy_yaml_definition(output_dir, Path(args.setup))

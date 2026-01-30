@@ -6,4 +6,5 @@ Guides
 
    lrsystem_yaml
    api-overview
+   lrsystem-assessment
    

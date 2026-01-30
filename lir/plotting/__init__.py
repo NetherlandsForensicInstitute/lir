@@ -137,7 +137,7 @@ def pav(
     y = llrdata.labels
 
     pav = IsotonicCalibrator(add_misleading=add_misleading)
-    pav_llrs = pav.fit_transform(llrs, y)
+    pav_llrs = pav.fit_apply(llrdata).llrs
 
     xrange = yrange = [
         llrs[llrs != -np.inf].min() - 0.5,
@@ -150,7 +150,7 @@ def pav(
 
     # line pre pav llrs x and post pav llrs y
     line_x = np.arange(*xrange, 0.01)
-    line_y = pav.transform(line_x)
+    line_y = pav.apply(LLRData(features=line_x.reshape(-1, 1))).llrs
 
     # filter nan values, happens when values are out of bound (x_values out of training domain for pav)
     # see: https://scikit-learn.org/stable/modules/generated/sklearn.isotonic.IsotonicRegression.html

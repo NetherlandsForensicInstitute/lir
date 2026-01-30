@@ -9,7 +9,6 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 
 from lir.config.base import _expand
-from lir.data.datasets.synthesized_normal_binary import SynthesizedNormalBinaryData, SynthesizedNormalDataClass
 from lir.data.models import FeatureData
 from lir.lrsystems.binary_lrsystem import BinaryLRSystem
 from lir.lrsystems.lrsystems import LRSystem
@@ -20,15 +19,7 @@ from lir.util import probability_to_logodds
 
 
 @pytest.fixture
-def sample_feature_data() -> FeatureData:
-    """Provide a synthesized data set."""
-    return SynthesizedNormalBinaryData(
-        {0: SynthesizedNormalDataClass(-1, 1, 100), 1: SynthesizedNormalDataClass(1, 1, 100)}, seed=0
-    ).get_instances()
-
-
-@pytest.fixture
-def trained_lr_system(sample_feature_data: FeatureData) -> LRSystem:
+def trained_lr_system(synthesized_normal_data: FeatureData) -> LRSystem:
     """Provide a basic trained LR system model based on specific settings and data."""
     pipeline = Pipeline(
         steps=[
@@ -38,7 +29,7 @@ def trained_lr_system(sample_feature_data: FeatureData) -> LRSystem:
         ]
     )
     lrsystem = BinaryLRSystem(pipeline=pipeline)
-    lrsystem.fit(sample_feature_data)
+    lrsystem.fit(synthesized_normal_data)
 
     return lrsystem
 
@@ -59,7 +50,7 @@ def test_serialize_trained_lr_system(trained_lr_system: LRSystem, model_file_pat
 
 
 def test_deserialize_trained_lr_system(
-    trained_lr_system: LRSystem, sample_feature_data: FeatureData, model_file_path: Path
+    trained_lr_system: LRSystem, synthesized_normal_data: FeatureData, model_file_path: Path
 ):
     """Check that a deserialized, trained LR system yields exactly the same results."""
     # Given that we have a certain LR system serialized
@@ -72,8 +63,8 @@ def test_deserialize_trained_lr_system(
     assert type(trained_lr_system) is type(deserialized_model)
 
     # The calculated LLR output should be identical to the LR system output of the serialized model
-    expected_llr_data = trained_lr_system.apply(sample_feature_data)
-    deserialized_model_data = deserialized_model.apply(sample_feature_data)
+    expected_llr_data = trained_lr_system.apply(synthesized_normal_data)
+    deserialized_model_data = deserialized_model.apply(synthesized_normal_data)
 
     assert deserialized_model_data == expected_llr_data
 

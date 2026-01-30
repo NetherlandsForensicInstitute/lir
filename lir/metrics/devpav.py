@@ -1,6 +1,7 @@
 import numpy as np
 
 from lir.algorithms.isotonic_regression import IsotonicCalibrator
+from lir.data.models import LLRData
 from lir.util import Xy_to_Xn, logodds_to_odds
 
 
@@ -128,10 +129,9 @@ def _devpavcalculator(lrs: np.ndarray, pav_lrs: np.ndarray, y: np.ndarray) -> fl
     return surface / deltaX
 
 
-def devpav(llrs: np.ndarray, y: np.ndarray) -> float:
+def devpav(llrs: LLRData) -> float:
     """Calculates devPAV for LR data under H1 and H2."""
-    if all(y) or not any(y):
-        raise ValueError('devpav: illegal input: at least one value is required for each class')
+    labels = llrs.check_both_labels()
     cal = IsotonicCalibrator()
-    pavllrs = cal.fit_transform(llrs, y)
-    return _devpavcalculator(logodds_to_odds(llrs), logodds_to_odds(pavllrs), y)
+    pavllrs = cal.fit_apply(llrs)
+    return _devpavcalculator(logodds_to_odds(llrs.llrs), logodds_to_odds(pavllrs.llrs), labels)

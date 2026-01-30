@@ -122,6 +122,19 @@ class InstanceData(BaseModel, ABC):
     def __add__(self, other: 'InstanceData') -> Self:
         return self.concatenate(other)
 
+    def check_both_labels(self) -> np.ndarray:
+        """
+        Return labels or raise an error if they are missing or if they do not represent both hypotheses.
+
+        :return: the labels
+        :raise: ValueError if hypothesis labels are missing or either label is not represented.
+        """
+        if self.labels is None:
+            raise ValueError('labels not set')
+        if not np.all(np.unique(self.labels) == np.arange(2)):
+            raise ValueError(f'not all classes are represented; labels found: {np.unique(self.labels)}')
+        return self.labels
+
     @classmethod
     def _concatenate_field(cls, field: str, values: list[Any]) -> Any:
         if len(values) == 0:

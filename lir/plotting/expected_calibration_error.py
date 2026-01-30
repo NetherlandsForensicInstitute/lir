@@ -53,10 +53,7 @@ def plot_ece(
         - 'zoomed':   starts at 0 and ends slightly (10%) above the maximum ECE value of the LRs. This may cut off part
                        of the 'non-informative' reference line.
     """
-    llrs = llrdata.llrs
-    labels = llrdata.labels
-    if labels is None:
-        raise ValueError('LLRData must contain labels to plot ECE.')
+    labels = llrdata.require_labels
 
     log_prior_odds = np.arange(*log_prior_odds_range, 0.01)
     prior_odds = np.power(10, log_prior_odds)
@@ -71,7 +68,7 @@ def plot_ece(
         )
 
     # plot LRs
-    ece_values = calculate_ece(logodds_to_odds(llrs), labels, odds_to_probability(prior_odds))
+    ece_values = calculate_ece(logodds_to_odds(llrdata.llrs), labels, odds_to_probability(prior_odds))
     ax.plot(
         log_prior_odds,
         ece_values,
@@ -81,10 +78,10 @@ def plot_ece(
 
     if show_pav:
         # plot PAV LRs
-        pav_llrs = IsotonicCalibrator().fit_transform(llrs, labels)
+        pav_llrs = IsotonicCalibrator().fit_apply(llrdata)
         ax.plot(
             log_prior_odds,
-            calculate_ece(logodds_to_odds(pav_llrs), labels, odds_to_probability(prior_odds)),
+            calculate_ece(logodds_to_odds(pav_llrs.llrs), labels, odds_to_probability(prior_odds)),
             linestyle='--',
             label='PAV LRs',
         )

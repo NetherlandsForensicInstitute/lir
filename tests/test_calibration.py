@@ -37,8 +37,8 @@ class TestIsotonicRegression(unittest.TestCase):
         score_class1 = np.arange(0, 1, 0.1)
         X, y = Xn_to_Xy(score_class0, score_class1)
         irc = IsotonicCalibrator()
-        llrs = irc.fit_transform(probability_to_logodds(X), y)
-        lr0, lr1 = Xy_to_Xn(logodds_to_odds(llrs), y)
+        llrs = irc.fit_apply(LLRData(features=probability_to_logodds(X).reshape(-1, 1), labels=y))
+        lr0, lr1 = Xy_to_Xn(logodds_to_odds(llrs.llrs), y)
         self.assertEqual(score_class0.shape, lr0.shape)
         self.assertEqual(score_class1.shape, lr1.shape)
         np.testing.assert_almost_equal(lr0, [1.0] * lr0.shape[0])
@@ -51,8 +51,8 @@ class TestIsotonicRegression(unittest.TestCase):
         cllr = _cllr(lr0, lr1)
 
         irc = IsotonicCalibrator()
-        llrs = irc.fit_transform(odds_to_probability(X), y)
-        lrmin0, lrmin1 = Xy_to_Xn(logodds_to_odds(llrs), y)
+        llrs = irc.fit_apply(LLRData(features=odds_to_probability(X).reshape(-1, 1), labels=y))
+        lrmin0, lrmin1 = Xy_to_Xn(logodds_to_odds(llrs.llrs), y)
 
         cllrmin = _cllr(lrmin0, lrmin1)
 
@@ -76,8 +76,8 @@ class TestIsotonicRegression(unittest.TestCase):
         score_class1 = np.arange(0.05, 1.05, 0.1)
         X, y = Xn_to_Xy(score_class0, score_class1)
         irc = IsotonicCalibrator()
-        llrs = irc.fit_transform(X, y)
-        lr0, lr1 = Xy_to_Xn(logodds_to_odds(llrs), y)
+        llrs = irc.fit_apply(LLRData(features=X.reshape(-1, 1), labels=y))
+        lr0, lr1 = Xy_to_Xn(logodds_to_odds(llrs.llrs), y)
         self.assertEqual(score_class0.shape, lr0.shape)
         self.assertEqual(score_class1.shape, lr1.shape)
         np.testing.assert_almost_equal(lr0, np.concatenate([[0], [1.0] * (lr0.shape[0] - 1)]))

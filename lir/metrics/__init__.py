@@ -36,12 +36,10 @@ def cllr_min(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
     :param weights: the relative weights of the classes
     :return: CLLR_min, a measure of discrimination
     """
-    llrs, y = llr_data.llrs, llr_data.require_labels
-
     cal = IsotonicCalibrator()
-    llrmin = cal.fit_transform(llrs, y)
+    llrmin = cal.fit_apply(llr_data)
 
-    return cllr(LLRData(features=llrmin, labels=y), weights)
+    return cllr(llrmin, weights)
 
 
 def cllr_cal(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:

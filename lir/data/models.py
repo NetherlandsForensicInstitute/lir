@@ -28,9 +28,24 @@ class InstanceData(BaseModel, ABC):
     """
     Base class for data on instances.
 
+    An InstanceData object may be labeled or unlabeled with ground-truth data. If it is labeled, the label values
+    correspond to the hypotheses and have values 0 or 1. In literature, the labels may have different names for values
+    1 and 0 respectively, such as:
+
+    - hypothesis 1 and hypothesis 2 (or H1 and H2)
+    - prosecutor's hypothesis and defense hypothesis (or Hp and Hd)
+    - same-source and different-source (or Hss and Hds)
+
+    The instances may optionally be associated with sources by means of the `source_ids` attribute. If available, each
+    instance will generally have one source id if the object holds single instances, or two source ids if the object
+    holds pairs of instances.
+
+    This class imposes no restrictions on the actual instance data. Sub class implementations will specialize in
+    particular data types.
+
     Attributes
     ----------
-    - labels: an array of labels, a 1-dimensional array with one value per instance
+    - labels: an array of hypothesis labels, a 1-dimensional array with one value per instance
     - source_ids: an array of source ids, a 2-dimensional array with one column and one value per instance
     """
 
@@ -98,6 +113,19 @@ class InstanceData(BaseModel, ABC):
 
     def __add__(self, other: 'InstanceData') -> Self:
         return self.concatenate(other)
+
+    def check_both_labels(self) -> np.ndarray:
+        """
+        Return labels or raise an error if they are missing or if they do not represent both hypotheses.
+
+        :return: the labels
+        :raise: ValueError if hypothesis labels are missing or either label is not represented.
+        """
+        if self.labels is None:
+            raise ValueError('labels not set')
+        if not np.all(np.unique(self.labels) == np.arange(2)):
+            raise ValueError(f'not all classes are represented; labels found: {np.unique(self.labels)}')
+        return self.labels
 
     @classmethod
     def _concatenate_field(cls, field: str, values: list[Any]) -> Any:
@@ -304,6 +332,14 @@ class FeatureData(InstanceData):
     """
     Data class for feature data.
 
+    Feature data can be any type of numeric data that is associated with the instances, such as measurements or
+    similarity scores.
+
+    If the object describes single instance data, the `features` attribute is generally 2-dimensional, with one row per
+    instance and one or more feature columns.
+
+    More than 2 dimensions may be used for paired data, see `PairedFeatureData`.
+
     Attributes
     ----------
     - features: an array of instance features, with one row per instance
@@ -339,6 +375,17 @@ class FeatureData(InstanceData):
 class PairedFeatureData(FeatureData):
     """
     Data class for instance pair data.
+
+    Each item in this data set represents instances from the "trace" source and from the "reference" source. The number
+    of instances from either source must be at least one.
+
+    The `features` attribute has at least 3 dimensions:
+    - the pairs are along the first dimension;
+    - the instances are along the second dimension (e.g. in a comparison of 1 trace instance and 1 source instance, the
+      length of this dimension is 2);
+    - the features are along the third dimension onward.
+
+    The `source_ids`, if available, must have two values for each item, i.e. 2 columns.
 
     Attributes
     ----------
@@ -400,6 +447,14 @@ class PairedFeatureData(FeatureData):
 class LLRData(FeatureData):
     """
     Representation of calculated LLR values.
+
+    An object of `LLRData` adds a specific interpretation to the `features` attribute.
+
+    - If the `features` attribute has a single column (i.e. dimensions `(n, 1)`), the values are LLRs.
+    - If the `features` attribute has three columns (i.e. dimensions `(n, 3)`), the values are LLRs and their
+      confidence intervals.
+
+    The values are also accessible by the attributes `llrs` and `llr_intervals`.
 
     Attributes
     ----------

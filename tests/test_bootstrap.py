@@ -8,16 +8,16 @@ from lir.algorithms.bayeserror import ELUBBounder
 from lir.algorithms.bootstraps import BootstrapAtData, BootstrapEquidistant, bootstrap
 from lir.algorithms.kde import KDECalibrator
 from lir.config.base import _expand
-from lir.data.datasets.synthesized_normal_binary import SynthesizedNormalBinaryData, SynthesizedNormalDataClass
+from lir.data.datasets.synthesized_normal_binary import SynthesizedNormalBinaryData, SynthesizedNormalData
 from lir.data.models import FeatureData, LLRData
 
 
 @pytest.fixture(
     params=[
-        [('kde', KDECalibrator((0.05, 0.023)))],
+        [('kde', KDECalibrator((0.5, 0.5)))],
         [('logistic', LogisticRegression())],
         [
-            ('kde', KDECalibrator((0.05, 0.023))),
+            ('kde', KDECalibrator((0.5, 0.5))),
             ('elub', ELUBBounder()),
         ],
         [
@@ -32,11 +32,9 @@ def sample_steps_and_data(request):
 
     The steps are parameterized to test different configurations, namely KDE and LogReg,
     with and without ELUB bounding, as well as an empty step list."""
-    data_spec = {
-        0: SynthesizedNormalDataClass(-1, 1, 20),
-        1: SynthesizedNormalDataClass(1, 1, 20),
-    }
-    data = SynthesizedNormalBinaryData(data_spec, seed=0)
+    h2_params = SynthesizedNormalData(-1, 1, 20)
+    h1_params = SynthesizedNormalData(1, 1, 20)
+    data = SynthesizedNormalBinaryData(h1_params, h2_params, seed=0)
     feature_data = data.get_instances()
 
     steps = request.param
@@ -80,6 +78,12 @@ def test_interval_extrapolation(sample_steps_and_data):
 
     new_data = FeatureData(features=np.array([[mn - 1], [mn], [mx], [mx + 1]]))
     results: LLRData = model_equidistant.apply(new_data)
+
+    equidistant_llrs = model_equidistant.apply(model_equidistant.get_bootstrap_data(feature_data)).llrs
+    assert np.all(np.diff(equidistant_llrs) >= 0), (
+        'the best estimate should be monotonic, otherwise the following tests may fail'
+    )
+
     # The difference between the interval at mn and mn-1 should be the same.
     assert np.isclose(
         results.llrs[0] - results.llr_intervals[0, 0],

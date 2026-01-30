@@ -1,6 +1,4 @@
-from collections.abc import Mapping
 from pathlib import Path
-from typing import Any
 
 import numpy as np
 import numpy.random
@@ -9,7 +7,7 @@ from lir.config.base import ContextAwareDict, config_parser, pop_field
 from lir.data.models import DataProvider, FeatureData
 
 
-class SynthesizedNormalDataClass:
+class SynthesizedNormalData:
     """Representation of normally distributed data, leveraging a number generator.
 
     The generated data can be used to generate normally distributed data and is useful
@@ -31,33 +29,26 @@ class SynthesizedNormalDataClass:
 class SynthesizedNormalBinaryData(DataProvider):
     """Implementation of a data source generating normally distributed binary class data."""
 
-    def __init__(self, data_classes: Mapping[Any, SynthesizedNormalDataClass], seed: int):
-        self.data_classes = data_classes
+    def __init__(self, h1_params: SynthesizedNormalData, h2_params: SynthesizedNormalData, seed: int | None = None):
+        self.data_parameters = [h1_params, h2_params]
         self.seed = seed
 
     def get_instances(self) -> FeatureData:
         """
         Returns instances with randomly synthesized data and binary labels.
 
-        The features are drawn from a normal distribution, as configured. The meta data vector is empty, with
-        dimensions `(n, 0)`.
+        The features are drawn from a normal distribution, as configured.
         """
         rng = np.random.default_rng(seed=self.seed)
-        values = [(cls.get(rng), class_name) for class_name, cls in self.data_classes.items()]
-        values = [(data, [class_name] * data.shape[0]) for data, class_name in values]
-        features = np.concatenate([data for data, _ in values])
-        labels = np.concatenate([labels for _, labels in values])
+        features = np.concatenate([data_class.get(rng) for data_class in self.data_parameters])
+        labels = np.concatenate([np.ones(self.data_parameters[0].size[0]), np.zeros(self.data_parameters[1].size[0])])
         return FeatureData(features=features, labels=labels)
 
 
 @config_parser
 def synthesized_normal_binary(config: ContextAwareDict, _: Path) -> DataProvider:
     """Set up (binary class) data source class to obtain normally distributed data from configuration."""
-    seed = pop_field(config, 'seed')
+    seed = pop_field(config, 'seed', required=False)
     h1 = pop_field(config, 'h1')
     h2 = pop_field(config, 'h2')
-    data_classes = {
-        1: SynthesizedNormalDataClass(**h1),
-        0: SynthesizedNormalDataClass(**h2),
-    }
-    return SynthesizedNormalBinaryData(data_classes, seed)
+    return SynthesizedNormalBinaryData(SynthesizedNormalData(**h2), SynthesizedNormalData(**h1), seed=seed)

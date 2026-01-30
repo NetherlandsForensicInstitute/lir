@@ -2,19 +2,16 @@ import pytest
 
 from lir.algorithms.bootstraps import BootstrapAtData
 from lir.algorithms.logistic_regression import LogitCalibrator
-from lir.data.datasets.synthesized_normal_binary import SynthesizedNormalBinaryData, SynthesizedNormalDataClass
-from lir.data.models import LLRData
+from lir.data.datasets.synthesized_normal_binary import SynthesizedNormalBinaryData, SynthesizedNormalData
+from lir.data.models import FeatureData, LLRData
 from lir.transform import as_transformer
 
 
 @pytest.fixture
-def synthesized_normal_data() -> SynthesizedNormalBinaryData:
-    data_classes = {
-        1: SynthesizedNormalDataClass(mean=0, std=1, size=100),  # H1
-        0: SynthesizedNormalDataClass(mean=2, std=1, size=100),  # H2
-    }
-
-    return SynthesizedNormalBinaryData(data_classes=data_classes, seed=42)
+def synthesized_normal_data() -> FeatureData:
+    h1_data = SynthesizedNormalData(mean=0, std=1, size=100)  # H1
+    h2_data = SynthesizedNormalData(mean=2, std=1, size=100)  # H2
+    return SynthesizedNormalBinaryData(h1_data, h2_data, seed=42).get_instances()
 
 
 @pytest.fixture
@@ -24,7 +21,6 @@ def synthesized_llrs(synthesized_normal_data: SynthesizedNormalBinaryData) -> LL
 
 
 @pytest.fixture
-def synthesized_llrs_with_interval(synthesized_normal_data: SynthesizedNormalBinaryData) -> LLRData:
+def synthesized_llrs_with_interval(synthesized_normal_data: FeatureData) -> LLRData:
     bootstrap = BootstrapAtData(steps=[('clf', LogitCalibrator())])
-    data = synthesized_normal_data.get_instances()
-    return bootstrap.fit_apply(data)
+    return bootstrap.fit_apply(synthesized_normal_data)

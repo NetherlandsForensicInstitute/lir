@@ -80,8 +80,15 @@ def initialize_experiments(
 def error(msg: str, e: Exception | None = None) -> None:
     """Stop execution with given error message or raise exception."""
     sys.stderr.write(f'{msg}\n')
-    if e and LOG.level <= logging.DEBUG:
-        raise e
+
+    if e:
+        # Show exception traceback if loglevel is set to DEBUG (or lower),
+        # otherwise print the message.
+        LOG.debug(msg, exc_info=e)
+    else:
+        # No exception; print the message at the ERROR loglevel
+        LOG.error(msg)
+
     sys.exit(1)
 
 

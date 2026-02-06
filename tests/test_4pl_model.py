@@ -48,7 +48,7 @@ class TestFourParameterLogisticCalibrator(unittest.TestCase):
         four_pl_model.fit(instances)
         logodds = four_pl_model.apply(instances)
 
-        np.testing.assert_almost_equal(devpav(logodds.llrs, logodds.labels), 0.12029952948152635, decimal=5)
+        np.testing.assert_almost_equal(devpav(logodds), 0.12029952948152635, decimal=5)
 
     def test_pl_0_is_1(self):
         instances = self.get_instances()
@@ -59,7 +59,7 @@ class TestFourParameterLogisticCalibrator(unittest.TestCase):
         four_pl_model.fit(instances)
         logodds = four_pl_model.apply(instances)
 
-        np.testing.assert_almost_equal(devpav(logodds.llrs, logodds.labels), 0.15273304557837525, decimal=5)
+        np.testing.assert_almost_equal(devpav(logodds), 0.15273304557837525, decimal=5)
 
     def test_pl_0_is_1_and_pl_1_is_0(self):
         instances = self.get_instances()
@@ -72,7 +72,7 @@ class TestFourParameterLogisticCalibrator(unittest.TestCase):
         four_pl_model.fit(instances)
 
         logodds = four_pl_model.apply(instances)
-        np.testing.assert_almost_equal(devpav(logodds.llrs, logodds.labels), 0.10475112893952891, decimal=5)
+        np.testing.assert_almost_equal(devpav(logodds), 0.10475112893952891, decimal=5)
 
 
 if __name__ == '__main__':

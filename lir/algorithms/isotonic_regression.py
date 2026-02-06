@@ -1,10 +1,13 @@
+from typing import Self
+
 import numpy as np
 import sklearn.isotonic
 from numpy.typing import ArrayLike
-from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.utils import check_array, check_consistent_length
 
-from lir.util import probability_to_logodds
+from lir import Transformer
+from lir.data.models import FeatureData, InstanceData, LLRData
+from lir.util import check_type, probability_to_logodds
 
 
 class IsotonicRegression(sklearn.isotonic.IsotonicRegression):
@@ -96,7 +99,7 @@ class IsotonicRegression(sklearn.isotonic.IsotonicRegression):
         return res
 
 
-class IsotonicCalibrator(BaseEstimator, TransformerMixin):
+class IsotonicCalibrator(Transformer):
     """Calculate LR from a score belonging to one of two distributions using isotonic regression.
 
     Calculates a likelihood ratio of a score value, provided it is from one of
@@ -112,11 +115,13 @@ class IsotonicCalibrator(BaseEstimator, TransformerMixin):
         self.add_misleading = add_misleading
         self._ir = IsotonicRegression(out_of_bounds='clip')
 
-    def fit(self, X: np.ndarray, y: np.ndarray) -> 'IsotonicCalibrator':
+    def fit(self, instances: InstanceData) -> Self:
         """Allow fitting the estimator on the given data."""
-        assert np.all(np.unique(y) == np.arange(2)), 'y labels must be 0 and 1'
+        y = instances.check_both_labels()
+        instances = check_type(FeatureData, instances).replace_as(LLRData)
 
         # prevent extreme LRs
+        X = instances.llrs
         if self.add_misleading > 0:
             X = np.concatenate(
                 [
@@ -133,8 +138,12 @@ class IsotonicCalibrator(BaseEstimator, TransformerMixin):
 
         return self
 
-    def transform(self, X: np.ndarray) -> np.ndarray:
+    def apply(self, instances: InstanceData) -> LLRData:
         """Transform a given value, using the fitted Isotonic Regression model."""
-        self.p1 = self._ir.transform(X)
-        self.p0 = 1 - self.p1
-        return probability_to_logodds(self.p1)
+        instances = check_type(FeatureData, instances).replace_as(LLRData)
+        probs = self._ir.transform(instances.llrs)
+        return instances.replace_as(LLRData, features=probability_to_logodds(probs).reshape(-1, 1))
+
+    def fit_apply(self, instances: InstanceData) -> LLRData:
+        """Fit and apply the calibrator to the given data."""
+        return self.fit(instances).apply(instances)

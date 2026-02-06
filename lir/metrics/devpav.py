@@ -119,7 +119,7 @@ def _devpavcalculator(lrs: np.ndarray, pav_lrs: np.ndarray, y: np.ndarray) -> fl
         return np.nan
 
     if len(X) == 1:
-        return abs(X - Y)
+        return abs(X[0] - Y[0])
 
     # Actual devPAV calculation
     surface = sum(_calcsurface((X[i - 1], Y[i - 1]), (X[i], Y[i])) for i in range(1, len(X)))

@@ -206,3 +206,11 @@ def metrics_csv(config: ContextAwareDict, output_dir: Path) -> WriteMetricsToCsv
 
     check_is_empty(config)
     return WriteMetricsToCsv(output_dir, columns)
+
+
+__all__ = (
+    Aggregation,
+    AggregationData,
+    AggregatePlot,
+    WriteMetricsToCsv,
+)

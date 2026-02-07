@@ -30,17 +30,6 @@ class Bootstrap(Pipeline, ABC):
 
     The AtData variant allows for more complex data types, while the Equidistant variant is only suitable for continuous
     features.
-
-    Attributes
-    ----------
-        steps: The steps of s pipeline to be bootstrapped.
-        n_bootstraps: int: The number of bootstrap samples to generate.
-        interval: tuple[float, float]: The lower and upper quantiles for the confidence interval.
-        seed: int | None: The random seed for reproducibility.
-        n_points: int | None: Number of equidistant points to use for interval estimation (BootstrapEquidistant only).
-
-        f_delta_interval_lower: Interpolation function for the lower bound of the interval.
-        f_delta_interval_upper: Interpolation function for the upper bound of the interval.
     """
 
     def __init__(
@@ -52,8 +41,6 @@ class Bootstrap(Pipeline, ABC):
     ):
         """Initialize the TrainDataBootstrap with the given pipeline steps, number of bootstraps, and interval.
 
-        Parameters
-        ----------
         :param steps: list[tuple[str, Any]]: The steps of the pipeline to be bootstrapped.
         :param n_bootstraps: int: The number of bootstrap samples to generate. Default is 400.
         :param interval: tuple[float, float]: The lower and upper quantiles for the confidence interval.
@@ -181,8 +168,6 @@ class BootstrapEquidistant(Bootstrap):
     ):
         """Initialize the instance with the given pipeline steps, number of bootstraps, and interval.
 
-        Parameters
-        ----------
         :param steps: list[tuple[str, Any]]: The steps of the pipeline to be bootstrapped.
         :param n_bootstraps: int: The number of bootstrap samples to generate. Default is 400.
         :param interval: tuple[float, float]: The lower and upper quantiles for the confidence interval.
@@ -223,6 +208,7 @@ def bootstrap(modules_config: ContextAwareDict, output_dir: Path) -> Bootstrap:
     Transitional function to parse a bootstrapping pipeline.
 
     The configuration takes the following arguments:
+
     - steps: the pipeline steps to bootstrap
     - points: the points to bootstrap, can be either `data` or `equidistant`. This selects the bootstrapping class:
       `BootstrapAtData` for 'data', or `BootstrapEquidistant` for 'equidistant'

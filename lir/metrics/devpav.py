@@ -70,14 +70,12 @@ def _devpavcalculator(lrs: np.ndarray, pav_lrs: np.ndarray, y: np.ndarray) -> fl
     """
     Calculate devPAV for PAV-transformed LRs.
 
-    Parameters
-    ----------
+    Parameters:
     - lrs: np.ndarray of LR values.
     - pav_lrs: np.ndarray of LRs after PAV transformation.
     - y: np.ndarray of labels (1 for H1 and 0 for H2).
 
-    Returns
-    -------
+    Returns:
     - float: devPAV value
 
     """

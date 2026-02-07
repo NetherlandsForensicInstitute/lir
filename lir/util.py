@@ -62,10 +62,9 @@ FloatOrArray = TypeVar('FloatOrArray', np.ndarray, float)
 def odds_to_probability[FloatOrArray: (np.ndarray, float)](odds: FloatOrArray) -> FloatOrArray:
     """Converts odds to a probability.
 
-    Returns
-    -------
-       1                , for odds values of inf
-       odds / (1 + odds), otherwise
+    Returns:
+    - 1                , for odds values of inf
+    - odds / (1 + odds), otherwise
     """
     inf_values = odds == np.inf
     with np.errstate(invalid='ignore'):

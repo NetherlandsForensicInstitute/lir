@@ -11,11 +11,10 @@ class ElementWiseDifference(Transformer):
     Takes an array of sample pairs and returns the element-wise absolute difference.
 
     Expects:
-        - a PairedFeatureData object with n_trace_instances=1 and n_ref_instances=1;
+    - a PairedFeatureData object with n_trace_instances=1 and n_ref_instances=1;
 
-    Returns
-    -------
-        - a copy of the FeatureData object with features of shape (n, f)
+    Returns:
+    - a copy of the FeatureData object with features of shape (n, f)
     """
 
     def apply(self, instances: InstanceData) -> FeatureData:

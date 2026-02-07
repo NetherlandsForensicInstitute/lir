@@ -57,8 +57,7 @@ class Canvas:
 def savefig(path: str) -> _GeneratorContextManager[Canvas]:
     """Create a plotting context, write plot when closed.
 
-    Example
-    -------
+    Example:
     ```py
     with savefig(filename) as ax:
         ax.pav(lrs, y)
@@ -66,9 +65,7 @@ def savefig(path: str) -> _GeneratorContextManager[Canvas]:
 
     A call to `savefig(path)` is identical to `axes(savefig=path)`.
 
-    Parameters
-    ----------
-    path : str
+    :param path: str
         write a PNG image to this path
     """
     return axes(savefig=path)
@@ -77,8 +74,7 @@ def savefig(path: str) -> _GeneratorContextManager[Canvas]:
 def show() -> _GeneratorContextManager[Canvas]:
     """Create a plotting context, show plot when closed.
 
-    Example
-    -------
+    Example:
     ```py
     with show() as ax:
         ax.pav(lrs, y)
@@ -93,8 +89,7 @@ def show() -> _GeneratorContextManager[Canvas]:
 def axes(savefig: PathLike | None = None, show: bool | None = None) -> Iterator[Canvas]:
     """Create a plotting context.
 
-    Example
-    -------
+    Example:
     ```py
     with axes() as ax:
         ax.pav(lrs, y)
@@ -119,19 +114,15 @@ def pav(
 ) -> None:
     """Generate a plot of pre-calibrated versus post-calibrated LRs using Pool Adjacent Violators (PAV).
 
-    Parameters
-    ----------
-    llrs : numpy array of floats
-        Likelihood ratios before PAV transform
-    y : numpy array
+    :param llrdata: an `LLRData` object of likelihood ratios before PAV transform
+    :param y: numpy array
         Labels corresponding to lrs (0 for Hd and 1 for Hp)
-    add_misleading : int
+    :param add_misleading: int
         number of misleading evidence points to add on both sides (default: `0`)
-    show_scatter : boolean
+    :param show_scatter: boolean
         If True, show individual LRs (default: `True`)
-    ax : pyplot axes object
+    :param ax: pyplot axes object
         defaults to `matplotlib.pyplot`
-    ----------
     """
     llrs = llrdata.llrs
     y = llrdata.labels
@@ -251,13 +242,10 @@ def lr_histogram(
 ) -> None:
     """Plot the 10log lrs.
 
-    Parameters
-    ----------
-    llrs : the likelihood ratios
-    y : a numpy array of labels (0 or 1)
-    bins: number of bins to divide scores into
-    weighted: if y-axis should be weighted for frequency within each class
-    ax: axes to plot figure to
+    :param llrdata: the likelihood ratios
+    :param bins: number of bins to divide scores into
+    :param weighted: if y-axis should be weighted for frequency within each class
+    :param ax: axes to plot figure to
 
     """
     llrs = llrdata.llrs
@@ -276,15 +264,12 @@ def lr_histogram(
 def tippett(llrdata: LLRData, plot_type: int = 1, ax: Axes = plt) -> None:
     """Plot empirical cumulative distribution functions of same-source and different-sources lrs.
 
-    Parameters
-    ----------
-    llrs : the likelihood ratios
-    y : a numpy array of labels (0 or 1)
-    plot_type : an integer, must be either 1 or 2.
+    :param llrdata: the likelihood ratios
+    :param plot_type: an integer, must be either 1 or 2.
         In type 1 both curves show proportion of lrs greater than or equal to the
         x-axis value, while in type 2 the curve for same-source shows the
         proportion of lrs smaller than or equal to the x-axis value.
-    ax: axes to plot figure to
+    :param ax: axes to plot figure to
     """
     llrs = llrdata.llrs
     labels = llrdata.labels
@@ -312,11 +297,9 @@ def tippett(llrdata: LLRData, plot_type: int = 1, ax: Axes = plt) -> None:
 def llr_interval(llrdata: LLRData, ax: Axes = plt) -> None:
     """Plot the lr's on the x-as, with the relative interval score on the y-as.
 
-    Parameters
-    ----------
-    llrdata : LLRData
+    :param llrdata: LLRData
         The LLRData object containing the likelihood ratios and interval scores.
-    ax: axes to plot figure to
+    :param ax: axes to plot figure to
 
     """
     if not llrdata.has_intervals:
@@ -351,14 +334,12 @@ def score_distribution(
     within the class, and `inf` is the fraction of instances. Otherwise, the
     y-axis shows the number of instances.
 
-    Parameters
-    ----------
-    scores : scores of (fitted) lr_system (1d-array)
-    y : a numpy array of labels (0 or 1, 1d-array of same length as `scores`)
-    bins: number of bins to divide scores into
-    weighted: if y-axis should be the probability density within each class,
+    :param scores: scores of (fitted) lr_system (1d-array)
+    :param y: a numpy array of labels (0 or 1, 1d-array of same length as `scores`)
+    :param bins: number of bins to divide scores into
+    :param weighted: if y-axis should be the probability density within each class,
         instead of counts
-    ax: axes to plot figure to
+    :param ax: axes to plot figure to
 
     """
     if ax is None:

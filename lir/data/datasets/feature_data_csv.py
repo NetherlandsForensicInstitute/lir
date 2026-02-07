@@ -58,7 +58,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
 
     Example: let's say we have data with two features and source ids.
 
-    ```csv
+    ```
     source_id,feature1,feature2,feature3,name_of_an_irrelevant_column
     0,1,10,1,sherlock
     0,1,11,1,holmes

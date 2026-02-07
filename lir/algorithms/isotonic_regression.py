@@ -21,27 +21,18 @@ class IsotonicRegression(sklearn.isotonic.IsotonicRegression):
     def fit(self, X: ArrayLike, y: ArrayLike, sample_weight: ArrayLike | tuple | None = None) -> 'IsotonicRegression':
         """Fit the model using X, y as training data.
 
-        Parameters
-        ----------
-        X : array-like of shape (n_samples,)
+        X is stored for future use, as :meth:`transform` needs X to interpolate
+        new input data.
+
+        :param X: array-like of shape (n_samples,)
             Training data.
-
-        y : array-like of shape (n_samples,)
+        :param y: array-like of shape (n_samples,)
             Training target.
-
-        sample_weight : array-like of shape (n_samples,), default=None
+        :param sample_weight: array-like of shape (n_samples,), default=None
             Weights. If set to None, all weights will be set to 1 (equal
             weights).
 
-        Returns
-        -------
-        self : object
-            Returns an instance of self.
-
-        Notes
-        -----
-        X is stored for future use, as :meth:`transform` needs X to interpolate
-        new input data.
+        :return: Returns an instance of self.
         """
         check_params = dict(accept_sparse=False, ensure_2d=False, ensure_all_finite=False)  # noqa: C408
         X = check_array(X, dtype=[np.float64, np.float32], **check_params)
@@ -65,14 +56,9 @@ class IsotonicRegression(sklearn.isotonic.IsotonicRegression):
     def transform(self, T: ArrayLike) -> np.ndarray:
         """Transform new data by linear interpolation.
 
-        Parameters
-        ----------
-        T : array-like of shape (n_samples,)
+        :param T: array-like of shape (n_samples,)
             Data to transform.
-
-        Returns
-        -------
-        T_ : array, shape=(n_samples,)
+        :return: array, shape=(n_samples,)
             The transformed data
         """
         dtype = self._necessary_X_.dtype if hasattr(self, '_necessary_X_') else np.float64
@@ -106,6 +92,7 @@ class IsotonicCalibrator(Transformer):
     two distributions. Uses isotonic regression for interpolation.
 
     In contrast to `IsotonicRegression`, this class:
+
     - has an initialization argument that provides the option of adding misleading data points
     - outputs logodds instead of probabilities
     """

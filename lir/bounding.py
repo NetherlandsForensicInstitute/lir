@@ -1,6 +1,6 @@
 import logging
 from abc import ABC, abstractmethod
-from typing import Self
+from typing import Any, Self
 
 import numpy as np
 
@@ -114,3 +114,10 @@ class NSourceBounder(LLRBounder):
         LOG.debug(f'NSourceBounder: number of sources: N={len(n_sources)}')
         LOG.debug(f'NSourceBounder: calculated bounds: -log(N)={-log_n_sopurces}, log(N)={log_n_sopurces}')
         return -log_n_sopurces, log_n_sopurces
+
+
+__all__: list[Any] = [
+    LLRBounder,
+    StaticBounder,
+    NSourceBounder,
+]

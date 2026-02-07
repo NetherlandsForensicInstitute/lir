@@ -13,7 +13,14 @@ from lir.transform import Transformer, as_transformer
 from lir.util import check_type
 
 
-LOG = logging.getLogger(__name__)
+_LOG = logging.getLogger(__name__)
+
+
+__all__ = [
+    'Pipeline',
+    'LoggingPipeline',
+    'logging_pipeline',
+]
 
 
 class Pipeline(Transformer):

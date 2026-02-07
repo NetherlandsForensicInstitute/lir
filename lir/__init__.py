@@ -6,8 +6,10 @@ sampling schemes or techniques, and doing case-based validation and computation 
 """
 
 import sys
+from typing import Any
 
-from lir.transform import Transformer as Transformer  # as required by linting, later to be replaced by __all__
+from lir.data.models import DataProvider, DataStrategy, FeatureData, InstanceData, LLRData, PairedFeatureData
+from lir.transform import Transformer
 
 
 def is_interactive() -> bool:
@@ -16,3 +18,17 @@ def is_interactive() -> bool:
     This method is used, for example, to determine if a progress bar should be shown.
     """
     return sys.stdout.isatty()
+
+
+__all__: list[Any] = [
+    is_interactive,
+    # data.models
+    InstanceData,
+    FeatureData,
+    PairedFeatureData,
+    LLRData,
+    DataProvider,
+    DataStrategy,
+    # transform
+    Transformer,
+]

@@ -44,6 +44,8 @@ dev = [
     "sphinx-rtd-theme>=3.1.0",
     "sphinxcontrib-napoleon>=0.7",
     "sphinx-jinja>=2.0.2",
+    "sphinx-autodoc2>=0.5.0",
+    "myst-parser>=5.0.0",
 ]
 
 [tool.pdm]
@@ -64,7 +66,7 @@ test = "coverage run --branch --source lir --module pytest --strict-markers test
 quicktest = {composite = ["test --testmon"]}
 test-coverage = "coverage report"
 lir = "python run.py"
-generate-docs= {composite = ["sphinx-apidoc -o docs/api lir", "sphinx-build -M html docs build"]}
+generate-docs= {composite = ["sphinx-build -M html docs build"]}
 serve-docs = {composite = ["generate-docs", "python -m http.server -d build/html"]}
 
 [tool.ruff]

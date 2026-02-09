@@ -29,13 +29,23 @@ pygments_style = 'sphinx'  # enable syntax highlighting
 # modindex_common_prefix = ['lir.']
 
 extensions = [
-    'sphinx.ext.autodoc',
+    'autodoc2',
+    'myst_parser',
     'sphinx.ext.autosummary',
     'sphinx_rtd_theme',
     'sphinx.ext.napoleon',
     'sphinx_jinja',
 ]
 
+autodoc2_packages = [
+    '../lir',
+]
+
+autodoc2_output_dir = 'api'
+
+autodoc2_docstring_parser_regexes = [
+    (r'.*', 'myst'),
+]
 
 templates_path = ['_templates']
 exclude_patterns = []
@@ -71,7 +81,7 @@ html_sidebars = {'**': ['globaltoc.html', 'relations.html', 'sourcelink.html', '
 def is_module(name: str) -> bool:
     """Check whether the given name corresponds to a module in the lir package."""
     source_path = Path(__file__).parent.parent / name.replace('.', '/')
-    return source_path.is_dir()
+    return source_path.is_dir() or Path(f'{source_path}.py').exists()
 
 
 def get_apidocs_uri(class_name: str | ConfigParser) -> str:
@@ -83,7 +93,7 @@ def get_apidocs_uri(class_name: str | ConfigParser) -> str:
     for i in range(1, len(parts)):
         module_name = '.'.join(parts[:-i])
         if is_module(module_name):
-            return f'api/{module_name}.html#{class_name}'
+            return f'api/lir/{module_name}.html#{class_name}'
 
     return 'api/lir.html'
 

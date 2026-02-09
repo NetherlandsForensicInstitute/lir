@@ -5,7 +5,7 @@
    self
    guides
    reference
-   API reference <api/lir>
+   API reference <api/index>
 
 
 

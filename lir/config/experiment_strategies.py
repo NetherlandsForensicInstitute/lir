@@ -8,10 +8,9 @@ from typing import Any
 
 from lir import registry
 from lir.aggregation import Aggregation
+from lir.config.aggregation import parse_aggregations
 from lir.config.base import (
     ConfigParser,
-    GenericConfigParser,
-    YamlParseError,
     check_is_empty,
     check_type,
     pop_field,
@@ -51,36 +50,7 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         if not config:
             return []
 
-        results: list[Aggregation] = []
-        for i, item in enumerate(config):
-            # Normalise configuration into (class_name, args)
-            if isinstance(item, str):
-                class_name, args = item, ContextAwareDict(config.context + [str(i)])
-            elif isinstance(item, ContextAwareDict):
-                class_name = pop_field(item, 'method')
-                args = item
-            else:
-                raise YamlParseError(
-                    config.context,
-                    'Invalid output configuration; expected a string or a mapping with a "method" field.',
-                )
-
-            parser: ConfigParser = registry.get(
-                class_name,
-                default_config_parser=GenericConfigParser,
-                search_path=['output'],
-            )
-            parsed_object = parser.parse(args, self._output_dir)
-
-            if not isinstance(parsed_object, Aggregation):
-                raise YamlParseError(
-                    config.context,
-                    f'Invalid output configuration; expected an Aggregation, found: {type(parsed_object)}.',
-                )
-
-            results.append(parsed_object)  # type: ignore
-
-        return results
+        return parse_aggregations(config, self._output_dir)
 
     @abstractmethod
     def get_experiment(self, name: str) -> Experiment:

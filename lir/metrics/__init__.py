@@ -36,6 +36,9 @@ def cllr_min(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
     :param weights: the relative weights of the classes
     :return: CLLR_min, a measure of discrimination
     """
+    if not np.all(np.unique(llr_data.require_labels) == [0, 1]):
+        return np.nan
+
     cal = IsotonicCalibrator()
     llrmin = cal.fit_apply(llr_data)
 

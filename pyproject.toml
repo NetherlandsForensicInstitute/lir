@@ -95,6 +95,8 @@ lint.ignore = [
     "D107",
     # allow non-imperative moods for doc strings (TEMPORARY: see issue #256 on GitHub)
     "D401",
+    # disable section heading checks that contradict sphinx/myst
+    "D406", "D407",
 ]
 lint.isort.lines-after-imports = 2
 # List of enabled linting rules, for a complete

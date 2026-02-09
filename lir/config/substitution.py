@@ -340,7 +340,6 @@ def _assign(struct: ContextAwareDict | ContextAwareList, path: list[str], value:
     """Assign a new value to a path within an hierarchical `dict` structure.
 
     Parameters:
-
     - struct is the `dict` that is modified in-place
     - path is the path within the dict, as a list of `str`
     - value is the value to be assigned

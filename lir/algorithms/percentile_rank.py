@@ -7,33 +7,35 @@ from scipy.stats import rankdata
 
 
 class PercentileRankTransformer(sklearn.base.TransformerMixin):
-    """Compute the percentile rankings of a dataset, relative to another dataset.
+    """
+    Compute the percentile rankings of a dataset, relative to another dataset.
 
     Rankings are in range [0, 1]. Handling ties: the maximum of the ranks that
     would have been assigned to all the tied values is assigned to each value.
 
-    To be able to compute the rankings of dataset *Z* relative to dataset *X*,
-    `fit` will create a ranking function for each feature separately, based on
-    *X*. The method `transform` will apply ranking of *Z* based on dataset *X*.
+    To compute the ranks of dataset ``Z`` relative to dataset ``X``, :meth:`fit`
+    will create a ranking function for each feature using ``X``. :meth:`transform`
+    then applies those per-feature ranking functions to ``Z``.
 
-    This class has the methods `fit()` and `transform()`, both take a parameter
-    `X` with one row per instance, e.g. dimensions (n, f) with n = number of
-    measurements, f = number of features. The number of features should be the
-    same in `fit()` and `transform()`.
+    Both :meth:`fit` and :meth:`transform` accept an array ``X`` with one row per
+    instance, i.e. shape ``(n_samples, n_features)``. The number of features must
+    match between :meth:`fit` and :meth:`transform`.
 
-    If the parameter `X` has a *pair* of measurements per row, i.e. has
-    dimensions (n, f, 2), the percentile rank is fitted and applied
-    independently for the first and second measurement of the pair.
+    If ``X`` contains paired measurements per instance (shape
+    ``(n_samples, n_features, 2)``), ranking is fitted and applied independently to
+    the first and second measurement in the pair.
 
-    Fit:
-    Expects:
-        - `X` is a numpy array with one row per instance
+    Parameters
+    ----------
+    X : numpy.ndarray
+        Input data with shape ``(n_samples, n_features)`` or
+        ``(n_samples, n_features, 2)``.
 
-    Transform:
-    Expects:
-        - `X` is a numpy array with one row per instance
-    Returns:
-        - a numpy array with the same shape as `X`
+    Returns
+    -------
+    numpy.ndarray
+        Percentile ranks with the same shape as the input passed to
+        :meth:`transform`.
     """
 
     def __init__(self) -> None:

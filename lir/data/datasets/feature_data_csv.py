@@ -50,34 +50,40 @@ class ExtraField(NamedTuple):
 
 class FeatureDataCsvParser(DataProvider, ABC):
     """
-    Parses a csv file into a FeatureData object.
+    Parse a CSV file into a ``FeatureData`` object.
 
-    This is an abstract class with implementations for different sources:
-    - for reading from a local file, use `FeatureDataCsvFileParser`;
-    - for reading from a URL, use `FeatureDataCsvHttpParser`;
-    - for reading from a stream, use `FeatureDataCsvStreamParser`.
+    This is an abstract base class with concrete implementations for different
+    data sources:
 
-    Example: let's say we have data with two features and source ids.
+    - :class:`FeatureDataCsvFileParser` for reading from a local file;
+    - :class:`FeatureDataCsvHttpParser` for reading from a URL;
+    - :class:`FeatureDataCsvStreamParser` for reading from a stream.
 
-    ```
-    source_id,feature1,feature2,feature3,name_of_an_irrelevant_column
-    0,1,10,1,sherlock
-    0,1,11,1,holmes
-    1,20,30,1,irene
-    1,18,32,3,adler
-    2,5,10,8,professor
-    2,1,11,8,moriarty
-    ```
 
-    This file can be parsed from the following YAML:
-    ```yaml
-    data:
-      provider: feature_data_csv
-      path: path/to/file.csv
-      source_id_column: source_id
-      ignore_columns:
-        - name_of_an_irrelevant_column
-    ```
+    Example
+    -------
+    Assume a CSV file containing two features and source identifiers:
+
+    .. code-block:: text
+
+        source_id,feature1,feature2,feature3,name_of_an_irrelevant_column
+        0,1,10,1,sherlock
+        0,1,11,1,holmes
+        1,20,30,1,irene
+        1,18,32,3,adler
+        2,5,10,8,professor
+        2,1,11,8,moriarty
+
+    This file can be parsed using the following YAML configuration:
+
+    .. code-block:: yaml
+
+        data:
+        provider: feature_data_csv
+        path: path/to/file.csv
+        source_id_column: source_id
+        ignore_columns:
+            - name_of_an_irrelevant_column
     """
 
     def __init__(

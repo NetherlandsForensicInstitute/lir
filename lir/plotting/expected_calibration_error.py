@@ -1,17 +1,22 @@
-"""Empirical Cross Entrpy (ECE).
+"""
+Empirical cross-entropy (ECE).
 
 The discrimination and calibration of the LRs reported by some systems can also
 be measured separately. The empirical cross entropy (ECE) plot is a graphical
 way of doing this.
 
-The ECE is the average of -P(Hp) * log2(P(Hp|LRi)) for all LRi when Hp is true,
-and -P(Hd) * log2(P(Hd|LRi)) for all LRi when Hd is true.
+ECE is computed as the average of:
 
-See:
-[-] D. Ramos, Forensic evidence evaluation using automatic speaker recognition
-    systems. Ph.D. Thesis. Universidad Autonoma de Madrid.
-[-] Bernard Robertson, G.A. Vignaux and Charles Berger, Interpreting Evidence:
-    Evaluating Forensic Science in the Courtroom, 2nd edition, 2016, pp. 96-97.
+- ``-P(Hp) * log2(P(Hp | LR_i))`` over all ``LR_i`` for which ``Hp`` is true, and
+- ``-P(Hd) * log2(P(Hd | LR_i))`` over all ``LR_i`` for which ``Hd`` is true.
+
+References
+----------
+Ramos, D. *Forensic Evidence Evaluation Using Automatic Speaker Recognition
+Systems*. Ph.D. thesis, Universidad Autónoma de Madrid.
+
+Robertson, B., Vignaux, G. A., & Berger, C. (2016). *Interpreting Evidence:
+Evaluating Forensic Science in the Courtroom* (2nd ed.), pp. 96–97.
 """
 
 from typing import Any
@@ -35,23 +40,34 @@ def plot_ece(
     show_pav: bool = True,
     ylim: str = 'neutral',
 ) -> None:
-    """Generate an ECE plot for a set of LRs and corresponding ground-truth labels.
+    """
+    Generate an ECE plot for a set of LRs and corresponding ground-truth labels.
 
-    The x-axis indicates the log prior odds of a sample being drawn from class
-    1; the y-axis shows the entropy for (1) a non-informative system (dotted
-    line), (2) the set of LR values (line), and (3) the set of LR values after
-    PAV-transformation (Pool Adjacent Violators, dashed line).
+    The x-axis shows the log prior odds of a sample being drawn from class 1. The
+    y-axis shows the expected cost (cross-entropy) for:
 
-    :param llrdata: the LLR data containing LLRs and labels.
-    :param log_prior_odds_range: the range of prior odds (tuple of two values,
-        indicating both ends of the range on the x-axis)
-    :param ax: the matplotlib axis to plot on
-    :param show_pav: whether to show the PAV-transformed LRs in the plot
-    :param ylim: the y-axis limits. Valid values are:
-        - 'neutral':  starts at 0, and ends automatically. In practice, this means that the upper limit is set slightly
-                      above the maximum of the 'non-informative' reference.
-        - 'zoomed':   starts at 0 and ends slightly (10%) above the maximum ECE value of the LRs. This may cut off part
-                       of the 'non-informative' reference line.
+    1. A non-informative system (dotted line),
+    2. The provided LR values (solid line), and
+    3. The LR values after PAV transformation (Pool Adjacent Violators; dashed line).
+
+    Parameters
+    ----------
+    llrdata : LLRData
+        LLR data containing LLR values and corresponding labels.
+    log_prior_odds_range : tuple[float, float], optional
+        Range of log prior odds shown on the x-axis, given as ``(min, max)``.
+    ax : matplotlib.axes.Axes, optional
+        Matplotlib axes to plot into. If ``None``, the current axes are used.
+    show_pav : bool, optional
+        Whether to include the PAV-transformed LRs in the plot.
+    ylim : {"neutral", "zoomed"}, optional
+        Y-axis scaling mode:
+
+        - ``"neutral"``: Lower limit is 0; upper limit is set slightly above the
+          maximum of the non-informative reference.
+        - ``"zoomed"``: Lower limit is 0; upper limit is set to approximately 10%
+          above the maximum ECE value of the LRs (this may clip part of the
+          non-informative reference line).
     """
     labels = llrdata.require_labels
 

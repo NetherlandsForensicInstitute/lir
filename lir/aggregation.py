@@ -3,6 +3,7 @@ import logging
 from abc import ABC, abstractmethod
 from collections import OrderedDict
 from collections.abc import Callable, Mapping, Sequence
+from functools import partial
 from pathlib import Path
 from typing import IO, Any, NamedTuple
 
@@ -158,15 +159,32 @@ def plot_invariance_delta_function(config: ContextAwareDict, output_dir: Path) -
 class WriteMetricsToCsv(Aggregation):
     """Helper class to write aggregated results to CSV file."""
 
-    def __init__(self, output_dir: Path, columns: Mapping[str, Callable]):
-        self.path = output_dir / 'metrics.csv'
+    def __init__(self, path: Path, columns: Mapping[str, Callable]):
+        """
+        Initialize the class.
+
+        :param path: the path to the CSV file
+        :param columns: the columns as a dictionary of names to metric functions
+        """
+        self.path = path
         self._file: IO[Any] | None = None
         self._writer: csv.DictWriter | None = None
         self.columns = columns
 
+    @staticmethod
+    def _safe_call(fn: Callable, message: str) -> Any:
+        try:
+            return fn()
+        except Exception as e:
+            LOG.warning(f'{message}: {e}')
+            return ''
+
     def report(self, data: AggregationData) -> None:
         """Write the metrics to CSV."""
-        columns = [(key, metric(data.llrdata)) for key, metric in self.columns.items()]
+        columns = [
+            (key, self._safe_call(partial(metric, data.llrdata), f'calculating metric {key} failed'))
+            for key, metric in self.columns.items()
+        ]
         metrics = []
         for name, value in columns:
             if isinstance(value, (list, tuple)):
@@ -205,4 +223,4 @@ def metrics_csv(config: ContextAwareDict, output_dir: Path) -> WriteMetricsToCsv
     columns = {name: parse_individual_metric(name, output_dir, config.context) for name in columns}
 
     check_is_empty(config)
-    return WriteMetricsToCsv(output_dir, columns)
+    return WriteMetricsToCsv(output_dir / 'metrics.csv', columns)

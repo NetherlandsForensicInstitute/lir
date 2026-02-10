@@ -21,7 +21,6 @@ Evaluating Forensic Science in the Courtroom* (2nd ed.), pp. 96–97.
 
 from typing import Any
 
-import matplotlib.pyplot as plt
 import numpy as np
 
 from lir.algorithms.isotonic_regression import IsotonicCalibrator
@@ -34,9 +33,9 @@ from lir.util import (
 
 
 def plot_ece(
+    ax: Any,
     llrdata: LLRData,
     log_prior_odds_range: tuple[float, float] = (-3, 3),
-    ax: Any = plt,
     show_pav: bool = True,
     ylim: str = 'neutral',
 ) -> None:

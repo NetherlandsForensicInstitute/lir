@@ -30,13 +30,17 @@ class Canvas:
     def __init__(self, ax: Axes):
         self.ax = ax
 
-        self.ece = partial(ece, ax=ax)
-        self.lr_histogram = partial(lr_histogram, ax=ax)
-        self.nbe = partial(nbe, ax=ax)
-        self.pav = partial(pav, ax=ax)
-        self.score_distribution = partial(score_distribution, ax=ax)
-        self.tippett = partial(tippett, ax=ax)
-        self.llr_interval = partial(llr_interval, ax=ax)
+        self.ece = partial(ece, ax)
+        self.lr_histogram = partial(lr_histogram, ax)
+        self.nbe = partial(nbe, ax)
+        self.pav = partial(pav, ax)
+        self.score_distribution = partial(score_distribution, ax)
+        self.tippett = partial(tippett, ax)
+        self.llr_interval = partial(llr_interval, ax)
+
+    def title(self, label: str, **kwargs: Any) -> Any:
+        """Set the title of the axes (wrapper for set_title)."""
+        return self.ax.set_title(label, **kwargs)
 
     def __getattr__(self, attr: str) -> Any:
         return getattr(self.ax, attr)
@@ -105,22 +109,23 @@ def axes(savefig: PathLike | None = None, show: bool | None = None) -> Iterator[
 
 
 def pav(
+    ax: Axes,
     llrdata: LLRData,
     add_misleading: int = 0,
     show_scatter: bool = True,
-    ax: Axes = plt,
 ) -> None:
     """Generate a plot of pre-calibrated versus post-calibrated LRs using Pool Adjacent Violators (PAV).
 
-    :param llrdata: an `LLRData` object of likelihood ratios before PAV transform
-    :param y: numpy array
-        Labels corresponding to lrs (0 for Hd and 1 for Hp)
-    :param add_misleading: int
+    Parameters
+    ----------
+    ax : Axes
+        The matplotlib axes object to plot on
+    llrdata : LLRData
+        The LLRData object containing likelihood ratios and labels
+    add_misleading : int
         number of misleading evidence points to add on both sides (default: `0`)
-    :param show_scatter: boolean
+    show_scatter : bool
         If True, show individual LRs (default: `True`)
-    :param ax: pyplot axes object
-        defaults to `matplotlib.pyplot`
     """
     llrs = llrdata.llrs
     y = llrdata.labels
@@ -240,18 +245,23 @@ def pav(
 
 
 def lr_histogram(
+    ax: Axes,
     llrdata: LLRData,
     bins: int = 20,
     weighted: bool = True,
-    ax: Axes = plt,
 ) -> None:
     """Plot the 10log lrs.
 
-    :param llrdata: the likelihood ratios
-    :param bins: number of bins to divide scores into
-    :param weighted: if y-axis should be weighted for frequency within each class
-    :param ax: axes to plot figure to
-
+    Parameters
+    ----------
+    ax : Axes
+        The matplotlib axes object to plot on
+    llrdata : LLRData
+        The LLRData object containing likelihood ratios and labels
+    bins : int
+        number of bins to divide scores into (default: 20)
+    weighted : bool
+        if y-axis should be weighted for frequency within each class (default: True)
     """
     llrs = llrdata.llrs
     y = llrdata.labels
@@ -271,15 +281,20 @@ def lr_histogram(
     ax.legend()
 
 
-def tippett(llrdata: LLRData, plot_type: int = 1, ax: Axes = plt) -> None:
+def tippett(ax: Axes, llrdata: LLRData, plot_type: int = 1) -> None:
     """Plot empirical cumulative distribution functions of same-source and different-sources lrs.
 
-    :param llrdata: the likelihood ratios
-    :param plot_type: an integer, must be either 1 or 2.
+    Parameters
+    ----------
+    ax : Axes
+        The matplotlib axes object to plot on
+    llrdata : LLRData
+        The LLRData object containing likelihood ratios and labels
+    plot_type : int
+        must be either 1 or 2 (default: 1).
         In type 1 both curves show proportion of lrs greater than or equal to the
         x-axis value, while in type 2 the curve for same-source shows the
         proportion of lrs smaller than or equal to the x-axis value.
-    :param ax: axes to plot figure to
     """
     llrs = llrdata.llrs
     labels = llrdata.labels
@@ -304,13 +319,15 @@ def tippett(llrdata: LLRData, plot_type: int = 1, ax: Axes = plt) -> None:
     ax.legend()
 
 
-def llr_interval(llrdata: LLRData, ax: Axes = plt) -> None:
+def llr_interval(ax: Axes, llrdata: LLRData) -> None:
     """Plot the lr's on the x-as, with the relative interval score on the y-as.
 
-    :param llrdata: LLRData
+    Parameters
+    ----------
+    ax : Axes
+        The matplotlib axes object to plot on
+    llrdata : LLRData
         The LLRData object containing the likelihood ratios and interval scores.
-    :param ax: axes to plot figure to
-
     """
     if not llrdata.has_intervals:
         raise ValueError('LLRData must contain interval scores to plot Score-LR.')
@@ -332,11 +349,11 @@ def llr_interval(llrdata: LLRData, ax: Axes = plt) -> None:
 
 
 def score_distribution(
+    ax: Axes,
     scores: np.ndarray,
     y: np.ndarray,
     bins: int = 20,
     weighted: bool = True,
-    ax: Axes | None = None,
 ) -> None:
     """Plot the distributions of scores calculated by the (fitted) lr_system.
 
@@ -344,20 +361,23 @@ def score_distribution(
     within the class, and `inf` is the fraction of instances. Otherwise, the
     y-axis shows the number of instances.
 
-    :param scores: scores of (fitted) lr_system (1d-array)
-    :param y: a numpy array of labels (0 or 1, 1d-array of same length as `scores`)
-    :param bins: number of bins to divide scores into
-    :param weighted: if y-axis should be the probability density within each class,
-        instead of counts
-    :param ax: axes to plot figure to
-
+    Parameters
+    ----------
+    ax : Axes
+        The matplotlib axes object to plot on
+    scores : np.ndarray
+        scores of (fitted) lr_system (1d-array)
+    y : np.ndarray
+        a numpy array of labels (0 or 1, 1d-array of same length as `scores`)
+    bins : int
+        number of bins to divide scores into (default: 20)
+    weighted : bool
+        if y-axis should be the probability density within each class,
+        instead of counts (default: True)
     """
-    if ax is None:
-        _, ax = plt.subplots()
     plt.rcParams.update({'font.size': 15})
 
     bins = np.histogram_bin_edges(scores[np.isfinite(scores)], bins=bins)
-    bin_width = bins[1] - bins[0]
 
     # flip Y-classes to achieve blue bars for H1-true and orange for H2-true
     y_classes = np.flip(np.unique(y))

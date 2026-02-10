@@ -24,15 +24,15 @@ class TestPlotting(unittest.TestCase):
             ax.title('PAV plot using savefig()')
 
         # without context
-        fig = plt.figure()
-        plotting.pav(llr_data)
+        fig, ax = plt.subplots()
+        plotting.pav(ax, llr_data)
         plt.title('simple call with full control')
         plt.close(fig)
 
         # sub plots
         fig, axs = plt.subplots(2)
-        plotting.pav(llr_data, ax=axs[0])
-        plotting.ece(llr_data, ax=axs[1])
+        plotting.pav(axs[0], llr_data)
+        plotting.ece(axs[1], llr_data)
         plt.close(fig)
 
     def test_plot_calls(self):

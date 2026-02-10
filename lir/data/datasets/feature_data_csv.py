@@ -1,5 +1,6 @@
 import csv
 import io
+import itertools
 import logging
 from abc import ABC
 from collections import defaultdict
@@ -87,6 +88,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
         role_assignment_column: str | None = None,
         extra_fields: list[ExtraField] | None = None,
         ignore_columns: list[str] | None = None,
+        head: int | None = None,
         message_prefix: str = '',
     ):
         """
@@ -101,6 +103,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
         :param role_assignment_column: the name of the column that contains the role assignment ("train" or "test")
         :param extra_fields: extra fields to read, in addition to the above
         :param ignore_columns: the names of the columns that should be ignored
+        :param head: read at most this number of rows from the file only, and ignore all others
         :param message_prefix: a string to prefix to all log and error messages
         """
         self.source_id_columns: list[str] = (
@@ -114,6 +117,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
         self.role_assignment_column = role_assignment_column
         self.extra_fields = extra_fields or []
         self.ignore_columns = ignore_columns or []
+        self._head = head
         self._message_prefix = message_prefix
 
         # the "extra field" argument allows for including arbitrary fields
@@ -175,7 +179,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
         extra_values = defaultdict(list)
 
         # read the file, row by row
-        for row in reader:
+        for row in itertools.islice(reader, self._head):
             if source_ids is not None:
                 source_ids.append([row[column_name] for column_name in self.source_id_columns])
             if self.label_column is not None:
@@ -193,6 +197,9 @@ class FeatureDataCsvParser(DataProvider, ABC):
             features.append(
                 [self._parse_value(reader.line_num, fieldname, row[fieldname], float) for fieldname in feature_columns]
             )
+
+        if self._head is not None and len(features) < self._head:
+            LOG.warning(f'input file has too few rows; expected: {self._head}; found: {len(features)}')
 
         # finalize the data
         data = {

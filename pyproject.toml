@@ -140,5 +140,4 @@ ignore_missing_imports = true
 exclude = [
     "lir/lrsystems/two_level.py",  # imported from LIR
     "lir/plotting/__init__.py",  # imported from LIR
-    "lir/transform/pairing.py",  # imported from LIR
 ]

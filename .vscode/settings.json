@@ -1,0 +1,15 @@
+{
+    "yaml.schemas": {
+        "./configs/lir.schema.json": [
+            "examples/*.yaml"
+        ],
+        "/Users/pimmeulensteen/Documents/Projects/lir/configs/experiments.yaml": [
+            "/Users/pimmeulensteen/Documents/Projects/lir/configs/experiments.yaml"
+        ],
+        "lir": [
+            "yaml.schema",
+            "file:///Users/pimmeulensteen/Documents/Projects/lir/examples/optuna.yaml"
+        ],
+        "file:///Users/pimmeulensteen/Documents/Projects/lir/configs/lir.schema.json": "file:///Users/pimmeulensteen/Documents/Projects/lir/examples/bootstrap.yaml"
+    }
+}

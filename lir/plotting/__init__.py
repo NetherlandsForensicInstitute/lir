@@ -20,18 +20,6 @@ from .expected_calibration_error import plot_ece as ece
 
 LOG = logging.getLogger(__name__)
 
-# make matplotlib.pyplot behave more like axes objects
-plt.set_xlabel = plt.xlabel
-plt.set_ylabel = plt.ylabel
-plt.set_xlim = plt.xlim
-plt.set_ylim = plt.ylim
-plt.get_xlim = lambda: plt.gca().get_xlim()
-plt.get_ylim = lambda: plt.gca().get_ylim()
-plt.set_xticks = plt.xticks
-plt.set_yticks = plt.yticks
-plt.get_legend = lambda: plt.gca().get_legend()
-
-
 H1_COLOR = 'red'
 H2_COLOR = 'blue'
 
@@ -105,9 +93,9 @@ def axes(savefig: PathLike | None = None, show: bool | None = None) -> Iterator[
         with axes() as ax:
             ax.pav(lrs, y)
     """
-    fig = plt.figure()
+    fig, ax = plt.subplots()
     try:
-        yield Canvas(ax=plt)
+        yield Canvas(ax=ax)
     finally:
         if savefig:
             fig.savefig(savefig)
@@ -145,12 +133,15 @@ def pav(
         llrs[llrs != np.inf].max() + 0.5,
     ]
 
-    has_legend = ax.get_legend() is not None
-    if not has_legend or 'Consistent system' not in [text.get_text() for text in ax.get_legend().get_texts()]:
+    legend = ax.get_legend()
+    has_legend = legend is not None
+    if not has_legend or (
+        legend is not None and 'Consistent system' not in [text.get_text() for text in legend.get_texts()]
+    ):
         ax.plot(xrange, yrange, '--', color='gray', label='Consistent system')
 
     # line pre pav llrs x and post pav llrs y
-    line_x = np.arange(*xrange, 0.01)
+    line_x = np.arange(xrange[0], xrange[1], 0.01)
     line_y = pav.apply(LLRData(features=line_x.reshape(-1, 1))).llrs
 
     # filter nan values, happens when values are out of bound (x_values out of training domain for pav)
@@ -166,29 +157,29 @@ def pav(
 
         def adjust_ticks_labels_and_range(
             neg_inf: bool, pos_inf: bool, axis_lower: float, axis_upper: float
-        ) -> tuple[tuple[float, float], list, list[str]]:
+        ) -> tuple[tuple[float, float], list[float], list[str]]:
             # We want a maximum of 10 ticks on the axis. If the range is larger,
             # we adjust the step_size accordingly. We devide by 9 because the range
             # is inclusive, so 10 ticks means 9 steps.
             step_size = (axis_upper - axis_lower) / 9
 
-            ticks = list(range(floor(axis_lower), ceil(axis_upper) + 1, ceil(step_size)))
+            ticks: list[int | float] = list(range(floor(axis_lower), ceil(axis_upper) + 1, ceil(step_size)))
             tick_labels = list(map(str, ticks))
-            step_size = ticks[2] - ticks[1]
+            step_size_actual: int | float = ticks[2] - ticks[1]
 
             if neg_inf:
-                axis_lower -= step_size
+                axis_lower -= step_size_actual
                 ticks = [axis_lower] + ticks
                 tick_labels = ['-∞'] + tick_labels
 
             if pos_inf:
-                axis_upper += step_size
+                axis_upper += step_size_actual
                 ticks = ticks + [axis_upper]
                 tick_labels = tick_labels + ['+∞']
 
             return (axis_lower, axis_upper), ticks, tick_labels
 
-        def replace_values_out_of_range(values, min_range, max_range):
+        def replace_values_out_of_range(values: np.ndarray, min_range: float, max_range: float) -> np.ndarray:
             # create margin for point so no overlap with axis line
             margin = (max_range - min_range) / 60
             return np.concatenate(
@@ -198,16 +189,16 @@ def pav(
                 ]
             )
 
-        yrange, ticks_y, tick_labels_y = adjust_ticks_labels_and_range(
-            np.isneginf(pav_llrs).any(), np.isposinf(pav_llrs).any(), *yrange
+        yrange_tuple, ticks_y, tick_labels_y = adjust_ticks_labels_and_range(
+            bool(np.isneginf(pav_llrs).any()), bool(np.isposinf(pav_llrs).any()), yrange[0], yrange[1]
         )
-        xrange, ticks_x, tick_labels_x = adjust_ticks_labels_and_range(
-            np.isneginf(llrs).any(), np.isposinf(llrs).any(), *xrange
+        xrange_tuple, ticks_x, tick_labels_x = adjust_ticks_labels_and_range(
+            bool(np.isneginf(llrs).any()), bool(np.isposinf(llrs).any()), xrange[0], xrange[1]
         )
 
         mask_not_inf = np.logical_or(np.isinf(llrs), np.isinf(pav_llrs))
-        x_inf = replace_values_out_of_range(llrs[mask_not_inf], xrange[0], xrange[1])
-        y_inf = replace_values_out_of_range(pav_llrs[mask_not_inf], yrange[0], yrange[1])
+        x_inf = replace_values_out_of_range(llrs[mask_not_inf], xrange_tuple[0], xrange_tuple[1])
+        y_inf = replace_values_out_of_range(pav_llrs[mask_not_inf], yrange_tuple[0], yrange_tuple[1])
 
         ax.set_yticks(ticks_y, tick_labels_y)
         ax.set_xticks(ticks_x, tick_labels_x)
@@ -217,9 +208,12 @@ def pav(
         ax.axvline(x=0, color='gray', linewidth=0.5, linestyle=':')
 
         color = [H1_COLOR if i > 0 else H2_COLOR for i in y_inf]
-        ax.scatter(x_inf, y_inf, color=color, marker='|', linewidth=0.2)
+        ax.scatter(x_inf, y_inf, color=color, marker='|', linewidths=0.2)
 
-    ax.axis(xrange + yrange)
+        xrange = list(xrange_tuple)
+        yrange = list(yrange_tuple)
+
+    ax.axis((xrange[0], xrange[1], yrange[0], yrange[1]))
     # pre-/post-calibrated lr fit
 
     if show_scatter:
@@ -231,11 +225,12 @@ def pav(
         h2_llrs = np.where(mask_not_y, llrs, np.nan)
         h2_pav = np.where(mask_not_y, pav_llrs, np.nan)
 
+        assert y is not None
         n_h1 = np.count_nonzero(y)
         n_h2 = len(y) - n_h1
 
-        ax.scatter(h1_llrs, h1_pav, facecolors=H1_COLOR, marker=2, linewidths=0.2, label=f'H1 (n={n_h1})')
-        ax.scatter(h2_llrs, h2_pav, facecolors=H2_COLOR, marker=3, linewidths=0.2, label=f'H2 (n={n_h2})')
+        ax.scatter(h1_llrs, h1_pav, facecolors=H1_COLOR, marker='v', linewidths=0.2, label=f'H1 (n={n_h1})')
+        ax.scatter(h2_llrs, h2_pav, facecolors=H2_COLOR, marker='^', linewidths=0.2, label=f'H2 (n={n_h2})')
 
         # scatter plot of measured lrs
 
@@ -261,11 +256,16 @@ def lr_histogram(
     llrs = llrdata.llrs
     y = llrdata.labels
 
-    bins = np.histogram_bin_edges(llrs, bins=bins)
+    assert y is not None
+    bins_array = np.histogram_bin_edges(llrs, bins=bins)
     points0, points1 = util.Xy_to_Xn(llrs, y)
     weights0, weights1 = (np.ones_like(points) / len(points) if weighted else None for points in (points0, points1))
-    ax.hist(points1, bins=bins, alpha=0.25, weights=weights1, label=f'H1 (n={len(points1)})', color=H1_COLOR)
-    ax.hist(points0, bins=bins, alpha=0.25, weights=weights0, label=f'H2 (n={len(points0)})', color=H2_COLOR)
+    ax.hist(
+        points1, bins=bins_array.tolist(), alpha=0.25, weights=weights1, label=f'H1 (n={len(points1)})', color=H1_COLOR
+    )
+    ax.hist(
+        points0, bins=bins_array.tolist(), alpha=0.25, weights=weights0, label=f'H2 (n={len(points0)})', color=H2_COLOR
+    )
     ax.set_xlabel('log$_{10}$(LR)')
     ax.set_ylabel('count' if not weighted else 'relative frequency')
     ax.legend()
@@ -409,16 +409,17 @@ def score_distribution(
         for color, x_coord, y_coord in plot_args_inf:
             ax.bar(x_coord, y_coord, width=bar_width, color=color, alpha=0.3, hatch='/')
 
-    for cls, weight in zip(y_classes, weights, strict=True):
+    bin_width = bins[1] - bins[0]
+    for cls, weight_vec in zip(y_classes, weights, strict=True):
         ax.hist(
             scores[y == cls],
-            bins=bins,
+            bins=bins.tolist(),
             alpha=0.3,
             label=f'class {cls}',
-            weights=weight / bin_width if weighted else None,
+            weights=weight_vec / bin_width if weighted else None,
         )
 
-        ax.set_xlabel('score')
+    ax.set_xlabel('score')
     if weighted:
         ax.set_ylabel('probability density')
     else:

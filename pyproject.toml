@@ -136,7 +136,3 @@ strict_optional = true
 warn_unused_configs = true
 # do not warn about missing imports
 ignore_missing_imports = true
-
-exclude = [
-    "lir/plotting/__init__.py",  # imported from LIR
-]

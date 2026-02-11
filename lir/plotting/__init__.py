@@ -12,6 +12,7 @@ from matplotlib.axes import Axes
 
 from lir import util
 from lir.algorithms.bayeserror import plot_nbe as nbe
+from lir.config.base import check_not_none
 from lir.data.models import LLRData
 
 from ..algorithms.isotonic_regression import IsotonicCalibrator
@@ -230,7 +231,7 @@ def pav(
         h2_llrs = np.where(mask_not_y, llrs, np.nan)
         h2_pav = np.where(mask_not_y, pav_llrs, np.nan)
 
-        assert y is not None
+        y = check_not_none(y)
         n_h1 = np.count_nonzero(y)
         n_h2 = len(y) - n_h1
 
@@ -264,9 +265,8 @@ def lr_histogram(
         if y-axis should be weighted for frequency within each class (default: True)
     """
     llrs = llrdata.llrs
-    y = llrdata.labels
+    y = llrdata.require_labels
 
-    assert y is not None
     bins_array = np.histogram_bin_edges(llrs, bins=bins)
     points0, points1 = util.Xy_to_Xn(llrs, y)
     weights0, weights1 = (np.ones_like(points) / len(points) if weighted else None for points in (points0, points1))
@@ -297,9 +297,7 @@ def tippett(ax: Axes, llrdata: LLRData, plot_type: int = 1) -> None:
         proportion of lrs smaller than or equal to the x-axis value.
     """
     llrs = llrdata.llrs
-    labels = llrdata.labels
-    if labels is None:
-        raise ValueError('Labels are required to create a Tippet plot.')
+    labels = llrdata.require_labels
 
     lr_0, lr_1 = util.Xy_to_Xn(llrs, labels)
     xplot0 = np.linspace(np.min(lr_0), np.max(lr_0), 100)

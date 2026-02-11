@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LiR Exeperiment",
+  "type": "object",
+  "properties": {
+    "output_path": { 
+      "type": "string", 
+      "minLength": 1,
+      "description": "Path where output files will be saved. Can include placeholders like ${timestamp}."
+    },
+    "experiments": { "type": "array" }
+  },
+  "required": ["output_path", "experiments"]
+}

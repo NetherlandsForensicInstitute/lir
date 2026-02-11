@@ -4,6 +4,7 @@ import numpy as np
 from scipy.special import logsumexp
 
 from lir import Transformer
+from lir.config.base import check_not_none
 from lir.data.models import FeatureData, InstanceData
 from lir.lrsystems.lrsystems import LLRData, LRSystem
 from lir.transform.pairing import PairingMethod
@@ -290,27 +291,28 @@ class TwoLevelModelNormalKDE:
             covars_trace_update_inv is the inverse of covars_trace_update,
             covars_ref_inv is the inverse of covars_ref.
         """
-        assert self.kernel_bandwidth_sq is not None
-        assert self.between_covars is not None
-        assert self.mean_within_covars is not None
+        kernel_bandwidth_sq = check_not_none(self.kernel_bandwidth_sq)
+        between_covars = check_not_none(self.between_covars)
+        mean_within_covars = check_not_none(self.mean_within_covars)
+
         # Number of trace and reference measurements
         n_trace = len(X_trace)
         n_reference = len(X_ref)
         # Calculate covariance matrix for the trace data, given the training data (U_h0)
-        covars_trace = self.kernel_bandwidth_sq * self.between_covars + self.mean_within_covars / n_trace
+        covars_trace = kernel_bandwidth_sq * between_covars + mean_within_covars / n_trace
         # Calculate covariance matrix for the reference data, given the training data (U_hx)
-        covars_ref = self.kernel_bandwidth_sq * self.between_covars + self.mean_within_covars / n_reference
+        covars_ref = kernel_bandwidth_sq * between_covars + mean_within_covars / n_reference
         # take the inverses
         covars_trace_inv = np.linalg.inv(covars_trace)
         covars_ref_inv = np.linalg.inv(covars_ref)
         # Calculate T_hn
-        T_hn = self.kernel_bandwidth_sq * self.between_covars - np.matmul(
-            np.matmul((self.kernel_bandwidth_sq * self.between_covars), covars_ref_inv),
-            (self.kernel_bandwidth_sq * self.between_covars),
+        T_hn = kernel_bandwidth_sq * between_covars - np.matmul(
+            np.matmul((kernel_bandwidth_sq * between_covars), covars_ref_inv),
+            (kernel_bandwidth_sq * between_covars),
         )
         # Calculate covariance matrix for the trace data, given the training data and with a Bayesian update with
         #   the reference data under Hp (U_hn)
-        covars_trace_update = T_hn + self.mean_within_covars / n_trace
+        covars_trace_update = T_hn + mean_within_covars / n_trace
         covars_trace_update_inv = np.linalg.inv(covars_trace_update)
 
         # TODO covars_trace redundant to return?
@@ -329,21 +331,22 @@ class TwoLevelModelNormalKDE:
         X_ref np.array of measurements of reference object, rows are repetitions, columns features
         returns: updated_ref_mean, bayesian update of reference mean given KDE background means.
         """
-        assert self.kernel_bandwidth_sq is not None
-        assert self.between_covars is not None
-        assert self.mean_within_covars is not None
-        assert self.means_per_source is not None
+        kernel_bandwidth_sq = check_not_none(self.kernel_bandwidth_sq)
+        between_covars = check_not_none(self.between_covars)
+        mean_within_covars = check_not_none(self.mean_within_covars)
+        means_per_source = check_not_none(self.means_per_source)
+
         n_reference = len(X_ref)
         mean_X_reference = np.mean(X_ref, axis=0)
 
         # calculate the two terms for mu_h and add, see Bolck et al
         mu_h_1 = np.matmul(
-            np.matmul(self.kernel_bandwidth_sq * self.between_covars, covars_ref_inv),
+            np.matmul(kernel_bandwidth_sq * between_covars, covars_ref_inv),
             mean_X_reference,
         ).reshape(-1, 1)
         mu_h_2 = np.matmul(
-            np.matmul(self.mean_within_covars / n_reference, covars_ref_inv),
-            self.means_per_source.transpose(),
+            np.matmul(mean_within_covars / n_reference, covars_ref_inv),
+            means_per_source.transpose(),
         )
 
         return (mu_h_1 + mu_h_2).transpose()
@@ -371,13 +374,13 @@ class TwoLevelModelNormalKDE:
         updated_ref_mean np.array with same dimensions as X, calculated by _predict_updated_ref_mean
         returns: ln_num1, natural log of numerator of the LR-formula in Bolck et al.
         """
-        assert self.means_per_source is not None
+        means_per_source = check_not_none(self.means_per_source)
         mean_X_trace = np.mean(X_trace, axis=0).reshape(1, -1)
         mean_X_reference = np.mean(X_ref, axis=0).reshape(1, -1)
 
         # calculate difference vectors (in matrix form)
         dif_trace = mean_X_trace - updated_ref_mean
-        dif_ref = mean_X_reference - self.means_per_source
+        dif_ref = mean_X_reference - means_per_source
 
         # calculate matrix products and sums
         ln_num_terms = -0.5 * np.sum(np.matmul(dif_trace, covars_trace_update_inv) * dif_trace, axis=1) + -0.5 * np.sum(
@@ -397,10 +400,10 @@ class TwoLevelModelNormalKDE:
         U_inv, np.array with respective covariance matrix as calculated by _predict_covariances_trace_ref
         returns: ln_den, natural log of a denominator term of the LR-formula in Bolck et al.
         """
-        assert self.means_per_source is not None
+        means_per_source = check_not_none(self.means_per_source)
         # calculate mean of reference or trace measurements and difference vectors (in matrix form)
         mean_X_ref_or_trace = np.mean(X_ref_or_trace, axis=0).reshape(1, -1)
-        dif_ref = mean_X_ref_or_trace - self.means_per_source
+        dif_ref = mean_X_ref_or_trace - means_per_source
 
         # calculate matrix products and sums
         ln_den_terms = -0.5 * np.sum(np.matmul(dif_ref, covars_inv) * dif_ref, axis=1)

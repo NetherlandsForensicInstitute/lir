@@ -11,7 +11,7 @@ data:
     cache_dir: cache/glass
 
   splits:
-    strategy: predefined_train_test_split
+    strategy: predefined_train_test
 
 lr_system:
   architecture: score_based

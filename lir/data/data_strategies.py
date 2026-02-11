@@ -42,15 +42,13 @@ class BinaryCrossValidation(DataStrategy):
 
     .. code-block:: yaml
 
-        data_strategies:
-        binary_cross_validation: lir.data.data_strategies.BinaryCrossValidation
+        data:
+          [...]
+          splits:
+            strategy: binary_cross_validation
+            folds: 5
+            seed: 42
 
-    In a benchmark configuration, the split strategy can be referenced as:
-
-    .. code-block:: yaml
-
-        splits:
-        strategy: binary_cross_validation
     """
 
     def __init__(self, folds: int, seed: int | None = None):
@@ -92,20 +90,13 @@ class MulticlassCrossValidation(DataStrategy):
     same source are assigned to the same fold, ensuring that no source appears in
     both the training and test sets within a split.
 
-    This strategy may be registered in a YAML registry as follows:
-
-    .. code-block:: yaml
-
-        data_strategies:
-        multiclass_cross_validation: lir.data.data_strategies.MulticlassCrossValidation
-
     In a benchmark configuration, the split strategy can be referenced as:
 
     .. code-block:: yaml
 
         data:
-        [...]
-        splits:
+          [...]
+          splits:
             strategy: multiclass_cross_validation
             folds: 5
     """

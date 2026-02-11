@@ -265,11 +265,11 @@ class FolderHyperparameter(Hyperparameter):
 
         hyperparameters:
         - path: data.provider.path
-            type: folder
-            folder: project_files/my_dataset/
-            ignore_files:  # Optional list of file patterns to ignore.
-            - '*.tmp'
-            - 'ignore_this_file.csv'
+          type: folder
+          folder: project_files/my_dataset/
+          ignore_files:  # Optional list of file patterns to ignore.
+           - '*.tmp'
+           - 'ignore_this_file.csv'
 
     Raises
     ------

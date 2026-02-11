@@ -1,11 +1,11 @@
 import pytest
 
 from lir import metrics
-from lir.data.data_strategies import MulticlassCrossValidation
 from lir.data.datasets.synthesized_normal_multiclass import (
     SynthesizedDimension,
     SynthesizedNormalMulticlassData,
 )
+from lir.data_strategies import MulticlassCrossValidation
 from lir.lrsystems.lrsystems import LLRData
 from lir.lrsystems.two_level import TwoLevelSystem
 from lir.transform.pairing import SourcePairing

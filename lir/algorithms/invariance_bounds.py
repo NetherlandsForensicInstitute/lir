@@ -1,10 +1,11 @@
 """
 Extrapolation bounds on LRs using the Invariance Verification method by Alberink et al. (2025).
 
-See:
-[-] A transparent method to determine limit values for Likelihood Ratio systems, by
-    Ivo Alberink, Jeannette Leegwater, Jonas Malmborg, Anders Nordgaard, Marjan Sjerps, Leen van der Ham
-    In: Submitted for publication in 2025.
+References
+----------
+Alberink, I., Leegwater, J., Malmborg, J., Nordgaard, A., Sjerps, M., &
+van der Ham, L. (2025). *A transparent method to determine limit values for
+likelihood ratio systems*. Submitted for publication.
 """
 
 import matplotlib.pyplot as plt

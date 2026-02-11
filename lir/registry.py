@@ -267,17 +267,19 @@ class YamlRegistry(ConfigParserLoader):
         default_config_parser: Callable[[Any], ConfigParser] | None = None,
         search_path: list[str] | None = None,
     ) -> ConfigParser:
-        """Retrieve a value for a given key name from the YAML-based registry.
+        """
+        Retrieve a value for a given key name from the YAML-based registry.
 
-        An entry can take the following forms, available under the keys `path.to.key1` and
-        `path.to.key2` respectively:
-        ```
-        path.to.key1: ObjectName
-        path.to.key2:
-            class: ObjectName
-        ```
+        An entry can take the following forms, available under the keys ``path.to.key1`` and ``path.to.key2``
+        respectively:
 
-        In the example, `ObjectName` refers to a Python object available in the current runtime.
+        .. code-block:: yaml
+
+            path.to.key1: ObjectName
+            path.to.key2:
+                class: ObjectName
+
+        In the example, ``ObjectName`` refers to a Python object available in the current runtime.
         """
         spec = self._find(key, search_path)
         if isinstance(spec, str):

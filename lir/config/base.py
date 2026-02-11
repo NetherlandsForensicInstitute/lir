@@ -141,25 +141,29 @@ class GenericConfigParser(ConfigParser):
 
 
 def config_parser(func: Callable[[ContextAwareDict, Path], Any]) -> Callable:
-    """Wrap parsing functions in a `ConfigParser` object by providing a decorator.
+    """
+    Wrap a parsing function in a ``ConfigParser`` object using a decorator.
 
-    The `ConfigParser` object exposes a `parse()` method, required by the API.
+    The resulting ``ConfigParser`` instance exposes a :meth:`parse` method, as
+    required by the API. The body of the decorated function is executed when the
+    :meth:`parse` method is called.
 
-    Using the `@config_parser` decorator, exposes the body of the function through the wrapped
-    `parse()` method.
+    This decorator can be used as follows:
 
-    This decorator can be used as follows (example):
-    ```
-    @config_parser
-    def foo(config, config_context_path, output_dir):
-      if "some_argument" not in config or "another_argument" not in config:
-        raise YamlParseError(config_context_path, "a required argument is missing")
-      return Bar(config["some_argument"], config["another_argument"])
-    ```
+    .. code-block:: python
 
-    Now, the function `foo()` is wrapped within a `ConfigParser` object,
-    which exposes the function body of `foo()` through the `parse()` method.
-    See documentation of `ConfigParser` for the meaning of the arguments.
+        @config_parser
+        def foo(config, config_context_path, output_dir):
+            if "some_argument" not in config or "another_argument" not in config:
+                raise YamlParseError(
+                    config_context_path,
+                    "a required argument is missing",
+                )
+            return Bar(config["some_argument"], config["another_argument"])
+
+    After decoration, ``foo`` is replaced by a ``ConfigParser`` instance whose
+    :meth:`parse` method executes the original function body. See the
+    documentation of :class:`ConfigParser` for the meaning of the arguments.
     """
 
     class ConfigParserFunction(ConfigParser):

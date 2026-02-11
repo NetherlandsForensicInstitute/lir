@@ -55,45 +55,55 @@ class Canvas:
 
 
 def savefig(path: str) -> _GeneratorContextManager[Canvas]:
-    """Create a plotting context, write plot when closed.
+    """
+    Create a plotting context and write the figure to a file when the context exits.
 
-    Example:
-    ```py
-    with savefig(filename) as ax:
-        ax.pav(lrs, y)
-    ```
+    Example
+    -------
+    .. code-block:: python
 
-    A call to `savefig(path)` is identical to `axes(savefig=path)`.
+        with savefig(path) as ax:
+            ax.pav(lrs, y)
 
-    :param path: str
-        write a PNG image to this path
+    A call to :func:`savefig` is equivalent to calling :func:`axes` with
+    ``savefig=path``.
+
+    Parameters
+    ----------
+    path : str
+        Path to the output file. The figure is written as a PNG image.
     """
     return axes(savefig=path)
 
 
 def show() -> _GeneratorContextManager[Canvas]:
-    """Create a plotting context, show plot when closed.
+    """
+    Create a plotting context and show the figure when the context exits.
 
-    Example:
-    ```py
-    with show() as ax:
-        ax.pav(lrs, y)
-    ```
+    Example
+    -------
+    .. code-block:: python
 
-    A call to `show()` is identical to `axes(show=True)`.
+        with show() as ax:
+            ax.pav(lrs, y)
+
+    A call to :func:`show` is equivalent to calling :func:`axes` with
+    ``show=True``.
     """
     return axes(show=True)
 
 
 @contextmanager
 def axes(savefig: PathLike | None = None, show: bool | None = None) -> Iterator[Canvas]:
-    """Create a plotting context.
+    """
+    Create a plotting context.
 
-    Example:
-    ```py
-    with axes() as ax:
-        ax.pav(lrs, y)
-    ```
+    Example
+    -------
+    .. code-block:: python
+
+        with axes() as ax:
+            ax.pav(lrs, y)
     """
     fig = plt.figure()
     try:

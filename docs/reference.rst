@@ -22,7 +22,7 @@ This page lists the components that may be needed to set up an experiment.
     ] %}
 
     {{friendly_name}}
-    ^^^^^^^^^^^^^^^^^
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     Registry section: ``{{ registry_section }}``
 
     {% for name in registry %}
@@ -52,7 +52,7 @@ This page lists the components that may be needed to define an LR system.
     ] %}
 
     {{friendly_name}}
-    ^^^^^^^^^^^^^^^^^
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     Registry section: `{{ registry_section }}`
 

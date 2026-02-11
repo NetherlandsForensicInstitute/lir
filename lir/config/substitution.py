@@ -1,28 +1,32 @@
-"""Substitution module.
+"""
+Substitution module.
 
-This module offers support functions for replacing/modifying components of an LR Benchmark pipeline
-at runtime. For example to compare a logistic regression approach with a support vector approach or to
-optimize a given (hyper)parameter of the system.
+This module provides utility functions for replacing or modifying components of
+an LR Benchmark pipeline at runtime. Typical use cases include comparing
+different modelling approaches (e.g. logistic regression versus support vector
+machines) or optimising system hyperparameters.
 
-For example, the `parameters` path of the `model_selection_run` benchmark, which defines the `comparing.clf` as
-a path to modify with the options as defined in the `values` section. This will replace (update) the defined
-`comparing` module in the LR system configuration, used in this pipeline.
-```
-benchmarks:
-  model_selection_run:
-    lr_system: ...
-    ...
-    parameters:
-      - path: comparing.clf
-        values:
-          - name: logit
-            method: logistic_regression
-            C: 1
-          - name: svm
-            method: svm
-            probability: True
-```
-"""  # noqa: D405, D406, D407, D411, D214 (ignores to allow YAML definition)
+For example, the ``parameters`` section of the ``model_selection_run`` benchmark
+can define a path (``comparing.clf``) to be modified using the options listed in
+the ``values`` field. Each option updates the ``comparing`` component in the LR
+system configuration used by the pipeline.
+
+.. code-block:: yaml
+
+    benchmarks:
+      model_selection_run:
+        lr_system: ...
+        ...
+        parameters:
+          - path: comparing.clf
+            values:
+              - name: logit
+                method: logistic_regression
+                C: 1
+              - name: svm
+                method: svm
+                probability: True
+"""  # noqa: D214, D405, D406, D407, D411 (allow for `parameters` in docstring)
 
 import json
 import logging
@@ -191,15 +195,16 @@ def parse_constant(spec: ContextAwareDict, output_path: Path) -> CategoricalHype
 
 class FloatHyperparameter(Hyperparameter):
     """
-    A floating point hyperparameter.
+    Floating-point hyperparameter.
 
-    A floating point hyperparameter has the following fields in a YAML configuration:
-    - path: the path of this hyperparameter in the LR system configuration
-    - low: the lowest possible value
-    - high: the highest possible value
-    - step (optional): the step size
-    - log (optional): if True, search in log space instead of linear space; cannot be combined with `step` (defaults to
-      False)
+    In a YAML configuration, this hyperparameter supports the following fields:
+
+    - ``path``: Path to the hyperparameter in the LR system configuration.
+    - ``low``: Lower bound of the search range.
+    - ``high``: Upper bound of the search range.
+    - ``step`` (optional): Step size for a linear grid search.
+    - ``log`` (optional): If ``True``, search in logarithmic space instead of
+    linear space. Cannot be combined with ``step``. Defaults to ``False``.
     """
 
     def __init__(self, path: str, low: float, high: float, step: float | None, log: bool):
@@ -243,30 +248,36 @@ def parse_float(spec: ContextAwareDict, output_path: Path) -> 'FloatHyperparamet
 
 class FolderHyperparameter(Hyperparameter):
     """
-    A folder hyperparameter that takes all files in a given folder as options.
+    Hyperparameter that enumerates all files in a given folder as options.
 
-    A folder hyperparameter has fields in a YAML configuration:
-    - folder: the path of the folder containing the options
-    - ignore_files: a list of file patterns to ignore
+    This hyperparameter reads the contents of a specified folder and generates one
+    option per file. Each option uses the file’s full path as both its name and its
+    value.
 
-    The generated options will have the full path of each file as both name and value.
+    In a YAML configuration, a folder hyperparameter supports the following fields:
 
-    An example configuration is as follows:
-    ```
+    - ``folder``: Path to the folder containing the candidate files.
+    - ``ignore_files``: Optional list of file patterns to ignore.
+
+    Example configuration:
+
+    .. code-block:: yaml
+
         hyperparameters:
-          - path: data.provider.path
-            type: folder
-            folder: project_files/my_dataset/
-            ignore_files: # Optional list of file patterns to ignore.
-              - '*.tmp'
-              - 'ignore_this_file.csv'
-    ```
+        - path: data.provider.path
+          type: folder
+          folder: project_files/my_dataset/
+          ignore_files:  # Optional list of file patterns to ignore.
+           - '*.tmp'
+           - 'ignore_this_file.csv'
 
-    A ValueError can be raised in the following situations:
-    - the given folder does not exist
-        applies during initialization
-    - no valid files are found in the folder (after applying the ignore list)
-        applies when calling the `options()` method
+    Raises
+    ------
+    ValueError
+        If the specified folder does not exist (during initialisation).
+    ValueError
+        If no valid files are found in the folder after applying the ignore
+        patterns (when calling :meth:`options`).
     """
 
     def __init__(self, path: str, folder: str, ignore_files: list[str] | None = None):

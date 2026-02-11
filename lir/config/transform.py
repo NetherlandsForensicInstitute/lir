@@ -101,30 +101,44 @@ def parse_module(
     config_context_path: list[str],
     default_method: str | None = None,
 ) -> Transformer:
-    """Construct a `Transformer` from a string or configuration section.
+    """
+    Construct a ``Transformer`` from a string or configuration section.
 
-    If the `module_config` argument is `None`, the `Identity` transformer is returned.
+    If ``module_config`` is ``None``, an :class:`Identity` transformer is returned.
 
-    If `module_config` is a dictionary, it must have the field `method`, which is an object that name is looked up the
-    registry. All other fields are initialization arguments. If no arguments are required, the input can be just the
-    object name instead.
+    If ``module_config`` is a dictionary, it must contain a ``method`` field whose
+    value is the name of an object looked up in the registry. All remaining fields
+    are passed as initialisation arguments. If no arguments are required, the input
+    may be given directly as the object name.
 
-    If the class is:
-    - a subclass of `ConfigParser, then the class is instantiated, and the return value of its `parse()` method is
-      returned;
-    - a class which has a `transform` attribute, or a `Transformer` subclass, it is instantiated and returned;
-    - a class which has a `predict_proba` attribute, it is instantiated, wrapped by `EstimatorTransformer` and
-      returned;
-    - any other callable, it is wrapped by `FunctionTransformer`, and returned.
+    The resolved object is handled as follows:
 
-    If `module_config` is a `str`, the call to this function has the same effect as if it was a dictionary whose single
-    field `method` had this value.
+    - If it is a subclass of :class:`ConfigParser`, the class is instantiated and the
+      result of its :meth:`parse` method is returned.
+    - If it defines a ``transform`` method, or is a subclass of ``Transformer``, it
+      is instantiated and returned.
+    - If it defines a ``predict_proba`` method, it is instantiated, wrapped in
+      :class:`EstimatorTransformer`, and returned.
+    - Any other callable is wrapped in :class:`FunctionTransformer` and returned.
 
-    :param module_config: the specification of this module
-    :param output_dir: where any output is written
-    :param config_context_path: the context of this configuration
-    :param default_method: the default value for the `method` field of the `mdoule_config`
-    :return: a transformer object
+    If ``module_config`` is a string, this function behaves as if a dictionary with a
+    single field ``method`` set to that string had been provided.
+
+    Parameters
+    ----------
+    module_config : dict or str or None
+        Specification of the module.
+    output_dir : str or pathlib.Path
+        Directory where any output produced by the module is written.
+    config_context_path : str
+        Context path of this configuration, used for error reporting.
+    default_method : str, optional
+        Default value for the ``method`` field if it is not provided.
+
+    Returns
+    -------
+    Transformer
+        The constructed transformer instance.
     """
     if module_config is None:
         return Identity()

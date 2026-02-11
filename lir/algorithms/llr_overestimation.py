@@ -17,12 +17,15 @@ def plot_llr_overestimation(
 ) -> None:
     """Plot the LLR-overestimation as function of the system LLR.
 
-     The LLR-overestimation is defined as the log-10 of the ratio between
+    The LLR-overestimation is defined as the log-10 of the ratio between
         (1) the system LRs; the outputs of the LR-system, and
         (2) the empirical LRs; the ratio's between the relative frequencies of the H1-LLRs and H2-LLRs.
-     - See documentation on :func:`calc_llr_overestimation` for more details on the LLR-overestimation.
-     - An interval around the LLR-overestimation can be calculated using fiducial distributions.
-     - The average absolute LLR-overestimation can be used as single metric.
+
+    See documentation on :func:`calc_llr_overestimation` for more details on the LLR-overestimation.
+
+    An interval around the LLR-overestimation can be calculated using fiducial distributions. The average absolute
+    LLR-overestimation can be used as single metric.
+
     :param llrdata: An instance of LLRData containing LLRs and ground-truth labels
     :param num_fids: number of fiducial distributions to base the interval on; use 0 for no interval
     :param ax: matplotlib axes to plot into

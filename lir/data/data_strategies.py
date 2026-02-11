@@ -32,21 +32,23 @@ class BinaryTrainTestSplit(DataStrategy):
 
 
 class BinaryCrossValidation(DataStrategy):
-    """Representation of a K-fold cross validation iterator over each train/test split fold.
+    """
+    K-fold cross-validation iterator over successive train/test splits.
 
-    The input data should have class labels. This split assigns instances of both classes to each "fold" subset.
+    The input data must contain class labels. Each fold is constructed so that
+    instances from both classes are present in every split.
 
-    This method might be referenced in the YAML registry as follows:
-    ```
-    data_strategies:
-      binary_cross_validation: lir.data.data_strategies.BinaryCrossValidation
-    ```
+    This strategy may be registered in a YAML registry as follows:
 
-    In the benchmark configuration YAML, this validation can be referenced as follows:
-    ```
-    splits:
-      strategy: binary_cross_validation
-    ```
+    .. code-block:: yaml
+
+        data:
+          [...]
+          splits:
+            strategy: binary_cross_validation
+            folds: 5
+            seed: 42
+
     """
 
     def __init__(self, folds: int, seed: int | None = None):
@@ -82,24 +84,21 @@ class MulticlassTrainTestSplit(DataStrategy):
 
 class MulticlassCrossValidation(DataStrategy):
     """
-    Representation of a K-fold cross validation iterator over train/test splits.
+    K-fold cross-validation iterator over successive train/test splits.
 
-    The input data should have source_ids. This split assigns all instances of a source to the same "fold" subset.
+    The input data must contain ``source_ids``. All instances originating from the
+    same source are assigned to the same fold, ensuring that no source appears in
+    both the training and test sets within a split.
 
-    This method might be referenced in the YAML registry as follows:
-    ```
-    data_strategies:
-      multiclass_cross_validation: lir.data.data_strategies.MulticlassCrossValidation
-    ```
+    In a benchmark configuration, the split strategy can be referenced as:
 
-    In the benchmark configuration YAML, this validation can be referenced as follows:
-    ```
-    data:
-      [...]
-      splits:
-        strategy: multiclass_cross_validation
-        folds: 5
-    ```
+    .. code-block:: yaml
+
+        data:
+          [...]
+          splits:
+            strategy: multiclass_cross_validation
+            folds: 5
     """
 
     def __init__(self, folds: int):
@@ -153,17 +152,20 @@ class RoleAssignment(Enum):
 
 class PredefinedTrainTestSplit(DataStrategy):
     """
-    Splits data into a training set and a test set, according to pre-existing assignments in the data.
+    Split data into a training set and a test set based on predefined assignments.
 
-    Presumes a `role_assignments` field in the data, which has the value "train" for instances that will be part of the
-    training set, and "test" for instances in the test set.
+    This strategy expects a ``role_assignments`` field in the data, where each
+    instance is labelled either ``"train"`` (included in the training set) or
+    ``"test"`` (included in the test set).
 
-    In the benchmark configuration YAML, this validation can be referenced as follows:
-    ```
-    cross_validation_splits:
-        strategy: predefined_train_test_split
-        data_origin: ${data}
-    ```
+    In the benchmark configuration YAML, this split strategy can be referenced as
+    follows:
+
+    .. code-block:: yaml
+
+        cross_validation_splits:
+            strategy: predefined_train_test_split
+            data_origin: ${data}
     """
 
     def apply(self, instances: FeatureData) -> Iterable[tuple[FeatureData, FeatureData]]:

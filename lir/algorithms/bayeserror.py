@@ -1,11 +1,12 @@
 """
-Normalized Bayes Error-rate (NBE).
+Normalised Bayes error rate (NBE).
 
-See:
-[-] Peter Vergeer, Andrew van Es, Arent de Jongh, Ivo Alberink and Reinoud
-    Stoel, Numerical likelihood ratios outputted by LR systems are often based
-    on extrapolation: When to stop extrapolating? In: Science and Justice 56
-    (2016) 482–491.
+References
+----------
+Vergeer, P., van Es, A., de Jongh, A., Alberink, I., & Stoel, R. (2016).
+Numerical likelihood ratios output by LR systems are often based on
+extrapolation: When to stop extrapolating? *Science and Justice*, 56,
+482–491.
 """
 
 import matplotlib.pyplot as plt

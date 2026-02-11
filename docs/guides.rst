@@ -7,4 +7,5 @@ Guides
    lrsystem_yaml
    api-overview
    lrsystem-assessment
+   experiment-setup
    

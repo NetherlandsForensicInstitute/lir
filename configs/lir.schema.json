@@ -1,14 +1,75 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "LiR Exeperiment",
+  "title": "LiR Configuration Schema",
+  "description": "Configuration file for running Likelihood Ratio (LiR) experiments. A configuration defines where outputs are written and specifies one or more experiments, each describing data, system configuration, and requested output artefacts.",
   "type": "object",
   "properties": {
-    "output_path": { 
-      "type": "string", 
+    "output_path": {
+      "type": "string",
       "minLength": 1,
-      "description": "Path where output files will be saved. Can include placeholders like ${timestamp}."
+      "description": "Base directory where all experiment outputs will be written. The path may contain placeholders such as ${timestamp}, which are resolved at runtime to create unique output folders per run."
     },
-    "experiments": { "type": "array" }
+    "experiments": {
+      "type": "array",
+      "minItems": 1,
+      "description": "List of experiments to execute. Each experiment defines a LiR pipeline including data selection, LR system configuration, execution strategy, and requested outputs.",
+      "items": {
+        "type": "object",
+        "description": "Definition of a single LiR experiment. Experiments are executed independently and produce their own outputs within the configured output path.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique identifier for the experiment. Used in logging, output folder naming, and result tracking. It should be unique and descriptive."
+          },
+          "strategy": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Execution strategy controlling how the experiment is run (for example a single run, or grid search)."
+          },
+          "data": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Dataset to use for this experiment. Contains a data source and data strategy."
+          },
+          "lr_system": {
+            "type": "string",
+            "minLength": 1,
+            "description": "LR system configuration to use for this experiment."
+          },  
+          "output": {
+            "type": "array",
+            "minItems": 1,
+            "description": "List of output artefacts to generate for this experiment. Each entry defines an output generator registered in the LiR framework (for example metrics, plots, reports, or exported scores). Outputs are produced after the experiment completes.",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Shorthand output specification. Equivalent to specifying an object with `method` equal to this string. The value must correspond to a registered LiR output method."
+                },
+                {
+                  "type": "object",
+                  "description": "Structured output specification allowing additional configuration of the selected output method.",
+                  "properties": {
+                    "method": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Identifier of the output method to execute. Must match a method registered in the LiR output registry (for example a specific plot, metric computation, or export routine)."
+                    }
+                  },
+                  "required": ["method"],
+                  "additionalProperties": true
+                }
+              ]
+            }
+          }
+        },
+        "required": ["name", "strategy", "data", "lr_system", "output"],
+        "additionalProperties": true
+      }
+    }
   },
-  "required": ["output_path", "experiments"]
+  "required": ["output_path", "experiments"],
+  "additionalProperties": true
 }

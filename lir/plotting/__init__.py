@@ -87,9 +87,8 @@ def show() -> _GeneratorContextManager[Canvas]:
 
 
 @contextmanager
-def axes(savefig: PathLike | None = None, show: bool | None = None) -> Iterator[Canvas]:
-    """
-    Create a plotting context.
+def axes(savefig: PathLike | str | None = None, show: bool | None = None) -> Iterator[Canvas]:
+    """Create a plotting context.
 
     Example
     -------

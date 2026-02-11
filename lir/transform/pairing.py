@@ -284,20 +284,18 @@ class InstancePairing(PairingMethod):
         if self._ss_limit is not None and rows_same.size > self._ss_limit:
             rows_same = self.rng.choice(rows_same, self._ss_limit, replace=False)
 
-        n_ds_pairs = int(
-            min(
-                x
-                for x in [
-                    rows_same.size * self._ratio_limit if self._ratio_limit else None,
-                    self._ds_limit,
-                    rows_diff.size,
-                ]
-                if x is not None
-            )
+        n_ds_pairs = min(
+            x
+            for x in [
+                rows_same.size * self._ratio_limit if self._ratio_limit else None,
+                self._ds_limit,
+                rows_diff.size,
+            ]
+            if x is not None
         )
 
         if n_ds_pairs < rows_diff.size:
-            rows_diff = self.rng.choice(rows_diff, n_ds_pairs, replace=False)
+            rows_diff = self.rng.choice(rows_diff, int(n_ds_pairs), replace=False)
 
         pairing = np.concatenate([pairing[rows_same, :], pairing[rows_diff, :]])
         pair_labels = np.concatenate([np.ones(rows_same.size), np.zeros(rows_diff.size)])

@@ -1,11 +1,11 @@
-from typing import Any, Self
+from typing import Self
 
 import numpy as np
 from scipy.special import logsumexp
 
 from lir import Transformer
 from lir.config.base import check_not_none
-from lir.data.models import FeatureData, InstanceData
+from lir.data.models import FeatureData, InstanceData, check_type
 from lir.lrsystems.lrsystems import LLRData, LRSystem
 from lir.transform.pairing import PairingMethod
 from lir.transform.pipeline import Pipeline
@@ -358,7 +358,7 @@ class TwoLevelModelNormalKDE:
         covars_ref_inv: np.ndarray,
         covars_trace_update_inv: np.ndarray,
         updated_ref_mean: np.ndarray,
-    ) -> np.floating[Any]:
+    ) -> np.floating:
         """Perform calculation to predict natural log of numerator.
 
         See Bolck et al. formula in appendix. The formula consists of three sum_terms (and some other terms).
@@ -390,7 +390,7 @@ class TwoLevelModelNormalKDE:
         # exponentiate, sum and take log again
         return logsumexp(ln_num_terms)
 
-    def _predict_ln_den_term(self, X_ref_or_trace: np.ndarray, covars_inv: np.ndarray) -> np.floating[Any]:
+    def _predict_ln_den_term(self, X_ref_or_trace: np.ndarray, covars_inv: np.ndarray) -> np.floating:
         """Perform calculation and return natural log of a denominator term of the LR-formula.
 
         See Bolck et al. formula in appendix. The formula consists of three sum_terms (and some other terms).
@@ -415,10 +415,10 @@ class TwoLevelModelNormalKDE:
         self,
         covars_trace: np.ndarray,
         covars_trace_update: np.ndarray,
-        ln_num: np.floating[Any],
-        ln_den_left: np.floating[Any],
-        ln_den_right: np.floating[Any],
-    ) -> np.floating[Any]:
+        ln_num: np.floating,
+        ln_den_left: np.floating,
+        ln_den_right: np.floating,
+    ) -> np.floating:
         """Predict 10-base logarithm LR's from the Bolck formula.
 
         X_trace np.array of measurements of trace object, rows are repetitions, columns are variables
@@ -488,7 +488,7 @@ class TwoLevelSystem(LRSystem):
     def fit(self, instances: InstanceData) -> Self:
         """Fit the model based on the instance data."""
         instances = self.preprocessing_pipeline.fit_apply(instances)
-        assert isinstance(instances, FeatureData)
+        instances = check_type(FeatureData, instances, 'preprocessing pipeline should return FeatureData')
         self.model.fit_on_unpaired_instances(instances.features, instances.source_ids_1d)
 
         pairs = self.pairing_function.pair(instances, self.n_trace_instances, self.n_ref_instances)

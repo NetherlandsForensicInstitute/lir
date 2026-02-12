@@ -10,7 +10,7 @@ from lir.config.base import check_not_none
 from lir.data.models import DataStrategy, FeatureData
 
 
-class BinaryTrainTestSplit(DataStrategy):
+class TrainTestSplit(DataStrategy):
     """Representation of a train/test split.
 
     The input data should have hypothesis labels. This split assigns instances of both classes to the training set and
@@ -31,7 +31,7 @@ class BinaryTrainTestSplit(DataStrategy):
         yield instances[indexes_train], instances[indexes_test]
 
 
-class BinaryCrossValidation(DataStrategy):
+class CrossValidation(DataStrategy):
     """
     K-fold cross-validation iterator over successive train/test splits.
 
@@ -63,7 +63,7 @@ class BinaryCrossValidation(DataStrategy):
             yield instances[train_index], instances[test_index]
 
 
-class MulticlassTrainTestSplit(DataStrategy):
+class SourcesTrainTestSplit(DataStrategy):
     """Representation of a multi-class train/test split.
 
     The input data should have source_ids. This split assigns all instances of a source to either the training set or
@@ -82,7 +82,7 @@ class MulticlassTrainTestSplit(DataStrategy):
         yield instances[train_index], instances[test_index]
 
 
-class MulticlassCrossValidation(DataStrategy):
+class SourcesCrossValidation(DataStrategy):
     """
     K-fold cross-validation iterator over successive train/test splits.
 
@@ -112,7 +112,7 @@ class MulticlassCrossValidation(DataStrategy):
             yield instances[train_index], instances[test_index]
 
 
-class PairedInstancesTrainTestSplit(DataStrategy):
+class PairsTrainTestSplit(DataStrategy):
     """A train/test split policy for paired instances.
 
     The input data should have source_ids with two columns. This split assigns all sources to either the training set or

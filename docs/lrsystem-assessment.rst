@@ -128,7 +128,7 @@ distribution. It visualizes as follows.
 .. jupyter-execute::
 
     from lir.algorithms.logistic_regression import LogitCalibrator
-    from lir.data.data_strategies import BinaryTrainTestSplit
+    from lir.data_strategies import TrainTestSplit
     from lir.data.datasets.synthesized_normal_binary import SynthesizedNormalData, SynthesizedNormalBinaryData
 
     # set the parameters for H1 data and H2 data
@@ -139,7 +139,7 @@ distribution. It visualizes as follows.
     instances = SynthesizedNormalBinaryData(h1_data, h2_data, seed=42).get_instances()
 
     # split the data into a 50% training set and a 50% test set
-    training_instances, test_instances = next(BinaryTrainTestSplit(test_size=.5).apply(instances))
+    training_instances, test_instances = next(TrainTestSplit(test_size=.5).apply(instances))
 
     # build a simple LR system for these data
     calibrator = LogitCalibrator()

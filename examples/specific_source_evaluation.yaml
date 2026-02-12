@@ -14,7 +14,7 @@ data:
       size: 1000
 
   splits:
-    strategy: binary_cross_validation
+    strategy: cross_validation
     folds: 5
     seed: 42
 

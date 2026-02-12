@@ -1,4 +1,4 @@
-from collections.abc import Iterable, Iterator
+from collections.abc import Iterator
 from enum import Enum
 from typing import Any
 
@@ -6,26 +6,46 @@ import numpy as np
 import sklearn
 from sklearn.model_selection import GroupKFold, GroupShuffleSplit, KFold
 
-from lir.config.base import check_not_none
-from lir.data.models import DataStrategy, FeatureData
+from lir.data.models import DataStrategy, FeatureData, InstanceDataType
 
 
 class TrainTestSplit(DataStrategy):
-    """Representation of a train/test split.
+    """
+    Split the data into a training set and a test set.
+
+    This splitter distributes the instances randomly over a training set and test set. Each instance is assigned to
+    either the training set or the test set, but no sources will have instances that appear in both. The hypothesis
+    labels are used to distribute the instances of each hypothesis proportionally to both sets.
+
+    This splitter is suitable for most specific-source setups. If you have a common-source setup, take a look at
+    ``SourcesTrainTestSplit``. Alternatively, use the ``CrossValidation`` strategy for cross-validation.
+
+    In an experiment setup file, the split strategy can be referenced as:
 
     The input data should have hypothesis labels. This split assigns instances of both classes to the training set and
     the test set.
     """
 
     def __init__(self, test_size: float | int, seed: int | None = None):
+        """
+        Initialize the object.
+
+        :param test_size: If float, should be between 0.0 and 1.0 and represent the proportion of the dataset to include
+            in the test split. If int, represents the absolute number of test samples.
+        :param seed: The random state.
+        """
         self.test_size = test_size
         self.seed = seed
 
-    def apply(self, instances: FeatureData) -> Iterable[tuple[FeatureData, FeatureData]]:
-        """Allow iteration by looping over the resulting train/test split(s)."""
+    def apply(self, instances: FeatureData) -> Iterator[tuple[FeatureData, FeatureData]]:
+        """
+        Split the data into a training set and a test set.
+
+        :return: an iterator over a single item, which is a tuple of the training set and the test set.
+        """
         indexes = np.arange(len(instances))
         indexes_train, indexes_test = sklearn.model_selection.train_test_split(
-            indexes, stratify=instances.labels, test_size=self.test_size, shuffle=True, random_state=self.seed
+            indexes, stratify=instances.require_labels, test_size=self.test_size, shuffle=True, random_state=self.seed
         )
 
         yield instances[indexes_train], instances[indexes_test]
@@ -35,100 +55,148 @@ class CrossValidation(DataStrategy):
     """
     K-fold cross-validation iterator over successive train/test splits.
 
-    The input data must contain class labels. Each fold is constructed so that
-    instances from both classes are present in every split.
+    The input data must contain hypothesis labels. Each fold is constructed so that instances from both hypotheses are
+    present in every split.
 
     This strategy may be registered in a YAML registry as follows:
 
     .. code-block:: yaml
 
-        data:
-          [...]
-          splits:
-            strategy: binary_cross_validation
-            folds: 5
-            seed: 42
+        splits:
+          strategy: cross_validation
+          folds: 5  # the number k in k-fold cross-validation
+          seed: 42  # optional
 
     """
 
     def __init__(self, folds: int, seed: int | None = None):
+        """
+        Initialize the object.
+
+        :param folds: The number of train/test splits to return.
+        :param seed: The random state.
+        """
         self.folds = folds
         self.seed = seed
         self.shuffle = True if self.seed is not None else False  # noqa: SIM210
 
-    def apply(self, instances: FeatureData) -> Iterable[tuple[FeatureData, FeatureData]]:
-        """Allow iteration by looping over the resulting train/test split(s)."""
+    def apply(self, instances: InstanceDataType) -> Iterator[tuple[InstanceDataType, InstanceDataType]]:
+        """Return an iterator over *k* train/test splits."""
         kf = KFold(n_splits=self.folds, shuffle=self.shuffle, random_state=self.seed)
-        for _i, (train_index, test_index) in enumerate(kf.split(instances.features, y=instances.labels)):
+        for train_index, test_index in kf.split(np.arange(len(instances)), y=instances.labels):
             yield instances[train_index], instances[test_index]
 
 
 class SourcesTrainTestSplit(DataStrategy):
-    """Representation of a multi-class train/test split.
+    """
+    Split the data into a training set and a test set by their source ids.
 
-    The input data should have source_ids. This split assigns all instances of a source to either the training set or
-    the test set.
+    This splitter uses the ``source_ids`` attribute and distributes the sources over the training and test set. Each
+    source is assigned to either the training set or the test set, but no sources will have instances that appear in
+    both.
+
+    This splitter is suitable for most common-source setups. Alternatively, use the ``SourcesCrossValidation`` strategy
+    for cross-validation.
+
+    In an experiment setup file, the split strategy can be referenced as:
+
+    .. code-block:: yaml
+
+        splits:
+          strategy: train_test_sources
+          test_size: 0.5  # the proportion of sources in the test set
+          seed: 42        # optional
+
+    This class internally uses ``sklearn.model_selection.GroupShuffleSplit``.
     """
 
     def __init__(self, test_size: float | int, seed: int | None = None):
+        """
+        Class initialization.
+
+        :param test_size: If float, should be between 0.0 and 1.0 and represent the proportion of sources to include in
+            the test split (rounded up). If int, represents the absolute number of test sources.
+        :param seed: The random state.
+        """
         self.test_size = test_size
         self.seed = seed
 
-    def apply(self, instances: FeatureData) -> Iterable[tuple[FeatureData, FeatureData]]:
-        """Allow iteration by looping over the resulting train/test split(s)."""
+    def apply(self, instances: InstanceDataType) -> Iterator[tuple[InstanceDataType, InstanceDataType]]:
+        """
+        Split the data into a training set and a test set.
+
+        :return: an iterator over a single item, which is a tuple of the training set and the test set.
+        """
         splitter = GroupShuffleSplit(test_size=self.test_size, n_splits=1, random_state=self.seed)
-        ((train_index, test_index),) = splitter.split(instances.features, instances.source_ids, instances.source_ids)
+        ((train_index, test_index),) = splitter.split(np.arange(len(instances)), groups=instances.source_ids_1d)
 
         yield instances[train_index], instances[test_index]
 
 
 class SourcesCrossValidation(DataStrategy):
     """
-    K-fold cross-validation iterator over successive train/test splits.
+    K-fold cross-validation by source id.
 
-    The input data must contain ``source_ids``. All instances originating from the
-    same source are assigned to the same fold, ensuring that no source appears in
-    both the training and test sets within a split.
+    This data strategy uses the ``source_ids`` attribute and distributes the sources over *k* different subsets.
+    Each of the subsets will be offered once as the test set, using the others as the training set. Each source is
+    assigned to exactly one of the subsets, and no sources will have instances that appear in more than one.
 
-    In a benchmark configuration, the split strategy can be referenced as:
+    In an experiment setup file, the data strategy can be referenced as:
 
     .. code-block:: yaml
 
-        data:
-          [...]
-          splits:
-            strategy: multiclass_cross_validation
-            folds: 5
+        splits:
+          strategy: cross_validation_sources
+          folds: 5
+
+    This class internally uses ``sklearn.model_selection.GroupKFold``.
     """
 
     def __init__(self, folds: int):
+        """:param folds: the number of train/test splits to return"""
         self.folds = folds
 
-    def apply(self, instances: FeatureData) -> Iterable[tuple[FeatureData, FeatureData]]:
-        """Allow iteration by looping over the resulting train/test split(s)."""
+    def apply(self, instances: InstanceDataType) -> Iterator[tuple[InstanceDataType, InstanceDataType]]:
+        """
+        Perform *k*-fold cross-validation.
+
+        Return an iterator over *k* train/test splits.
+        """
         kf = GroupKFold(n_splits=self.folds)
 
-        for _i, (train_index, test_index) in enumerate(kf.split(instances.features, groups=instances.source_ids_1d)):
+        for train_index, test_index in kf.split(np.arange(len(instances)), groups=instances.source_ids_1d):
             yield instances[train_index], instances[test_index]
 
 
 class PairsTrainTestSplit(DataStrategy):
     """A train/test split policy for paired instances.
 
-    The input data should have source_ids with two columns. This split assigns all sources to either the training set or
-    the test set. The pairs are assigned to training or testing if both of their sources have that role. Pairs with
-    mixed roles are omitted.
+    The input data should have ``source_ids`` with two columns. This split assigns all sources to either the training
+    set or the test set. The pairs are assigned to training or testing if both of their sources have that role. Pairs
+    with mixed roles are omitted.
     """
 
     def __init__(self, test_size: float | int, seed: int | None = None):
+        """
+        Initialize the object.
+
+        :param test_size: The proportion of sources to include in the test set.
+        :param seed: The random state.
+        """
         self.test_size = test_size
         self.seed = seed
 
-    def apply(self, instances: FeatureData) -> Iterator[tuple[FeatureData, FeatureData]]:
-        """Allow iteration by looping over the resulting train/test split(s)."""
-        source_ids_1d = np.unique(check_not_none(instances.source_ids, 'missing field: `source_ids`'))
+    def apply(self, instances: InstanceDataType) -> Iterator[tuple[InstanceDataType, InstanceDataType]]:
+        """
+        Split the data into a training set and a test set.
+
+        :return: an iterator over a single item, which is a tuple of the training set and the test set.
+        """
+        source_ids = instances.source_ids
+        if source_ids is None or len(source_ids.shape) != 2 or source_ids.shape[1] != 2:
+            raise ValueError(f'expected two-column source_ids; shape found: {getattr(source_ids, "shape", None)}')
         sources_train, sources_test = sklearn.model_selection.train_test_split(
-            source_ids_1d, test_size=self.test_size, shuffle=True, random_state=self.seed
+            np.unique(source_ids), test_size=self.test_size, shuffle=True, random_state=self.seed
         )
 
         sources_train = set(sources_train)
@@ -158,18 +226,20 @@ class PredefinedTrainTestSplit(DataStrategy):
     instance is labelled either ``"train"`` (included in the training set) or
     ``"test"`` (included in the test set).
 
-    In the benchmark configuration YAML, this split strategy can be referenced as
-    follows:
+    In the experiment setup file, this split strategy can be referenced as follows:
 
     .. code-block:: yaml
 
         cross_validation_splits:
-            strategy: predefined_train_test_split
-            data_origin: ${data}
+            strategy: predefined_train_test
     """
 
-    def apply(self, instances: FeatureData) -> Iterable[tuple[FeatureData, FeatureData]]:
-        """Split the FeatureData into a train and a test split."""
+    def apply(self, instances: InstanceDataType) -> Iterator[tuple[InstanceDataType, InstanceDataType]]:
+        """
+        Split the data into a training set and a test set.
+
+        :return: an iterator over a single item, which is a tuple of the training set and the test set.
+        """
         if 'role_assignments' not in instances.all_fields:
             raise ValueError('`role_assignments` field is missing')
 

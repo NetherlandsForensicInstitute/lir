@@ -13,11 +13,11 @@ data_strategies:
   multiclass_cross_validation: lir.data.data_strategies.MulticlassCrossValidation
   predefined_train_test_split: lir.data.data_strategies.PredefinedTrainTestSplit
 data_providers:
-  synthesized_normal_binary: lir.data.datasets.synthesized_normal_binary.synthesized_normal_binary
-  synthesized_normal_multiclass: lir.data.datasets.synthesized_normal_multiclass.synthesized_normal_multiclass
-  glass: lir.data.datasets.glass.GlassData
-  parse_features_from_csv_file: lir.data.datasets.feature_data_csv.feature_data_csv_file_parser
-  parse_features_from_csv_url: lir.data.datasets.feature_data_csv.feature_data_csv_http_parser
+  synthesized_normal_binary: lir.datasets.synthesized_normal_binary.synthesized_normal_binary
+  synthesized_normal_multiclass: lir.datasets.synthesized_normal_multiclass.synthesized_normal_multiclass
+  glass: lir.datasets.glass.GlassData
+  parse_features_from_csv_file: lir.datasets.feature_data_csv.feature_data_csv_file_parser
+  parse_features_from_csv_url: lir.datasets.feature_data_csv.feature_data_csv_http_parser
 modules:
   # pipelines
   pipeline: lir.transform.pipeline.pipeline

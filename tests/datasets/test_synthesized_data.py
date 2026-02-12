@@ -1,5 +1,5 @@
-from lir.data.datasets.synthesized_normal_binary import SynthesizedNormalBinaryData, SynthesizedNormalData
-from lir.data.datasets.synthesized_normal_multiclass import SynthesizedDimension, SynthesizedNormalMulticlassData
+from lir.datasets.synthesized_normal_binary import SynthesizedNormalBinaryData, SynthesizedNormalData
+from lir.datasets.synthesized_normal_multiclass import SynthesizedDimension, SynthesizedNormalMulticlassData
 
 
 def test_binary_data():

@@ -134,7 +134,7 @@ advanced configuration such as cross-validation.
 
 A data strategy inherits from `DataStrategy`_ and implements an ``apply()`` method that returns an iterator of pairs of training and test sets.
 
-.. _data strategies: api/lir.data.html#module-lir.data.data_strategies
+.. _data strategies: api/lir.data.html#module-lir.data_strategies
 .. _DataProvider: api/lir.data.html#lir.data.models.DataProvider
 .. _DataStrategy: api/lir.data.html#lir.data.models.DataStrategy
 .. _Pipeline: api/lir.transform.html#lir.transform.pipeline.Pipeline
@@ -143,7 +143,7 @@ Example:
 
 .. jupyter-execute::
 
-    from lir.data.data_strategies import MulticlassTrainTestSplit
+    from lir.data_strategies import MulticlassTrainTestSplit
 
     splitter = MulticlassTrainTestSplit(test_size=0.5)
     for training_data, test_data in splitter.apply(glass_data):
@@ -232,7 +232,7 @@ we have to deal with multiple train/test splits.
 
 .. jupyter-execute::
 
-    from lir.data.data_strategies import MulticlassCrossValidation
+    from lir.data_strategies import MulticlassCrossValidation
     from lir.data.models import concatenate_instances
 
     # initialize 5-fold cross-validation

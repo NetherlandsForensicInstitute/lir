@@ -16,9 +16,9 @@ import requests
 from requests_cache import CachedSession
 
 from lir.config.base import ContextAwareDict, check_is_empty, config_parser, pop_field
-from lir.data.data_strategies import RoleAssignment
 from lir.data.io import search_path
 from lir.data.models import DataProvider, FeatureData
+from lir.data_strategies import RoleAssignment
 from lir.util import check_type
 
 

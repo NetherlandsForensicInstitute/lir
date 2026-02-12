@@ -7,11 +7,11 @@ experiment_strategies:
   grid: lir.config.experiment_strategies.GridStrategy
   optuna: lir.config.experiment_strategies.OptunaStrategy
 data_strategies:
-  binary_train_test_split: lir.data.data_strategies.BinaryTrainTestSplit
-  binary_cross_validation: lir.data.data_strategies.BinaryCrossValidation
-  multiclass_train_test_split: lir.data.data_strategies.MulticlassTrainTestSplit
-  multiclass_cross_validation: lir.data.data_strategies.MulticlassCrossValidation
-  predefined_train_test_split: lir.data.data_strategies.PredefinedTrainTestSplit
+  binary_train_test_split: lir.data_strategies.BinaryTrainTestSplit
+  binary_cross_validation: lir.data_strategies.BinaryCrossValidation
+  multiclass_train_test_split: lir.data_strategies.MulticlassTrainTestSplit
+  multiclass_cross_validation: lir.data_strategies.MulticlassCrossValidation
+  predefined_train_test_split: lir.data_strategies.PredefinedTrainTestSplit
 data_providers:
   synthesized_normal_binary: lir.data.datasets.synthesized_normal_binary.synthesized_normal_binary
   synthesized_normal_multiclass: lir.data.datasets.synthesized_normal_multiclass.synthesized_normal_multiclass

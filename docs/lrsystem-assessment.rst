@@ -128,7 +128,7 @@ distribution. It visualizes as follows.
 .. jupyter-execute::
 
     from lir.algorithms.logistic_regression import LogitCalibrator
-    from lir.data.data_strategies import BinaryTrainTestSplit
+    from lir.data_strategies import BinaryTrainTestSplit
     from lir.data.datasets.synthesized_normal_binary import SynthesizedNormalData, SynthesizedNormalBinaryData
 
     # set the parameters for H1 data and H2 data

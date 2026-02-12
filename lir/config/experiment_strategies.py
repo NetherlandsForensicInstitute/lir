@@ -25,7 +25,7 @@ from lir.config.substitution import (
     parse_parameter,
 )
 from lir.experiment import Experiment, PredefinedExperiment
-from lir.optuna import OptunaExperiment
+from lir.experiments.optuna import OptunaExperiment
 
 
 class ExperimentStrategyConfigParser(ConfigParser, ABC):

@@ -1,0 +1,51 @@
+:py:mod:`lir.data.datasets.glass`
+=================================
+
+.. py:module:: lir.data.datasets.glass
+
+.. autodoc2-docstring:: lir.data.datasets.glass
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`GlassData <lir.data.datasets.glass.GlassData>`
+     - .. autodoc2-docstring:: lir.data.datasets.glass.GlassData
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:class:: GlassData(cache_dir: os.PathLike)
+   :canonical: lir.data.datasets.glass.GlassData
+
+   Bases: :py:obj:`lir.data.models.DataProvider`
+
+   .. autodoc2-docstring:: lir.data.datasets.glass.GlassData
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.data.datasets.glass.GlassData.__init__
+      :parser: myst
+
+   .. py:method:: _load_data(file: str, role: lir.data.data_strategies.RoleAssignment) -> lir.data.models.FeatureData
+      :canonical: lir.data.datasets.glass.GlassData._load_data
+
+      .. autodoc2-docstring:: lir.data.datasets.glass.GlassData._load_data
+         :parser: myst
+
+   .. py:method:: get_instances() -> lir.data.models.FeatureData
+      :canonical: lir.data.datasets.glass.GlassData.get_instances
+
+      .. autodoc2-docstring:: lir.data.datasets.glass.GlassData.get_instances
+         :parser: myst

@@ -1,0 +1,246 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Getting started &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="_static/thebelab.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Guides" href="guides.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/lir/lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/lir/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir/lir.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir/lir.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Getting started</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="toctree-wrapper compound">
+</div>
+<section id="getting-started">
+<h1>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h1>
+<p>Toolkit for developing, optimising and evaluating Likelihood Ratio (LR) systems. This allows benchmarking of LR systems
+on different datasets, investigating impact of different sampling schemes or techniques, and doing case-based validation
+and computation of case LRs.</p>
+<p>LIR was first released in 2020 and redesigned from scratch in 2025, replacing the <a class="reference external" href="https://github.com/NetherlandsForensicInstitute/lir-deprecated">previous repository</a>.</p>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<p>LIR is compatible with Python 3.12 and later. The easiest way to install LIR is to use <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>lir
+</pre></div>
+</div>
+</section>
+<section id="terminology">
+<h2>Terminology<a class="headerlink" href="#terminology" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>lr system</strong>: An algorithm to calculate likelihood ratios.</p></li>
+<li><p><strong>lr system architecture</strong>: A way to compose an LR system, e.g. feature based, specific source, etc.</p></li>
+<li><p><strong>source</strong>: Something that can generate instances, or where instances are derived from. This is typically the level
+relevant to the forensic question and the hypotheses. Examples**: a glass pane, a person whose face may be pictured, a
+speaker of the voice, a shoe.</p></li>
+<li><p><strong>instance</strong>: A single manifestation of a source. Traces and reference samples are instances of a source. In a feature
+based system, instances are used as the building blocks for modeling hypotheses. Examples**: the measurements on a
+fragment of glass, a face image, a voice recording, a shoe print.</p></li>
+<li><p><strong>pair</strong>: A combination of two groups of instances. The instance groups may be same source or different source. In a
+common-source system, pairs are used as the building blocks for modeling hypotheses. A group may contain only one
+instance, or it may consist of multiple repeated measurements of the same source that are compared as one unit.</p></li>
+<li><p><strong>data set</strong>: A set of instances and/or pairs, labeled or unlabeled for source or for hypothesis, that may be used for calculating likelihood ratios.</p></li>
+<li><p><strong>label</strong>: The ground-truth value for an instance or a pair. The label may be on the level of the hypothesis (e.g. H1,
+H2), or on the level of the source (e.g. Speaker1, Speaker2). Hypothesis labels may derived from source labels.
+In case of a labeled data set, the ground truth (i.e. labels) is known. This will typically be the data that is used
+for development, analysis or validation of an LR system. Unlabeled data has no ground truth. This will typically be
+the application data, or case data in a forensic setting.</p></li>
+<li><p><strong>binary data</strong>: A data set with exactly two different labels, for specific source evaluation (e.g. H1, H2).</p></li>
+<li><p><strong>multiclass data</strong>: A data set with an arbitrary number of labels, for common source evaluation or for reduction to
+binary data for specific source evaluation.</p></li>
+<li><p><strong>data strategy</strong>: The way in which the data are assigned to different applications (validation, calibration, etc.) within the lr system. Well known strategies are train/test split, cross-validation, leave-one-out.</p></li>
+<li><p><strong>data provider</strong>: A method for making a data set available, e.g. by reading from disk and processing it.</p></li>
+<li><p><strong>run</strong>: Calculations for an lr system on a specific data set, as part of an experiment.</p></li>
+<li><p><strong>experiment</strong>: A series of one or more runs to calculate lrs, to measure system performance, to evaluate the effect of varying system parameters, or to optimize system parameters.</p></li>
+<li><p><strong>experiment strategy</strong>: A strategy for specifying system parameter values, e.g. single run, grid search, etc.</p></li>
+</ul>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<p>This repository offers both a Python API and a command-line interface.</p>
+</section>
+<section id="command-line-interface">
+<h2>Command-line interface<a class="headerlink" href="#command-line-interface" title="Link to this heading"></a></h2>
+<p>Evaluate an LR system using the command-line interface as follows:</p>
+<ol class="arabic simple">
+<li><p>define your data, LR system and experiments in a YAML file;</p></li>
+<li><p>run <code class="docutils literal notranslate"><span class="pre">lir</span> <span class="pre">&lt;yaml</span> <span class="pre">file&gt;</span></code>.</p></li>
+</ol>
+<p>The <code class="docutils literal notranslate"><span class="pre">examples</span></code> folder may be a good starting point for setting up an experiment.</p>
+<p>The elements of the experiment configuration YAML are looked up in the registry. The following lists all available
+elements in the registry.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lir<span class="w"> </span>--list-registry
+</pre></div>
+</div>
+</section>
+<section id="datasets">
+<h2>Datasets<a class="headerlink" href="#datasets" title="Link to this heading"></a></h2>
+<p>There are currently a number of datasets implemented for this project:</p>
+<ul class="simple">
+<li><p>glass: LA-ICP-MS measurements of elemental concentration from floatglass. The data will be downloaded automatically from <a class="reference external" href="https://github.com/NetherlandsForensicInstitute/elemental_composition_glass">https://github.com/NetherlandsForensicInstitute/elemental_composition_glass</a> when used in the pipeline for the first time.</p></li>
+</ul>
+</section>
+<section id="simulations">
+<h2>Simulations<a class="headerlink" href="#simulations" title="Link to this heading"></a></h2>
+<p>It is straightforward to simulate data for experimentation. Currently two very simple simulations
+<code class="docutils literal notranslate"><span class="pre">synthesized_normal_binary</span></code> and <code class="docutils literal notranslate"><span class="pre">synthesized_normal_multiclass</span></code> are available, with sources and measurements drawn from
+normal distributions.</p>
+</section>
+<section id="development">
+<h2>Development<a class="headerlink" href="#development" title="Link to this heading"></a></h2>
+</section>
+<section id="id1">
+<h2>Installation<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<p>To install LiR, install the latest version from PyPI: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">lir</span></code> in your virtual environment. For more detailed instructions of the CLI please refer to the project <a class="reference external" href="https://github.com/NetherlandsForensicInstitute/lir/blob/main/README.md#installation">README.md</a>.</p>
+</section>
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading"></a></h2>
+<p>If you want to contribute to the LiR project, please follow the <a class="reference external" href="https://github.com/NetherlandsForensicInstitute/lir/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a> guidelines, which include the instructions to set up LiR for local development.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="guides.html" class="btn btn-neutral float-right" title="Guides" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

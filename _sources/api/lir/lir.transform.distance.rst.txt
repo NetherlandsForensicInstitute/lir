@@ -1,0 +1,58 @@
+:py:mod:`lir.transform.distance`
+================================
+
+.. py:module:: lir.transform.distance
+
+.. autodoc2-docstring:: lir.transform.distance
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`ElementWiseDifference <lir.transform.distance.ElementWiseDifference>`
+     - .. autodoc2-docstring:: lir.transform.distance.ElementWiseDifference
+          :parser: myst
+          :summary:
+   * - :py:obj:`ManhattanDistance <lir.transform.distance.ManhattanDistance>`
+     - .. autodoc2-docstring:: lir.transform.distance.ManhattanDistance
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:class:: ElementWiseDifference
+   :canonical: lir.transform.distance.ElementWiseDifference
+
+   Bases: :py:obj:`lir.Transformer`
+
+   .. autodoc2-docstring:: lir.transform.distance.ElementWiseDifference
+      :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.InstanceData) -> lir.data.models.FeatureData
+      :canonical: lir.transform.distance.ElementWiseDifference.apply
+
+      .. autodoc2-docstring:: lir.transform.distance.ElementWiseDifference.apply
+         :parser: myst
+
+.. py:class:: ManhattanDistance
+   :canonical: lir.transform.distance.ManhattanDistance
+
+   Bases: :py:obj:`lir.Transformer`
+
+   .. autodoc2-docstring:: lir.transform.distance.ManhattanDistance
+      :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.InstanceData) -> lir.data.models.FeatureData
+      :canonical: lir.transform.distance.ManhattanDistance.apply
+
+      .. autodoc2-docstring:: lir.transform.distance.ManhattanDistance.apply
+         :parser: myst

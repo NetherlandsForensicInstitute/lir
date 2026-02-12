@@ -1,0 +1,65 @@
+:py:mod:`lir`
+=============
+
+.. py:module:: lir
+
+.. autodoc2-docstring:: lir
+   :parser: myst
+   :allowtitles:
+
+Subpackages
+-----------
+
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   lir.plotting
+   lir.metrics
+   lir.algorithms
+   lir.resources
+   lir.transform
+   lir.data
+   lir.lrsystems
+   lir.config
+
+Submodules
+----------
+
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   lir.util
+   lir.optuna
+   lir.main
+   lir.bounding
+   lir.aggregation
+   lir.visualization
+   lir.persistence
+   lir.registry
+   lir.experiment
+
+Package Contents
+----------------
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`is_interactive <lir.is_interactive>`
+     - .. autodoc2-docstring:: lir.is_interactive
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:function:: is_interactive() -> bool
+   :canonical: lir.is_interactive
+
+   .. autodoc2-docstring:: lir.is_interactive
+      :parser: myst

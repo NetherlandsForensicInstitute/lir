@@ -1,0 +1,76 @@
+:py:mod:`lir.transform.composite`
+=================================
+
+.. py:module:: lir.transform.composite
+
+.. autodoc2-docstring:: lir.transform.composite
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`CategoricalCompositeTransformer <lir.transform.composite.CategoricalCompositeTransformer>`
+     - .. autodoc2-docstring:: lir.transform.composite.CategoricalCompositeTransformer
+          :parser: myst
+          :summary:
+
+Data
+~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`LOG <lir.transform.composite.LOG>`
+     - .. autodoc2-docstring:: lir.transform.composite.LOG
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:data:: LOG
+   :canonical: lir.transform.composite.LOG
+   :value: 'getLogger(...)'
+
+   .. autodoc2-docstring:: lir.transform.composite.LOG
+      :parser: myst
+
+.. py:class:: CategoricalCompositeTransformer(factory: collections.abc.Callable[[], lir.Transformer], category_field: str)
+   :canonical: lir.transform.composite.CategoricalCompositeTransformer
+
+   Bases: :py:obj:`lir.Transformer`
+
+   .. autodoc2-docstring:: lir.transform.composite.CategoricalCompositeTransformer
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.transform.composite.CategoricalCompositeTransformer.__init__
+      :parser: myst
+
+   .. py:method:: _get_transformer(value: typing.Any, create_if_missing: bool) -> lir.Transformer
+      :canonical: lir.transform.composite.CategoricalCompositeTransformer._get_transformer
+
+      .. autodoc2-docstring:: lir.transform.composite.CategoricalCompositeTransformer._get_transformer
+         :parser: myst
+
+   .. py:method:: fit(instances: lir.data.models.InstanceData) -> typing.Self
+      :canonical: lir.transform.composite.CategoricalCompositeTransformer.fit
+
+      .. autodoc2-docstring:: lir.transform.composite.CategoricalCompositeTransformer.fit
+         :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.InstanceData) -> lir.data.models.InstanceData
+      :canonical: lir.transform.composite.CategoricalCompositeTransformer.apply
+
+      .. autodoc2-docstring:: lir.transform.composite.CategoricalCompositeTransformer.apply
+         :parser: myst

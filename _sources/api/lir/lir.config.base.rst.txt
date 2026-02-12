@@ -1,0 +1,291 @@
+:py:mod:`lir.config.base`
+=========================
+
+.. py:module:: lir.config.base
+
+.. autodoc2-docstring:: lir.config.base
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`ContextAwareDict <lir.config.base.ContextAwareDict>`
+     - .. autodoc2-docstring:: lir.config.base.ContextAwareDict
+          :parser: myst
+          :summary:
+   * - :py:obj:`ContextAwareList <lir.config.base.ContextAwareList>`
+     - .. autodoc2-docstring:: lir.config.base.ContextAwareList
+          :parser: myst
+          :summary:
+   * - :py:obj:`ConfigParser <lir.config.base.ConfigParser>`
+     - .. autodoc2-docstring:: lir.config.base.ConfigParser
+          :parser: myst
+          :summary:
+   * - :py:obj:`GenericFunctionConfigParser <lir.config.base.GenericFunctionConfigParser>`
+     - .. autodoc2-docstring:: lir.config.base.GenericFunctionConfigParser
+          :parser: myst
+          :summary:
+   * - :py:obj:`GenericConfigParser <lir.config.base.GenericConfigParser>`
+     - .. autodoc2-docstring:: lir.config.base.GenericConfigParser
+          :parser: myst
+          :summary:
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`_expand <lir.config.base._expand>`
+     - .. autodoc2-docstring:: lir.config.base._expand
+          :parser: myst
+          :summary:
+   * - :py:obj:`config_parser <lir.config.base.config_parser>`
+     - .. autodoc2-docstring:: lir.config.base.config_parser
+          :parser: myst
+          :summary:
+   * - :py:obj:`parse_pairing_config <lir.config.base.parse_pairing_config>`
+     - .. autodoc2-docstring:: lir.config.base.parse_pairing_config
+          :parser: myst
+          :summary:
+   * - :py:obj:`check_not_none <lir.config.base.check_not_none>`
+     - .. autodoc2-docstring:: lir.config.base.check_not_none
+          :parser: myst
+          :summary:
+   * - :py:obj:`check_type <lir.config.base.check_type>`
+     - .. autodoc2-docstring:: lir.config.base.check_type
+          :parser: myst
+          :summary:
+   * - :py:obj:`pop_field <lir.config.base.pop_field>`
+     - .. autodoc2-docstring:: lir.config.base.pop_field
+          :parser: myst
+          :summary:
+   * - :py:obj:`check_is_empty <lir.config.base.check_is_empty>`
+     - .. autodoc2-docstring:: lir.config.base.check_is_empty
+          :parser: myst
+          :summary:
+
+Data
+~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`AnyType <lir.config.base.AnyType>`
+     - .. autodoc2-docstring:: lir.config.base.AnyType
+          :parser: myst
+          :summary:
+   * - :py:obj:`YamlValueType <lir.config.base.YamlValueType>`
+     - .. autodoc2-docstring:: lir.config.base.YamlValueType
+          :parser: myst
+          :summary:
+   * - :py:obj:`_YAML_TYPES <lir.config.base._YAML_TYPES>`
+     - .. autodoc2-docstring:: lir.config.base._YAML_TYPES
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:exception:: YamlParseError(config_context_path: list[str], message: str)
+   :canonical: lir.config.base.YamlParseError
+
+   Bases: :py:obj:`ValueError`
+
+   .. autodoc2-docstring:: lir.config.base.YamlParseError
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.config.base.YamlParseError.__init__
+      :parser: myst
+
+.. py:class:: ContextAwareDict(context: list[str], *args: typing.Any, **kwargs: typing.Any)
+   :canonical: lir.config.base.ContextAwareDict
+
+   Bases: :py:obj:`dict`
+
+   .. autodoc2-docstring:: lir.config.base.ContextAwareDict
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.config.base.ContextAwareDict.__init__
+      :parser: myst
+
+   .. py:method:: clone(context: list[str] | None = None) -> lir.config.base.ContextAwareDict
+      :canonical: lir.config.base.ContextAwareDict.clone
+
+      .. autodoc2-docstring:: lir.config.base.ContextAwareDict.clone
+         :parser: myst
+
+.. py:class:: ContextAwareList(context: list[str], *args: typing.Any, **kwargs: typing.Any)
+   :canonical: lir.config.base.ContextAwareList
+
+   Bases: :py:obj:`list`
+
+   .. autodoc2-docstring:: lir.config.base.ContextAwareList
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.config.base.ContextAwareList.__init__
+      :parser: myst
+
+   .. py:method:: clone(context: list[str] | None = None) -> lir.config.base.ContextAwareList
+      :canonical: lir.config.base.ContextAwareList.clone
+
+      .. autodoc2-docstring:: lir.config.base.ContextAwareList.clone
+         :parser: myst
+
+.. py:function:: _expand(context: list[str], cfg: typing.Any) -> typing.Any
+   :canonical: lir.config.base._expand
+
+   .. autodoc2-docstring:: lir.config.base._expand
+      :parser: myst
+
+.. py:class:: ConfigParser
+   :canonical: lir.config.base.ConfigParser
+
+   Bases: :py:obj:`abc.ABC`
+
+   .. autodoc2-docstring:: lir.config.base.ConfigParser
+      :parser: myst
+
+   .. py:method:: parse(config: lir.config.base.ContextAwareDict, output_dir: pathlib.Path) -> typing.Any
+      :canonical: lir.config.base.ConfigParser.parse
+      :abstractmethod:
+
+      .. autodoc2-docstring:: lir.config.base.ConfigParser.parse
+         :parser: myst
+
+   .. py:method:: get_type_name(cls: typing.Any) -> str
+      :canonical: lir.config.base.ConfigParser.get_type_name
+      :staticmethod:
+
+      .. autodoc2-docstring:: lir.config.base.ConfigParser.get_type_name
+         :parser: myst
+
+   .. py:method:: reference() -> str
+      :canonical: lir.config.base.ConfigParser.reference
+
+      .. autodoc2-docstring:: lir.config.base.ConfigParser.reference
+         :parser: myst
+
+.. py:class:: GenericFunctionConfigParser(component_class: collections.abc.Callable)
+   :canonical: lir.config.base.GenericFunctionConfigParser
+
+   Bases: :py:obj:`lir.config.base.ConfigParser`
+
+   .. autodoc2-docstring:: lir.config.base.GenericFunctionConfigParser
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.config.base.GenericFunctionConfigParser.__init__
+      :parser: myst
+
+   .. py:method:: parse(config: lir.config.base.ContextAwareDict, output_dir: pathlib.Path) -> collections.abc.Callable
+      :canonical: lir.config.base.GenericFunctionConfigParser.parse
+
+      .. autodoc2-docstring:: lir.config.base.GenericFunctionConfigParser.parse
+         :parser: myst
+
+   .. py:method:: reference() -> str
+      :canonical: lir.config.base.GenericFunctionConfigParser.reference
+
+      .. autodoc2-docstring:: lir.config.base.GenericFunctionConfigParser.reference
+         :parser: myst
+
+.. py:class:: GenericConfigParser(component_class: type[typing.Any])
+   :canonical: lir.config.base.GenericConfigParser
+
+   Bases: :py:obj:`lir.config.base.ConfigParser`
+
+   .. autodoc2-docstring:: lir.config.base.GenericConfigParser
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.config.base.GenericConfigParser.__init__
+      :parser: myst
+
+   .. py:method:: parse(config: lir.config.base.ContextAwareDict, output_dir: pathlib.Path) -> typing.Any
+      :canonical: lir.config.base.GenericConfigParser.parse
+
+      .. autodoc2-docstring:: lir.config.base.GenericConfigParser.parse
+         :parser: myst
+
+   .. py:method:: reference() -> str
+      :canonical: lir.config.base.GenericConfigParser.reference
+
+      .. autodoc2-docstring:: lir.config.base.GenericConfigParser.reference
+         :parser: myst
+
+.. py:function:: config_parser(func: collections.abc.Callable[[lir.config.base.ContextAwareDict, pathlib.Path], typing.Any]) -> collections.abc.Callable
+   :canonical: lir.config.base.config_parser
+
+   .. autodoc2-docstring:: lir.config.base.config_parser
+      :parser: myst
+
+.. py:function:: parse_pairing_config(module_config: lir.config.base.ContextAwareDict | str, output_dir: pathlib.Path, context: list[str]) -> lir.transform.pairing.PairingMethod
+   :canonical: lir.config.base.parse_pairing_config
+
+   .. autodoc2-docstring:: lir.config.base.parse_pairing_config
+      :parser: myst
+
+.. py:data:: AnyType
+   :canonical: lir.config.base.AnyType
+   :value: 'TypeVar(...)'
+
+   .. autodoc2-docstring:: lir.config.base.AnyType
+      :parser: myst
+
+.. py:function:: check_not_none(v: lir.config.base.check_not_none.AnyType | None, message: str | None = None) -> lir.config.base.check_not_none.AnyType
+   :canonical: lir.config.base.check_not_none
+
+   .. autodoc2-docstring:: lir.config.base.check_not_none
+      :parser: myst
+
+.. py:data:: YamlValueType
+   :canonical: lir.config.base.YamlValueType
+   :value: None
+
+   .. autodoc2-docstring:: lir.config.base.YamlValueType
+      :parser: myst
+
+.. py:data:: _YAML_TYPES
+   :canonical: lir.config.base._YAML_TYPES
+   :type: dict
+   :value: None
+
+   .. autodoc2-docstring:: lir.config.base._YAML_TYPES
+      :parser: myst
+
+.. py:function:: check_type(type_class: typing.Any, v: lir.config.base.YamlValueType, message: str | None = None) -> typing.Any
+   :canonical: lir.config.base.check_type
+
+   .. autodoc2-docstring:: lir.config.base.check_type
+      :parser: myst
+
+.. py:function:: pop_field(config: lir.config.base.ContextAwareDict | typing.Any, field: str, default: typing.Any = None, required: bool | None = None, validate: collections.abc.Callable[[typing.Any], typing.Any] | None = None) -> typing.Any
+   :canonical: lir.config.base.pop_field
+
+   .. autodoc2-docstring:: lir.config.base.pop_field
+      :parser: myst
+
+.. py:function:: check_is_empty(config: lir.config.base.ContextAwareDict, accept_keys: collections.abc.Sequence[str] | None = None) -> None
+   :canonical: lir.config.base.check_is_empty
+
+   .. autodoc2-docstring:: lir.config.base.check_is_empty
+      :parser: myst

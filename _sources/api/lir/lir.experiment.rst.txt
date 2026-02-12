@@ -1,0 +1,100 @@
+:py:mod:`lir.experiment`
+========================
+
+.. py:module:: lir.experiment
+
+.. autodoc2-docstring:: lir.experiment
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`Experiment <lir.experiment.Experiment>`
+     - .. autodoc2-docstring:: lir.experiment.Experiment
+          :parser: myst
+          :summary:
+   * - :py:obj:`PredefinedExperiment <lir.experiment.PredefinedExperiment>`
+     - .. autodoc2-docstring:: lir.experiment.PredefinedExperiment
+          :parser: myst
+          :summary:
+
+Data
+~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`LOG <lir.experiment.LOG>`
+     - .. autodoc2-docstring:: lir.experiment.LOG
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:data:: LOG
+   :canonical: lir.experiment.LOG
+   :value: 'getLogger(...)'
+
+   .. autodoc2-docstring:: lir.experiment.LOG
+      :parser: myst
+
+.. py:class:: Experiment(name: str, outputs: collections.abc.Sequence[lir.aggregation.Aggregation], output_path: pathlib.Path)
+   :canonical: lir.experiment.Experiment
+
+   Bases: :py:obj:`abc.ABC`
+
+   .. autodoc2-docstring:: lir.experiment.Experiment
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.experiment.Experiment.__init__
+      :parser: myst
+
+   .. py:method:: _run_lrsystem(lrsystem_config: lir.config.base.ContextAwareDict, split_data: collections.abc.Iterable[tuple[lir.data.models.InstanceData, lir.data.models.InstanceData]], parameters: dict[str, typing.Any], run_name: str, data_config: lir.config.base.ContextAwareDict) -> lir.lrsystems.lrsystems.LLRData
+      :canonical: lir.experiment.Experiment._run_lrsystem
+
+      .. autodoc2-docstring:: lir.experiment.Experiment._run_lrsystem
+         :parser: myst
+
+   .. py:method:: _generate_and_run() -> None
+      :canonical: lir.experiment.Experiment._generate_and_run
+      :abstractmethod:
+
+      .. autodoc2-docstring:: lir.experiment.Experiment._generate_and_run
+         :parser: myst
+
+   .. py:method:: run() -> None
+      :canonical: lir.experiment.Experiment.run
+
+      .. autodoc2-docstring:: lir.experiment.Experiment.run
+         :parser: myst
+
+.. py:class:: PredefinedExperiment(name: str, data_configs: list[tuple[lir.config.base.ContextAwareDict, dict[str, typing.Any]]], outputs: collections.abc.Sequence[lir.aggregation.Aggregation], output_path: pathlib.Path, lrsystem_configs: list[tuple[lir.config.base.ContextAwareDict, dict[str, typing.Any]]])
+   :canonical: lir.experiment.PredefinedExperiment
+
+   Bases: :py:obj:`lir.experiment.Experiment`
+
+   .. autodoc2-docstring:: lir.experiment.PredefinedExperiment
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.experiment.PredefinedExperiment.__init__
+      :parser: myst
+
+   .. py:method:: _generate_and_run() -> None
+      :canonical: lir.experiment.PredefinedExperiment._generate_and_run
+
+      .. autodoc2-docstring:: lir.experiment.PredefinedExperiment._generate_and_run
+         :parser: myst

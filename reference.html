@@ -1,0 +1,290 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registry reference &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="_static/thebelab.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Reference" href="api/index.html" />
+    <link rel="prev" title="Assessing LR system performance" href="lrsystem-assessment.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/lir/lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/lir/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir/lir.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir/lir.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Registry reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/reference.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="registry-reference">
+<h1>Registry reference<a class="headerlink" href="#registry-reference" title="Link to this heading"></a></h1>
+<section id="experiment-components">
+<h2>Experiment components<a class="headerlink" href="#experiment-components" title="Link to this heading"></a></h2>
+<p>The preferred way to set up an experiment is to use a YAML configuration.
+Use the [LR system selection helper](lrsystem_yaml.md) to learn how to use the YAML interface.</p>
+<p>This page lists the components that may be needed to set up an experiment.</p>
+<section id="experiment-strategies">
+<h3>Experiment strategies<a class="headerlink" href="#experiment-strategies" title="Link to this heading"></a></h3>
+<p>Registry section: <code class="docutils literal notranslate"><span class="pre">experiment_strategies</span></code></p>
+<ul class="simple">
+<li><p><a class="reference external" href="api/lir/lir.config.experiment_strategies.html#lir.config.experiment_strategies.SingleRunStrategy">experiment_strategies.single_run</a> Prepare Experiment consisting of a single run using configuration values.</p></li>
+<li><p><a class="reference external" href="api/lir/lir.config.experiment_strategies.html#lir.config.experiment_strategies.GridStrategy">experiment_strategies.grid</a> Prepare Experiment consisting of multiple runs using configuration values.</p></li>
+<li><p><a class="reference external" href="api/lir/lir.config.experiment_strategies.html#lir.config.experiment_strategies.OptunaStrategy">experiment_strategies.optuna</a> Prepare Experiment for optimizing configuration parameters.</p></li>
+</ul>
+</section>
+<section id="data-strategies">
+<h3>Data strategies<a class="headerlink" href="#data-strategies" title="Link to this heading"></a></h3>
+<p>Registry section: <code class="docutils literal notranslate"><span class="pre">data_strategies</span></code></p>
+<ul class="simple">
+<li><p><a class="reference external" href="api/lir/lir.data.data_strategies.html#lir.data.data_strategies.BinaryTrainTestSplit">data_strategies.binary_train_test_split</a> Representation of a train/test split.</p></li>
+<li><p><a class="reference external" href="api/lir/lir.data.data_strategies.html#lir.data.data_strategies.BinaryCrossValidation">data_strategies.binary_cross_validation</a> K-fold cross-validation iterator over successive train/test splits.</p></li>
+<li><p><a class="reference external" href="api/lir/lir.data.data_strategies.html#lir.data.data_strategies.MulticlassTrainTestSplit">data_strategies.multiclass_train_test_split</a> Representation of a multi-class train/test split.</p></li>
+<li><p><a class="reference external" href="api/lir/lir.data.data_strategies.html#lir.data.data_strategies.MulticlassCrossValidation">data_strategies.multiclass_cross_validation</a> K-fold cross-validation iterator over successive train/test splits.</p></li>
+<li><p><a class="reference external" href="api/lir/lir.data.data_strategies.html#lir.data.data_strategies.PredefinedTrainTestSplit">data_strategies.predefined_train_test_split</a> Split data into a training set and a test set based on predefined assignments.</p></li>
+</ul>
+</section>
+<section id="data-providers">
+<h3>Data providers<a class="headerlink" href="#data-providers" title="Link to this heading"></a></h3>
+<p>Registry section: <code class="docutils literal notranslate"><span class="pre">data_providers</span></code></p>
+<ul class="simple">
+<li><p><a class="reference external" href="api/lir/lir.data.datasets.synthesized_normal_binary.html#lir.data.datasets.synthesized_normal_binary.synthesized_normal_binary">data_providers.synthesized_normal_binary</a></p></li>
+<li><p><a class="reference external" href="api/lir/lir.data.datasets.synthesized_normal_multiclass.html#lir.data.datasets.synthesized_normal_multiclass.synthesized_normal_multiclass">data_providers.synthesized_normal_multiclass</a></p></li>
+<li><p><a class="reference external" href="api/lir/lir.data.datasets.glass.html#lir.data.datasets.glass.GlassData">data_providers.glass</a> LA-ICP-MS measurements of elemental concentration from floatglass.</p></li>
+<li><p><a class="reference external" href="api/lir/lir.data.datasets.feature_data_csv.html#lir.data.datasets.feature_data_csv.feature_data_csv_file_parser">data_providers.parse_features_from_csv_file</a></p></li>
+<li><p><a class="reference external" href="api/lir/lir.data.datasets.feature_data_csv.html#lir.data.datasets.feature_data_csv.feature_data_csv_http_parser">data_providers.parse_features_from_csv_url</a></p></li>
+</ul>
+</section>
+<section id="metrics">
+<h3>Metrics<a class="headerlink" href="#metrics" title="Link to this heading"></a></h3>
+<p>Registry section: <code class="docutils literal notranslate"><span class="pre">metric</span></code></p>
+<ul class="simple">
+<li><p><a class="reference external" href="api/lir/lir.metrics.html#lir.metrics.cllr">metric.cllr</a> Calculate a log likelihood ratio cost (C_llr) for a series of log likelihood ratios.</p></li>
+<li><p><a class="reference external" href="api/lir/lir.metrics.html#lir.metrics.cllr_min">metric.cllr_min</a> Estimate the discriminative power from a collection of log likelihood ratios.</p></li>
+<li><p><a class="reference external" href="api/lir/lir.metrics.html#lir.metrics.cllr_cal">metric.cllr_cal</a> Calculate the difference between the C_llr before and after isotonic calibration.</p></li>
+<li><p><a class="reference external" href="api/lir/lir.metrics.html#lir.metrics.llr_lower_bound">metric.llr_lower_bound</a> Provide corresponding lower bound for provided LLR data.</p></li>
+<li><p><a class="reference external" href="api/lir/lir.metrics.html#lir.metrics.llr_upper_bound">metric.llr_upper_bound</a> Provide corresponding upper bound for provided LLR data.</p></li>
+</ul>
+</section>
+<section id="output">
+<h3>Output<a class="headerlink" href="#output" title="Link to this heading"></a></h3>
+<p>Registry section: <code class="docutils literal notranslate"><span class="pre">output</span></code></p>
+<ul class="simple">
+<li><p><a class="reference external" href="api/lir/lir.aggregation.html#lir.aggregation.metrics_csv">output.metrics</a></p></li>
+<li><p><a class="reference external" href="api/lir/lir.aggregation.html#lir.aggregation.plot_pav">output.pav</a></p></li>
+<li><p><a class="reference external" href="api/lir/lir.aggregation.html#lir.aggregation.plot_ece">output.ece</a></p></li>
+<li><p><a class="reference external" href="api/lir/lir.aggregation.html#lir.aggregation.plot_lr_histogram">output.lr_histogram</a></p></li>
+<li><p><a class="reference external" href="api/lir/lir.aggregation.html#lir.aggregation.plot_llr_interval">output.llr_interval</a></p></li>
+<li><p><a class="reference external" href="api/lir/lir.aggregation.html#lir.aggregation.plot_llr_overestimation">output.llr_overestimation</a></p></li>
+<li><p><a class="reference external" href="api/lir/lir.aggregation.html#lir.aggregation.plot_nbe">output.nbe</a></p></li>
+<li><p><a class="reference external" href="api/lir/lir.aggregation.html#lir.aggregation.plot_invariance_delta_function">output.invariance_delta_function</a></p></li>
+<li><p><a class="reference external" href="api/lir/lir.aggregation.html#lir.aggregation.plot_tippett">output.tippett</a></p></li>
+<li><p><a class="reference external" href="api/lir/lir.persistence.html#lir.persistence.parse_save_model">output.save_model</a></p></li>
+<li><p><a class="reference external" href="api/lir/lir.config.aggregation.html#lir.config.aggregation.subset_aggregation">output.by_category</a></p></li>
+</ul>
+</section>
+<section id="hyperparameters">
+<h3>Hyperparameters<a class="headerlink" href="#hyperparameters" title="Link to this heading"></a></h3>
+<p>Registry section: <code class="docutils literal notranslate"><span class="pre">hyperparameter_types</span></code></p>
+<ul class="simple">
+<li><p><a class="reference external" href="api/lir/lir.config.substitution.html#lir.config.substitution.parse_categorical">hyperparameter_types.categorical</a></p></li>
+<li><p><a class="reference external" href="api/lir/lir.config.substitution.html#lir.config.substitution.parse_clustered">hyperparameter_types.cluster</a></p></li>
+<li><p><a class="reference external" href="api/lir/lir.config.substitution.html#lir.config.substitution.parse_constant">hyperparameter_types.constant</a></p></li>
+<li><p><a class="reference external" href="api/lir/lir.config.substitution.html#lir.config.substitution.parse_float">hyperparameter_types.float</a></p></li>
+<li><p><a class="reference external" href="api/lir/lir.config.substitution.html#lir.config.substitution.parse_folder">hyperparameter_types.folder</a></p></li>
+</ul>
+</section>
+</section>
+<section id="lr-system-components">
+<h2>LR system components<a class="headerlink" href="#lr-system-components" title="Link to this heading"></a></h2>
+<p>You may choose to use either the Python API or a YAML configuration to set up an LR system.</p>
+<ul class="simple">
+<li><p>Use the <a class="reference external" href="https://github.com/NetherlandsForensicInstitute/lir/tree/practitioner_guide">Pracitioner’s Guide</a> to learn how to use the Python API.</p></li>
+<li><p>Use the [LR system selection helper](lrsystem_yaml.md) to learn how to use the YAML interface.</p></li>
+</ul>
+<p>This page lists the components that may be needed to define an LR system.</p>
+<section id="lr-system-architecture">
+<h3>LR system architecture<a class="headerlink" href="#lr-system-architecture" title="Link to this heading"></a></h3>
+<p>Registry section: <cite>lrsystem_architecture</cite></p>
+<ul class="simple">
+<li><p><a class="reference external" href="api/lir/lir.config.lrsystem_architectures.html#lir.config.lrsystem_architectures.specific_source">lrsystem_architectures.specific_source</a></p></li>
+<li><p><a class="reference external" href="api/lir/lir.config.lrsystem_architectures.html#lir.config.lrsystem_architectures.score_based">lrsystem_architectures.score_based</a></p></li>
+<li><p><a class="reference external" href="api/lir/lir.config.lrsystem_architectures.html#lir.config.lrsystem_architectures.two_level">lrsystem_architectures.two_level</a></p></li>
+</ul>
+</section>
+<section id="lr-system-modules">
+<h3>LR system modules<a class="headerlink" href="#lr-system-modules" title="Link to this heading"></a></h3>
+<p>Registry section: <cite>modules</cite></p>
+<ul class="simple">
+<li><p><a class="reference external" href="api/lir/lir.transform.pipeline.html#lir.transform.pipeline.pipeline">modules.pipeline</a></p></li>
+<li><p><a class="reference external" href="api/lir/lir.transform.pipeline.html#lir.transform.pipeline.logging_pipeline">modules.logging_pipeline</a></p></li>
+<li><p><a class="reference external" href="api/lir/lir.algorithms.bootstraps.html#lir.algorithms.bootstraps.bootstrap">modules.bootstrap</a></p></li>
+<li><p><a class="reference external" href="api/lir.html">modules.standard_scaler</a> Standardize features by removing the mean and scaling to unit variance.</p></li>
+<li><p><a class="reference external" href="api/lir/lir.util.html#lir.util.probability_to_odds">modules.probabilities_to_odds</a> Converts a probability to odds.</p></li>
+<li><p><a class="reference external" href="api/lir/lir.util.html#lir.util.probability_to_logodds">modules.probabilities_to_logodds</a> Converts probability values to their log odds with base 10.</p></li>
+<li><p><a class="reference external" href="api/lir/lir.transform.distance.html#lir.transform.distance.ElementWiseDifference">modules.element_wise_difference</a> Calculate the element-wise absolute difference between pairs.</p></li>
+<li><p><a class="reference external" href="api/lir/lir.transform.distance.html#lir.transform.distance.ManhattanDistance">modules.manhattan_distance</a> Calculate the Manhattan distance between pairs.</p></li>
+<li><p><a class="reference external" href="api/lir/lir.config.util.html#lir.config.util.TeeParser">modules.tee</a> Parse configuration for allowing multiple tasks for given input.</p></li>
+<li><p><a class="reference external" href="api/lir/lir.config.transform.html#lir.config.transform.csv_writer">modules.csv_writer</a></p></li>
+<li><p><a class="reference external" href="api/lir.html">modules.logistic_regression</a> Logistic Regression (aka logit, MaxEnt) classifier.</p></li>
+<li><p><a class="reference external" href="api/lir.html">modules.svm</a> C-Support Vector Classification.</p></li>
+<li><p><a class="reference external" href="api/lir/lir.algorithms.kde.html#lir.algorithms.kde.KDECalibrator">modules.kde</a> Calculate LR from a score, belonging to one of two distributions using KDE.</p></li>
+<li><p><a class="reference external" href="api/lir/lir.algorithms.isotonic_regression.html#lir.algorithms.isotonic_regression.IsotonicRegression">modules.isotonic_calibrator</a> Wrap SKlearn implementation to support infinite values.</p></li>
+<li><p><a class="reference external" href="api/lir/lir.algorithms.logistic_regression.html#lir.algorithms.logistic_regression.LogitCalibrator">modules.logit</a> Calculate LR from a score, belonging to one of two distributions using Logistic Regression.</p></li>
+<li><p><a class="reference external" href="api/lir/lir.bounding.html#lir.bounding.StaticBounder">modules.static_bounder</a> Bound LLRs to constant values.</p></li>
+<li><p><a class="reference external" href="api/lir/lir.algorithms.bayeserror.html#lir.algorithms.bayeserror.ELUBBounder">modules.elub_bounder</a> Calculate the Emperical Upper and Lower Bounds for a given LR system.</p></li>
+<li><p><a class="reference external" href="api/lir/lir.algorithms.invariance_bounds.html#lir.algorithms.invariance_bounds.IVBounder">modules.iv_bounder</a> Calculate Invariance Verification bounds for a given LR system.</p></li>
+<li><p><a class="reference external" href="api/lir/lir.bounding.html#lir.bounding.NSourceBounder">modules.n_source_bounder</a> Bound LLRs based on the number of sources.</p></li>
+</ul>
+</section>
+<section id="pairing-methods">
+<h3>Pairing methods<a class="headerlink" href="#pairing-methods" title="Link to this heading"></a></h3>
+<p>Registry section: <cite>pairing</cite></p>
+<ul class="simple">
+<li><p><a class="reference external" href="api/lir/lir.transform.pairing.html#lir.transform.pairing.InstancePairing">pairing.instance_pairs</a> Construct pairs from a set of instances.</p></li>
+<li><p><a class="reference external" href="api/lir/lir.transform.pairing.html#lir.transform.pairing.SourcePairing">pairing.source_pairs</a> Construct pairs of sources (i.e. classes) from an array of instances.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lrsystem-assessment.html" class="btn btn-neutral float-left" title="Assessing LR system performance" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api/index.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

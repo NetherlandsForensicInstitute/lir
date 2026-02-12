@@ -1,0 +1,186 @@
+:py:mod:`lir.data.data_strategies`
+==================================
+
+.. py:module:: lir.data.data_strategies
+
+.. autodoc2-docstring:: lir.data.data_strategies
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`BinaryTrainTestSplit <lir.data.data_strategies.BinaryTrainTestSplit>`
+     - .. autodoc2-docstring:: lir.data.data_strategies.BinaryTrainTestSplit
+          :parser: myst
+          :summary:
+   * - :py:obj:`BinaryCrossValidation <lir.data.data_strategies.BinaryCrossValidation>`
+     - .. autodoc2-docstring:: lir.data.data_strategies.BinaryCrossValidation
+          :parser: myst
+          :summary:
+   * - :py:obj:`MulticlassTrainTestSplit <lir.data.data_strategies.MulticlassTrainTestSplit>`
+     - .. autodoc2-docstring:: lir.data.data_strategies.MulticlassTrainTestSplit
+          :parser: myst
+          :summary:
+   * - :py:obj:`MulticlassCrossValidation <lir.data.data_strategies.MulticlassCrossValidation>`
+     - .. autodoc2-docstring:: lir.data.data_strategies.MulticlassCrossValidation
+          :parser: myst
+          :summary:
+   * - :py:obj:`PairedInstancesTrainTestSplit <lir.data.data_strategies.PairedInstancesTrainTestSplit>`
+     - .. autodoc2-docstring:: lir.data.data_strategies.PairedInstancesTrainTestSplit
+          :parser: myst
+          :summary:
+   * - :py:obj:`RoleAssignment <lir.data.data_strategies.RoleAssignment>`
+     - .. autodoc2-docstring:: lir.data.data_strategies.RoleAssignment
+          :parser: myst
+          :summary:
+   * - :py:obj:`PredefinedTrainTestSplit <lir.data.data_strategies.PredefinedTrainTestSplit>`
+     - .. autodoc2-docstring:: lir.data.data_strategies.PredefinedTrainTestSplit
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:class:: BinaryTrainTestSplit(test_size: float | int, seed: int | None = None)
+   :canonical: lir.data.data_strategies.BinaryTrainTestSplit
+
+   Bases: :py:obj:`lir.data.models.DataStrategy`
+
+   .. autodoc2-docstring:: lir.data.data_strategies.BinaryTrainTestSplit
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.data.data_strategies.BinaryTrainTestSplit.__init__
+      :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.FeatureData) -> collections.abc.Iterable[tuple[lir.data.models.FeatureData, lir.data.models.FeatureData]]
+      :canonical: lir.data.data_strategies.BinaryTrainTestSplit.apply
+
+      .. autodoc2-docstring:: lir.data.data_strategies.BinaryTrainTestSplit.apply
+         :parser: myst
+
+.. py:class:: BinaryCrossValidation(folds: int, seed: int | None = None)
+   :canonical: lir.data.data_strategies.BinaryCrossValidation
+
+   Bases: :py:obj:`lir.data.models.DataStrategy`
+
+   .. autodoc2-docstring:: lir.data.data_strategies.BinaryCrossValidation
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.data.data_strategies.BinaryCrossValidation.__init__
+      :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.FeatureData) -> collections.abc.Iterable[tuple[lir.data.models.FeatureData, lir.data.models.FeatureData]]
+      :canonical: lir.data.data_strategies.BinaryCrossValidation.apply
+
+      .. autodoc2-docstring:: lir.data.data_strategies.BinaryCrossValidation.apply
+         :parser: myst
+
+.. py:class:: MulticlassTrainTestSplit(test_size: float | int, seed: int | None = None)
+   :canonical: lir.data.data_strategies.MulticlassTrainTestSplit
+
+   Bases: :py:obj:`lir.data.models.DataStrategy`
+
+   .. autodoc2-docstring:: lir.data.data_strategies.MulticlassTrainTestSplit
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.data.data_strategies.MulticlassTrainTestSplit.__init__
+      :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.FeatureData) -> collections.abc.Iterable[tuple[lir.data.models.FeatureData, lir.data.models.FeatureData]]
+      :canonical: lir.data.data_strategies.MulticlassTrainTestSplit.apply
+
+      .. autodoc2-docstring:: lir.data.data_strategies.MulticlassTrainTestSplit.apply
+         :parser: myst
+
+.. py:class:: MulticlassCrossValidation(folds: int)
+   :canonical: lir.data.data_strategies.MulticlassCrossValidation
+
+   Bases: :py:obj:`lir.data.models.DataStrategy`
+
+   .. autodoc2-docstring:: lir.data.data_strategies.MulticlassCrossValidation
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.data.data_strategies.MulticlassCrossValidation.__init__
+      :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.FeatureData) -> collections.abc.Iterable[tuple[lir.data.models.FeatureData, lir.data.models.FeatureData]]
+      :canonical: lir.data.data_strategies.MulticlassCrossValidation.apply
+
+      .. autodoc2-docstring:: lir.data.data_strategies.MulticlassCrossValidation.apply
+         :parser: myst
+
+.. py:class:: PairedInstancesTrainTestSplit(test_size: float | int, seed: int | None = None)
+   :canonical: lir.data.data_strategies.PairedInstancesTrainTestSplit
+
+   Bases: :py:obj:`lir.data.models.DataStrategy`
+
+   .. autodoc2-docstring:: lir.data.data_strategies.PairedInstancesTrainTestSplit
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.data.data_strategies.PairedInstancesTrainTestSplit.__init__
+      :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.FeatureData) -> collections.abc.Iterator[tuple[lir.data.models.FeatureData, lir.data.models.FeatureData]]
+      :canonical: lir.data.data_strategies.PairedInstancesTrainTestSplit.apply
+
+      .. autodoc2-docstring:: lir.data.data_strategies.PairedInstancesTrainTestSplit.apply
+         :parser: myst
+
+.. py:class:: RoleAssignment(*args, **kwds)
+   :canonical: lir.data.data_strategies.RoleAssignment
+
+   Bases: :py:obj:`enum.Enum`
+
+   .. autodoc2-docstring:: lir.data.data_strategies.RoleAssignment
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.data.data_strategies.RoleAssignment.__init__
+      :parser: myst
+
+   .. py:attribute:: TRAIN
+      :canonical: lir.data.data_strategies.RoleAssignment.TRAIN
+      :value: 'train'
+
+      .. autodoc2-docstring:: lir.data.data_strategies.RoleAssignment.TRAIN
+         :parser: myst
+
+   .. py:attribute:: TEST
+      :canonical: lir.data.data_strategies.RoleAssignment.TEST
+      :value: 'test'
+
+      .. autodoc2-docstring:: lir.data.data_strategies.RoleAssignment.TEST
+         :parser: myst
+
+.. py:class:: PredefinedTrainTestSplit
+   :canonical: lir.data.data_strategies.PredefinedTrainTestSplit
+
+   Bases: :py:obj:`lir.data.models.DataStrategy`
+
+   .. autodoc2-docstring:: lir.data.data_strategies.PredefinedTrainTestSplit
+      :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.FeatureData) -> collections.abc.Iterable[tuple[lir.data.models.FeatureData, lir.data.models.FeatureData]]
+      :canonical: lir.data.data_strategies.PredefinedTrainTestSplit.apply
+
+      .. autodoc2-docstring:: lir.data.data_strategies.PredefinedTrainTestSplit.apply
+         :parser: myst

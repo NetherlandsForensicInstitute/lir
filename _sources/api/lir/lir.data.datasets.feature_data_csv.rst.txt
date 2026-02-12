@@ -1,0 +1,239 @@
+:py:mod:`lir.data.datasets.feature_data_csv`
+============================================
+
+.. py:module:: lir.data.datasets.feature_data_csv
+
+.. autodoc2-docstring:: lir.data.datasets.feature_data_csv
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`ExtraField <lir.data.datasets.feature_data_csv.ExtraField>`
+     - .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.ExtraField
+          :parser: myst
+          :summary:
+   * - :py:obj:`FeatureDataCsvParser <lir.data.datasets.feature_data_csv.FeatureDataCsvParser>`
+     - .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.FeatureDataCsvParser
+          :parser: myst
+          :summary:
+   * - :py:obj:`FeatureDataCsvFileParser <lir.data.datasets.feature_data_csv.FeatureDataCsvFileParser>`
+     - .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.FeatureDataCsvFileParser
+          :parser: myst
+          :summary:
+   * - :py:obj:`FeatureDataCsvStreamParser <lir.data.datasets.feature_data_csv.FeatureDataCsvStreamParser>`
+     - .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.FeatureDataCsvStreamParser
+          :parser: myst
+          :summary:
+   * - :py:obj:`FeatureDataCsvHttpParser <lir.data.datasets.feature_data_csv.FeatureDataCsvHttpParser>`
+     - .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.FeatureDataCsvHttpParser
+          :parser: myst
+          :summary:
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`_parse_cell_type <lir.data.datasets.feature_data_csv._parse_cell_type>`
+     - .. autodoc2-docstring:: lir.data.datasets.feature_data_csv._parse_cell_type
+          :parser: myst
+          :summary:
+   * - :py:obj:`_parse_extra_field <lir.data.datasets.feature_data_csv._parse_extra_field>`
+     - .. autodoc2-docstring:: lir.data.datasets.feature_data_csv._parse_extra_field
+          :parser: myst
+          :summary:
+   * - :py:obj:`_parse_feature_data_csv <lir.data.datasets.feature_data_csv._parse_feature_data_csv>`
+     - .. autodoc2-docstring:: lir.data.datasets.feature_data_csv._parse_feature_data_csv
+          :parser: myst
+          :summary:
+   * - :py:obj:`feature_data_csv_http_parser <lir.data.datasets.feature_data_csv.feature_data_csv_http_parser>`
+     - .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.feature_data_csv_http_parser
+          :parser: myst
+          :summary:
+   * - :py:obj:`feature_data_csv_file_parser <lir.data.datasets.feature_data_csv.feature_data_csv_file_parser>`
+     - .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.feature_data_csv_file_parser
+          :parser: myst
+          :summary:
+
+Data
+~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`LOG <lir.data.datasets.feature_data_csv.LOG>`
+     - .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.LOG
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:data:: LOG
+   :canonical: lir.data.datasets.feature_data_csv.LOG
+   :value: 'getLogger(...)'
+
+   .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.LOG
+      :parser: myst
+
+.. py:class:: ExtraField
+   :canonical: lir.data.datasets.feature_data_csv.ExtraField
+
+   Bases: :py:obj:`typing.NamedTuple`
+
+   .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.ExtraField
+      :parser: myst
+
+   .. py:attribute:: name
+      :canonical: lir.data.datasets.feature_data_csv.ExtraField.name
+      :type: str
+      :value: None
+
+      .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.ExtraField.name
+         :parser: myst
+
+   .. py:attribute:: column_names
+      :canonical: lir.data.datasets.feature_data_csv.ExtraField.column_names
+      :type: list[str]
+      :value: None
+
+      .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.ExtraField.column_names
+         :parser: myst
+
+   .. py:attribute:: validate_cell
+      :canonical: lir.data.datasets.feature_data_csv.ExtraField.validate_cell
+      :type: collections.abc.Callable[[str], typing.Any]
+      :value: None
+
+      .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.ExtraField.validate_cell
+         :parser: myst
+
+   .. py:method:: parse_row(row: dict[str, str]) -> list[typing.Any]
+      :canonical: lir.data.datasets.feature_data_csv.ExtraField.parse_row
+
+      .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.ExtraField.parse_row
+         :parser: myst
+
+.. py:class:: FeatureDataCsvParser(source_id_column: str | list[str] | None = None, label_column: str | None = None, instance_id_column: str | None = None, role_assignment_column: str | None = None, extra_fields: list[lir.data.datasets.feature_data_csv.ExtraField] | None = None, ignore_columns: list[str] | None = None, head: int | None = None, message_prefix: str = '')
+   :canonical: lir.data.datasets.feature_data_csv.FeatureDataCsvParser
+
+   Bases: :py:obj:`lir.data.models.DataProvider`, :py:obj:`abc.ABC`
+
+   .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.FeatureDataCsvParser
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.FeatureDataCsvParser.__init__
+      :parser: myst
+
+   .. py:method:: _parse_value(line_num: int, column_name: str, value: str, parse_fn: collections.abc.Callable[[str], typing.Any]) -> typing.Any
+      :canonical: lir.data.datasets.feature_data_csv.FeatureDataCsvParser._parse_value
+
+      .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.FeatureDataCsvParser._parse_value
+         :parser: myst
+
+   .. py:method:: _parse_file(fp: typing.IO) -> lir.data.models.FeatureData
+      :canonical: lir.data.datasets.feature_data_csv.FeatureDataCsvParser._parse_file
+
+      .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.FeatureDataCsvParser._parse_file
+         :parser: myst
+
+.. py:class:: FeatureDataCsvFileParser(file: os.PathLike, **kwargs: typing.Any)
+   :canonical: lir.data.datasets.feature_data_csv.FeatureDataCsvFileParser
+
+   Bases: :py:obj:`lir.data.datasets.feature_data_csv.FeatureDataCsvParser`
+
+   .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.FeatureDataCsvFileParser
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.FeatureDataCsvFileParser.__init__
+      :parser: myst
+
+   .. py:method:: get_instances() -> lir.data.models.FeatureData
+      :canonical: lir.data.datasets.feature_data_csv.FeatureDataCsvFileParser.get_instances
+
+      .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.FeatureDataCsvFileParser.get_instances
+         :parser: myst
+
+.. py:class:: FeatureDataCsvStreamParser(fp: typing.IO, **kwargs: typing.Any)
+   :canonical: lir.data.datasets.feature_data_csv.FeatureDataCsvStreamParser
+
+   Bases: :py:obj:`lir.data.datasets.feature_data_csv.FeatureDataCsvParser`
+
+   .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.FeatureDataCsvStreamParser
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.FeatureDataCsvStreamParser.__init__
+      :parser: myst
+
+   .. py:method:: get_instances() -> lir.data.models.FeatureData
+      :canonical: lir.data.datasets.feature_data_csv.FeatureDataCsvStreamParser.get_instances
+
+      .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.FeatureDataCsvStreamParser.get_instances
+         :parser: myst
+
+.. py:class:: FeatureDataCsvHttpParser(url: str, session: requests.Session, **kwargs: typing.Any)
+   :canonical: lir.data.datasets.feature_data_csv.FeatureDataCsvHttpParser
+
+   Bases: :py:obj:`lir.data.datasets.feature_data_csv.FeatureDataCsvParser`
+
+   .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.FeatureDataCsvHttpParser
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.FeatureDataCsvHttpParser.__init__
+      :parser: myst
+
+   .. py:method:: get_instances() -> lir.data.models.FeatureData
+      :canonical: lir.data.datasets.feature_data_csv.FeatureDataCsvHttpParser.get_instances
+
+      .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.FeatureDataCsvHttpParser.get_instances
+         :parser: myst
+
+.. py:function:: _parse_cell_type(value: str) -> collections.abc.Callable[[str], typing.Any]
+   :canonical: lir.data.datasets.feature_data_csv._parse_cell_type
+
+   .. autodoc2-docstring:: lir.data.datasets.feature_data_csv._parse_cell_type
+      :parser: myst
+
+.. py:function:: _parse_extra_field(config: lir.config.base.ContextAwareDict) -> lir.data.datasets.feature_data_csv.ExtraField
+   :canonical: lir.data.datasets.feature_data_csv._parse_extra_field
+
+   .. autodoc2-docstring:: lir.data.datasets.feature_data_csv._parse_extra_field
+      :parser: myst
+
+.. py:function:: _parse_feature_data_csv(parser_class: type[lir.data.datasets.feature_data_csv.FeatureDataCsvParser], config: lir.config.base.ContextAwareDict, **kwargs: typing.Any) -> lir.data.datasets.feature_data_csv.FeatureDataCsvParser
+   :canonical: lir.data.datasets.feature_data_csv._parse_feature_data_csv
+
+   .. autodoc2-docstring:: lir.data.datasets.feature_data_csv._parse_feature_data_csv
+      :parser: myst
+
+.. py:function:: feature_data_csv_http_parser(config: lir.config.base.ContextAwareDict, output_dir: pathlib.Path) -> lir.data.datasets.feature_data_csv.FeatureDataCsvParser
+   :canonical: lir.data.datasets.feature_data_csv.feature_data_csv_http_parser
+
+   .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.feature_data_csv_http_parser
+      :parser: myst
+
+.. py:function:: feature_data_csv_file_parser(config: lir.config.base.ContextAwareDict, output_dir: pathlib.Path) -> lir.data.datasets.feature_data_csv.FeatureDataCsvParser
+   :canonical: lir.data.datasets.feature_data_csv.feature_data_csv_file_parser
+
+   .. autodoc2-docstring:: lir.data.datasets.feature_data_csv.feature_data_csv_file_parser
+      :parser: myst

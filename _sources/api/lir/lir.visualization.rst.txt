@@ -1,0 +1,72 @@
+:py:mod:`lir.visualization`
+===========================
+
+.. py:module:: lir.visualization
+
+.. autodoc2-docstring:: lir.visualization
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`_save_or_plot <lir.visualization._save_or_plot>`
+     - .. autodoc2-docstring:: lir.visualization._save_or_plot
+          :parser: myst
+          :summary:
+   * - :py:obj:`pav <lir.visualization.pav>`
+     - .. autodoc2-docstring:: lir.visualization.pav
+          :parser: myst
+          :summary:
+   * - :py:obj:`ece <lir.visualization.ece>`
+     - .. autodoc2-docstring:: lir.visualization.ece
+          :parser: myst
+          :summary:
+   * - :py:obj:`lr_histogram <lir.visualization.lr_histogram>`
+     - .. autodoc2-docstring:: lir.visualization.lr_histogram
+          :parser: myst
+          :summary:
+   * - :py:obj:`llr_interval <lir.visualization.llr_interval>`
+     - .. autodoc2-docstring:: lir.visualization.llr_interval
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:function:: _save_or_plot(ax: typing.Any | None, base_path: pathlib.Path | None, filename: str, plot_func: collections.abc.Callable[[typing.Any, typing.Any], None], *args: typing.Any) -> None
+   :canonical: lir.visualization._save_or_plot
+
+   .. autodoc2-docstring:: lir.visualization._save_or_plot
+      :parser: myst
+
+.. py:function:: pav(base_path: pathlib.Path | None, llrdata: lir.data.models.LLRData, ax: typing.Any | None = None) -> None
+   :canonical: lir.visualization.pav
+
+   .. autodoc2-docstring:: lir.visualization.pav
+      :parser: myst
+
+.. py:function:: ece(base_path: pathlib.Path | None, llrdata: lir.data.models.LLRData, ax: typing.Any | None = None) -> None
+   :canonical: lir.visualization.ece
+
+   .. autodoc2-docstring:: lir.visualization.ece
+      :parser: myst
+
+.. py:function:: lr_histogram(base_path: pathlib.Path | None, llrdata: lir.data.models.LLRData, ax: typing.Any | None = None) -> None
+   :canonical: lir.visualization.lr_histogram
+
+   .. autodoc2-docstring:: lir.visualization.lr_histogram
+      :parser: myst
+
+.. py:function:: llr_interval(base_path: pathlib.Path | None, llrdata: lir.data.models.LLRData, ax: typing.Any | None = None) -> None
+   :canonical: lir.visualization.llr_interval
+
+   .. autodoc2-docstring:: lir.visualization.llr_interval
+      :parser: myst

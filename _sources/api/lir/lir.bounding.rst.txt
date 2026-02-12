@@ -1,0 +1,130 @@
+:py:mod:`lir.bounding`
+======================
+
+.. py:module:: lir.bounding
+
+.. autodoc2-docstring:: lir.bounding
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`LLRBounder <lir.bounding.LLRBounder>`
+     - .. autodoc2-docstring:: lir.bounding.LLRBounder
+          :parser: myst
+          :summary:
+   * - :py:obj:`StaticBounder <lir.bounding.StaticBounder>`
+     - .. autodoc2-docstring:: lir.bounding.StaticBounder
+          :parser: myst
+          :summary:
+   * - :py:obj:`NSourceBounder <lir.bounding.NSourceBounder>`
+     - .. autodoc2-docstring:: lir.bounding.NSourceBounder
+          :parser: myst
+          :summary:
+
+Data
+~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`LOG <lir.bounding.LOG>`
+     - .. autodoc2-docstring:: lir.bounding.LOG
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:data:: LOG
+   :canonical: lir.bounding.LOG
+   :value: 'getLogger(...)'
+
+   .. autodoc2-docstring:: lir.bounding.LOG
+      :parser: myst
+
+.. py:class:: LLRBounder(lower_llr_bound: float | None = None, upper_llr_bound: float | None = None)
+   :canonical: lir.bounding.LLRBounder
+
+   Bases: :py:obj:`lir.Transformer`, :py:obj:`abc.ABC`
+
+   .. autodoc2-docstring:: lir.bounding.LLRBounder
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.bounding.LLRBounder.__init__
+      :parser: myst
+
+   .. py:method:: calculate_bounds(llrdata: lir.data.models.LLRData) -> tuple[float | None, float | None]
+      :canonical: lir.bounding.LLRBounder.calculate_bounds
+      :abstractmethod:
+
+      .. autodoc2-docstring:: lir.bounding.LLRBounder.calculate_bounds
+         :parser: myst
+
+   .. py:method:: _validate(instances: lir.data.models.InstanceData) -> lir.data.models.LLRData
+      :canonical: lir.bounding.LLRBounder._validate
+      :staticmethod:
+
+      .. autodoc2-docstring:: lir.bounding.LLRBounder._validate
+         :parser: myst
+
+   .. py:method:: fit(instances: lir.data.models.InstanceData) -> typing.Self
+      :canonical: lir.bounding.LLRBounder.fit
+
+      .. autodoc2-docstring:: lir.bounding.LLRBounder.fit
+         :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.InstanceData) -> lir.data.models.LLRData
+      :canonical: lir.bounding.LLRBounder.apply
+
+      .. autodoc2-docstring:: lir.bounding.LLRBounder.apply
+         :parser: myst
+
+.. py:class:: StaticBounder(lower_llr_bound: float | None, upper_llr_bound: float | None)
+   :canonical: lir.bounding.StaticBounder
+
+   Bases: :py:obj:`lir.bounding.LLRBounder`
+
+   .. autodoc2-docstring:: lir.bounding.StaticBounder
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.bounding.StaticBounder.__init__
+      :parser: myst
+
+   .. py:method:: calculate_bounds(llrdata: lir.data.models.LLRData) -> tuple[float | None, float | None]
+      :canonical: lir.bounding.StaticBounder.calculate_bounds
+
+      .. autodoc2-docstring:: lir.bounding.StaticBounder.calculate_bounds
+         :parser: myst
+
+.. py:class:: NSourceBounder(lower_llr_bound: float | None = None, upper_llr_bound: float | None = None)
+   :canonical: lir.bounding.NSourceBounder
+
+   Bases: :py:obj:`lir.bounding.LLRBounder`
+
+   .. autodoc2-docstring:: lir.bounding.NSourceBounder
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.bounding.NSourceBounder.__init__
+      :parser: myst
+
+   .. py:method:: calculate_bounds(llrdata: lir.data.models.LLRData) -> tuple[float | None, float | None]
+      :canonical: lir.bounding.NSourceBounder.calculate_bounds
+
+      .. autodoc2-docstring:: lir.bounding.NSourceBounder.calculate_bounds
+         :parser: myst

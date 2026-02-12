@@ -1,0 +1,25 @@
+:py:mod:`lir.config`
+====================
+
+.. py:module:: lir.config
+
+.. autodoc2-docstring:: lir.config
+   :parser: myst
+   :allowtitles:
+
+Submodules
+----------
+
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   lir.config.metrics
+   lir.config.util
+   lir.config.transform
+   lir.config.experiment_strategies
+   lir.config.lrsystem_architectures
+   lir.config.aggregation
+   lir.config.substitution
+   lir.config.data
+   lir.config.base

@@ -1,0 +1,296 @@
+:py:mod:`lir.aggregation`
+=========================
+
+.. py:module:: lir.aggregation
+
+.. autodoc2-docstring:: lir.aggregation
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`AggregationData <lir.aggregation.AggregationData>`
+     - .. autodoc2-docstring:: lir.aggregation.AggregationData
+          :parser: myst
+          :summary:
+   * - :py:obj:`Aggregation <lir.aggregation.Aggregation>`
+     - .. autodoc2-docstring:: lir.aggregation.Aggregation
+          :parser: myst
+          :summary:
+   * - :py:obj:`AggregatePlot <lir.aggregation.AggregatePlot>`
+     - .. autodoc2-docstring:: lir.aggregation.AggregatePlot
+          :parser: myst
+          :summary:
+   * - :py:obj:`WriteMetricsToCsv <lir.aggregation.WriteMetricsToCsv>`
+     - .. autodoc2-docstring:: lir.aggregation.WriteMetricsToCsv
+          :parser: myst
+          :summary:
+   * - :py:obj:`SubsetAggregation <lir.aggregation.SubsetAggregation>`
+     - .. autodoc2-docstring:: lir.aggregation.SubsetAggregation
+          :parser: myst
+          :summary:
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`plot_pav <lir.aggregation.plot_pav>`
+     - .. autodoc2-docstring:: lir.aggregation.plot_pav
+          :parser: myst
+          :summary:
+   * - :py:obj:`plot_ece <lir.aggregation.plot_ece>`
+     - .. autodoc2-docstring:: lir.aggregation.plot_ece
+          :parser: myst
+          :summary:
+   * - :py:obj:`plot_lr_histogram <lir.aggregation.plot_lr_histogram>`
+     - .. autodoc2-docstring:: lir.aggregation.plot_lr_histogram
+          :parser: myst
+          :summary:
+   * - :py:obj:`plot_llr_interval <lir.aggregation.plot_llr_interval>`
+     - .. autodoc2-docstring:: lir.aggregation.plot_llr_interval
+          :parser: myst
+          :summary:
+   * - :py:obj:`plot_llr_overestimation <lir.aggregation.plot_llr_overestimation>`
+     - .. autodoc2-docstring:: lir.aggregation.plot_llr_overestimation
+          :parser: myst
+          :summary:
+   * - :py:obj:`plot_nbe <lir.aggregation.plot_nbe>`
+     - .. autodoc2-docstring:: lir.aggregation.plot_nbe
+          :parser: myst
+          :summary:
+   * - :py:obj:`plot_tippett <lir.aggregation.plot_tippett>`
+     - .. autodoc2-docstring:: lir.aggregation.plot_tippett
+          :parser: myst
+          :summary:
+   * - :py:obj:`plot_invariance_delta_function <lir.aggregation.plot_invariance_delta_function>`
+     - .. autodoc2-docstring:: lir.aggregation.plot_invariance_delta_function
+          :parser: myst
+          :summary:
+   * - :py:obj:`metrics_csv <lir.aggregation.metrics_csv>`
+     - .. autodoc2-docstring:: lir.aggregation.metrics_csv
+          :parser: myst
+          :summary:
+
+Data
+~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`LOG <lir.aggregation.LOG>`
+     - .. autodoc2-docstring:: lir.aggregation.LOG
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:data:: LOG
+   :canonical: lir.aggregation.LOG
+   :value: 'getLogger(...)'
+
+   .. autodoc2-docstring:: lir.aggregation.LOG
+      :parser: myst
+
+.. py:class:: AggregationData
+   :canonical: lir.aggregation.AggregationData
+
+   Bases: :py:obj:`typing.NamedTuple`
+
+   .. autodoc2-docstring:: lir.aggregation.AggregationData
+      :parser: myst
+
+   .. py:attribute:: llrdata
+      :canonical: lir.aggregation.AggregationData.llrdata
+      :type: lir.data.models.LLRData
+      :value: None
+
+      .. autodoc2-docstring:: lir.aggregation.AggregationData.llrdata
+         :parser: myst
+
+   .. py:attribute:: lrsystem
+      :canonical: lir.aggregation.AggregationData.lrsystem
+      :type: lir.lrsystems.lrsystems.LRSystem
+      :value: None
+
+      .. autodoc2-docstring:: lir.aggregation.AggregationData.lrsystem
+         :parser: myst
+
+   .. py:attribute:: parameters
+      :canonical: lir.aggregation.AggregationData.parameters
+      :type: dict[str, typing.Any]
+      :value: None
+
+      .. autodoc2-docstring:: lir.aggregation.AggregationData.parameters
+         :parser: myst
+
+   .. py:attribute:: run_name
+      :canonical: lir.aggregation.AggregationData.run_name
+      :type: str
+      :value: None
+
+      .. autodoc2-docstring:: lir.aggregation.AggregationData.run_name
+         :parser: myst
+
+.. py:class:: Aggregation
+   :canonical: lir.aggregation.Aggregation
+
+   Bases: :py:obj:`abc.ABC`
+
+   .. autodoc2-docstring:: lir.aggregation.Aggregation
+      :parser: myst
+
+   .. py:method:: report(data: lir.aggregation.AggregationData) -> None
+      :canonical: lir.aggregation.Aggregation.report
+      :abstractmethod:
+
+      .. autodoc2-docstring:: lir.aggregation.Aggregation.report
+         :parser: myst
+
+   .. py:method:: close() -> None
+      :canonical: lir.aggregation.Aggregation.close
+
+      .. autodoc2-docstring:: lir.aggregation.Aggregation.close
+         :parser: myst
+
+.. py:class:: AggregatePlot(plot_fn: collections.abc.Callable, plot_name: str, output_dir: pathlib.Path | None = None, **kwargs: typing.Any)
+   :canonical: lir.aggregation.AggregatePlot
+
+   Bases: :py:obj:`lir.aggregation.Aggregation`
+
+   .. autodoc2-docstring:: lir.aggregation.AggregatePlot
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.aggregation.AggregatePlot.__init__
+      :parser: myst
+
+   .. py:method:: report(data: lir.aggregation.AggregationData) -> None
+      :canonical: lir.aggregation.AggregatePlot.report
+
+      .. autodoc2-docstring:: lir.aggregation.AggregatePlot.report
+         :parser: myst
+
+.. py:function:: plot_pav(config: lir.config.base.ContextAwareDict, output_dir: pathlib.Path) -> lir.aggregation.AggregatePlot
+   :canonical: lir.aggregation.plot_pav
+
+   .. autodoc2-docstring:: lir.aggregation.plot_pav
+      :parser: myst
+
+.. py:function:: plot_ece(config: lir.config.base.ContextAwareDict, output_dir: pathlib.Path) -> lir.aggregation.AggregatePlot
+   :canonical: lir.aggregation.plot_ece
+
+   .. autodoc2-docstring:: lir.aggregation.plot_ece
+      :parser: myst
+
+.. py:function:: plot_lr_histogram(config: lir.config.base.ContextAwareDict, output_dir: pathlib.Path) -> lir.aggregation.AggregatePlot
+   :canonical: lir.aggregation.plot_lr_histogram
+
+   .. autodoc2-docstring:: lir.aggregation.plot_lr_histogram
+      :parser: myst
+
+.. py:function:: plot_llr_interval(config: lir.config.base.ContextAwareDict, output_dir: pathlib.Path) -> lir.aggregation.AggregatePlot
+   :canonical: lir.aggregation.plot_llr_interval
+
+   .. autodoc2-docstring:: lir.aggregation.plot_llr_interval
+      :parser: myst
+
+.. py:function:: plot_llr_overestimation(config: lir.config.base.ContextAwareDict, output_dir: pathlib.Path) -> lir.aggregation.AggregatePlot
+   :canonical: lir.aggregation.plot_llr_overestimation
+
+   .. autodoc2-docstring:: lir.aggregation.plot_llr_overestimation
+      :parser: myst
+
+.. py:function:: plot_nbe(config: lir.config.base.ContextAwareDict, output_dir: pathlib.Path) -> lir.aggregation.AggregatePlot
+   :canonical: lir.aggregation.plot_nbe
+
+   .. autodoc2-docstring:: lir.aggregation.plot_nbe
+      :parser: myst
+
+.. py:function:: plot_tippett(config: lir.config.base.ContextAwareDict, output_dir: pathlib.Path) -> lir.aggregation.AggregatePlot
+   :canonical: lir.aggregation.plot_tippett
+
+   .. autodoc2-docstring:: lir.aggregation.plot_tippett
+      :parser: myst
+
+.. py:function:: plot_invariance_delta_function(config: lir.config.base.ContextAwareDict, output_dir: pathlib.Path) -> lir.aggregation.AggregatePlot
+   :canonical: lir.aggregation.plot_invariance_delta_function
+
+   .. autodoc2-docstring:: lir.aggregation.plot_invariance_delta_function
+      :parser: myst
+
+.. py:class:: WriteMetricsToCsv(path: pathlib.Path, columns: collections.abc.Mapping[str, collections.abc.Callable])
+   :canonical: lir.aggregation.WriteMetricsToCsv
+
+   Bases: :py:obj:`lir.aggregation.Aggregation`
+
+   .. autodoc2-docstring:: lir.aggregation.WriteMetricsToCsv
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.aggregation.WriteMetricsToCsv.__init__
+      :parser: myst
+
+   .. py:method:: _safe_call(fn: collections.abc.Callable, message: str) -> typing.Any
+      :canonical: lir.aggregation.WriteMetricsToCsv._safe_call
+      :staticmethod:
+
+      .. autodoc2-docstring:: lir.aggregation.WriteMetricsToCsv._safe_call
+         :parser: myst
+
+   .. py:method:: report(data: lir.aggregation.AggregationData) -> None
+      :canonical: lir.aggregation.WriteMetricsToCsv.report
+
+      .. autodoc2-docstring:: lir.aggregation.WriteMetricsToCsv.report
+         :parser: myst
+
+   .. py:method:: close() -> None
+      :canonical: lir.aggregation.WriteMetricsToCsv.close
+
+      .. autodoc2-docstring:: lir.aggregation.WriteMetricsToCsv.close
+         :parser: myst
+
+.. py:function:: metrics_csv(config: lir.config.base.ContextAwareDict, output_dir: pathlib.Path) -> lir.aggregation.WriteMetricsToCsv
+   :canonical: lir.aggregation.metrics_csv
+
+   .. autodoc2-docstring:: lir.aggregation.metrics_csv
+      :parser: myst
+
+.. py:class:: SubsetAggregation(aggregation_methods: list[lir.aggregation.Aggregation], category_field: str)
+   :canonical: lir.aggregation.SubsetAggregation
+
+   Bases: :py:obj:`lir.aggregation.Aggregation`
+
+   .. autodoc2-docstring:: lir.aggregation.SubsetAggregation
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.aggregation.SubsetAggregation.__init__
+      :parser: myst
+
+   .. py:method:: report(data: lir.aggregation.AggregationData) -> None
+      :canonical: lir.aggregation.SubsetAggregation.report
+
+      .. autodoc2-docstring:: lir.aggregation.SubsetAggregation.report
+         :parser: myst
+
+   .. py:method:: close() -> None
+      :canonical: lir.aggregation.SubsetAggregation.close
+
+      .. autodoc2-docstring:: lir.aggregation.SubsetAggregation.close
+         :parser: myst

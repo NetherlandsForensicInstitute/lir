@@ -2,8 +2,8 @@ import pytest
 
 from lir.algorithms.bootstraps import BootstrapAtData
 from lir.algorithms.logistic_regression import LogitCalibrator
-from lir.data.datasets.synthesized_normal_binary import SynthesizedNormalBinaryData, SynthesizedNormalData
 from lir.data.models import FeatureData, LLRData
+from lir.datasets.synthesized_normal_binary import SynthesizedNormalBinaryData, SynthesizedNormalData
 from lir.transform import as_transformer
 
 

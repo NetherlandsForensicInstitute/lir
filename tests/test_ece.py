@@ -5,8 +5,8 @@ import unittest
 import numpy as np
 
 from lir import metrics
-from lir.data.datasets.alcohol_breath_analyser import AlcoholBreathAnalyser
 from lir.data.models import LLRData
+from lir.datasets.alcohol_breath_analyser import AlcoholBreathAnalyser
 from lir.plotting.expected_calibration_error import calculate_ece
 from lir.util import logodds_to_odds
 

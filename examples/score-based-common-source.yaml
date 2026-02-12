@@ -67,7 +67,7 @@ my_data_provider:                             # <-- adapt this name to your own 
 # and for each of the folds an LR system is trained with all the other folds. The outcomes for all folds are then pooled into one set.
 
 my_data_splits:             # <-- adapt this name to your own preference, you will refer to it later when setting up your experiment
-  strategy: multiclass_cross_validation
+  strategy: cross_validation_sources
   folds: 5
 
 # Alternatively, you may choose a simple split, where some data is assigned the role of training data and some is assigned the role of validation data.

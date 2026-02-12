@@ -5,7 +5,7 @@ from lir.data.datasets.synthesized_normal_multiclass import (
     SynthesizedDimension,
     SynthesizedNormalMulticlassData,
 )
-from lir.data_strategies import MulticlassCrossValidation
+from lir.data_strategies import SourcesCrossValidation
 from lir.lrsystems.lrsystems import LLRData
 from lir.lrsystems.two_level import TwoLevelSystem
 from lir.transform.pairing import SourcePairing
@@ -20,7 +20,7 @@ def _calculate_cllr(mean: float = 0.0, std: float = 1.0, error_std: float = 1.0)
     }
 
     data = SynthesizedNormalMulticlassData(**params)
-    splitter = MulticlassCrossValidation(2)
+    splitter = SourcesCrossValidation(2)
 
     pairing = SourcePairing(seed=0)
 

@@ -3,11 +3,8 @@ import unittest
 import numpy as np
 import pytest
 
-from lir.data.datasets.synthesized_normal_multiclass import (
-    SynthesizedDimension,
-    SynthesizedNormalMulticlassData,
-)
 from lir.data.models import FeatureData
+from lir.datasets.synthesized_normal_multiclass import SynthesizedDimension, SynthesizedNormalMulticlassData
 from lir.transform.pairing import InstancePairing, SourcePairing
 
 

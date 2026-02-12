@@ -1,15 +1,57 @@
 import unittest
+from pathlib import Path
 
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 
 from lir.algorithms import invariance_bounds
 from lir.algorithms.invariance_bounds import IVBounder
-from lir.data.datasets.alcohol_breath_analyser import AlcoholBreathAnalyser
-from lir.data.models import FeatureData, LLRData
+from lir.data.models import DataProvider, FeatureData, LLRData
+from lir.datasets.alcohol_breath_analyser import AlcoholBreathAnalyser
 from lir.transform.pipeline import Pipeline
 from lir.util import Xn_to_Xy, probability_to_logodds
-from tests.data.datasets.lr_bounding import BoundingExample4, BoundingExample5
+
+
+class UnboundLRs(DataProvider):
+    """ "
+    Examples from paper:
+        A transparent method to determine limit values for Likelihood Ratio systems, by
+        Ivo Alberink, Jeannette Leegwater, Jonas Malmborg, Anders Nordgaard, Marjan Sjerps, Leen van der Ham
+        In: Submitted for publication in 2025.
+    """
+
+    def get_llrs(self) -> tuple[np.ndarray, np.ndarray]:
+        raise NotImplementedError('This method needs implementation in subclass')
+
+    def get_instances(self) -> LLRData:
+        llrs_h1, llrs_h2 = self.get_llrs()
+
+        llrs = np.append(llrs_h1, llrs_h2)
+        y = np.append(np.ones((len(llrs_h1), 1)), np.zeros((len(llrs_h2), 1)))
+        return LLRData(features=llrs, labels=y)
+
+
+class BoundingExample4(UnboundLRs):
+    """Simulated Log10-LRs, based on normal distributions."""
+
+    def get_llrs(self) -> tuple[np.ndarray, np.ndarray]:
+        np.random.seed(42)
+        llrs_h1 = np.log10(np.exp(np.random.normal(1, 1, 100)))
+        llrs_h2 = np.log10(np.exp(np.random.normal(0, 1, 1000)))
+
+        return llrs_h1, llrs_h2
+
+
+class BoundingExample5(UnboundLRs):
+    """Log10-LRs from an LR-system for cartridge case marks."""
+
+    def get_llrs(self) -> tuple[np.ndarray, np.ndarray]:
+        dirname = Path(__file__).parent
+        input_path = dirname / 'resources/lr_bounding'
+        llrs_h1 = np.loadtxt(input_path / 'LLR_KM.csv')
+        llrs_h2 = np.loadtxt(input_path / 'LLR_KNM.csv')
+
+        return llrs_h1, llrs_h2
 
 
 class TestBounding(unittest.TestCase):

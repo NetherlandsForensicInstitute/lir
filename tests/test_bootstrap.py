@@ -8,8 +8,8 @@ from lir.algorithms.bayeserror import ELUBBounder
 from lir.algorithms.bootstraps import BootstrapAtData, BootstrapEquidistant, bootstrap
 from lir.algorithms.kde import KDECalibrator
 from lir.config.base import _expand
-from lir.data.datasets.synthesized_normal_binary import SynthesizedNormalBinaryData, SynthesizedNormalData
 from lir.data.models import FeatureData, LLRData
+from lir.datasets.synthesized_normal_binary import SynthesizedNormalBinaryData, SynthesizedNormalData
 
 
 @pytest.fixture(

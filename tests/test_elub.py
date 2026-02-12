@@ -4,8 +4,8 @@ import numpy as np
 from sklearn.linear_model import LogisticRegression
 
 from lir.algorithms import bayeserror
-from lir.data.datasets.alcohol_breath_analyser import AlcoholBreathAnalyser
 from lir.data.models import FeatureData, LLRData
+from lir.datasets.alcohol_breath_analyser import AlcoholBreathAnalyser
 from lir.transform import BinaryClassifierTransformer, FunctionTransformer
 from lir.transform.pipeline import Pipeline
 from lir.util import Xn_to_Xy, probability_to_logodds

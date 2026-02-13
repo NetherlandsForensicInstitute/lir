@@ -15,7 +15,7 @@ from lir.config.substitution import (
     HyperparameterOption,
 )
 from lir.data.models import LLRData
-from lir.experiment import Experiment
+from lir.experiments import Experiment
 
 
 class OptunaExperiment(Experiment):

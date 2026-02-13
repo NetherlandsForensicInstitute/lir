@@ -14,7 +14,7 @@ from joblib import Parallel, delayed
 from lir import registry
 from lir.config.base import YamlParseError, _expand, pop_field
 from lir.config.experiment_strategies import parse_experiments
-from lir.experiment import Experiment
+from lir.experiments import Experiment
 
 
 LOG = logging.getLogger(__name__)

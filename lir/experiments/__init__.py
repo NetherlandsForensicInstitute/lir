@@ -1,6 +1,6 @@
 from lir.experiments.base_experiment import Experiment
-from lir.experiments.optuna import OptunaExperiment
-from lir.experiments.predefined import PredefinedExperiment
+from lir.experiments.optuna_experiment import OptunaExperiment
+from lir.experiments.predefined_experiment import PredefinedExperiment
 
 
 __all__ = [

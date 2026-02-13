@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import argparse
 import datetime
 import logging
@@ -173,7 +171,3 @@ def main(input_args: list[str] | None = None) -> None:
             LOG.info('Running selected experiments sequentially.')
             for experiment in experiments.values():
                 experiment.run()
-
-
-if __name__ == '__main__':
-    main()

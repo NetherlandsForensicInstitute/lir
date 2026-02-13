@@ -33,6 +33,18 @@ This repository offers both a Python API and a command-line interface.
 Command-line interface
 ----------------------
 
+LiR can be launched from the command line as follows:
+
+```sh
+lir --help
+```
+
+Or, alternatively:
+
+```sh
+python -m lir
+```
+
 Evaluate an LR system using the command-line interface as follows:
 
 1. define your data, LR system and experiments in a YAML file;

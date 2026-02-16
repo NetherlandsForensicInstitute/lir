@@ -4,7 +4,7 @@ import warnings
 
 import numpy as np
 
-from lir.algorithms.isotonic_regression import IsotonicCalibrator
+from lir.algorithms.isotonic_regression import IsotonicCalibrator, IsotonicRegression
 from lir.algorithms.logistic_regression import LogitCalibrator
 from lir.data.models import LLRData
 from lir.util import (
@@ -208,3 +208,10 @@ class TestLogitCalibrator(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+def test_nan_stay_nan():
+    ir = IsotonicRegression()
+    llrs = ir.fit_transform(np.array([np.nan, 0, 0]), np.array([0, 0, 1]))
+    assert np.isnan(llrs[0])
+    assert llrs[1] == llrs[2] == 0.5

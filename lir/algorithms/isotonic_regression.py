@@ -39,6 +39,16 @@ class IsotonicRegression(sklearn.isotonic.IsotonicRegression):
         y = check_array(y, dtype=X.dtype, **check_params)
         check_consistent_length(X, y, sample_weight)
 
+        # remove samples with NaN in X from training set so NaN inputs don't
+        # influence the fitted model; NaN inputs will be preserved by
+        # transform
+        nan_mask = np.isnan(X)
+        if np.any(nan_mask):
+            X = X[~nan_mask]
+            y = y[~nan_mask]
+            if sample_weight is not None:
+                sample_weight = np.asarray(sample_weight)[~nan_mask]
+
         # Transform y by running the isotonic regression algorithm and
         # transform X accordingly.
         X, y = self._build_y(X, y, sample_weight)
@@ -78,6 +88,13 @@ class IsotonicRegression(sklearn.isotonic.IsotonicRegression):
             T = np.clip(T, self.X_min_, self.X_max_)
 
         res = self.f_(T)
+
+        # preserve NaN inputs: interpolation may return non-NaN for NaN inputs,
+        # but we want NaN inputs to stay NaN in the output
+        nan_mask = np.isnan(T)
+        if np.any(nan_mask):
+            res = res.copy()
+            res[nan_mask] = np.nan
 
         # on scipy 0.17, interp1d up-casts to float64, so we cast back
         res = res.astype(T.dtype)

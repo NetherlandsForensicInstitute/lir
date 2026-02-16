@@ -93,10 +93,10 @@ consistent!
         fig.set_figwidth(10)
 
         # create the visualizations
-        lr_histogram(llrs, ax=ax_lrhist)
-        pav(llrs, ax=ax_pav)
-        plot_ece(llrs, ax=ax_ece)
-        tippett(llrs, ax=ax_tippett)
+        lr_histogram(ax_lrhist, llrs)
+        pav(ax_pav, llrs)
+        plot_ece(ax_ece, llrs)
+        tippett(ax_tippett, llrs)
 
         # generate the image
         fig.tight_layout()

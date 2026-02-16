@@ -122,10 +122,10 @@ def pav(
         The matplotlib axes object to plot on
     llrdata : LLRData
         The LLRData object containing likelihood ratios and labels
-    add_misleading : int
-        number of misleading evidence points to add on both sides (default: `0`)
-    show_scatter : bool
-        If True, show individual LRs (default: `True`)
+    add_misleading : int, optional
+        number of misleading evidence points to add on both sides (default: ``0``)
+    show_scatter : bool, optional
+        If True, show individual LRs (default: ``True``)
     """
     llrs = llrdata.llrs
     y = llrdata.labels

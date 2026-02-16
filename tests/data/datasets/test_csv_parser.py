@@ -4,11 +4,11 @@ import numpy as np
 import pytest
 
 from lir.config.base import _expand
-from lir.data.data_strategies import RoleAssignment
 from lir.data.datasets.feature_data_csv import (
     feature_data_csv_file_parser,
 )
 from lir.data.models import FeatureData
+from lir.data_strategies import RoleAssignment
 
 
 @pytest.mark.parametrize(

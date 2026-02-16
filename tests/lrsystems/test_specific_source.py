@@ -4,8 +4,8 @@ import numpy as np
 import pytest
 from sklearn.preprocessing import StandardScaler
 
-from lir.data.data_strategies import BinaryTrainTestSplit
 from lir.data.models import FeatureData
+from lir.data_strategies import TrainTestSplit
 from lir.lrsystems.binary_lrsystem import BinaryLRSystem
 from lir.lrsystems.lrsystems import LLRData
 from lir.transform.pipeline import Pipeline
@@ -13,7 +13,7 @@ from lir.transform.pipeline import Pipeline
 
 def test_specific_source_pipeline(synthesized_normal_data: FeatureData):
     """Check that a simple Specific Source LR system can be utilized through a SKLearn pipeline."""
-    splitter = BinaryTrainTestSplit(0.2, seed=0)
+    splitter = TrainTestSplit(0.2, seed=0)
 
     steps = [
         ('preprocessing', StandardScaler()),

@@ -24,7 +24,7 @@ data:
     cache_dir: cache/glass
 
   splits:
-    strategy: predefined_train_test_split
+    strategy: predefined_train_test
 
 # This defines a score-based LR system. We may later experiment with different parameter values by augmenting this
 # system.

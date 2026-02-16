@@ -134,7 +134,7 @@ advanced configuration such as cross-validation.
 
 A data strategy inherits from `DataStrategy`_ and implements an ``apply()`` method that returns an iterator of pairs of training and test sets.
 
-.. _data strategies: api/lir.data.html#module-lir.data.data_strategies
+.. _data strategies: api/lir.data.html#module-lir.data_strategies
 .. _DataProvider: api/lir.data.html#lir.data.models.DataProvider
 .. _DataStrategy: api/lir.data.html#lir.data.models.DataStrategy
 .. _Pipeline: api/lir.transform.html#lir.transform.pipeline.Pipeline
@@ -143,13 +143,13 @@ Example:
 
 .. jupyter-execute::
 
-    from lir.data.data_strategies import MulticlassTrainTestSplit
+    from lir.data_strategies import SourcesTrainTestSplit
 
-    splitter = MulticlassTrainTestSplit(test_size=0.5)
-    for training_data, test_data in splitter.apply(glass_data):
-        # because we do a single train/test split, this for loop will run only once
-        print(f'We have {len(training_data)} instances available for training our models.')
-        print(f'We have {len(test_data)} instances available as test data.')
+    splitter = SourcesTrainTestSplit(test_size=0.5)
+    ((training_data, test_data),) = splitter.apply(glass_data)
+
+    print(f'We have {len(training_data)} instances available for training our models.')
+    print(f'We have {len(test_data)} instances available as test data.')
 
 
 LR systems
@@ -232,11 +232,11 @@ we have to deal with multiple train/test splits.
 
 .. jupyter-execute::
 
-    from lir.data.data_strategies import MulticlassCrossValidation
+    from lir.data_strategies import SourcesCrossValidation
     from lir.data.models import concatenate_instances
 
     # initialize 5-fold cross-validation
-    splitter = MulticlassCrossValidation(folds=5)
+    splitter = SourcesCrossValidation(folds=5)
 
     # initialize the results as an empty list
     results = []

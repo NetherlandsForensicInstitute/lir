@@ -4,9 +4,9 @@ from pathlib import Path
 
 import numpy as np
 
-from lir.data.data_strategies import RoleAssignment
 from lir.data.io import RemoteResource
 from lir.data.models import DataProvider, FeatureData
+from lir.data_strategies import RoleAssignment
 
 
 class GlassData(DataProvider):

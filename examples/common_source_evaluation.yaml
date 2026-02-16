@@ -13,7 +13,7 @@ data:
         error_std: 1
 
   splits:
-    strategy: multiclass_cross_validation
+    strategy: cross_validation_sources
     folds: 5
 
 lr_system:

@@ -179,7 +179,7 @@ class TwoLevelModelNormalKDE:
 
     @staticmethod
     def _get_mean_covariance_within(X: np.ndarray, y: np.ndarray) -> np.ndarray:
-        """Calculates a matrix of mean covariances within each of the sources.
+        """Calculate a matrix of mean covariances within each of the sources.
 
         X np.array of measurements, rows are sources/repetitions, columns are features
         y np 1d-array of labels. labels from {1, ..., n} with n the number of sources. Repetitions get the same label.

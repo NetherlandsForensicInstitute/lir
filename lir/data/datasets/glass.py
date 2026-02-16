@@ -29,7 +29,7 @@ class GlassData(DataProvider):
         )
 
     def _load_data(self, file: str, role: RoleAssignment) -> FeatureData:
-        """Returns a tuple of features, source_ids and instance_ids."""
+        """Return a tuple of features, source_ids and instance_ids."""
         source_ids = []
         instance_ids = []
         values = []
@@ -52,7 +52,7 @@ class GlassData(DataProvider):
 
     def get_instances(self) -> FeatureData:
         """
-        Returns data with pre-defined assignments of training data and test data.
+        Return data with pre-defined assignments of training data and test data.
 
         The training data is read from `training.csv` and has three instances (replicates) per source.
         The test data is read from `duplo.csv` and `triplo.csv` and has a total of five instances per source.

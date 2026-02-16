@@ -6,7 +6,7 @@ from lir.util import Xy_to_Xn, logodds_to_odds
 
 
 def _calcsurface(c1: tuple[float, float], c2: tuple[float, float]) -> float:
-    """Helper function that calculates the desired surface for two xy-coordinates."""
+    """Calculate the desired surface for two xy-coordinates."""
     # step 1: calculate intersection (xs, ys) of straight line through coordinates with identity line (if slope (a) = 1,
     # there is no intersection and surface of this parallelogram is equal to deltaY * deltaX)
 
@@ -128,7 +128,7 @@ def _devpavcalculator(lrs: np.ndarray, pav_lrs: np.ndarray, y: np.ndarray) -> fl
 
 
 def devpav(llrs: LLRData) -> float:
-    """Calculates devPAV for LR data under H1 and H2."""
+    """Calculate devPAV for LR data under H1 and H2."""
     labels = llrs.check_both_labels()
     cal = IsotonicCalibrator()
     pavllrs = cal.fit_apply(llrs)

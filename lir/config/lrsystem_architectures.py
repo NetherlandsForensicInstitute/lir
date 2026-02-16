@@ -155,7 +155,7 @@ def augment_config(
     baseline_config: ContextAwareDict, hyperparameters: dict[str, HyperparameterOption]
 ) -> ContextAwareDict:
     """
-    Parses an augmented LR system.
+    Parse an augmented LR system.
 
     The LR system is parsed from a base configuration and a set of parameter substitutions that override parts of the
     base configuration. Results are written to a subdirectory of `output_dir` that is named by its parameter

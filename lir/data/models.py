@@ -321,7 +321,7 @@ class InstanceData(BaseModel, ABC):
 
     def replace(self, **kwargs: Any) -> Self:
         """
-        Returns a modified copy with updated values.
+        Return a modified copy with updated values.
 
         :param kwargs: the fields to replace
         :return: the modified copy
@@ -330,7 +330,7 @@ class InstanceData(BaseModel, ABC):
 
     def replace_as(self, datatype: type['InstanceDataType'], **kwargs: Any) -> 'InstanceDataType':
         """
-        Returns a modified copy with updated data type and values.
+        Return a modified copy with updated data type and values.
 
         :param datatype: the return type
         :param kwargs: the fields to replace
@@ -446,7 +446,7 @@ class PairedFeatureData(FeatureData):
 
     @model_validator(mode='after')
     def check_sourceid_shape(self) -> Self:
-        """Overrides the `InstanceData` implementation."""
+        """Override the `InstanceData` implementation."""
         if self.source_ids is not None and (len(self.source_ids.shape) != 2 or self.source_ids.shape[1] != 2):
             raise ValueError(f'source_ids should be 2-dimensional with 2 columns; found shape {self.source_ids.shape}')
         return self
@@ -584,7 +584,7 @@ class DataProvider(ABC):
 
     @abstractmethod
     def get_instances(self) -> FeatureData:
-        """Returns an InstanceData object, containing data for a set of instances."""
+        """Return an InstanceData object, containing data for a set of instances."""
         raise NotImplementedError
 
 

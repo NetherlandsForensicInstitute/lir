@@ -29,7 +29,7 @@ Example for glass data:
 .. jupyter-execute::
 
     import numpy as np
-    from lir.data.datasets.glass import GlassData
+    from lir.datasets.glass import GlassData
     from lir.transform.distance import ManhattanDistance
     from lir.algorithms.logistic_regression import LogitCalibrator
 

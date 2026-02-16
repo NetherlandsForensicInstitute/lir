@@ -1,0 +1,102 @@
+:py:mod:`lir.config.transform`
+==============================
+
+.. py:module:: lir.config.transform
+
+.. autodoc2-docstring:: lir.config.transform
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`GenericTransformerConfigParser <lir.config.transform.GenericTransformerConfigParser>`
+     - .. autodoc2-docstring:: lir.config.transform.GenericTransformerConfigParser
+          :parser: myst
+          :summary:
+   * - :py:obj:`NumpyWrappingConfigParser <lir.config.transform.NumpyWrappingConfigParser>`
+     - .. autodoc2-docstring:: lir.config.transform.NumpyWrappingConfigParser
+          :parser: myst
+          :summary:
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`parse_module <lir.config.transform.parse_module>`
+     - .. autodoc2-docstring:: lir.config.transform.parse_module
+          :parser: myst
+          :summary:
+   * - :py:obj:`csv_writer <lir.config.transform.csv_writer>`
+     - .. autodoc2-docstring:: lir.config.transform.csv_writer
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:class:: GenericTransformerConfigParser(component_class: object)
+   :canonical: lir.config.transform.GenericTransformerConfigParser
+
+   Bases: :py:obj:`lir.config.base.ConfigParser`
+
+   .. autodoc2-docstring:: lir.config.transform.GenericTransformerConfigParser
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.config.transform.GenericTransformerConfigParser.__init__
+      :parser: myst
+
+   .. py:method:: parse(config: lir.config.base.ContextAwareDict, output_dir: pathlib.Path) -> lir.transform.Transformer
+      :canonical: lir.config.transform.GenericTransformerConfigParser.parse
+
+      .. autodoc2-docstring:: lir.config.transform.GenericTransformerConfigParser.parse
+         :parser: myst
+
+.. py:class:: NumpyWrappingConfigParser(module_parser: lir.config.base.ConfigParser)
+   :canonical: lir.config.transform.NumpyWrappingConfigParser
+
+   Bases: :py:obj:`lir.config.base.ConfigParser`
+
+   .. autodoc2-docstring:: lir.config.transform.NumpyWrappingConfigParser
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.config.transform.NumpyWrappingConfigParser.__init__
+      :parser: myst
+
+   .. py:method:: parse(config: lir.config.base.ContextAwareDict, output_dir: pathlib.Path) -> lir.transform.Transformer
+      :canonical: lir.config.transform.NumpyWrappingConfigParser.parse
+
+      .. autodoc2-docstring:: lir.config.transform.NumpyWrappingConfigParser.parse
+         :parser: myst
+
+   .. py:method:: reference() -> str
+      :canonical: lir.config.transform.NumpyWrappingConfigParser.reference
+
+      .. autodoc2-docstring:: lir.config.transform.NumpyWrappingConfigParser.reference
+         :parser: myst
+
+.. py:function:: parse_module(module_config: lir.config.base.ContextAwareDict | str | None, output_dir: pathlib.Path, config_context_path: list[str], default_method: str | None = None) -> lir.transform.Transformer
+   :canonical: lir.config.transform.parse_module
+
+   .. autodoc2-docstring:: lir.config.transform.parse_module
+      :parser: myst
+
+.. py:function:: csv_writer(config: lir.config.base.ContextAwareDict, output_dir: pathlib.Path) -> lir.transform.CsvWriter
+   :canonical: lir.config.transform.csv_writer
+
+   .. autodoc2-docstring:: lir.config.transform.csv_writer
+      :parser: myst

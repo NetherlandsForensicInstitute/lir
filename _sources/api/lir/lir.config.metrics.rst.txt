@@ -1,0 +1,32 @@
+:py:mod:`lir.config.metrics`
+============================
+
+.. py:module:: lir.config.metrics
+
+.. autodoc2-docstring:: lir.config.metrics
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`parse_individual_metric <lir.config.metrics.parse_individual_metric>`
+     - .. autodoc2-docstring:: lir.config.metrics.parse_individual_metric
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:function:: parse_individual_metric(name: str, output_path: pathlib.Path, context: list[str]) -> collections.abc.Callable
+   :canonical: lir.config.metrics.parse_individual_metric
+
+   .. autodoc2-docstring:: lir.config.metrics.parse_individual_metric
+      :parser: myst

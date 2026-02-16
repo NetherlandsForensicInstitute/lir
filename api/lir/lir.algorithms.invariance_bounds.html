@@ -1,0 +1,274 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.algorithms.invariance_bounds &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="lir.algorithms.llr_overestimation" href="lir.algorithms.llr_overestimation.html" />
+    <link rel="prev" title="lir.algorithms.bootstraps" href="lir.algorithms.bootstraps.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a></li>
+          <li class="breadcrumb-item"><a href="lir.algorithms.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.algorithms</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.algorithms.invariance_bounds</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/api/lir/lir.algorithms.invariance_bounds.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-lir.algorithms.invariance_bounds">
+<span id="lir-algorithms-invariance-bounds"></span><h1><a class="reference internal" href="#module-lir.algorithms.invariance_bounds" title="lir.algorithms.invariance_bounds"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.algorithms.invariance_bounds</span></code></a><a class="headerlink" href="#module-lir.algorithms.invariance_bounds" title="Link to this heading"></a></h1>
+<p>Extrapolation bounds on LRs using the Invariance Verification method by Alberink et al. (2025).</p>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading"></a></h2>
+<p>Alberink, I., Leegwater, J., Malmborg, J., Nordgaard, A., Sjerps, M., &amp;
+van der Ham, L. (2025). <em>A transparent method to determine limit values for
+likelihood ratio systems</em>. Submitted for publication.</p>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.algorithms.invariance_bounds.IVBounder" title="lir.algorithms.invariance_bounds.IVBounder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IVBounder</span></code></a></p></td>
+<td><p>Calculate Invariance Verification bounds for a given LR system.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.algorithms.invariance_bounds.plot_invariance_delta_functions" title="lir.algorithms.invariance_bounds.plot_invariance_delta_functions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_invariance_delta_functions</span></code></a></p></td>
+<td><p>Return a figure of the Invariance Verification delta functions along with the upper and lower bounds of the LRs.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.algorithms.invariance_bounds.calculate_invariance_bounds" title="lir.algorithms.invariance_bounds.calculate_invariance_bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_invariance_bounds</span></code></a></p></td>
+<td><p>Return the upper and lower Invariance Verification bounds of the LRs.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.algorithms.invariance_bounds.calculate_invariance_delta_functions" title="lir.algorithms.invariance_bounds.calculate_invariance_delta_functions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_invariance_delta_functions</span></code></a></p></td>
+<td><p>Calculate the Invariance Verification delta functions for a set of LRs at given threshold values.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="api">
+<h3>API<a class="headerlink" href="#api" title="Link to this heading"></a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.algorithms.invariance_bounds.plot_invariance_delta_functions">
+<span class="sig-prename descclassname"><span class="pre">lir.algorithms.invariance_bounds.</span></span><span class="sig-name descname"><span class="pre">plot_invariance_delta_functions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">llrdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">lir.data.models.LLRData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">llr_threshold_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">matplotlib.pyplot.Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lir.algorithms.invariance_bounds.plot_invariance_delta_functions" title="Link to this definition"></a></dt>
+<dd><p>Return a figure of the Invariance Verification delta functions along with the upper and lower bounds of the LRs.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>llrdata</strong> – An instance of LLRData containing LLRs and ground-truth labels</p></li>
+<li><p><strong>llr_threshold_range</strong> – lower limit and upper limit for the LLRs to include in the figure</p></li>
+<li><p><strong>step_size</strong> – required accuracy on a base-10 logarithmic scale</p></li>
+<li><p><strong>ax</strong> – matplotlib axes</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.algorithms.invariance_bounds.calculate_invariance_bounds">
+<span class="sig-prename descclassname"><span class="pre">lir.algorithms.invariance_bounds.</span></span><span class="sig-name descname"><span class="pre">calculate_invariance_bounds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">llrdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">lir.data.models.LLRData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">llr_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">substitute_extremes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(-20,</span> <span class="pre">20)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.algorithms.invariance_bounds.calculate_invariance_bounds" title="Link to this definition"></a></dt>
+<dd><p>Return the upper and lower Invariance Verification bounds of the LRs.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>llrdata</strong> – an instance of LLRData containing LLRs and ground-truth labels</p></li>
+<li><p><strong>llr_threshold</strong> – predefined values of LLRs as possible bounds</p></li>
+<li><p><strong>step_size</strong> – required accuracy on a base-10 logarithmic scale</p></li>
+<li><p><strong>substitute_extremes</strong> – (tuple of scalars) substitute for extreme LLRs, i.e.
+LLRs smaller than the lower value or greater than the upper value are clipped</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.algorithms.invariance_bounds.calculate_invariance_delta_functions">
+<span class="sig-prename descclassname"><span class="pre">lir.algorithms.invariance_bounds.</span></span><span class="sig-name descname"><span class="pre">calculate_invariance_delta_functions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">llrdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">lir.data.models.LLRData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">llr_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.algorithms.invariance_bounds.calculate_invariance_delta_functions" title="Link to this definition"></a></dt>
+<dd><p>Calculate the Invariance Verification delta functions for a set of LRs at given threshold values.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>llrdata</strong> – An instance of LLRData containing LLRs and ground-truth labels</p></li>
+<li><p><strong>llr_threshold</strong> – an array of threshold LLRs</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>two arrays of delta-values, at all threshold LR values</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.algorithms.invariance_bounds.IVBounder">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.algorithms.invariance_bounds.</span></span><span class="sig-name descname"><span class="pre">IVBounder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lower_llr_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_llr_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.algorithms.invariance_bounds.IVBounder" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="lir.bounding.html#lir.bounding.LLRBounder" title="lir.bounding.LLRBounder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.bounding.LLRBounder</span></code></a></p>
+<p>Calculate Invariance Verification bounds for a given LR system.</p>
+<p>Class that, given an LR system, outputs the same LRs as the system but bounded by the Invariance Verification
+bounds as described in:
+A transparent method to determine limit values for Likelihood Ratio systems, by
+Ivo Alberink, Jeannette Leegwater, Jonas Malmborg, Anders Nordgaard, Marjan Sjerps, Leen van der Ham
+In: Submitted for publication in 2025.</p>
+<p class="rubric">Initialization</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.invariance_bounds.IVBounder.calculate_bounds">
+<span class="sig-name descname"><span class="pre">calculate_bounds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">llrdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">lir.data.models.LLRData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.algorithms.invariance_bounds.IVBounder.calculate_bounds" title="Link to this definition"></a></dt>
+<dd><p>Calculate the Invariance Verification bounds.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lir.algorithms.bootstraps.html" class="btn btn-neutral float-left" title="lir.algorithms.bootstraps" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lir.algorithms.llr_overestimation.html" class="btn btn-neutral float-right" title="lir.algorithms.llr_overestimation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

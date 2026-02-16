@@ -1,0 +1,28 @@
+:py:mod:`lir.data`
+==================
+
+.. py:module:: lir.data
+
+.. autodoc2-docstring:: lir.data
+   :parser: myst
+   :allowtitles:
+
+Subpackages
+-----------
+
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   lir.data.datasets
+
+Submodules
+----------
+
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   lir.data.models
+   lir.data.io
+   lir.data.data_strategies

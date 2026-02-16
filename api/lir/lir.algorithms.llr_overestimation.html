@@ -1,0 +1,265 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.algorithms.llr_overestimation &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="lir.algorithms.kde" href="lir.algorithms.kde.html" />
+    <link rel="prev" title="lir.algorithms.invariance_bounds" href="lir.algorithms.invariance_bounds.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a></li>
+          <li class="breadcrumb-item"><a href="lir.algorithms.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.algorithms</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.algorithms.llr_overestimation</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/api/lir/lir.algorithms.llr_overestimation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-lir.algorithms.llr_overestimation">
+<span id="lir-algorithms-llr-overestimation"></span><h1><a class="reference internal" href="#module-lir.algorithms.llr_overestimation" title="lir.algorithms.llr_overestimation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.algorithms.llr_overestimation</span></code></a><a class="headerlink" href="#module-lir.algorithms.llr_overestimation" title="Link to this heading"></a></h1>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.algorithms.llr_overestimation.plot_llr_overestimation" title="lir.algorithms.llr_overestimation.plot_llr_overestimation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_llr_overestimation</span></code></a></p></td>
+<td><p>Plot the LLR-overestimation as function of the system LLR.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.algorithms.llr_overestimation.calc_llr_overestimation" title="lir.algorithms.llr_overestimation.calc_llr_overestimation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_llr_overestimation</span></code></a></p></td>
+<td><p>Calculate the LLR-overestimation as function of the system LLR.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.algorithms.llr_overestimation.calc_fiducial_density_functions" title="lir.algorithms.llr_overestimation.calc_fiducial_density_functions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_fiducial_density_functions</span></code></a></p></td>
+<td><p>Calculate (smoothed) density functions of fiducial distributions of a dataset.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="api">
+<h3>API<a class="headerlink" href="#api" title="Link to this heading"></a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.algorithms.llr_overestimation.plot_llr_overestimation">
+<span class="sig-prename descclassname"><span class="pre">lir.algorithms.llr_overestimation.</span></span><span class="sig-name descname"><span class="pre">plot_llr_overestimation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">llrdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">lir.data.models.LLRData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_fids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">matplotlib.pyplot.Axes</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">plt</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lir.algorithms.llr_overestimation.plot_llr_overestimation" title="Link to this definition"></a></dt>
+<dd><p>Plot the LLR-overestimation as function of the system LLR.</p>
+<p>The LLR-overestimation is defined as the log-10 of the ratio between
+(1) the system LRs; the outputs of the LR-system, and
+(2) the empirical LRs; the ratio’s between the relative frequencies of the H1-LLRs and H2-LLRs.</p>
+<p>See documentation on :func:<code class="docutils literal notranslate"><span class="pre">calc_llr_overestimation</span></code> for more details on the LLR-overestimation.</p>
+<p>An interval around the LLR-overestimation can be calculated using fiducial distributions. The average absolute
+LLR-overestimation can be used as single metric.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>llrdata</strong> – An instance of LLRData containing LLRs and ground-truth labels</p></li>
+<li><p><strong>num_fids</strong> – number of fiducial distributions to base the interval on; use 0 for no interval</p></li>
+<li><p><strong>ax</strong> – matplotlib axes to plot into</p></li>
+<li><p><strong>kwargs</strong> – additional arguments to pass to :func:<code class="docutils literal notranslate"><span class="pre">calc_llr_overestimation</span></code>
+and/or :func:<code class="docutils literal notranslate"><span class="pre">calc_fiducial_density_functions</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.algorithms.llr_overestimation.calc_llr_overestimation">
+<span class="sig-prename descclassname"><span class="pre">lir.algorithms.llr_overestimation.</span></span><span class="sig-name descname"><span class="pre">calc_llr_overestimation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">llrs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_fids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">('silverman',</span> <span class="pre">'silverman')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_grid_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.algorithms.llr_overestimation.calc_llr_overestimation" title="Link to this definition"></a></dt>
+<dd><p>Calculate the LLR-overestimation as function of the system LLR.</p>
+<p>The LLR-overestimation is defined as the log-10 of the ratio between
+(1) the system LRs; the outputs of the LR-system, and
+(2) the empirical LRs; the ratio’s between the relative frequencies of the H1-LLRs and H2-LLRs.</p>
+<ul class="simple">
+<li><p>It quantifies the deviation from the requirement that ‘the LR of the LR is the LR’: the ‘LR-consistency’.</p></li>
+<li><p>For a perfect LR-system, the LLR-overestimation is 0: the system and empirical LRs are the same.</p></li>
+<li><p>A positive LLR-overestimation indicates that the system LRs are too high, compared to the empirical LRs.</p></li>
+<li><p>An LLR-overestimation of +1 indicates that the system LRs are too high by a factor of 10.</p></li>
+<li><p>An LLR-overestimation of -1 indicates that the system LRs are too low by a factor of 10.</p></li>
+<li><p>The relative frequencies are estimated with KDE using Silverman’s rule-of-thumb for the bandwidths.</p></li>
+<li><p>An interval around the LLR-overestimation can be calculated using fiducial distributions.</p></li>
+</ul>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>llrs</strong> – the log-10 likelihood ratios (LLRs), as calculated by the LR-system</p></li>
+<li><p><strong>y</strong> – the corresponding labels (0 for H2 or Hd, 1 for H1 or Hp)</p></li>
+<li><p><strong>num_grid_points</strong> – number of points used in the grid to calculate the LLR-overestimation on</p></li>
+<li><p><strong>bw</strong> – two bandwidths for the KDEs of H1 &amp; H2; for each specify a method (string) or a value (float)</p></li>
+<li><p><strong>num_fids</strong> – number of fiducial distributions to base the interval on; use 0 for no interval</p></li>
+<li><p><strong>alpha</strong> – level of confidence to use for the interval</p></li>
+<li><p><strong>kwargs</strong> – additional arguments to pass to :func:<code class="docutils literal notranslate"><span class="pre">calc_fiducial_density_functions</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a tuple of LLRs, their overestimation (best estimate), and their overestimation interval</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.algorithms.llr_overestimation.calc_fiducial_density_functions">
+<span class="sig-prename descclassname"><span class="pre">lir.algorithms.llr_overestimation.</span></span><span class="sig-name descname"><span class="pre">calc_fiducial_density_functions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'pdf'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_fids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing_grid_fraction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span> <span class="pre">/</span> <span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing_sample_size_correction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#lir.algorithms.llr_overestimation.calc_fiducial_density_functions" title="Link to this definition"></a></dt>
+<dd><p>Calculate (smoothed) density functions of fiducial distributions of a dataset.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – 1-dimensional array of data points</p></li>
+<li><p><strong>grid</strong> – 1-dimensional array of equally spaced grid points, at which to calculate the density functions</p></li>
+<li><p><strong>df_type</strong> – type of density function (df) to generate: either probability (‘pdf’) or cumulative (‘cdf’)</p></li>
+<li><p><strong>num_fids</strong> – number of fiducial distributions to generate</p></li>
+<li><p><strong>smoothing_grid_fraction</strong> – fraction of grid points to use as half window during smoothing</p></li>
+<li><p><strong>smoothing_sample_size_correction</strong> – value to use for sample size correction of smoothing window; 0 is no
+correction</p></li>
+<li><p><strong>seed</strong> – seed for random number generator used draw samples from a uniform distribution.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lir.algorithms.invariance_bounds.html" class="btn btn-neutral float-left" title="lir.algorithms.invariance_bounds" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lir.algorithms.kde.html" class="btn btn-neutral float-right" title="lir.algorithms.kde" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

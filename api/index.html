@@ -1,0 +1,252 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Reference &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lir" href="lir/lir.html" />
+    <link rel="prev" title="Registry reference" href="../reference.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lir/lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">API Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="api-reference">
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h1>
+<p>This page contains auto-generated API reference documentation <a class="footnote-reference brackets" href="#f1" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="lir/lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lir/lir.experiments.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.experiments</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.experiments.predefined_experiment.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.experiments.predefined_experiment</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.experiments.optuna_experiment.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.experiments.optuna_experiment</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.experiments.base_experiment.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.experiments.base_experiment</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir/lir.plotting.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.plotting</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.plotting.expected_calibration_error.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.plotting.expected_calibration_error</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir/lir.metrics.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.metrics</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.metrics.overestimation.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.metrics.overestimation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.metrics.devpav.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.metrics.devpav</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir/lir.lrsystems.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.lrsystems</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.lrsystems.lrsystems.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.lrsystems.lrsystems</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.lrsystems.score_based.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.lrsystems.score_based</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.lrsystems.binary_lrsystem.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.lrsystems.binary_lrsystem</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.lrsystems.two_level.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.lrsystems.two_level</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir/lir.config.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.config</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.config.base.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.config.base</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.config.metrics.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.config.metrics</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.config.lrsystem_architectures.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.config.lrsystem_architectures</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.config.experiment_strategies.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.config.experiment_strategies</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.config.util.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.config.util</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.config.substitution.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.config.substitution</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.config.data.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.config.data</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.config.transform.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.config.transform</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.config.aggregation.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.config.aggregation</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir/lir.algorithms.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.algorithms</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.algorithms.bayeserror.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.algorithms.bayeserror</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.algorithms.percentile_rank.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.algorithms.percentile_rank</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.algorithms.logistic_regression.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.algorithms.logistic_regression</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.algorithms.bootstraps.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.algorithms.bootstraps</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.algorithms.invariance_bounds.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.algorithms.invariance_bounds</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.algorithms.llr_overestimation.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.algorithms.llr_overestimation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.algorithms.kde.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.algorithms.kde</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.algorithms.isotonic_regression.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.algorithms.isotonic_regression</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir/lir.data.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.data</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.data.datasets.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.data.datasets</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lir/lir.data.datasets.feature_data_csv.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.data.datasets.feature_data_csv</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lir/lir.data.datasets.synthesized_normal_multiclass.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.data.datasets.synthesized_normal_multiclass</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lir/lir.data.datasets.synthesized_normal_binary.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.data.datasets.synthesized_normal_binary</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lir/lir.data.datasets.alcohol_breath_analyser.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.data.datasets.alcohol_breath_analyser</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lir/lir.data.datasets.glass.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.data.datasets.glass</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.data.models.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.data.models</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.data.io.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.data.io</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.data.data_strategies.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.data.data_strategies</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir/lir.transform.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.transform</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.transform.distance.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.transform.distance</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.transform.pipeline.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.transform.pipeline</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.transform.pairing.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.transform.pairing</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir/lir.transform.composite.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.transform.composite</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lir/lir.resources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.resources</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lir/lir.visualization.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.visualization</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lir/lir.main.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.main</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lir/lir.bounding.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.bounding</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lir/lir.util.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.util</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lir/lir.persistence.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.persistence</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lir/lir.registry.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.registry</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lir/lir.__main__.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.__main__</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lir/lir.aggregation.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.aggregation</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="f1" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Created with <a class="reference external" href="https://github.com/chrisjsewell/sphinx-autodoc2">sphinx-autodoc2</a></p>
+</aside>
+</aside>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../reference.html" class="btn btn-neutral float-left" title="Registry reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lir/lir.html" class="btn btn-neutral float-right" title="lir" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

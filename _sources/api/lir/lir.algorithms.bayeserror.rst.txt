@@ -1,0 +1,83 @@
+:py:mod:`lir.algorithms.bayeserror`
+===================================
+
+.. py:module:: lir.algorithms.bayeserror
+
+.. autodoc2-docstring:: lir.algorithms.bayeserror
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`ELUBBounder <lir.algorithms.bayeserror.ELUBBounder>`
+     - .. autodoc2-docstring:: lir.algorithms.bayeserror.ELUBBounder
+          :parser: myst
+          :summary:
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`plot_nbe <lir.algorithms.bayeserror.plot_nbe>`
+     - .. autodoc2-docstring:: lir.algorithms.bayeserror.plot_nbe
+          :parser: myst
+          :summary:
+   * - :py:obj:`elub <lir.algorithms.bayeserror.elub>`
+     - .. autodoc2-docstring:: lir.algorithms.bayeserror.elub
+          :parser: myst
+          :summary:
+   * - :py:obj:`calculate_expected_utility <lir.algorithms.bayeserror.calculate_expected_utility>`
+     - .. autodoc2-docstring:: lir.algorithms.bayeserror.calculate_expected_utility
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:function:: plot_nbe(ax: matplotlib.pyplot.Axes, llrdata: lir.data.models.LLRData, log_lr_threshold_range: tuple[float, float] | None = None, add_misleading: int = 1, step_size: float = 0.01) -> None
+   :canonical: lir.algorithms.bayeserror.plot_nbe
+
+   .. autodoc2-docstring:: lir.algorithms.bayeserror.plot_nbe
+      :parser: myst
+
+.. py:function:: elub(llrdata: lir.data.models.LLRData, add_misleading: int = 1, step_size: float = 0.01, substitute_extremes: tuple[float, float] = (-9, 9)) -> tuple[float, float]
+   :canonical: lir.algorithms.bayeserror.elub
+
+   .. autodoc2-docstring:: lir.algorithms.bayeserror.elub
+      :parser: myst
+
+.. py:function:: calculate_expected_utility(lrs: numpy.ndarray, y: numpy.ndarray, threshold_lrs: numpy.ndarray, add_misleading: int = 0) -> float
+   :canonical: lir.algorithms.bayeserror.calculate_expected_utility
+
+   .. autodoc2-docstring:: lir.algorithms.bayeserror.calculate_expected_utility
+      :parser: myst
+
+.. py:class:: ELUBBounder(lower_llr_bound: float | None = None, upper_llr_bound: float | None = None)
+   :canonical: lir.algorithms.bayeserror.ELUBBounder
+
+   Bases: :py:obj:`lir.bounding.LLRBounder`
+
+   .. autodoc2-docstring:: lir.algorithms.bayeserror.ELUBBounder
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.algorithms.bayeserror.ELUBBounder.__init__
+      :parser: myst
+
+   .. py:method:: calculate_bounds(llrdata: lir.data.models.LLRData) -> tuple[float | None, float | None]
+      :canonical: lir.algorithms.bayeserror.ELUBBounder.calculate_bounds
+
+      .. autodoc2-docstring:: lir.algorithms.bayeserror.ELUBBounder.calculate_bounds
+         :parser: myst

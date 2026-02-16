@@ -1,0 +1,343 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.data.data_strategies &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="lir.transform" href="lir.transform.html" />
+    <link rel="prev" title="lir.data.io" href="lir.data.io.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a></li>
+          <li class="breadcrumb-item"><a href="lir.data.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.data</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.data.data_strategies</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/api/lir/lir.data.data_strategies.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-lir.data.data_strategies">
+<span id="lir-data-data-strategies"></span><h1><a class="reference internal" href="#module-lir.data.data_strategies" title="lir.data.data_strategies"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.data.data_strategies</span></code></a><a class="headerlink" href="#module-lir.data.data_strategies" title="Link to this heading"></a></h1>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.data.data_strategies.BinaryTrainTestSplit" title="lir.data.data_strategies.BinaryTrainTestSplit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BinaryTrainTestSplit</span></code></a></p></td>
+<td><p>Representation of a train/test split.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.data.data_strategies.BinaryCrossValidation" title="lir.data.data_strategies.BinaryCrossValidation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BinaryCrossValidation</span></code></a></p></td>
+<td><p>K-fold cross-validation iterator over successive train/test splits.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.data.data_strategies.MulticlassTrainTestSplit" title="lir.data.data_strategies.MulticlassTrainTestSplit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MulticlassTrainTestSplit</span></code></a></p></td>
+<td><p>Representation of a multi-class train/test split.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.data.data_strategies.MulticlassCrossValidation" title="lir.data.data_strategies.MulticlassCrossValidation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MulticlassCrossValidation</span></code></a></p></td>
+<td><p>K-fold cross-validation iterator over successive train/test splits.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.data.data_strategies.PairedInstancesTrainTestSplit" title="lir.data.data_strategies.PairedInstancesTrainTestSplit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PairedInstancesTrainTestSplit</span></code></a></p></td>
+<td><p>A train/test split policy for paired instances.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.data.data_strategies.RoleAssignment" title="lir.data.data_strategies.RoleAssignment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RoleAssignment</span></code></a></p></td>
+<td><p>Indicate whether the data is part of the train or the test split.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.data.data_strategies.PredefinedTrainTestSplit" title="lir.data.data_strategies.PredefinedTrainTestSplit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PredefinedTrainTestSplit</span></code></a></p></td>
+<td><p>Split data into a training set and a test set based on predefined assignments.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="api">
+<h3>API<a class="headerlink" href="#api" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.data_strategies.BinaryTrainTestSplit">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.data_strategies.</span></span><span class="sig-name descname"><span class="pre">BinaryTrainTestSplit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.data.data_strategies.BinaryTrainTestSplit" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="lir.data.models.html#lir.data.models.DataStrategy" title="lir.data.models.DataStrategy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.data.models.DataStrategy</span></code></a></p>
+<p>Representation of a train/test split.</p>
+<p>The input data should have hypothesis labels. This split assigns instances of both classes to the training set and
+the test set.</p>
+<p class="rubric">Initialization</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.data_strategies.BinaryTrainTestSplit.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">collections.abc.Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.data.data_strategies.BinaryTrainTestSplit.apply" title="Link to this definition"></a></dt>
+<dd><p>Allow iteration by looping over the resulting train/test split(s).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.data_strategies.BinaryCrossValidation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.data_strategies.</span></span><span class="sig-name descname"><span class="pre">BinaryCrossValidation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.data.data_strategies.BinaryCrossValidation" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="lir.data.models.html#lir.data.models.DataStrategy" title="lir.data.models.DataStrategy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.data.models.DataStrategy</span></code></a></p>
+<p>K-fold cross-validation iterator over successive train/test splits.</p>
+<p>The input data must contain class labels. Each fold is constructed so that
+instances from both classes are present in every split.</p>
+<p>This strategy may be registered in a YAML registry as follows:</p>
+<p>.. code-block:: yaml</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>data:
+  [...]
+  splits:
+    strategy: binary_cross_validation
+    folds: 5
+    seed: 42
+</pre></div>
+</div>
+<p class="rubric">Initialization</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.data_strategies.BinaryCrossValidation.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">collections.abc.Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.data.data_strategies.BinaryCrossValidation.apply" title="Link to this definition"></a></dt>
+<dd><p>Allow iteration by looping over the resulting train/test split(s).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.data_strategies.MulticlassTrainTestSplit">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.data_strategies.</span></span><span class="sig-name descname"><span class="pre">MulticlassTrainTestSplit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.data.data_strategies.MulticlassTrainTestSplit" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="lir.data.models.html#lir.data.models.DataStrategy" title="lir.data.models.DataStrategy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.data.models.DataStrategy</span></code></a></p>
+<p>Representation of a multi-class train/test split.</p>
+<p>The input data should have source_ids. This split assigns all instances of a source to either the training set or
+the test set.</p>
+<p class="rubric">Initialization</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.data_strategies.MulticlassTrainTestSplit.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">collections.abc.Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.data.data_strategies.MulticlassTrainTestSplit.apply" title="Link to this definition"></a></dt>
+<dd><p>Allow iteration by looping over the resulting train/test split(s).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.data_strategies.MulticlassCrossValidation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.data_strategies.</span></span><span class="sig-name descname"><span class="pre">MulticlassCrossValidation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.data.data_strategies.MulticlassCrossValidation" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="lir.data.models.html#lir.data.models.DataStrategy" title="lir.data.models.DataStrategy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.data.models.DataStrategy</span></code></a></p>
+<p>K-fold cross-validation iterator over successive train/test splits.</p>
+<p>The input data must contain <code class="docutils literal notranslate"><span class="pre">source_ids</span></code>. All instances originating from the
+same source are assigned to the same fold, ensuring that no source appears in
+both the training and test sets within a split.</p>
+<p>In a benchmark configuration, the split strategy can be referenced as:</p>
+<p>.. code-block:: yaml</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>data:
+  [...]
+  splits:
+    strategy: multiclass_cross_validation
+    folds: 5
+</pre></div>
+</div>
+<p class="rubric">Initialization</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.data_strategies.MulticlassCrossValidation.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">collections.abc.Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.data.data_strategies.MulticlassCrossValidation.apply" title="Link to this definition"></a></dt>
+<dd><p>Allow iteration by looping over the resulting train/test split(s).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.data_strategies.PairedInstancesTrainTestSplit">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.data_strategies.</span></span><span class="sig-name descname"><span class="pre">PairedInstancesTrainTestSplit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.data.data_strategies.PairedInstancesTrainTestSplit" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="lir.data.models.html#lir.data.models.DataStrategy" title="lir.data.models.DataStrategy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.data.models.DataStrategy</span></code></a></p>
+<p>A train/test split policy for paired instances.</p>
+<p>The input data should have source_ids with two columns. This split assigns all sources to either the training set or
+the test set. The pairs are assigned to training or testing if both of their sources have that role. Pairs with
+mixed roles are omitted.</p>
+<p class="rubric">Initialization</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.data_strategies.PairedInstancesTrainTestSplit.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">collections.abc.Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.data.data_strategies.PairedInstancesTrainTestSplit.apply" title="Link to this definition"></a></dt>
+<dd><p>Allow iteration by looping over the resulting train/test split(s).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.data_strategies.RoleAssignment">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.data_strategies.</span></span><span class="sig-name descname"><span class="pre">RoleAssignment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.data.data_strategies.RoleAssignment" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>Indicate whether the data is part of the train or the test split.</p>
+<p class="rubric">Initialization</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.data.data_strategies.RoleAssignment.TRAIN">
+<span class="sig-name descname"><span class="pre">TRAIN</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'train'</span></span><a class="headerlink" href="#lir.data.data_strategies.RoleAssignment.TRAIN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.data.data_strategies.RoleAssignment.TEST">
+<span class="sig-name descname"><span class="pre">TEST</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'test'</span></span><a class="headerlink" href="#lir.data.data_strategies.RoleAssignment.TEST" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.data_strategies.PredefinedTrainTestSplit">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.data_strategies.</span></span><span class="sig-name descname"><span class="pre">PredefinedTrainTestSplit</span></span><a class="headerlink" href="#lir.data.data_strategies.PredefinedTrainTestSplit" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="lir.data.models.html#lir.data.models.DataStrategy" title="lir.data.models.DataStrategy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.data.models.DataStrategy</span></code></a></p>
+<p>Split data into a training set and a test set based on predefined assignments.</p>
+<p>This strategy expects a <code class="docutils literal notranslate"><span class="pre">role_assignments</span></code> field in the data, where each
+instance is labelled either <code class="docutils literal notranslate"><span class="pre">&quot;train&quot;</span></code> (included in the training set) or
+<code class="docutils literal notranslate"><span class="pre">&quot;test&quot;</span></code> (included in the test set).</p>
+<p>In the benchmark configuration YAML, this split strategy can be referenced as
+follows:</p>
+<p>.. code-block:: yaml</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cross_validation_splits:
+    strategy: predefined_train_test_split
+    data_origin: ${data}
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.data_strategies.PredefinedTrainTestSplit.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">collections.abc.Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.data.data_strategies.PredefinedTrainTestSplit.apply" title="Link to this definition"></a></dt>
+<dd><p>Split the FeatureData into a train and a test split.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lir.data.io.html" class="btn btn-neutral float-left" title="lir.data.io" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lir.transform.html" class="btn btn-neutral float-right" title="lir.transform" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,83 @@
+:py:mod:`lir.algorithms.invariance_bounds`
+==========================================
+
+.. py:module:: lir.algorithms.invariance_bounds
+
+.. autodoc2-docstring:: lir.algorithms.invariance_bounds
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`IVBounder <lir.algorithms.invariance_bounds.IVBounder>`
+     - .. autodoc2-docstring:: lir.algorithms.invariance_bounds.IVBounder
+          :parser: myst
+          :summary:
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`plot_invariance_delta_functions <lir.algorithms.invariance_bounds.plot_invariance_delta_functions>`
+     - .. autodoc2-docstring:: lir.algorithms.invariance_bounds.plot_invariance_delta_functions
+          :parser: myst
+          :summary:
+   * - :py:obj:`calculate_invariance_bounds <lir.algorithms.invariance_bounds.calculate_invariance_bounds>`
+     - .. autodoc2-docstring:: lir.algorithms.invariance_bounds.calculate_invariance_bounds
+          :parser: myst
+          :summary:
+   * - :py:obj:`calculate_invariance_delta_functions <lir.algorithms.invariance_bounds.calculate_invariance_delta_functions>`
+     - .. autodoc2-docstring:: lir.algorithms.invariance_bounds.calculate_invariance_delta_functions
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:function:: plot_invariance_delta_functions(llrdata: lir.data.models.LLRData, llr_threshold_range: tuple[float, float] | None = None, step_size: float = 0.001, ax: matplotlib.pyplot.Axes | None = None) -> None
+   :canonical: lir.algorithms.invariance_bounds.plot_invariance_delta_functions
+
+   .. autodoc2-docstring:: lir.algorithms.invariance_bounds.plot_invariance_delta_functions
+      :parser: myst
+
+.. py:function:: calculate_invariance_bounds(llrdata: lir.data.models.LLRData, llr_threshold: numpy.ndarray | None = None, step_size: float = 0.001, substitute_extremes: tuple[float, float] = (-20, 20)) -> tuple[float, float, numpy.ndarray, numpy.ndarray]
+   :canonical: lir.algorithms.invariance_bounds.calculate_invariance_bounds
+
+   .. autodoc2-docstring:: lir.algorithms.invariance_bounds.calculate_invariance_bounds
+      :parser: myst
+
+.. py:function:: calculate_invariance_delta_functions(llrdata: lir.data.models.LLRData, llr_threshold: numpy.ndarray) -> tuple[numpy.ndarray, numpy.ndarray]
+   :canonical: lir.algorithms.invariance_bounds.calculate_invariance_delta_functions
+
+   .. autodoc2-docstring:: lir.algorithms.invariance_bounds.calculate_invariance_delta_functions
+      :parser: myst
+
+.. py:class:: IVBounder(lower_llr_bound: float | None = None, upper_llr_bound: float | None = None)
+   :canonical: lir.algorithms.invariance_bounds.IVBounder
+
+   Bases: :py:obj:`lir.bounding.LLRBounder`
+
+   .. autodoc2-docstring:: lir.algorithms.invariance_bounds.IVBounder
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.algorithms.invariance_bounds.IVBounder.__init__
+      :parser: myst
+
+   .. py:method:: calculate_bounds(llrdata: lir.data.models.LLRData) -> tuple[float | None, float | None]
+      :canonical: lir.algorithms.invariance_bounds.IVBounder.calculate_bounds
+
+      .. autodoc2-docstring:: lir.algorithms.invariance_bounds.IVBounder.calculate_bounds
+         :parser: myst

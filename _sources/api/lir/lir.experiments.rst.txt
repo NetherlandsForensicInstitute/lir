@@ -1,0 +1,44 @@
+:py:mod:`lir.experiments`
+=========================
+
+.. py:module:: lir.experiments
+
+.. autodoc2-docstring:: lir.experiments
+   :parser: myst
+   :allowtitles:
+
+Submodules
+----------
+
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   lir.experiments.predefined_experiment
+   lir.experiments.optuna_experiment
+   lir.experiments.base_experiment
+
+Package Contents
+----------------
+
+Data
+~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`__all__ <lir.experiments.__all__>`
+     - .. autodoc2-docstring:: lir.experiments.__all__
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:data:: __all__
+   :canonical: lir.experiments.__all__
+   :value: ['Experiment', 'OptunaExperiment', 'PredefinedExperiment']
+
+   .. autodoc2-docstring:: lir.experiments.__all__
+      :parser: myst

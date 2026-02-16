@@ -1,0 +1,105 @@
+:py:mod:`lir.data.datasets.synthesized_normal_multiclass`
+=========================================================
+
+.. py:module:: lir.data.datasets.synthesized_normal_multiclass
+
+.. autodoc2-docstring:: lir.data.datasets.synthesized_normal_multiclass
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`SynthesizedDimension <lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension>`
+     - .. autodoc2-docstring:: lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension
+          :parser: myst
+          :summary:
+   * - :py:obj:`SynthesizedNormalMulticlassData <lir.data.datasets.synthesized_normal_multiclass.SynthesizedNormalMulticlassData>`
+     - .. autodoc2-docstring:: lir.data.datasets.synthesized_normal_multiclass.SynthesizedNormalMulticlassData
+          :parser: myst
+          :summary:
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`synthesized_normal_multiclass <lir.data.datasets.synthesized_normal_multiclass.synthesized_normal_multiclass>`
+     - .. autodoc2-docstring:: lir.data.datasets.synthesized_normal_multiclass.synthesized_normal_multiclass
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:class:: SynthesizedDimension
+   :canonical: lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension
+
+   Bases: :py:obj:`typing.NamedTuple`
+
+   .. autodoc2-docstring:: lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension
+      :parser: myst
+
+   .. py:attribute:: population_mean
+      :canonical: lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension.population_mean
+      :type: float
+      :value: None
+
+      .. autodoc2-docstring:: lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension.population_mean
+         :parser: myst
+
+   .. py:attribute:: population_std
+      :canonical: lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension.population_std
+      :type: float
+      :value: None
+
+      .. autodoc2-docstring:: lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension.population_std
+         :parser: myst
+
+   .. py:attribute:: sources_std
+      :canonical: lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension.sources_std
+      :type: float
+      :value: None
+
+      .. autodoc2-docstring:: lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension.sources_std
+         :parser: myst
+
+.. py:class:: SynthesizedNormalMulticlassData(dimensions: list[lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension], population_size: int, sources_size: int, seed: int | None)
+   :canonical: lir.data.datasets.synthesized_normal_multiclass.SynthesizedNormalMulticlassData
+
+   Bases: :py:obj:`lir.data.models.DataProvider`
+
+   .. autodoc2-docstring:: lir.data.datasets.synthesized_normal_multiclass.SynthesizedNormalMulticlassData
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.data.datasets.synthesized_normal_multiclass.SynthesizedNormalMulticlassData.__init__
+      :parser: myst
+
+   .. py:method:: _generate_dimension(rng: typing.Any, dimension: lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension) -> numpy.ndarray
+      :canonical: lir.data.datasets.synthesized_normal_multiclass.SynthesizedNormalMulticlassData._generate_dimension
+
+      .. autodoc2-docstring:: lir.data.datasets.synthesized_normal_multiclass.SynthesizedNormalMulticlassData._generate_dimension
+         :parser: myst
+
+   .. py:method:: get_instances() -> lir.data.models.FeatureData
+      :canonical: lir.data.datasets.synthesized_normal_multiclass.SynthesizedNormalMulticlassData.get_instances
+
+      .. autodoc2-docstring:: lir.data.datasets.synthesized_normal_multiclass.SynthesizedNormalMulticlassData.get_instances
+         :parser: myst
+
+.. py:function:: synthesized_normal_multiclass(config: lir.config.substitution.ContextAwareDict, _: pathlib.Path) -> lir.data.models.DataProvider
+   :canonical: lir.data.datasets.synthesized_normal_multiclass.synthesized_normal_multiclass
+
+   .. autodoc2-docstring:: lir.data.datasets.synthesized_normal_multiclass.synthesized_normal_multiclass
+      :parser: myst

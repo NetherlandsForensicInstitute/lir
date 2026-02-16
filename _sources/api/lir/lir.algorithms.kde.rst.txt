@@ -1,0 +1,105 @@
+:py:mod:`lir.algorithms.kde`
+============================
+
+.. py:module:: lir.algorithms.kde
+
+.. autodoc2-docstring:: lir.algorithms.kde
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`KDECalibrator <lir.algorithms.kde.KDECalibrator>`
+     - .. autodoc2-docstring:: lir.algorithms.kde.KDECalibrator
+          :parser: myst
+          :summary:
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`compensate_and_remove_neginf_inf <lir.algorithms.kde.compensate_and_remove_neginf_inf>`
+     - .. autodoc2-docstring:: lir.algorithms.kde.compensate_and_remove_neginf_inf
+          :parser: myst
+          :summary:
+   * - :py:obj:`parse_bandwidth <lir.algorithms.kde.parse_bandwidth>`
+     - .. autodoc2-docstring:: lir.algorithms.kde.parse_bandwidth
+          :parser: myst
+          :summary:
+
+Data
+~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`LOG <lir.algorithms.kde.LOG>`
+     - .. autodoc2-docstring:: lir.algorithms.kde.LOG
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:data:: LOG
+   :canonical: lir.algorithms.kde.LOG
+   :value: 'getLogger(...)'
+
+   .. autodoc2-docstring:: lir.algorithms.kde.LOG
+      :parser: myst
+
+.. py:function:: compensate_and_remove_neginf_inf(log_odds: numpy.ndarray, y: numpy.ndarray) -> tuple[numpy.ndarray, numpy.ndarray, float, float]
+   :canonical: lir.algorithms.kde.compensate_and_remove_neginf_inf
+
+   .. autodoc2-docstring:: lir.algorithms.kde.compensate_and_remove_neginf_inf
+      :parser: myst
+
+.. py:function:: parse_bandwidth(bandwidth: collections.abc.Callable | str | float | tuple[float, float] | None) -> collections.abc.Callable[[typing.Any, typing.Any], tuple[float, float]]
+   :canonical: lir.algorithms.kde.parse_bandwidth
+
+   .. autodoc2-docstring:: lir.algorithms.kde.parse_bandwidth
+      :parser: myst
+
+.. py:class:: KDECalibrator(bandwidth: collections.abc.Callable | str | float | tuple[float, float] | None = None)
+   :canonical: lir.algorithms.kde.KDECalibrator
+
+   Bases: :py:obj:`lir.Transformer`
+
+   .. autodoc2-docstring:: lir.algorithms.kde.KDECalibrator
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.algorithms.kde.KDECalibrator.__init__
+      :parser: myst
+
+   .. py:method:: bandwidth_silverman(X: numpy.ndarray, y: numpy.ndarray) -> tuple[float, float]
+      :canonical: lir.algorithms.kde.KDECalibrator.bandwidth_silverman
+      :staticmethod:
+
+      .. autodoc2-docstring:: lir.algorithms.kde.KDECalibrator.bandwidth_silverman
+         :parser: myst
+
+   .. py:method:: fit(instances: lir.data.models.InstanceData) -> typing.Self
+      :canonical: lir.algorithms.kde.KDECalibrator.fit
+
+      .. autodoc2-docstring:: lir.algorithms.kde.KDECalibrator.fit
+         :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.InstanceData) -> lir.data.models.LLRData
+      :canonical: lir.algorithms.kde.KDECalibrator.apply
+
+      .. autodoc2-docstring:: lir.algorithms.kde.KDECalibrator.apply
+         :parser: myst

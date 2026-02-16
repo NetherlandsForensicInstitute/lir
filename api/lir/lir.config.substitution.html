@@ -1,0 +1,510 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.config.substitution &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="lir.config.data" href="lir.config.data.html" />
+    <link rel="prev" title="lir.config.util" href="lir.config.util.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a></li>
+          <li class="breadcrumb-item"><a href="lir.config.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.config</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.config.substitution</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/api/lir/lir.config.substitution.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-lir.config.substitution">
+<span id="lir-config-substitution"></span><h1><a class="reference internal" href="#module-lir.config.substitution" title="lir.config.substitution"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.config.substitution</span></code></a><a class="headerlink" href="#module-lir.config.substitution" title="Link to this heading"></a></h1>
+<p>Substitution module.</p>
+<p>This module provides utility functions for replacing or modifying components of
+an LR Benchmark pipeline at runtime. Typical use cases include comparing
+different modelling approaches (e.g. logistic regression versus support vector
+machines) or optimising system hyperparameters.</p>
+<p>For example, the <code class="docutils literal notranslate"><span class="pre">parameters</span></code> section of the <code class="docutils literal notranslate"><span class="pre">model_selection_run</span></code> benchmark
+can define a path (<code class="docutils literal notranslate"><span class="pre">comparing.clf</span></code>) to be modified using the options listed in
+the <code class="docutils literal notranslate"><span class="pre">values</span></code> field. Each option updates the <code class="docutils literal notranslate"><span class="pre">comparing</span></code> component in the LR
+system configuration used by the pipeline.</p>
+<p>.. code-block:: yaml</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>benchmarks:
+  model_selection_run:
+    lr_system: ...
+    ...
+    parameters:
+      - path: comparing.clf
+        values:
+          - name: logit
+            method: logistic_regression
+            C: 1
+          - name: svm
+            method: svm
+            probability: True
+</pre></div>
+</div>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.config.substitution.HyperparameterOption" title="lir.config.substitution.HyperparameterOption"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HyperparameterOption</span></code></a></p></td>
+<td><p>An option for a value of a hyperparameter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.config.substitution.Hyperparameter" title="lir.config.substitution.Hyperparameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Hyperparameter</span></code></a></p></td>
+<td><p>Base class for all hyperparameters.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.config.substitution.CategoricalHyperparameter" title="lir.config.substitution.CategoricalHyperparameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CategoricalHyperparameter</span></code></a></p></td>
+<td><p>A categorical hyperparameter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.config.substitution.FloatHyperparameter" title="lir.config.substitution.FloatHyperparameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FloatHyperparameter</span></code></a></p></td>
+<td><p>Floating-point hyperparameter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.config.substitution.FolderHyperparameter" title="lir.config.substitution.FolderHyperparameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FolderHyperparameter</span></code></a></p></td>
+<td><p>Hyperparameter that enumerates all files in a given folder as options.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.config.substitution._parse_categorical_option" title="lir.config.substitution._parse_categorical_option"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_parse_categorical_option</span></code></a></p></td>
+<td><p>Parse a section describing an option value of a categorical hyperparameter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.config.substitution.parse_categorical" title="lir.config.substitution.parse_categorical"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_categorical</span></code></a></p></td>
+<td><p>Parse the <code class="docutils literal notranslate"><span class="pre">parameters</span></code> section of the configuration into a <code class="docutils literal notranslate"><span class="pre">CategoricalVariable</span></code> object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.config.substitution._parse_substitution" title="lir.config.substitution._parse_substitution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_parse_substitution</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.config.substitution._parse_clustered_option" title="lir.config.substitution._parse_clustered_option"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_parse_clustered_option</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.config.substitution.parse_clustered" title="lir.config.substitution.parse_clustered"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_clustered</span></code></a></p></td>
+<td><p>Parse the configuration section of a clustered hyperparameter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.config.substitution.parse_constant" title="lir.config.substitution.parse_constant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_constant</span></code></a></p></td>
+<td><p>Parse the configuration section of a constant.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.config.substitution.parse_float" title="lir.config.substitution.parse_float"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_float</span></code></a></p></td>
+<td><p>Parse the <code class="docutils literal notranslate"><span class="pre">parameters</span></code> section of the configuration into a <code class="docutils literal notranslate"><span class="pre">CategoricalVariable</span></code> object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.config.substitution.parse_folder" title="lir.config.substitution.parse_folder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_folder</span></code></a></p></td>
+<td><p>Parse the <code class="docutils literal notranslate"><span class="pre">parameters</span></code> section of the configuration into a <code class="docutils literal notranslate"><span class="pre">FolderHyperparameter</span></code> object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.config.substitution.parse_parameter" title="lir.config.substitution.parse_parameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_parameter</span></code></a></p></td>
+<td><p>Parse the parameters section of the configuration into a dedicated value wrapper object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.config.substitution._assign" title="lir.config.substitution._assign"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_assign</span></code></a></p></td>
+<td><p>Assign a new value to a path within an hierarchical <code class="docutils literal notranslate"><span class="pre">dict</span></code> structure.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.config.substitution._path_exists" title="lir.config.substitution._path_exists"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_path_exists</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.config.substitution.substitute_parameters" title="lir.config.substitution.substitute_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">substitute_parameters</span></code></a></p></td>
+<td><p>Substitute parameters in an LR system configuration and return the updated configuration.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="data">
+<h3>Data<a class="headerlink" href="#data" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.config.substitution.LOG" title="lir.config.substitution.LOG"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LOG</span></code></a></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="api">
+<h3>API<a class="headerlink" href="#api" title="Link to this heading"></a></h3>
+<dl class="py data">
+<dt class="sig sig-object py" id="lir.config.substitution.LOG">
+<span class="sig-prename descclassname"><span class="pre">lir.config.substitution.</span></span><span class="sig-name descname"><span class="pre">LOG</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'getLogger(...)'</span></span><a class="headerlink" href="#lir.config.substitution.LOG" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.config.substitution.HyperparameterOption">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.config.substitution.</span></span><span class="sig-name descname"><span class="pre">HyperparameterOption</span></span><a class="headerlink" href="#lir.config.substitution.HyperparameterOption" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">typing.NamedTuple</span></code></p>
+<p>An option for a value of a hyperparameter.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">HyperparameterOption</span></code> is a named tuple with two fields:</p>
+<ul class="simple">
+<li><p>name: a descriptive name of this option</p></li>
+<li><p>substitutions: a mapping of configuration paths to values</p></li>
+</ul>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.config.substitution.HyperparameterOption.name">
+<span class="sig-name descname"><span class="pre">name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#lir.config.substitution.HyperparameterOption.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.config.substitution.HyperparameterOption.substitutions">
+<span class="sig-name descname"><span class="pre">substitutions</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">collections.abc.Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#lir.config.substitution.HyperparameterOption.substitutions" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.config.substitution.HyperparameterOption.__repr__">
+<span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#lir.config.substitution.HyperparameterOption.__repr__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.config.substitution.Hyperparameter">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.config.substitution.</span></span><span class="sig-name descname"><span class="pre">Hyperparameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.config.substitution.Hyperparameter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>Base class for all hyperparameters.</p>
+<p class="rubric">Initialization</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.config.substitution.Hyperparameter.options">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">options</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lir.config.substitution.HyperparameterOption" title="lir.config.substitution.HyperparameterOption"><span class="pre">lir.config.substitution.HyperparameterOption</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.config.substitution.Hyperparameter.options" title="Link to this definition"></a></dt>
+<dd><p>Get a list of values that a hyperparameter can take in the context of a particular experiment.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>a list of <code class="docutils literal notranslate"><span class="pre">HyperparameterOption</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.config.substitution.CategoricalHyperparameter">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.config.substitution.</span></span><span class="sig-name descname"><span class="pre">CategoricalHyperparameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lir.config.substitution.HyperparameterOption" title="lir.config.substitution.HyperparameterOption"><span class="pre">lir.config.substitution.HyperparameterOption</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.config.substitution.CategoricalHyperparameter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.config.substitution.Hyperparameter" title="lir.config.substitution.Hyperparameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.config.substitution.Hyperparameter</span></code></a></p>
+<p>A categorical hyperparameter.</p>
+<p>A categorical hyperparameter has the following fields in a YAML configuration:</p>
+<ul class="simple">
+<li><p>path: the path of this hyperparameter in the LR system configuration</p></li>
+<li><p>options: a list of options</p></li>
+</ul>
+<p class="rubric">Initialization</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.config.substitution.CategoricalHyperparameter.options">
+<span class="sig-name descname"><span class="pre">options</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lir.config.substitution.HyperparameterOption" title="lir.config.substitution.HyperparameterOption"><span class="pre">lir.config.substitution.HyperparameterOption</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.config.substitution.CategoricalHyperparameter.options" title="Link to this definition"></a></dt>
+<dd><p>Provide API access to the options for the hyperparameter.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.config.substitution._parse_categorical_option">
+<span class="sig-prename descclassname"><span class="pre">lir.config.substitution.</span></span><span class="sig-name descname"><span class="pre">_parse_categorical_option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">option_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.config.substitution.HyperparameterOption" title="lir.config.substitution.HyperparameterOption"><span class="pre">lir.config.substitution.HyperparameterOption</span></a></span></span><a class="headerlink" href="#lir.config.substitution._parse_categorical_option" title="Link to this definition"></a></dt>
+<dd><p>Parse a section describing an option value of a categorical hyperparameter.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.config.substitution.parse_categorical">
+<span class="sig-prename descclassname"><span class="pre">lir.config.substitution.</span></span><span class="sig-name descname"><span class="pre">parse_categorical</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.config.substitution.CategoricalHyperparameter" title="lir.config.substitution.CategoricalHyperparameter"><span class="pre">lir.config.substitution.CategoricalHyperparameter</span></a></span></span><a class="headerlink" href="#lir.config.substitution.parse_categorical" title="Link to this definition"></a></dt>
+<dd><p>Parse the <code class="docutils literal notranslate"><span class="pre">parameters</span></code> section of the configuration into a <code class="docutils literal notranslate"><span class="pre">CategoricalVariable</span></code> object.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.config.substitution._parse_substitution">
+<span class="sig-prename descclassname"><span class="pre">lir.config.substitution.</span></span><span class="sig-name descname"><span class="pre">_parse_substitution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.config.substitution._parse_substitution" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.config.substitution._parse_clustered_option">
+<span class="sig-prename descclassname"><span class="pre">lir.config.substitution.</span></span><span class="sig-name descname"><span class="pre">_parse_clustered_option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.config.substitution.HyperparameterOption" title="lir.config.substitution.HyperparameterOption"><span class="pre">lir.config.substitution.HyperparameterOption</span></a></span></span><a class="headerlink" href="#lir.config.substitution._parse_clustered_option" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.config.substitution.parse_clustered">
+<span class="sig-prename descclassname"><span class="pre">lir.config.substitution.</span></span><span class="sig-name descname"><span class="pre">parse_clustered</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.config.substitution.CategoricalHyperparameter" title="lir.config.substitution.CategoricalHyperparameter"><span class="pre">lir.config.substitution.CategoricalHyperparameter</span></a></span></span><a class="headerlink" href="#lir.config.substitution.parse_clustered" title="Link to this definition"></a></dt>
+<dd><p>Parse the configuration section of a clustered hyperparameter.</p>
+<p>A cluster is a set of hyperparameters that are changed at the same time.</p>
+<p>A clustered hyperparameter has the following fields in a YAML configuration:</p>
+<ul class="simple">
+<li><p>name (optional): a descriptive name for this hyperparameter</p></li>
+<li><p>options: a list of options</p></li>
+</ul>
+<p>Each option has the following options:</p>
+<ul class="simple">
+<li><p>name: a descriptive name for this option</p></li>
+<li><p>substitutions: a list of substitutions, with a <code class="docutils literal notranslate"><span class="pre">path</span></code> and <code class="docutils literal notranslate"><span class="pre">value</span></code> field each</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.config.substitution.parse_constant">
+<span class="sig-prename descclassname"><span class="pre">lir.config.substitution.</span></span><span class="sig-name descname"><span class="pre">parse_constant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.config.substitution.CategoricalHyperparameter" title="lir.config.substitution.CategoricalHyperparameter"><span class="pre">lir.config.substitution.CategoricalHyperparameter</span></a></span></span><a class="headerlink" href="#lir.config.substitution.parse_constant" title="Link to this definition"></a></dt>
+<dd><p>Parse the configuration section of a constant.</p>
+<p>A constant is functionally identical to a categorical hyperparameter with a single option and has the following
+fields in a YAML configuration:</p>
+<ul class="simple">
+<li><p>path: the path of this hyperparameter in the LR system configuration</p></li>
+<li><p>value: the substitution value</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.config.substitution.FloatHyperparameter">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.config.substitution.</span></span><span class="sig-name descname"><span class="pre">FloatHyperparameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.config.substitution.FloatHyperparameter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.config.substitution.Hyperparameter" title="lir.config.substitution.Hyperparameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.config.substitution.Hyperparameter</span></code></a></p>
+<p>Floating-point hyperparameter.</p>
+<p>In a YAML configuration, this hyperparameter supports the following fields:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">path</span></code>: Path to the hyperparameter in the LR system configuration.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">low</span></code>: Lower bound of the search range.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">high</span></code>: Upper bound of the search range.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">step</span></code> (optional): Step size for a linear grid search.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">log</span></code> (optional): If <code class="docutils literal notranslate"><span class="pre">True</span></code>, search in logarithmic space instead of
+linear space. Cannot be combined with <code class="docutils literal notranslate"><span class="pre">step</span></code>. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+<p class="rubric">Initialization</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.config.substitution.FloatHyperparameter.options">
+<span class="sig-name descname"><span class="pre">options</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lir.config.substitution.HyperparameterOption" title="lir.config.substitution.HyperparameterOption"><span class="pre">lir.config.substitution.HyperparameterOption</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.config.substitution.FloatHyperparameter.options" title="Link to this definition"></a></dt>
+<dd><p>Provide API access to the options for the hyperparameter.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.config.substitution.parse_float">
+<span class="sig-prename descclassname"><span class="pre">lir.config.substitution.</span></span><span class="sig-name descname"><span class="pre">parse_float</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.config.substitution.FloatHyperparameter" title="lir.config.substitution.FloatHyperparameter"><span class="pre">lir.config.substitution.FloatHyperparameter</span></a></span></span><a class="headerlink" href="#lir.config.substitution.parse_float" title="Link to this definition"></a></dt>
+<dd><p>Parse the <code class="docutils literal notranslate"><span class="pre">parameters</span></code> section of the configuration into a <code class="docutils literal notranslate"><span class="pre">CategoricalVariable</span></code> object.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.config.substitution.FolderHyperparameter">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.config.substitution.</span></span><span class="sig-name descname"><span class="pre">FolderHyperparameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.config.substitution.FolderHyperparameter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.config.substitution.Hyperparameter" title="lir.config.substitution.Hyperparameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.config.substitution.Hyperparameter</span></code></a></p>
+<p>Hyperparameter that enumerates all files in a given folder as options.</p>
+<p>This hyperparameter reads the contents of a specified folder and generates one
+option per file. Each option uses the file’s full path as both its name and its
+value.</p>
+<p>In a YAML configuration, a folder hyperparameter supports the following fields:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">folder</span></code>: Path to the folder containing the candidate files.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ignore_files</span></code>: Optional list of file patterns to ignore.</p></li>
+</ul>
+<p>Example configuration:</p>
+<p>.. code-block:: yaml</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>hyperparameters:
+- path: data.provider.path
+  type: folder
+  folder: project_files/my_dataset/
+  ignore_files:  # Optional list of file patterns to ignore.
+   - &#39;*.tmp&#39;
+   - &#39;ignore_this_file.csv&#39;
+</pre></div>
+</div>
+<section id="raises">
+<h4>Raises<a class="headerlink" href="#raises" title="Link to this heading"></a></h4>
+<p>ValueError
+If the specified folder does not exist (during initialisation).
+ValueError
+If no valid files are found in the folder after applying the ignore
+patterns (when calling :meth:<code class="docutils literal notranslate"><span class="pre">options</span></code>).</p>
+</section>
+<p class="rubric">Initialization</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.config.substitution.FolderHyperparameter.options">
+<span class="sig-name descname"><span class="pre">options</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lir.config.substitution.HyperparameterOption" title="lir.config.substitution.HyperparameterOption"><span class="pre">lir.config.substitution.HyperparameterOption</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.config.substitution.FolderHyperparameter.options" title="Link to this definition"></a></dt>
+<dd><p>Generates the options by walking over the folder.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.config.substitution.parse_folder">
+<span class="sig-prename descclassname"><span class="pre">lir.config.substitution.</span></span><span class="sig-name descname"><span class="pre">parse_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.config.substitution.FolderHyperparameter" title="lir.config.substitution.FolderHyperparameter"><span class="pre">lir.config.substitution.FolderHyperparameter</span></a></span></span><a class="headerlink" href="#lir.config.substitution.parse_folder" title="Link to this definition"></a></dt>
+<dd><p>Parse the <code class="docutils literal notranslate"><span class="pre">parameters</span></code> section of the configuration into a <code class="docutils literal notranslate"><span class="pre">FolderHyperparameter</span></code> object.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.config.substitution.parse_parameter">
+<span class="sig-prename descclassname"><span class="pre">lir.config.substitution.</span></span><span class="sig-name descname"><span class="pre">parse_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.config.substitution.Hyperparameter" title="lir.config.substitution.Hyperparameter"><span class="pre">lir.config.substitution.Hyperparameter</span></a></span></span><a class="headerlink" href="#lir.config.substitution.parse_parameter" title="Link to this definition"></a></dt>
+<dd><p>Parse the parameters section of the configuration into a dedicated value wrapper object.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.config.substitution._assign">
+<span class="sig-prename descclassname"><span class="pre">lir.config.substitution.</span></span><span class="sig-name descname"><span class="pre">_assign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">struct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareList" title="lir.config.base.ContextAwareList"><span class="pre">lir.config.base.ContextAwareList</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lir.config.substitution._assign" title="Link to this definition"></a></dt>
+<dd><p>Assign a new value to a path within an hierarchical <code class="docutils literal notranslate"><span class="pre">dict</span></code> structure.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><p>struct is the <code class="docutils literal notranslate"><span class="pre">dict</span></code> that is modified in-place</p></li>
+<li><p>path is the path within the dict, as a list of <code class="docutils literal notranslate"><span class="pre">str</span></code></p></li>
+<li><p>value is the value to be assigned</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.config.substitution._path_exists">
+<span class="sig-prename descclassname"><span class="pre">lir.config.substitution.</span></span><span class="sig-name descname"><span class="pre">_path_exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">struct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lir.config.substitution._path_exists" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.config.substitution.substitute_parameters">
+<span class="sig-prename descclassname"><span class="pre">lir.config.substitution.</span></span><span class="sig-name descname"><span class="pre">substitute_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">hyperparameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></span><a class="headerlink" href="#lir.config.substitution.substitute_parameters" title="Link to this definition"></a></dt>
+<dd><p>Substitute parameters in an LR system configuration and return the updated configuration.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base_config</strong> – the original LR system configuration</p></li>
+<li><p><strong>hyperparameters</strong> – the hyperparameters and their values</p></li>
+<li><p><strong>context</strong> – the context path of the augmented configuration</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the augmented LR system configuration</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lir.config.util.html" class="btn btn-neutral float-left" title="lir.config.util" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lir.config.data.html" class="btn btn-neutral float-right" title="lir.config.data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

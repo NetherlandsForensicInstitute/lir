@@ -1,0 +1,255 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.plotting.expected_calibration_error &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="lir.metrics" href="lir.metrics.html" />
+    <link rel="prev" title="lir.plotting" href="lir.plotting.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a></li>
+          <li class="breadcrumb-item"><a href="lir.plotting.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.plotting</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.plotting.expected_calibration_error</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/api/lir/lir.plotting.expected_calibration_error.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-lir.plotting.expected_calibration_error">
+<span id="lir-plotting-expected-calibration-error"></span><h1><a class="reference internal" href="#module-lir.plotting.expected_calibration_error" title="lir.plotting.expected_calibration_error"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.plotting.expected_calibration_error</span></code></a><a class="headerlink" href="#module-lir.plotting.expected_calibration_error" title="Link to this heading"></a></h1>
+<p>Empirical cross-entropy (ECE).</p>
+<p>The discrimination and calibration of the LRs reported by some systems can also
+be measured separately. The empirical cross entropy (ECE) plot is a graphical
+way of doing this.</p>
+<p>ECE is computed as the average of:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-P(Hp)</span> <span class="pre">*</span> <span class="pre">log2(P(Hp</span> <span class="pre">|</span> <span class="pre">LR_i))</span></code> over all <code class="docutils literal notranslate"><span class="pre">LR_i</span></code> for which <code class="docutils literal notranslate"><span class="pre">Hp</span></code> is true, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-P(Hd)</span> <span class="pre">*</span> <span class="pre">log2(P(Hd</span> <span class="pre">|</span> <span class="pre">LR_i))</span></code> over all <code class="docutils literal notranslate"><span class="pre">LR_i</span></code> for which <code class="docutils literal notranslate"><span class="pre">Hd</span></code> is true.</p></li>
+</ul>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading"></a></h2>
+<p>Ramos, D. <em>Forensic Evidence Evaluation Using Automatic Speaker Recognition
+Systems</em>. Ph.D. thesis, Universidad Autónoma de Madrid.</p>
+<p>Robertson, B., Vignaux, G. A., &amp; Berger, C. (2016). <em>Interpreting Evidence:
+Evaluating Forensic Science in the Courtroom</em> (2nd ed.), pp. 96–97.</p>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.plotting.expected_calibration_error.plot_ece" title="lir.plotting.expected_calibration_error.plot_ece"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_ece</span></code></a></p></td>
+<td><p>Generate an ECE plot for a set of LRs and corresponding ground-truth labels.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.plotting.expected_calibration_error.calculate_ece" title="lir.plotting.expected_calibration_error.calculate_ece"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_ece</span></code></a></p></td>
+<td><p>Calculate empirical cross-entropy (ECE) of a set of LRs and corresponding ground-truth labels.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="api">
+<h3>API<a class="headerlink" href="#api" title="Link to this heading"></a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.plotting.expected_calibration_error.plot_ece">
+<span class="sig-prename descclassname"><span class="pre">lir.plotting.expected_calibration_error.</span></span><span class="sig-name descname"><span class="pre">plot_ece</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">llrdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">lir.data.models.LLRData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_prior_odds_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(-3,</span> <span class="pre">3)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_pav</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'neutral'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lir.plotting.expected_calibration_error.plot_ece" title="Link to this definition"></a></dt>
+<dd><p>Generate an ECE plot for a set of LRs and corresponding ground-truth labels.</p>
+<p>The x-axis shows the log prior odds of a sample being drawn from class 1. The
+y-axis shows the expected cost (cross-entropy) for:</p>
+<ol class="arabic simple">
+<li><p>A non-informative system (dotted line),</p></li>
+<li><p>The provided LR values (solid line), and</p></li>
+<li><p>The LR values after PAV transformation (Pool Adjacent Violators; dashed line).</p></li>
+</ol>
+<section id="parameters">
+<h4>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h4>
+<p>llrdata : LLRData
+LLR data containing LLR values and corresponding labels.
+log_prior_odds_range : tuple[float, float], optional
+Range of log prior odds shown on the x-axis, given as <code class="docutils literal notranslate"><span class="pre">(min,</span> <span class="pre">max)</span></code>.
+ax : matplotlib.axes.Axes, optional
+Matplotlib axes to plot into. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the current axes are used.
+show_pav : bool, optional
+Whether to include the PAV-transformed LRs in the plot.
+ylim : {“neutral”, “zoomed”}, optional
+Y-axis scaling mode:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>- ``&quot;neutral&quot;``: Lower limit is 0; upper limit is set slightly above the
+  maximum of the non-informative reference.
+- ``&quot;zoomed&quot;``: Lower limit is 0; upper limit is set to approximately 10%
+  above the maximum ECE value of the LRs (this may clip part of the
+  non-informative reference line).
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.plotting.expected_calibration_error.calculate_ece">
+<span class="sig-prename descclassname"><span class="pre">lir.plotting.expected_calibration_error.</span></span><span class="sig-name descname"><span class="pre">calculate_ece</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lrs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">priors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#lir.plotting.expected_calibration_error.calculate_ece" title="Link to this definition"></a></dt>
+<dd><p>Calculate empirical cross-entropy (ECE) of a set of LRs and corresponding ground-truth labels.</p>
+<p>An entropy is calculated for each element of <code class="docutils literal notranslate"><span class="pre">priors</span></code>.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lrs</strong> – an array of LRs</p></li>
+<li><p><strong>y</strong> – an array of ground-truth labels of the LRs (values 0 for Hd or 1
+for Hp); must be of the same length as <code class="docutils literal notranslate"><span class="pre">lrs</span></code>.</p></li>
+<li><p><strong>priors</strong> – an array of prior probabilities of the samples being drawn
+from class 1 (values in range [0..1])</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>an array of entropy values of the same length as <code class="docutils literal notranslate"><span class="pre">priors</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lir.plotting.html" class="btn btn-neutral float-left" title="lir.plotting" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lir.metrics.html" class="btn btn-neutral float-right" title="lir.metrics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

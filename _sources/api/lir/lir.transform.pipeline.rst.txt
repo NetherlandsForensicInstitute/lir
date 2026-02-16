@@ -1,0 +1,137 @@
+:py:mod:`lir.transform.pipeline`
+================================
+
+.. py:module:: lir.transform.pipeline
+
+.. autodoc2-docstring:: lir.transform.pipeline
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`Pipeline <lir.transform.pipeline.Pipeline>`
+     - .. autodoc2-docstring:: lir.transform.pipeline.Pipeline
+          :parser: myst
+          :summary:
+   * - :py:obj:`LoggingPipeline <lir.transform.pipeline.LoggingPipeline>`
+     - .. autodoc2-docstring:: lir.transform.pipeline.LoggingPipeline
+          :parser: myst
+          :summary:
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`parse_steps <lir.transform.pipeline.parse_steps>`
+     - .. autodoc2-docstring:: lir.transform.pipeline.parse_steps
+          :parser: myst
+          :summary:
+   * - :py:obj:`pipeline <lir.transform.pipeline.pipeline>`
+     - .. autodoc2-docstring:: lir.transform.pipeline.pipeline
+          :parser: myst
+          :summary:
+   * - :py:obj:`logging_pipeline <lir.transform.pipeline.logging_pipeline>`
+     - .. autodoc2-docstring:: lir.transform.pipeline.logging_pipeline
+          :parser: myst
+          :summary:
+
+Data
+~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`LOG <lir.transform.pipeline.LOG>`
+     - .. autodoc2-docstring:: lir.transform.pipeline.LOG
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:data:: LOG
+   :canonical: lir.transform.pipeline.LOG
+   :value: 'getLogger(...)'
+
+   .. autodoc2-docstring:: lir.transform.pipeline.LOG
+      :parser: myst
+
+.. py:class:: Pipeline(steps: list[tuple[str, lir.transform.Transformer | typing.Any]])
+   :canonical: lir.transform.pipeline.Pipeline
+
+   Bases: :py:obj:`lir.transform.Transformer`
+
+   .. autodoc2-docstring:: lir.transform.pipeline.Pipeline
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.transform.pipeline.Pipeline.__init__
+      :parser: myst
+
+   .. py:method:: fit(instances: lir.data.models.InstanceData) -> typing.Self
+      :canonical: lir.transform.pipeline.Pipeline.fit
+
+      .. autodoc2-docstring:: lir.transform.pipeline.Pipeline.fit
+         :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.InstanceData) -> lir.data.models.InstanceData
+      :canonical: lir.transform.pipeline.Pipeline.apply
+
+      .. autodoc2-docstring:: lir.transform.pipeline.Pipeline.apply
+         :parser: myst
+
+   .. py:method:: fit_apply(instances: lir.data.models.InstanceData) -> lir.data.models.InstanceData
+      :canonical: lir.transform.pipeline.Pipeline.fit_apply
+
+      .. autodoc2-docstring:: lir.transform.pipeline.Pipeline.fit_apply
+         :parser: myst
+
+.. py:function:: parse_steps(config: lir.config.base.ContextAwareDict | None, output_dir: pathlib.Path) -> list[tuple[str, lir.transform.Transformer]]
+   :canonical: lir.transform.pipeline.parse_steps
+
+   .. autodoc2-docstring:: lir.transform.pipeline.parse_steps
+      :parser: myst
+
+.. py:function:: pipeline(config: lir.config.base.ContextAwareDict, output_dir: pathlib.Path) -> lir.transform.pipeline.Pipeline
+   :canonical: lir.transform.pipeline.pipeline
+
+   .. autodoc2-docstring:: lir.transform.pipeline.pipeline
+      :parser: myst
+
+.. py:class:: LoggingPipeline(steps: list[tuple[str, lir.transform.Transformer | typing.Any]], output_file: os.PathLike, include_batch_number: bool = True, include_labels: bool = True, include_fields: list[str] | None = None, include_steps: list[str] | None = None, include_input: bool = True)
+   :canonical: lir.transform.pipeline.LoggingPipeline
+
+   Bases: :py:obj:`lir.transform.pipeline.Pipeline`
+
+   .. autodoc2-docstring:: lir.transform.pipeline.LoggingPipeline
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.transform.pipeline.LoggingPipeline.__init__
+      :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.InstanceData) -> lir.data.models.InstanceData
+      :canonical: lir.transform.pipeline.LoggingPipeline.apply
+
+      .. autodoc2-docstring:: lir.transform.pipeline.LoggingPipeline.apply
+         :parser: myst
+
+.. py:function:: logging_pipeline(config: lir.config.base.ContextAwareDict, output_dir: pathlib.Path) -> lir.transform.pipeline.Pipeline
+   :canonical: lir.transform.pipeline.logging_pipeline
+
+   .. autodoc2-docstring:: lir.transform.pipeline.logging_pipeline
+      :parser: myst

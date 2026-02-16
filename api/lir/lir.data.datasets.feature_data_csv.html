@@ -1,0 +1,451 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.data.datasets.feature_data_csv &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="lir.data.datasets.synthesized_normal_multiclass" href="lir.data.datasets.synthesized_normal_multiclass.html" />
+    <link rel="prev" title="lir.data.datasets" href="lir.data.datasets.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a></li>
+          <li class="breadcrumb-item"><a href="lir.data.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.data</span></code></a></li>
+          <li class="breadcrumb-item"><a href="lir.data.datasets.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.data.datasets</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.data.datasets.feature_data_csv</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/api/lir/lir.data.datasets.feature_data_csv.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-lir.data.datasets.feature_data_csv">
+<span id="lir-data-datasets-feature-data-csv"></span><h1><a class="reference internal" href="#module-lir.data.datasets.feature_data_csv" title="lir.data.datasets.feature_data_csv"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.data.datasets.feature_data_csv</span></code></a><a class="headerlink" href="#module-lir.data.datasets.feature_data_csv" title="Link to this heading"></a></h1>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.data.datasets.feature_data_csv.ExtraField" title="lir.data.datasets.feature_data_csv.ExtraField"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ExtraField</span></code></a></p></td>
+<td><p>Extra field for CSV parsing.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvParser" title="lir.data.datasets.feature_data_csv.FeatureDataCsvParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeatureDataCsvParser</span></code></a></p></td>
+<td><p>Parse a CSV file into a <code class="docutils literal notranslate"><span class="pre">FeatureData</span></code> object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvFileParser" title="lir.data.datasets.feature_data_csv.FeatureDataCsvFileParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeatureDataCsvFileParser</span></code></a></p></td>
+<td><p>Read CSV data from file.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvStreamParser" title="lir.data.datasets.feature_data_csv.FeatureDataCsvStreamParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeatureDataCsvStreamParser</span></code></a></p></td>
+<td><p>Read data from a streamed CSV.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvHttpParser" title="lir.data.datasets.feature_data_csv.FeatureDataCsvHttpParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeatureDataCsvHttpParser</span></code></a></p></td>
+<td><p>Read data from a stream.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.data.datasets.feature_data_csv._parse_cell_type" title="lir.data.datasets.feature_data_csv._parse_cell_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_parse_cell_type</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.data.datasets.feature_data_csv._parse_extra_field" title="lir.data.datasets.feature_data_csv._parse_extra_field"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_parse_extra_field</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.data.datasets.feature_data_csv._parse_feature_data_csv" title="lir.data.datasets.feature_data_csv._parse_feature_data_csv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_parse_feature_data_csv</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.data.datasets.feature_data_csv.feature_data_csv_http_parser" title="lir.data.datasets.feature_data_csv.feature_data_csv_http_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_data_csv_http_parser</span></code></a></p></td>
+<td><p>Configuration parser to initialize the CSV parser that reads data from a stream.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.data.datasets.feature_data_csv.feature_data_csv_file_parser" title="lir.data.datasets.feature_data_csv.feature_data_csv_file_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_data_csv_file_parser</span></code></a></p></td>
+<td><p>Configuration parser to initialize the CSV parser that reads data from a stream.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="data">
+<h3>Data<a class="headerlink" href="#data" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.data.datasets.feature_data_csv.LOG" title="lir.data.datasets.feature_data_csv.LOG"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LOG</span></code></a></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="api">
+<h3>API<a class="headerlink" href="#api" title="Link to this heading"></a></h3>
+<dl class="py data">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv.LOG">
+<span class="sig-prename descclassname"><span class="pre">lir.data.datasets.feature_data_csv.</span></span><span class="sig-name descname"><span class="pre">LOG</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'getLogger(...)'</span></span><a class="headerlink" href="#lir.data.datasets.feature_data_csv.LOG" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv.ExtraField">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.datasets.feature_data_csv.</span></span><span class="sig-name descname"><span class="pre">ExtraField</span></span><a class="headerlink" href="#lir.data.datasets.feature_data_csv.ExtraField" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">typing.NamedTuple</span></code></p>
+<p>Extra field for CSV parsing.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv.ExtraField.name">
+<span class="sig-name descname"><span class="pre">name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#lir.data.datasets.feature_data_csv.ExtraField.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv.ExtraField.column_names">
+<span class="sig-name descname"><span class="pre">column_names</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#lir.data.datasets.feature_data_csv.ExtraField.column_names" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv.ExtraField.validate_cell">
+<span class="sig-name descname"><span class="pre">validate_cell</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">collections.abc.Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#lir.data.datasets.feature_data_csv.ExtraField.validate_cell" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv.ExtraField.parse_row">
+<span class="sig-name descname"><span class="pre">parse_row</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.data.datasets.feature_data_csv.ExtraField.parse_row" title="Link to this definition"></a></dt>
+<dd><p>Take the appropriate values from a dictionary and return them as a list.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>row</strong> – the CSV line as a dictionary.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a list of values.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv.FeatureDataCsvParser">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.datasets.feature_data_csv.</span></span><span class="sig-name descname"><span class="pre">FeatureDataCsvParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_id_column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_id_column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">role_assignment_column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_fields</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lir.data.datasets.feature_data_csv.ExtraField" title="lir.data.datasets.feature_data_csv.ExtraField"><span class="pre">lir.data.datasets.feature_data_csv.ExtraField</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvParser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="lir.data.models.html#lir.data.models.DataProvider" title="lir.data.models.DataProvider"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.data.models.DataProvider</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>Parse a CSV file into a <code class="docutils literal notranslate"><span class="pre">FeatureData</span></code> object.</p>
+<p>This is an abstract base class with concrete implementations for different
+data sources:</p>
+<ul class="simple">
+<li><dl class="myst field-list simple">
+<dt class="field-odd">class<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">FeatureDataCsvFileParser</span></code> for reading from a local file;</p>
+</dd>
+</dl>
+</li>
+<li><dl class="myst field-list simple">
+<dt class="field-odd">class<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">FeatureDataCsvHttpParser</span></code> for reading from a URL;</p>
+</dd>
+</dl>
+</li>
+<li><dl class="myst field-list simple">
+<dt class="field-odd">class<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">FeatureDataCsvStreamParser</span></code> for reading from a stream.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<section id="example">
+<h4>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h4>
+<p>Assume a CSV file containing two features and source identifiers:</p>
+<p>.. code-block:: text</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>source_id,feature1,feature2,feature3,name_of_an_irrelevant_column
+0,1,10,1,sherlock
+0,1,11,1,holmes
+1,20,30,1,irene
+1,18,32,3,adler
+2,5,10,8,professor
+2,1,11,8,moriarty
+</pre></div>
+</div>
+<p>This file can be parsed using the following YAML configuration:</p>
+<p>.. code-block:: yaml</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>data:
+provider: feature_data_csv
+path: path/to/file.csv
+source_id_column: source_id
+ignore_columns:
+    - name_of_an_irrelevant_column
+</pre></div>
+</div>
+</section>
+<p class="rubric">Initialization</p>
+<p>Initializes the parser.</p>
+<p>Special columns can be assigned as such or can be ignored (see below). All other columns are interpreted as
+feature columns. All arguments are optional.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_id_column</strong> – the name (or list of two names) of the column that has the source ids</p></li>
+<li><p><strong>label_column</strong> – the name of the column that contains the hypothesis label (0 or 1)</p></li>
+<li><p><strong>instance_id_column</strong> – the name of the column that contains the instance id (str)</p></li>
+<li><p><strong>role_assignment_column</strong> – the name of the column that contains the role assignment (“train” or “test”)</p></li>
+<li><p><strong>extra_fields</strong> – extra fields to read, in addition to the above</p></li>
+<li><p><strong>ignore_columns</strong> – the names of the columns that should be ignored</p></li>
+<li><p><strong>head</strong> – read at most this number of rows from the file only, and ignore all others</p></li>
+<li><p><strong>message_prefix</strong> – a string to prefix to all log and error messages</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv.FeatureDataCsvParser._parse_value">
+<span class="sig-name descname"><span class="pre">_parse_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line_num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvParser._parse_value" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv.FeatureDataCsvParser._parse_file">
+<span class="sig-name descname"><span class="pre">_parse_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">IO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a></span></span><a class="headerlink" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvParser._parse_file" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv.FeatureDataCsvFileParser">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.datasets.feature_data_csv.</span></span><span class="sig-name descname"><span class="pre">FeatureDataCsvFileParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">os.PathLike</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvFileParser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvParser" title="lir.data.datasets.feature_data_csv.FeatureDataCsvParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.data.datasets.feature_data_csv.FeatureDataCsvParser</span></code></a></p>
+<p>Read CSV data from file.</p>
+<p class="rubric">Initialization</p>
+<p>Initializes the CSV parser that reads data from a file.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file</strong> – the path to the csv file</p></li>
+<li><p><strong>kwargs</strong> – arguments passed to FeatureDataCsvParser</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv.FeatureDataCsvFileParser.get_instances">
+<span class="sig-name descname"><span class="pre">get_instances</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a></span></span><a class="headerlink" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvFileParser.get_instances" title="Link to this definition"></a></dt>
+<dd><p>Retrieve FeatureData instances.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv.FeatureDataCsvStreamParser">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.datasets.feature_data_csv.</span></span><span class="sig-name descname"><span class="pre">FeatureDataCsvStreamParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">IO</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvStreamParser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvParser" title="lir.data.datasets.feature_data_csv.FeatureDataCsvParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.data.datasets.feature_data_csv.FeatureDataCsvParser</span></code></a></p>
+<p>Read data from a streamed CSV.</p>
+<p class="rubric">Initialization</p>
+<p>Initializes the CSV parser that reads data from a stream.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>flo</strong> – the file-like object</p></li>
+<li><p><strong>kwargs</strong> – arguments passed to FeatureDataCsvParser</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv.FeatureDataCsvStreamParser.get_instances">
+<span class="sig-name descname"><span class="pre">get_instances</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a></span></span><a class="headerlink" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvStreamParser.get_instances" title="Link to this definition"></a></dt>
+<dd><p>Retrieve FeatureData instances from CSV stream.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv.FeatureDataCsvHttpParser">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.datasets.feature_data_csv.</span></span><span class="sig-name descname"><span class="pre">FeatureDataCsvHttpParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">requests.Session</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvHttpParser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvParser" title="lir.data.datasets.feature_data_csv.FeatureDataCsvParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.data.datasets.feature_data_csv.FeatureDataCsvParser</span></code></a></p>
+<p>Read data from a stream.</p>
+<p class="rubric">Initialization</p>
+<p>Initializes the CSV parser that reads data from a stream.</p>
+<p>By default, this class uses <code class="docutils literal notranslate"><span class="pre">requests-cache</span></code> to cache retrieved data. The cache is persistent and located in
+the user cache folder, which is written to the log file.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> – the URL to the CSV resource</p></li>
+<li><p><strong>session</strong> – requests session for HTTP requests</p></li>
+<li><p><strong>kwargs</strong> – arguments passed to FeatureDataCsvParser</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv.FeatureDataCsvHttpParser.get_instances">
+<span class="sig-name descname"><span class="pre">get_instances</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a></span></span><a class="headerlink" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvHttpParser.get_instances" title="Link to this definition"></a></dt>
+<dd><p>Retrieve FeatureData from the remote resource.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv._parse_cell_type">
+<span class="sig-prename descclassname"><span class="pre">lir.data.datasets.feature_data_csv.</span></span><span class="sig-name descname"><span class="pre">_parse_cell_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">collections.abc.Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.data.datasets.feature_data_csv._parse_cell_type" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv._parse_extra_field">
+<span class="sig-prename descclassname"><span class="pre">lir.data.datasets.feature_data_csv.</span></span><span class="sig-name descname"><span class="pre">_parse_extra_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.data.datasets.feature_data_csv.ExtraField" title="lir.data.datasets.feature_data_csv.ExtraField"><span class="pre">lir.data.datasets.feature_data_csv.ExtraField</span></a></span></span><a class="headerlink" href="#lir.data.datasets.feature_data_csv._parse_extra_field" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv._parse_feature_data_csv">
+<span class="sig-prename descclassname"><span class="pre">lir.data.datasets.feature_data_csv.</span></span><span class="sig-name descname"><span class="pre">_parse_feature_data_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser_class</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvParser" title="lir.data.datasets.feature_data_csv.FeatureDataCsvParser"><span class="pre">lir.data.datasets.feature_data_csv.FeatureDataCsvParser</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvParser" title="lir.data.datasets.feature_data_csv.FeatureDataCsvParser"><span class="pre">lir.data.datasets.feature_data_csv.FeatureDataCsvParser</span></a></span></span><a class="headerlink" href="#lir.data.datasets.feature_data_csv._parse_feature_data_csv" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv.feature_data_csv_http_parser">
+<span class="sig-prename descclassname"><span class="pre">lir.data.datasets.feature_data_csv.</span></span><span class="sig-name descname"><span class="pre">feature_data_csv_http_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvParser" title="lir.data.datasets.feature_data_csv.FeatureDataCsvParser"><span class="pre">lir.data.datasets.feature_data_csv.FeatureDataCsvParser</span></a></span></span><a class="headerlink" href="#lir.data.datasets.feature_data_csv.feature_data_csv_http_parser" title="Link to this definition"></a></dt>
+<dd><p>Configuration parser to initialize the CSV parser that reads data from a stream.</p>
+<p>Arguments:
+- use_cache: boolean indicating whether to cache retrieved data</p>
+<p>Other arguments are passed directly to <code class="docutils literal notranslate"><span class="pre">FeatureDataCsvParser</span></code>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.data.datasets.feature_data_csv.feature_data_csv_file_parser">
+<span class="sig-prename descclassname"><span class="pre">lir.data.datasets.feature_data_csv.</span></span><span class="sig-name descname"><span class="pre">feature_data_csv_file_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.data.datasets.feature_data_csv.FeatureDataCsvParser" title="lir.data.datasets.feature_data_csv.FeatureDataCsvParser"><span class="pre">lir.data.datasets.feature_data_csv.FeatureDataCsvParser</span></a></span></span><a class="headerlink" href="#lir.data.datasets.feature_data_csv.feature_data_csv_file_parser" title="Link to this definition"></a></dt>
+<dd><p>Configuration parser to initialize the CSV parser that reads data from a stream.</p>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lir.data.datasets.html" class="btn btn-neutral float-left" title="lir.data.datasets" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lir.data.datasets.synthesized_normal_multiclass.html" class="btn btn-neutral float-right" title="lir.data.datasets.synthesized_normal_multiclass" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

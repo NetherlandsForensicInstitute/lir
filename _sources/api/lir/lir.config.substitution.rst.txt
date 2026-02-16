@@ -1,0 +1,293 @@
+:py:mod:`lir.config.substitution`
+=================================
+
+.. py:module:: lir.config.substitution
+
+.. autodoc2-docstring:: lir.config.substitution
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`HyperparameterOption <lir.config.substitution.HyperparameterOption>`
+     - .. autodoc2-docstring:: lir.config.substitution.HyperparameterOption
+          :parser: myst
+          :summary:
+   * - :py:obj:`Hyperparameter <lir.config.substitution.Hyperparameter>`
+     - .. autodoc2-docstring:: lir.config.substitution.Hyperparameter
+          :parser: myst
+          :summary:
+   * - :py:obj:`CategoricalHyperparameter <lir.config.substitution.CategoricalHyperparameter>`
+     - .. autodoc2-docstring:: lir.config.substitution.CategoricalHyperparameter
+          :parser: myst
+          :summary:
+   * - :py:obj:`FloatHyperparameter <lir.config.substitution.FloatHyperparameter>`
+     - .. autodoc2-docstring:: lir.config.substitution.FloatHyperparameter
+          :parser: myst
+          :summary:
+   * - :py:obj:`FolderHyperparameter <lir.config.substitution.FolderHyperparameter>`
+     - .. autodoc2-docstring:: lir.config.substitution.FolderHyperparameter
+          :parser: myst
+          :summary:
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`_parse_categorical_option <lir.config.substitution._parse_categorical_option>`
+     - .. autodoc2-docstring:: lir.config.substitution._parse_categorical_option
+          :parser: myst
+          :summary:
+   * - :py:obj:`parse_categorical <lir.config.substitution.parse_categorical>`
+     - .. autodoc2-docstring:: lir.config.substitution.parse_categorical
+          :parser: myst
+          :summary:
+   * - :py:obj:`_parse_substitution <lir.config.substitution._parse_substitution>`
+     - .. autodoc2-docstring:: lir.config.substitution._parse_substitution
+          :parser: myst
+          :summary:
+   * - :py:obj:`_parse_clustered_option <lir.config.substitution._parse_clustered_option>`
+     - .. autodoc2-docstring:: lir.config.substitution._parse_clustered_option
+          :parser: myst
+          :summary:
+   * - :py:obj:`parse_clustered <lir.config.substitution.parse_clustered>`
+     - .. autodoc2-docstring:: lir.config.substitution.parse_clustered
+          :parser: myst
+          :summary:
+   * - :py:obj:`parse_constant <lir.config.substitution.parse_constant>`
+     - .. autodoc2-docstring:: lir.config.substitution.parse_constant
+          :parser: myst
+          :summary:
+   * - :py:obj:`parse_float <lir.config.substitution.parse_float>`
+     - .. autodoc2-docstring:: lir.config.substitution.parse_float
+          :parser: myst
+          :summary:
+   * - :py:obj:`parse_folder <lir.config.substitution.parse_folder>`
+     - .. autodoc2-docstring:: lir.config.substitution.parse_folder
+          :parser: myst
+          :summary:
+   * - :py:obj:`parse_parameter <lir.config.substitution.parse_parameter>`
+     - .. autodoc2-docstring:: lir.config.substitution.parse_parameter
+          :parser: myst
+          :summary:
+   * - :py:obj:`_assign <lir.config.substitution._assign>`
+     - .. autodoc2-docstring:: lir.config.substitution._assign
+          :parser: myst
+          :summary:
+   * - :py:obj:`_path_exists <lir.config.substitution._path_exists>`
+     - .. autodoc2-docstring:: lir.config.substitution._path_exists
+          :parser: myst
+          :summary:
+   * - :py:obj:`substitute_parameters <lir.config.substitution.substitute_parameters>`
+     - .. autodoc2-docstring:: lir.config.substitution.substitute_parameters
+          :parser: myst
+          :summary:
+
+Data
+~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`LOG <lir.config.substitution.LOG>`
+     - .. autodoc2-docstring:: lir.config.substitution.LOG
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:data:: LOG
+   :canonical: lir.config.substitution.LOG
+   :value: 'getLogger(...)'
+
+   .. autodoc2-docstring:: lir.config.substitution.LOG
+      :parser: myst
+
+.. py:class:: HyperparameterOption
+   :canonical: lir.config.substitution.HyperparameterOption
+
+   Bases: :py:obj:`typing.NamedTuple`
+
+   .. autodoc2-docstring:: lir.config.substitution.HyperparameterOption
+      :parser: myst
+
+   .. py:attribute:: name
+      :canonical: lir.config.substitution.HyperparameterOption.name
+      :type: str
+      :value: None
+
+      .. autodoc2-docstring:: lir.config.substitution.HyperparameterOption.name
+         :parser: myst
+
+   .. py:attribute:: substitutions
+      :canonical: lir.config.substitution.HyperparameterOption.substitutions
+      :type: collections.abc.Mapping[str, typing.Any]
+      :value: None
+
+      .. autodoc2-docstring:: lir.config.substitution.HyperparameterOption.substitutions
+         :parser: myst
+
+   .. py:method:: __repr__() -> str
+      :canonical: lir.config.substitution.HyperparameterOption.__repr__
+
+.. py:class:: Hyperparameter(name: str)
+   :canonical: lir.config.substitution.Hyperparameter
+
+   Bases: :py:obj:`abc.ABC`
+
+   .. autodoc2-docstring:: lir.config.substitution.Hyperparameter
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.config.substitution.Hyperparameter.__init__
+      :parser: myst
+
+   .. py:method:: options() -> list[lir.config.substitution.HyperparameterOption]
+      :canonical: lir.config.substitution.Hyperparameter.options
+      :abstractmethod:
+
+      .. autodoc2-docstring:: lir.config.substitution.Hyperparameter.options
+         :parser: myst
+
+.. py:class:: CategoricalHyperparameter(name: str, options: list[lir.config.substitution.HyperparameterOption])
+   :canonical: lir.config.substitution.CategoricalHyperparameter
+
+   Bases: :py:obj:`lir.config.substitution.Hyperparameter`
+
+   .. autodoc2-docstring:: lir.config.substitution.CategoricalHyperparameter
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.config.substitution.CategoricalHyperparameter.__init__
+      :parser: myst
+
+   .. py:method:: options() -> list[lir.config.substitution.HyperparameterOption]
+      :canonical: lir.config.substitution.CategoricalHyperparameter.options
+
+      .. autodoc2-docstring:: lir.config.substitution.CategoricalHyperparameter.options
+         :parser: myst
+
+.. py:function:: _parse_categorical_option(spec: typing.Any, path: str, option_index: int | None) -> lir.config.substitution.HyperparameterOption
+   :canonical: lir.config.substitution._parse_categorical_option
+
+   .. autodoc2-docstring:: lir.config.substitution._parse_categorical_option
+      :parser: myst
+
+.. py:function:: parse_categorical(spec: lir.config.base.ContextAwareDict, output_path: pathlib.Path) -> lir.config.substitution.CategoricalHyperparameter
+   :canonical: lir.config.substitution.parse_categorical
+
+   .. autodoc2-docstring:: lir.config.substitution.parse_categorical
+      :parser: myst
+
+.. py:function:: _parse_substitution(spec: lir.config.base.ContextAwareDict) -> tuple[str, typing.Any]
+   :canonical: lir.config.substitution._parse_substitution
+
+   .. autodoc2-docstring:: lir.config.substitution._parse_substitution
+      :parser: myst
+
+.. py:function:: _parse_clustered_option(spec: lir.config.base.ContextAwareDict) -> lir.config.substitution.HyperparameterOption
+   :canonical: lir.config.substitution._parse_clustered_option
+
+   .. autodoc2-docstring:: lir.config.substitution._parse_clustered_option
+      :parser: myst
+
+.. py:function:: parse_clustered(spec: lir.config.base.ContextAwareDict, output_path: pathlib.Path) -> lir.config.substitution.CategoricalHyperparameter
+   :canonical: lir.config.substitution.parse_clustered
+
+   .. autodoc2-docstring:: lir.config.substitution.parse_clustered
+      :parser: myst
+
+.. py:function:: parse_constant(spec: lir.config.base.ContextAwareDict, output_path: pathlib.Path) -> lir.config.substitution.CategoricalHyperparameter
+   :canonical: lir.config.substitution.parse_constant
+
+   .. autodoc2-docstring:: lir.config.substitution.parse_constant
+      :parser: myst
+
+.. py:class:: FloatHyperparameter(path: str, low: float, high: float, step: float | None, log: bool)
+   :canonical: lir.config.substitution.FloatHyperparameter
+
+   Bases: :py:obj:`lir.config.substitution.Hyperparameter`
+
+   .. autodoc2-docstring:: lir.config.substitution.FloatHyperparameter
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.config.substitution.FloatHyperparameter.__init__
+      :parser: myst
+
+   .. py:method:: options() -> list[lir.config.substitution.HyperparameterOption]
+      :canonical: lir.config.substitution.FloatHyperparameter.options
+
+      .. autodoc2-docstring:: lir.config.substitution.FloatHyperparameter.options
+         :parser: myst
+
+.. py:function:: parse_float(spec: lir.config.base.ContextAwareDict, output_path: pathlib.Path) -> lir.config.substitution.FloatHyperparameter
+   :canonical: lir.config.substitution.parse_float
+
+   .. autodoc2-docstring:: lir.config.substitution.parse_float
+      :parser: myst
+
+.. py:class:: FolderHyperparameter(path: str, folder: str, ignore_files: list[str] | None = None)
+   :canonical: lir.config.substitution.FolderHyperparameter
+
+   Bases: :py:obj:`lir.config.substitution.Hyperparameter`
+
+   .. autodoc2-docstring:: lir.config.substitution.FolderHyperparameter
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.config.substitution.FolderHyperparameter.__init__
+      :parser: myst
+
+   .. py:method:: options() -> list[lir.config.substitution.HyperparameterOption]
+      :canonical: lir.config.substitution.FolderHyperparameter.options
+
+      .. autodoc2-docstring:: lir.config.substitution.FolderHyperparameter.options
+         :parser: myst
+
+.. py:function:: parse_folder(spec: lir.config.base.ContextAwareDict, output_path: pathlib.Path) -> lir.config.substitution.FolderHyperparameter
+   :canonical: lir.config.substitution.parse_folder
+
+   .. autodoc2-docstring:: lir.config.substitution.parse_folder
+      :parser: myst
+
+.. py:function:: parse_parameter(spec: lir.config.base.ContextAwareDict, output_dir: pathlib.Path) -> lir.config.substitution.Hyperparameter
+   :canonical: lir.config.substitution.parse_parameter
+
+   .. autodoc2-docstring:: lir.config.substitution.parse_parameter
+      :parser: myst
+
+.. py:function:: _assign(struct: lir.config.base.ContextAwareDict | lir.config.base.ContextAwareList, path: list[str], value: typing.Any) -> None
+   :canonical: lir.config.substitution._assign
+
+   .. autodoc2-docstring:: lir.config.substitution._assign
+      :parser: myst
+
+.. py:function:: _path_exists(struct: dict | list, path: list[str]) -> bool
+   :canonical: lir.config.substitution._path_exists
+
+   .. autodoc2-docstring:: lir.config.substitution._path_exists
+      :parser: myst
+
+.. py:function:: substitute_parameters(base_config: lir.config.base.ContextAwareDict, hyperparameters: collections.abc.Mapping[str, typing.Any], context: list[str]) -> lir.config.base.ContextAwareDict
+   :canonical: lir.config.substitution.substitute_parameters
+
+   .. autodoc2-docstring:: lir.config.substitution.substitute_parameters
+      :parser: myst

@@ -1,0 +1,86 @@
+:py:mod:`lir.algorithms.isotonic_regression`
+============================================
+
+.. py:module:: lir.algorithms.isotonic_regression
+
+.. autodoc2-docstring:: lir.algorithms.isotonic_regression
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`IsotonicRegression <lir.algorithms.isotonic_regression.IsotonicRegression>`
+     - .. autodoc2-docstring:: lir.algorithms.isotonic_regression.IsotonicRegression
+          :parser: myst
+          :summary:
+   * - :py:obj:`IsotonicCalibrator <lir.algorithms.isotonic_regression.IsotonicCalibrator>`
+     - .. autodoc2-docstring:: lir.algorithms.isotonic_regression.IsotonicCalibrator
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:class:: IsotonicRegression(*, y_min=None, y_max=None, increasing=True, out_of_bounds='nan')
+   :canonical: lir.algorithms.isotonic_regression.IsotonicRegression
+
+   Bases: :py:obj:`sklearn.isotonic.IsotonicRegression`
+
+   .. autodoc2-docstring:: lir.algorithms.isotonic_regression.IsotonicRegression
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.algorithms.isotonic_regression.IsotonicRegression.__init__
+      :parser: myst
+
+   .. py:method:: fit(X: numpy.typing.ArrayLike, y: numpy.typing.ArrayLike, sample_weight: numpy.typing.ArrayLike | tuple | None = None) -> lir.algorithms.isotonic_regression.IsotonicRegression
+      :canonical: lir.algorithms.isotonic_regression.IsotonicRegression.fit
+
+      .. autodoc2-docstring:: lir.algorithms.isotonic_regression.IsotonicRegression.fit
+         :parser: myst
+
+   .. py:method:: transform(T: numpy.typing.ArrayLike) -> numpy.ndarray
+      :canonical: lir.algorithms.isotonic_regression.IsotonicRegression.transform
+
+      .. autodoc2-docstring:: lir.algorithms.isotonic_regression.IsotonicRegression.transform
+         :parser: myst
+
+.. py:class:: IsotonicCalibrator(add_misleading: int = 0)
+   :canonical: lir.algorithms.isotonic_regression.IsotonicCalibrator
+
+   Bases: :py:obj:`lir.Transformer`
+
+   .. autodoc2-docstring:: lir.algorithms.isotonic_regression.IsotonicCalibrator
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.algorithms.isotonic_regression.IsotonicCalibrator.__init__
+      :parser: myst
+
+   .. py:method:: fit(instances: lir.data.models.InstanceData) -> typing.Self
+      :canonical: lir.algorithms.isotonic_regression.IsotonicCalibrator.fit
+
+      .. autodoc2-docstring:: lir.algorithms.isotonic_regression.IsotonicCalibrator.fit
+         :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.InstanceData) -> lir.data.models.LLRData
+      :canonical: lir.algorithms.isotonic_regression.IsotonicCalibrator.apply
+
+      .. autodoc2-docstring:: lir.algorithms.isotonic_regression.IsotonicCalibrator.apply
+         :parser: myst
+
+   .. py:method:: fit_apply(instances: lir.data.models.InstanceData) -> lir.data.models.LLRData
+      :canonical: lir.algorithms.isotonic_regression.IsotonicCalibrator.fit_apply
+
+      .. autodoc2-docstring:: lir.algorithms.isotonic_regression.IsotonicCalibrator.fit_apply
+         :parser: myst

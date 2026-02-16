@@ -1,0 +1,125 @@
+:py:mod:`lir.algorithms.logistic_regression`
+============================================
+
+.. py:module:: lir.algorithms.logistic_regression
+
+.. autodoc2-docstring:: lir.algorithms.logistic_regression
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`LogitCalibrator <lir.algorithms.logistic_regression.LogitCalibrator>`
+     - .. autodoc2-docstring:: lir.algorithms.logistic_regression.LogitCalibrator
+          :parser: myst
+          :summary:
+   * - :py:obj:`FourParameterLogisticCalibrator <lir.algorithms.logistic_regression.FourParameterLogisticCalibrator>`
+     - .. autodoc2-docstring:: lir.algorithms.logistic_regression.FourParameterLogisticCalibrator
+          :parser: myst
+          :summary:
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`_negative_log_likelihood_balanced <lir.algorithms.logistic_regression._negative_log_likelihood_balanced>`
+     - .. autodoc2-docstring:: lir.algorithms.logistic_regression._negative_log_likelihood_balanced
+          :parser: myst
+          :summary:
+
+Data
+~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`LOG <lir.algorithms.logistic_regression.LOG>`
+     - .. autodoc2-docstring:: lir.algorithms.logistic_regression.LOG
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:data:: LOG
+   :canonical: lir.algorithms.logistic_regression.LOG
+   :value: 'getLogger(...)'
+
+   .. autodoc2-docstring:: lir.algorithms.logistic_regression.LOG
+      :parser: myst
+
+.. py:class:: LogitCalibrator(**kwargs: dict)
+   :canonical: lir.algorithms.logistic_regression.LogitCalibrator
+
+   Bases: :py:obj:`lir.Transformer`
+
+   .. autodoc2-docstring:: lir.algorithms.logistic_regression.LogitCalibrator
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.algorithms.logistic_regression.LogitCalibrator.__init__
+      :parser: myst
+
+   .. py:method:: fit(instances: lir.data.models.InstanceData) -> typing.Self
+      :canonical: lir.algorithms.logistic_regression.LogitCalibrator.fit
+
+      .. autodoc2-docstring:: lir.algorithms.logistic_regression.LogitCalibrator.fit
+         :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.InstanceData) -> lir.data.models.LLRData
+      :canonical: lir.algorithms.logistic_regression.LogitCalibrator.apply
+
+      .. autodoc2-docstring:: lir.algorithms.logistic_regression.LogitCalibrator.apply
+         :parser: myst
+
+.. py:function:: _negative_log_likelihood_balanced(X: numpy.ndarray, y: numpy.ndarray, model: collections.abc.Callable, params: list) -> numpy.ndarray
+   :canonical: lir.algorithms.logistic_regression._negative_log_likelihood_balanced
+
+   .. autodoc2-docstring:: lir.algorithms.logistic_regression._negative_log_likelihood_balanced
+      :parser: myst
+
+.. py:class:: FourParameterLogisticCalibrator
+   :canonical: lir.algorithms.logistic_regression.FourParameterLogisticCalibrator
+
+   Bases: :py:obj:`lir.Transformer`
+
+   .. autodoc2-docstring:: lir.algorithms.logistic_regression.FourParameterLogisticCalibrator
+      :parser: myst
+
+   .. py:method:: __int__() -> None
+      :canonical: lir.algorithms.logistic_regression.FourParameterLogisticCalibrator.__int__
+
+      .. autodoc2-docstring:: lir.algorithms.logistic_regression.FourParameterLogisticCalibrator.__int__
+         :parser: myst
+
+   .. py:method:: fit(instances: lir.data.models.InstanceData) -> typing.Self
+      :canonical: lir.algorithms.logistic_regression.FourParameterLogisticCalibrator.fit
+
+      .. autodoc2-docstring:: lir.algorithms.logistic_regression.FourParameterLogisticCalibrator.fit
+         :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.InstanceData) -> lir.data.models.LLRData
+      :canonical: lir.algorithms.logistic_regression.FourParameterLogisticCalibrator.apply
+
+      .. autodoc2-docstring:: lir.algorithms.logistic_regression.FourParameterLogisticCalibrator.apply
+         :parser: myst
+
+   .. py:method:: _four_pl_model(s: numpy.ndarray, a: float, b: float, c: float, d: float) -> numpy.ndarray
+      :canonical: lir.algorithms.logistic_regression.FourParameterLogisticCalibrator._four_pl_model
+      :staticmethod:
+
+      .. autodoc2-docstring:: lir.algorithms.logistic_regression.FourParameterLogisticCalibrator._four_pl_model
+         :parser: myst

@@ -1,0 +1,45 @@
+:py:mod:`lir.data.datasets.alcohol_breath_analyser`
+===================================================
+
+.. py:module:: lir.data.datasets.alcohol_breath_analyser
+
+.. autodoc2-docstring:: lir.data.datasets.alcohol_breath_analyser
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`AlcoholBreathAnalyser <lir.data.datasets.alcohol_breath_analyser.AlcoholBreathAnalyser>`
+     - .. autodoc2-docstring:: lir.data.datasets.alcohol_breath_analyser.AlcoholBreathAnalyser
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:class:: AlcoholBreathAnalyser(ill_calibrated: bool = False)
+   :canonical: lir.data.datasets.alcohol_breath_analyser.AlcoholBreathAnalyser
+
+   Bases: :py:obj:`lir.data.models.DataProvider`
+
+   .. autodoc2-docstring:: lir.data.datasets.alcohol_breath_analyser.AlcoholBreathAnalyser
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.data.datasets.alcohol_breath_analyser.AlcoholBreathAnalyser.__init__
+      :parser: myst
+
+   .. py:method:: get_instances() -> lir.data.models.LLRData
+      :canonical: lir.data.datasets.alcohol_breath_analyser.AlcoholBreathAnalyser.get_instances
+
+      .. autodoc2-docstring:: lir.data.datasets.alcohol_breath_analyser.AlcoholBreathAnalyser.get_instances
+         :parser: myst

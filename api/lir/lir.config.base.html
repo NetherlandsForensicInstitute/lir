@@ -1,0 +1,484 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.config.base &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="lir.config.metrics" href="lir.config.metrics.html" />
+    <link rel="prev" title="lir.config" href="lir.config.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a></li>
+          <li class="breadcrumb-item"><a href="lir.config.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.config</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.config.base</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/api/lir/lir.config.base.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-lir.config.base">
+<span id="lir-config-base"></span><h1><a class="reference internal" href="#module-lir.config.base" title="lir.config.base"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.config.base</span></code></a><a class="headerlink" href="#module-lir.config.base" title="Link to this heading"></a></h1>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ContextAwareDict</span></code></a></p></td>
+<td><p>Dictionary wrapper which has knowledge about its context.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.config.base.ContextAwareList" title="lir.config.base.ContextAwareList"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ContextAwareList</span></code></a></p></td>
+<td><p>List wrapper which has knowledge about its context.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.config.base.ConfigParser" title="lir.config.base.ConfigParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConfigParser</span></code></a></p></td>
+<td><p>Abstract base configuration parser class.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.config.base.GenericFunctionConfigParser" title="lir.config.base.GenericFunctionConfigParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GenericFunctionConfigParser</span></code></a></p></td>
+<td><p>Parser for callable functions or component classes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.config.base.GenericConfigParser" title="lir.config.base.GenericConfigParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GenericConfigParser</span></code></a></p></td>
+<td><p>Return an instantiation of a class, initialized with the specified arguments.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.config.base._expand" title="lir.config.base._expand"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_expand</span></code></a></p></td>
+<td><p>Unpack the data structure iteratively into the appropriate underlying representation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.config.base.config_parser" title="lir.config.base.config_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">config_parser</span></code></a></p></td>
+<td><p>Wrap a parsing function in a <code class="docutils literal notranslate"><span class="pre">ConfigParser</span></code> object using a decorator.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.config.base.parse_pairing_config" title="lir.config.base.parse_pairing_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_pairing_config</span></code></a></p></td>
+<td><p>Parse and delegate pairing to the corresponding function for the defined pairing method.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.config.base.check_not_none" title="lir.config.base.check_not_none"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_not_none</span></code></a></p></td>
+<td><p>Validate the value to not be equal to None.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.config.base.check_type" title="lir.config.base.check_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_type</span></code></a></p></td>
+<td><p>Check whether a value is an instance of a type.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.config.base.pop_field" title="lir.config.base.pop_field"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pop_field</span></code></a></p></td>
+<td><p>Validate and retrieve the value for a given field, after which it is removed from the configuration.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.config.base.check_is_empty" title="lir.config.base.check_is_empty"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_is_empty</span></code></a></p></td>
+<td><p>Ensure all defined expected arguments are parsed and warn about ignored arguments.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="data">
+<h3>Data<a class="headerlink" href="#data" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.config.base.AnyType" title="lir.config.base.AnyType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AnyType</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.config.base.YamlValueType" title="lir.config.base.YamlValueType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">YamlValueType</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.config.base._YAML_TYPES" title="lir.config.base._YAML_TYPES"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_YAML_TYPES</span></code></a></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="api">
+<h3>API<a class="headerlink" href="#api" title="Link to this heading"></a></h3>
+<dl class="py exception">
+<dt class="sig sig-object py" id="lir.config.base.YamlParseError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.config.base.</span></span><span class="sig-name descname"><span class="pre">YamlParseError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_context_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.config.base.YamlParseError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+<p>Error raised when parsing YAML configuration fails, mentioning specific YAML path.</p>
+<p class="rubric">Initialization</p>
+<p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.config.base.ContextAwareDict">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.config.base.</span></span><span class="sig-name descname"><span class="pre">ContextAwareDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.config.base.ContextAwareDict" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code></p>
+<p>Dictionary wrapper which has knowledge about its context.</p>
+<p class="rubric">Initialization</p>
+<p>Initialize self.  See help(type(self)) for accurate signature.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.config.base.ContextAwareDict.clone">
+<span class="sig-name descname"><span class="pre">clone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></span><a class="headerlink" href="#lir.config.base.ContextAwareDict.clone" title="Link to this definition"></a></dt>
+<dd><p>Allow creating a new instance of the ContextAware dictionary, keeping the context.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.config.base.ContextAwareList">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.config.base.</span></span><span class="sig-name descname"><span class="pre">ContextAwareList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.config.base.ContextAwareList" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></p>
+<p>List wrapper which has knowledge about its context.</p>
+<p class="rubric">Initialization</p>
+<p>Initialize self.  See help(type(self)) for accurate signature.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.config.base.ContextAwareList.clone">
+<span class="sig-name descname"><span class="pre">clone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.config.base.ContextAwareList" title="lir.config.base.ContextAwareList"><span class="pre">lir.config.base.ContextAwareList</span></a></span></span><a class="headerlink" href="#lir.config.base.ContextAwareList.clone" title="Link to this definition"></a></dt>
+<dd><p>Allow creating a new instance of the ContextAware dictionary, keeping the context.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.config.base._expand">
+<span class="sig-prename descclassname"><span class="pre">lir.config.base.</span></span><span class="sig-name descname"><span class="pre">_expand</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#lir.config.base._expand" title="Link to this definition"></a></dt>
+<dd><p>Unpack the data structure iteratively into the appropriate underlying representation.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.config.base.ConfigParser">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.config.base.</span></span><span class="sig-name descname"><span class="pre">ConfigParser</span></span><a class="headerlink" href="#lir.config.base.ConfigParser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>Abstract base configuration parser class.</p>
+<p>Each implementation should implement a custom <code class="docutils literal notranslate"><span class="pre">parse()</span></code> method
+which is dedicated to parsing a specific aspect, e.g. the configuration
+for setting up the numpy CSV writer.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.config.base.ConfigParser.parse">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#lir.config.base.ConfigParser.parse" title="Link to this definition"></a></dt>
+<dd><p>Dedicated function to parse a specific section of a YAML configuration.</p>
+<p>Arguments:</p>
+<ul class="simple">
+<li><p>config: a section of a YAML configuration</p></li>
+<li><p>config_context_path: the path in the YAML configuration to <code class="docutils literal notranslate"><span class="pre">config</span></code>, the section to be parsed</p></li>
+<li><p>output_dir: the directory where the returned object may write results during its lifetime</p></li>
+</ul>
+<p>Returns: an object that is configured according to <code class="docutils literal notranslate"><span class="pre">config</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.config.base.ConfigParser.get_type_name">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">get_type_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#lir.config.base.ConfigParser.get_type_name" title="Link to this definition"></a></dt>
+<dd><p>Return the full type name of the <code class="docutils literal notranslate"><span class="pre">cls</span></code> argument.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.config.base.ConfigParser.reference">
+<span class="sig-name descname"><span class="pre">reference</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#lir.config.base.ConfigParser.reference" title="Link to this definition"></a></dt>
+<dd><p>Return the full class name that was used to initialize this parser.</p>
+<p>By default, return the name of this class. In a subclass that was initialized with another class or function
+that does the actual work, the name of that class is returned.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.config.base.GenericFunctionConfigParser">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.config.base.</span></span><span class="sig-name descname"><span class="pre">GenericFunctionConfigParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">component_class</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Callable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.config.base.GenericFunctionConfigParser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.config.base.ConfigParser" title="lir.config.base.ConfigParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.config.base.ConfigParser</span></code></a></p>
+<p>Parser for callable functions or component classes.</p>
+<p class="rubric">Initialization</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.config.base.GenericFunctionConfigParser.parse">
+<span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">collections.abc.Callable</span></span></span><a class="headerlink" href="#lir.config.base.GenericFunctionConfigParser.parse" title="Link to this definition"></a></dt>
+<dd><p>Perform the parsing, based on component class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.config.base.GenericFunctionConfigParser.reference">
+<span class="sig-name descname"><span class="pre">reference</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#lir.config.base.GenericFunctionConfigParser.reference" title="Link to this definition"></a></dt>
+<dd><p>Return the full name of the <code class="docutils literal notranslate"><span class="pre">component_class</span></code> function argument.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.config.base.GenericConfigParser">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.config.base.</span></span><span class="sig-name descname"><span class="pre">GenericConfigParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">component_class</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">type</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.config.base.GenericConfigParser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.config.base.ConfigParser" title="lir.config.base.ConfigParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.config.base.ConfigParser</span></code></a></p>
+<p>Return an instantiation of a class, initialized with the specified arguments.</p>
+<p class="rubric">Initialization</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.config.base.GenericConfigParser.parse">
+<span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#lir.config.base.GenericConfigParser.parse" title="Link to this definition"></a></dt>
+<dd><p>Perform parsing of a class, based on configuration.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.config.base.GenericConfigParser.reference">
+<span class="sig-name descname"><span class="pre">reference</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#lir.config.base.GenericConfigParser.reference" title="Link to this definition"></a></dt>
+<dd><p>Return the full name of the <code class="docutils literal notranslate"><span class="pre">component_class</span></code> class argument.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.config.base.config_parser">
+<span class="sig-prename descclassname"><span class="pre">lir.config.base.</span></span><span class="sig-name descname"><span class="pre">config_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">collections.abc.Callable</span></span></span><a class="headerlink" href="#lir.config.base.config_parser" title="Link to this definition"></a></dt>
+<dd><p>Wrap a parsing function in a <code class="docutils literal notranslate"><span class="pre">ConfigParser</span></code> object using a decorator.</p>
+<p>The resulting <code class="docutils literal notranslate"><span class="pre">ConfigParser</span></code> instance exposes a :meth:<code class="docutils literal notranslate"><span class="pre">parse</span></code> method, as
+required by the API. The body of the decorated function is executed when the</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Meth<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">parse</span></code> method is called.</p>
+</dd>
+</dl>
+<p>This decorator can be used as follows:</p>
+<p>.. code-block:: python</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>@config_parser
+def foo(config, config_context_path, output_dir):
+    if &quot;some_argument&quot; not in config or &quot;another_argument&quot; not in config:
+        raise YamlParseError(
+            config_context_path,
+            &quot;a required argument is missing&quot;,
+        )
+    return Bar(config[&quot;some_argument&quot;], config[&quot;another_argument&quot;])
+</pre></div>
+</div>
+<p>After decoration, <code class="docutils literal notranslate"><span class="pre">foo</span></code> is replaced by a <code class="docutils literal notranslate"><span class="pre">ConfigParser</span></code> instance whose</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Meth<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">parse</span></code> method executes the original function body. See the
+documentation of :class:<code class="docutils literal notranslate"><span class="pre">ConfigParser</span></code> for the meaning of the arguments.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.config.base.parse_pairing_config">
+<span class="sig-prename descclassname"><span class="pre">lir.config.base.</span></span><span class="sig-name descname"><span class="pre">parse_pairing_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.transform.pairing.html#lir.transform.pairing.PairingMethod" title="lir.transform.pairing.PairingMethod"><span class="pre">lir.transform.pairing.PairingMethod</span></a></span></span><a class="headerlink" href="#lir.config.base.parse_pairing_config" title="Link to this definition"></a></dt>
+<dd><p>Parse and delegate pairing to the corresponding function for the defined pairing method.</p>
+<p>The argument <code class="docutils literal notranslate"><span class="pre">module_config</span></code> defines the pairing method. If its value is a <code class="docutils literal notranslate"><span class="pre">str</span></code>, the registry is queried and the
+corresponding pairing method is returned. If its value is a <code class="docutils literal notranslate"><span class="pre">dict</span></code>, the pairing method is defined
+by the value <code class="docutils literal notranslate"><span class="pre">module_config[&quot;method&quot;]</span></code>, and the registry is queried for the config parser of
+the corresponding pairing method. The remaining values in <code class="docutils literal notranslate"><span class="pre">module_config</span></code> are passed as arguments to the
+configuration parser of the pairing method.</p>
+<p>If the registry cannot resolve the pairing method, an exception is raised.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="lir.config.base.AnyType">
+<span class="sig-prename descclassname"><span class="pre">lir.config.base.</span></span><span class="sig-name descname"><span class="pre">AnyType</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'TypeVar(...)'</span></span><a class="headerlink" href="#lir.config.base.AnyType" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.config.base.check_not_none">
+<span class="sig-prename descclassname"><span class="pre">lir.config.base.</span></span><span class="sig-name descname"><span class="pre">check_not_none</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lir.config.base.check_not_none.AnyType</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">lir.config.base.check_not_none.AnyType</span></span></span><a class="headerlink" href="#lir.config.base.check_not_none" title="Link to this definition"></a></dt>
+<dd><p>Validate the value to not be equal to None.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="lir.config.base.YamlValueType">
+<span class="sig-prename descclassname"><span class="pre">lir.config.base.</span></span><span class="sig-name descname"><span class="pre">YamlValueType</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#lir.config.base.YamlValueType" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="lir.config.base._YAML_TYPES">
+<span class="sig-prename descclassname"><span class="pre">lir.config.base.</span></span><span class="sig-name descname"><span class="pre">_YAML_TYPES</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#lir.config.base._YAML_TYPES" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.config.base.check_type">
+<span class="sig-prename descclassname"><span class="pre">lir.config.base.</span></span><span class="sig-name descname"><span class="pre">check_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_class</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lir.config.base.YamlValueType" title="lir.config.base.YamlValueType"><span class="pre">lir.config.base.YamlValueType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#lir.config.base.check_type" title="Link to this definition"></a></dt>
+<dd><p>Check whether a value is an instance of a type.</p>
+<p>Returns the value if successful, raises an exception otherwise.</p>
+<p>Value types that may be found in YAML configurations:</p>
+<ul class="simple">
+<li><p>dict</p></li>
+<li><p>list</p></li>
+<li><p>int</p></li>
+<li><p>float</p></li>
+<li><p>str</p></li>
+<li><p>NoneType</p></li>
+</ul>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>type_class</strong> – the target type</p></li>
+<li><p><strong>v</strong> – the value to check</p></li>
+<li><p><strong>message</strong> – an optional message that is used in case of an error</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.config.base.pop_field">
+<span class="sig-prename descclassname"><span class="pre">lir.config.base.</span></span><span class="sig-name descname"><span class="pre">pop_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#lir.config.base.pop_field" title="Link to this definition"></a></dt>
+<dd><p>Validate and retrieve the value for a given field, after which it is removed from the configuration.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – the configuration</p></li>
+<li><p><strong>field</strong> – the field to obtain from the <code class="docutils literal notranslate"><span class="pre">config</span></code></p></li>
+<li><p><strong>default</strong> – the value to return if the field is not found; defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>; if the value is not <code class="docutils literal notranslate"><span class="pre">None</span></code>, the
+<code class="docutils literal notranslate"><span class="pre">required</span></code> argument defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code></p></li>
+<li><p><strong>required</strong> – if <code class="docutils literal notranslate"><span class="pre">True</span></code> and the field was not found, raise an error; defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code> unless <code class="docutils literal notranslate"><span class="pre">default</span></code> is not
+<code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
+<li><p><strong>validate</strong> – a callable to validate the value type</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the field value or the default value or an error is raised</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.config.base.check_is_empty">
+<span class="sig-prename descclassname"><span class="pre">lir.config.base.</span></span><span class="sig-name descname"><span class="pre">check_is_empty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">accept_keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lir.config.base.check_is_empty" title="Link to this definition"></a></dt>
+<dd><p>Ensure all defined expected arguments are parsed and warn about ignored arguments.</p>
+<p>If any unexpected arguments remain, a <code class="docutils literal notranslate"><span class="pre">YamlParseError</span></code> is raised indicating the
+argument was unexpected and not taken into account (i.e. not parsed). This methodology ensures
+the user does not assume arguments are parsed that are in fact not recognized.</p>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lir.config.html" class="btn btn-neutral float-left" title="lir.config" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lir.config.metrics.html" class="btn btn-neutral float-right" title="lir.config.metrics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

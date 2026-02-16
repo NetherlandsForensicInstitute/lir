@@ -1,0 +1,189 @@
+:py:mod:`lir.config.experiment_strategies`
+==========================================
+
+.. py:module:: lir.config.experiment_strategies
+
+.. autodoc2-docstring:: lir.config.experiment_strategies
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`ExperimentStrategyConfigParser <lir.config.experiment_strategies.ExperimentStrategyConfigParser>`
+     - .. autodoc2-docstring:: lir.config.experiment_strategies.ExperimentStrategyConfigParser
+          :parser: myst
+          :summary:
+   * - :py:obj:`SingleRunStrategy <lir.config.experiment_strategies.SingleRunStrategy>`
+     - .. autodoc2-docstring:: lir.config.experiment_strategies.SingleRunStrategy
+          :parser: myst
+          :summary:
+   * - :py:obj:`GridStrategy <lir.config.experiment_strategies.GridStrategy>`
+     - .. autodoc2-docstring:: lir.config.experiment_strategies.GridStrategy
+          :parser: myst
+          :summary:
+   * - :py:obj:`OptunaStrategy <lir.config.experiment_strategies.OptunaStrategy>`
+     - .. autodoc2-docstring:: lir.config.experiment_strategies.OptunaStrategy
+          :parser: myst
+          :summary:
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`create_configs_from_hyperparameters <lir.config.experiment_strategies.create_configs_from_hyperparameters>`
+     - .. autodoc2-docstring:: lir.config.experiment_strategies.create_configs_from_hyperparameters
+          :parser: myst
+          :summary:
+   * - :py:obj:`parse_experiment_strategy <lir.config.experiment_strategies.parse_experiment_strategy>`
+     - .. autodoc2-docstring:: lir.config.experiment_strategies.parse_experiment_strategy
+          :parser: myst
+          :summary:
+   * - :py:obj:`parse_experiments <lir.config.experiment_strategies.parse_experiments>`
+     - .. autodoc2-docstring:: lir.config.experiment_strategies.parse_experiments
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:class:: ExperimentStrategyConfigParser()
+   :canonical: lir.config.experiment_strategies.ExperimentStrategyConfigParser
+
+   Bases: :py:obj:`lir.config.base.ConfigParser`, :py:obj:`abc.ABC`
+
+   .. autodoc2-docstring:: lir.config.experiment_strategies.ExperimentStrategyConfigParser
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.config.experiment_strategies.ExperimentStrategyConfigParser.__init__
+      :parser: myst
+
+   .. py:method:: primary_metric() -> collections.abc.Callable
+      :canonical: lir.config.experiment_strategies.ExperimentStrategyConfigParser.primary_metric
+
+      .. autodoc2-docstring:: lir.config.experiment_strategies.ExperimentStrategyConfigParser.primary_metric
+         :parser: myst
+
+   .. py:method:: output_list() -> collections.abc.Sequence[lir.aggregation.Aggregation]
+      :canonical: lir.config.experiment_strategies.ExperimentStrategyConfigParser.output_list
+
+      .. autodoc2-docstring:: lir.config.experiment_strategies.ExperimentStrategyConfigParser.output_list
+         :parser: myst
+
+   .. py:method:: get_experiment(name: str) -> lir.experiments.Experiment
+      :canonical: lir.config.experiment_strategies.ExperimentStrategyConfigParser.get_experiment
+      :abstractmethod:
+
+      .. autodoc2-docstring:: lir.config.experiment_strategies.ExperimentStrategyConfigParser.get_experiment
+         :parser: myst
+
+   .. py:method:: _parse_config_with_parameters(config_field: str, parameters_field: str) -> tuple[lir.config.substitution.ContextAwareDict, list[lir.config.substitution.Hyperparameter]]
+      :canonical: lir.config.experiment_strategies.ExperimentStrategyConfigParser._parse_config_with_parameters
+
+      .. autodoc2-docstring:: lir.config.experiment_strategies.ExperimentStrategyConfigParser._parse_config_with_parameters
+         :parser: myst
+
+   .. py:method:: data_config() -> tuple[lir.config.substitution.ContextAwareDict, list[lir.config.substitution.Hyperparameter]]
+      :canonical: lir.config.experiment_strategies.ExperimentStrategyConfigParser.data_config
+
+      .. autodoc2-docstring:: lir.config.experiment_strategies.ExperimentStrategyConfigParser.data_config
+         :parser: myst
+
+   .. py:method:: lrsystem_config() -> tuple[lir.config.substitution.ContextAwareDict, list[lir.config.substitution.Hyperparameter]]
+      :canonical: lir.config.experiment_strategies.ExperimentStrategyConfigParser.lrsystem_config
+
+      .. autodoc2-docstring:: lir.config.experiment_strategies.ExperimentStrategyConfigParser.lrsystem_config
+         :parser: myst
+
+   .. py:method:: parse(config: lir.config.substitution.ContextAwareDict, output_dir: pathlib.Path) -> lir.experiments.Experiment
+      :canonical: lir.config.experiment_strategies.ExperimentStrategyConfigParser.parse
+
+      .. autodoc2-docstring:: lir.config.experiment_strategies.ExperimentStrategyConfigParser.parse
+         :parser: myst
+
+.. py:class:: SingleRunStrategy()
+   :canonical: lir.config.experiment_strategies.SingleRunStrategy
+
+   Bases: :py:obj:`lir.config.experiment_strategies.ExperimentStrategyConfigParser`
+
+   .. autodoc2-docstring:: lir.config.experiment_strategies.SingleRunStrategy
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.config.experiment_strategies.SingleRunStrategy.__init__
+      :parser: myst
+
+   .. py:method:: get_experiment(name: str) -> lir.experiments.Experiment
+      :canonical: lir.config.experiment_strategies.SingleRunStrategy.get_experiment
+
+      .. autodoc2-docstring:: lir.config.experiment_strategies.SingleRunStrategy.get_experiment
+         :parser: myst
+
+.. py:function:: create_configs_from_hyperparameters(baseline_config: lir.config.substitution.ContextAwareDict, parameters: list[lir.config.substitution.Hyperparameter]) -> list[tuple[lir.config.substitution.ContextAwareDict, dict[str, typing.Any]]]
+   :canonical: lir.config.experiment_strategies.create_configs_from_hyperparameters
+
+   .. autodoc2-docstring:: lir.config.experiment_strategies.create_configs_from_hyperparameters
+      :parser: myst
+
+.. py:class:: GridStrategy()
+   :canonical: lir.config.experiment_strategies.GridStrategy
+
+   Bases: :py:obj:`lir.config.experiment_strategies.ExperimentStrategyConfigParser`
+
+   .. autodoc2-docstring:: lir.config.experiment_strategies.GridStrategy
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.config.experiment_strategies.GridStrategy.__init__
+      :parser: myst
+
+   .. py:method:: get_experiment(name: str) -> lir.experiments.Experiment
+      :canonical: lir.config.experiment_strategies.GridStrategy.get_experiment
+
+      .. autodoc2-docstring:: lir.config.experiment_strategies.GridStrategy.get_experiment
+         :parser: myst
+
+.. py:class:: OptunaStrategy()
+   :canonical: lir.config.experiment_strategies.OptunaStrategy
+
+   Bases: :py:obj:`lir.config.experiment_strategies.ExperimentStrategyConfigParser`
+
+   .. autodoc2-docstring:: lir.config.experiment_strategies.OptunaStrategy
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.config.experiment_strategies.OptunaStrategy.__init__
+      :parser: myst
+
+   .. py:method:: get_experiment(name: str) -> lir.experiments.Experiment
+      :canonical: lir.config.experiment_strategies.OptunaStrategy.get_experiment
+
+      .. autodoc2-docstring:: lir.config.experiment_strategies.OptunaStrategy.get_experiment
+         :parser: myst
+
+.. py:function:: parse_experiment_strategy(config: lir.config.substitution.ContextAwareDict, output_path: pathlib.Path) -> lir.experiments.Experiment
+   :canonical: lir.config.experiment_strategies.parse_experiment_strategy
+
+   .. autodoc2-docstring:: lir.config.experiment_strategies.parse_experiment_strategy
+      :parser: myst
+
+.. py:function:: parse_experiments(cfg: lir.config.substitution.ContextAwareDict, output_path: pathlib.Path) -> collections.abc.Mapping[str, lir.experiments.Experiment]
+   :canonical: lir.config.experiment_strategies.parse_experiments
+
+   .. autodoc2-docstring:: lir.config.experiment_strategies.parse_experiments
+      :parser: myst

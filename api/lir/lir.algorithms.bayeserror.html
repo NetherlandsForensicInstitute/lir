@@ -1,0 +1,347 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.algorithms.bayeserror &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="lir.algorithms.percentile_rank" href="lir.algorithms.percentile_rank.html" />
+    <link rel="prev" title="lir.algorithms" href="lir.algorithms.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a></li>
+          <li class="breadcrumb-item"><a href="lir.algorithms.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.algorithms</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.algorithms.bayeserror</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/api/lir/lir.algorithms.bayeserror.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-lir.algorithms.bayeserror">
+<span id="lir-algorithms-bayeserror"></span><h1><a class="reference internal" href="#module-lir.algorithms.bayeserror" title="lir.algorithms.bayeserror"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.algorithms.bayeserror</span></code></a><a class="headerlink" href="#module-lir.algorithms.bayeserror" title="Link to this heading"></a></h1>
+<p>Normalised Bayes error rate (NBE).</p>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading"></a></h2>
+<p>Vergeer, P., van Es, A., de Jongh, A., Alberink, I., &amp; Stoel, R. (2016).
+Numerical likelihood ratios output by LR systems are often based on
+extrapolation: When to stop extrapolating? <em>Science and Justice</em>, 56,
+482–491.</p>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.algorithms.bayeserror.ELUBBounder" title="lir.algorithms.bayeserror.ELUBBounder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ELUBBounder</span></code></a></p></td>
+<td><p>Calculate the Emperical Upper and Lower Bounds for a given LR system.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.algorithms.bayeserror.plot_nbe" title="lir.algorithms.bayeserror.plot_nbe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_nbe</span></code></a></p></td>
+<td><p>Generate the visual NBE plot using matplotlib.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.algorithms.bayeserror.elub" title="lir.algorithms.bayeserror.elub"><code class="xref py py-obj docutils literal notranslate"><span class="pre">elub</span></code></a></p></td>
+<td><p>Calculate and return the empirical upper and lower bound log10-LRs (ELUB LLRs).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.algorithms.bayeserror.calculate_expected_utility" title="lir.algorithms.bayeserror.calculate_expected_utility"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_expected_utility</span></code></a></p></td>
+<td><p>Calculate the expected utility of a set of LRs for a given threshold.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="api">
+<h3>API<a class="headerlink" href="#api" title="Link to this heading"></a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.algorithms.bayeserror.plot_nbe">
+<span class="sig-prename descclassname"><span class="pre">lir.algorithms.bayeserror.</span></span><span class="sig-name descname"><span class="pre">plot_nbe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">matplotlib.pyplot.Axes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">llrdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">lir.data.models.LLRData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_lr_threshold_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_misleading</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lir.algorithms.bayeserror.plot_nbe" title="Link to this definition"></a></dt>
+<dd><p>Generate the visual NBE plot using matplotlib.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> – the matplotlib axis to plot on</p></li>
+<li><p><strong>llrdata</strong> – the LLR data containing LLRs and labels</p></li>
+<li><p><strong>log_lr_threshold_range</strong> – the range of log LR threshold values</p></li>
+<li><p><strong>add_misleading</strong> – number of misleading evidence points to add</p></li>
+<li><p><strong>step_size</strong> – step size for the log LR threshold range</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.algorithms.bayeserror.elub">
+<span class="sig-prename descclassname"><span class="pre">lir.algorithms.bayeserror.</span></span><span class="sig-name descname"><span class="pre">elub</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">llrdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">lir.data.models.LLRData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_misleading</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">substitute_extremes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(-9,</span> <span class="pre">9)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.algorithms.bayeserror.elub" title="Link to this definition"></a></dt>
+<dd><p>Calculate and return the empirical upper and lower bound log10-LRs (ELUB LLRs).</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>llrdata</strong> – An instance of LLRData containing LLRs and ground-truth labels</p></li>
+<li><p><strong>add_misleading</strong> – the number of consequential misleading LLRs to be added
+to both sides (labels 0 and 1)</p></li>
+<li><p><strong>step_size</strong> – required accuracy on a 10-base logarithmic scale</p></li>
+<li><p><strong>substitute_extremes</strong> – tuple of scalars: substitute for extreme LRs, i.e.
+LRs of 0 and inf are substituted by these values</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.algorithms.bayeserror.calculate_expected_utility">
+<span class="sig-prename descclassname"><span class="pre">lir.algorithms.bayeserror.</span></span><span class="sig-name descname"><span class="pre">calculate_expected_utility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lrs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold_lrs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_misleading</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#lir.algorithms.bayeserror.calculate_expected_utility" title="Link to this definition"></a></dt>
+<dd><p>Calculate the expected utility of a set of LRs for a given threshold.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lrs</strong> – an array of LRs</p></li>
+<li><p><strong>y</strong> – an array of ground-truth labels (values 0 for Hd or 1 for Hp);
+must be of the same length as <code class="docutils literal notranslate"><span class="pre">lrs</span></code></p></li>
+<li><p><strong>threshold_lrs</strong> – an array of threshold lrs: minimum LR for acceptance</p></li>
+<li><p><strong>add_misleading</strong> – the number of consequential misleading LRs to be added.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>an array of utility values, one element for each threshold LR</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.algorithms.bayeserror.ELUBBounder">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.algorithms.bayeserror.</span></span><span class="sig-name descname"><span class="pre">ELUBBounder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lower_llr_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_llr_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.algorithms.bayeserror.ELUBBounder" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="lir.bounding.html#lir.bounding.LLRBounder" title="lir.bounding.LLRBounder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.bounding.LLRBounder</span></code></a></p>
+<p>Calculate the Emperical Upper and Lower Bounds for a given LR system.</p>
+<p>Class that, given an LR system, outputs the same LRs as the system but bounded by the Empirical Upper and Lower
+Bounds as described in
+P. Vergeer, A. van Es, A. de Jongh, I. Alberink, R.D. Stoel,
+Numerical likelihood ratios outputted by LR systems are often based on extrapolation:
+when to stop extrapolating?
+Sci. Justics 56 (2016) 482-491.</p>
+<section id="matlab-code-from-the-authors">
+<h4>MATLAB code from the authors:<a class="headerlink" href="#matlab-code-from-the-authors" title="Link to this heading"></a></h4>
+</section>
+<section id="clear-all-close-all">
+<h4>clear all; close all;<a class="headerlink" href="#clear-all-close-all" title="Link to this heading"></a></h4>
+</section>
+<section id="llrs-hp-csvread">
+<h4>llrs_hp=csvread(’…’);<a class="headerlink" href="#llrs-hp-csvread" title="Link to this heading"></a></h4>
+</section>
+<section id="llrs-hd-csvread">
+<h4>llrs_hd=csvread(’…’);<a class="headerlink" href="#llrs-hd-csvread" title="Link to this heading"></a></h4>
+</section>
+<section id="start-7-finish-7">
+<h4>start=-7; finish=7;<a class="headerlink" href="#start-7-finish-7" title="Link to this heading"></a></h4>
+</section>
+<section id="rho-start-0-01-finish-theta-10-rho">
+<h4>rho=start:0.01:finish; theta=10.^rho;<a class="headerlink" href="#rho-start-0-01-finish-theta-10-rho" title="Link to this heading"></a></h4>
+</section>
+<section id="nbe">
+<h4>nbe=[];<a class="headerlink" href="#nbe" title="Link to this heading"></a></h4>
+</section>
+<section id="for-k-1-length-rho">
+<h4>for k=1:length(rho)<a class="headerlink" href="#for-k-1-length-rho" title="Link to this heading"></a></h4>
+</section>
+<section id="if-rho-k-0">
+<h4>if rho(k)&lt;0<a class="headerlink" href="#if-rho-k-0" title="Link to this heading"></a></h4>
+</section>
+<section id="llrs-hp-llrs-hp-rho-k">
+<h4>llrs_hp=[llrs_hp;rho(k)];<a class="headerlink" href="#llrs-hp-llrs-hp-rho-k" title="Link to this heading"></a></h4>
+</section>
+<section id="nbe-nbe-theta-k-1-mean-llrs-hp-rho-k">
+<h4>nbe=[nbe;(theta(k)^(-1))*mean(llrs_hp&lt;=rho(k))+…<a class="headerlink" href="#nbe-nbe-theta-k-1-mean-llrs-hp-rho-k" title="Link to this heading"></a></h4>
+</section>
+<section id="mean-llrs-hd-rho-k">
+<h4>mean(llrs_hd&gt;rho(k))];<a class="headerlink" href="#mean-llrs-hd-rho-k" title="Link to this heading"></a></h4>
+</section>
+<section id="else">
+<h4>else<a class="headerlink" href="#else" title="Link to this heading"></a></h4>
+</section>
+<section id="llrs-hd-llrs-hd-rho-k">
+<h4>llrs_hd=[llrs_hd;rho(k)];<a class="headerlink" href="#llrs-hd-llrs-hd-rho-k" title="Link to this heading"></a></h4>
+</section>
+<section id="nbe-nbe-theta-k-mean-llrs-hd-rho-k">
+<h4>nbe=[nbe;theta(k)*mean(llrs_hd&gt;=rho(k))+…<a class="headerlink" href="#nbe-nbe-theta-k-mean-llrs-hd-rho-k" title="Link to this heading"></a></h4>
+</section>
+<section id="mean-llrs-hp-rho-k">
+<h4>mean(llrs_hp&lt;rho(k))];<a class="headerlink" href="#mean-llrs-hp-rho-k" title="Link to this heading"></a></h4>
+</section>
+<section id="end">
+<h4>end<a class="headerlink" href="#end" title="Link to this heading"></a></h4>
+</section>
+<section id="id1">
+<h4>end<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
+</section>
+<section id="plot-rho-log10-nbe-hold-on">
+<h4>plot(rho,-log10(nbe)); hold on;<a class="headerlink" href="#plot-rho-log10-nbe-hold-on" title="Link to this heading"></a></h4>
+</section>
+<section id="plot-start-finish-0-0">
+<h4>plot([start finish],[0 0]);<a class="headerlink" href="#plot-start-finish-0-0" title="Link to this heading"></a></h4>
+</section>
+<section id="a-rho-log10-nbe-0">
+<h4>a=rho(-log10(nbe)&gt;0);<a class="headerlink" href="#a-rho-log10-nbe-0" title="Link to this heading"></a></h4>
+</section>
+<section id="empirical-bounds-min-a-max-a">
+<h4>empirical_bounds=[min(a) max(a)]<a class="headerlink" href="#empirical-bounds-min-a-max-a" title="Link to this heading"></a></h4>
+</section>
+<p class="rubric">Initialization</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.bayeserror.ELUBBounder.calculate_bounds">
+<span class="sig-name descname"><span class="pre">calculate_bounds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">llrdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">lir.data.models.LLRData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.algorithms.bayeserror.ELUBBounder.calculate_bounds" title="Link to this definition"></a></dt>
+<dd><p>Calculate the LLR emperical upper and lower bounds (ELUB).</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lir.algorithms.html" class="btn btn-neutral float-left" title="lir.algorithms" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lir.algorithms.percentile_rank.html" class="btn btn-neutral float-right" title="lir.algorithms.percentile_rank" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

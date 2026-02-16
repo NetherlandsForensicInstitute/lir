@@ -1,0 +1,408 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.plotting &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="lir.plotting.expected_calibration_error" href="lir.plotting.expected_calibration_error.html" />
+    <link rel="prev" title="lir.experiments.base_experiment" href="lir.experiments.base_experiment.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.plotting</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/api/lir/lir.plotting.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-lir.plotting">
+<span id="lir-plotting"></span><h1><a class="reference internal" href="#module-lir.plotting" title="lir.plotting"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.plotting</span></code></a><a class="headerlink" href="#module-lir.plotting" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="lir.plotting.expected_calibration_error.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.plotting.expected_calibration_error</span></code></a></li>
+</ul>
+</div>
+</section>
+<section id="package-contents">
+<h2>Package Contents<a class="headerlink" href="#package-contents" title="Link to this heading"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.plotting.Canvas" title="lir.plotting.Canvas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Canvas</span></code></a></p></td>
+<td><p>Representation of an empty canvas, to be used in plotting multiple visualizations.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.plotting.savefig" title="lir.plotting.savefig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">savefig</span></code></a></p></td>
+<td><p>Create a plotting context and write the figure to a file when the context exits.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.plotting.show" title="lir.plotting.show"><code class="xref py py-obj docutils literal notranslate"><span class="pre">show</span></code></a></p></td>
+<td><p>Create a plotting context and show the figure when the context exits.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.plotting.axes" title="lir.plotting.axes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">axes</span></code></a></p></td>
+<td><p>Create a plotting context.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.plotting.pav" title="lir.plotting.pav"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pav</span></code></a></p></td>
+<td><p>Generate a plot of pre-calibrated versus post-calibrated LRs using Pool Adjacent Violators (PAV).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.plotting.lr_histogram" title="lir.plotting.lr_histogram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lr_histogram</span></code></a></p></td>
+<td><p>Plot the 10log lrs.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.plotting.tippett" title="lir.plotting.tippett"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tippett</span></code></a></p></td>
+<td><p>Plot empirical cumulative distribution functions of same-source and different-sources lrs.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.plotting.llr_interval" title="lir.plotting.llr_interval"><code class="xref py py-obj docutils literal notranslate"><span class="pre">llr_interval</span></code></a></p></td>
+<td><p>Plot the lr’s on the x-as, with the relative interval score on the y-as.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.plotting.score_distribution" title="lir.plotting.score_distribution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score_distribution</span></code></a></p></td>
+<td><p>Plot the distributions of scores calculated by the (fitted) lr_system.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="data">
+<h3>Data<a class="headerlink" href="#data" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.plotting.LOG" title="lir.plotting.LOG"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LOG</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.plotting.H1_COLOR" title="lir.plotting.H1_COLOR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">H1_COLOR</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.plotting.H2_COLOR" title="lir.plotting.H2_COLOR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">H2_COLOR</span></code></a></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="api">
+<h3>API<a class="headerlink" href="#api" title="Link to this heading"></a></h3>
+<dl class="py data">
+<dt class="sig sig-object py" id="lir.plotting.LOG">
+<span class="sig-prename descclassname"><span class="pre">lir.plotting.</span></span><span class="sig-name descname"><span class="pre">LOG</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'getLogger(...)'</span></span><a class="headerlink" href="#lir.plotting.LOG" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="lir.plotting.H1_COLOR">
+<span class="sig-prename descclassname"><span class="pre">lir.plotting.</span></span><span class="sig-name descname"><span class="pre">H1_COLOR</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'red'</span></span><a class="headerlink" href="#lir.plotting.H1_COLOR" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="lir.plotting.H2_COLOR">
+<span class="sig-prename descclassname"><span class="pre">lir.plotting.</span></span><span class="sig-name descname"><span class="pre">H2_COLOR</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'blue'</span></span><a class="headerlink" href="#lir.plotting.H2_COLOR" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.plotting.Canvas">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.plotting.</span></span><span class="sig-name descname"><span class="pre">Canvas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">matplotlib.axes.Axes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.plotting.Canvas" title="Link to this definition"></a></dt>
+<dd><p>Representation of an empty canvas, to be used in plotting multiple visualizations.</p>
+<p class="rubric">Initialization</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.plotting.Canvas.title">
+<span class="sig-name descname"><span class="pre">title</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#lir.plotting.Canvas.title" title="Link to this definition"></a></dt>
+<dd><p>Set the title of the axes (wrapper for set_title).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.plotting.Canvas.__getattr__">
+<span class="sig-name descname"><span class="pre">__getattr__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#lir.plotting.Canvas.__getattr__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.plotting.savefig">
+<span class="sig-prename descclassname"><span class="pre">lir.plotting.</span></span><span class="sig-name descname"><span class="pre">savefig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">contextlib._GeneratorContextManager</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lir.plotting.Canvas" title="lir.plotting.Canvas"><span class="pre">lir.plotting.Canvas</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.plotting.savefig" title="Link to this definition"></a></dt>
+<dd><p>Create a plotting context and write the figure to a file when the context exits.</p>
+<section id="example">
+<h4>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h4>
+<p>.. code-block:: python</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>with savefig(path) as ax:
+    ax.pav(lrs, y)
+</pre></div>
+</div>
+<p>A call to :func:<code class="docutils literal notranslate"><span class="pre">savefig</span></code> is equivalent to calling :func:<code class="docutils literal notranslate"><span class="pre">axes</span></code> with
+<code class="docutils literal notranslate"><span class="pre">savefig=path</span></code>.</p>
+</section>
+<section id="parameters">
+<h4>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h4>
+<p>path : str
+Path to the output file. The figure is written as a PNG image.</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.plotting.show">
+<span class="sig-prename descclassname"><span class="pre">lir.plotting.</span></span><span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">contextlib._GeneratorContextManager</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lir.plotting.Canvas" title="lir.plotting.Canvas"><span class="pre">lir.plotting.Canvas</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.plotting.show" title="Link to this definition"></a></dt>
+<dd><p>Create a plotting context and show the figure when the context exits.</p>
+<section id="example">
+<h4>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h4>
+<p>.. code-block:: python</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>with show() as ax:
+    ax.pav(lrs, y)
+</pre></div>
+</div>
+<p>A call to :func:<code class="docutils literal notranslate"><span class="pre">show</span></code> is equivalent to calling :func:<code class="docutils literal notranslate"><span class="pre">axes</span></code> with
+<code class="docutils literal notranslate"><span class="pre">show=True</span></code>.</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.plotting.axes">
+<span class="sig-prename descclassname"><span class="pre">lir.plotting.</span></span><span class="sig-name descname"><span class="pre">axes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">savefig</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">os.PathLike</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">collections.abc.Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lir.plotting.Canvas" title="lir.plotting.Canvas"><span class="pre">lir.plotting.Canvas</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.plotting.axes" title="Link to this definition"></a></dt>
+<dd><p>Create a plotting context.</p>
+<section id="example">
+<h4>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h4>
+<p>.. code-block:: python</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>with axes() as ax:
+    ax.pav(lrs, y)
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.plotting.pav">
+<span class="sig-prename descclassname"><span class="pre">lir.plotting.</span></span><span class="sig-name descname"><span class="pre">pav</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">matplotlib.axes.Axes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">llrdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">lir.data.models.LLRData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_misleading</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_scatter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lir.plotting.pav" title="Link to this definition"></a></dt>
+<dd><p>Generate a plot of pre-calibrated versus post-calibrated LRs using Pool Adjacent Violators (PAV).</p>
+<section id="parameters">
+<h4>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h4>
+<p>ax : Axes
+The matplotlib axes object to plot on
+llrdata : LLRData
+The LLRData object containing likelihood ratios and labels
+add_misleading : int, optional
+number of misleading evidence points to add on both sides (default: <code class="docutils literal notranslate"><span class="pre">0</span></code>)
+show_scatter : bool, optional
+If True, show individual LRs (default: <code class="docutils literal notranslate"><span class="pre">True</span></code>)</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.plotting.lr_histogram">
+<span class="sig-prename descclassname"><span class="pre">lir.plotting.</span></span><span class="sig-name descname"><span class="pre">lr_histogram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">matplotlib.axes.Axes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">llrdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">lir.data.models.LLRData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weighted</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lir.plotting.lr_histogram" title="Link to this definition"></a></dt>
+<dd><p>Plot the 10log lrs.</p>
+<section id="parameters">
+<h4>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h4>
+<p>ax : Axes
+The matplotlib axes object to plot on
+llrdata : LLRData
+The LLRData object containing likelihood ratios and labels
+bins : int
+number of bins to divide scores into (default: 20)
+weighted : bool
+if y-axis should be weighted for frequency within each class (default: True)</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.plotting.tippett">
+<span class="sig-prename descclassname"><span class="pre">lir.plotting.</span></span><span class="sig-name descname"><span class="pre">tippett</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">matplotlib.axes.Axes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">llrdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">lir.data.models.LLRData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lir.plotting.tippett" title="Link to this definition"></a></dt>
+<dd><p>Plot empirical cumulative distribution functions of same-source and different-sources lrs.</p>
+<section id="parameters">
+<h4>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h4>
+<p>ax : Axes
+The matplotlib axes object to plot on
+llrdata : LLRData
+The LLRData object containing likelihood ratios and labels
+plot_type : int
+must be either 1 or 2 (default: 1).
+In type 1 both curves show proportion of lrs greater than or equal to the
+x-axis value, while in type 2 the curve for same-source shows the
+proportion of lrs smaller than or equal to the x-axis value.</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.plotting.llr_interval">
+<span class="sig-prename descclassname"><span class="pre">lir.plotting.</span></span><span class="sig-name descname"><span class="pre">llr_interval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">matplotlib.axes.Axes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">llrdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">lir.data.models.LLRData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lir.plotting.llr_interval" title="Link to this definition"></a></dt>
+<dd><p>Plot the lr’s on the x-as, with the relative interval score on the y-as.</p>
+<section id="parameters">
+<h4>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h4>
+<p>ax : Axes
+The matplotlib axes object to plot on
+llrdata : LLRData
+The LLRData object containing the likelihood ratios and interval scores.</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.plotting.score_distribution">
+<span class="sig-prename descclassname"><span class="pre">lir.plotting.</span></span><span class="sig-name descname"><span class="pre">score_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">matplotlib.axes.Axes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weighted</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lir.plotting.score_distribution" title="Link to this definition"></a></dt>
+<dd><p>Plot the distributions of scores calculated by the (fitted) lr_system.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">weighted</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, the y-axis represents the probability density
+within the class, and <code class="docutils literal notranslate"><span class="pre">inf</span></code> is the fraction of instances. Otherwise, the
+y-axis shows the number of instances.</p>
+<section id="parameters">
+<h4>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h4>
+<p>ax : Axes
+The matplotlib axes object to plot on
+scores : np.ndarray
+scores of (fitted) lr_system (1d-array)
+y : np.ndarray
+a numpy array of labels (0 or 1, 1d-array of same length as <code class="docutils literal notranslate"><span class="pre">scores</span></code>)
+bins : int
+number of bins to divide scores into (default: 20)
+weighted : bool
+if y-axis should be the probability density within each class,
+instead of counts (default: True)</p>
+</section>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lir.experiments.base_experiment.html" class="btn btn-neutral float-left" title="lir.experiments.base_experiment" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lir.plotting.expected_calibration_error.html" class="btn btn-neutral float-right" title="lir.plotting.expected_calibration_error" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

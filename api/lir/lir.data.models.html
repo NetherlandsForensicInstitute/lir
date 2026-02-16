@@ -1,0 +1,769 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.data.models &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="lir.data.io" href="lir.data.io.html" />
+    <link rel="prev" title="lir.data.datasets.glass" href="lir.data.datasets.glass.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a></li>
+          <li class="breadcrumb-item"><a href="lir.data.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.data</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.data.models</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/api/lir/lir.data.models.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-lir.data.models">
+<span id="lir-data-models"></span><h1><a class="reference internal" href="#module-lir.data.models" title="lir.data.models"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.data.models</span></code></a><a class="headerlink" href="#module-lir.data.models" title="Link to this heading"></a></h1>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InstanceData</span></code></a></p></td>
+<td><p>Base class for data on instances.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeatureData</span></code></a></p></td>
+<td><p>Data class for feature data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.data.models.PairedFeatureData" title="lir.data.models.PairedFeatureData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PairedFeatureData</span></code></a></p></td>
+<td><p>Data class for instance pair data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.data.models.LLRData" title="lir.data.models.LLRData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LLRData</span></code></a></p></td>
+<td><p>Representation of calculated LLR values.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.data.models.DataProvider" title="lir.data.models.DataProvider"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataProvider</span></code></a></p></td>
+<td><p>Base class for data providers.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.data.models.DataStrategy" title="lir.data.models.DataStrategy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataStrategy</span></code></a></p></td>
+<td><p>Base class for data (splitting) strategies.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.data.models._validate_labels" title="lir.data.models._validate_labels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_validate_labels</span></code></a></p></td>
+<td><p>Check if labels have the correct shape.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.data.models._validate_source_ids" title="lir.data.models._validate_source_ids"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_validate_source_ids</span></code></a></p></td>
+<td><p>Check if source_ids have the correct shape.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.data.models._validate_features" title="lir.data.models._validate_features"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_validate_features</span></code></a></p></td>
+<td><p>Check if labels have the correct shape.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.data.models.concatenate_instances" title="lir.data.models.concatenate_instances"><code class="xref py py-obj docutils literal notranslate"><span class="pre">concatenate_instances</span></code></a></p></td>
+<td><p>Concatenate the results of the InstanceData objects.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.data.models.get_instances_by_category" title="lir.data.models.get_instances_by_category"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_instances_by_category</span></code></a></p></td>
+<td><p>Return subsets of a set of instances by category.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="data">
+<h3>Data<a class="headerlink" href="#data" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.data.models.LOG" title="lir.data.models.LOG"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LOG</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.data.models.InstanceDataType" title="lir.data.models.InstanceDataType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InstanceDataType</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.data.models.FeatureDataType" title="lir.data.models.FeatureDataType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeatureDataType</span></code></a></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="api">
+<h3>API<a class="headerlink" href="#api" title="Link to this heading"></a></h3>
+<dl class="py data">
+<dt class="sig sig-object py" id="lir.data.models.LOG">
+<span class="sig-prename descclassname"><span class="pre">lir.data.models.</span></span><span class="sig-name descname"><span class="pre">LOG</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'getLogger(...)'</span></span><a class="headerlink" href="#lir.data.models.LOG" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.data.models._validate_labels">
+<span class="sig-prename descclassname"><span class="pre">lir.data.models.</span></span><span class="sig-name descname"><span class="pre">_validate_labels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#lir.data.models._validate_labels" title="Link to this definition"></a></dt>
+<dd><p>Check if labels have the correct shape.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.data.models._validate_source_ids">
+<span class="sig-prename descclassname"><span class="pre">lir.data.models.</span></span><span class="sig-name descname"><span class="pre">_validate_source_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#lir.data.models._validate_source_ids" title="Link to this definition"></a></dt>
+<dd><p>Check if source_ids have the correct shape.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.models.InstanceData">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.models.</span></span><span class="sig-name descname"><span class="pre">InstanceData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.data.models.InstanceData" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">pydantic.BaseModel</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>Base class for data on instances.</p>
+<p>An InstanceData object may be labeled or unlabeled with ground-truth data. If it is labeled, the label values
+correspond to the hypotheses and have values 0 or 1. In literature, the labels may have different names for values
+1 and 0 respectively, such as:</p>
+<ul class="simple">
+<li><p>hypothesis 1 and hypothesis 2 (or H1 and H2)</p></li>
+<li><p>prosecutor’s hypothesis and defense hypothesis (or Hp and Hd)</p></li>
+<li><p>same-source and different-source (or Hss and Hds)</p></li>
+</ul>
+<p>The instances may optionally be associated with sources by means of the <code class="docutils literal notranslate"><span class="pre">source_ids</span></code> attribute. If available, each
+instance will generally have one source id if the object holds single instances, or two source ids if the object
+holds pairs of instances.</p>
+<p>This class imposes no restrictions on the actual instance data. Sub class implementations will specialize in
+particular data types.</p>
+<p>Attributes:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">labels</span></code>: The hypothesis labels of the instances, as a 1-dimensional array with one value per instance, can be
+either 0 or 1.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">source_ids</span></code>: The ids of all sources that contributed to the instances. Each instance is from a single source,
+except if it is a pair, in which case it has two sources. The source ids is either a 1-dimensional array or a
+2-dimensional array with two columns.</p></li>
+</ul>
+<p class="rubric">Initialization</p>
+<p>Create a new model by parsing and validating input data from keyword arguments.</p>
+<p>Raises [<code class="docutils literal notranslate"><span class="pre">ValidationError</span></code>][pydantic_core.ValidationError] if the input data cannot be
+validated to form a valid model.</p>
+<p><code class="docutils literal notranslate"><span class="pre">self</span></code> is explicitly positional-only to allow <code class="docutils literal notranslate"><span class="pre">self</span></code> as a field name.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.data.models.InstanceData.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ConfigDict(...)'</span></span><a class="headerlink" href="#lir.data.models.InstanceData.model_config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.data.models.InstanceData.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">AfterValidator</span><span class="p"><span class="pre">(</span></span><span class="pre">_validate_labels</span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">]</span></span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#lir.data.models.InstanceData.labels" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.data.models.InstanceData.source_ids">
+<span class="sig-name descname"><span class="pre">source_ids</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">AfterValidator</span><span class="p"><span class="pre">(</span></span><span class="pre">_validate_source_ids</span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">]</span></span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#lir.data.models.InstanceData.source_ids" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="lir.data.models.InstanceData.require_labels">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">require_labels</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span></span><a class="headerlink" href="#lir.data.models.InstanceData.require_labels" title="Link to this definition"></a></dt>
+<dd><p>Returns <code class="docutils literal notranslate"><span class="pre">labels</span></code> and guarantee that it is not None (or raise an error).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.models.InstanceData.check_sourceids_labels_match">
+<span class="sig-name descname"><span class="pre">check_sourceids_labels_match</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lir.data.models.InstanceData.check_sourceids_labels_match" title="Link to this definition"></a></dt>
+<dd><p>Validate the source_ids and labels have matching shapes.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="lir.data.models.InstanceData.source_ids_1d">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">source_ids_1d</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span></span><a class="headerlink" href="#lir.data.models.InstanceData.source_ids_1d" title="Link to this definition"></a></dt>
+<dd><dl class="myst field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the attribute <code class="docutils literal notranslate"><span class="pre">source_ids</span></code> as a 1-dimensional array, with one source id per instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.models.InstanceData.__len__">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#lir.data.models.InstanceData.__len__" title="Link to this definition"></a></dt>
+<dd><dl class="myst field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the number of instances in this dataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.models.InstanceData.__getitem__">
+<span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indexes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lir.data.models.InstanceData.__getitem__" title="Link to this definition"></a></dt>
+<dd><p>Get a copy of a subset of instances.</p>
+<p>All <code class="docutils literal notranslate"><span class="pre">ndarray</span></code> fields are indexed using <code class="docutils literal notranslate"><span class="pre">indexes</span></code>.
+All other fields are taken as-is.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>indexes</strong> – the indexes to select</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a subset of this dataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.models.InstanceData.__add__">
+<span class="sig-name descname"><span class="pre">__add__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lir.data.models.InstanceData.__add__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.models.InstanceData.check_both_labels">
+<span class="sig-name descname"><span class="pre">check_both_labels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#lir.data.models.InstanceData.check_both_labels" title="Link to this definition"></a></dt>
+<dd><p>Return labels or raise an error if they are missing or if they do not represent both hypotheses.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the labels</p>
+</dd>
+<dt class="field-even">Raise<span class="colon">:</span></dt>
+<dd class="field-even"><p>ValueError if hypothesis labels are missing or either label is not represented.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.models.InstanceData._concatenate_field">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">_concatenate_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#lir.data.models.InstanceData._concatenate_field" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.models.InstanceData.concatenate">
+<span class="sig-name descname"><span class="pre">concatenate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">others</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lir.data.models.InstanceData.concatenate" title="Link to this definition"></a></dt>
+<dd><p>Concatenate instances from InstanceData objects.</p>
+<p>All concatenated objects must have the same types and fields. How fields are concatenated may depend on the
+subclass. By default, they must have the same values for all non-numpy array fields, or an error is raised.
+Numpy fields are concatenated using <code class="docutils literal notranslate"><span class="pre">np.concatenate</span></code>. Other fields are copied as-is.</p>
+<p>Returns a new object with the concatenated instances.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.models.InstanceData.has_same_type">
+<span class="sig-name descname"><span class="pre">has_same_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lir.data.models.InstanceData.has_same_type" title="Link to this definition"></a></dt>
+<dd><p>Compare these instance data to another class.</p>
+<p>Returns True iff:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">other</span></code> has the same class</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">other</span></code> has the same fields</p></li>
+<li><p>all fields have the same type</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.models.InstanceData.combine">
+<span class="sig-name descname"><span class="pre">combine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">others</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">InstanceData</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">InstanceData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Callable</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lir.data.models.InstanceData.combine" title="Link to this definition"></a></dt>
+<dd><p>Apply a custom combination function to InstanceData objects.</p>
+<p>All objects must have the same types and fields, and the same values for all non-numpy array
+fields, or an error is raised. Numpy fields are concatenated using <code class="docutils literal notranslate"><span class="pre">fn</span></code>. Other fields are copied as-is.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.models.InstanceData.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Callable</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lir.data.models.InstanceData.apply" title="Link to this definition"></a></dt>
+<dd><p>Apply a custom function to this InstanceData object.</p>
+<p>The function <code class="docutils literal notranslate"><span class="pre">fn</span></code> is applied to all Numpy fields. Other fields are copied as-is.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.models.InstanceData.__eq__">
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lir.data.models.InstanceData.__eq__" title="Link to this definition"></a></dt>
+<dd><p>Compare these instance data to another class.</p>
+<p>Returns True iff:</p>
+<ul class="simple">
+<li><p>the method <code class="docutils literal notranslate"><span class="pre">has_same_type()</span></code> returns <code class="docutils literal notranslate"><span class="pre">True</span></code></p></li>
+<li><p>all numpy fields in <code class="docutils literal notranslate"><span class="pre">other</span></code> have the same shape and the same values</p></li>
+<li><p>all other fields are compared using the <code class="docutils literal notranslate"><span class="pre">!=</span></code> operator</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="lir.data.models.InstanceData.all_fields">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">all_fields</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#lir.data.models.InstanceData.all_fields" title="Link to this definition"></a></dt>
+<dd><dl class="myst field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>a list of all fields, including both mandatory and extra fields</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="lir.data.models.InstanceData.has_labels">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">has_labels</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#lir.data.models.InstanceData.has_labels" title="Link to this definition"></a></dt>
+<dd><dl class="myst field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True iff the instances are labeled</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.models.InstanceData.replace">
+<span class="sig-name descname"><span class="pre">replace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lir.data.models.InstanceData.replace" title="Link to this definition"></a></dt>
+<dd><p>Returns a modified copy with updated values.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>kwargs</strong> – the fields to replace</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the modified copy</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.models.InstanceData.replace_as">
+<span class="sig-name descname"><span class="pre">replace_as</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datatype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lir.data.models.InstanceDataType" title="lir.data.models.InstanceDataType"><span class="pre">lir.data.models.InstanceDataType</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.data.models.InstanceDataType" title="lir.data.models.InstanceDataType"><span class="pre">lir.data.models.InstanceDataType</span></a></span></span><a class="headerlink" href="#lir.data.models.InstanceData.replace_as" title="Link to this definition"></a></dt>
+<dd><p>Returns a modified copy with updated data type and values.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>datatype</strong> – the return type</p></li>
+<li><p><strong>kwargs</strong> – the fields to replace</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the modified copy</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.data.models._validate_features">
+<span class="sig-prename descclassname"><span class="pre">lir.data.models.</span></span><span class="sig-name descname"><span class="pre">_validate_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#lir.data.models._validate_features" title="Link to this definition"></a></dt>
+<dd><p>Check if labels have the correct shape.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.models.FeatureData">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.models.</span></span><span class="sig-name descname"><span class="pre">FeatureData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.data.models.FeatureData" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.data.models.InstanceData</span></code></a></p>
+<p>Data class for feature data.</p>
+<p>Feature data can be any type of numeric data that is associated with the instances, such as measurements on a single
+instance or similarity scores between a pair of instances.</p>
+<p>If the object describes single instance data, the <code class="docutils literal notranslate"><span class="pre">features</span></code> attribute is generally 2-dimensional, with one row per
+instance and one or more feature columns.</p>
+<p>More than 2 dimensions may be used for paired data, see <code class="docutils literal notranslate"><span class="pre">PairedFeatureData</span></code>.</p>
+<p>Attributes:</p>
+<ul class="simple">
+<li><p>features: an array of instance features, with one row per instance</p></li>
+</ul>
+<p class="rubric">Initialization</p>
+<p>Create a new model by parsing and validating input data from keyword arguments.</p>
+<p>Raises [<code class="docutils literal notranslate"><span class="pre">ValidationError</span></code>][pydantic_core.ValidationError] if the input data cannot be
+validated to form a valid model.</p>
+<p><code class="docutils literal notranslate"><span class="pre">self</span></code> is explicitly positional-only to allow <code class="docutils literal notranslate"><span class="pre">self</span></code> as a field name.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.data.models.FeatureData.features">
+<span class="sig-name descname"><span class="pre">features</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">AfterValidator</span><span class="p"><span class="pre">(</span></span><span class="pre">_validate_features</span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">]</span></span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#lir.data.models.FeatureData.features" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.models.FeatureData.__len__">
+<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#lir.data.models.FeatureData.__len__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.models.FeatureData.check_matching_shapes">
+<span class="sig-name descname"><span class="pre">check_matching_shapes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lir.data.models.FeatureData.check_matching_shapes" title="Link to this definition"></a></dt>
+<dd><p>Validate the shape of the features and the labels are matching.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.models.FeatureData.check_features">
+<span class="sig-name descname"><span class="pre">check_features</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lir.data.models.FeatureData.check_features" title="Link to this definition"></a></dt>
+<dd><p>Validate the features.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.models.PairedFeatureData">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.models.</span></span><span class="sig-name descname"><span class="pre">PairedFeatureData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.data.models.PairedFeatureData" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.data.models.FeatureData</span></code></a></p>
+<p>Data class for instance pair data.</p>
+<p>Each item in this data set represents instances from the “trace” source and from the “reference” source. The number
+of instances from either source must be at least one.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">features</span></code> attribute has at least 3 dimensions:</p>
+<ul class="simple">
+<li><p>the pairs are along the first dimension;</p></li>
+<li><p>the instances are along the second dimension (e.g. in a comparison of 1 trace instance and 1 reference instance,
+the length of this dimension is 2);</p></li>
+<li><p>the features are along the third dimension onward.</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">source_ids</span></code>, if available, must have two values for each item, i.e. 2 columns.</p>
+<p>Attributes:</p>
+<ul class="simple">
+<li><p>n_trace_instances: the number of trace instances in each pair</p></li>
+<li><p>n_ref_instances: the number of reference instances in each pair</p></li>
+<li><p>features: the features of all instances in the pair, with pairs along the first dimension, and instances along the
+second</p></li>
+<li><p>source_ids: the source ids of the trace and reference instances of each pair, a 2-dimensional array with two
+columns</p></li>
+<li><p>features_trace: the features of the trace instances</p></li>
+<li><p>features_ref: the features of the reference instances</p></li>
+<li><p>source_ids_trace: the source ids of the trace instances</p></li>
+<li><p>source_ids_ref: the source ids of the reference instances</p></li>
+</ul>
+<p class="rubric">Initialization</p>
+<p>Create a new model by parsing and validating input data from keyword arguments.</p>
+<p>Raises [<code class="docutils literal notranslate"><span class="pre">ValidationError</span></code>][pydantic_core.ValidationError] if the input data cannot be
+validated to form a valid model.</p>
+<p><code class="docutils literal notranslate"><span class="pre">self</span></code> is explicitly positional-only to allow <code class="docutils literal notranslate"><span class="pre">self</span></code> as a field name.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.data.models.PairedFeatureData.n_trace_instances">
+<span class="sig-name descname"><span class="pre">n_trace_instances</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#lir.data.models.PairedFeatureData.n_trace_instances" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.data.models.PairedFeatureData.n_ref_instances">
+<span class="sig-name descname"><span class="pre">n_ref_instances</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#lir.data.models.PairedFeatureData.n_ref_instances" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="lir.data.models.PairedFeatureData.features_trace">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">features_trace</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span></span><a class="headerlink" href="#lir.data.models.PairedFeatureData.features_trace" title="Link to this definition"></a></dt>
+<dd><p>Get the features of the trace instances.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="lir.data.models.PairedFeatureData.features_ref">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">features_ref</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span></span><a class="headerlink" href="#lir.data.models.PairedFeatureData.features_ref" title="Link to this definition"></a></dt>
+<dd><p>Get the features of the reference instances.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="lir.data.models.PairedFeatureData.source_ids_trace">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">source_ids_trace</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#lir.data.models.PairedFeatureData.source_ids_trace" title="Link to this definition"></a></dt>
+<dd><p>Get the source ids of the trace instances.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="lir.data.models.PairedFeatureData.source_ids_ref">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">source_ids_ref</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#lir.data.models.PairedFeatureData.source_ids_ref" title="Link to this definition"></a></dt>
+<dd><p>Get the source ids of the reference instances.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.models.PairedFeatureData.check_sourceid_shape">
+<span class="sig-name descname"><span class="pre">check_sourceid_shape</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lir.data.models.PairedFeatureData.check_sourceid_shape" title="Link to this definition"></a></dt>
+<dd><p>Overrides the <code class="docutils literal notranslate"><span class="pre">InstanceData</span></code> implementation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.models.PairedFeatureData.check_features_dimensions">
+<span class="sig-name descname"><span class="pre">check_features_dimensions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lir.data.models.PairedFeatureData.check_features_dimensions" title="Link to this definition"></a></dt>
+<dd><p>Validate feature dimensions.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.models.LLRData">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.models.</span></span><span class="sig-name descname"><span class="pre">LLRData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.data.models.LLRData" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.data.models.FeatureData</span></code></a></p>
+<p>Representation of calculated LLR values.</p>
+<p>An object of <code class="docutils literal notranslate"><span class="pre">LLRData</span></code> adds a specific interpretation to the <code class="docutils literal notranslate"><span class="pre">features</span></code> attribute.</p>
+<ul class="simple">
+<li><p>If the <code class="docutils literal notranslate"><span class="pre">features</span></code> attribute has a single column (i.e. dimensions <code class="docutils literal notranslate"><span class="pre">(n,</span> <span class="pre">1)</span></code>), the values are LLRs.</p></li>
+<li><p>If the <code class="docutils literal notranslate"><span class="pre">features</span></code> attribute has three columns (i.e. dimensions <code class="docutils literal notranslate"><span class="pre">(n,</span> <span class="pre">3)</span></code>), the values are LLRs and their
+confidence intervals.</p></li>
+</ul>
+<p>The values are also accessible by the attributes <code class="docutils literal notranslate"><span class="pre">llrs</span></code> and <code class="docutils literal notranslate"><span class="pre">llr_intervals</span></code>.</p>
+<p>Attributes:</p>
+<ul class="simple">
+<li><p>llrs: 1-dimensional numpy array of LLR values</p></li>
+<li><p>has_intervals: indicate whether the LLR’s have intervals</p></li>
+<li><p>llr_intervals: numpy array of LLR values of dimensions (n, 2), or <code class="docutils literal notranslate"><span class="pre">None</span></code> if the LLR’s have no intervals</p></li>
+<li><p>llr_upper_bound: upper bound applied to the LLRs, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if no upper bound was applied</p></li>
+<li><p>llr_lower_bound: lower bound applied to the LLRs, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if no lower bound was applied</p></li>
+</ul>
+<p class="rubric">Initialization</p>
+<p>Create a new model by parsing and validating input data from keyword arguments.</p>
+<p>Raises [<code class="docutils literal notranslate"><span class="pre">ValidationError</span></code>][pydantic_core.ValidationError] if the input data cannot be
+validated to form a valid model.</p>
+<p><code class="docutils literal notranslate"><span class="pre">self</span></code> is explicitly positional-only to allow <code class="docutils literal notranslate"><span class="pre">self</span></code> as a field name.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.data.models.LLRData.llr_upper_bound">
+<span class="sig-name descname"><span class="pre">llr_upper_bound</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#lir.data.models.LLRData.llr_upper_bound" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.data.models.LLRData.llr_lower_bound">
+<span class="sig-name descname"><span class="pre">llr_lower_bound</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#lir.data.models.LLRData.llr_lower_bound" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="lir.data.models.LLRData.llrs">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">llrs</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span></span><a class="headerlink" href="#lir.data.models.LLRData.llrs" title="Link to this definition"></a></dt>
+<dd><dl class="myst field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>1-dimensional numpy array of LLR values</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="lir.data.models.LLRData.has_intervals">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">has_intervals</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#lir.data.models.LLRData.has_intervals" title="Link to this definition"></a></dt>
+<dd><dl class="myst field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>indicate whether the LLR’s have intervals</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="lir.data.models.LLRData.llr_intervals">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">llr_intervals</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#lir.data.models.LLRData.llr_intervals" title="Link to this definition"></a></dt>
+<dd><dl class="myst field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy array of LLR values of dimensions (n, 2), or <code class="docutils literal notranslate"><span class="pre">None</span></code> if the LLR’s have no intervals</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="lir.data.models.LLRData.llr_bounds">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">llr_bounds</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#lir.data.models.LLRData.llr_bounds" title="Link to this definition"></a></dt>
+<dd><dl class="myst field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>a tuple (min_llr, max_llr)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.models.LLRData.check_features_are_llrs">
+<span class="sig-name descname"><span class="pre">check_features_are_llrs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lir.data.models.LLRData.check_features_are_llrs" title="Link to this definition"></a></dt>
+<dd><p>Validate the feature data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.models.LLRData._concatenate_field">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">_concatenate_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#lir.data.models.LLRData._concatenate_field" title="Link to this definition"></a></dt>
+<dd><p>Remove <code class="docutils literal notranslate"><span class="pre">llr_upper_bound</span></code> and <code class="docutils literal notranslate"><span class="pre">llr_lower_bound</span></code> when having different values.</p>
+<p>The fields <code class="docutils literal notranslate"><span class="pre">llr_upper_bound</span></code> and <code class="docutils literal notranslate"><span class="pre">llr_lower_bound</span></code> may have different values which is not allowed by default.
+Remove them instead of trying to combine them.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.models.LLRData.check_misleading_finite">
+<span class="sig-name descname"><span class="pre">check_misleading_finite</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lir.data.models.LLRData.check_misleading_finite" title="Link to this definition"></a></dt>
+<dd><p>Check whether all values are either finite or not misleading.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="lir.data.models.InstanceDataType">
+<span class="sig-prename descclassname"><span class="pre">lir.data.models.</span></span><span class="sig-name descname"><span class="pre">InstanceDataType</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'TypeVar(...)'</span></span><a class="headerlink" href="#lir.data.models.InstanceDataType" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="lir.data.models.FeatureDataType">
+<span class="sig-prename descclassname"><span class="pre">lir.data.models.</span></span><span class="sig-name descname"><span class="pre">FeatureDataType</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'TypeVar(...)'</span></span><a class="headerlink" href="#lir.data.models.FeatureDataType" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.data.models.concatenate_instances">
+<span class="sig-prename descclassname"><span class="pre">lir.data.models.</span></span><span class="sig-name descname"><span class="pre">concatenate_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">first</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lir.data.models.InstanceDataType" title="lir.data.models.InstanceDataType"><span class="pre">lir.data.models.InstanceDataType</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">others</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lir.data.models.InstanceDataType" title="lir.data.models.InstanceDataType"><span class="pre">lir.data.models.InstanceDataType</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.data.models.InstanceDataType" title="lir.data.models.InstanceDataType"><span class="pre">lir.data.models.InstanceDataType</span></a></span></span><a class="headerlink" href="#lir.data.models.concatenate_instances" title="Link to this definition"></a></dt>
+<dd><p>Concatenate the results of the InstanceData objects.</p>
+<p>Alias for <code class="docutils literal notranslate"><span class="pre">first.concatenate(*others)</span></code>.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.models.DataProvider">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.models.</span></span><span class="sig-name descname"><span class="pre">DataProvider</span></span><a class="headerlink" href="#lir.data.models.DataProvider" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>Base class for data providers.</p>
+<p>Each data provider should provide access to instance data by implementing the <code class="docutils literal notranslate"><span class="pre">get_instances()</span></code> method.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.models.DataProvider.get_instances">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">get_instances</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a></span></span><a class="headerlink" href="#lir.data.models.DataProvider.get_instances" title="Link to this definition"></a></dt>
+<dd><p>Returns an InstanceData object, containing data for a set of instances.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.data.models.DataStrategy">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.data.models.</span></span><span class="sig-name descname"><span class="pre">DataStrategy</span></span><a class="headerlink" href="#lir.data.models.DataStrategy" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>Base class for data (splitting) strategies.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.data.models.DataStrategy.apply">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">collections.abc.Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.data.models.DataStrategy.apply" title="Link to this definition"></a></dt>
+<dd><p>Provide iterator to access training and test set.</p>
+<p>Returns an iterator over tuples of a training set and a test set. Both the training set and the test
+is represented by an <code class="docutils literal notranslate"><span class="pre">InstanceData</span></code> object.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.data.models.get_instances_by_category">
+<span class="sig-prename descclassname"><span class="pre">lir.data.models.</span></span><span class="sig-name descname"><span class="pre">get_instances_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lir.data.models.get_instances_by_category.InstanceDataType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category_field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category_shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">collections.abc.Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">lir.data.models.get_instances_by_category.InstanceDataType</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.data.models.get_instances_by_category" title="Link to this definition"></a></dt>
+<dd><p>Return subsets of a set of instances by category.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">instances</span></code> object must have a field by the name of <code class="docutils literal notranslate"><span class="pre">category_field</span></code>. That field is a numpy array with one row
+per instance. Its values are the categories of each instance. The field may have any shape, as long as the number of
+rows matches the number of instances.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">category_shape</span></code> is provided, the shape of the category field is checked against this value.</p>
+<p>The returned value is an iterator with each item being a tuple of the category and the subset of instances of that
+category.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instances</strong> – the set of instances to draw from</p></li>
+<li><p><strong>category_field</strong> – the name of the field in instances that indicates the categories</p></li>
+<li><p><strong>category_shape</strong> – the optional shape of the category field</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuples of categories and corresponding subsets of instances</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lir.data.datasets.glass.html" class="btn btn-neutral float-left" title="lir.data.datasets.glass" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lir.data.io.html" class="btn btn-neutral float-right" title="lir.data.io" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

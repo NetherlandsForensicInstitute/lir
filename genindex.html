@@ -1,0 +1,1937 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Index &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="_static/thebelab.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="#" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/lir/lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/lir/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir/lir.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir/lir.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Index</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+
+<h1 id="index">Index</h1>
+
+<div class="genindex-jumpbox">
+ <a href="#_"><strong>_</strong></a>
+ | <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
+ | <a href="#I"><strong>I</strong></a>
+ | <a href="#K"><strong>K</strong></a>
+ | <a href="#L"><strong>L</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
+ | <a href="#O"><strong>O</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
+ | <a href="#V"><strong>V</strong></a>
+ | <a href="#W"><strong>W</strong></a>
+ | <a href="#X"><strong>X</strong></a>
+ | <a href="#Y"><strong>Y</strong></a>
+ 
+</div>
+<h2 id="_">_</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.InstanceData.__add__">__add__() (lir.data.models.InstanceData method)</a>
+</li>
+      <li><a href="api/lir/lir.experiments.html#lir.experiments.__all__">__all__ (in module lir.experiments)</a>
+</li>
+      <li><a href="api/lir/lir.util.html#lir.util.Bind.__call__">__call__() (lir.util.Bind method)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.InstanceData.__eq__">__eq__() (lir.data.models.InstanceData method)</a>
+</li>
+      <li><a href="api/lir/lir.plotting.html#lir.plotting.Canvas.__getattr__">__getattr__() (lir.plotting.Canvas method)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.InstanceData.__getitem__">__getitem__() (lir.data.models.InstanceData method)</a>
+</li>
+      <li><a href="api/lir/lir.algorithms.logistic_regression.html#lir.algorithms.logistic_regression.FourParameterLogisticCalibrator.__int__">__int__() (lir.algorithms.logistic_regression.FourParameterLogisticCalibrator method)</a>
+</li>
+      <li><a href="api/lir/lir.registry.html#lir.registry.ClassLoader.__iter__">__iter__() (lir.registry.ClassLoader method)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.registry.html#lir.registry.FederatedLoader.__iter__">(lir.registry.FederatedLoader method)</a>
+</li>
+        <li><a href="api/lir/lir.registry.html#lir.registry.YamlRegistry.__iter__">(lir.registry.YamlRegistry method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.FeatureData.__len__">__len__() (lir.data.models.FeatureData method)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.data.models.html#lir.data.models.InstanceData.__len__">(lir.data.models.InstanceData method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/lir/lir.config.substitution.html#lir.config.substitution.HyperparameterOption.__repr__">__repr__() (lir.config.substitution.HyperparameterOption method)</a>
+</li>
+      <li><a href="api/lir/lir.registry.html#lir.registry.YamlRegistry.__str__">__str__() (lir.registry.YamlRegistry method)</a>
+</li>
+      <li><a href="api/lir/lir.config.substitution.html#lir.config.substitution._assign">_assign() (in module lir.config.substitution)</a>
+</li>
+      <li><a href="api/lir/lir.metrics.devpav.html#lir.metrics.devpav._calcsurface">_calcsurface() (in module lir.metrics.devpav)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.InstanceData._concatenate_field">_concatenate_field() (lir.data.models.InstanceData class method)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.data.models.html#lir.data.models.LLRData._concatenate_field">(lir.data.models.LLRData class method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/lir/lir.transform.pairing.html#lir.transform.pairing.SourcePairing._construct_array">_construct_array() (lir.transform.pairing.SourcePairing method)</a>
+</li>
+      <li><a href="api/lir/lir.metrics.devpav.html#lir.metrics.devpav._devpavcalculator">_devpavcalculator() (in module lir.metrics.devpav)</a>
+</li>
+      <li><a href="api/lir/lir.config.base.html#lir.config.base._expand">_expand() (in module lir.config.base)</a>
+</li>
+      <li><a href="api/lir/lir.registry.html#lir.registry.YamlRegistry._find">_find() (lir.registry.YamlRegistry method)</a>
+</li>
+      <li><a href="api/lir/lir.algorithms.logistic_regression.html#lir.algorithms.logistic_regression.FourParameterLogisticCalibrator._four_pl_model">_four_pl_model() (lir.algorithms.logistic_regression.FourParameterLogisticCalibrator static method)</a>
+</li>
+      <li><a href="api/lir/lir.experiments.base_experiment.html#lir.experiments.base_experiment.Experiment._generate_and_run">_generate_and_run() (lir.experiments.base_experiment.Experiment method)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.experiments.optuna_experiment.html#lir.experiments.optuna_experiment.OptunaExperiment._generate_and_run">(lir.experiments.optuna_experiment.OptunaExperiment method)</a>
+</li>
+        <li><a href="api/lir/lir.experiments.predefined_experiment.html#lir.experiments.predefined_experiment.PredefinedExperiment._generate_and_run">(lir.experiments.predefined_experiment.PredefinedExperiment method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/lir/lir.data.datasets.synthesized_normal_multiclass.html#lir.data.datasets.synthesized_normal_multiclass.SynthesizedNormalMulticlassData._generate_dimension">_generate_dimension() (lir.data.datasets.synthesized_normal_multiclass.SynthesizedNormalMulticlassData method)</a>
+</li>
+      <li><a href="api/lir/lir.registry.html#lir.registry._get_attribute_by_name">_get_attribute_by_name() (in module lir.registry)</a>
+</li>
+      <li><a href="api/lir/lir.lrsystems.two_level.html#lir.lrsystems.two_level.TwoLevelModelNormalKDE._get_between_covariance">_get_between_covariance() (lir.lrsystems.two_level.TwoLevelModelNormalKDE static method)</a>
+</li>
+      <li><a href="api/lir/lir.registry.html#lir.registry.ConfigParserLoader._get_config_parser">_get_config_parser() (lir.registry.ConfigParserLoader static method)</a>
+</li>
+      <li><a href="api/lir/lir.data.io.html#lir.data.io.DataFileBuilderCsv._get_headers">_get_headers() (lir.data.io.DataFileBuilderCsv static method)</a>
+</li>
+      <li><a href="api/lir/lir.experiments.optuna_experiment.html#lir.experiments.optuna_experiment.OptunaExperiment._get_hyperparameter_substitutions">_get_hyperparameter_substitutions() (lir.experiments.optuna_experiment.OptunaExperiment method)</a>
+</li>
+      <li><a href="api/lir/lir.lrsystems.two_level.html#lir.lrsystems.two_level.TwoLevelModelNormalKDE._get_kernel_bandwidth_squared">_get_kernel_bandwidth_squared() (lir.lrsystems.two_level.TwoLevelModelNormalKDE static method)</a>
+</li>
+      <li><a href="api/lir/lir.lrsystems.two_level.html#lir.lrsystems.two_level.TwoLevelModelNormalKDE._get_mean_covariance_within">_get_mean_covariance_within() (lir.lrsystems.two_level.TwoLevelModelNormalKDE static method)</a>
+</li>
+      <li><a href="api/lir/lir.lrsystems.two_level.html#lir.lrsystems.two_level.TwoLevelModelNormalKDE._get_means_per_source">_get_means_per_source() (lir.lrsystems.two_level.TwoLevelModelNormalKDE static method)</a>
+</li>
+      <li><a href="api/lir/lir.lrsystems.two_level.html#lir.lrsystems.two_level.TwoLevelModelNormalKDE._get_n_features">_get_n_features() (lir.lrsystems.two_level.TwoLevelModelNormalKDE static method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.lrsystems.two_level.html#lir.lrsystems.two_level.TwoLevelModelNormalKDE._get_n_sources">_get_n_sources() (lir.lrsystems.two_level.TwoLevelModelNormalKDE static method)</a>
+</li>
+      <li><a href="api/lir/lir.experiments.optuna_experiment.html#lir.experiments.optuna_experiment.OptunaExperiment._get_parameter_value">_get_parameter_value() (lir.experiments.optuna_experiment.OptunaExperiment static method)</a>
+</li>
+      <li><a href="api/lir/lir.transform.pairing.html#lir.transform.pairing.SourcePairing._get_random_subset">_get_random_subset() (lir.transform.pairing.SourcePairing method)</a>
+</li>
+      <li><a href="api/lir/lir.transform.composite.html#lir.transform.composite.CategoricalCompositeTransformer._get_transformer">_get_transformer() (lir.transform.composite.CategoricalCompositeTransformer method)</a>
+</li>
+      <li><a href="api/lir/lir.transform.html#lir.transform.CsvWriter._join_reader">_join_reader() (lir.transform.CsvWriter method)</a>
+</li>
+      <li><a href="api/lir/lir.data.datasets.glass.html#lir.data.datasets.glass.GlassData._load_data">_load_data() (lir.data.datasets.glass.GlassData method)</a>
+</li>
+      <li><a href="api/lir/lir.registry.html#lir.registry._load_package_registry">_load_package_registry() (in module lir.registry)</a>
+</li>
+      <li><a href="api/lir/lir.algorithms.logistic_regression.html#lir.algorithms.logistic_regression._negative_log_likelihood_balanced">_negative_log_likelihood_balanced() (in module lir.algorithms.logistic_regression)</a>
+</li>
+      <li><a href="api/lir/lir.experiments.optuna_experiment.html#lir.experiments.optuna_experiment.OptunaExperiment._objective">_objective() (lir.experiments.optuna_experiment.OptunaExperiment method)</a>
+</li>
+      <li><a href="api/lir/lir.registry.html#lir.registry.YamlRegistry._parse">_parse() (lir.registry.YamlRegistry static method)</a>
+</li>
+      <li><a href="api/lir/lir.config.substitution.html#lir.config.substitution._parse_categorical_option">_parse_categorical_option() (in module lir.config.substitution)</a>
+</li>
+      <li><a href="api/lir/lir.data.datasets.feature_data_csv.html#lir.data.datasets.feature_data_csv._parse_cell_type">_parse_cell_type() (in module lir.data.datasets.feature_data_csv)</a>
+</li>
+      <li><a href="api/lir/lir.config.substitution.html#lir.config.substitution._parse_clustered_option">_parse_clustered_option() (in module lir.config.substitution)</a>
+</li>
+      <li><a href="api/lir/lir.config.experiment_strategies.html#lir.config.experiment_strategies.ExperimentStrategyConfigParser._parse_config_with_parameters">_parse_config_with_parameters() (lir.config.experiment_strategies.ExperimentStrategyConfigParser method)</a>
+</li>
+      <li><a href="api/lir/lir.data.datasets.feature_data_csv.html#lir.data.datasets.feature_data_csv._parse_extra_field">_parse_extra_field() (in module lir.data.datasets.feature_data_csv)</a>
+</li>
+      <li><a href="api/lir/lir.data.datasets.feature_data_csv.html#lir.data.datasets.feature_data_csv._parse_feature_data_csv">_parse_feature_data_csv() (in module lir.data.datasets.feature_data_csv)</a>
+</li>
+      <li><a href="api/lir/lir.data.datasets.feature_data_csv.html#lir.data.datasets.feature_data_csv.FeatureDataCsvParser._parse_file">_parse_file() (lir.data.datasets.feature_data_csv.FeatureDataCsvParser method)</a>
+</li>
+      <li><a href="api/lir/lir.config.substitution.html#lir.config.substitution._parse_substitution">_parse_substitution() (in module lir.config.substitution)</a>
+</li>
+      <li><a href="api/lir/lir.data.datasets.feature_data_csv.html#lir.data.datasets.feature_data_csv.FeatureDataCsvParser._parse_value">_parse_value() (lir.data.datasets.feature_data_csv.FeatureDataCsvParser method)</a>
+</li>
+      <li><a href="api/lir/lir.config.substitution.html#lir.config.substitution._path_exists">_path_exists() (in module lir.config.substitution)</a>
+</li>
+      <li><a href="api/lir/lir.lrsystems.two_level.html#lir.lrsystems.two_level.TwoLevelModelNormalKDE._predict_covariances_trace_ref">_predict_covariances_trace_ref() (lir.lrsystems.two_level.TwoLevelModelNormalKDE method)</a>
+</li>
+      <li><a href="api/lir/lir.lrsystems.two_level.html#lir.lrsystems.two_level.TwoLevelModelNormalKDE._predict_ln_den_term">_predict_ln_den_term() (lir.lrsystems.two_level.TwoLevelModelNormalKDE method)</a>
+</li>
+      <li><a href="api/lir/lir.lrsystems.two_level.html#lir.lrsystems.two_level.TwoLevelModelNormalKDE._predict_ln_num">_predict_ln_num() (lir.lrsystems.two_level.TwoLevelModelNormalKDE method)</a>
+</li>
+      <li><a href="api/lir/lir.lrsystems.two_level.html#lir.lrsystems.two_level.TwoLevelModelNormalKDE._predict_log10_LR_from_formula_Bolck">_predict_log10_LR_from_formula_Bolck() (lir.lrsystems.two_level.TwoLevelModelNormalKDE method)</a>
+</li>
+      <li><a href="api/lir/lir.lrsystems.two_level.html#lir.lrsystems.two_level.TwoLevelModelNormalKDE._predict_log10_lr_score">_predict_log10_lr_score() (lir.lrsystems.two_level.TwoLevelModelNormalKDE method)</a>
+</li>
+      <li><a href="api/lir/lir.lrsystems.two_level.html#lir.lrsystems.two_level.TwoLevelModelNormalKDE._predict_updated_ref_mean">_predict_updated_ref_mean() (lir.lrsystems.two_level.TwoLevelModelNormalKDE method)</a>
+</li>
+      <li><a href="api/lir/lir.registry.html#lir.registry._REGISTRY">_REGISTRY (in module lir.registry)</a>
+</li>
+      <li><a href="api/lir/lir.experiments.base_experiment.html#lir.experiments.base_experiment.Experiment._run_lrsystem">_run_lrsystem() (lir.experiments.base_experiment.Experiment method)</a>
+</li>
+      <li><a href="api/lir/lir.aggregation.html#lir.aggregation.WriteMetricsToCsv._safe_call">_safe_call() (lir.aggregation.WriteMetricsToCsv static method)</a>
+</li>
+      <li><a href="api/lir/lir.visualization.html#lir.visualization._save_or_plot">_save_or_plot() (in module lir.visualization)</a>
+</li>
+      <li><a href="api/lir/lir.lrsystems.two_level.html#lir.lrsystems.two_level._split_pairs">_split_pairs() (in module lir.lrsystems.two_level)</a>
+</li>
+      <li><a href="api/lir/lir.bounding.html#lir.bounding.LLRBounder._validate">_validate() (lir.bounding.LLRBounder static method)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models._validate_features">_validate_features() (in module lir.data.models)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models._validate_labels">_validate_labels() (in module lir.data.models)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models._validate_source_ids">_validate_source_ids() (in module lir.data.models)</a>
+</li>
+      <li><a href="api/lir/lir.transform.html#lir.transform.CsvWriter._write_rows">_write_rows() (lir.transform.CsvWriter method)</a>
+</li>
+      <li><a href="api/lir/lir.config.base.html#lir.config.base._YAML_TYPES">_YAML_TYPES (in module lir.config.base)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.data.io.html#lir.data.io.DataFileBuilderCsv.add_column">add_column() (lir.data.io.DataFileBuilderCsv method)</a>
+</li>
+      <li><a href="api/lir/lir.aggregation.html#lir.aggregation.AggregatePlot">AggregatePlot (class in lir.aggregation)</a>
+</li>
+      <li><a href="api/lir/lir.aggregation.html#lir.aggregation.Aggregation">Aggregation (class in lir.aggregation)</a>
+</li>
+      <li><a href="api/lir/lir.aggregation.html#lir.aggregation.AggregationData">AggregationData (class in lir.aggregation)</a>
+</li>
+      <li><a href="api/lir/lir.data.datasets.alcohol_breath_analyser.html#lir.data.datasets.alcohol_breath_analyser.AlcoholBreathAnalyser">AlcoholBreathAnalyser (class in lir.data.datasets.alcohol_breath_analyser)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.InstanceData.all_fields">all_fields (lir.data.models.InstanceData property)</a>
+</li>
+      <li><a href="api/lir/lir.config.base.html#lir.config.base.AnyType">AnyType (in module lir.config.base)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.util.html#lir.util.AnyType">(in module lir.util)</a>
+</li>
+      </ul></li>
+      <li><a href="api/lir/lir.algorithms.bootstraps.html#lir.algorithms.bootstraps.Bootstrap.apply">apply() (lir.algorithms.bootstraps.Bootstrap method)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.algorithms.isotonic_regression.html#lir.algorithms.isotonic_regression.IsotonicCalibrator.apply">(lir.algorithms.isotonic_regression.IsotonicCalibrator method)</a>
+</li>
+        <li><a href="api/lir/lir.algorithms.kde.html#lir.algorithms.kde.KDECalibrator.apply">(lir.algorithms.kde.KDECalibrator method)</a>
+</li>
+        <li><a href="api/lir/lir.algorithms.logistic_regression.html#lir.algorithms.logistic_regression.FourParameterLogisticCalibrator.apply">(lir.algorithms.logistic_regression.FourParameterLogisticCalibrator method)</a>
+</li>
+        <li><a href="api/lir/lir.algorithms.logistic_regression.html#lir.algorithms.logistic_regression.LogitCalibrator.apply">(lir.algorithms.logistic_regression.LogitCalibrator method)</a>
+</li>
+        <li><a href="api/lir/lir.bounding.html#lir.bounding.LLRBounder.apply">(lir.bounding.LLRBounder method)</a>
+</li>
+        <li><a href="api/lir/lir.config.lrsystem_architectures.html#lir.config.lrsystem_architectures.ParsedLRSystem.apply">(lir.config.lrsystem_architectures.ParsedLRSystem method)</a>
+</li>
+        <li><a href="api/lir/lir.data.data_strategies.html#lir.data.data_strategies.BinaryCrossValidation.apply">(lir.data.data_strategies.BinaryCrossValidation method)</a>
+</li>
+        <li><a href="api/lir/lir.data.data_strategies.html#lir.data.data_strategies.BinaryTrainTestSplit.apply">(lir.data.data_strategies.BinaryTrainTestSplit method)</a>
+</li>
+        <li><a href="api/lir/lir.data.data_strategies.html#lir.data.data_strategies.MulticlassCrossValidation.apply">(lir.data.data_strategies.MulticlassCrossValidation method)</a>
+</li>
+        <li><a href="api/lir/lir.data.data_strategies.html#lir.data.data_strategies.MulticlassTrainTestSplit.apply">(lir.data.data_strategies.MulticlassTrainTestSplit method)</a>
+</li>
+        <li><a href="api/lir/lir.data.data_strategies.html#lir.data.data_strategies.PairedInstancesTrainTestSplit.apply">(lir.data.data_strategies.PairedInstancesTrainTestSplit method)</a>
+</li>
+        <li><a href="api/lir/lir.data.data_strategies.html#lir.data.data_strategies.PredefinedTrainTestSplit.apply">(lir.data.data_strategies.PredefinedTrainTestSplit method)</a>
+</li>
+        <li><a href="api/lir/lir.data.models.html#lir.data.models.DataStrategy.apply">(lir.data.models.DataStrategy method)</a>
+</li>
+        <li><a href="api/lir/lir.data.models.html#lir.data.models.InstanceData.apply">(lir.data.models.InstanceData method)</a>
+</li>
+        <li><a href="api/lir/lir.lrsystems.binary_lrsystem.html#lir.lrsystems.binary_lrsystem.BinaryLRSystem.apply">(lir.lrsystems.binary_lrsystem.BinaryLRSystem method)</a>
+</li>
+        <li><a href="api/lir/lir.lrsystems.lrsystems.html#lir.lrsystems.lrsystems.LRSystem.apply">(lir.lrsystems.lrsystems.LRSystem method)</a>
+</li>
+        <li><a href="api/lir/lir.lrsystems.score_based.html#lir.lrsystems.score_based.ScoreBasedSystem.apply">(lir.lrsystems.score_based.ScoreBasedSystem method)</a>
+</li>
+        <li><a href="api/lir/lir.lrsystems.two_level.html#lir.lrsystems.two_level.TwoLevelSystem.apply">(lir.lrsystems.two_level.TwoLevelSystem method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.html#lir.transform.BinaryClassifierTransformer.apply">(lir.transform.BinaryClassifierTransformer method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.composite.html#lir.transform.composite.CategoricalCompositeTransformer.apply">(lir.transform.composite.CategoricalCompositeTransformer method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.html#lir.transform.CsvWriter.apply">(lir.transform.CsvWriter method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.distance.html#lir.transform.distance.ElementWiseDifference.apply">(lir.transform.distance.ElementWiseDifference method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.distance.html#lir.transform.distance.ManhattanDistance.apply">(lir.transform.distance.ManhattanDistance method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.html#lir.transform.FunctionTransformer.apply">(lir.transform.FunctionTransformer method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.html#lir.transform.Identity.apply">(lir.transform.Identity method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.html#lir.transform.NumpyTransformer.apply">(lir.transform.NumpyTransformer method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.pipeline.html#lir.transform.pipeline.LoggingPipeline.apply">(lir.transform.pipeline.LoggingPipeline method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.pipeline.html#lir.transform.pipeline.Pipeline.apply">(lir.transform.pipeline.Pipeline method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.html#lir.transform.SklearnTransformer.apply">(lir.transform.SklearnTransformer method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.html#lir.transform.Tee.apply">(lir.transform.Tee method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.html#lir.transform.Transformer.apply">(lir.transform.Transformer method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.html#lir.transform.TransformerWrapper.apply">(lir.transform.TransformerWrapper method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.transform.html#lir.transform.as_transformer">as_transformer() (in module lir.transform)</a>
+</li>
+      <li><a href="api/lir/lir.config.lrsystem_architectures.html#lir.config.lrsystem_architectures.augment_config">augment_config() (in module lir.config.lrsystem_architectures)</a>
+</li>
+      <li><a href="api/lir/lir.plotting.html#lir.plotting.axes">axes() (in module lir.plotting)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.algorithms.kde.html#lir.algorithms.kde.KDECalibrator.bandwidth_silverman">bandwidth_silverman() (lir.algorithms.kde.KDECalibrator static method)</a>
+</li>
+      <li><a href="api/lir/lir.transform.html#lir.transform.BinaryClassifierTransformer">BinaryClassifierTransformer (class in lir.transform)</a>
+</li>
+      <li><a href="api/lir/lir.data.data_strategies.html#lir.data.data_strategies.BinaryCrossValidation">BinaryCrossValidation (class in lir.data.data_strategies)</a>
+</li>
+      <li><a href="api/lir/lir.lrsystems.binary_lrsystem.html#lir.lrsystems.binary_lrsystem.BinaryLRSystem">BinaryLRSystem (class in lir.lrsystems.binary_lrsystem)</a>
+</li>
+      <li><a href="api/lir/lir.data.data_strategies.html#lir.data.data_strategies.BinaryTrainTestSplit">BinaryTrainTestSplit (class in lir.data.data_strategies)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.util.html#lir.util.Bind">Bind (class in lir.util)</a>
+</li>
+      <li><a href="api/lir/lir.algorithms.bootstraps.html#lir.algorithms.bootstraps.Bootstrap">Bootstrap (class in lir.algorithms.bootstraps)</a>
+</li>
+      <li><a href="api/lir/lir.algorithms.bootstraps.html#lir.algorithms.bootstraps.bootstrap">bootstrap() (in module lir.algorithms.bootstraps)</a>
+</li>
+      <li><a href="api/lir/lir.algorithms.bootstraps.html#lir.algorithms.bootstraps.BootstrapAtData">BootstrapAtData (class in lir.algorithms.bootstraps)</a>
+</li>
+      <li><a href="api/lir/lir.algorithms.bootstraps.html#lir.algorithms.bootstraps.BootstrapEquidistant">BootstrapEquidistant (class in lir.algorithms.bootstraps)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.algorithms.llr_overestimation.html#lir.algorithms.llr_overestimation.calc_fiducial_density_functions">calc_fiducial_density_functions() (in module lir.algorithms.llr_overestimation)</a>
+</li>
+      <li><a href="api/lir/lir.algorithms.llr_overestimation.html#lir.algorithms.llr_overestimation.calc_llr_overestimation">calc_llr_overestimation() (in module lir.algorithms.llr_overestimation)</a>
+</li>
+      <li><a href="api/lir/lir.algorithms.bayeserror.html#lir.algorithms.bayeserror.ELUBBounder.calculate_bounds">calculate_bounds() (lir.algorithms.bayeserror.ELUBBounder method)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.algorithms.invariance_bounds.html#lir.algorithms.invariance_bounds.IVBounder.calculate_bounds">(lir.algorithms.invariance_bounds.IVBounder method)</a>
+</li>
+        <li><a href="api/lir/lir.bounding.html#lir.bounding.LLRBounder.calculate_bounds">(lir.bounding.LLRBounder method)</a>
+</li>
+        <li><a href="api/lir/lir.bounding.html#lir.bounding.NSourceBounder.calculate_bounds">(lir.bounding.NSourceBounder method)</a>
+</li>
+        <li><a href="api/lir/lir.bounding.html#lir.bounding.StaticBounder.calculate_bounds">(lir.bounding.StaticBounder method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/lir/lir.plotting.expected_calibration_error.html#lir.plotting.expected_calibration_error.calculate_ece">calculate_ece() (in module lir.plotting.expected_calibration_error)</a>
+</li>
+      <li><a href="api/lir/lir.algorithms.bayeserror.html#lir.algorithms.bayeserror.calculate_expected_utility">calculate_expected_utility() (in module lir.algorithms.bayeserror)</a>
+</li>
+      <li><a href="api/lir/lir.algorithms.invariance_bounds.html#lir.algorithms.invariance_bounds.calculate_invariance_bounds">calculate_invariance_bounds() (in module lir.algorithms.invariance_bounds)</a>
+</li>
+      <li><a href="api/lir/lir.algorithms.invariance_bounds.html#lir.algorithms.invariance_bounds.calculate_invariance_delta_functions">calculate_invariance_delta_functions() (in module lir.algorithms.invariance_bounds)</a>
+</li>
+      <li><a href="api/lir/lir.plotting.html#lir.plotting.Canvas">Canvas (class in lir.plotting)</a>
+</li>
+      <li><a href="api/lir/lir.transform.composite.html#lir.transform.composite.CategoricalCompositeTransformer">CategoricalCompositeTransformer (class in lir.transform.composite)</a>
+</li>
+      <li><a href="api/lir/lir.config.substitution.html#lir.config.substitution.CategoricalHyperparameter">CategoricalHyperparameter (class in lir.config.substitution)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.InstanceData.check_both_labels">check_both_labels() (lir.data.models.InstanceData method)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.FeatureData.check_features">check_features() (lir.data.models.FeatureData method)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.LLRData.check_features_are_llrs">check_features_are_llrs() (lir.data.models.LLRData method)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.PairedFeatureData.check_features_dimensions">check_features_dimensions() (lir.data.models.PairedFeatureData method)</a>
+</li>
+      <li><a href="api/lir/lir.config.base.html#lir.config.base.check_is_empty">check_is_empty() (in module lir.config.base)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.FeatureData.check_matching_shapes">check_matching_shapes() (lir.data.models.FeatureData method)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.LLRData.check_misleading_finite">check_misleading_finite() (lir.data.models.LLRData method)</a>
+</li>
+      <li><a href="api/lir/lir.config.base.html#lir.config.base.check_not_none">check_not_none() (in module lir.config.base)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.PairedFeatureData.check_sourceid_shape">check_sourceid_shape() (lir.data.models.PairedFeatureData method)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.InstanceData.check_sourceids_labels_match">check_sourceids_labels_match() (lir.data.models.InstanceData method)</a>
+</li>
+      <li><a href="api/lir/lir.config.base.html#lir.config.base.check_type">check_type() (in module lir.config.base)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.util.html#lir.util.check_type">(in module lir.util)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.registry.html#lir.registry.ClassLoader">ClassLoader (class in lir.registry)</a>
+</li>
+      <li><a href="api/lir/lir.metrics.html#lir.metrics.cllr">cllr() (in module lir.metrics)</a>
+</li>
+      <li><a href="api/lir/lir.metrics.html#lir.metrics.cllr_cal">cllr_cal() (in module lir.metrics)</a>
+</li>
+      <li><a href="api/lir/lir.metrics.html#lir.metrics.cllr_min">cllr_min() (in module lir.metrics)</a>
+</li>
+      <li><a href="api/lir/lir.config.base.html#lir.config.base.ContextAwareDict.clone">clone() (lir.config.base.ContextAwareDict method)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.config.base.html#lir.config.base.ContextAwareList.clone">(lir.config.base.ContextAwareList method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/lir/lir.aggregation.html#lir.aggregation.Aggregation.close">close() (lir.aggregation.Aggregation method)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.aggregation.html#lir.aggregation.SubsetAggregation.close">(lir.aggregation.SubsetAggregation method)</a>
+</li>
+        <li><a href="api/lir/lir.aggregation.html#lir.aggregation.WriteMetricsToCsv.close">(lir.aggregation.WriteMetricsToCsv method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/lir/lir.data.datasets.feature_data_csv.html#lir.data.datasets.feature_data_csv.ExtraField.column_names">column_names (lir.data.datasets.feature_data_csv.ExtraField attribute)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.InstanceData.combine">combine() (lir.data.models.InstanceData method)</a>
+</li>
+      <li><a href="api/lir/lir.algorithms.kde.html#lir.algorithms.kde.compensate_and_remove_neginf_inf">compensate_and_remove_neginf_inf() (in module lir.algorithms.kde)</a>
+</li>
+      <li><a href="api/lir/lir.registry.html#lir.registry.ComponentNotFoundError">ComponentNotFoundError</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.InstanceData.concatenate">concatenate() (lir.data.models.InstanceData method)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.concatenate_instances">concatenate_instances() (in module lir.data.models)</a>
+</li>
+      <li><a href="api/lir/lir.config.base.html#lir.config.base.config_parser">config_parser() (in module lir.config.base)</a>
+</li>
+      <li><a href="api/lir/lir.config.base.html#lir.config.base.ConfigParser">ConfigParser (class in lir.config.base)</a>
+</li>
+      <li><a href="api/lir/lir.registry.html#lir.registry.ConfigParserLoader">ConfigParserLoader (class in lir.registry)</a>
+</li>
+      <li><a href="api/lir/lir.config.base.html#lir.config.base.ContextAwareDict">ContextAwareDict (class in lir.config.base)</a>
+</li>
+      <li><a href="api/lir/lir.config.base.html#lir.config.base.ContextAwareList">ContextAwareList (class in lir.config.base)</a>
+</li>
+      <li><a href="api/lir/lir.main.html#lir.main.copy_yaml_definition">copy_yaml_definition() (in module lir.main)</a>
+</li>
+      <li><a href="api/lir/lir.config.experiment_strategies.html#lir.config.experiment_strategies.create_configs_from_hyperparameters">create_configs_from_hyperparameters() (in module lir.config.experiment_strategies)</a>
+</li>
+      <li><a href="api/lir/lir.config.transform.html#lir.config.transform.csv_writer">csv_writer() (in module lir.config.transform)</a>
+</li>
+      <li><a href="api/lir/lir.transform.html#lir.transform.CsvWriter">CsvWriter (class in lir.transform)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.config.experiment_strategies.html#lir.config.experiment_strategies.ExperimentStrategyConfigParser.data_config">data_config() (lir.config.experiment_strategies.ExperimentStrategyConfigParser method)</a>
+</li>
+      <li><a href="api/lir/lir.data.io.html#lir.data.io.DataFileBuilderCsv">DataFileBuilderCsv (class in lir.data.io)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.DataProvider">DataProvider (class in lir.data.models)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.DataStrategy">DataStrategy (class in lir.data.models)</a>
+</li>
+      <li><a href="api/lir/lir.transform.html#lir.transform.DataWriter">DataWriter (class in lir.transform)</a>
+</li>
+      <li><a href="api/lir/lir.main.html#lir.main.DEFAULT_LOGLEVEL">DEFAULT_LOGLEVEL (in module lir.main)</a>
+</li>
+      <li><a href="api/lir/lir.metrics.devpav.html#lir.metrics.devpav.devpav">devpav() (in module lir.metrics.devpav)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.visualization.html#lir.visualization.ece">ece() (in module lir.visualization)</a>
+</li>
+      <li><a href="api/lir/lir.transform.distance.html#lir.transform.distance.ElementWiseDifference">ElementWiseDifference (class in lir.transform.distance)</a>
+</li>
+      <li><a href="api/lir/lir.algorithms.bayeserror.html#lir.algorithms.bayeserror.elub">elub() (in module lir.algorithms.bayeserror)</a>
+</li>
+      <li><a href="api/lir/lir.algorithms.bayeserror.html#lir.algorithms.bayeserror.ELUBBounder">ELUBBounder (class in lir.algorithms.bayeserror)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.main.html#lir.main.error">error() (in module lir.main)</a>
+</li>
+      <li><a href="api/lir/lir.experiments.base_experiment.html#lir.experiments.base_experiment.Experiment">Experiment (class in lir.experiments.base_experiment)</a>
+</li>
+      <li><a href="api/lir/lir.config.experiment_strategies.html#lir.config.experiment_strategies.ExperimentStrategyConfigParser">ExperimentStrategyConfigParser (class in lir.config.experiment_strategies)</a>
+</li>
+      <li><a href="api/lir/lir.data.datasets.feature_data_csv.html#lir.data.datasets.feature_data_csv.ExtraField">ExtraField (class in lir.data.datasets.feature_data_csv)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.data.datasets.feature_data_csv.html#lir.data.datasets.feature_data_csv.feature_data_csv_file_parser">feature_data_csv_file_parser() (in module lir.data.datasets.feature_data_csv)</a>
+</li>
+      <li><a href="api/lir/lir.data.datasets.feature_data_csv.html#lir.data.datasets.feature_data_csv.feature_data_csv_http_parser">feature_data_csv_http_parser() (in module lir.data.datasets.feature_data_csv)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.FeatureData">FeatureData (class in lir.data.models)</a>
+</li>
+      <li><a href="api/lir/lir.data.datasets.feature_data_csv.html#lir.data.datasets.feature_data_csv.FeatureDataCsvFileParser">FeatureDataCsvFileParser (class in lir.data.datasets.feature_data_csv)</a>
+</li>
+      <li><a href="api/lir/lir.data.datasets.feature_data_csv.html#lir.data.datasets.feature_data_csv.FeatureDataCsvHttpParser">FeatureDataCsvHttpParser (class in lir.data.datasets.feature_data_csv)</a>
+</li>
+      <li><a href="api/lir/lir.data.datasets.feature_data_csv.html#lir.data.datasets.feature_data_csv.FeatureDataCsvParser">FeatureDataCsvParser (class in lir.data.datasets.feature_data_csv)</a>
+</li>
+      <li><a href="api/lir/lir.data.datasets.feature_data_csv.html#lir.data.datasets.feature_data_csv.FeatureDataCsvStreamParser">FeatureDataCsvStreamParser (class in lir.data.datasets.feature_data_csv)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.FeatureDataType">FeatureDataType (in module lir.data.models)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.FeatureData.features">features (lir.data.models.FeatureData attribute)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.PairedFeatureData.features_ref">features_ref (lir.data.models.PairedFeatureData property)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.PairedFeatureData.features_trace">features_trace (lir.data.models.PairedFeatureData property)</a>
+</li>
+      <li><a href="api/lir/lir.registry.html#lir.registry.FederatedLoader">FederatedLoader (class in lir.registry)</a>
+</li>
+      <li><a href="api/lir/lir.algorithms.bootstraps.html#lir.algorithms.bootstraps.Bootstrap.fit">fit() (lir.algorithms.bootstraps.Bootstrap method)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.algorithms.isotonic_regression.html#lir.algorithms.isotonic_regression.IsotonicCalibrator.fit">(lir.algorithms.isotonic_regression.IsotonicCalibrator method)</a>
+</li>
+        <li><a href="api/lir/lir.algorithms.isotonic_regression.html#lir.algorithms.isotonic_regression.IsotonicRegression.fit">(lir.algorithms.isotonic_regression.IsotonicRegression method)</a>
+</li>
+        <li><a href="api/lir/lir.algorithms.kde.html#lir.algorithms.kde.KDECalibrator.fit">(lir.algorithms.kde.KDECalibrator method)</a>
+</li>
+        <li><a href="api/lir/lir.algorithms.logistic_regression.html#lir.algorithms.logistic_regression.FourParameterLogisticCalibrator.fit">(lir.algorithms.logistic_regression.FourParameterLogisticCalibrator method)</a>
+</li>
+        <li><a href="api/lir/lir.algorithms.logistic_regression.html#lir.algorithms.logistic_regression.LogitCalibrator.fit">(lir.algorithms.logistic_regression.LogitCalibrator method)</a>
+</li>
+        <li><a href="api/lir/lir.algorithms.percentile_rank.html#lir.algorithms.percentile_rank.PercentileRankTransformer.fit">(lir.algorithms.percentile_rank.PercentileRankTransformer method)</a>
+</li>
+        <li><a href="api/lir/lir.bounding.html#lir.bounding.LLRBounder.fit">(lir.bounding.LLRBounder method)</a>
+</li>
+        <li><a href="api/lir/lir.config.lrsystem_architectures.html#lir.config.lrsystem_architectures.ParsedLRSystem.fit">(lir.config.lrsystem_architectures.ParsedLRSystem method)</a>
+</li>
+        <li><a href="api/lir/lir.lrsystems.binary_lrsystem.html#lir.lrsystems.binary_lrsystem.BinaryLRSystem.fit">(lir.lrsystems.binary_lrsystem.BinaryLRSystem method)</a>
+</li>
+        <li><a href="api/lir/lir.lrsystems.lrsystems.html#lir.lrsystems.lrsystems.LRSystem.fit">(lir.lrsystems.lrsystems.LRSystem method)</a>
+</li>
+        <li><a href="api/lir/lir.lrsystems.score_based.html#lir.lrsystems.score_based.ScoreBasedSystem.fit">(lir.lrsystems.score_based.ScoreBasedSystem method)</a>
+</li>
+        <li><a href="api/lir/lir.lrsystems.two_level.html#lir.lrsystems.two_level.TwoLevelSystem.fit">(lir.lrsystems.two_level.TwoLevelSystem method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.html#lir.transform.BinaryClassifierTransformer.fit">(lir.transform.BinaryClassifierTransformer method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.composite.html#lir.transform.composite.CategoricalCompositeTransformer.fit">(lir.transform.composite.CategoricalCompositeTransformer method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.pipeline.html#lir.transform.pipeline.Pipeline.fit">(lir.transform.pipeline.Pipeline method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.html#lir.transform.SKLearnPipelineModule.fit">(lir.transform.SKLearnPipelineModule method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.html#lir.transform.SklearnTransformer.fit">(lir.transform.SklearnTransformer method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.html#lir.transform.SklearnTransformerType.fit">(lir.transform.SklearnTransformerType method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.html#lir.transform.Tee.fit">(lir.transform.Tee method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.html#lir.transform.Transformer.fit">(lir.transform.Transformer method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.html#lir.transform.TransformerWrapper.fit">(lir.transform.TransformerWrapper method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.algorithms.bootstraps.html#lir.algorithms.bootstraps.Bootstrap.fit_apply">fit_apply() (lir.algorithms.bootstraps.Bootstrap method)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.algorithms.isotonic_regression.html#lir.algorithms.isotonic_regression.IsotonicCalibrator.fit_apply">(lir.algorithms.isotonic_regression.IsotonicCalibrator method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.html#lir.transform.CsvWriter.fit_apply">(lir.transform.CsvWriter method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.html#lir.transform.NumpyTransformer.fit_apply">(lir.transform.NumpyTransformer method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.pipeline.html#lir.transform.pipeline.Pipeline.fit_apply">(lir.transform.pipeline.Pipeline method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.html#lir.transform.SklearnTransformer.fit_apply">(lir.transform.SklearnTransformer method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.html#lir.transform.Transformer.fit_apply">(lir.transform.Transformer method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/lir/lir.lrsystems.two_level.html#lir.lrsystems.two_level.TwoLevelModelNormalKDE.fit_on_unpaired_instances">fit_on_unpaired_instances() (lir.lrsystems.two_level.TwoLevelModelNormalKDE method)</a>
+</li>
+      <li><a href="api/lir/lir.transform.html#lir.transform.SklearnTransformerType.fit_transform">fit_transform() (lir.transform.SklearnTransformerType method)</a>
+</li>
+      <li><a href="api/lir/lir.config.substitution.html#lir.config.substitution.FloatHyperparameter">FloatHyperparameter (class in lir.config.substitution)</a>
+</li>
+      <li><a href="api/lir/lir.util.html#lir.util.FloatOrArray">FloatOrArray (in module lir.util)</a>
+</li>
+      <li><a href="api/lir/lir.config.substitution.html#lir.config.substitution.FolderHyperparameter">FolderHyperparameter (class in lir.config.substitution)</a>
+</li>
+      <li><a href="api/lir/lir.algorithms.logistic_regression.html#lir.algorithms.logistic_regression.FourParameterLogisticCalibrator">FourParameterLogisticCalibrator (class in lir.algorithms.logistic_regression)</a>
+</li>
+      <li><a href="api/lir/lir.transform.html#lir.transform.FunctionTransformer">FunctionTransformer (class in lir.transform)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.config.base.html#lir.config.base.GenericConfigParser">GenericConfigParser (class in lir.config.base)</a>
+</li>
+      <li><a href="api/lir/lir.config.base.html#lir.config.base.GenericFunctionConfigParser">GenericFunctionConfigParser (class in lir.config.base)</a>
+</li>
+      <li><a href="api/lir/lir.config.transform.html#lir.config.transform.GenericTransformerConfigParser">GenericTransformerConfigParser (class in lir.config.transform)</a>
+</li>
+      <li><a href="api/lir/lir.registry.html#lir.registry.get">get() (in module lir.registry)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.data.datasets.synthesized_normal_binary.html#lir.data.datasets.synthesized_normal_binary.SynthesizedNormalData.get">(lir.data.datasets.synthesized_normal_binary.SynthesizedNormalData method)</a>
+</li>
+        <li><a href="api/lir/lir.registry.html#lir.registry.ClassLoader.get">(lir.registry.ClassLoader method)</a>
+</li>
+        <li><a href="api/lir/lir.registry.html#lir.registry.ConfigParserLoader.get">(lir.registry.ConfigParserLoader method)</a>
+</li>
+        <li><a href="api/lir/lir.registry.html#lir.registry.FederatedLoader.get">(lir.registry.FederatedLoader method)</a>
+</li>
+        <li><a href="api/lir/lir.registry.html#lir.registry.YamlRegistry.get">(lir.registry.YamlRegistry method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/lir/lir.algorithms.bootstraps.html#lir.algorithms.bootstraps.Bootstrap.get_bootstrap_data">get_bootstrap_data() (lir.algorithms.bootstraps.Bootstrap method)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.algorithms.bootstraps.html#lir.algorithms.bootstraps.BootstrapAtData.get_bootstrap_data">(lir.algorithms.bootstraps.BootstrapAtData method)</a>
+</li>
+        <li><a href="api/lir/lir.algorithms.bootstraps.html#lir.algorithms.bootstraps.BootstrapEquidistant.get_bootstrap_data">(lir.algorithms.bootstraps.BootstrapEquidistant method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/lir/lir.util.html#lir.util.get_classes_from_Xy">get_classes_from_Xy() (in module lir.util)</a>
+</li>
+      <li><a href="api/lir/lir.config.experiment_strategies.html#lir.config.experiment_strategies.ExperimentStrategyConfigParser.get_experiment">get_experiment() (lir.config.experiment_strategies.ExperimentStrategyConfigParser method)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.config.experiment_strategies.html#lir.config.experiment_strategies.GridStrategy.get_experiment">(lir.config.experiment_strategies.GridStrategy method)</a>
+</li>
+        <li><a href="api/lir/lir.config.experiment_strategies.html#lir.config.experiment_strategies.OptunaStrategy.get_experiment">(lir.config.experiment_strategies.OptunaStrategy method)</a>
+</li>
+        <li><a href="api/lir/lir.config.experiment_strategies.html#lir.config.experiment_strategies.SingleRunStrategy.get_experiment">(lir.config.experiment_strategies.SingleRunStrategy method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.data.datasets.alcohol_breath_analyser.html#lir.data.datasets.alcohol_breath_analyser.AlcoholBreathAnalyser.get_instances">get_instances() (lir.data.datasets.alcohol_breath_analyser.AlcoholBreathAnalyser method)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.data.datasets.feature_data_csv.html#lir.data.datasets.feature_data_csv.FeatureDataCsvFileParser.get_instances">(lir.data.datasets.feature_data_csv.FeatureDataCsvFileParser method)</a>
+</li>
+        <li><a href="api/lir/lir.data.datasets.feature_data_csv.html#lir.data.datasets.feature_data_csv.FeatureDataCsvHttpParser.get_instances">(lir.data.datasets.feature_data_csv.FeatureDataCsvHttpParser method)</a>
+</li>
+        <li><a href="api/lir/lir.data.datasets.feature_data_csv.html#lir.data.datasets.feature_data_csv.FeatureDataCsvStreamParser.get_instances">(lir.data.datasets.feature_data_csv.FeatureDataCsvStreamParser method)</a>
+</li>
+        <li><a href="api/lir/lir.data.datasets.glass.html#lir.data.datasets.glass.GlassData.get_instances">(lir.data.datasets.glass.GlassData method)</a>
+</li>
+        <li><a href="api/lir/lir.data.datasets.synthesized_normal_binary.html#lir.data.datasets.synthesized_normal_binary.SynthesizedNormalBinaryData.get_instances">(lir.data.datasets.synthesized_normal_binary.SynthesizedNormalBinaryData method)</a>
+</li>
+        <li><a href="api/lir/lir.data.datasets.synthesized_normal_multiclass.html#lir.data.datasets.synthesized_normal_multiclass.SynthesizedNormalMulticlassData.get_instances">(lir.data.datasets.synthesized_normal_multiclass.SynthesizedNormalMulticlassData method)</a>
+</li>
+        <li><a href="api/lir/lir.data.models.html#lir.data.models.DataProvider.get_instances">(lir.data.models.DataProvider method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.get_instances_by_category">get_instances_by_category() (in module lir.data.models)</a>
+</li>
+      <li><a href="api/lir/lir.config.base.html#lir.config.base.ConfigParser.get_type_name">get_type_name() (lir.config.base.ConfigParser static method)</a>
+</li>
+      <li><a href="api/lir/lir.data.datasets.glass.html#lir.data.datasets.glass.GlassData">GlassData (class in lir.data.datasets.glass)</a>
+</li>
+      <li><a href="api/lir/lir.config.experiment_strategies.html#lir.config.experiment_strategies.GridStrategy">GridStrategy (class in lir.config.experiment_strategies)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.plotting.html#lir.plotting.H1_COLOR">H1_COLOR (in module lir.plotting)</a>
+</li>
+      <li><a href="api/lir/lir.plotting.html#lir.plotting.H2_COLOR">H2_COLOR (in module lir.plotting)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.LLRData.has_intervals">has_intervals (lir.data.models.LLRData property)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.InstanceData.has_labels">has_labels (lir.data.models.InstanceData property)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.InstanceData.has_same_type">has_same_type() (lir.data.models.InstanceData method)</a>
+</li>
+      <li><a href="api/lir/lir.config.substitution.html#lir.config.substitution.Hyperparameter">Hyperparameter (class in lir.config.substitution)</a>
+</li>
+      <li><a href="api/lir/lir.config.substitution.html#lir.config.substitution.HyperparameterOption">HyperparameterOption (class in lir.config.substitution)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.transform.html#lir.transform.Identity">Identity (class in lir.transform)</a>
+</li>
+      <li><a href="api/lir/lir.main.html#lir.main.initialize_experiments">initialize_experiments() (in module lir.main)</a>
+</li>
+      <li><a href="api/lir/lir.main.html#lir.main.initialize_logfile">initialize_logfile() (in module lir.main)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.InstanceData">InstanceData (class in lir.data.models)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.InstanceDataType">InstanceDataType (in module lir.data.models)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.transform.pairing.html#lir.transform.pairing.InstancePairing">InstancePairing (class in lir.transform.pairing)</a>
+</li>
+      <li><a href="api/lir/lir.registry.html#lir.registry.InvalidRegistryEntryError">InvalidRegistryEntryError</a>
+</li>
+      <li><a href="api/lir/lir.html#lir.is_interactive">is_interactive() (in module lir)</a>
+</li>
+      <li><a href="api/lir/lir.algorithms.isotonic_regression.html#lir.algorithms.isotonic_regression.IsotonicCalibrator">IsotonicCalibrator (class in lir.algorithms.isotonic_regression)</a>
+</li>
+      <li><a href="api/lir/lir.algorithms.isotonic_regression.html#lir.algorithms.isotonic_regression.IsotonicRegression">IsotonicRegression (class in lir.algorithms.isotonic_regression)</a>
+</li>
+      <li><a href="api/lir/lir.algorithms.invariance_bounds.html#lir.algorithms.invariance_bounds.IVBounder">IVBounder (class in lir.algorithms.invariance_bounds)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="K">K</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.algorithms.kde.html#lir.algorithms.kde.KDECalibrator">KDECalibrator (class in lir.algorithms.kde)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.InstanceData.labels">labels (lir.data.models.InstanceData attribute)</a>
+</li>
+      <li>
+    lir
+
+      <ul>
+        <li><a href="api/lir/lir.html#module-lir">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.__main__
+
+      <ul>
+        <li><a href="api/lir/lir.__main__.html#module-lir.__main__">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.aggregation
+
+      <ul>
+        <li><a href="api/lir/lir.aggregation.html#module-lir.aggregation">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.algorithms
+
+      <ul>
+        <li><a href="api/lir/lir.algorithms.html#module-lir.algorithms">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.algorithms.bayeserror
+
+      <ul>
+        <li><a href="api/lir/lir.algorithms.bayeserror.html#module-lir.algorithms.bayeserror">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.algorithms.bootstraps
+
+      <ul>
+        <li><a href="api/lir/lir.algorithms.bootstraps.html#module-lir.algorithms.bootstraps">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.algorithms.invariance_bounds
+
+      <ul>
+        <li><a href="api/lir/lir.algorithms.invariance_bounds.html#module-lir.algorithms.invariance_bounds">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.algorithms.isotonic_regression
+
+      <ul>
+        <li><a href="api/lir/lir.algorithms.isotonic_regression.html#module-lir.algorithms.isotonic_regression">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.algorithms.kde
+
+      <ul>
+        <li><a href="api/lir/lir.algorithms.kde.html#module-lir.algorithms.kde">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.algorithms.llr_overestimation
+
+      <ul>
+        <li><a href="api/lir/lir.algorithms.llr_overestimation.html#module-lir.algorithms.llr_overestimation">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.algorithms.logistic_regression
+
+      <ul>
+        <li><a href="api/lir/lir.algorithms.logistic_regression.html#module-lir.algorithms.logistic_regression">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.algorithms.percentile_rank
+
+      <ul>
+        <li><a href="api/lir/lir.algorithms.percentile_rank.html#module-lir.algorithms.percentile_rank">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.bounding
+
+      <ul>
+        <li><a href="api/lir/lir.bounding.html#module-lir.bounding">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.config
+
+      <ul>
+        <li><a href="api/lir/lir.config.html#module-lir.config">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.config.aggregation
+
+      <ul>
+        <li><a href="api/lir/lir.config.aggregation.html#module-lir.config.aggregation">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.config.base
+
+      <ul>
+        <li><a href="api/lir/lir.config.base.html#module-lir.config.base">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.config.data
+
+      <ul>
+        <li><a href="api/lir/lir.config.data.html#module-lir.config.data">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.config.experiment_strategies
+
+      <ul>
+        <li><a href="api/lir/lir.config.experiment_strategies.html#module-lir.config.experiment_strategies">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.config.lrsystem_architectures
+
+      <ul>
+        <li><a href="api/lir/lir.config.lrsystem_architectures.html#module-lir.config.lrsystem_architectures">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.config.metrics
+
+      <ul>
+        <li><a href="api/lir/lir.config.metrics.html#module-lir.config.metrics">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.config.substitution
+
+      <ul>
+        <li><a href="api/lir/lir.config.substitution.html#module-lir.config.substitution">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.config.transform
+
+      <ul>
+        <li><a href="api/lir/lir.config.transform.html#module-lir.config.transform">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.config.util
+
+      <ul>
+        <li><a href="api/lir/lir.config.util.html#module-lir.config.util">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.data
+
+      <ul>
+        <li><a href="api/lir/lir.data.html#module-lir.data">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.data.data_strategies
+
+      <ul>
+        <li><a href="api/lir/lir.data.data_strategies.html#module-lir.data.data_strategies">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.data.datasets
+
+      <ul>
+        <li><a href="api/lir/lir.data.datasets.html#module-lir.data.datasets">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.data.datasets.alcohol_breath_analyser
+
+      <ul>
+        <li><a href="api/lir/lir.data.datasets.alcohol_breath_analyser.html#module-lir.data.datasets.alcohol_breath_analyser">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.data.datasets.feature_data_csv
+
+      <ul>
+        <li><a href="api/lir/lir.data.datasets.feature_data_csv.html#module-lir.data.datasets.feature_data_csv">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.data.datasets.glass
+
+      <ul>
+        <li><a href="api/lir/lir.data.datasets.glass.html#module-lir.data.datasets.glass">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.data.datasets.synthesized_normal_binary
+
+      <ul>
+        <li><a href="api/lir/lir.data.datasets.synthesized_normal_binary.html#module-lir.data.datasets.synthesized_normal_binary">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.data.datasets.synthesized_normal_multiclass
+
+      <ul>
+        <li><a href="api/lir/lir.data.datasets.synthesized_normal_multiclass.html#module-lir.data.datasets.synthesized_normal_multiclass">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.data.io
+
+      <ul>
+        <li><a href="api/lir/lir.data.io.html#module-lir.data.io">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.data.models
+
+      <ul>
+        <li><a href="api/lir/lir.data.models.html#module-lir.data.models">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.experiments
+
+      <ul>
+        <li><a href="api/lir/lir.experiments.html#module-lir.experiments">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.experiments.base_experiment
+
+      <ul>
+        <li><a href="api/lir/lir.experiments.base_experiment.html#module-lir.experiments.base_experiment">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.experiments.optuna_experiment
+
+      <ul>
+        <li><a href="api/lir/lir.experiments.optuna_experiment.html#module-lir.experiments.optuna_experiment">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.experiments.predefined_experiment
+
+      <ul>
+        <li><a href="api/lir/lir.experiments.predefined_experiment.html#module-lir.experiments.predefined_experiment">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.lrsystems
+
+      <ul>
+        <li><a href="api/lir/lir.lrsystems.html#module-lir.lrsystems">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.lrsystems.binary_lrsystem
+
+      <ul>
+        <li><a href="api/lir/lir.lrsystems.binary_lrsystem.html#module-lir.lrsystems.binary_lrsystem">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    lir.lrsystems.lrsystems
+
+      <ul>
+        <li><a href="api/lir/lir.lrsystems.lrsystems.html#module-lir.lrsystems.lrsystems">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.lrsystems.score_based
+
+      <ul>
+        <li><a href="api/lir/lir.lrsystems.score_based.html#module-lir.lrsystems.score_based">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.lrsystems.two_level
+
+      <ul>
+        <li><a href="api/lir/lir.lrsystems.two_level.html#module-lir.lrsystems.two_level">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.main
+
+      <ul>
+        <li><a href="api/lir/lir.main.html#module-lir.main">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.metrics
+
+      <ul>
+        <li><a href="api/lir/lir.metrics.html#module-lir.metrics">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.metrics.devpav
+
+      <ul>
+        <li><a href="api/lir/lir.metrics.devpav.html#module-lir.metrics.devpav">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.metrics.overestimation
+
+      <ul>
+        <li><a href="api/lir/lir.metrics.overestimation.html#module-lir.metrics.overestimation">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.persistence
+
+      <ul>
+        <li><a href="api/lir/lir.persistence.html#module-lir.persistence">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.plotting
+
+      <ul>
+        <li><a href="api/lir/lir.plotting.html#module-lir.plotting">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.plotting.expected_calibration_error
+
+      <ul>
+        <li><a href="api/lir/lir.plotting.expected_calibration_error.html#module-lir.plotting.expected_calibration_error">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.registry
+
+      <ul>
+        <li><a href="api/lir/lir.registry.html#module-lir.registry">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.resources
+
+      <ul>
+        <li><a href="api/lir/lir.resources.html#module-lir.resources">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.transform
+
+      <ul>
+        <li><a href="api/lir/lir.transform.html#module-lir.transform">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.transform.composite
+
+      <ul>
+        <li><a href="api/lir/lir.transform.composite.html#module-lir.transform.composite">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.transform.distance
+
+      <ul>
+        <li><a href="api/lir/lir.transform.distance.html#module-lir.transform.distance">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.transform.pairing
+
+      <ul>
+        <li><a href="api/lir/lir.transform.pairing.html#module-lir.transform.pairing">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.transform.pipeline
+
+      <ul>
+        <li><a href="api/lir/lir.transform.pipeline.html#module-lir.transform.pipeline">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.util
+
+      <ul>
+        <li><a href="api/lir/lir.util.html#module-lir.util">module</a>
+</li>
+      </ul></li>
+      <li>
+    lir.visualization
+
+      <ul>
+        <li><a href="api/lir/lir.visualization.html#module-lir.visualization">module</a>
+</li>
+      </ul></li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.LLRData.llr_bounds">llr_bounds (lir.data.models.LLRData property)</a>
+</li>
+      <li><a href="api/lir/lir.plotting.html#lir.plotting.llr_interval">llr_interval() (in module lir.plotting)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.visualization.html#lir.visualization.llr_interval">(in module lir.visualization)</a>
+</li>
+      </ul></li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.LLRData.llr_intervals">llr_intervals (lir.data.models.LLRData property)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.LLRData.llr_lower_bound">llr_lower_bound (lir.data.models.LLRData attribute)</a>
+</li>
+      <li><a href="api/lir/lir.metrics.html#lir.metrics.llr_lower_bound">llr_lower_bound() (in module lir.metrics)</a>
+</li>
+      <li><a href="api/lir/lir.metrics.overestimation.html#lir.metrics.overestimation.llr_overestimation">llr_overestimation() (in module lir.metrics.overestimation)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.LLRData.llr_upper_bound">llr_upper_bound (lir.data.models.LLRData attribute)</a>
+</li>
+      <li><a href="api/lir/lir.metrics.html#lir.metrics.llr_upper_bound">llr_upper_bound() (in module lir.metrics)</a>
+</li>
+      <li><a href="api/lir/lir.bounding.html#lir.bounding.LLRBounder">LLRBounder (class in lir.bounding)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.LLRData">LLRData (class in lir.data.models)</a>
+</li>
+      <li><a href="api/lir/lir.aggregation.html#lir.aggregation.AggregationData.llrdata">llrdata (lir.aggregation.AggregationData attribute)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.LLRData.llrs">llrs (lir.data.models.LLRData property)</a>
+</li>
+      <li><a href="api/lir/lir.util.html#lir.util.ln_to_log10">ln_to_log10() (in module lir.util)</a>
+</li>
+      <li><a href="api/lir/lir.persistence.html#lir.persistence.load_model">load_model() (in module lir.persistence)</a>
+</li>
+      <li><a href="api/lir/lir.aggregation.html#lir.aggregation.LOG">LOG (in module lir.aggregation)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.algorithms.kde.html#lir.algorithms.kde.LOG">(in module lir.algorithms.kde)</a>
+</li>
+        <li><a href="api/lir/lir.algorithms.logistic_regression.html#lir.algorithms.logistic_regression.LOG">(in module lir.algorithms.logistic_regression)</a>
+</li>
+        <li><a href="api/lir/lir.bounding.html#lir.bounding.LOG">(in module lir.bounding)</a>
+</li>
+        <li><a href="api/lir/lir.config.lrsystem_architectures.html#lir.config.lrsystem_architectures.LOG">(in module lir.config.lrsystem_architectures)</a>
+</li>
+        <li><a href="api/lir/lir.config.substitution.html#lir.config.substitution.LOG">(in module lir.config.substitution)</a>
+</li>
+        <li><a href="api/lir/lir.data.datasets.feature_data_csv.html#lir.data.datasets.feature_data_csv.LOG">(in module lir.data.datasets.feature_data_csv)</a>
+</li>
+        <li><a href="api/lir/lir.data.io.html#lir.data.io.LOG">(in module lir.data.io)</a>
+</li>
+        <li><a href="api/lir/lir.data.models.html#lir.data.models.LOG">(in module lir.data.models)</a>
+</li>
+        <li><a href="api/lir/lir.main.html#lir.main.LOG">(in module lir.main)</a>
+</li>
+        <li><a href="api/lir/lir.plotting.html#lir.plotting.LOG">(in module lir.plotting)</a>
+</li>
+        <li><a href="api/lir/lir.registry.html#lir.registry.LOG">(in module lir.registry)</a>
+</li>
+        <li><a href="api/lir/lir.transform.html#lir.transform.LOG">(in module lir.transform)</a>
+</li>
+        <li><a href="api/lir/lir.transform.composite.html#lir.transform.composite.LOG">(in module lir.transform.composite)</a>
+</li>
+        <li><a href="api/lir/lir.transform.pipeline.html#lir.transform.pipeline.LOG">(in module lir.transform.pipeline)</a>
+</li>
+      </ul></li>
+      <li><a href="api/lir/lir.transform.pipeline.html#lir.transform.pipeline.logging_pipeline">logging_pipeline() (in module lir.transform.pipeline)</a>
+</li>
+      <li><a href="api/lir/lir.transform.pipeline.html#lir.transform.pipeline.LoggingPipeline">LoggingPipeline (class in lir.transform.pipeline)</a>
+</li>
+      <li><a href="api/lir/lir.algorithms.logistic_regression.html#lir.algorithms.logistic_regression.LogitCalibrator">LogitCalibrator (class in lir.algorithms.logistic_regression)</a>
+</li>
+      <li><a href="api/lir/lir.util.html#lir.util.logodds_to_odds">logodds_to_odds() (in module lir.util)</a>
+</li>
+      <li><a href="api/lir/lir.util.html#lir.util.logodds_to_probability">logodds_to_probability() (in module lir.util)</a>
+</li>
+      <li><a href="api/lir/lir.util.html#lir.util.LR">LR (in module lir.util)</a>
+</li>
+      <li><a href="api/lir/lir.plotting.html#lir.plotting.lr_histogram">lr_histogram() (in module lir.plotting)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.visualization.html#lir.visualization.lr_histogram">(in module lir.visualization)</a>
+</li>
+      </ul></li>
+      <li><a href="api/lir/lir.lrsystems.lrsystems.html#lir.lrsystems.lrsystems.LRSystem">LRSystem (class in lir.lrsystems.lrsystems)</a>
+</li>
+      <li><a href="api/lir/lir.aggregation.html#lir.aggregation.AggregationData.lrsystem">lrsystem (lir.aggregation.AggregationData attribute)</a>
+</li>
+      <li><a href="api/lir/lir.config.experiment_strategies.html#lir.config.experiment_strategies.ExperimentStrategyConfigParser.lrsystem_config">lrsystem_config() (lir.config.experiment_strategies.ExperimentStrategyConfigParser method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.main.html#lir.main.main">main() (in module lir.main)</a>
+</li>
+      <li><a href="api/lir/lir.transform.distance.html#lir.transform.distance.ManhattanDistance">ManhattanDistance (class in lir.transform.distance)</a>
+</li>
+      <li><a href="api/lir/lir.aggregation.html#lir.aggregation.metrics_csv">metrics_csv() (in module lir.aggregation)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.InstanceData.model_config">model_config (lir.data.models.InstanceData attribute)</a>
+</li>
+      <li>
+    module
+
+      <ul>
+        <li><a href="api/lir/lir.html#module-lir">lir</a>
+</li>
+        <li><a href="api/lir/lir.__main__.html#module-lir.__main__">lir.__main__</a>
+</li>
+        <li><a href="api/lir/lir.aggregation.html#module-lir.aggregation">lir.aggregation</a>
+</li>
+        <li><a href="api/lir/lir.algorithms.html#module-lir.algorithms">lir.algorithms</a>
+</li>
+        <li><a href="api/lir/lir.algorithms.bayeserror.html#module-lir.algorithms.bayeserror">lir.algorithms.bayeserror</a>
+</li>
+        <li><a href="api/lir/lir.algorithms.bootstraps.html#module-lir.algorithms.bootstraps">lir.algorithms.bootstraps</a>
+</li>
+        <li><a href="api/lir/lir.algorithms.invariance_bounds.html#module-lir.algorithms.invariance_bounds">lir.algorithms.invariance_bounds</a>
+</li>
+        <li><a href="api/lir/lir.algorithms.isotonic_regression.html#module-lir.algorithms.isotonic_regression">lir.algorithms.isotonic_regression</a>
+</li>
+        <li><a href="api/lir/lir.algorithms.kde.html#module-lir.algorithms.kde">lir.algorithms.kde</a>
+</li>
+        <li><a href="api/lir/lir.algorithms.llr_overestimation.html#module-lir.algorithms.llr_overestimation">lir.algorithms.llr_overestimation</a>
+</li>
+        <li><a href="api/lir/lir.algorithms.logistic_regression.html#module-lir.algorithms.logistic_regression">lir.algorithms.logistic_regression</a>
+</li>
+        <li><a href="api/lir/lir.algorithms.percentile_rank.html#module-lir.algorithms.percentile_rank">lir.algorithms.percentile_rank</a>
+</li>
+        <li><a href="api/lir/lir.bounding.html#module-lir.bounding">lir.bounding</a>
+</li>
+        <li><a href="api/lir/lir.config.html#module-lir.config">lir.config</a>
+</li>
+        <li><a href="api/lir/lir.config.aggregation.html#module-lir.config.aggregation">lir.config.aggregation</a>
+</li>
+        <li><a href="api/lir/lir.config.base.html#module-lir.config.base">lir.config.base</a>
+</li>
+        <li><a href="api/lir/lir.config.data.html#module-lir.config.data">lir.config.data</a>
+</li>
+        <li><a href="api/lir/lir.config.experiment_strategies.html#module-lir.config.experiment_strategies">lir.config.experiment_strategies</a>
+</li>
+        <li><a href="api/lir/lir.config.lrsystem_architectures.html#module-lir.config.lrsystem_architectures">lir.config.lrsystem_architectures</a>
+</li>
+        <li><a href="api/lir/lir.config.metrics.html#module-lir.config.metrics">lir.config.metrics</a>
+</li>
+        <li><a href="api/lir/lir.config.substitution.html#module-lir.config.substitution">lir.config.substitution</a>
+</li>
+        <li><a href="api/lir/lir.config.transform.html#module-lir.config.transform">lir.config.transform</a>
+</li>
+        <li><a href="api/lir/lir.config.util.html#module-lir.config.util">lir.config.util</a>
+</li>
+        <li><a href="api/lir/lir.data.html#module-lir.data">lir.data</a>
+</li>
+        <li><a href="api/lir/lir.data.data_strategies.html#module-lir.data.data_strategies">lir.data.data_strategies</a>
+</li>
+        <li><a href="api/lir/lir.data.datasets.html#module-lir.data.datasets">lir.data.datasets</a>
+</li>
+        <li><a href="api/lir/lir.data.datasets.alcohol_breath_analyser.html#module-lir.data.datasets.alcohol_breath_analyser">lir.data.datasets.alcohol_breath_analyser</a>
+</li>
+        <li><a href="api/lir/lir.data.datasets.feature_data_csv.html#module-lir.data.datasets.feature_data_csv">lir.data.datasets.feature_data_csv</a>
+</li>
+        <li><a href="api/lir/lir.data.datasets.glass.html#module-lir.data.datasets.glass">lir.data.datasets.glass</a>
+</li>
+        <li><a href="api/lir/lir.data.datasets.synthesized_normal_binary.html#module-lir.data.datasets.synthesized_normal_binary">lir.data.datasets.synthesized_normal_binary</a>
+</li>
+        <li><a href="api/lir/lir.data.datasets.synthesized_normal_multiclass.html#module-lir.data.datasets.synthesized_normal_multiclass">lir.data.datasets.synthesized_normal_multiclass</a>
+</li>
+        <li><a href="api/lir/lir.data.io.html#module-lir.data.io">lir.data.io</a>
+</li>
+        <li><a href="api/lir/lir.data.models.html#module-lir.data.models">lir.data.models</a>
+</li>
+        <li><a href="api/lir/lir.experiments.html#module-lir.experiments">lir.experiments</a>
+</li>
+        <li><a href="api/lir/lir.experiments.base_experiment.html#module-lir.experiments.base_experiment">lir.experiments.base_experiment</a>
+</li>
+        <li><a href="api/lir/lir.experiments.optuna_experiment.html#module-lir.experiments.optuna_experiment">lir.experiments.optuna_experiment</a>
+</li>
+        <li><a href="api/lir/lir.experiments.predefined_experiment.html#module-lir.experiments.predefined_experiment">lir.experiments.predefined_experiment</a>
+</li>
+        <li><a href="api/lir/lir.lrsystems.html#module-lir.lrsystems">lir.lrsystems</a>
+</li>
+        <li><a href="api/lir/lir.lrsystems.binary_lrsystem.html#module-lir.lrsystems.binary_lrsystem">lir.lrsystems.binary_lrsystem</a>
+</li>
+        <li><a href="api/lir/lir.lrsystems.lrsystems.html#module-lir.lrsystems.lrsystems">lir.lrsystems.lrsystems</a>
+</li>
+        <li><a href="api/lir/lir.lrsystems.score_based.html#module-lir.lrsystems.score_based">lir.lrsystems.score_based</a>
+</li>
+        <li><a href="api/lir/lir.lrsystems.two_level.html#module-lir.lrsystems.two_level">lir.lrsystems.two_level</a>
+</li>
+        <li><a href="api/lir/lir.main.html#module-lir.main">lir.main</a>
+</li>
+        <li><a href="api/lir/lir.metrics.html#module-lir.metrics">lir.metrics</a>
+</li>
+        <li><a href="api/lir/lir.metrics.devpav.html#module-lir.metrics.devpav">lir.metrics.devpav</a>
+</li>
+        <li><a href="api/lir/lir.metrics.overestimation.html#module-lir.metrics.overestimation">lir.metrics.overestimation</a>
+</li>
+        <li><a href="api/lir/lir.persistence.html#module-lir.persistence">lir.persistence</a>
+</li>
+        <li><a href="api/lir/lir.plotting.html#module-lir.plotting">lir.plotting</a>
+</li>
+        <li><a href="api/lir/lir.plotting.expected_calibration_error.html#module-lir.plotting.expected_calibration_error">lir.plotting.expected_calibration_error</a>
+</li>
+        <li><a href="api/lir/lir.registry.html#module-lir.registry">lir.registry</a>
+</li>
+        <li><a href="api/lir/lir.resources.html#module-lir.resources">lir.resources</a>
+</li>
+        <li><a href="api/lir/lir.transform.html#module-lir.transform">lir.transform</a>
+</li>
+        <li><a href="api/lir/lir.transform.composite.html#module-lir.transform.composite">lir.transform.composite</a>
+</li>
+        <li><a href="api/lir/lir.transform.distance.html#module-lir.transform.distance">lir.transform.distance</a>
+</li>
+        <li><a href="api/lir/lir.transform.pairing.html#module-lir.transform.pairing">lir.transform.pairing</a>
+</li>
+        <li><a href="api/lir/lir.transform.pipeline.html#module-lir.transform.pipeline">lir.transform.pipeline</a>
+</li>
+        <li><a href="api/lir/lir.util.html#module-lir.util">lir.util</a>
+</li>
+        <li><a href="api/lir/lir.visualization.html#module-lir.visualization">lir.visualization</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.data.data_strategies.html#lir.data.data_strategies.MulticlassCrossValidation">MulticlassCrossValidation (class in lir.data.data_strategies)</a>
+</li>
+      <li><a href="api/lir/lir.data.data_strategies.html#lir.data.data_strategies.MulticlassTrainTestSplit">MulticlassTrainTestSplit (class in lir.data.data_strategies)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.PairedFeatureData.n_ref_instances">n_ref_instances (lir.data.models.PairedFeatureData attribute)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.PairedFeatureData.n_trace_instances">n_trace_instances (lir.data.models.PairedFeatureData attribute)</a>
+</li>
+      <li><a href="api/lir/lir.config.substitution.html#lir.config.substitution.HyperparameterOption.name">name (lir.config.substitution.HyperparameterOption attribute)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.data.datasets.feature_data_csv.html#lir.data.datasets.feature_data_csv.ExtraField.name">(lir.data.datasets.feature_data_csv.ExtraField attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.bounding.html#lir.bounding.NSourceBounder">NSourceBounder (class in lir.bounding)</a>
+</li>
+      <li><a href="api/lir/lir.transform.html#lir.transform.NumpyTransformer">NumpyTransformer (class in lir.transform)</a>
+</li>
+      <li><a href="api/lir/lir.config.transform.html#lir.config.transform.NumpyWrappingConfigParser">NumpyWrappingConfigParser (class in lir.config.transform)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="O">O</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.util.html#lir.util.odds_to_logodds">odds_to_logodds() (in module lir.util)</a>
+</li>
+      <li><a href="api/lir/lir.util.html#lir.util.odds_to_probability">odds_to_probability() (in module lir.util)</a>
+</li>
+      <li><a href="api/lir/lir.data.io.html#lir.data.io.RemoteResource.open">open() (lir.data.io.RemoteResource method)</a>
+</li>
+      <li><a href="api/lir/lir.config.substitution.html#lir.config.substitution.CategoricalHyperparameter.options">options() (lir.config.substitution.CategoricalHyperparameter method)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.config.substitution.html#lir.config.substitution.FloatHyperparameter.options">(lir.config.substitution.FloatHyperparameter method)</a>
+</li>
+        <li><a href="api/lir/lir.config.substitution.html#lir.config.substitution.FolderHyperparameter.options">(lir.config.substitution.FolderHyperparameter method)</a>
+</li>
+        <li><a href="api/lir/lir.config.substitution.html#lir.config.substitution.Hyperparameter.options">(lir.config.substitution.Hyperparameter method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.experiments.optuna_experiment.html#lir.experiments.optuna_experiment.OptunaExperiment">OptunaExperiment (class in lir.experiments.optuna_experiment)</a>
+</li>
+      <li><a href="api/lir/lir.config.experiment_strategies.html#lir.config.experiment_strategies.OptunaStrategy">OptunaStrategy (class in lir.config.experiment_strategies)</a>
+</li>
+      <li><a href="api/lir/lir.config.experiment_strategies.html#lir.config.experiment_strategies.ExperimentStrategyConfigParser.output_list">output_list() (lir.config.experiment_strategies.ExperimentStrategyConfigParser method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.transform.pairing.html#lir.transform.pairing.InstancePairing.pair">pair() (lir.transform.pairing.InstancePairing method)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.transform.pairing.html#lir.transform.pairing.PairingMethod.pair">(lir.transform.pairing.PairingMethod method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.pairing.html#lir.transform.pairing.SourcePairing.pair">(lir.transform.pairing.SourcePairing method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.PairedFeatureData">PairedFeatureData (class in lir.data.models)</a>
+</li>
+      <li><a href="api/lir/lir.data.data_strategies.html#lir.data.data_strategies.PairedInstancesTrainTestSplit">PairedInstancesTrainTestSplit (class in lir.data.data_strategies)</a>
+</li>
+      <li><a href="api/lir/lir.transform.pairing.html#lir.transform.pairing.PairingMethod">PairingMethod (class in lir.transform.pairing)</a>
+</li>
+      <li><a href="api/lir/lir.aggregation.html#lir.aggregation.AggregationData.parameters">parameters (lir.aggregation.AggregationData attribute)</a>
+</li>
+      <li><a href="api/lir/lir.config.base.html#lir.config.base.ConfigParser.parse">parse() (lir.config.base.ConfigParser method)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.config.base.html#lir.config.base.GenericConfigParser.parse">(lir.config.base.GenericConfigParser method)</a>
+</li>
+        <li><a href="api/lir/lir.config.base.html#lir.config.base.GenericFunctionConfigParser.parse">(lir.config.base.GenericFunctionConfigParser method)</a>
+</li>
+        <li><a href="api/lir/lir.config.experiment_strategies.html#lir.config.experiment_strategies.ExperimentStrategyConfigParser.parse">(lir.config.experiment_strategies.ExperimentStrategyConfigParser method)</a>
+</li>
+        <li><a href="api/lir/lir.config.transform.html#lir.config.transform.GenericTransformerConfigParser.parse">(lir.config.transform.GenericTransformerConfigParser method)</a>
+</li>
+        <li><a href="api/lir/lir.config.transform.html#lir.config.transform.NumpyWrappingConfigParser.parse">(lir.config.transform.NumpyWrappingConfigParser method)</a>
+</li>
+        <li><a href="api/lir/lir.config.util.html#lir.config.util.TeeParser.parse">(lir.config.util.TeeParser method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/lir/lir.config.aggregation.html#lir.config.aggregation.parse_aggregation">parse_aggregation() (in module lir.config.aggregation)</a>
+</li>
+      <li><a href="api/lir/lir.config.aggregation.html#lir.config.aggregation.parse_aggregations">parse_aggregations() (in module lir.config.aggregation)</a>
+</li>
+      <li><a href="api/lir/lir.algorithms.kde.html#lir.algorithms.kde.parse_bandwidth">parse_bandwidth() (in module lir.algorithms.kde)</a>
+</li>
+      <li><a href="api/lir/lir.config.substitution.html#lir.config.substitution.parse_categorical">parse_categorical() (in module lir.config.substitution)</a>
+</li>
+      <li><a href="api/lir/lir.config.substitution.html#lir.config.substitution.parse_clustered">parse_clustered() (in module lir.config.substitution)</a>
+</li>
+      <li><a href="api/lir/lir.config.substitution.html#lir.config.substitution.parse_constant">parse_constant() (in module lir.config.substitution)</a>
+</li>
+      <li><a href="api/lir/lir.config.data.html#lir.config.data.parse_data_object">parse_data_object() (in module lir.config.data)</a>
+</li>
+      <li><a href="api/lir/lir.config.data.html#lir.config.data.parse_data_provider">parse_data_provider() (in module lir.config.data)</a>
+</li>
+      <li><a href="api/lir/lir.config.data.html#lir.config.data.parse_data_strategy">parse_data_strategy() (in module lir.config.data)</a>
+</li>
+      <li><a href="api/lir/lir.config.lrsystem_architectures.html#lir.config.lrsystem_architectures.parse_default_pipeline">parse_default_pipeline() (in module lir.config.lrsystem_architectures)</a>
+</li>
+      <li><a href="api/lir/lir.config.experiment_strategies.html#lir.config.experiment_strategies.parse_experiment_strategy">parse_experiment_strategy() (in module lir.config.experiment_strategies)</a>
+</li>
+      <li><a href="api/lir/lir.config.experiment_strategies.html#lir.config.experiment_strategies.parse_experiments">parse_experiments() (in module lir.config.experiment_strategies)</a>
+</li>
+      <li><a href="api/lir/lir.config.substitution.html#lir.config.substitution.parse_float">parse_float() (in module lir.config.substitution)</a>
+</li>
+      <li><a href="api/lir/lir.config.substitution.html#lir.config.substitution.parse_folder">parse_folder() (in module lir.config.substitution)</a>
+</li>
+      <li><a href="api/lir/lir.config.metrics.html#lir.config.metrics.parse_individual_metric">parse_individual_metric() (in module lir.config.metrics)</a>
+</li>
+      <li><a href="api/lir/lir.config.lrsystem_architectures.html#lir.config.lrsystem_architectures.parse_lrsystem">parse_lrsystem() (in module lir.config.lrsystem_architectures)</a>
+</li>
+      <li><a href="api/lir/lir.config.transform.html#lir.config.transform.parse_module">parse_module() (in module lir.config.transform)</a>
+</li>
+      <li><a href="api/lir/lir.config.base.html#lir.config.base.parse_pairing_config">parse_pairing_config() (in module lir.config.base)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.config.substitution.html#lir.config.substitution.parse_parameter">parse_parameter() (in module lir.config.substitution)</a>
+</li>
+      <li><a href="api/lir/lir.data.datasets.feature_data_csv.html#lir.data.datasets.feature_data_csv.ExtraField.parse_row">parse_row() (lir.data.datasets.feature_data_csv.ExtraField method)</a>
+</li>
+      <li><a href="api/lir/lir.persistence.html#lir.persistence.parse_save_model">parse_save_model() (in module lir.persistence)</a>
+</li>
+      <li><a href="api/lir/lir.transform.pipeline.html#lir.transform.pipeline.parse_steps">parse_steps() (in module lir.transform.pipeline)</a>
+</li>
+      <li><a href="api/lir/lir.config.lrsystem_architectures.html#lir.config.lrsystem_architectures.ParsedLRSystem">ParsedLRSystem (class in lir.config.lrsystem_architectures)</a>
+</li>
+      <li><a href="api/lir/lir.plotting.html#lir.plotting.pav">pav() (in module lir.plotting)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.visualization.html#lir.visualization.pav">(in module lir.visualization)</a>
+</li>
+      </ul></li>
+      <li><a href="api/lir/lir.algorithms.percentile_rank.html#lir.algorithms.percentile_rank.PercentileRankTransformer">PercentileRankTransformer (class in lir.algorithms.percentile_rank)</a>
+</li>
+      <li><a href="api/lir/lir.transform.pipeline.html#lir.transform.pipeline.Pipeline">Pipeline (class in lir.transform.pipeline)</a>
+</li>
+      <li><a href="api/lir/lir.transform.pipeline.html#lir.transform.pipeline.pipeline">pipeline() (in module lir.transform.pipeline)</a>
+</li>
+      <li><a href="api/lir/lir.aggregation.html#lir.aggregation.plot_ece">plot_ece() (in module lir.aggregation)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.plotting.expected_calibration_error.html#lir.plotting.expected_calibration_error.plot_ece">(in module lir.plotting.expected_calibration_error)</a>
+</li>
+      </ul></li>
+      <li><a href="api/lir/lir.aggregation.html#lir.aggregation.plot_invariance_delta_function">plot_invariance_delta_function() (in module lir.aggregation)</a>
+</li>
+      <li><a href="api/lir/lir.algorithms.invariance_bounds.html#lir.algorithms.invariance_bounds.plot_invariance_delta_functions">plot_invariance_delta_functions() (in module lir.algorithms.invariance_bounds)</a>
+</li>
+      <li><a href="api/lir/lir.aggregation.html#lir.aggregation.plot_llr_interval">plot_llr_interval() (in module lir.aggregation)</a>
+</li>
+      <li><a href="api/lir/lir.aggregation.html#lir.aggregation.plot_llr_overestimation">plot_llr_overestimation() (in module lir.aggregation)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.algorithms.llr_overestimation.html#lir.algorithms.llr_overestimation.plot_llr_overestimation">(in module lir.algorithms.llr_overestimation)</a>
+</li>
+      </ul></li>
+      <li><a href="api/lir/lir.aggregation.html#lir.aggregation.plot_lr_histogram">plot_lr_histogram() (in module lir.aggregation)</a>
+</li>
+      <li><a href="api/lir/lir.aggregation.html#lir.aggregation.plot_nbe">plot_nbe() (in module lir.aggregation)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.algorithms.bayeserror.html#lir.algorithms.bayeserror.plot_nbe">(in module lir.algorithms.bayeserror)</a>
+</li>
+      </ul></li>
+      <li><a href="api/lir/lir.aggregation.html#lir.aggregation.plot_pav">plot_pav() (in module lir.aggregation)</a>
+</li>
+      <li><a href="api/lir/lir.aggregation.html#lir.aggregation.plot_tippett">plot_tippett() (in module lir.aggregation)</a>
+</li>
+      <li><a href="api/lir/lir.config.base.html#lir.config.base.pop_field">pop_field() (in module lir.config.base)</a>
+</li>
+      <li><a href="api/lir/lir.data.datasets.synthesized_normal_multiclass.html#lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension.population_mean">population_mean (lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension attribute)</a>
+</li>
+      <li><a href="api/lir/lir.data.datasets.synthesized_normal_multiclass.html#lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension.population_std">population_std (lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension attribute)</a>
+</li>
+      <li><a href="api/lir/lir.experiments.predefined_experiment.html#lir.experiments.predefined_experiment.PredefinedExperiment">PredefinedExperiment (class in lir.experiments.predefined_experiment)</a>
+</li>
+      <li><a href="api/lir/lir.data.data_strategies.html#lir.data.data_strategies.PredefinedTrainTestSplit">PredefinedTrainTestSplit (class in lir.data.data_strategies)</a>
+</li>
+      <li><a href="api/lir/lir.lrsystems.two_level.html#lir.lrsystems.two_level.TwoLevelModelNormalKDE.predict_proba">predict_proba() (lir.lrsystems.two_level.TwoLevelModelNormalKDE method)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.transform.html#lir.transform.SKLearnPipelineModule.predict_proba">(lir.transform.SKLearnPipelineModule method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/lir/lir.config.experiment_strategies.html#lir.config.experiment_strategies.ExperimentStrategyConfigParser.primary_metric">primary_metric() (lir.config.experiment_strategies.ExperimentStrategyConfigParser method)</a>
+</li>
+      <li><a href="api/lir/lir.util.html#lir.util.probability_to_logodds">probability_to_logodds() (in module lir.util)</a>
+</li>
+      <li><a href="api/lir/lir.util.html#lir.util.probability_to_odds">probability_to_odds() (in module lir.util)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.config.base.html#lir.config.base.ConfigParser.reference">reference() (lir.config.base.ConfigParser method)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.config.base.html#lir.config.base.GenericConfigParser.reference">(lir.config.base.GenericConfigParser method)</a>
+</li>
+        <li><a href="api/lir/lir.config.base.html#lir.config.base.GenericFunctionConfigParser.reference">(lir.config.base.GenericFunctionConfigParser method)</a>
+</li>
+        <li><a href="api/lir/lir.config.transform.html#lir.config.transform.NumpyWrappingConfigParser.reference">(lir.config.transform.NumpyWrappingConfigParser method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/lir/lir.registry.html#lir.registry.registry">registry() (in module lir.registry)</a>
+</li>
+      <li><a href="api/lir/lir.data.io.html#lir.data.io.RemoteResource">RemoteResource (class in lir.data.io)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.InstanceData.replace">replace() (lir.data.models.InstanceData method)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.InstanceData.replace_as">replace_as() (lir.data.models.InstanceData method)</a>
+</li>
+      <li><a href="api/lir/lir.aggregation.html#lir.aggregation.AggregatePlot.report">report() (lir.aggregation.AggregatePlot method)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.aggregation.html#lir.aggregation.Aggregation.report">(lir.aggregation.Aggregation method)</a>
+</li>
+        <li><a href="api/lir/lir.aggregation.html#lir.aggregation.SubsetAggregation.report">(lir.aggregation.SubsetAggregation method)</a>
+</li>
+        <li><a href="api/lir/lir.aggregation.html#lir.aggregation.WriteMetricsToCsv.report">(lir.aggregation.WriteMetricsToCsv method)</a>
+</li>
+        <li><a href="api/lir/lir.persistence.html#lir.persistence.SaveModel.report">(lir.persistence.SaveModel method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.InstanceData.require_labels">require_labels (lir.data.models.InstanceData property)</a>
+</li>
+      <li><a href="api/lir/lir.transform.pairing.html#lir.transform.pairing.InstancePairing.rng">rng (lir.transform.pairing.InstancePairing property)</a>
+</li>
+      <li><a href="api/lir/lir.data.data_strategies.html#lir.data.data_strategies.RoleAssignment">RoleAssignment (class in lir.data.data_strategies)</a>
+</li>
+      <li><a href="api/lir/lir.experiments.base_experiment.html#lir.experiments.base_experiment.Experiment.run">run() (lir.experiments.base_experiment.Experiment method)</a>
+</li>
+      <li><a href="api/lir/lir.aggregation.html#lir.aggregation.AggregationData.run_name">run_name (lir.aggregation.AggregationData attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.persistence.html#lir.persistence.save_model">save_model() (in module lir.persistence)</a>
+</li>
+      <li><a href="api/lir/lir.plotting.html#lir.plotting.savefig">savefig() (in module lir.plotting)</a>
+</li>
+      <li><a href="api/lir/lir.persistence.html#lir.persistence.SaveModel">SaveModel (class in lir.persistence)</a>
+</li>
+      <li><a href="api/lir/lir.config.lrsystem_architectures.html#lir.config.lrsystem_architectures.score_based">score_based() (in module lir.config.lrsystem_architectures)</a>
+</li>
+      <li><a href="api/lir/lir.plotting.html#lir.plotting.score_distribution">score_distribution() (in module lir.plotting)</a>
+</li>
+      <li><a href="api/lir/lir.lrsystems.score_based.html#lir.lrsystems.score_based.ScoreBasedSystem">ScoreBasedSystem (class in lir.lrsystems.score_based)</a>
+</li>
+      <li><a href="api/lir/lir.data.io.html#lir.data.io.search_path">search_path() (in module lir.data.io)</a>
+</li>
+      <li><a href="api/lir/lir.main.html#lir.main.setup_logging">setup_logging() (in module lir.main)</a>
+</li>
+      <li><a href="api/lir/lir.plotting.html#lir.plotting.show">show() (in module lir.plotting)</a>
+</li>
+      <li><a href="api/lir/lir.config.util.html#lir.config.util.simplify_data_structure">simplify_data_structure() (in module lir.config.util)</a>
+</li>
+      <li><a href="api/lir/lir.config.experiment_strategies.html#lir.config.experiment_strategies.SingleRunStrategy">SingleRunStrategy (class in lir.config.experiment_strategies)</a>
+</li>
+      <li><a href="api/lir/lir.transform.html#lir.transform.SKLearnPipelineModule">SKLearnPipelineModule (class in lir.transform)</a>
+</li>
+      <li><a href="api/lir/lir.transform.html#lir.transform.SklearnTransformer">SklearnTransformer (class in lir.transform)</a>
+</li>
+      <li><a href="api/lir/lir.transform.html#lir.transform.SklearnTransformerType">SklearnTransformerType (class in lir.transform)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.InstanceData.source_ids">source_ids (lir.data.models.InstanceData attribute)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.InstanceData.source_ids_1d">source_ids_1d (lir.data.models.InstanceData property)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.PairedFeatureData.source_ids_ref">source_ids_ref (lir.data.models.PairedFeatureData property)</a>
+</li>
+      <li><a href="api/lir/lir.data.models.html#lir.data.models.PairedFeatureData.source_ids_trace">source_ids_trace (lir.data.models.PairedFeatureData property)</a>
+</li>
+      <li><a href="api/lir/lir.transform.pairing.html#lir.transform.pairing.SourcePairing">SourcePairing (class in lir.transform.pairing)</a>
+</li>
+      <li><a href="api/lir/lir.data.datasets.synthesized_normal_multiclass.html#lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension.sources_std">sources_std (lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension attribute)</a>
+</li>
+      <li><a href="api/lir/lir.config.lrsystem_architectures.html#lir.config.lrsystem_architectures.specific_source">specific_source() (in module lir.config.lrsystem_architectures)</a>
+</li>
+      <li><a href="api/lir/lir.bounding.html#lir.bounding.StaticBounder">StaticBounder (class in lir.bounding)</a>
+</li>
+      <li><a href="api/lir/lir.config.aggregation.html#lir.config.aggregation.subset_aggregation">subset_aggregation() (in module lir.config.aggregation)</a>
+</li>
+      <li><a href="api/lir/lir.aggregation.html#lir.aggregation.SubsetAggregation">SubsetAggregation (class in lir.aggregation)</a>
+</li>
+      <li><a href="api/lir/lir.config.substitution.html#lir.config.substitution.substitute_parameters">substitute_parameters() (in module lir.config.substitution)</a>
+</li>
+      <li><a href="api/lir/lir.config.substitution.html#lir.config.substitution.HyperparameterOption.substitutions">substitutions (lir.config.substitution.HyperparameterOption attribute)</a>
+</li>
+      <li><a href="api/lir/lir.data.datasets.synthesized_normal_binary.html#lir.data.datasets.synthesized_normal_binary.synthesized_normal_binary">synthesized_normal_binary() (in module lir.data.datasets.synthesized_normal_binary)</a>
+</li>
+      <li><a href="api/lir/lir.data.datasets.synthesized_normal_multiclass.html#lir.data.datasets.synthesized_normal_multiclass.synthesized_normal_multiclass">synthesized_normal_multiclass() (in module lir.data.datasets.synthesized_normal_multiclass)</a>
+</li>
+      <li><a href="api/lir/lir.data.datasets.synthesized_normal_multiclass.html#lir.data.datasets.synthesized_normal_multiclass.SynthesizedDimension">SynthesizedDimension (class in lir.data.datasets.synthesized_normal_multiclass)</a>
+</li>
+      <li><a href="api/lir/lir.data.datasets.synthesized_normal_binary.html#lir.data.datasets.synthesized_normal_binary.SynthesizedNormalBinaryData">SynthesizedNormalBinaryData (class in lir.data.datasets.synthesized_normal_binary)</a>
+</li>
+      <li><a href="api/lir/lir.data.datasets.synthesized_normal_binary.html#lir.data.datasets.synthesized_normal_binary.SynthesizedNormalData">SynthesizedNormalData (class in lir.data.datasets.synthesized_normal_binary)</a>
+</li>
+      <li><a href="api/lir/lir.data.datasets.synthesized_normal_multiclass.html#lir.data.datasets.synthesized_normal_multiclass.SynthesizedNormalMulticlassData">SynthesizedNormalMulticlassData (class in lir.data.datasets.synthesized_normal_multiclass)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.transform.html#lir.transform.Tee">Tee (class in lir.transform)</a>
+</li>
+      <li><a href="api/lir/lir.config.util.html#lir.config.util.TeeParser">TeeParser (class in lir.config.util)</a>
+</li>
+      <li><a href="api/lir/lir.data.data_strategies.html#lir.data.data_strategies.RoleAssignment.TEST">TEST (lir.data.data_strategies.RoleAssignment attribute)</a>
+</li>
+      <li><a href="api/lir/lir.plotting.html#lir.plotting.tippett">tippett() (in module lir.plotting)</a>
+</li>
+      <li><a href="api/lir/lir.plotting.html#lir.plotting.Canvas.title">title() (lir.plotting.Canvas method)</a>
+</li>
+      <li><a href="api/lir/lir.data.data_strategies.html#lir.data.data_strategies.RoleAssignment.TRAIN">TRAIN (lir.data.data_strategies.RoleAssignment attribute)</a>
+</li>
+      <li><a href="api/lir/lir.algorithms.isotonic_regression.html#lir.algorithms.isotonic_regression.IsotonicRegression.transform">transform() (lir.algorithms.isotonic_regression.IsotonicRegression method)</a>
+
+      <ul>
+        <li><a href="api/lir/lir.algorithms.percentile_rank.html#lir.algorithms.percentile_rank.PercentileRankTransformer.transform">(lir.algorithms.percentile_rank.PercentileRankTransformer method)</a>
+</li>
+        <li><a href="api/lir/lir.lrsystems.two_level.html#lir.lrsystems.two_level.TwoLevelModelNormalKDE.transform">(lir.lrsystems.two_level.TwoLevelModelNormalKDE method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.html#lir.transform.SKLearnPipelineModule.transform">(lir.transform.SKLearnPipelineModule method)</a>
+</li>
+        <li><a href="api/lir/lir.transform.html#lir.transform.SklearnTransformerType.transform">(lir.transform.SklearnTransformerType method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.transform.html#lir.transform.Transformer">Transformer (class in lir.transform)</a>
+</li>
+      <li><a href="api/lir/lir.transform.html#lir.transform.TransformerWrapper">TransformerWrapper (class in lir.transform)</a>
+</li>
+      <li><a href="api/lir/lir.config.lrsystem_architectures.html#lir.config.lrsystem_architectures.two_level">two_level() (in module lir.config.lrsystem_architectures)</a>
+</li>
+      <li><a href="api/lir/lir.lrsystems.two_level.html#lir.lrsystems.two_level.TwoLevelModelNormalKDE">TwoLevelModelNormalKDE (class in lir.lrsystems.two_level)</a>
+</li>
+      <li><a href="api/lir/lir.lrsystems.two_level.html#lir.lrsystems.two_level.TwoLevelSystem">TwoLevelSystem (class in lir.lrsystems.two_level)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.data.datasets.feature_data_csv.html#lir.data.datasets.feature_data_csv.ExtraField.validate_cell">validate_cell (lir.data.datasets.feature_data_csv.ExtraField attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.util.html#lir.util.warn_deprecated">warn_deprecated() (in module lir.util)</a>
+</li>
+      <li><a href="api/lir/lir.data.io.html#lir.data.io.DataFileBuilderCsv.write">write() (lir.data.io.DataFileBuilderCsv method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.aggregation.html#lir.aggregation.WriteMetricsToCsv">WriteMetricsToCsv (class in lir.aggregation)</a>
+</li>
+      <li><a href="api/lir/lir.transform.html#lir.transform.DataWriter.writerow">writerow() (lir.transform.DataWriter method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="X">X</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.util.html#lir.util.Xn_to_Xy">Xn_to_Xy() (in module lir.util)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.util.html#lir.util.Xy_to_Xn">Xy_to_Xn() (in module lir.util)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="Y">Y</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.config.base.html#lir.config.base.YamlParseError">YamlParseError</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/lir/lir.registry.html#lir.registry.YamlRegistry">YamlRegistry (class in lir.registry)</a>
+</li>
+      <li><a href="api/lir/lir.config.base.html#lir.config.base.YamlValueType">YamlValueType (in module lir.config.base)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

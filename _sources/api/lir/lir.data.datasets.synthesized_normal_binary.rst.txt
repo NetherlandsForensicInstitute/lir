@@ -1,0 +1,84 @@
+:py:mod:`lir.data.datasets.synthesized_normal_binary`
+=====================================================
+
+.. py:module:: lir.data.datasets.synthesized_normal_binary
+
+.. autodoc2-docstring:: lir.data.datasets.synthesized_normal_binary
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`SynthesizedNormalData <lir.data.datasets.synthesized_normal_binary.SynthesizedNormalData>`
+     - .. autodoc2-docstring:: lir.data.datasets.synthesized_normal_binary.SynthesizedNormalData
+          :parser: myst
+          :summary:
+   * - :py:obj:`SynthesizedNormalBinaryData <lir.data.datasets.synthesized_normal_binary.SynthesizedNormalBinaryData>`
+     - .. autodoc2-docstring:: lir.data.datasets.synthesized_normal_binary.SynthesizedNormalBinaryData
+          :parser: myst
+          :summary:
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`synthesized_normal_binary <lir.data.datasets.synthesized_normal_binary.synthesized_normal_binary>`
+     - .. autodoc2-docstring:: lir.data.datasets.synthesized_normal_binary.synthesized_normal_binary
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:class:: SynthesizedNormalData(mean: float, std: float, size: int | tuple[int, int])
+   :canonical: lir.data.datasets.synthesized_normal_binary.SynthesizedNormalData
+
+   .. autodoc2-docstring:: lir.data.datasets.synthesized_normal_binary.SynthesizedNormalData
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.data.datasets.synthesized_normal_binary.SynthesizedNormalData.__init__
+      :parser: myst
+
+   .. py:method:: get(rng: numpy.random.Generator) -> numpy.ndarray
+      :canonical: lir.data.datasets.synthesized_normal_binary.SynthesizedNormalData.get
+
+      .. autodoc2-docstring:: lir.data.datasets.synthesized_normal_binary.SynthesizedNormalData.get
+         :parser: myst
+
+.. py:class:: SynthesizedNormalBinaryData(h1_params: lir.data.datasets.synthesized_normal_binary.SynthesizedNormalData, h2_params: lir.data.datasets.synthesized_normal_binary.SynthesizedNormalData, seed: int | None = None)
+   :canonical: lir.data.datasets.synthesized_normal_binary.SynthesizedNormalBinaryData
+
+   Bases: :py:obj:`lir.data.models.DataProvider`
+
+   .. autodoc2-docstring:: lir.data.datasets.synthesized_normal_binary.SynthesizedNormalBinaryData
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.data.datasets.synthesized_normal_binary.SynthesizedNormalBinaryData.__init__
+      :parser: myst
+
+   .. py:method:: get_instances() -> lir.data.models.FeatureData
+      :canonical: lir.data.datasets.synthesized_normal_binary.SynthesizedNormalBinaryData.get_instances
+
+      .. autodoc2-docstring:: lir.data.datasets.synthesized_normal_binary.SynthesizedNormalBinaryData.get_instances
+         :parser: myst
+
+.. py:function:: synthesized_normal_binary(config: lir.config.base.ContextAwareDict, _: pathlib.Path) -> lir.data.models.DataProvider
+   :canonical: lir.data.datasets.synthesized_normal_binary.synthesized_normal_binary
+
+   .. autodoc2-docstring:: lir.data.datasets.synthesized_normal_binary.synthesized_normal_binary
+      :parser: myst

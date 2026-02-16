@@ -1,0 +1,138 @@
+:py:mod:`lir.config.lrsystem_architectures`
+===========================================
+
+.. py:module:: lir.config.lrsystem_architectures
+
+.. autodoc2-docstring:: lir.config.lrsystem_architectures
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`ParsedLRSystem <lir.config.lrsystem_architectures.ParsedLRSystem>`
+     - .. autodoc2-docstring:: lir.config.lrsystem_architectures.ParsedLRSystem
+          :parser: myst
+          :summary:
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`specific_source <lir.config.lrsystem_architectures.specific_source>`
+     - .. autodoc2-docstring:: lir.config.lrsystem_architectures.specific_source
+          :parser: myst
+          :summary:
+   * - :py:obj:`score_based <lir.config.lrsystem_architectures.score_based>`
+     - .. autodoc2-docstring:: lir.config.lrsystem_architectures.score_based
+          :parser: myst
+          :summary:
+   * - :py:obj:`two_level <lir.config.lrsystem_architectures.two_level>`
+     - .. autodoc2-docstring:: lir.config.lrsystem_architectures.two_level
+          :parser: myst
+          :summary:
+   * - :py:obj:`parse_lrsystem <lir.config.lrsystem_architectures.parse_lrsystem>`
+     - .. autodoc2-docstring:: lir.config.lrsystem_architectures.parse_lrsystem
+          :parser: myst
+          :summary:
+   * - :py:obj:`augment_config <lir.config.lrsystem_architectures.augment_config>`
+     - .. autodoc2-docstring:: lir.config.lrsystem_architectures.augment_config
+          :parser: myst
+          :summary:
+   * - :py:obj:`parse_default_pipeline <lir.config.lrsystem_architectures.parse_default_pipeline>`
+     - .. autodoc2-docstring:: lir.config.lrsystem_architectures.parse_default_pipeline
+          :parser: myst
+          :summary:
+
+Data
+~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`LOG <lir.config.lrsystem_architectures.LOG>`
+     - .. autodoc2-docstring:: lir.config.lrsystem_architectures.LOG
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:data:: LOG
+   :canonical: lir.config.lrsystem_architectures.LOG
+   :value: 'getLogger(...)'
+
+   .. autodoc2-docstring:: lir.config.lrsystem_architectures.LOG
+      :parser: myst
+
+.. py:class:: ParsedLRSystem(lrsystem: lir.lrsystems.lrsystems.LRSystem, config: lir.config.substitution.ContextAwareDict)
+   :canonical: lir.config.lrsystem_architectures.ParsedLRSystem
+
+   Bases: :py:obj:`lir.lrsystems.lrsystems.LRSystem`
+
+   .. autodoc2-docstring:: lir.config.lrsystem_architectures.ParsedLRSystem
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.config.lrsystem_architectures.ParsedLRSystem.__init__
+      :parser: myst
+
+   .. py:method:: fit(instances: lir.data.models.InstanceData) -> typing.Self
+      :canonical: lir.config.lrsystem_architectures.ParsedLRSystem.fit
+
+      .. autodoc2-docstring:: lir.config.lrsystem_architectures.ParsedLRSystem.fit
+         :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.InstanceData) -> lir.data.models.LLRData
+      :canonical: lir.config.lrsystem_architectures.ParsedLRSystem.apply
+
+      .. autodoc2-docstring:: lir.config.lrsystem_architectures.ParsedLRSystem.apply
+         :parser: myst
+
+.. py:function:: specific_source(config: lir.config.substitution.ContextAwareDict, output_dir: pathlib.Path) -> lir.lrsystems.lrsystems.LRSystem
+   :canonical: lir.config.lrsystem_architectures.specific_source
+
+   .. autodoc2-docstring:: lir.config.lrsystem_architectures.specific_source
+      :parser: myst
+
+.. py:function:: score_based(config: lir.config.substitution.ContextAwareDict, output_dir: pathlib.Path) -> lir.lrsystems.lrsystems.LRSystem
+   :canonical: lir.config.lrsystem_architectures.score_based
+
+   .. autodoc2-docstring:: lir.config.lrsystem_architectures.score_based
+      :parser: myst
+
+.. py:function:: two_level(config: lir.config.substitution.ContextAwareDict, output_dir: pathlib.Path) -> lir.lrsystems.two_level.TwoLevelSystem
+   :canonical: lir.config.lrsystem_architectures.two_level
+
+   .. autodoc2-docstring:: lir.config.lrsystem_architectures.two_level
+      :parser: myst
+
+.. py:function:: parse_lrsystem(config: lir.config.substitution.ContextAwareDict, output_dir: pathlib.Path) -> lir.config.lrsystem_architectures.ParsedLRSystem
+   :canonical: lir.config.lrsystem_architectures.parse_lrsystem
+
+   .. autodoc2-docstring:: lir.config.lrsystem_architectures.parse_lrsystem
+      :parser: myst
+
+.. py:function:: augment_config(baseline_config: lir.config.substitution.ContextAwareDict, hyperparameters: dict[str, lir.config.substitution.HyperparameterOption]) -> lir.config.substitution.ContextAwareDict
+   :canonical: lir.config.lrsystem_architectures.augment_config
+
+   .. autodoc2-docstring:: lir.config.lrsystem_architectures.augment_config
+      :parser: myst
+
+.. py:function:: parse_default_pipeline(config: lir.config.substitution.ContextAwareDict) -> str
+   :canonical: lir.config.lrsystem_architectures.parse_default_pipeline
+
+   .. autodoc2-docstring:: lir.config.lrsystem_architectures.parse_default_pipeline
+      :parser: myst

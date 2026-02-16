@@ -1,0 +1,47 @@
+:py:mod:`lir.lrsystems.lrsystems`
+=================================
+
+.. py:module:: lir.lrsystems.lrsystems
+
+.. autodoc2-docstring:: lir.lrsystems.lrsystems
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`LRSystem <lir.lrsystems.lrsystems.LRSystem>`
+     - .. autodoc2-docstring:: lir.lrsystems.lrsystems.LRSystem
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:class:: LRSystem
+   :canonical: lir.lrsystems.lrsystems.LRSystem
+
+   Bases: :py:obj:`lir.Transformer`, :py:obj:`abc.ABC`
+
+   .. autodoc2-docstring:: lir.lrsystems.lrsystems.LRSystem
+      :parser: myst
+
+   .. py:method:: fit(instances: lir.data.models.InstanceData) -> typing.Self
+      :canonical: lir.lrsystems.lrsystems.LRSystem.fit
+
+      .. autodoc2-docstring:: lir.lrsystems.lrsystems.LRSystem.fit
+         :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.InstanceData) -> lir.data.models.LLRData
+      :canonical: lir.lrsystems.lrsystems.LRSystem.apply
+      :abstractmethod:
+
+      .. autodoc2-docstring:: lir.lrsystems.lrsystems.LRSystem.apply
+         :parser: myst

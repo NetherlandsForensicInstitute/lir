@@ -1,0 +1,52 @@
+:py:mod:`lir.config.data`
+=========================
+
+.. py:module:: lir.config.data
+
+.. autodoc2-docstring:: lir.config.data
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`parse_data_object <lir.config.data.parse_data_object>`
+     - .. autodoc2-docstring:: lir.config.data.parse_data_object
+          :parser: myst
+          :summary:
+   * - :py:obj:`parse_data_strategy <lir.config.data.parse_data_strategy>`
+     - .. autodoc2-docstring:: lir.config.data.parse_data_strategy
+          :parser: myst
+          :summary:
+   * - :py:obj:`parse_data_provider <lir.config.data.parse_data_provider>`
+     - .. autodoc2-docstring:: lir.config.data.parse_data_provider
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:function:: parse_data_object(cfg: lir.config.substitution.ContextAwareDict, output_path: pathlib.Path) -> tuple[lir.data.models.DataProvider, lir.data.models.DataStrategy]
+   :canonical: lir.config.data.parse_data_object
+
+   .. autodoc2-docstring:: lir.config.data.parse_data_object
+      :parser: myst
+
+.. py:function:: parse_data_strategy(cfg: lir.config.substitution.ContextAwareDict, output_path: pathlib.Path) -> lir.data.models.DataStrategy
+   :canonical: lir.config.data.parse_data_strategy
+
+   .. autodoc2-docstring:: lir.config.data.parse_data_strategy
+      :parser: myst
+
+.. py:function:: parse_data_provider(cfg: lir.config.substitution.ContextAwareDict, output_path: pathlib.Path) -> lir.data.models.DataProvider
+   :canonical: lir.config.data.parse_data_provider
+
+   .. autodoc2-docstring:: lir.config.data.parse_data_provider
+      :parser: myst

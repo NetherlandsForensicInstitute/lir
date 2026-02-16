@@ -1,0 +1,8 @@
+:py:mod:`lir.__main__`
+======================
+
+.. py:module:: lir.__main__
+
+.. autodoc2-docstring:: lir.__main__
+   :parser: myst
+   :allowtitles:

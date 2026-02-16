@@ -1,0 +1,187 @@
+:py:mod:`lir.plotting`
+======================
+
+.. py:module:: lir.plotting
+
+.. autodoc2-docstring:: lir.plotting
+   :parser: myst
+   :allowtitles:
+
+Submodules
+----------
+
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   lir.plotting.expected_calibration_error
+
+Package Contents
+----------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`Canvas <lir.plotting.Canvas>`
+     - .. autodoc2-docstring:: lir.plotting.Canvas
+          :parser: myst
+          :summary:
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`savefig <lir.plotting.savefig>`
+     - .. autodoc2-docstring:: lir.plotting.savefig
+          :parser: myst
+          :summary:
+   * - :py:obj:`show <lir.plotting.show>`
+     - .. autodoc2-docstring:: lir.plotting.show
+          :parser: myst
+          :summary:
+   * - :py:obj:`axes <lir.plotting.axes>`
+     - .. autodoc2-docstring:: lir.plotting.axes
+          :parser: myst
+          :summary:
+   * - :py:obj:`pav <lir.plotting.pav>`
+     - .. autodoc2-docstring:: lir.plotting.pav
+          :parser: myst
+          :summary:
+   * - :py:obj:`lr_histogram <lir.plotting.lr_histogram>`
+     - .. autodoc2-docstring:: lir.plotting.lr_histogram
+          :parser: myst
+          :summary:
+   * - :py:obj:`tippett <lir.plotting.tippett>`
+     - .. autodoc2-docstring:: lir.plotting.tippett
+          :parser: myst
+          :summary:
+   * - :py:obj:`llr_interval <lir.plotting.llr_interval>`
+     - .. autodoc2-docstring:: lir.plotting.llr_interval
+          :parser: myst
+          :summary:
+   * - :py:obj:`score_distribution <lir.plotting.score_distribution>`
+     - .. autodoc2-docstring:: lir.plotting.score_distribution
+          :parser: myst
+          :summary:
+
+Data
+~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`LOG <lir.plotting.LOG>`
+     - .. autodoc2-docstring:: lir.plotting.LOG
+          :parser: myst
+          :summary:
+   * - :py:obj:`H1_COLOR <lir.plotting.H1_COLOR>`
+     - .. autodoc2-docstring:: lir.plotting.H1_COLOR
+          :parser: myst
+          :summary:
+   * - :py:obj:`H2_COLOR <lir.plotting.H2_COLOR>`
+     - .. autodoc2-docstring:: lir.plotting.H2_COLOR
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:data:: LOG
+   :canonical: lir.plotting.LOG
+   :value: 'getLogger(...)'
+
+   .. autodoc2-docstring:: lir.plotting.LOG
+      :parser: myst
+
+.. py:data:: H1_COLOR
+   :canonical: lir.plotting.H1_COLOR
+   :value: 'red'
+
+   .. autodoc2-docstring:: lir.plotting.H1_COLOR
+      :parser: myst
+
+.. py:data:: H2_COLOR
+   :canonical: lir.plotting.H2_COLOR
+   :value: 'blue'
+
+   .. autodoc2-docstring:: lir.plotting.H2_COLOR
+      :parser: myst
+
+.. py:class:: Canvas(ax: matplotlib.axes.Axes)
+   :canonical: lir.plotting.Canvas
+
+   .. autodoc2-docstring:: lir.plotting.Canvas
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.plotting.Canvas.__init__
+      :parser: myst
+
+   .. py:method:: title(label: str, **kwargs: typing.Any) -> typing.Any
+      :canonical: lir.plotting.Canvas.title
+
+      .. autodoc2-docstring:: lir.plotting.Canvas.title
+         :parser: myst
+
+   .. py:method:: __getattr__(attr: str) -> typing.Any
+      :canonical: lir.plotting.Canvas.__getattr__
+
+      .. autodoc2-docstring:: lir.plotting.Canvas.__getattr__
+         :parser: myst
+
+.. py:function:: savefig(path: str) -> contextlib._GeneratorContextManager[lir.plotting.Canvas]
+   :canonical: lir.plotting.savefig
+
+   .. autodoc2-docstring:: lir.plotting.savefig
+      :parser: myst
+
+.. py:function:: show() -> contextlib._GeneratorContextManager[lir.plotting.Canvas]
+   :canonical: lir.plotting.show
+
+   .. autodoc2-docstring:: lir.plotting.show
+      :parser: myst
+
+.. py:function:: axes(savefig: os.PathLike | str | None = None, show: bool | None = None) -> collections.abc.Iterator[lir.plotting.Canvas]
+   :canonical: lir.plotting.axes
+
+   .. autodoc2-docstring:: lir.plotting.axes
+      :parser: myst
+
+.. py:function:: pav(ax: matplotlib.axes.Axes, llrdata: lir.data.models.LLRData, add_misleading: int = 0, show_scatter: bool = True) -> None
+   :canonical: lir.plotting.pav
+
+   .. autodoc2-docstring:: lir.plotting.pav
+      :parser: myst
+
+.. py:function:: lr_histogram(ax: matplotlib.axes.Axes, llrdata: lir.data.models.LLRData, bins: int = 20, weighted: bool = True) -> None
+   :canonical: lir.plotting.lr_histogram
+
+   .. autodoc2-docstring:: lir.plotting.lr_histogram
+      :parser: myst
+
+.. py:function:: tippett(ax: matplotlib.axes.Axes, llrdata: lir.data.models.LLRData, plot_type: int = 1) -> None
+   :canonical: lir.plotting.tippett
+
+   .. autodoc2-docstring:: lir.plotting.tippett
+      :parser: myst
+
+.. py:function:: llr_interval(ax: matplotlib.axes.Axes, llrdata: lir.data.models.LLRData) -> None
+   :canonical: lir.plotting.llr_interval
+
+   .. autodoc2-docstring:: lir.plotting.llr_interval
+      :parser: myst
+
+.. py:function:: score_distribution(ax: matplotlib.axes.Axes, scores: numpy.ndarray, y: numpy.ndarray, bins: int = 20, weighted: bool = True) -> None
+   :canonical: lir.plotting.score_distribution
+
+   .. autodoc2-docstring:: lir.plotting.score_distribution
+      :parser: myst

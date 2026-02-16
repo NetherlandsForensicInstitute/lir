@@ -1,0 +1,83 @@
+:py:mod:`lir.persistence`
+=========================
+
+.. py:module:: lir.persistence
+
+.. autodoc2-docstring:: lir.persistence
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`SaveModel <lir.persistence.SaveModel>`
+     - .. autodoc2-docstring:: lir.persistence.SaveModel
+          :parser: myst
+          :summary:
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`load_model <lir.persistence.load_model>`
+     - .. autodoc2-docstring:: lir.persistence.load_model
+          :parser: myst
+          :summary:
+   * - :py:obj:`save_model <lir.persistence.save_model>`
+     - .. autodoc2-docstring:: lir.persistence.save_model
+          :parser: myst
+          :summary:
+   * - :py:obj:`parse_save_model <lir.persistence.parse_save_model>`
+     - .. autodoc2-docstring:: lir.persistence.parse_save_model
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:function:: load_model(path: pathlib.Path) -> lir.lrsystems.lrsystems.LRSystem
+   :canonical: lir.persistence.load_model
+
+   .. autodoc2-docstring:: lir.persistence.load_model
+      :parser: myst
+
+.. py:function:: save_model(path: pathlib.Path, model: lir.lrsystems.lrsystems.LRSystem) -> None
+   :canonical: lir.persistence.save_model
+
+   .. autodoc2-docstring:: lir.persistence.save_model
+      :parser: myst
+
+.. py:class:: SaveModel(output_dir: pathlib.Path, filename: os.PathLike | str = 'model.pkl')
+   :canonical: lir.persistence.SaveModel
+
+   Bases: :py:obj:`lir.aggregation.Aggregation`
+
+   .. autodoc2-docstring:: lir.persistence.SaveModel
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.persistence.SaveModel.__init__
+      :parser: myst
+
+   .. py:method:: report(data: lir.aggregation.AggregationData) -> None
+      :canonical: lir.persistence.SaveModel.report
+
+      .. autodoc2-docstring:: lir.persistence.SaveModel.report
+         :parser: myst
+
+.. py:function:: parse_save_model(config: lir.config.base.ContextAwareDict, output_dir: pathlib.Path) -> lir.persistence.SaveModel
+   :canonical: lir.persistence.parse_save_model
+
+   .. autodoc2-docstring:: lir.persistence.parse_save_model
+      :parser: myst

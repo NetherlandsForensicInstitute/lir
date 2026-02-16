@@ -1,0 +1,439 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.aggregation &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="prev" title="lir.__main__" href="lir.__main__.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="lir.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.aggregation</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/api/lir/lir.aggregation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-lir.aggregation">
+<span id="lir-aggregation"></span><h1><a class="reference internal" href="#module-lir.aggregation" title="lir.aggregation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.aggregation</span></code></a><a class="headerlink" href="#module-lir.aggregation" title="Link to this heading"></a></h1>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.aggregation.AggregationData" title="lir.aggregation.AggregationData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AggregationData</span></code></a></p></td>
+<td><p>Representation of aggregated data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.aggregation.Aggregation" title="lir.aggregation.Aggregation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Aggregation</span></code></a></p></td>
+<td><p>Base representation of an aggregated data collection.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.aggregation.AggregatePlot" title="lir.aggregation.AggregatePlot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AggregatePlot</span></code></a></p></td>
+<td><p>Aggregation that generates plots by repeatedly calling a plotting function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.aggregation.WriteMetricsToCsv" title="lir.aggregation.WriteMetricsToCsv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WriteMetricsToCsv</span></code></a></p></td>
+<td><p>Helper class to write aggregated results to CSV file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.aggregation.SubsetAggregation" title="lir.aggregation.SubsetAggregation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SubsetAggregation</span></code></a></p></td>
+<td><p>Aggregation method that manages data categorization.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.aggregation.plot_pav" title="lir.aggregation.plot_pav"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_pav</span></code></a></p></td>
+<td><p>Corresponding registry function to generate aggregate PAV plot.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.aggregation.plot_ece" title="lir.aggregation.plot_ece"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_ece</span></code></a></p></td>
+<td><p>Corresponding registry function to generate aggregate ECE plot.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.aggregation.plot_lr_histogram" title="lir.aggregation.plot_lr_histogram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_lr_histogram</span></code></a></p></td>
+<td><p>Corresponding registry function to generate aggregate LR Histogram.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.aggregation.plot_llr_interval" title="lir.aggregation.plot_llr_interval"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_llr_interval</span></code></a></p></td>
+<td><p>Corresponding registry function to generate aggregate LLR interval plot.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.aggregation.plot_llr_overestimation" title="lir.aggregation.plot_llr_overestimation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_llr_overestimation</span></code></a></p></td>
+<td><p>Corresponding registry function to generate aggregate LLR overestimation plot.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.aggregation.plot_nbe" title="lir.aggregation.plot_nbe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_nbe</span></code></a></p></td>
+<td><p>Corresponding registry function to generate aggregate NBE plot.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.aggregation.plot_tippett" title="lir.aggregation.plot_tippett"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_tippett</span></code></a></p></td>
+<td><p>Corresponding registry function to generate aggregate Tippett plot.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.aggregation.plot_invariance_delta_function" title="lir.aggregation.plot_invariance_delta_function"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_invariance_delta_function</span></code></a></p></td>
+<td><p>Corresponding registry function to generate aggregate invariance delta function plot.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.aggregation.metrics_csv" title="lir.aggregation.metrics_csv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">metrics_csv</span></code></a></p></td>
+<td><p>Corresponding registry function to leverage CSV Writer class to write results to disk.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="data">
+<h3>Data<a class="headerlink" href="#data" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.aggregation.LOG" title="lir.aggregation.LOG"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LOG</span></code></a></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="api">
+<h3>API<a class="headerlink" href="#api" title="Link to this heading"></a></h3>
+<dl class="py data">
+<dt class="sig sig-object py" id="lir.aggregation.LOG">
+<span class="sig-prename descclassname"><span class="pre">lir.aggregation.</span></span><span class="sig-name descname"><span class="pre">LOG</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'getLogger(...)'</span></span><a class="headerlink" href="#lir.aggregation.LOG" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.aggregation.AggregationData">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.aggregation.</span></span><span class="sig-name descname"><span class="pre">AggregationData</span></span><a class="headerlink" href="#lir.aggregation.AggregationData" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">typing.NamedTuple</span></code></p>
+<p>Representation of aggregated data.</p>
+<p>Fields:</p>
+<ul class="simple">
+<li><p>llrdata: the LLR data containing LLRs and labels.</p></li>
+<li><p>lrsystem: the model that produced the results</p></li>
+<li><p>parameters: parameters that identify the system producing the results</p></li>
+<li><p>run_name: string representation of the run that produced the results</p></li>
+</ul>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.aggregation.AggregationData.llrdata">
+<span class="sig-name descname"><span class="pre">llrdata</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="lir.data.models.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">lir.data.models.LLRData</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#lir.aggregation.AggregationData.llrdata" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.aggregation.AggregationData.lrsystem">
+<span class="sig-name descname"><span class="pre">lrsystem</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="lir.lrsystems.lrsystems.html#lir.lrsystems.lrsystems.LRSystem" title="lir.lrsystems.lrsystems.LRSystem"><span class="pre">lir.lrsystems.lrsystems.LRSystem</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#lir.aggregation.AggregationData.lrsystem" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.aggregation.AggregationData.parameters">
+<span class="sig-name descname"><span class="pre">parameters</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#lir.aggregation.AggregationData.parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.aggregation.AggregationData.run_name">
+<span class="sig-name descname"><span class="pre">run_name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#lir.aggregation.AggregationData.run_name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.aggregation.Aggregation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.aggregation.</span></span><span class="sig-name descname"><span class="pre">Aggregation</span></span><a class="headerlink" href="#lir.aggregation.Aggregation" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>Base representation of an aggregated data collection.</p>
+<p>Other classes may extend from this class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.aggregation.Aggregation.report">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lir.aggregation.AggregationData" title="lir.aggregation.AggregationData"><span class="pre">lir.aggregation.AggregationData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lir.aggregation.Aggregation.report" title="Link to this definition"></a></dt>
+<dd><p>Report that new results are available.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> – a named tuple containing the results</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.aggregation.Aggregation.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lir.aggregation.Aggregation.close" title="Link to this definition"></a></dt>
+<dd><p>Finalize the aggregation; no more results will come in.</p>
+<p>The close method is called at the end of gathering the aggregation(s) to ensure files are closed, buffers are
+cleared, or other things that need to finish / tear down.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.aggregation.AggregatePlot">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.aggregation.</span></span><span class="sig-name descname"><span class="pre">AggregatePlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plot_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.aggregation.AggregatePlot" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.aggregation.Aggregation" title="lir.aggregation.Aggregation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.aggregation.Aggregation</span></code></a></p>
+<p>Aggregation that generates plots by repeatedly calling a plotting function.</p>
+<p class="rubric">Initialization</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.aggregation.AggregatePlot.report">
+<span class="sig-name descname"><span class="pre">report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lir.aggregation.AggregationData" title="lir.aggregation.AggregationData"><span class="pre">lir.aggregation.AggregationData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lir.aggregation.AggregatePlot.report" title="Link to this definition"></a></dt>
+<dd><p>Plot the data when new results are available.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.aggregation.plot_pav">
+<span class="sig-prename descclassname"><span class="pre">lir.aggregation.</span></span><span class="sig-name descname"><span class="pre">plot_pav</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.aggregation.AggregatePlot" title="lir.aggregation.AggregatePlot"><span class="pre">lir.aggregation.AggregatePlot</span></a></span></span><a class="headerlink" href="#lir.aggregation.plot_pav" title="Link to this definition"></a></dt>
+<dd><p>Corresponding registry function to generate aggregate PAV plot.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.aggregation.plot_ece">
+<span class="sig-prename descclassname"><span class="pre">lir.aggregation.</span></span><span class="sig-name descname"><span class="pre">plot_ece</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.aggregation.AggregatePlot" title="lir.aggregation.AggregatePlot"><span class="pre">lir.aggregation.AggregatePlot</span></a></span></span><a class="headerlink" href="#lir.aggregation.plot_ece" title="Link to this definition"></a></dt>
+<dd><p>Corresponding registry function to generate aggregate ECE plot.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.aggregation.plot_lr_histogram">
+<span class="sig-prename descclassname"><span class="pre">lir.aggregation.</span></span><span class="sig-name descname"><span class="pre">plot_lr_histogram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.aggregation.AggregatePlot" title="lir.aggregation.AggregatePlot"><span class="pre">lir.aggregation.AggregatePlot</span></a></span></span><a class="headerlink" href="#lir.aggregation.plot_lr_histogram" title="Link to this definition"></a></dt>
+<dd><p>Corresponding registry function to generate aggregate LR Histogram.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.aggregation.plot_llr_interval">
+<span class="sig-prename descclassname"><span class="pre">lir.aggregation.</span></span><span class="sig-name descname"><span class="pre">plot_llr_interval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.aggregation.AggregatePlot" title="lir.aggregation.AggregatePlot"><span class="pre">lir.aggregation.AggregatePlot</span></a></span></span><a class="headerlink" href="#lir.aggregation.plot_llr_interval" title="Link to this definition"></a></dt>
+<dd><p>Corresponding registry function to generate aggregate LLR interval plot.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.aggregation.plot_llr_overestimation">
+<span class="sig-prename descclassname"><span class="pre">lir.aggregation.</span></span><span class="sig-name descname"><span class="pre">plot_llr_overestimation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.aggregation.AggregatePlot" title="lir.aggregation.AggregatePlot"><span class="pre">lir.aggregation.AggregatePlot</span></a></span></span><a class="headerlink" href="#lir.aggregation.plot_llr_overestimation" title="Link to this definition"></a></dt>
+<dd><p>Corresponding registry function to generate aggregate LLR overestimation plot.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.aggregation.plot_nbe">
+<span class="sig-prename descclassname"><span class="pre">lir.aggregation.</span></span><span class="sig-name descname"><span class="pre">plot_nbe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.aggregation.AggregatePlot" title="lir.aggregation.AggregatePlot"><span class="pre">lir.aggregation.AggregatePlot</span></a></span></span><a class="headerlink" href="#lir.aggregation.plot_nbe" title="Link to this definition"></a></dt>
+<dd><p>Corresponding registry function to generate aggregate NBE plot.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.aggregation.plot_tippett">
+<span class="sig-prename descclassname"><span class="pre">lir.aggregation.</span></span><span class="sig-name descname"><span class="pre">plot_tippett</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.aggregation.AggregatePlot" title="lir.aggregation.AggregatePlot"><span class="pre">lir.aggregation.AggregatePlot</span></a></span></span><a class="headerlink" href="#lir.aggregation.plot_tippett" title="Link to this definition"></a></dt>
+<dd><p>Corresponding registry function to generate aggregate Tippett plot.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.aggregation.plot_invariance_delta_function">
+<span class="sig-prename descclassname"><span class="pre">lir.aggregation.</span></span><span class="sig-name descname"><span class="pre">plot_invariance_delta_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.aggregation.AggregatePlot" title="lir.aggregation.AggregatePlot"><span class="pre">lir.aggregation.AggregatePlot</span></a></span></span><a class="headerlink" href="#lir.aggregation.plot_invariance_delta_function" title="Link to this definition"></a></dt>
+<dd><p>Corresponding registry function to generate aggregate invariance delta function plot.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.aggregation.WriteMetricsToCsv">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.aggregation.</span></span><span class="sig-name descname"><span class="pre">WriteMetricsToCsv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">collections.abc.Callable</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.aggregation.WriteMetricsToCsv" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.aggregation.Aggregation" title="lir.aggregation.Aggregation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.aggregation.Aggregation</span></code></a></p>
+<p>Helper class to write aggregated results to CSV file.</p>
+<p class="rubric">Initialization</p>
+<p>Initialize the class.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> – the path to the CSV file</p></li>
+<li><p><strong>columns</strong> – the columns as a dictionary of names to metric functions</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.aggregation.WriteMetricsToCsv._safe_call">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">_safe_call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#lir.aggregation.WriteMetricsToCsv._safe_call" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.aggregation.WriteMetricsToCsv.report">
+<span class="sig-name descname"><span class="pre">report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lir.aggregation.AggregationData" title="lir.aggregation.AggregationData"><span class="pre">lir.aggregation.AggregationData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lir.aggregation.WriteMetricsToCsv.report" title="Link to this definition"></a></dt>
+<dd><p>Write the metrics to CSV.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.aggregation.WriteMetricsToCsv.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lir.aggregation.WriteMetricsToCsv.close" title="Link to this definition"></a></dt>
+<dd><p>Ensure the CSV file is properly closed after writing.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.aggregation.metrics_csv">
+<span class="sig-prename descclassname"><span class="pre">lir.aggregation.</span></span><span class="sig-name descname"><span class="pre">metrics_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.aggregation.WriteMetricsToCsv" title="lir.aggregation.WriteMetricsToCsv"><span class="pre">lir.aggregation.WriteMetricsToCsv</span></a></span></span><a class="headerlink" href="#lir.aggregation.metrics_csv" title="Link to this definition"></a></dt>
+<dd><p>Corresponding registry function to leverage CSV Writer class to write results to disk.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.aggregation.SubsetAggregation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.aggregation.</span></span><span class="sig-name descname"><span class="pre">SubsetAggregation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">aggregation_methods</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lir.aggregation.Aggregation" title="lir.aggregation.Aggregation"><span class="pre">lir.aggregation.Aggregation</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category_field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.aggregation.SubsetAggregation" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.aggregation.Aggregation" title="lir.aggregation.Aggregation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.aggregation.Aggregation</span></code></a></p>
+<p>Aggregation method that manages data categorization.</p>
+<p>A separate aggregation method is used for each category.</p>
+<p class="rubric">Initialization</p>
+<p>Initialize the subset aggregation method.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>aggregation_methods</strong> – a list of methods to aggregate results by category</p></li>
+<li><p><strong>category_field</strong> – the name of the category field</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.aggregation.SubsetAggregation.report">
+<span class="sig-name descname"><span class="pre">report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lir.aggregation.AggregationData" title="lir.aggregation.AggregationData"><span class="pre">lir.aggregation.AggregationData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lir.aggregation.SubsetAggregation.report" title="Link to this definition"></a></dt>
+<dd><p>Report that new results are available.</p>
+<p>The data are categorized into subsets and forwarded to the actual aggregation method.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> – a named tuple containing the results</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.aggregation.SubsetAggregation.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lir.aggregation.SubsetAggregation.close" title="Link to this definition"></a></dt>
+<dd><p>Close all subset aggregation methods.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lir.__main__.html" class="btn btn-neutral float-left" title="lir.__main__" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

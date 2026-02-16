@@ -1,0 +1,51 @@
+:py:mod:`lir.lrsystems.binary_lrsystem`
+=======================================
+
+.. py:module:: lir.lrsystems.binary_lrsystem
+
+.. autodoc2-docstring:: lir.lrsystems.binary_lrsystem
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`BinaryLRSystem <lir.lrsystems.binary_lrsystem.BinaryLRSystem>`
+     - .. autodoc2-docstring:: lir.lrsystems.binary_lrsystem.BinaryLRSystem
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:class:: BinaryLRSystem(pipeline: lir.Transformer)
+   :canonical: lir.lrsystems.binary_lrsystem.BinaryLRSystem
+
+   Bases: :py:obj:`lir.lrsystems.lrsystems.LRSystem`
+
+   .. autodoc2-docstring:: lir.lrsystems.binary_lrsystem.BinaryLRSystem
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.lrsystems.binary_lrsystem.BinaryLRSystem.__init__
+      :parser: myst
+
+   .. py:method:: fit(instances: lir.data.models.InstanceData) -> typing.Self
+      :canonical: lir.lrsystems.binary_lrsystem.BinaryLRSystem.fit
+
+      .. autodoc2-docstring:: lir.lrsystems.binary_lrsystem.BinaryLRSystem.fit
+         :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.InstanceData) -> lir.lrsystems.lrsystems.LLRData
+      :canonical: lir.lrsystems.binary_lrsystem.BinaryLRSystem.apply
+
+      .. autodoc2-docstring:: lir.lrsystems.binary_lrsystem.BinaryLRSystem.apply
+         :parser: myst

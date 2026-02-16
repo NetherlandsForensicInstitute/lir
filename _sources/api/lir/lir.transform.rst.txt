@@ -1,0 +1,413 @@
+:py:mod:`lir.transform`
+=======================
+
+.. py:module:: lir.transform
+
+.. autodoc2-docstring:: lir.transform
+   :parser: myst
+   :allowtitles:
+
+Submodules
+----------
+
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   lir.transform.distance
+   lir.transform.pipeline
+   lir.transform.pairing
+   lir.transform.composite
+
+Package Contents
+----------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`DataWriter <lir.transform.DataWriter>`
+     - .. autodoc2-docstring:: lir.transform.DataWriter
+          :parser: myst
+          :summary:
+   * - :py:obj:`SKLearnPipelineModule <lir.transform.SKLearnPipelineModule>`
+     - .. autodoc2-docstring:: lir.transform.SKLearnPipelineModule
+          :parser: myst
+          :summary:
+   * - :py:obj:`SklearnTransformerType <lir.transform.SklearnTransformerType>`
+     - .. autodoc2-docstring:: lir.transform.SklearnTransformerType
+          :parser: myst
+          :summary:
+   * - :py:obj:`Transformer <lir.transform.Transformer>`
+     - .. autodoc2-docstring:: lir.transform.Transformer
+          :parser: myst
+          :summary:
+   * - :py:obj:`Identity <lir.transform.Identity>`
+     - .. autodoc2-docstring:: lir.transform.Identity
+          :parser: myst
+          :summary:
+   * - :py:obj:`BinaryClassifierTransformer <lir.transform.BinaryClassifierTransformer>`
+     - .. autodoc2-docstring:: lir.transform.BinaryClassifierTransformer
+          :parser: myst
+          :summary:
+   * - :py:obj:`SklearnTransformer <lir.transform.SklearnTransformer>`
+     - .. autodoc2-docstring:: lir.transform.SklearnTransformer
+          :parser: myst
+          :summary:
+   * - :py:obj:`FunctionTransformer <lir.transform.FunctionTransformer>`
+     - .. autodoc2-docstring:: lir.transform.FunctionTransformer
+          :parser: myst
+          :summary:
+   * - :py:obj:`Tee <lir.transform.Tee>`
+     - .. autodoc2-docstring:: lir.transform.Tee
+          :parser: myst
+          :summary:
+   * - :py:obj:`TransformerWrapper <lir.transform.TransformerWrapper>`
+     - .. autodoc2-docstring:: lir.transform.TransformerWrapper
+          :parser: myst
+          :summary:
+   * - :py:obj:`NumpyTransformer <lir.transform.NumpyTransformer>`
+     - .. autodoc2-docstring:: lir.transform.NumpyTransformer
+          :parser: myst
+          :summary:
+   * - :py:obj:`CsvWriter <lir.transform.CsvWriter>`
+     - .. autodoc2-docstring:: lir.transform.CsvWriter
+          :parser: myst
+          :summary:
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`as_transformer <lir.transform.as_transformer>`
+     - .. autodoc2-docstring:: lir.transform.as_transformer
+          :parser: myst
+          :summary:
+
+Data
+~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`LOG <lir.transform.LOG>`
+     - .. autodoc2-docstring:: lir.transform.LOG
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:data:: LOG
+   :canonical: lir.transform.LOG
+   :value: 'getLogger(...)'
+
+   .. autodoc2-docstring:: lir.transform.LOG
+      :parser: myst
+
+.. py:class:: DataWriter
+   :canonical: lir.transform.DataWriter
+
+   Bases: :py:obj:`typing.Protocol`
+
+   .. autodoc2-docstring:: lir.transform.DataWriter
+      :parser: myst
+
+   .. py:method:: writerow(row: typing.Any) -> None
+      :canonical: lir.transform.DataWriter.writerow
+
+      .. autodoc2-docstring:: lir.transform.DataWriter.writerow
+         :parser: myst
+
+.. py:class:: SKLearnPipelineModule
+   :canonical: lir.transform.SKLearnPipelineModule
+
+   Bases: :py:obj:`typing.Protocol`
+
+   .. autodoc2-docstring:: lir.transform.SKLearnPipelineModule
+      :parser: myst
+
+   .. py:method:: fit(X: numpy.ndarray, y: numpy.ndarray | None) -> typing.Self
+      :canonical: lir.transform.SKLearnPipelineModule.fit
+
+      .. autodoc2-docstring:: lir.transform.SKLearnPipelineModule.fit
+         :parser: myst
+
+   .. py:method:: transform(X: numpy.ndarray) -> typing.Any
+      :canonical: lir.transform.SKLearnPipelineModule.transform
+
+      .. autodoc2-docstring:: lir.transform.SKLearnPipelineModule.transform
+         :parser: myst
+
+   .. py:method:: predict_proba(X: numpy.ndarray) -> typing.Any
+      :canonical: lir.transform.SKLearnPipelineModule.predict_proba
+
+      .. autodoc2-docstring:: lir.transform.SKLearnPipelineModule.predict_proba
+         :parser: myst
+
+.. py:class:: SklearnTransformerType
+   :canonical: lir.transform.SklearnTransformerType
+
+   Bases: :py:obj:`typing.Protocol`
+
+   .. autodoc2-docstring:: lir.transform.SklearnTransformerType
+      :parser: myst
+
+   .. py:method:: fit(features: numpy.ndarray, labels: numpy.ndarray | None) -> typing.Self
+      :canonical: lir.transform.SklearnTransformerType.fit
+
+      .. autodoc2-docstring:: lir.transform.SklearnTransformerType.fit
+         :parser: myst
+
+   .. py:method:: transform(features: numpy.ndarray) -> typing.Any
+      :canonical: lir.transform.SklearnTransformerType.transform
+
+      .. autodoc2-docstring:: lir.transform.SklearnTransformerType.transform
+         :parser: myst
+
+   .. py:method:: fit_transform(features: numpy.ndarray, labels: numpy.ndarray | None) -> numpy.ndarray
+      :canonical: lir.transform.SklearnTransformerType.fit_transform
+
+      .. autodoc2-docstring:: lir.transform.SklearnTransformerType.fit_transform
+         :parser: myst
+
+.. py:class:: Transformer
+   :canonical: lir.transform.Transformer
+
+   Bases: :py:obj:`abc.ABC`
+
+   .. autodoc2-docstring:: lir.transform.Transformer
+      :parser: myst
+
+   .. py:method:: fit(instances: lir.data.models.InstanceData) -> typing.Self
+      :canonical: lir.transform.Transformer.fit
+
+      .. autodoc2-docstring:: lir.transform.Transformer.fit
+         :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.InstanceData) -> lir.data.models.InstanceData
+      :canonical: lir.transform.Transformer.apply
+      :abstractmethod:
+
+      .. autodoc2-docstring:: lir.transform.Transformer.apply
+         :parser: myst
+
+   .. py:method:: fit_apply(instances: lir.data.models.InstanceData) -> lir.data.models.InstanceData
+      :canonical: lir.transform.Transformer.fit_apply
+
+      .. autodoc2-docstring:: lir.transform.Transformer.fit_apply
+         :parser: myst
+
+.. py:class:: Identity
+   :canonical: lir.transform.Identity
+
+   Bases: :py:obj:`lir.transform.Transformer`
+
+   .. autodoc2-docstring:: lir.transform.Identity
+      :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.InstanceDataType) -> lir.data.models.InstanceDataType
+      :canonical: lir.transform.Identity.apply
+
+      .. autodoc2-docstring:: lir.transform.Identity.apply
+         :parser: myst
+
+.. py:class:: BinaryClassifierTransformer(estimator: lir.transform.SKLearnPipelineModule)
+   :canonical: lir.transform.BinaryClassifierTransformer
+
+   Bases: :py:obj:`lir.transform.Transformer`
+
+   .. autodoc2-docstring:: lir.transform.BinaryClassifierTransformer
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.transform.BinaryClassifierTransformer.__init__
+      :parser: myst
+
+   .. py:method:: fit(instances: lir.data.models.InstanceData) -> typing.Self
+      :canonical: lir.transform.BinaryClassifierTransformer.fit
+
+      .. autodoc2-docstring:: lir.transform.BinaryClassifierTransformer.fit
+         :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.InstanceData) -> lir.data.models.InstanceData
+      :canonical: lir.transform.BinaryClassifierTransformer.apply
+
+      .. autodoc2-docstring:: lir.transform.BinaryClassifierTransformer.apply
+         :parser: myst
+
+.. py:class:: SklearnTransformer(transformer: lir.transform.SklearnTransformerType)
+   :canonical: lir.transform.SklearnTransformer
+
+   Bases: :py:obj:`lir.transform.Transformer`
+
+   .. autodoc2-docstring:: lir.transform.SklearnTransformer
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.transform.SklearnTransformer.__init__
+      :parser: myst
+
+   .. py:method:: fit(instances: lir.data.models.InstanceData) -> typing.Self
+      :canonical: lir.transform.SklearnTransformer.fit
+
+      .. autodoc2-docstring:: lir.transform.SklearnTransformer.fit
+         :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.InstanceData) -> lir.data.models.InstanceData
+      :canonical: lir.transform.SklearnTransformer.apply
+
+      .. autodoc2-docstring:: lir.transform.SklearnTransformer.apply
+         :parser: myst
+
+   .. py:method:: fit_apply(instances: lir.data.models.InstanceData) -> lir.data.models.FeatureData
+      :canonical: lir.transform.SklearnTransformer.fit_apply
+
+      .. autodoc2-docstring:: lir.transform.SklearnTransformer.fit_apply
+         :parser: myst
+
+.. py:class:: FunctionTransformer(func: collections.abc.Callable)
+   :canonical: lir.transform.FunctionTransformer
+
+   Bases: :py:obj:`lir.transform.Transformer`
+
+   .. autodoc2-docstring:: lir.transform.FunctionTransformer
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.transform.FunctionTransformer.__init__
+      :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.InstanceData) -> lir.data.models.FeatureData
+      :canonical: lir.transform.FunctionTransformer.apply
+
+      .. autodoc2-docstring:: lir.transform.FunctionTransformer.apply
+         :parser: myst
+
+.. py:class:: Tee(transformers: list[lir.transform.Transformer])
+   :canonical: lir.transform.Tee
+
+   Bases: :py:obj:`lir.transform.Transformer`
+
+   .. autodoc2-docstring:: lir.transform.Tee
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.transform.Tee.__init__
+      :parser: myst
+
+   .. py:method:: fit(instances: lir.data.models.InstanceData) -> typing.Self
+      :canonical: lir.transform.Tee.fit
+
+      .. autodoc2-docstring:: lir.transform.Tee.fit
+         :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.InstanceData) -> lir.data.models.InstanceData
+      :canonical: lir.transform.Tee.apply
+
+      .. autodoc2-docstring:: lir.transform.Tee.apply
+         :parser: myst
+
+.. py:class:: TransformerWrapper(wrapped_transformer: lir.transform.Transformer)
+   :canonical: lir.transform.TransformerWrapper
+
+   Bases: :py:obj:`lir.transform.Transformer`
+
+   .. autodoc2-docstring:: lir.transform.TransformerWrapper
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.transform.TransformerWrapper.__init__
+      :parser: myst
+
+   .. py:method:: fit(instances: lir.data.models.InstanceData) -> typing.Self
+      :canonical: lir.transform.TransformerWrapper.fit
+
+      .. autodoc2-docstring:: lir.transform.TransformerWrapper.fit
+         :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.InstanceData) -> lir.data.models.InstanceData
+      :canonical: lir.transform.TransformerWrapper.apply
+
+      .. autodoc2-docstring:: lir.transform.TransformerWrapper.apply
+         :parser: myst
+
+.. py:class:: NumpyTransformer(transformer: lir.transform.Transformer, header: list[str] | None)
+   :canonical: lir.transform.NumpyTransformer
+
+   Bases: :py:obj:`lir.transform.TransformerWrapper`
+
+   .. autodoc2-docstring:: lir.transform.NumpyTransformer
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.transform.NumpyTransformer.__init__
+      :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.InstanceData) -> lir.data.models.InstanceData
+      :canonical: lir.transform.NumpyTransformer.apply
+
+      .. autodoc2-docstring:: lir.transform.NumpyTransformer.apply
+         :parser: myst
+
+   .. py:method:: fit_apply(instances: lir.data.models.InstanceData) -> lir.data.models.InstanceData
+      :canonical: lir.transform.NumpyTransformer.fit_apply
+
+      .. autodoc2-docstring:: lir.transform.NumpyTransformer.fit_apply
+         :parser: myst
+
+.. py:class:: CsvWriter(path: pathlib.Path, include: list[str] | None = None, header: list[str] | None = None, include_labels: bool = False, include_meta: bool = False, include_input: bool = True, include_batch: bool = False)
+   :canonical: lir.transform.CsvWriter
+
+   Bases: :py:obj:`lir.transform.Transformer`
+
+   .. autodoc2-docstring:: lir.transform.CsvWriter
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.transform.CsvWriter.__init__
+      :parser: myst
+
+   .. py:method:: _join_reader(filename: str) -> collections.abc.Iterator[list[str]]
+      :canonical: lir.transform.CsvWriter._join_reader
+
+      .. autodoc2-docstring:: lir.transform.CsvWriter._join_reader
+         :parser: myst
+
+   .. py:method:: _write_rows(writer: lir.transform.DataWriter, instances: lir.data.models.FeatureData, write_header: bool) -> None
+      :canonical: lir.transform.CsvWriter._write_rows
+
+      .. autodoc2-docstring:: lir.transform.CsvWriter._write_rows
+         :parser: myst
+
+   .. py:method:: fit_apply(instances: lir.data.models.InstanceDataType) -> lir.data.models.InstanceDataType
+      :canonical: lir.transform.CsvWriter.fit_apply
+
+      .. autodoc2-docstring:: lir.transform.CsvWriter.fit_apply
+         :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.InstanceData) -> lir.data.models.FeatureData
+      :canonical: lir.transform.CsvWriter.apply
+
+      .. autodoc2-docstring:: lir.transform.CsvWriter.apply
+         :parser: myst
+
+.. py:function:: as_transformer(transformer_like: typing.Any) -> lir.transform.Transformer
+   :canonical: lir.transform.as_transformer
+
+   .. autodoc2-docstring:: lir.transform.as_transformer
+      :parser: myst

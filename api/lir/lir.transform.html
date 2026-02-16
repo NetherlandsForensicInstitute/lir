@@ -1,0 +1,529 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.transform &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="lir.transform.distance" href="lir.transform.distance.html" />
+    <link rel="prev" title="lir.data.data_strategies" href="lir.data.data_strategies.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.transform</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/api/lir/lir.transform.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-lir.transform">
+<span id="lir-transform"></span><h1><a class="reference internal" href="#module-lir.transform" title="lir.transform"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.transform</span></code></a><a class="headerlink" href="#module-lir.transform" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="lir.transform.distance.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.transform.distance</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="lir.transform.pipeline.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.transform.pipeline</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="lir.transform.pairing.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.transform.pairing</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="lir.transform.composite.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.transform.composite</span></code></a></li>
+</ul>
+</div>
+</section>
+<section id="package-contents">
+<h2>Package Contents<a class="headerlink" href="#package-contents" title="Link to this heading"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.transform.DataWriter" title="lir.transform.DataWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataWriter</span></code></a></p></td>
+<td><p>Representation of a data writer and necessary methods.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.transform.SKLearnPipelineModule" title="lir.transform.SKLearnPipelineModule"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SKLearnPipelineModule</span></code></a></p></td>
+<td><p>Representation of the interface required for estimators by the scikit-learn <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.transform.SklearnTransformerType" title="lir.transform.SklearnTransformerType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SklearnTransformerType</span></code></a></p></td>
+<td><p>Representation of the interface required for transformers by the scikit-learn <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.transform.Transformer" title="lir.transform.Transformer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Transformer</span></code></a></p></td>
+<td><p>Transformer module which is compatible with the scikit-learn <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.transform.Identity" title="lir.transform.Identity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Identity</span></code></a></p></td>
+<td><p>Represent the Identity function of a transformer.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.transform.BinaryClassifierTransformer" title="lir.transform.BinaryClassifierTransformer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BinaryClassifierTransformer</span></code></a></p></td>
+<td><p>Implementation of a binary class classifier as scikit-learn <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code> step.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.transform.SklearnTransformer" title="lir.transform.SklearnTransformer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SklearnTransformer</span></code></a></p></td>
+<td><p>Implementation of a binary class classifier as scikit-learn <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code> step.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.transform.FunctionTransformer" title="lir.transform.FunctionTransformer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FunctionTransformer</span></code></a></p></td>
+<td><p>Implementation of a transformer function as scikit-learn <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code> step.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.transform.Tee" title="lir.transform.Tee"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Tee</span></code></a></p></td>
+<td><p>Implementation of a custom transformer allowing to perform two separate tasks on a given input.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.transform.TransformerWrapper" title="lir.transform.TransformerWrapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TransformerWrapper</span></code></a></p></td>
+<td><p>Base class for a transformer wrapper.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.transform.NumpyTransformer" title="lir.transform.NumpyTransformer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NumpyTransformer</span></code></a></p></td>
+<td><p>Implementation of a transformer wrapper.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.transform.CsvWriter" title="lir.transform.CsvWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CsvWriter</span></code></a></p></td>
+<td><p>Implementation of a transformation step in a scikit-learn Pipeline that writes to CSV.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.transform.as_transformer" title="lir.transform.as_transformer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">as_transformer</span></code></a></p></td>
+<td><p>Provide a <code class="docutils literal notranslate"><span class="pre">Transformer</span></code> instance of the provided transformer like input.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="data">
+<h3>Data<a class="headerlink" href="#data" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.transform.LOG" title="lir.transform.LOG"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LOG</span></code></a></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="api">
+<h3>API<a class="headerlink" href="#api" title="Link to this heading"></a></h3>
+<dl class="py data">
+<dt class="sig sig-object py" id="lir.transform.LOG">
+<span class="sig-prename descclassname"><span class="pre">lir.transform.</span></span><span class="sig-name descname"><span class="pre">LOG</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'getLogger(...)'</span></span><a class="headerlink" href="#lir.transform.LOG" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.transform.DataWriter">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.transform.</span></span><span class="sig-name descname"><span class="pre">DataWriter</span></span><a class="headerlink" href="#lir.transform.DataWriter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">typing.Protocol</span></code></p>
+<p>Representation of a data writer and necessary methods.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.DataWriter.writerow">
+<span class="sig-name descname"><span class="pre">writerow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lir.transform.DataWriter.writerow" title="Link to this definition"></a></dt>
+<dd><p>Write row to output.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.transform.SKLearnPipelineModule">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.transform.</span></span><span class="sig-name descname"><span class="pre">SKLearnPipelineModule</span></span><a class="headerlink" href="#lir.transform.SKLearnPipelineModule" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">typing.Protocol</span></code></p>
+<p>Representation of the interface required for estimators by the scikit-learn <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code>.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.SKLearnPipelineModule.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lir.transform.SKLearnPipelineModule.fit" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.SKLearnPipelineModule.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#lir.transform.SKLearnPipelineModule.transform" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.SKLearnPipelineModule.predict_proba">
+<span class="sig-name descname"><span class="pre">predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#lir.transform.SKLearnPipelineModule.predict_proba" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.transform.SklearnTransformerType">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.transform.</span></span><span class="sig-name descname"><span class="pre">SklearnTransformerType</span></span><a class="headerlink" href="#lir.transform.SklearnTransformerType" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">typing.Protocol</span></code></p>
+<p>Representation of the interface required for transformers by the scikit-learn <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code>.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.SklearnTransformerType.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lir.transform.SklearnTransformerType.fit" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.SklearnTransformerType.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#lir.transform.SklearnTransformerType.transform" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.SklearnTransformerType.fit_transform">
+<span class="sig-name descname"><span class="pre">fit_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#lir.transform.SklearnTransformerType.fit_transform" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.transform.Transformer">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.transform.</span></span><span class="sig-name descname"><span class="pre">Transformer</span></span><a class="headerlink" href="#lir.transform.Transformer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>Transformer module which is compatible with the scikit-learn <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code>.</p>
+<p>The transformer should provide a <code class="docutils literal notranslate"><span class="pre">transform()</span></code> method. Since transformers are not
+fitted to the data, the <code class="docutils literal notranslate"><span class="pre">fit()</span></code> simply returns the object it was called upon without
+side effects.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.Transformer.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lir.transform.Transformer.fit" title="Link to this definition"></a></dt>
+<dd><p>Perform (optional) fitting of the instance data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.Transformer.apply">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></span><a class="headerlink" href="#lir.transform.Transformer.apply" title="Link to this definition"></a></dt>
+<dd><p>Convert the instance data based on the (optionally fitted) model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.Transformer.fit_apply">
+<span class="sig-name descname"><span class="pre">fit_apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></span><a class="headerlink" href="#lir.transform.Transformer.fit_apply" title="Link to this definition"></a></dt>
+<dd><p>Combine call to <code class="docutils literal notranslate"><span class="pre">fit()</span></code> with directly following call to <code class="docutils literal notranslate"><span class="pre">apply()</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.transform.Identity">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.transform.</span></span><span class="sig-name descname"><span class="pre">Identity</span></span><a class="headerlink" href="#lir.transform.Identity" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.transform.Transformer" title="lir.transform.Transformer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.transform.Transformer</span></code></a></p>
+<p>Represent the Identity function of a transformer.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">apply()</span></code> is called on such a transformer, it simply returns the instances.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.Identity.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceDataType" title="lir.data.models.InstanceDataType"><span class="pre">lir.data.models.InstanceDataType</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceDataType" title="lir.data.models.InstanceDataType"><span class="pre">lir.data.models.InstanceDataType</span></a></span></span><a class="headerlink" href="#lir.transform.Identity.apply" title="Link to this definition"></a></dt>
+<dd><p>Simply provide the instances.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.transform.BinaryClassifierTransformer">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.transform.</span></span><span class="sig-name descname"><span class="pre">BinaryClassifierTransformer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lir.transform.SKLearnPipelineModule" title="lir.transform.SKLearnPipelineModule"><span class="pre">lir.transform.SKLearnPipelineModule</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.transform.BinaryClassifierTransformer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.transform.Transformer" title="lir.transform.Transformer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.transform.Transformer</span></code></a></p>
+<p>Implementation of a binary class classifier as scikit-learn <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code> step.</p>
+<p class="rubric">Initialization</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.BinaryClassifierTransformer.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lir.transform.BinaryClassifierTransformer.fit" title="Link to this definition"></a></dt>
+<dd><p>Fit the model on the provided instances.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.BinaryClassifierTransformer.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></span><a class="headerlink" href="#lir.transform.BinaryClassifierTransformer.apply" title="Link to this definition"></a></dt>
+<dd><p>Convert instances by applying the fitted model.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.transform.SklearnTransformer">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.transform.</span></span><span class="sig-name descname"><span class="pre">SklearnTransformer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lir.transform.SklearnTransformerType" title="lir.transform.SklearnTransformerType"><span class="pre">lir.transform.SklearnTransformerType</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.transform.SklearnTransformer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.transform.Transformer" title="lir.transform.Transformer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.transform.Transformer</span></code></a></p>
+<p>Implementation of a binary class classifier as scikit-learn <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code> step.</p>
+<p class="rubric">Initialization</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.SklearnTransformer.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lir.transform.SklearnTransformer.fit" title="Link to this definition"></a></dt>
+<dd><p>Fit the model on the provided instances.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.SklearnTransformer.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></span><a class="headerlink" href="#lir.transform.SklearnTransformer.apply" title="Link to this definition"></a></dt>
+<dd><p>Convert instances by applying the fitted model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.SklearnTransformer.fit_apply">
+<span class="sig-name descname"><span class="pre">fit_apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a></span></span><a class="headerlink" href="#lir.transform.SklearnTransformer.fit_apply" title="Link to this definition"></a></dt>
+<dd><p>Combine call to <code class="docutils literal notranslate"><span class="pre">.fit()</span></code> followed by <code class="docutils literal notranslate"><span class="pre">.apply()</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.transform.FunctionTransformer">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.transform.</span></span><span class="sig-name descname"><span class="pre">FunctionTransformer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Callable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.transform.FunctionTransformer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.transform.Transformer" title="lir.transform.Transformer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.transform.Transformer</span></code></a></p>
+<p>Implementation of a transformer function as scikit-learn <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code> step.</p>
+<p class="rubric">Initialization</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.FunctionTransformer.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a></span></span><a class="headerlink" href="#lir.transform.FunctionTransformer.apply" title="Link to this definition"></a></dt>
+<dd><p>Call the custom defined function on the feature data instances and use output as features.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.transform.Tee">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.transform.</span></span><span class="sig-name descname"><span class="pre">Tee</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lir.transform.Transformer" title="lir.transform.Transformer"><span class="pre">lir.transform.Transformer</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.transform.Tee" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.transform.Transformer" title="lir.transform.Transformer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.transform.Transformer</span></code></a></p>
+<p>Implementation of a custom transformer allowing to perform two separate tasks on a given input.</p>
+<p class="rubric">Initialization</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.Tee.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lir.transform.Tee.fit" title="Link to this definition"></a></dt>
+<dd><p>Delegate <code class="docutils literal notranslate"><span class="pre">fit()</span></code> to all specified transformers.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.Tee.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></span><a class="headerlink" href="#lir.transform.Tee.apply" title="Link to this definition"></a></dt>
+<dd><p>Delegate <code class="docutils literal notranslate"><span class="pre">apply()</span></code> to all specified transformers.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.transform.TransformerWrapper">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.transform.</span></span><span class="sig-name descname"><span class="pre">TransformerWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wrapped_transformer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lir.transform.Transformer" title="lir.transform.Transformer"><span class="pre">lir.transform.Transformer</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.transform.TransformerWrapper" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.transform.Transformer" title="lir.transform.Transformer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.transform.Transformer</span></code></a></p>
+<p>Base class for a transformer wrapper.</p>
+<p>This class is derived from <code class="docutils literal notranslate"><span class="pre">AdvancedTransformer</span></code> and has a default implementation of all functions
+by forwarding the call to the wrapped transformer. A subclass may add or change functionality
+by overriding functions.</p>
+<p class="rubric">Initialization</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.TransformerWrapper.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lir.transform.TransformerWrapper.fit" title="Link to this definition"></a></dt>
+<dd><p>Delegate calls to underlying wrapped transformer but return the Wrapper instance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.TransformerWrapper.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></span><a class="headerlink" href="#lir.transform.TransformerWrapper.apply" title="Link to this definition"></a></dt>
+<dd><p>Delegate calls to underlying wrapped transformer but return the Wrapper instance.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.transform.NumpyTransformer">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.transform.</span></span><span class="sig-name descname"><span class="pre">NumpyTransformer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lir.transform.Transformer" title="lir.transform.Transformer"><span class="pre">lir.transform.Transformer</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.transform.NumpyTransformer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.transform.TransformerWrapper" title="lir.transform.TransformerWrapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.transform.TransformerWrapper</span></code></a></p>
+<p>Implementation of a transformer wrapper.</p>
+<p class="rubric">Initialization</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.NumpyTransformer.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></span><a class="headerlink" href="#lir.transform.NumpyTransformer.apply" title="Link to this definition"></a></dt>
+<dd><p>Extend the instances with the desired header data, call base <code class="docutils literal notranslate"><span class="pre">apply</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.NumpyTransformer.fit_apply">
+<span class="sig-name descname"><span class="pre">fit_apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></span><a class="headerlink" href="#lir.transform.NumpyTransformer.fit_apply" title="Link to this definition"></a></dt>
+<dd><p>Extend the instances with the desired header data, call base <code class="docutils literal notranslate"><span class="pre">fit_apply</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.transform.CsvWriter">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.transform.</span></span><span class="sig-name descname"><span class="pre">CsvWriter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_meta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_input</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_batch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.transform.CsvWriter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.transform.Transformer" title="lir.transform.Transformer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.transform.Transformer</span></code></a></p>
+<p>Implementation of a transformation step in a scikit-learn Pipeline that writes to CSV.</p>
+<p>This might be used to obtain temporary or intermediate results for logging or debugging
+purposes.</p>
+<p class="rubric">Initialization</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.CsvWriter._join_reader">
+<span class="sig-name descname"><span class="pre">_join_reader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">collections.abc.Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lir.transform.CsvWriter._join_reader" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.CsvWriter._write_rows">
+<span class="sig-name descname"><span class="pre">_write_rows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">writer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lir.transform.DataWriter" title="lir.transform.DataWriter"><span class="pre">lir.transform.DataWriter</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_header</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lir.transform.CsvWriter._write_rows" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.CsvWriter.fit_apply">
+<span class="sig-name descname"><span class="pre">fit_apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceDataType" title="lir.data.models.InstanceDataType"><span class="pre">lir.data.models.InstanceDataType</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceDataType" title="lir.data.models.InstanceDataType"><span class="pre">lir.data.models.InstanceDataType</span></a></span></span><a class="headerlink" href="#lir.transform.CsvWriter.fit_apply" title="Link to this definition"></a></dt>
+<dd><p>Provide required <code class="docutils literal notranslate"><span class="pre">fit_apply()</span></code> and return all instances.</p>
+<p>Since the CsvWriter is implemented as a step (Transformer) in the pipeline, it should support
+the <code class="docutils literal notranslate"><span class="pre">fit_apply</span></code> method which is called on all transformers of the pipeline.</p>
+<p>We don’t need to actually fit or transform anything, so we simply return the instances (as is).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.transform.CsvWriter.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a></span></span><a class="headerlink" href="#lir.transform.CsvWriter.apply" title="Link to this definition"></a></dt>
+<dd><p>Write numpy feature vector to CSV output file.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.transform.as_transformer">
+<span class="sig-prename descclassname"><span class="pre">lir.transform.</span></span><span class="sig-name descname"><span class="pre">as_transformer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformer_like</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.transform.Transformer" title="lir.transform.Transformer"><span class="pre">lir.transform.Transformer</span></a></span></span><a class="headerlink" href="#lir.transform.as_transformer" title="Link to this definition"></a></dt>
+<dd><p>Provide a <code class="docutils literal notranslate"><span class="pre">Transformer</span></code> instance of the provided transformer like input.</p>
+<p>For any transformer-like object, wrap if necessary, and return a <code class="docutils literal notranslate"><span class="pre">Transformer</span></code>.</p>
+<p>The transformer-like object may be one of the following:</p>
+<ul class="simple">
+<li><p>an instance of <code class="docutils literal notranslate"><span class="pre">Transformer</span></code>, which is returned as-is;</p></li>
+<li><p>a scikit-learn style transformer which implements <code class="docutils literal notranslate"><span class="pre">transform()</span></code> and optionally <code class="docutils literal notranslate"><span class="pre">fit()</span></code> and/or <code class="docutils literal notranslate"><span class="pre">fit_transform()</span></code>;</p></li>
+<li><p>a scikit-learn style estimator, which implements <code class="docutils literal notranslate"><span class="pre">fit()</span></code> and <code class="docutils literal notranslate"><span class="pre">predict_proba()</span></code>; or</p></li>
+<li><p>a callable which takes an <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> argument and returns another <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code>.</p></li>
+</ul>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>transformer_like</strong> – the object to wrap or return</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a <code class="docutils literal notranslate"><span class="pre">Transformer</span></code> instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lir.data.data_strategies.html" class="btn btn-neutral float-left" title="lir.data.data_strategies" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lir.transform.distance.html" class="btn btn-neutral float-right" title="lir.transform.distance" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

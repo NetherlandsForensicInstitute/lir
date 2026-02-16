@@ -1,0 +1,106 @@
+:py:mod:`lir.transform.pairing`
+===============================
+
+.. py:module:: lir.transform.pairing
+
+.. autodoc2-docstring:: lir.transform.pairing
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`PairingMethod <lir.transform.pairing.PairingMethod>`
+     - .. autodoc2-docstring:: lir.transform.pairing.PairingMethod
+          :parser: myst
+          :summary:
+   * - :py:obj:`SourcePairing <lir.transform.pairing.SourcePairing>`
+     - .. autodoc2-docstring:: lir.transform.pairing.SourcePairing
+          :parser: myst
+          :summary:
+   * - :py:obj:`InstancePairing <lir.transform.pairing.InstancePairing>`
+     - .. autodoc2-docstring:: lir.transform.pairing.InstancePairing
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:class:: PairingMethod
+   :canonical: lir.transform.pairing.PairingMethod
+
+   Bases: :py:obj:`abc.ABC`
+
+   .. autodoc2-docstring:: lir.transform.pairing.PairingMethod
+      :parser: myst
+
+   .. py:method:: pair(instances: lir.data.models.InstanceData, n_trace_instances: int = 1, n_ref_instances: int = 1) -> lir.data.models.PairedFeatureData
+      :canonical: lir.transform.pairing.PairingMethod.pair
+      :abstractmethod:
+
+      .. autodoc2-docstring:: lir.transform.pairing.PairingMethod.pair
+         :parser: myst
+
+.. py:class:: SourcePairing(same_source_limit: int | None = None, different_source_limit: int | None = None, ratio_limit: int | None = None, seed: typing.Any | int = None)
+   :canonical: lir.transform.pairing.SourcePairing
+
+   Bases: :py:obj:`lir.transform.pairing.PairingMethod`
+
+   .. autodoc2-docstring:: lir.transform.pairing.SourcePairing
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.transform.pairing.SourcePairing.__init__
+      :parser: myst
+
+   .. py:method:: _get_random_subset(size: int, instances: lir.data.models.FeatureData) -> lir.data.models.FeatureData | None
+      :canonical: lir.transform.pairing.SourcePairing._get_random_subset
+
+      .. autodoc2-docstring:: lir.transform.pairing.SourcePairing._get_random_subset
+         :parser: myst
+
+   .. py:method:: _construct_array(source_pairs: numpy.ndarray, instances: lir.data.models.FeatureData, n_trace_instances: int, n_ref_instances: int) -> lir.data.models.PairedFeatureData | None
+      :canonical: lir.transform.pairing.SourcePairing._construct_array
+
+      .. autodoc2-docstring:: lir.transform.pairing.SourcePairing._construct_array
+         :parser: myst
+
+   .. py:method:: pair(instances: lir.data.models.InstanceData, n_trace_instances: int = 1, n_ref_instances: int = 1) -> lir.data.models.PairedFeatureData
+      :canonical: lir.transform.pairing.SourcePairing.pair
+
+      .. autodoc2-docstring:: lir.transform.pairing.SourcePairing.pair
+         :parser: myst
+
+.. py:class:: InstancePairing(same_source_limit: int | None = None, different_source_limit: int | None = None, ratio_limit: float | None = None, seed: int | None = None)
+   :canonical: lir.transform.pairing.InstancePairing
+
+   Bases: :py:obj:`lir.transform.pairing.PairingMethod`
+
+   .. autodoc2-docstring:: lir.transform.pairing.InstancePairing
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.transform.pairing.InstancePairing.__init__
+      :parser: myst
+
+   .. py:property:: rng
+      :canonical: lir.transform.pairing.InstancePairing.rng
+      :type: numpy.random.Generator
+
+      .. autodoc2-docstring:: lir.transform.pairing.InstancePairing.rng
+         :parser: myst
+
+   .. py:method:: pair(instances: lir.data.models.InstanceData, n_trace_instances: int = 1, n_ref_instances: int = 1) -> lir.data.models.PairedFeatureData
+      :canonical: lir.transform.pairing.InstancePairing.pair
+
+      .. autodoc2-docstring:: lir.transform.pairing.InstancePairing.pair
+         :parser: myst

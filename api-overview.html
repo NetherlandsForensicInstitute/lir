@@ -1,0 +1,468 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Overview of the Python API &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="_static/thebelab.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Assessing LR system performance" href="lrsystem-assessment.html" />
+    <link rel="prev" title="LR System selection helper" href="lrsystem_yaml.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Getting started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="guides.html">Guides</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/lir/lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/lir/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir/lir.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir/lir.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="guides.html">Guides</a></li>
+      <li class="breadcrumb-item active">Overview of the Python API</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/api-overview.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="overview-of-the-python-api">
+<h1>Overview of the Python API<a class="headerlink" href="#overview-of-the-python-api" title="Link to this heading"></a></h1>
+<p>This is an introduction the Python API. You will learn the basic concepts of data handling and LR calculation in LiR.</p>
+<section id="data-classes">
+<h2>Data classes<a class="headerlink" href="#data-classes" title="Link to this heading"></a></h2>
+<p>In LiR, a dataset is represented as an <a class="reference external" href="api/lir.data.html#lir.data.models.InstanceData">InstanceData</a> object, be it numeric features, scores, LLRs, or something else.</p>
+<p>Specialized sub classes are:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="api/lir.data.html#FeatureData">FeatureData</a>, for instances which has numerical features (sub class of <code class="docutils literal notranslate"><span class="pre">InstanceData</span></code>);</p></li>
+<li><p><a class="reference external" href="api/lir.data.html#PairedFeatureData">PairedFeatureData</a>, for pairs of instances that have numerical features (sub class of <code class="docutils literal notranslate"><span class="pre">FeatureData</span></code>);</p></li>
+<li><p><a class="reference external" href="api/lir.data.html#LLRData">LLRData</a>, for LLRs, with or without intervals (sub class of <code class="docutils literal notranslate"><span class="pre">FeatureData</span></code>).</p></li>
+</ul>
+<p>These objects can be instantiated manually, but in an experimental setup, they are generally provided by a <a class="reference external" href="api/lir.data.html#lir.data.models.DataProvider">DataProvider</a>.
+A <code class="docutils literal notranslate"><span class="pre">DataProvider</span></code> is a class that is specialized in generating, parsing or fetching a particular type of data.</p>
+<p>A data provider subclass implements the <code class="docutils literal notranslate"><span class="pre">get_instances()</span></code> method.</p>
+<p>Example for glass data:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.data.datasets.glass</span><span class="w"> </span><span class="kn">import</span> <span class="n">GlassData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.transform.distance</span><span class="w"> </span><span class="kn">import</span> <span class="n">ManhattanDistance</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.algorithms.logistic_regression</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogitCalibrator</span>
+
+<span class="c1"># retrieve the data</span>
+<span class="n">data_provider</span> <span class="o">=</span> <span class="n">GlassData</span><span class="p">(</span><span class="n">cache_dir</span><span class="o">=</span><span class="s1">&#39;cache&#39;</span><span class="p">)</span>
+<span class="n">glass_data</span> <span class="o">=</span> <span class="n">data_provider</span><span class="o">.</span><span class="n">get_instances</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The glass dataset has numeric features, so it is of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">glass_data</span><span class="p">)</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;It has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">glass_data</span><span class="p">)</span><span class="si">}</span><span class="s1"> instances, each of which is a measurement on a range of chemical elements.&#39;</span><span class="p">)</span>
+
+<span class="c1"># get the number of instances for each unique source id</span>
+<span class="n">unique_source_ids</span><span class="p">,</span> <span class="n">instance_count_by_source_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">glass_data</span><span class="o">.</span><span class="n">source_ids</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The measurements are of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">unique_source_ids</span><span class="p">)</span><span class="si">}</span><span class="s1"> different sources, i.e. glass fragments.&#39;</span><span class="p">)</span>
+
+<span class="c1"># get the number of sources with this many instances</span>
+<span class="n">instance_counts</span><span class="p">,</span> <span class="n">source_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">instance_count_by_source_id</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">instance_count</span><span class="p">,</span> <span class="n">source_count</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">instance_counts</span><span class="p">,</span> <span class="n">source_counts</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;There are </span><span class="si">{</span><span class="n">source_count</span><span class="si">}</span><span class="s1"> sources with </span><span class="si">{</span><span class="n">instance_count</span><span class="si">}</span><span class="s1"> instances.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>The glass dataset has numeric features, so it is of type &lt;class &#39;lir.data.models.FeatureData&#39;&gt;.
+It has 3577 instances, each of which is a measurement on a range of chemical elements.
+The measurements are of 979 different sources, i.e. glass fragments.
+There are 659 sources with 3 instances.
+There are 320 sources with 5 instances.
+</pre></div>
+</div>
+</div>
+</div>
+<p>Most LR systems compare two instances, one from the trace source, and one from a reference source, and make an inference
+about source identity.
+We already acquired measurements on single glass fragments.
+So we <a class="reference external" href="reference.html#pairing-methods">pair</a> the instances to get some pairs to compare.</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lir.transform.pairing</span><span class="w"> </span><span class="kn">import</span> <span class="n">SourcePairing</span>
+
+<span class="c1"># combine the instances into pairs</span>
+<span class="n">pairing_method</span> <span class="o">=</span> <span class="n">SourcePairing</span><span class="p">(</span><span class="n">ratio_limit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">pairs</span> <span class="o">=</span> <span class="n">pairing_method</span><span class="o">.</span><span class="n">pair</span><span class="p">(</span><span class="n">glass_data</span><span class="p">,</span> <span class="n">n_ref_instances</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_trace_instances</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;We have combined the </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">glass_data</span><span class="p">)</span><span class="si">}</span><span class="s1"> instances into </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">pairs</span><span class="p">)</span><span class="si">}</span><span class="s1"> pairs.&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The paired data has features of all instances in the pairs, so it has type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">pairs</span><span class="p">)</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">pairs</span><span class="p">[</span><span class="n">pairs</span><span class="o">.</span><span class="n">labels</span><span class="o">==</span><span class="mi">1</span><span class="p">])</span><span class="si">}</span><span class="s1"> pairs, both instances are from the same source.&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">pairs</span><span class="p">[</span><span class="n">pairs</span><span class="o">.</span><span class="n">labels</span><span class="o">==</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s1"> pairs, both instances are from different sources.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>We have combined the 3577 instances into 1958 pairs.
+The paired data has features of all instances in the pairs, so it has type &lt;class &#39;lir.data.models.PairedFeatureData&#39;&gt;.
+Of 979 pairs, both instances are from the same source.
+Of 979 pairs, both instances are from different sources.
+</pre></div>
+</div>
+</div>
+</div>
+<p>We have created a same-source pair for each source that has at least two instances. The number of different-source pairs
+is potentially much larger, but the number of pairs created is limited to the number of same-source pairs by the
+<code class="docutils literal notranslate"><span class="pre">ratio_limit</span></code> argument.</p>
+<p>Some LR systems may be able to work with multiple trace and reference instances in each pair. This is relevant if there
+are repetitive measurements of the same source.
+The code below creates pairs of 2 trace instances and 3 reference instances, so we need sources with at least 5
+instances for each same-source pair.</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lir.transform.pairing</span><span class="w"> </span><span class="kn">import</span> <span class="n">SourcePairing</span>
+
+<span class="c1"># combine the instances into pairs</span>
+<span class="n">pairing_method</span> <span class="o">=</span> <span class="n">SourcePairing</span><span class="p">(</span><span class="n">ratio_limit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">pairs_3x2</span> <span class="o">=</span> <span class="n">pairing_method</span><span class="o">.</span><span class="n">pair</span><span class="p">(</span><span class="n">glass_data</span><span class="p">,</span> <span class="n">n_trace_instances</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_ref_instances</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;We have combined the </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">glass_data</span><span class="p">)</span><span class="si">}</span><span class="s1"> instances into </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">pairs_3x2</span><span class="p">)</span><span class="si">}</span><span class="s1"> pairs.&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The paired data has features of all instances in the pairs, so it has type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">pairs_3x2</span><span class="p">)</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">pairs_3x2</span><span class="p">[</span><span class="n">pairs_3x2</span><span class="o">.</span><span class="n">labels</span><span class="o">==</span><span class="mi">1</span><span class="p">])</span><span class="si">}</span><span class="s1"> pairs, all instances are from the same source.&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">pairs_3x2</span><span class="p">[</span><span class="n">pairs_3x2</span><span class="o">.</span><span class="n">labels</span><span class="o">==</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s1"> pairs, the instances are from two different sources.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>We have combined the 3577 instances into 640 pairs.
+The paired data has features of all instances in the pairs, so it has type &lt;class &#39;lir.data.models.PairedFeatureData&#39;&gt;.
+Of 320 pairs, all instances are from the same source.
+Of 320 pairs, the instances are from two different sources.
+</pre></div>
+</div>
+</div>
+</div>
+<p>The actual comparison can take many forms, including a distance or similarity function such as the
+<a class="reference external" href="api/lir.transform.html#lir.transform.distance.ManhattanDistance">Manhattan distance</a>.</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lir.transform.distance</span><span class="w"> </span><span class="kn">import</span> <span class="n">ManhattanDistance</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.algorithms.logistic_regression</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogitCalibrator</span>
+
+<span class="c1"># reduce the pairs to a single value by calculating the Manhattan distance</span>
+<span class="n">distances</span> <span class="o">=</span> <span class="n">ManhattanDistance</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pairs</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The set of distances has type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The distances have an average of </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">distances</span><span class="o">.</span><span class="n">features</span><span class="p">)</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The standard deviation is </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">distances</span><span class="o">.</span><span class="n">features</span><span class="p">)</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>The set of distances has type &lt;class &#39;lir.data.models.FeatureData&#39;&gt;.
+The distances have an average of 1.7132633133820225.
+The standard deviation is 1.8213236663586245.
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now it is time to calculate LLRs…</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># calculate LLRs</span>
+<span class="n">llrs</span> <span class="o">=</span> <span class="n">LogitCalibrator</span><span class="p">()</span><span class="o">.</span><span class="n">fit_apply</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span>
+<span class="n">different_source_llrs</span> <span class="o">=</span> <span class="n">llrs</span><span class="p">[</span><span class="n">llrs</span><span class="o">.</span><span class="n">labels</span><span class="o">==</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">same_source_llrs</span> <span class="o">=</span> <span class="n">llrs</span><span class="p">[</span><span class="n">llrs</span><span class="o">.</span><span class="n">labels</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The set of LLRs has type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">llrs</span><span class="p">)</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The median LLR for different-source pairs is </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">different_source_llrs</span><span class="o">.</span><span class="n">llrs</span><span class="p">)</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The median LLR for same-source pairs is </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">same_source_llrs</span><span class="o">.</span><span class="n">llrs</span><span class="p">)</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>The set of LLRs has type &lt;class &#39;lir.data.models.LLRData&#39;&gt;.
+The median LLR for different-source pairs is -7.4145222619870745.
+The median LLR for same-source pairs is 1.8269216806298034.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="data-strategies">
+<h2>Data strategies<a class="headerlink" href="#data-strategies" title="Link to this heading"></a></h2>
+<p>Above, we training the system and calculated LLRs using the same pairs, which is <strong>not</strong> a sound experimental setup!
+In an experiment we work with <a class="reference external" href="api/lir.data.html#module-lir.data.data_strategies">data strategies</a>. This can be a simple train/test split, or a more
+advanced configuration such as cross-validation.</p>
+<p>A data strategy inherits from <a class="reference external" href="api/lir.data.html#lir.data.models.DataStrategy">DataStrategy</a> and implements an <code class="docutils literal notranslate"><span class="pre">apply()</span></code> method that returns an iterator of pairs of training and test sets.</p>
+<p>Example:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lir.data.data_strategies</span><span class="w"> </span><span class="kn">import</span> <span class="n">MulticlassTrainTestSplit</span>
+
+<span class="n">splitter</span> <span class="o">=</span> <span class="n">MulticlassTrainTestSplit</span><span class="p">(</span><span class="n">test_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">training_data</span><span class="p">,</span> <span class="n">test_data</span> <span class="ow">in</span> <span class="n">splitter</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">glass_data</span><span class="p">):</span>
+    <span class="c1"># because we do a single train/test split, this for loop will run only once</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;We have </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">training_data</span><span class="p">)</span><span class="si">}</span><span class="s1"> instances available for training our models.&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;We have </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">test_data</span><span class="p">)</span><span class="si">}</span><span class="s1"> instances available as test data.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>We have 1801 instances available for training our models.
+We have 1776 instances available as test data.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="lr-systems">
+<h2>LR systems<a class="headerlink" href="#lr-systems" title="Link to this heading"></a></h2>
+<p>There can be many different <a class="reference external" href="reference.html#lrsystem-architecture">LR system architectures</a>. Refer to the <a class="reference external" href="reference.html#lrsystem_yaml">selection guide</a> if unsure which one to use.</p>
+<p>The exact parameters depend on the type of LR system. The main ingredient is typically a pipeline of <em>modules</em>.
+The modules are executed one by one, and each module takes the output of the previous module, transforms the data,
+and passes the data to the next module. The modules may reduce or expand the number of features, but never change
+the number of instances or pairs.</p>
+<p>An LR system may have multiple modules or pipelines as its arguments, each of which has a different role. For example,
+a score-based LR system has a preprocessing module, to process single instances, and a comparing module or pipeline, to
+calculate LLRs for the pairs.</p>
+<p>The <a class="reference external" href="api/lir.transform.html#lir.transform.pipeline.Pipeline">Pipeline</a> class accepts any LiR module scikit-learn transformer, scikit-learn estimator, or even other
+pipelines as its modules, as long as the module can work with the data.</p>
+<p>For example, the <code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code> transforms the data to have mean = 0 and standard deviation = 1.</p>
+<p>Example:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.transform.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
+
+<span class="n">preprocessing_pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span>
+    <span class="p">(</span><span class="s1">&#39;scale&#39;</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">()),</span>
+<span class="p">])</span>
+
+<span class="n">normalized_glass_data</span> <span class="o">=</span> <span class="n">preprocessing_pipeline</span><span class="o">.</span><span class="n">fit_apply</span><span class="p">(</span><span class="n">glass_data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+<p>A simple LR system could take the manhattan distance of each pair and then apply some kind of calibration. We can combine those
+steps in a pipeline.</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lir.transform.distance</span><span class="w"> </span><span class="kn">import</span> <span class="n">ManhattanDistance</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.algorithms.logistic_regression</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogitCalibrator</span>
+
+<span class="n">comparing_pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span>
+    <span class="p">(</span><span class="s1">&#39;distance&#39;</span><span class="p">,</span> <span class="n">ManhattanDistance</span><span class="p">()),</span>
+    <span class="p">(</span><span class="s1">&#39;logit&#39;</span><span class="p">,</span> <span class="n">LogitCalibrator</span><span class="p">()),</span>
+<span class="p">])</span>
+
+<span class="n">llrs</span> <span class="o">=</span> <span class="n">comparing_pipeline</span><span class="o">.</span><span class="n">fit_apply</span><span class="p">(</span><span class="n">pairs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+<p>We can use these components in a score-based LR system:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lir.lrsystems.score_based</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScoreBasedSystem</span>
+
+<span class="c1"># initialize the score-based LR system with the components we created before</span>
+<span class="n">lrsystem</span> <span class="o">=</span> <span class="n">ScoreBasedSystem</span><span class="p">(</span><span class="n">preprocessing_pipeline</span><span class="o">=</span><span class="n">preprocessing_pipeline</span><span class="p">,</span> <span class="n">pairing_function</span><span class="o">=</span><span class="n">pairing_method</span><span class="p">,</span> <span class="n">evaluation_pipeline</span><span class="o">=</span><span class="n">comparing_pipeline</span><span class="p">)</span>
+
+<span class="c1"># use the training data to fit the LR system</span>
+<span class="n">lrsystem</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">training_data</span><span class="p">)</span>
+
+<span class="c1"># use the test data to calculate LLRs</span>
+<span class="n">llrs</span> <span class="o">=</span> <span class="n">lrsystem</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">test_data</span><span class="p">)</span>
+
+<span class="c1"># plot results</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lir.plotting</span>
+<span class="k">with</span> <span class="n">lir</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">show</span><span class="p">()</span> <span class="k">as</span> <span class="n">ax</span><span class="p">:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">lr_histogram</span><span class="p">(</span><span class="n">llrs</span><span class="p">)</span>
+
+<span class="c1"># zoom in on the LLRs around 0</span>
+<span class="k">with</span> <span class="n">lir</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">show</span><span class="p">()</span> <span class="k">as</span> <span class="n">ax</span><span class="p">:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">lr_histogram</span><span class="p">(</span><span class="n">llrs</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/api-overview_8_0.png" src="_images/api-overview_8_0.png" />
+<img alt="_images/api-overview_8_1.png" src="_images/api-overview_8_1.png" />
+</div>
+</div>
+<p>Above, we used a simple train/test split. Alternatives such as <strong>cross-validation</strong> use the data more efficiently, but
+we have to deal with multiple train/test splits.</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lir.data.data_strategies</span><span class="w"> </span><span class="kn">import</span> <span class="n">MulticlassCrossValidation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.data.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">concatenate_instances</span>
+
+<span class="c1"># initialize 5-fold cross-validation</span>
+<span class="n">splitter</span> <span class="o">=</span> <span class="n">MulticlassCrossValidation</span><span class="p">(</span><span class="n">folds</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># initialize the results as an empty list</span>
+<span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">training_data</span><span class="p">,</span> <span class="n">test_data</span> <span class="ow">in</span> <span class="n">splitter</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">glass_data</span><span class="p">):</span>
+    <span class="c1"># since we do five-fold cross-validation, we have five different</span>
+    <span class="c1"># train/test splits of the same data</span>
+
+    <span class="c1"># fitting and applying an LR system can be a one-liner</span>
+    <span class="n">subset_llrs</span> <span class="o">=</span> <span class="n">lrsystem</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">training_data</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">test_data</span><span class="p">)</span>
+
+    <span class="c1"># add the LLRs to results list</span>
+    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subset_llrs</span><span class="p">)</span>
+
+<span class="c1"># combine all LLRs into a single object</span>
+<span class="n">llrs</span> <span class="o">=</span> <span class="n">concatenate_instances</span><span class="p">(</span><span class="o">*</span><span class="n">results</span><span class="p">)</span>
+
+<span class="c1"># zoom in on the LLRs around 0</span>
+<span class="k">with</span> <span class="n">lir</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">show</span><span class="p">()</span> <span class="k">as</span> <span class="n">ax</span><span class="p">:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">lr_histogram</span><span class="p">(</span><span class="n">llrs</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/api-overview_9_0.png" src="_images/api-overview_9_0.png" />
+</div>
+</div>
+<p>This time, we have twice as much test data altogether, because each pair appears in one of the test sets. Results should
+look similar compared to the train/test split.</p>
+<p>Is this an adequate LR system?</p>
+<p><strong>Next step:</strong> learn how to <a class="reference external" href="lrsystem-assessment.html">assess an LR system’s performance</a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lrsystem_yaml.html" class="btn btn-neutral float-left" title="LR System selection helper" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lrsystem-assessment.html" class="btn btn-neutral float-right" title="Assessing LR system performance" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

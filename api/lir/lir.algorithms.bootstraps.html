@@ -1,0 +1,383 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.algorithms.bootstraps &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="lir.algorithms.invariance_bounds" href="lir.algorithms.invariance_bounds.html" />
+    <link rel="prev" title="lir.algorithms.logistic_regression" href="lir.algorithms.logistic_regression.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="lir.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir</span></code></a></li>
+          <li class="breadcrumb-item"><a href="lir.algorithms.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.algorithms</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.algorithms.bootstraps</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/api/lir/lir.algorithms.bootstraps.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-lir.algorithms.bootstraps">
+<span id="lir-algorithms-bootstraps"></span><h1><a class="reference internal" href="#module-lir.algorithms.bootstraps" title="lir.algorithms.bootstraps"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lir.algorithms.bootstraps</span></code></a><a class="headerlink" href="#module-lir.algorithms.bootstraps" title="Link to this heading"></a></h1>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.algorithms.bootstraps.Bootstrap" title="lir.algorithms.bootstraps.Bootstrap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bootstrap</span></code></a></p></td>
+<td><p>Bootstrap system that estimates confidence intervals around the best estimate of a pipeline.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lir.algorithms.bootstraps.BootstrapAtData" title="lir.algorithms.bootstraps.BootstrapAtData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BootstrapAtData</span></code></a></p></td>
+<td><p>Bootstrap system that uses the original training data points for interval estimation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.algorithms.bootstraps.BootstrapEquidistant" title="lir.algorithms.bootstraps.BootstrapEquidistant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BootstrapEquidistant</span></code></a></p></td>
+<td><p>Bootstrap system that uses equidistant points within the range of the training data for interval estimation.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lir.algorithms.bootstraps.bootstrap" title="lir.algorithms.bootstraps.bootstrap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bootstrap</span></code></a></p></td>
+<td><p>Transitional function to parse a bootstrapping pipeline.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="api">
+<h3>API<a class="headerlink" href="#api" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.algorithms.bootstraps.Bootstrap">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.algorithms.bootstraps.</span></span><span class="sig-name descname"><span class="pre">Bootstrap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bootstraps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0.05,</span> <span class="pre">0.95)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.algorithms.bootstraps.Bootstrap" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="lir.transform.pipeline.html#lir.transform.pipeline.Pipeline" title="lir.transform.pipeline.Pipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.transform.pipeline.Pipeline</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>Bootstrap system that estimates confidence intervals around the best estimate of a pipeline.</p>
+<p>This bootstrap system creates bootstrap samples from the training data, fits the pipeline on each sample,
+and then computes confidence intervals for the pipeline outputs based on the variability across the bootstrap
+samples.</p>
+<p>Computing these intervals is done by creating interpolation functions that map the best estimate to the
+difference between the best estimate and the lower and upper bounds of the confidence interval. To achieve this,
+two subclasses are provided that differ in how the data points for interval estimation are obtained.</p>
+<ul class="simple">
+<li><p>BootstrapAtData: Uses the original training data points for interval estimation.</p></li>
+<li><p>BootstrapEquidistant: Uses equidistant points within the range of the training data for interval estimation.</p></li>
+</ul>
+<p>The AtData variant allows for more complex data types, while the Equidistant variant is only suitable for continuous
+features.</p>
+<p class="rubric">Initialization</p>
+<p>Initialize the TrainDataBootstrap with the given pipeline steps, number of bootstraps, and interval.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>steps</strong> – list[tuple[str, Any]]: The steps of the pipeline to be bootstrapped.</p></li>
+<li><p><strong>n_bootstraps</strong> – int: The number of bootstrap samples to generate. Default is 400.</p></li>
+<li><p><strong>interval</strong> – tuple[float, float]: The lower and upper quantiles for the confidence interval.
+Default: (0.05,0.95).</p></li>
+<li><p><strong>seed</strong> – int | None: The random seed for reproducibility. Default is None.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.bootstraps.Bootstrap.get_bootstrap_data">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">get_bootstrap_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></span><a class="headerlink" href="#lir.algorithms.bootstraps.Bootstrap.get_bootstrap_data" title="Link to this definition"></a></dt>
+<dd><p>Get the data points to use for interval estimation.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instances</strong> – FeatureData: The feature data to fit the bootstrap system on.</p>
+</dd>
+<dt class="field-even">Return FeatureData<span class="colon">:</span></dt>
+<dd class="field-even"><p>The feature data to use for interval estimation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.bootstraps.Bootstrap.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.models.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">lir.data.models.LLRData</span></a></span></span><a class="headerlink" href="#lir.algorithms.bootstraps.Bootstrap.apply" title="Link to this definition"></a></dt>
+<dd><p>Transform the provided instances to include the best estimate and confidence intervals.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instances</strong> – FeatureData: The feature data to transform.</p>
+</dd>
+<dt class="field-even">Return LLRData<span class="colon">:</span></dt>
+<dd class="field-even"><p>The transformed feature data with best estimate and confidence intervals.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.bootstraps.Bootstrap.fit_apply">
+<span class="sig-name descname"><span class="pre">fit_apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.models.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">lir.data.models.LLRData</span></a></span></span><a class="headerlink" href="#lir.algorithms.bootstraps.Bootstrap.fit_apply" title="Link to this definition"></a></dt>
+<dd><p>Combine fitting and transforming in one step.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instances</strong> – FeatureData: The feature data to fit and transform.</p>
+</dd>
+<dt class="field-even">Return LLRData<span class="colon">:</span></dt>
+<dd class="field-even"><p>The transformed feature data with best estimate and confidence intervals.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.bootstraps.Bootstrap.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lir.algorithms.bootstraps.Bootstrap.fit" title="Link to this definition"></a></dt>
+<dd><p>Fit the bootstrap system to the provided instances.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instances</strong> – FeatureData: The feature data to fit the bootstrap system on.</p>
+</dd>
+<dt class="field-even">Return Self<span class="colon">:</span></dt>
+<dd class="field-even"><p>The fitted bootstrap system.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.algorithms.bootstraps.BootstrapAtData">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.algorithms.bootstraps.</span></span><span class="sig-name descname"><span class="pre">BootstrapAtData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bootstraps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0.05,</span> <span class="pre">0.95)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.algorithms.bootstraps.BootstrapAtData" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.algorithms.bootstraps.Bootstrap" title="lir.algorithms.bootstraps.Bootstrap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.algorithms.bootstraps.Bootstrap</span></code></a></p>
+<p>Bootstrap system that uses the original training data points for interval estimation.</p>
+<p>See the Bootstrap class for more details.</p>
+<p class="rubric">Initialization</p>
+<p>Initialize the TrainDataBootstrap with the given pipeline steps, number of bootstraps, and interval.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>steps</strong> – list[tuple[str, Any]]: The steps of the pipeline to be bootstrapped.</p></li>
+<li><p><strong>n_bootstraps</strong> – int: The number of bootstrap samples to generate. Default is 400.</p></li>
+<li><p><strong>interval</strong> – tuple[float, float]: The lower and upper quantiles for the confidence interval.
+Default: (0.05,0.95).</p></li>
+<li><p><strong>seed</strong> – int | None: The random seed for reproducibility. Default is None.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.bootstraps.BootstrapAtData.get_bootstrap_data">
+<span class="sig-name descname"><span class="pre">get_bootstrap_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></span><a class="headerlink" href="#lir.algorithms.bootstraps.BootstrapAtData.get_bootstrap_data" title="Link to this definition"></a></dt>
+<dd><p>Get the data points to use for interval estimation. The original training data points are used.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instances</strong> – FeatureData: The feature data to fit the bootstrap system on.</p>
+</dd>
+<dt class="field-even">Return FeatureData<span class="colon">:</span></dt>
+<dd class="field-even"><p>The feature data to use for interval estimation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.algorithms.bootstraps.BootstrapEquidistant">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.algorithms.bootstraps.</span></span><span class="sig-name descname"><span class="pre">BootstrapEquidistant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bootstraps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0.05,</span> <span class="pre">0.95)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.algorithms.bootstraps.BootstrapEquidistant" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.algorithms.bootstraps.Bootstrap" title="lir.algorithms.bootstraps.Bootstrap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lir.algorithms.bootstraps.Bootstrap</span></code></a></p>
+<p>Bootstrap system that uses equidistant points within the range of the training data for interval estimation.</p>
+<p>See the Bootstrap class for more details.</p>
+<p class="rubric">Initialization</p>
+<p>Initialize the instance with the given pipeline steps, number of bootstraps, and interval.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>steps</strong> – list[tuple[str, Any]]: The steps of the pipeline to be bootstrapped.</p></li>
+<li><p><strong>n_bootstraps</strong> – int: The number of bootstrap samples to generate. Default is 400.</p></li>
+<li><p><strong>interval</strong> – tuple[float, float]: The lower and upper quantiles for the confidence interval.
+Default: (0.05,0.95).</p></li>
+<li><p><strong>seed</strong> – int | None: The random seed for reproducibility. Default is None.</p></li>
+<li><p><strong>n_points</strong> – int | None: The number of equidistant points to use for interval estimation. Default is 1000.
+If None, uses the number of instances in the training data.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.bootstraps.BootstrapEquidistant.get_bootstrap_data">
+<span class="sig-name descname"><span class="pre">get_bootstrap_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">lir.data.models.InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.models.html#lir.data.models.FeatureData" title="lir.data.models.FeatureData"><span class="pre">lir.data.models.FeatureData</span></a></span></span><a class="headerlink" href="#lir.algorithms.bootstraps.BootstrapEquidistant.get_bootstrap_data" title="Link to this definition"></a></dt>
+<dd><p>Get the data points to use for interval estimation.</p>
+<p>This is done by creating equidistant points within the range of the training data.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instances</strong> – FeatureData: The feature data to fit the bootstrap system on.</p>
+</dd>
+<dt class="field-even">Return FeatureData<span class="colon">:</span></dt>
+<dd class="field-even"><p>The feature data to use for interval estimation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.algorithms.bootstraps.bootstrap">
+<span class="sig-prename descclassname"><span class="pre">lir.algorithms.bootstraps.</span></span><span class="sig-name descname"><span class="pre">bootstrap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modules_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">lir.config.base.ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lir.algorithms.bootstraps.Bootstrap" title="lir.algorithms.bootstraps.Bootstrap"><span class="pre">lir.algorithms.bootstraps.Bootstrap</span></a></span></span><a class="headerlink" href="#lir.algorithms.bootstraps.bootstrap" title="Link to this definition"></a></dt>
+<dd><p>Transitional function to parse a bootstrapping pipeline.</p>
+<p>The configuration takes the following arguments:</p>
+<ul class="simple">
+<li><p>steps: the pipeline steps to bootstrap</p></li>
+<li><p>points: the points to bootstrap, can be either <code class="docutils literal notranslate"><span class="pre">data</span></code> or <code class="docutils literal notranslate"><span class="pre">equidistant</span></code>. This selects the bootstrapping class:
+<code class="docutils literal notranslate"><span class="pre">BootstrapAtData</span></code> for ‘data’, or <code class="docutils literal notranslate"><span class="pre">BootstrapEquidistant</span></code> for ‘equidistant’</p></li>
+</ul>
+<p>Any other arguments are passed directly to the <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> method of the bootstrapping class.</p>
+<dl class="myst field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>modules_config</strong> – the configuration</p></li>
+<li><p><strong>output_dir</strong> – where to write output, if any</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a bootstrapping object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lir.algorithms.logistic_regression.html" class="btn btn-neutral float-left" title="lir.algorithms.logistic_regression" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lir.algorithms.invariance_bounds.html" class="btn btn-neutral float-right" title="lir.algorithms.invariance_bounds" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

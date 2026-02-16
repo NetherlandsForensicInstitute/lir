@@ -1,0 +1,52 @@
+:py:mod:`lir.algorithms.llr_overestimation`
+===========================================
+
+.. py:module:: lir.algorithms.llr_overestimation
+
+.. autodoc2-docstring:: lir.algorithms.llr_overestimation
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`plot_llr_overestimation <lir.algorithms.llr_overestimation.plot_llr_overestimation>`
+     - .. autodoc2-docstring:: lir.algorithms.llr_overestimation.plot_llr_overestimation
+          :parser: myst
+          :summary:
+   * - :py:obj:`calc_llr_overestimation <lir.algorithms.llr_overestimation.calc_llr_overestimation>`
+     - .. autodoc2-docstring:: lir.algorithms.llr_overestimation.calc_llr_overestimation
+          :parser: myst
+          :summary:
+   * - :py:obj:`calc_fiducial_density_functions <lir.algorithms.llr_overestimation.calc_fiducial_density_functions>`
+     - .. autodoc2-docstring:: lir.algorithms.llr_overestimation.calc_fiducial_density_functions
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:function:: plot_llr_overestimation(llrdata: lir.data.models.LLRData, num_fids: int = 1000, ax: matplotlib.pyplot.Axes = plt, **kwargs: typing.Any) -> None
+   :canonical: lir.algorithms.llr_overestimation.plot_llr_overestimation
+
+   .. autodoc2-docstring:: lir.algorithms.llr_overestimation.plot_llr_overestimation
+      :parser: myst
+
+.. py:function:: calc_llr_overestimation(llrs: numpy.ndarray, y: numpy.ndarray, num_fids: int = 1000, bw: tuple[str | float, str | float] = ('silverman', 'silverman'), num_grid_points: int = 100, alpha: float = 0.05, **kwargs: typing.Any) -> tuple[numpy.ndarray | None, numpy.ndarray | None, numpy.ndarray | None]
+   :canonical: lir.algorithms.llr_overestimation.calc_llr_overestimation
+
+   .. autodoc2-docstring:: lir.algorithms.llr_overestimation.calc_llr_overestimation
+      :parser: myst
+
+.. py:function:: calc_fiducial_density_functions(data: numpy.ndarray, grid: numpy.ndarray, df_type: str = 'pdf', num_fids: int = 1000, smoothing_grid_fraction: float = 1 / 10, smoothing_sample_size_correction: float = 1, seed: None | int = None) -> numpy.ndarray
+   :canonical: lir.algorithms.llr_overestimation.calc_fiducial_density_functions
+
+   .. autodoc2-docstring:: lir.algorithms.llr_overestimation.calc_fiducial_density_functions
+      :parser: myst

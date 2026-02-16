@@ -1,0 +1,500 @@
+:py:mod:`lir.data.models`
+=========================
+
+.. py:module:: lir.data.models
+
+.. autodoc2-docstring:: lir.data.models
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`InstanceData <lir.data.models.InstanceData>`
+     - .. autodoc2-docstring:: lir.data.models.InstanceData
+          :parser: myst
+          :summary:
+   * - :py:obj:`FeatureData <lir.data.models.FeatureData>`
+     - .. autodoc2-docstring:: lir.data.models.FeatureData
+          :parser: myst
+          :summary:
+   * - :py:obj:`PairedFeatureData <lir.data.models.PairedFeatureData>`
+     - .. autodoc2-docstring:: lir.data.models.PairedFeatureData
+          :parser: myst
+          :summary:
+   * - :py:obj:`LLRData <lir.data.models.LLRData>`
+     - .. autodoc2-docstring:: lir.data.models.LLRData
+          :parser: myst
+          :summary:
+   * - :py:obj:`DataProvider <lir.data.models.DataProvider>`
+     - .. autodoc2-docstring:: lir.data.models.DataProvider
+          :parser: myst
+          :summary:
+   * - :py:obj:`DataStrategy <lir.data.models.DataStrategy>`
+     - .. autodoc2-docstring:: lir.data.models.DataStrategy
+          :parser: myst
+          :summary:
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`_validate_labels <lir.data.models._validate_labels>`
+     - .. autodoc2-docstring:: lir.data.models._validate_labels
+          :parser: myst
+          :summary:
+   * - :py:obj:`_validate_source_ids <lir.data.models._validate_source_ids>`
+     - .. autodoc2-docstring:: lir.data.models._validate_source_ids
+          :parser: myst
+          :summary:
+   * - :py:obj:`_validate_features <lir.data.models._validate_features>`
+     - .. autodoc2-docstring:: lir.data.models._validate_features
+          :parser: myst
+          :summary:
+   * - :py:obj:`concatenate_instances <lir.data.models.concatenate_instances>`
+     - .. autodoc2-docstring:: lir.data.models.concatenate_instances
+          :parser: myst
+          :summary:
+   * - :py:obj:`get_instances_by_category <lir.data.models.get_instances_by_category>`
+     - .. autodoc2-docstring:: lir.data.models.get_instances_by_category
+          :parser: myst
+          :summary:
+
+Data
+~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`LOG <lir.data.models.LOG>`
+     - .. autodoc2-docstring:: lir.data.models.LOG
+          :parser: myst
+          :summary:
+   * - :py:obj:`InstanceDataType <lir.data.models.InstanceDataType>`
+     - .. autodoc2-docstring:: lir.data.models.InstanceDataType
+          :parser: myst
+          :summary:
+   * - :py:obj:`FeatureDataType <lir.data.models.FeatureDataType>`
+     - .. autodoc2-docstring:: lir.data.models.FeatureDataType
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:data:: LOG
+   :canonical: lir.data.models.LOG
+   :value: 'getLogger(...)'
+
+   .. autodoc2-docstring:: lir.data.models.LOG
+      :parser: myst
+
+.. py:function:: _validate_labels(labels: numpy.ndarray | None) -> numpy.ndarray | None
+   :canonical: lir.data.models._validate_labels
+
+   .. autodoc2-docstring:: lir.data.models._validate_labels
+      :parser: myst
+
+.. py:function:: _validate_source_ids(source_ids: numpy.ndarray | None) -> numpy.ndarray | None
+   :canonical: lir.data.models._validate_source_ids
+
+   .. autodoc2-docstring:: lir.data.models._validate_source_ids
+      :parser: myst
+
+.. py:class:: InstanceData(/, **data: typing.Any)
+   :canonical: lir.data.models.InstanceData
+
+   Bases: :py:obj:`pydantic.BaseModel`, :py:obj:`abc.ABC`
+
+   .. autodoc2-docstring:: lir.data.models.InstanceData
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.data.models.InstanceData.__init__
+      :parser: myst
+
+   .. py:attribute:: model_config
+      :canonical: lir.data.models.InstanceData.model_config
+      :value: 'ConfigDict(...)'
+
+      .. autodoc2-docstring:: lir.data.models.InstanceData.model_config
+         :parser: myst
+
+   .. py:attribute:: labels
+      :canonical: lir.data.models.InstanceData.labels
+      :type: typing.Annotated[numpy.ndarray | None, AfterValidator(_validate_labels)]
+      :value: None
+
+      .. autodoc2-docstring:: lir.data.models.InstanceData.labels
+         :parser: myst
+
+   .. py:attribute:: source_ids
+      :canonical: lir.data.models.InstanceData.source_ids
+      :type: typing.Annotated[numpy.ndarray | None, AfterValidator(_validate_source_ids)]
+      :value: None
+
+      .. autodoc2-docstring:: lir.data.models.InstanceData.source_ids
+         :parser: myst
+
+   .. py:property:: require_labels
+      :canonical: lir.data.models.InstanceData.require_labels
+      :type: numpy.ndarray
+
+      .. autodoc2-docstring:: lir.data.models.InstanceData.require_labels
+         :parser: myst
+
+   .. py:method:: check_sourceids_labels_match() -> typing.Self
+      :canonical: lir.data.models.InstanceData.check_sourceids_labels_match
+
+      .. autodoc2-docstring:: lir.data.models.InstanceData.check_sourceids_labels_match
+         :parser: myst
+
+   .. py:property:: source_ids_1d
+      :canonical: lir.data.models.InstanceData.source_ids_1d
+      :type: numpy.ndarray
+
+      .. autodoc2-docstring:: lir.data.models.InstanceData.source_ids_1d
+         :parser: myst
+
+   .. py:method:: __len__() -> int
+      :canonical: lir.data.models.InstanceData.__len__
+      :abstractmethod:
+
+      .. autodoc2-docstring:: lir.data.models.InstanceData.__len__
+         :parser: myst
+
+   .. py:method:: __getitem__(indexes: numpy.ndarray | int) -> typing.Self
+      :canonical: lir.data.models.InstanceData.__getitem__
+
+      .. autodoc2-docstring:: lir.data.models.InstanceData.__getitem__
+         :parser: myst
+
+   .. py:method:: __add__(other: lir.data.models.InstanceData) -> typing.Self
+      :canonical: lir.data.models.InstanceData.__add__
+
+      .. autodoc2-docstring:: lir.data.models.InstanceData.__add__
+         :parser: myst
+
+   .. py:method:: check_both_labels() -> numpy.ndarray
+      :canonical: lir.data.models.InstanceData.check_both_labels
+
+      .. autodoc2-docstring:: lir.data.models.InstanceData.check_both_labels
+         :parser: myst
+
+   .. py:method:: _concatenate_field(field: str, values: list[typing.Any]) -> typing.Any
+      :canonical: lir.data.models.InstanceData._concatenate_field
+      :classmethod:
+
+      .. autodoc2-docstring:: lir.data.models.InstanceData._concatenate_field
+         :parser: myst
+
+   .. py:method:: concatenate(*others: lir.data.models.InstanceData) -> typing.Self
+      :canonical: lir.data.models.InstanceData.concatenate
+
+      .. autodoc2-docstring:: lir.data.models.InstanceData.concatenate
+         :parser: myst
+
+   .. py:method:: has_same_type(other: typing.Any) -> bool
+      :canonical: lir.data.models.InstanceData.has_same_type
+
+      .. autodoc2-docstring:: lir.data.models.InstanceData.has_same_type
+         :parser: myst
+
+   .. py:method:: combine(others: list[InstanceData] | InstanceData, fn: collections.abc.Callable, *args: typing.Any, **kwargs: typing.Any) -> typing.Self
+      :canonical: lir.data.models.InstanceData.combine
+
+      .. autodoc2-docstring:: lir.data.models.InstanceData.combine
+         :parser: myst
+
+   .. py:method:: apply(fn: collections.abc.Callable, *args: typing.Any, **kwargs: typing.Any) -> typing.Self
+      :canonical: lir.data.models.InstanceData.apply
+
+      .. autodoc2-docstring:: lir.data.models.InstanceData.apply
+         :parser: myst
+
+   .. py:method:: __eq__(other: typing.Any) -> bool
+      :canonical: lir.data.models.InstanceData.__eq__
+
+      .. autodoc2-docstring:: lir.data.models.InstanceData.__eq__
+         :parser: myst
+
+   .. py:property:: all_fields
+      :canonical: lir.data.models.InstanceData.all_fields
+      :type: list[str]
+
+      .. autodoc2-docstring:: lir.data.models.InstanceData.all_fields
+         :parser: myst
+
+   .. py:property:: has_labels
+      :canonical: lir.data.models.InstanceData.has_labels
+      :type: bool
+
+      .. autodoc2-docstring:: lir.data.models.InstanceData.has_labels
+         :parser: myst
+
+   .. py:method:: replace(**kwargs: typing.Any) -> typing.Self
+      :canonical: lir.data.models.InstanceData.replace
+
+      .. autodoc2-docstring:: lir.data.models.InstanceData.replace
+         :parser: myst
+
+   .. py:method:: replace_as(datatype: type[lir.data.models.InstanceDataType], **kwargs: typing.Any) -> lir.data.models.InstanceDataType
+      :canonical: lir.data.models.InstanceData.replace_as
+
+      .. autodoc2-docstring:: lir.data.models.InstanceData.replace_as
+         :parser: myst
+
+.. py:function:: _validate_features(features: numpy.ndarray) -> numpy.ndarray
+   :canonical: lir.data.models._validate_features
+
+   .. autodoc2-docstring:: lir.data.models._validate_features
+      :parser: myst
+
+.. py:class:: FeatureData(/, **data: typing.Any)
+   :canonical: lir.data.models.FeatureData
+
+   Bases: :py:obj:`lir.data.models.InstanceData`
+
+   .. autodoc2-docstring:: lir.data.models.FeatureData
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.data.models.FeatureData.__init__
+      :parser: myst
+
+   .. py:attribute:: features
+      :canonical: lir.data.models.FeatureData.features
+      :type: typing.Annotated[numpy.ndarray, AfterValidator(_validate_features)]
+      :value: None
+
+      .. autodoc2-docstring:: lir.data.models.FeatureData.features
+         :parser: myst
+
+   .. py:method:: __len__() -> int
+      :canonical: lir.data.models.FeatureData.__len__
+
+   .. py:method:: check_matching_shapes() -> typing.Self
+      :canonical: lir.data.models.FeatureData.check_matching_shapes
+
+      .. autodoc2-docstring:: lir.data.models.FeatureData.check_matching_shapes
+         :parser: myst
+
+   .. py:method:: check_features() -> typing.Self
+      :canonical: lir.data.models.FeatureData.check_features
+
+      .. autodoc2-docstring:: lir.data.models.FeatureData.check_features
+         :parser: myst
+
+.. py:class:: PairedFeatureData(/, **data: typing.Any)
+   :canonical: lir.data.models.PairedFeatureData
+
+   Bases: :py:obj:`lir.data.models.FeatureData`
+
+   .. autodoc2-docstring:: lir.data.models.PairedFeatureData
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.data.models.PairedFeatureData.__init__
+      :parser: myst
+
+   .. py:attribute:: n_trace_instances
+      :canonical: lir.data.models.PairedFeatureData.n_trace_instances
+      :type: int
+      :value: None
+
+      .. autodoc2-docstring:: lir.data.models.PairedFeatureData.n_trace_instances
+         :parser: myst
+
+   .. py:attribute:: n_ref_instances
+      :canonical: lir.data.models.PairedFeatureData.n_ref_instances
+      :type: int
+      :value: None
+
+      .. autodoc2-docstring:: lir.data.models.PairedFeatureData.n_ref_instances
+         :parser: myst
+
+   .. py:property:: features_trace
+      :canonical: lir.data.models.PairedFeatureData.features_trace
+      :type: numpy.ndarray
+
+      .. autodoc2-docstring:: lir.data.models.PairedFeatureData.features_trace
+         :parser: myst
+
+   .. py:property:: features_ref
+      :canonical: lir.data.models.PairedFeatureData.features_ref
+      :type: numpy.ndarray
+
+      .. autodoc2-docstring:: lir.data.models.PairedFeatureData.features_ref
+         :parser: myst
+
+   .. py:property:: source_ids_trace
+      :canonical: lir.data.models.PairedFeatureData.source_ids_trace
+      :type: numpy.ndarray | None
+
+      .. autodoc2-docstring:: lir.data.models.PairedFeatureData.source_ids_trace
+         :parser: myst
+
+   .. py:property:: source_ids_ref
+      :canonical: lir.data.models.PairedFeatureData.source_ids_ref
+      :type: numpy.ndarray | None
+
+      .. autodoc2-docstring:: lir.data.models.PairedFeatureData.source_ids_ref
+         :parser: myst
+
+   .. py:method:: check_sourceid_shape() -> typing.Self
+      :canonical: lir.data.models.PairedFeatureData.check_sourceid_shape
+
+      .. autodoc2-docstring:: lir.data.models.PairedFeatureData.check_sourceid_shape
+         :parser: myst
+
+   .. py:method:: check_features_dimensions() -> typing.Self
+      :canonical: lir.data.models.PairedFeatureData.check_features_dimensions
+
+      .. autodoc2-docstring:: lir.data.models.PairedFeatureData.check_features_dimensions
+         :parser: myst
+
+.. py:class:: LLRData(/, **data: typing.Any)
+   :canonical: lir.data.models.LLRData
+
+   Bases: :py:obj:`lir.data.models.FeatureData`
+
+   .. autodoc2-docstring:: lir.data.models.LLRData
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.data.models.LLRData.__init__
+      :parser: myst
+
+   .. py:attribute:: llr_upper_bound
+      :canonical: lir.data.models.LLRData.llr_upper_bound
+      :type: float | None
+      :value: None
+
+      .. autodoc2-docstring:: lir.data.models.LLRData.llr_upper_bound
+         :parser: myst
+
+   .. py:attribute:: llr_lower_bound
+      :canonical: lir.data.models.LLRData.llr_lower_bound
+      :type: float | None
+      :value: None
+
+      .. autodoc2-docstring:: lir.data.models.LLRData.llr_lower_bound
+         :parser: myst
+
+   .. py:property:: llrs
+      :canonical: lir.data.models.LLRData.llrs
+      :type: numpy.ndarray
+
+      .. autodoc2-docstring:: lir.data.models.LLRData.llrs
+         :parser: myst
+
+   .. py:property:: has_intervals
+      :canonical: lir.data.models.LLRData.has_intervals
+      :type: bool
+
+      .. autodoc2-docstring:: lir.data.models.LLRData.has_intervals
+         :parser: myst
+
+   .. py:property:: llr_intervals
+      :canonical: lir.data.models.LLRData.llr_intervals
+      :type: numpy.ndarray | None
+
+      .. autodoc2-docstring:: lir.data.models.LLRData.llr_intervals
+         :parser: myst
+
+   .. py:property:: llr_bounds
+      :canonical: lir.data.models.LLRData.llr_bounds
+      :type: tuple[float | None, float | None]
+
+      .. autodoc2-docstring:: lir.data.models.LLRData.llr_bounds
+         :parser: myst
+
+   .. py:method:: check_features_are_llrs() -> typing.Self
+      :canonical: lir.data.models.LLRData.check_features_are_llrs
+
+      .. autodoc2-docstring:: lir.data.models.LLRData.check_features_are_llrs
+         :parser: myst
+
+   .. py:method:: _concatenate_field(field: str, values: list[typing.Any]) -> typing.Any
+      :canonical: lir.data.models.LLRData._concatenate_field
+      :classmethod:
+
+      .. autodoc2-docstring:: lir.data.models.LLRData._concatenate_field
+         :parser: myst
+
+   .. py:method:: check_misleading_finite() -> None
+      :canonical: lir.data.models.LLRData.check_misleading_finite
+
+      .. autodoc2-docstring:: lir.data.models.LLRData.check_misleading_finite
+         :parser: myst
+
+.. py:data:: InstanceDataType
+   :canonical: lir.data.models.InstanceDataType
+   :value: 'TypeVar(...)'
+
+   .. autodoc2-docstring:: lir.data.models.InstanceDataType
+      :parser: myst
+
+.. py:data:: FeatureDataType
+   :canonical: lir.data.models.FeatureDataType
+   :value: 'TypeVar(...)'
+
+   .. autodoc2-docstring:: lir.data.models.FeatureDataType
+      :parser: myst
+
+.. py:function:: concatenate_instances(first: lir.data.models.InstanceDataType, *others: lir.data.models.InstanceDataType) -> lir.data.models.InstanceDataType
+   :canonical: lir.data.models.concatenate_instances
+
+   .. autodoc2-docstring:: lir.data.models.concatenate_instances
+      :parser: myst
+
+.. py:class:: DataProvider
+   :canonical: lir.data.models.DataProvider
+
+   Bases: :py:obj:`abc.ABC`
+
+   .. autodoc2-docstring:: lir.data.models.DataProvider
+      :parser: myst
+
+   .. py:method:: get_instances() -> lir.data.models.FeatureData
+      :canonical: lir.data.models.DataProvider.get_instances
+      :abstractmethod:
+
+      .. autodoc2-docstring:: lir.data.models.DataProvider.get_instances
+         :parser: myst
+
+.. py:class:: DataStrategy
+   :canonical: lir.data.models.DataStrategy
+
+   Bases: :py:obj:`abc.ABC`
+
+   .. autodoc2-docstring:: lir.data.models.DataStrategy
+      :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.FeatureData) -> collections.abc.Iterable[tuple[lir.data.models.FeatureData, lir.data.models.FeatureData]]
+      :canonical: lir.data.models.DataStrategy.apply
+      :abstractmethod:
+
+      .. autodoc2-docstring:: lir.data.models.DataStrategy.apply
+         :parser: myst
+
+.. py:function:: get_instances_by_category(instances: lir.data.models.get_instances_by_category.InstanceDataType, category_field: str, category_shape: tuple[int] | None = None) -> collections.abc.Iterator[tuple[numpy.ndarray, lir.data.models.get_instances_by_category.InstanceDataType]]
+   :canonical: lir.data.models.get_instances_by_category
+
+   .. autodoc2-docstring:: lir.data.models.get_instances_by_category
+      :parser: myst

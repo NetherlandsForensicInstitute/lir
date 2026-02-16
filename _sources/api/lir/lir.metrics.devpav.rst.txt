@@ -1,0 +1,52 @@
+:py:mod:`lir.metrics.devpav`
+============================
+
+.. py:module:: lir.metrics.devpav
+
+.. autodoc2-docstring:: lir.metrics.devpav
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`_calcsurface <lir.metrics.devpav._calcsurface>`
+     - .. autodoc2-docstring:: lir.metrics.devpav._calcsurface
+          :parser: myst
+          :summary:
+   * - :py:obj:`_devpavcalculator <lir.metrics.devpav._devpavcalculator>`
+     - .. autodoc2-docstring:: lir.metrics.devpav._devpavcalculator
+          :parser: myst
+          :summary:
+   * - :py:obj:`devpav <lir.metrics.devpav.devpav>`
+     - .. autodoc2-docstring:: lir.metrics.devpav.devpav
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:function:: _calcsurface(c1: tuple[float, float], c2: tuple[float, float]) -> float
+   :canonical: lir.metrics.devpav._calcsurface
+
+   .. autodoc2-docstring:: lir.metrics.devpav._calcsurface
+      :parser: myst
+
+.. py:function:: _devpavcalculator(lrs: numpy.ndarray, pav_lrs: numpy.ndarray, y: numpy.ndarray) -> float
+   :canonical: lir.metrics.devpav._devpavcalculator
+
+   .. autodoc2-docstring:: lir.metrics.devpav._devpavcalculator
+      :parser: myst
+
+.. py:function:: devpav(llrs: lir.data.models.LLRData) -> float
+   :canonical: lir.metrics.devpav.devpav
+
+   .. autodoc2-docstring:: lir.metrics.devpav.devpav
+      :parser: myst

@@ -1,0 +1,8 @@
+:py:mod:`lir.resources`
+=======================
+
+.. py:module:: lir.resources
+
+.. autodoc2-docstring:: lir.resources
+   :parser: myst
+   :allowtitles:

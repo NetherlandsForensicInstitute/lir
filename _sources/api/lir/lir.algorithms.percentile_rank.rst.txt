@@ -1,0 +1,51 @@
+:py:mod:`lir.algorithms.percentile_rank`
+========================================
+
+.. py:module:: lir.algorithms.percentile_rank
+
+.. autodoc2-docstring:: lir.algorithms.percentile_rank
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`PercentileRankTransformer <lir.algorithms.percentile_rank.PercentileRankTransformer>`
+     - .. autodoc2-docstring:: lir.algorithms.percentile_rank.PercentileRankTransformer
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:class:: PercentileRankTransformer()
+   :canonical: lir.algorithms.percentile_rank.PercentileRankTransformer
+
+   Bases: :py:obj:`sklearn.base.TransformerMixin`
+
+   .. autodoc2-docstring:: lir.algorithms.percentile_rank.PercentileRankTransformer
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.algorithms.percentile_rank.PercentileRankTransformer.__init__
+      :parser: myst
+
+   .. py:method:: fit(X: numpy.ndarray, y: numpy.ndarray | None = None) -> lir.algorithms.percentile_rank.PercentileRankTransformer
+      :canonical: lir.algorithms.percentile_rank.PercentileRankTransformer.fit
+
+      .. autodoc2-docstring:: lir.algorithms.percentile_rank.PercentileRankTransformer.fit
+         :parser: myst
+
+   .. py:method:: transform(X: numpy.ndarray) -> numpy.ndarray
+      :canonical: lir.algorithms.percentile_rank.PercentileRankTransformer.transform
+
+      .. autodoc2-docstring:: lir.algorithms.percentile_rank.PercentileRankTransformer.transform
+         :parser: myst

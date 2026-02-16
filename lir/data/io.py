@@ -147,7 +147,7 @@ class DataFileBuilderCsv:
 
 def search_path(path: Path) -> Path:
     """
-    Searches the python path for a file.
+    Search the python path for a file.
 
     If `path` is absolute, it is normalized by `Path.resolve()` and returned.
 

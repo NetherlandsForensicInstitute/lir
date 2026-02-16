@@ -98,7 +98,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
         message_prefix: str = '',
     ):
         """
-        Initializes the parser.
+        Initialize the parser.
 
         Special columns can be assigned as such or can be ignored (see below). All other columns are interpreted as
         feature columns. All arguments are optional.
@@ -227,7 +227,7 @@ class FeatureDataCsvFileParser(FeatureDataCsvParser):
 
     def __init__(self, file: PathLike, **kwargs: Any):
         """
-        Initializes the CSV parser that reads data from a file.
+        Initialize the CSV parser that reads data from a file.
 
         :param file: the path to the csv file
         :param kwargs: arguments passed to FeatureDataCsvParser
@@ -248,7 +248,7 @@ class FeatureDataCsvStreamParser(FeatureDataCsvParser):
 
     def __init__(self, fp: IO, **kwargs: Any):
         """
-        Initializes the CSV parser that reads data from a stream.
+        Initialize the CSV parser that reads data from a stream.
 
         :param flo: the file-like object
         :param kwargs: arguments passed to FeatureDataCsvParser
@@ -267,7 +267,7 @@ class FeatureDataCsvHttpParser(FeatureDataCsvParser):
 
     def __init__(self, url: str, session: requests.Session, **kwargs: Any):
         """
-        Initializes the CSV parser that reads data from a stream.
+        Initialize the CSV parser that reads data from a stream.
 
         By default, this class uses `requests-cache` to cache retrieved data. The cache is persistent and located in
         the user cache folder, which is written to the log file.
@@ -320,7 +320,7 @@ def _parse_feature_data_csv(
 @config_parser
 def feature_data_csv_http_parser(config: ContextAwareDict, output_dir: Path) -> FeatureDataCsvParser:
     """
-    Configuration parser to initialize the CSV parser that reads data from a stream.
+    Initialize the CSV parser that reads data from a stream.
 
     Arguments:
         - use_cache: boolean indicating whether to cache retrieved data
@@ -341,5 +341,5 @@ def feature_data_csv_http_parser(config: ContextAwareDict, output_dir: Path) -> 
 
 @config_parser
 def feature_data_csv_file_parser(config: ContextAwareDict, output_dir: Path) -> FeatureDataCsvParser:
-    """Configuration parser to initialize the CSV parser that reads data from a stream."""
+    """Initialize the CSV parser that reads data from a stream."""
     return _parse_feature_data_csv(FeatureDataCsvFileParser, config)

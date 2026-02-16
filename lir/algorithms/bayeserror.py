@@ -18,13 +18,20 @@ from lir.util import logodds_to_odds
 
 
 def plot_nbe(
+    ax: plt.Axes,
     llrdata: LLRData,
     log_lr_threshold_range: tuple[float, float] | None = None,
     add_misleading: int = 1,
     step_size: float = 0.01,
-    ax: plt.Axes = plt,  # type: ignore
 ) -> None:
-    """Generate the visual NBE plot using matplotlib."""
+    """Generate the visual NBE plot using matplotlib.
+
+    :param ax: the matplotlib axis to plot on
+    :param llrdata: the LLR data containing LLRs and labels
+    :param log_lr_threshold_range: the range of log LR threshold values
+    :param add_misleading: number of misleading evidence points to add
+    :param step_size: step size for the log LR threshold range
+    """
     llrs = llrdata.llrs
     y = llrdata.labels
     if y is None:

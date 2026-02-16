@@ -223,7 +223,7 @@ We can use these components in a score-based LR system:
 
     # zoom in on the LLRs around 0
     with lir.plotting.show() as ax:
-        ax.xlim(-8, 3)
+        ax.set_xlim(-8, 3)
         ax.lr_histogram(llrs, bins=100)
 
 
@@ -256,7 +256,7 @@ we have to deal with multiple train/test splits.
 
     # zoom in on the LLRs around 0
     with lir.plotting.show() as ax:
-        ax.xlim(-8, 3)
+        ax.set_xlim(-8, 3)
         ax.lr_histogram(llrs, bins=100)
 
 

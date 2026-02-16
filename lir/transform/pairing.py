@@ -212,11 +212,11 @@ class InstancePairing(PairingMethod):
 
     def __init__(
         self,
-        same_source_limit=None,
-        different_source_limit=None,
-        ratio_limit=None,
-        seed=None,
-    ):
+        same_source_limit: int | None = None,
+        different_source_limit: int | None = None,
+        ratio_limit: float | None = None,
+        seed: int | None = None,
+    ) -> None:
         """
         Construct pairs from a set of instances.
 
@@ -237,10 +237,10 @@ class InstancePairing(PairingMethod):
         self._ds_limit = different_source_limit
         self._ratio_limit = ratio_limit
         self._seed = seed
-        self.__rng = None
+        self.__rng: np.random.Generator | None = None
 
     @property
-    def rng(self):
+    def rng(self) -> np.random.Generator:
         """Obtain a random number generator using a provided seed."""
         if not self.__rng:
             self.__rng = np.random.default_rng(seed=self._seed)
@@ -295,7 +295,7 @@ class InstancePairing(PairingMethod):
         )
 
         if n_ds_pairs < rows_diff.size:
-            rows_diff = self.rng.choice(rows_diff, n_ds_pairs, replace=False)
+            rows_diff = self.rng.choice(rows_diff, int(n_ds_pairs), replace=False)
 
         pairing = np.concatenate([pairing[rows_same, :], pairing[rows_diff, :]])
         pair_labels = np.concatenate([np.ones(rows_same.size), np.zeros(rows_diff.size)])

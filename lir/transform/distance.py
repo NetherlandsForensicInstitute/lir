@@ -56,3 +56,32 @@ class ManhattanDistance(Transformer):
 
         # manhattan distance is the sum over all feature axes
         return instances.replace(features=np.sum(instances.features, axis=feature_axes))
+
+
+class EuclideanDistance(Transformer):
+    """Calculate the Euclidean distance between pairs.
+
+    Takes a PairedFeatureData object or a FeatureData object and returns the euclidean distance.
+
+    If the input is a PairedFeatureData object, the distance is computed as the euclidean distance, i.e. the square
+    root of the sum of the squared element-wise difference between both sides of the pairs, for all features.
+
+    If the input is a FeatureData object, it is assumed that it contains the element-wise differences, and the square
+    root of the sum over these differences is calculated.
+
+    :returns: a FeatureData object with features of shape (n, 1)
+    """
+
+    def apply(self, instances: InstanceData) -> FeatureData:
+        """Calculate the Euclidean distance between all elements in the instance data (pairs)."""
+        instances = check_type(FeatureData, instances)
+
+        # if the data are paired instances, calculate the element wise difference first
+        if isinstance(instances, PairedFeatureData):
+            instances = ElementWiseDifference().apply(instances)
+
+        # the feature axes are all axes except the first
+        feature_axes = tuple(range(1, len(instances.features.shape)))
+
+        # euclidean distance is the square root of the sum over all feature axes
+        return instances.replace(features=np.sqrt(np.sum(instances.features**2, axis=feature_axes)))

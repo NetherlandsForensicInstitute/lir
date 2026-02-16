@@ -21,7 +21,7 @@ class PairingMethod(ABC):
         n_ref_instances: int = 1,
     ) -> PairedFeatureData:
         """
-        Takes instances as input, and returns pairs.
+        Take instances as input, and return pairs.
 
         A pair may be a pair of sources, with multiple instances per source.
 

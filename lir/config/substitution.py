@@ -295,7 +295,7 @@ class FolderHyperparameter(Hyperparameter):
         self.ignore_files = ignore_files if ignore_files is not None else []
 
     def options(self) -> list[HyperparameterOption]:
-        """Generates the options by walking over the folder."""
+        """Generate the options by walking over the folder."""
         options = []
         for dirpath, _, filenames in self.folder_path.walk():
             for filename in filenames:

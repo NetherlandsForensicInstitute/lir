@@ -514,6 +514,21 @@ class LLRData(FeatureData):
         """:return: a tuple (min_llr, max_llr)"""
         return self.llr_lower_bound, self.llr_upper_bound
 
+    @property
+    def scores(self) -> np.ndarray | None:
+        """:return: intermediate scores if available, or None"""
+        return self.model_extra.get('scores') if self.model_extra is not None else None
+
+    @property
+    def require_scores(self) -> np.ndarray:
+        """:return: intermediate scores, or raise an error if not available"""
+        if self.model_extra is None or 'scores' not in self.model_extra:
+            raise ValueError(
+                'Intermediate scores are not available for this instance. '
+                "Use the 'score_source' in your LR system to capture scores during the calculation of LLRs"
+            )
+        return self.model_extra['scores']
+
     @model_validator(mode='after')
     def check_features_are_llrs(self) -> Self:
         """Validate the feature data."""

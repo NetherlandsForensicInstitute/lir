@@ -1,10 +1,17 @@
 import collections
+import datetime
 import inspect
+import json
 import warnings
 from functools import partial
+from pathlib import Path
 from typing import Any, TypeVar
 
 import numpy as np
+import yaml
+from confidence import Configuration
+from confidence.models import ConfigurationSequence
+from jsonschema import validate
 
 
 LR = collections.namedtuple('LR', ['lr', 'p0', 'p1'])
@@ -114,6 +121,56 @@ def warn_deprecated() -> None:
         'please check documentation for alternatives',
         stacklevel=2,
     )
+
+
+def to_native_dict(cfg: Any) -> Any:
+    """Recursively convert confidence Configuration objects to native Python dicts/lists.
+
+    Accesses each value through cfg[key] to trigger reference resolution. The confidence
+    library doesn't have a built-in method for this, so we manually traverse and resolve.
+    """
+    match cfg:
+        case Configuration():
+            return {k: to_native_dict(cfg[k]) for k in cfg}
+        case ConfigurationSequence():
+            return [to_native_dict(item) for item in cfg]
+        case dict():
+            return {k: to_native_dict(v) for k, v in cfg.items()}
+        case list():
+            return [to_native_dict(item) for item in cfg]
+        case _:
+            return cfg
+
+
+def validate_yaml(yaml_path: Path) -> None:
+    """Validate a YAML file against the schema.
+
+    :param yaml_path: path to the YAML file to validate
+    :raises FileNotFoundError: if the YAML or schema file doesn't exist
+    :raises yaml.YAMLError: if the YAML is invalid
+    :raises ValidationError: if the YAML doesn't conform to the schema
+    """
+    schema_path = Path(__file__).parent.parent / 'configs' / 'lir.schema.json'
+
+    if not schema_path.exists():
+        raise FileNotFoundError(f'Schema file not found: {schema_path}')
+
+    if not yaml_path.exists():
+        raise FileNotFoundError(f'YAML file not found: {yaml_path}')
+
+    with open(schema_path) as f:
+        schema = json.load(f)
+
+    with open(yaml_path) as f:
+        data = yaml.safe_load(f)
+
+    # Resolve ${...} references before validation
+    context = {'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')}  # noqa: DTZ005
+    cfg = Configuration(data, context)
+    data = to_native_dict(cfg)
+
+    # Validate data against schema
+    validate(instance=data, schema=schema)
 
 
 class Bind(partial):

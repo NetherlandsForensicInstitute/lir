@@ -16,7 +16,7 @@ from lir.config.base import ContextAwareDict, YamlParseError, check_is_empty, co
 from lir.config.metrics import parse_individual_metric
 from lir.data.models import LLRData, get_instances_by_category
 from lir.lrsystems.lrsystems import LRSystem
-from lir.plotting import llr_interval, lr_histogram, pav, tippett
+from lir.plotting import llr_interval, lr_histogram, pav, score_distribution, score_llr, tippett
 from lir.plotting.expected_calibration_error import plot_ece as ece
 
 
@@ -154,6 +154,20 @@ def plot_invariance_delta_function(config: ContextAwareDict, output_dir: Path) -
     """Corresponding registry function to generate aggregate invariance delta function plot."""
     plot_name = pop_field(config, 'plot_name', default='Invariance_Delta_Functions')
     return AggregatePlot(invariance_delta_functions, plot_name, output_dir, **config)
+
+
+@config_parser
+def plot_score_llr(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    """Corresponding registry function to generate aggregate score vs LLR plot."""
+    plot_name = pop_field(config, 'plot_name', default='Score_LLR')
+    return AggregatePlot(score_llr, plot_name, output_dir, **config)
+
+
+@config_parser
+def plot_score_distribution(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    """Corresponding registry function to generate aggregate score distribution plot."""
+    plot_name = pop_field(config, 'plot_name', default='Score_Distribution')
+    return AggregatePlot(score_distribution, plot_name, output_dir, **config)
 
 
 class WriteMetricsToCsv(Aggregation):

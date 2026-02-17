@@ -22,6 +22,7 @@ class BinaryLRSystem(LRSystem):
     """
 
     def __init__(self, pipeline: Transformer):
+        super().__init__()
         self.pipeline = pipeline
 
     def fit(self, instances: InstanceData) -> Self:
@@ -61,5 +62,4 @@ class BinaryLRSystem(LRSystem):
         LLRData
             Likelihood-ratio data produced by applying the LR system.
         """
-        llrs = self.pipeline.apply(instances)
-        return LLRData(**llrs.model_dump())
+        return self._apply_pipeline_and_attach_scores(self.pipeline, instances)

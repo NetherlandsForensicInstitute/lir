@@ -17,6 +17,7 @@ class BinaryLRSystem(LRSystem):
     """
 
     def __init__(self, pipeline: Transformer):
+        super().__init__()
         self.pipeline = pipeline
 
     def fit(self, instances: InstanceData) -> Self:
@@ -33,5 +34,4 @@ class BinaryLRSystem(LRSystem):
         The returned set of LLRs has the same order as the set of input instances, and the returned labels are unchanged
         from the input labels.
         """
-        llrs = self.pipeline.apply(instances)
-        return LLRData(**llrs.model_dump())
+        return self._apply_pipeline_and_attach_scores(self.pipeline, instances)

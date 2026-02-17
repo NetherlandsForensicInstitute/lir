@@ -22,6 +22,7 @@ class ScoreBasedSystem(LRSystem):
         pairing_function: PairingMethod,
         evaluation_pipeline: Transformer | None,
     ):
+        super().__init__()
         self.preprocessing_pipeline = preprocessing_pipeline or Pipeline([])
         self.pairing_function = pairing_function
         self.evaluation_pipeline = evaluation_pipeline or Pipeline([])
@@ -44,6 +45,4 @@ class ScoreBasedSystem(LRSystem):
         """
         instances = self.preprocessing_pipeline.apply(instances)
         pairs = self.pairing_function.pair(instances, 1, 1)
-        pair_llrs = self.evaluation_pipeline.apply(pairs)
-
-        return LLRData(**pair_llrs.model_dump())
+        return self._apply_pipeline_and_attach_scores(self.evaluation_pipeline, pairs)

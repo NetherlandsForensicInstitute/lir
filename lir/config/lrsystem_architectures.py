@@ -141,6 +141,7 @@ def parse_lrsystem(config: ContextAwareDict, output_dir: Path) -> ParsedLRSystem
     lrsystem_config = config.clone()  # save for later
 
     architecture = pop_field(config, 'architecture')
+    score_source = pop_field(config, 'score_source', required=False, validate=str)
 
     try:
         parser = registry.get(architecture, search_path=['lrsystem_architectures'])
@@ -148,6 +149,10 @@ def parse_lrsystem(config: ContextAwareDict, output_dir: Path) -> ParsedLRSystem
         raise YamlParseError(config.context, f'{e}')
 
     lrsystem = parser.parse(config, output_dir)
+
+    # Set score source if configured
+    if score_source:
+        lrsystem.set_score_source(score_source)
     return ParsedLRSystem(lrsystem, lrsystem_config)
 
 

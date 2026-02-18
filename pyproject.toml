@@ -25,6 +25,7 @@ dependencies = [
     "requests-cache>=1.2.1",
     "requests>=2.32.5",
     "jsonschema>=4.26.0",
+    "pymc>=5.8.2",
 ]
 
 [project.urls]

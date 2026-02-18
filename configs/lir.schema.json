@@ -1,0 +1,578 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LiR Configuration Schema",
+  "description": "Configuration file for running Likelihood Ratio (LiR) experiments. A configuration defines where outputs are written and specifies one or more experiments, each describing data, system configuration, and requested output artefacts.\n\nNote: This configuration uses the 'confidence' library which extends standard YAML with variable substitution using ${variable_name} syntax. This is NOT part of standard YAML but a LiR-specific feature.",
+  "type": "object",
+  "properties": {
+    "output_path": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Base directory where all experiment outputs will be written. The path may contain placeholders such as ${timestamp}, which are resolved at runtime using the confidence library to create unique output folders per run. The ${timestamp} variable is automatically provided by LiR."
+    },
+    "data": {
+      "description": "Data configuration that defines both the data provider (source) and splits (train/test strategy).",
+      "$ref": "#/definitions/dataConfiguration"
+    },
+    "lr_system": {
+      "description": "LR system configuration that defines the architecture and modules for likelihood ratio calculation.",
+      "$ref": "#/definitions/lrSystemConfiguration"
+    },
+    "experiments": {
+      "type": "array",
+      "minItems": 1,
+      "description": "List of experiments to execute. Each experiment defines a LiR pipeline including data selection, LR system configuration, execution strategy, and requested outputs.",
+      "items": {
+        "$ref": "#/definitions/experiment"
+      }
+    }
+  },
+  "required": ["output_path", "experiments"],
+  "additionalProperties": true,
+  "definitions": {
+    "dataConfiguration": {
+      "type": "object",
+      "description": "Configuration for data loading and splitting into train/test sets.",
+      "properties": {
+        "provider": {
+          "$ref": "#/definitions/dataProvider",
+          "description": "Data provider configuration specifying the data source and how to load it."
+        },
+        "splits": {
+          "$ref": "#/definitions/dataSplits",
+          "description": "Data splitting strategy defining how to divide data into training and testing sets."
+        }
+      },
+      "required": ["provider", "splits"],
+      "additionalProperties": false
+    },
+    "dataProvider": {
+      "type": "object",
+      "description": "Specifies the method for loading data and its parameters.",
+      "properties": {
+        "method": {
+          "type": "string",
+          "description": "Name of the data provider method. Examples: synthesized_normal_binary, synthesized_normal_multiclass, glass, parse_features_from_csv_file, parse_features_from_csv_url.",
+          "enum": [
+            "synthesized_normal_binary",
+            "synthesized_normal_multiclass", 
+            "glass",
+            "data_providers.glass",
+            "parse_features_from_csv_file",
+            "parse_features_from_csv_url"
+          ]
+        },
+        "seed": {
+          "type": "integer",
+          "description": "Random seed for reproducible data generation (for synthesized data providers)."
+        },
+        "h1": {
+          "type": "object",
+          "description": "Parameters for hypothesis H1 distribution (same-source) in binary classification.",
+          "properties": {
+            "mean": {"type": "number"},
+            "std": {"type": "number"},
+            "size": {"type": "integer"}
+          },
+          "additionalProperties": false
+        },
+        "h2": {
+          "type": "object",
+          "description": "Parameters for hypothesis H2 distribution (different-source) in binary classification.",
+          "properties": {
+            "mean": {"type": "number"},
+            "std": {"type": "number"},
+            "size": {"type": "integer"}
+          },
+          "additionalProperties": false
+        },
+        "population": {
+          "type": "object",
+          "description": "Population parameters for multiclass synthesized data.",
+          "properties": {
+            "size": {"type": "integer"},
+            "instances_per_source": {"type": "integer"}
+          },
+          "additionalProperties": false
+        },
+        "dimensions": {
+          "type": "array",
+          "description": "Feature dimension specifications for multiclass data.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "mean": {"type": "number"},
+              "std": {"type": "number"},
+              "error_std": {"type": "number"}
+            },
+            "additionalProperties": false
+          }
+        },
+        "cache_dir": {
+          "type": "string",
+          "description": "Directory for caching downloaded data (e.g., for glass dataset)."
+        },
+        "url": {
+          "type": "string",
+          "description": "URL to fetch CSV data from (for parse_features_from_csv_url)."
+        },
+        "file": {
+          "type": "string",
+          "description": "Path to CSV file (for parse_features_from_csv_file)."
+        },
+        "source_id_column": {
+          "type": "string",
+          "description": "Name of the column containing source identifiers in CSV data."
+        },
+        "instance_id_column": {
+          "type": "string",
+          "description": "Name of the column containing instance identifiers in CSV data."
+        },
+        "ignore_columns": {
+          "type": "array",
+          "description": "List of column names to ignore when parsing CSV data.",
+          "items": {"type": "string"}
+        }
+      },
+      "required": ["method"],
+      "additionalProperties": true
+    },
+    "dataSplits": {
+      "type": "object",
+      "description": "Strategy for splitting data into training and testing sets.",
+      "properties": {
+        "strategy": {
+          "type": "string",
+          "description": "Name of the data splitting strategy.",
+          "enum": [
+            "binary_train_test_split",
+            "binary_cross_validation",
+            "multiclass_train_test_split",
+            "multiclass_cross_validation",
+            "predefined_train_test_split"
+          ]
+        },
+        "folds": {
+          "type": "integer",
+          "minimum": 2,
+          "description": "Number of folds for cross-validation strategies."
+        },
+        "seed": {
+          "type": "integer",
+          "description": "Random seed for reproducible data splitting."
+        },
+        "test_size": {
+          "oneOf": [
+            {"type": "number", "minimum": 0, "maximum": 1},
+            {"type": "integer", "minimum": 1}
+          ],
+          "description": "Size of test set: float between 0-1 for fraction, or integer for absolute count."
+        }
+      },
+      "required": ["strategy"],
+      "additionalProperties": false
+    },
+    "lrSystemConfiguration": {
+      "type": "object",
+      "description": "Configuration for a likelihood ratio system, including architecture and modules.",
+      "properties": {
+        "architecture": {
+          "type": "string",
+          "description": "Type of LR system architecture.",
+          "enum": ["specific_source", "score_based", "two_level"]
+        },
+        "modules": {
+          "description": "Module configuration for specific_source architecture. Can be a pipeline or a single module.",
+          "$ref": "#/definitions/module"
+        },
+        "preprocessing": {
+          "description": "Preprocessing module(s) applied before pairing (score_based/two_level).",
+          "$ref": "#/definitions/module"
+        },
+        "pairing": {
+          "description": "Pairing strategy for creating same-source and different-source pairs.",
+          "$ref": "#/definitions/pairingConfiguration"
+        },
+        "comparing": {
+          "description": "Module(s) for comparing pairs and producing LLRs (score_based architecture).",
+          "$ref": "#/definitions/module"
+        },
+        "postprocessing": {
+          "description": "Postprocessing module(s) for LLRs (two_level architecture).",
+          "$ref": "#/definitions/module"
+        },
+        "n_trace_instances": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of trace instances for two_level architecture."
+        },
+        "n_ref_instances": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of reference instances for two_level architecture."
+        },
+        "intermediate_output": {
+          "type": "boolean",
+          "description": "Whether to enable intermediate output logging (uses logging_pipeline as default)."
+        }
+      },
+      "required": ["architecture"],
+      "additionalProperties": false
+    },
+    "module": {
+      "oneOf": [
+        {
+          "type": "null",
+          "description": "No module (null/empty configuration)."
+        },
+        {
+          "type": "string",
+          "description": "Shorthand module specification using just the method name (e.g., 'standard_scaler')."
+        },
+        {
+          "type": "object",
+          "description": "Detailed module specification with method and parameters, or implicit pipeline with just steps.",
+          "properties": {
+            "method": {
+              "type": "string",
+              "description": "Name of the module method. Examples: pipeline, logging_pipeline, bootstrap, standard_scaler, logistic_regression, kde, svm, element_wise_difference, probabilities_to_logodds, elub_bounder, etc."
+            },
+            "steps": {
+              "type": "object",
+              "description": "For pipeline/logging_pipeline: named steps to execute in sequence.",
+              "additionalProperties": {
+                "$ref": "#/definitions/module"
+              }
+            },
+            "n_bootstraps": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Number of bootstrap iterations (for bootstrap method)."
+            },
+            "seed": {
+              "type": "integer",
+              "description": "Random seed for reproducibility."
+            },
+            "points": {
+              "type": "string",
+              "description": "What to bootstrap: 'data' or other options (for bootstrap method)."
+            },
+            "n_points": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Number of points to sample in bootstrap (for bootstrap method)."
+            },
+            "bandwidth": {
+              "oneOf": [
+                {"type": "number"},
+                {"type": "string", "enum": ["silverman", "scott"]},
+                {"type": "array", "items": {"type": "number"}}
+              ],
+              "description": "Bandwidth parameter for KDE calibration."
+            },
+            "C": {
+              "type": "number",
+              "description": "Regularization parameter for logistic regression."
+            },
+            "probability": {
+              "type": "boolean",
+              "description": "Enable probability estimates (for SVM)."
+            },
+            "random_state": {
+              "type": "integer",
+              "description": "Random state for scikit-learn estimators."
+            },
+            "include_labels": {
+              "type": "boolean",
+              "description": "Include labels in CSV output (for csv_writer)."
+            },
+            "with_mean": {
+              "type": "boolean",
+              "description": "Center data before scaling (for standard_scaler)."
+            }
+          },
+          "additionalProperties": true,
+          "anyOf": [
+            {"required": ["method"]},
+            {"required": ["steps"]}
+          ]
+        }
+      ]
+    },
+    "pairingConfiguration": {
+      "type": "object",
+      "description": "Configuration for pairing instances or sources.",
+      "properties": {
+        "method": {
+          "type": "string",
+          "description": "Pairing method name.",
+          "enum": ["instance_pairs", "source_pairs"]
+        },
+        "ratio_limit": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Limit the ratio of different-source pairs to same-source pairs."
+        },
+        "same_source_limit": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Absolute maximum number of same-source pairs."
+        },
+        "different_source_limit": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Absolute maximum number of different-source pairs."
+        }
+      },
+      "required": ["method"],
+      "additionalProperties": false
+    },
+    "experiment": {
+      "type": "object",
+      "description": "Definition of a single LiR experiment. Experiments are executed independently and produce their own outputs within the configured output path.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Unique identifier for the experiment. Used in logging, output folder naming, and result tracking."
+        },
+        "strategy": {
+          "type": "string",
+          "description": "Execution strategy controlling how the experiment is run.",
+          "enum": ["single_run", "grid", "optuna"]
+        },
+        "data": {
+          "$ref": "#/definitions/dataConfiguration",
+          "description": "Data configuration for this experiment (references are resolved before validation)."
+        },
+        "lr_system": {
+          "oneOf": [
+            {"type": "null", "description": "No LR system specified (will be substituted via hyperparameters)."},
+            {"$ref": "#/definitions/lrSystemConfiguration", "description": "LR system configuration for this experiment."}
+          ],
+          "description": "LR system configuration for this experiment (references are resolved before validation)."
+        },
+        "hyperparameters": {
+          "type": "array",
+          "description": "List of hyperparameters to vary (for grid and optuna strategies).",
+          "items": {
+            "$ref": "#/definitions/hyperparameter"
+          }
+        },
+        "dataparameters": {
+          "type": "array",
+          "description": "List of data parameters to vary (for grid strategy).",
+          "items": {
+            "$ref": "#/definitions/hyperparameter"
+          }
+        },
+        "primary_metric": {
+          "type": "string",
+          "description": "Primary metric to optimize (for optuna strategy). Examples: cllr, cllr_min, cllr_cal."
+        },
+        "n_trials": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of optimization trials to run (for optuna strategy)."
+        },
+        "output": {
+          "type": "array",
+          "minItems": 1,
+          "description": "List of output artefacts to generate for this experiment.",
+          "items": {
+            "$ref": "#/definitions/outputSpecification"
+          }
+        }
+      },
+      "required": ["name", "strategy", "output"],
+      "allOf": [
+        {
+          "if": {
+            "properties": {"strategy": {"const": "single_run"}}
+          },
+          "then": {
+            "required": ["data", "lr_system"]
+          }
+        },
+        {
+          "if": {
+            "properties": {"strategy": {"const": "grid"}}
+          },
+          "then": {
+            "anyOf": [
+              {"required": ["hyperparameters"]},
+              {"required": ["dataparameters"]}
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {"strategy": {"const": "optuna"}}
+          },
+          "then": {
+            "required": ["data", "lr_system", "hyperparameters", "primary_metric", "n_trials"]
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "hyperparameter": {
+      "type": "object",
+      "description": "Hyperparameter definition for grid search or optimization.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Optional descriptive name for the hyperparameter (defaults to path)."
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of hyperparameter.",
+          "enum": ["categorical", "cluster", "constant", "float", "folder"]
+        },
+        "path": {
+          "type": "string",
+          "description": "Dot-separated path to the parameter in the configuration (e.g., 'comparing.steps.clf')."
+        },
+        "options": {
+          "type": "array",
+          "description": "List of categorical options or clustered substitutions.",
+          "items": {
+            "oneOf": [
+              {"type": "string"},
+              {"type": "number"},
+              {"type": "boolean"},
+              {
+                "type": "object",
+                "properties": {
+                  "option_name": {
+                    "type": "string",
+                    "description": "Name for this option."
+                  },
+                  "value": {
+                    "description": "Value to substitute (alternative to inline specification)."
+                  },
+                  "method": {
+                    "type": "string",
+                    "description": "Method name (when option is a module specification)."
+                  },
+                  "substitutions": {
+                    "type": "array",
+                    "description": "List of path/value substitutions (for cluster type).",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "path": {"type": "string"},
+                        "value": {}
+                      },
+                      "required": ["path", "value"],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "additionalProperties": true
+              }
+            ]
+          }
+        },
+        "low": {
+          "type": "number",
+          "description": "Lower bound for float hyperparameter."
+        },
+        "high": {
+          "type": "number",
+          "description": "Upper bound for float hyperparameter."
+        },
+        "step": {
+          "type": "number",
+          "description": "Step size for float hyperparameter (for grid search)."
+        },
+        "log": {
+          "type": "boolean",
+          "description": "Sample from log space instead of linear (for float hyperparameter)."
+        },
+        "folder": {
+          "type": "string",
+          "description": "Path to folder containing options (for folder hyperparameter type)."
+        },
+        "ignore_files": {
+          "type": "array",
+          "description": "File patterns to ignore in folder (for folder hyperparameter type).",
+          "items": {"type": "string"}
+        },
+        "value": {
+          "description": "Constant value (for constant hyperparameter type)."
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSpecification": {
+      "oneOf": [
+        {
+          "type": "string",
+          "description": "Shorthand output specification using just the method name (e.g., 'metrics', 'pav', 'ece').",
+          "enum": [
+            "metrics",
+            "pav",
+            "ece",
+            "lr_histogram",
+            "llr_interval",
+            "llr_overestimation",
+            "nbe",
+            "invariance_delta_function",
+            "tippett",
+            "save_model"
+          ]
+        },
+        {
+          "type": "object",
+          "description": "Structured output specification with method and parameters.",
+          "properties": {
+            "method": {
+              "type": "string",
+              "description": "Output method name.",
+              "enum": [
+                "metrics",
+                "pav",
+                "ece",
+                "lr_histogram",
+                "llr_interval",
+                "llr_overestimation",
+                "nbe",
+                "invariance_delta_function",
+                "tippett",
+                "save_model"
+              ]
+            },
+            "columns": {
+              "type": "array",
+              "description": "List of metric columns to include (for metrics output).",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "cllr",
+                  "cllr_min",
+                  "cllr_cal",
+                  "llr_lower_bound",
+                  "llr_upper_bound"
+                ]
+              }
+            },
+            "show_pav": {
+              "type": "boolean",
+              "description": "Show PAV calibration overlay (for ece output)."
+            },
+            "ylim": {
+              "type": "string",
+              "description": "Y-axis limit setting (for ece output). Example: 'zoomed'."
+            },
+            "plot_type": {
+              "type": "integer",
+              "description": "Plot type variant (for tippett output). 1 or 2."
+            }
+          },
+          "required": ["method"],
+          "additionalProperties": true
+        }
+      ]
+    }
+  }
+}

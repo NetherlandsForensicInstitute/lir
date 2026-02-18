@@ -24,9 +24,9 @@ class McmcLLRModel(Transformer):
     def __init__(
         self,
         distribution_h1: str,
-        parameters_h1: dict[str, dict[str, int]] | None,
+        parameters_h1: dict[str, dict[str, float | int | str]] | None,
         distribution_h2: str,
-        parameters_h2: dict[str, dict[str, int]] | None,
+        parameters_h2: dict[str, dict[str, float | int | str]] | None,
         bounding: LLRBounder | None = elub_bounder,
         interval: tuple[float, float] = (0.05, 0.95),
         **mcmc_kwargs: Any,
@@ -63,20 +63,22 @@ class McmcLLRModel(Transformer):
             # determine the bounds for each LR-system individually
             self.bounders = [self.bounding.__class__() for _ in range(llrs.shape[1])]
             for i_system in range(llrs.shape[1]):
-                feature_data = FeatureData(features=instances.features, labels=instances.require_labels)
-                self.bounders[i_system] = self.bounders[i_system].fit(feature_data)
+                llr_data = LLRData(features=llrs[:, i_system], labels=instances.require_labels)
+                self.bounders[i_system] = self.bounders[i_system].fit(llr_data)
         return self
 
-    def transform(self, instances: FeatureData) -> LLRData:
+    def apply(self, instances: InstanceData) -> LLRData:
         """Apply the fitted model to the supplied instances."""
+        instances = check_type(FeatureData, instances)
         logp_h1 = self.model_h1.transform(instances.features)
         logp_h2 = self.model_h2.transform(instances.features)
         llrs = logp_h1 - logp_h2
         if (self.bounding is not None) and (self.bounders is not None):
             # apply the bounders one by one
             for i_system in range(llrs.shape[1]):
-                feature_data = FeatureData(features=instances.features, labels=instances.require_labels)
-                llrs[:, i_system] = self.bounders[i_system].apply(feature_data)
+                llr_data = LLRData(features=llrs[:, i_system], labels=instances.require_labels)
+                bounded_llr_data = self.bounders[i_system].apply(llr_data)
+                llrs[:, i_system] = bounded_llr_data.llrs
         quantiles = np.quantile(llrs, [0.5] + list(self.interval), axis=1, method='midpoint')
         return instances.replace_as(LLRData, features=quantiles.transpose(1, 0))
 
@@ -87,7 +89,7 @@ class McmcModel:
     def __init__(
         self,
         distribution: str,
-        parameters: dict[str, dict[str, int]] | None,
+        parameters: dict[str, dict[str, float | int | str]] | None,
         chain_count: int = 4,
         tune_count: int = 1000,
         draw_count: int = 1000,
@@ -114,7 +116,7 @@ class McmcModel:
         Or for a betabinomial distribution: parameters = {'alpha': {'prior': 'uniform', 'lower': 0.01, 'upper': 100},
         'beta': {'prior': 'uniform', 'lower': 0.01, 'upper': 100}}.
         """
-        self.distribution = distribution
+        self.distribution = distribution.lower()
         self.parameters = parameters
         self.chain_count = chain_count
         self.tune_count = tune_count
@@ -204,7 +206,7 @@ class McmcModel:
             logp = betabinom.logpmf(features_2d[0], features_2d[1], parameters_2d['alpha'], parameters_2d['beta'])
         elif self.distribution == 'binomial':
             logp = binom.logpmf(features_2d[0], features_2d[1], parameters_2d['p'])
-        elif self.distribution == 'norm':
+        elif self.distribution in {'normal', 'norm'}:
             logp = norm.logpdf(features_2d[0], parameters_2d['mu'], parameters_2d['sigma'])
         else:
             raise ValueError('Unrecognized distribution')

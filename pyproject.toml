@@ -8,7 +8,7 @@ description = "Package for optimising and evaluating Likelihood Ratio (LR) syste
 dynamic = ["version"]
 authors = [
     {name = "Netherlands Forensics Institute", email = "netherlandsforensicinstitute@users.noreply.github.com"}, ]
-requires-python = ">=3.12"
+requires-python = ">=3.12,<3.15"
 readme = "README.md"
 license = {text = "Apache Software License 2.0"}
 dependencies = [
@@ -21,10 +21,10 @@ dependencies = [
     "scipy>=1.13.1",
     "KDEpy>=1.1.12",
     "pydantic>=2.12.3",
-    "types-requests>=2.32.4.20250913",
     "requests-cache>=1.2.1",
     "requests>=2.32.5",
-    "pymc>=5.8.2",
+    "numba>=0.63",
+    "pymc>=5.21.0",
 ]
 
 [project.urls]
@@ -48,6 +48,7 @@ dev = [
     "sphinx-autodoc2>=0.5.0",
     "myst-parser>=5.0.0",
     "jupyter-sphinx>=0.5.3",
+    "types-requests>=2.32.4.20250913",
 ]
 
 [tool.pdm]

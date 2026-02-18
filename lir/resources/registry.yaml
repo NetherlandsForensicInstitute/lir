@@ -87,6 +87,8 @@ output:
   nbe: lir.aggregation.plot_nbe
   invariance_delta_function: lir.aggregation.plot_invariance_delta_function
   tippett: lir.aggregation.plot_tippett
+  score_llr: lir.aggregation.plot_score_llr
+  score_distribution: lir.aggregation.plot_score_distribution
   save_model: lir.persistence.parse_save_model
   by_category: lir.config.aggregation.subset_aggregation
   

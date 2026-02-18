@@ -36,6 +36,7 @@ class Canvas:
         self.nbe = partial(nbe, ax)
         self.pav = partial(pav, ax)
         self.score_distribution = partial(score_distribution, ax)
+        self.score_llr = partial(score_llr, ax)
         self.tippett = partial(tippett, ax)
         self.llr_interval = partial(llr_interval, ax)
 
@@ -347,8 +348,7 @@ def llr_interval(ax: Axes, llrdata: LLRData) -> None:
 
 def score_distribution(
     ax: Axes,
-    scores: np.ndarray,
-    y: np.ndarray,
+    llrdata: LLRData,
     bins: int = 20,
     weighted: bool = True,
 ) -> None:
@@ -362,16 +362,17 @@ def score_distribution(
     ----------
     ax : Axes
         The matplotlib axes object to plot on
-    scores : np.ndarray
-        scores of (fitted) lr_system (1d-array)
-    y : np.ndarray
-        a numpy array of labels (0 or 1, 1d-array of same length as `scores`)
+    llrdata : LLRData
+        The LLRData object containing scores and labels
     bins : int
         number of bins to divide scores into (default: 20)
     weighted : bool
         if y-axis should be the probability density within each class,
         instead of counts (default: True)
     """
+    scores = llrdata.require_scores
+    y = llrdata.require_labels
+
     plt.rcParams.update({'font.size': 15})
 
     bins = np.histogram_bin_edges(scores[np.isfinite(scores)], bins=bins)
@@ -441,3 +442,34 @@ def score_distribution(
         ax.set_ylabel('probability density')
     else:
         ax.set_ylabel('count')
+
+
+def score_llr(ax: Axes, llrdata: LLRData) -> None:
+    """Plot intermediate scores vs final LLRs, colored by hypothesis.
+
+    Parameters
+    ----------
+    ax : Axes
+        The matplotlib axes object to plot on
+    llrdata : LLRData
+        The LLRData object containing likelihood ratios and labels.
+        Must have scores available.
+    """
+    llrs = llrdata.llrs
+    labels = llrdata.require_labels
+    scores = llrdata.require_scores
+
+    # Separate by hypothesis
+    mask_h1 = labels == 1
+    mask_h2 = labels == 0
+
+    n_h1 = np.count_nonzero(mask_h1)
+    n_h2 = np.count_nonzero(mask_h2)
+
+    ax.scatter(scores[mask_h1], llrs[mask_h1], alpha=0.5, label=f'H1 (n={n_h1})', color=H1_COLOR)
+    ax.scatter(scores[mask_h2], llrs[mask_h2], alpha=0.5, label=f'H2 (n={n_h2})', color=H2_COLOR)
+
+    ax.axhline(y=0, color='gray', linestyle='--', linewidth=0.5)
+    ax.set_xlabel('Intermediate Score')
+    ax.set_ylabel('log$_{10}$(LR)')
+    ax.legend()

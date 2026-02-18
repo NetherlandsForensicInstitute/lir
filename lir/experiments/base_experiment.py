@@ -11,6 +11,7 @@ from lir.config.base import ContextAwareDict
 from lir.config.lrsystem_architectures import parse_lrsystem
 from lir.config.util import simplify_data_structure
 from lir.data.models import InstanceData, LLRData, concatenate_instances
+from lir.lrsystems.lrsystems import LRSystem
 
 
 class Experiment(ABC):
@@ -63,10 +64,16 @@ class Experiment(ABC):
         confidence.dumpf(confidence.Configuration(lrsystem_config_dict), run_output_dir / 'lrsystem.yaml')
         confidence.dumpf(confidence.Configuration(data_config_dict), run_output_dir / 'data.yaml')
 
+        # Convert the split_data iterable to a list to allow multiple iterations over the splits.
+        # E.g. one iteration for validation and one for case LLR generation.
+        split_data_list = list(split_data)
+        if not split_data_list:
+            raise ValueError('data splitting strategy did not produce any train/test splits')
+
         # Placeholders for numpy arrays of LLRs and labels obtained from each train/test split
         llr_sets: list[LLRData] = []
 
-        for training_data, test_data in split_data:
+        for training_data, test_data in split_data_list:
             lrsystem.fit(training_data)
             subset_llr_results: LLRData = lrsystem.apply(test_data)
 
@@ -76,8 +83,26 @@ class Experiment(ABC):
         # Combine collected numpy arrays after iteration over the train/test split(s)
         combined_llrs: LLRData = concatenate_instances(*llr_sets)
 
+        # Create a lazy factory for full-data-fitted model with memoization
+        _cached_full_fit_lrsystem = None
+
+        def get_full_fit_lrsystem() -> LRSystem:
+            nonlocal _cached_full_fit_lrsystem
+            if _cached_full_fit_lrsystem is None:
+                first_training_data, first_test_data = split_data_list[0]
+                full_training_data = concatenate_instances(first_training_data, first_test_data)
+                _cached_full_fit_lrsystem = parse_lrsystem(deepcopy(lrsystem_config), run_output_dir)
+                _cached_full_fit_lrsystem.fit(full_training_data)
+            return _cached_full_fit_lrsystem
+
         # Collect and report results as configured by `outputs`
-        results = AggregationData(llrdata=combined_llrs, lrsystem=lrsystem, parameters=parameters, run_name=run_name)
+        results = AggregationData(
+            llrdata=combined_llrs,
+            lrsystem=lrsystem,
+            parameters=parameters,
+            run_name=run_name,
+            get_full_fit_lrsystem=get_full_fit_lrsystem,
+        )
         for output in self.outputs:
             output.report(results)
 

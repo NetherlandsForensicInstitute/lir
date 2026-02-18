@@ -7,14 +7,16 @@ from functools import partial
 from pathlib import Path
 from typing import IO, Any, NamedTuple
 
+import numpy as np
 from matplotlib import pyplot as plt
 
 from lir.algorithms.bayeserror import plot_nbe as nbe
 from lir.algorithms.invariance_bounds import plot_invariance_delta_functions as invariance_delta_functions
 from lir.algorithms.llr_overestimation import plot_llr_overestimation as llr_overestimation
 from lir.config.base import ContextAwareDict, YamlParseError, check_is_empty, config_parser, pop_field
+from lir.config.data import parse_data_provider
 from lir.config.metrics import parse_individual_metric
-from lir.data.models import LLRData, get_instances_by_category
+from lir.data.models import DataProvider, LLRData, get_instances_by_category
 from lir.lrsystems.lrsystems import LRSystem
 from lir.plotting import llr_interval, lr_histogram, pav, tippett
 from lir.plotting.expected_calibration_error import plot_ece as ece
@@ -29,6 +31,7 @@ class AggregationData(NamedTuple):
     Fields:
     - llrdata: the LLR data containing LLRs and labels.
     - lrsystem: the model that produced the results
+    - get_full_fit_lrsystem: optional callable that lazily provides a model fitted on full data (ignoring splits)
     - parameters: parameters that identify the system producing the results
     - run_name: string representation of the run that produced the results
     """
@@ -37,6 +40,7 @@ class AggregationData(NamedTuple):
     lrsystem: LRSystem
     parameters: dict[str, Any]
     run_name: str
+    get_full_fit_lrsystem: Callable[[], LRSystem] | None = None
 
 
 class Aggregation(ABC):
@@ -226,6 +230,91 @@ def metrics_csv(config: ContextAwareDict, output_dir: Path) -> WriteMetricsToCsv
     return WriteMetricsToCsv(output_dir / 'metrics.csv', columns)
 
 
+class CaseLLRToCsv(Aggregation):
+    """Aggregation that applies a full-data-fitted LR system to case data and stores LLRs as CSV."""
+
+    def __init__(self, output_dir: Path, case_data_provider: DataProvider, filename: str = 'case_llr.csv') -> None:
+        self.output_dir = output_dir
+        self.case_data_provider = case_data_provider
+        self.filename = Path(filename)
+
+    def _get_output_path(self, run_name: str) -> Path:
+        if self.filename.is_absolute() or self.filename.is_relative_to(self.output_dir):
+            return self.filename
+
+        dirname = self.output_dir / run_name if run_name else self.output_dir
+        dirname.mkdir(parents=True, exist_ok=True)
+        return dirname / self.filename
+
+    @staticmethod
+    def _feature_columns(features: np.ndarray, header: list[str] | None = None) -> tuple[list[str], list[np.ndarray]]:
+        if features.ndim < 2:
+            raise ValueError(f'unsupported feature shape for CSV export: {features.shape}')
+
+        features_2d = features.reshape(features.shape[0], -1)
+        feature_count = features_2d.shape[1]
+
+        if header is not None and len(header) == feature_count:
+            column_names = [str(column) for column in header]
+        else:
+            column_names = [f'feature_{index}' for index in range(feature_count)]
+
+        return column_names, [features_2d[:, i] for i in range(feature_count)]
+
+    def report(self, data: AggregationData) -> None:
+        """Apply the full-data-fitted LR system to the case data and store the resulting LLRs as CSV."""
+        if data.get_full_fit_lrsystem is not None:
+            lrsystem = data.get_full_fit_lrsystem()
+        else:
+            LOG.warning(
+                f'No full-data-fitted model factory available for run `{data.run_name}`; '
+                f'using split-trained model instead.'
+            )
+            lrsystem = data.lrsystem
+
+        # Ensure the case data does not contain labels by setting them to None.
+        case_instances = self.case_data_provider.get_instances().replace(labels=None)
+        case_llrs = lrsystem.apply(case_instances)
+
+        path = self._get_output_path(data.run_name)
+        path.parent.mkdir(parents=True, exist_ok=True)
+
+        feature_header = getattr(case_instances, 'header', None)
+        feature_headers, feature_values = self._feature_columns(case_instances.features, feature_header)
+
+        columns: list[tuple[str, np.ndarray]] = list(zip(feature_headers, feature_values, strict=True))
+        columns.append(('llr', case_llrs.llrs))
+
+        if case_llrs.has_intervals and case_llrs.llr_intervals is not None:
+            columns.extend(
+                [
+                    ('llr_interval_low', case_llrs.llr_intervals[:, 0]),
+                    ('llr_interval_high', case_llrs.llr_intervals[:, 1]),
+                ]
+            )
+
+        if len(case_instances) != len(case_llrs):
+            raise ValueError(
+                f'Cannot export original case features to case_llr.csv because row counts differ: '
+                f'{len(case_instances)} case rows vs {len(case_llrs)} LLR rows.'
+            )
+
+        with open(path, 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow([name for name, _ in columns])
+            for row in zip(*(values for _, values in columns), strict=True):
+                writer.writerow(row)
+
+
+@config_parser
+def case_llr_csv(config: ContextAwareDict, output_dir: Path) -> CaseLLRToCsv:
+    """Parse output configuration for case LLR generation and CSV export."""
+    case_data_provider = parse_data_provider(pop_field(config, 'case_llr_data'), output_dir)
+    filename = pop_field(config, 'filename', default='case_llr.csv', validate=str)
+    check_is_empty(config)
+    return CaseLLRToCsv(output_dir, case_data_provider, filename)
+
+
 class SubsetAggregation(Aggregation):
     """
     Aggregation method that manages data categorization.
@@ -256,7 +345,11 @@ class SubsetAggregation(Aggregation):
             category_str = '_'.join(str(v) for v in category.reshape(-1))
             run_name = f'{run_name_prefix}{category_str}'
             category_data = AggregationData(
-                subset, data.lrsystem, data.parameters | {self.category_field: category}, run_name
+                llrdata=subset,
+                lrsystem=data.lrsystem,
+                parameters=data.parameters | {self.category_field: category},
+                run_name=run_name,
+                get_full_fit_lrsystem=data.get_full_fit_lrsystem,
             )
 
             for output in self.aggregation_methods:

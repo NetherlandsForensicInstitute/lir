@@ -1,0 +1,63 @@
+# Minimal MCMC LR-system example
+# Demonstrates using PyMC (v5.21.0+) for Bayesian MCMC-based LR calibration
+
+output_path: output/${timestamp}_mcmc_minimal
+
+data:
+  provider:
+    method: synthesized_normal_binary
+    seed: 7
+    h1:  # same-source pairs (H1)
+      mean: 0
+      std: 2
+      size: 100
+    h2:  # different-source pairs (H2)
+      mean: 0
+      std: 2
+      size: 100
+  splits:
+    strategy: binary_train_test_split
+    test_size: 0.3
+    seed: 42
+
+lr_system:
+  architecture: specific_source
+  modules:
+    method: logging_pipeline
+    steps:
+      scaler: standard_scaler
+      calibration:
+        method: mcmc
+        distribution_h1: normal
+        parameters_h1:
+          mu:
+            prior: normal
+            mu: 0
+            sigma: 5
+          sigma:
+            prior: uniform
+            lower: 0.01
+            upper: 5
+        distribution_h2: normal
+        parameters_h2:
+          mu:
+            prior: normal
+            mu: 0
+            sigma: 5
+          sigma:
+            prior: uniform
+            lower: 0.01
+            upper: 5
+        bounding: iv_bounder
+        chain_count: 2
+        tune_count: 250
+        draw_count: 250
+        random_seed: 42
+
+experiments:
+  - name: mcmc_demo
+    strategy: single_run
+    lr_system: ${lr_system}
+    data: ${data}
+    output:
+      - llr_interval

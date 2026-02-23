@@ -48,7 +48,12 @@ class TestPlotting(unittest.TestCase):
 
         # The reshape(-1, 1) is to simulate single-feature data with one sample per row
         llr_data = LLRData(features=llrs.reshape(-1, 1), labels=y)
-        llr_data_with_scores = LLRData(features=llrs.reshape(-1, 1), labels=y, scores=llrs)
+
+        scores = llr_data.features
+        data_dict = llr_data.model_dump()
+        data_dict['score'] = scores
+        llr_data_with_scores = LLRData(**data_dict)
+
         llr_data_finite = llr_data[finite_index]
 
         # The LLRData interval is just a 3-column ndarray where each row is:

@@ -35,7 +35,7 @@ class Pipeline(Transformer):
         Ordered transformer steps executed by this pipeline.
     """
 
-    def __init__(self, steps: list[tuple[str, Transformer | Any]], capture_step: str | None = None):
+    def __init__(self, steps: list[tuple[str, Transformer | Any]], sources_for_plots: dict[str, str] | None = None):
         """
         Initialize a new Pipeline object.
 
@@ -43,12 +43,12 @@ class Pipeline(Transformer):
         ----------
         steps : list[tuple[str, Transformer | Any]]
             Ordered transformer steps executed by this pipeline.
-        capture_step : str | None
-            Optional name of a step to capture intermediate output from.
+        sources_for_plots : dict[str, str] | None
+            Optional dictionary of step names to capture intermediate output from.
         """
         self.steps = [(name, as_transformer(module)) for name, module in steps]
-        self.capture_step = capture_step
-        self._captured: InstanceData | None = None
+        self.sources_for_plots = sources_for_plots
+        self._captured: tuple[str, InstanceData] | None = None
 
     def fit(self, instances: InstanceData) -> Self:
         """
@@ -91,12 +91,14 @@ class Pipeline(Transformer):
 
         for name, module in self.steps:
             instances = module.apply(instances)
-            if name == self.capture_step:
-                self._captured = instances
+            if self.sources_for_plots is not None:
+                for k, v in self.sources_for_plots.items():
+                    if name == v:
+                        self._captured = (k, instances)
 
-        if self.capture_step is not None and self._captured is None:
+        if self.sources_for_plots is not None and self._captured is None:
             available = [name for name, _ in self.steps]
-            raise ValueError(f"Step '{self.capture_step}' not found. Available: {available}")
+            raise ValueError(f"Step '{list(self.sources_for_plots.keys())}' not found. Available: {available}")
 
         return instances
 
@@ -216,7 +218,7 @@ class LoggingPipeline(Pipeline):
         self,
         steps: list[tuple[str, Transformer | Any]],
         output_file: PathLike,
-        capture_step: str | None = None,
+        sources_for_plots: dict[str, str] | None = None,
         include_batch_number: bool = True,
         include_labels: bool = True,
         include_fields: list[str] | None = None,
@@ -243,7 +245,7 @@ class LoggingPipeline(Pipeline):
         include_input : bool
             Whether to include original inputs in logged output.
         """
-        super().__init__(steps, capture_step)
+        super().__init__(steps, sources_for_plots)
         self.output_file = Path(output_file)
         self.include_batch_number = include_batch_number
         self.include_labels = include_labels
@@ -290,12 +292,16 @@ class LoggingPipeline(Pipeline):
             for module_name, module in self.steps:
                 instances = module.apply(instances)
 
-                if module_name == self.capture_step:
-                    self._captured = instances
+                if self.sources_for_plots is not None:
+                    for k, v in self.sources_for_plots.items():
+                        if module_name == v:
+                            self._captured = (k, instances)
 
                 if module_name in self.include_steps:
                     instances = check_type(
-                        FeatureData, instances, message=f'expected FeatureData as output of pipeline step {module_name}'
+                        FeatureData,
+                        instances,
+                        message=f'expected FeatureData as output of pipeline step {module_name}',
                     )
                     header = getattr(instances, 'header', None) or module_name
                     csv_builder.add_column(instances.features, header)
@@ -313,9 +319,9 @@ class LoggingPipeline(Pipeline):
 
         self.n_batches += 1
 
-        if self.capture_step is not None and self._captured is None:
+        if self.sources_for_plots is not None and self._captured is None:
             available = [name for name, _ in self.steps]
-            raise ValueError(f"Step '{self.capture_step}' not found. Available: {available}")
+            raise ValueError(f"Step(s) '{list(self.sources_for_plots.keys())}' not found. Available: {available}")
 
         return instances
 

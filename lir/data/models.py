@@ -765,20 +765,19 @@ class LLRData(FeatureData):
         """
         return self.llr_lower_bound, self.llr_upper_bound
 
-    @property
-    def scores(self) -> np.ndarray | None:
+    def source_for_plot(self, source_key: str) -> np.ndarray | None:
         """:return: intermediate scores if available, or None"""
-        return self.model_extra.get('scores') if self.model_extra is not None else None
+        return self.model_extra.get(source_key) if self.model_extra is not None else None
 
-    @property
-    def require_scores(self) -> np.ndarray:
+    def require_source_for_plots(self, source_key: str) -> np.ndarray:
         """:return: intermediate scores, or raise an error if not available"""
-        if self.model_extra is None or 'scores' not in self.model_extra:
+        if self.model_extra is None or source_key not in self.model_extra:
             raise ValueError(
-                'Intermediate scores are not available for this instance. '
-                "Use the 'score_source' in your LR system to capture scores during the calculation of LLRs"
+                f'{source_key} are not available for this instance. '
+                f"Use the `{source_key}` as key in 'sources_for_plots' in your LR system to capture {source_key}. "
+                f'Currently available sources: {list(self.model_extra.keys()) if self.model_extra else "none"}'
             )
-        return self.model_extra['scores']
+        return self.model_extra[source_key]
 
     @model_validator(mode='after')
     def check_features_are_llrs(self) -> Self:

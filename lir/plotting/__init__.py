@@ -370,7 +370,7 @@ def score_distribution(
         if y-axis should be the probability density within each class,
         instead of counts (default: True)
     """
-    scores = llrdata.require_scores
+    scores = llrdata.require_source_for_plots('score')
     y = llrdata.require_labels
 
     plt.rcParams.update({'font.size': 15})
@@ -457,7 +457,7 @@ def score_llr(ax: Axes, llrdata: LLRData) -> None:
     """
     llrs = llrdata.llrs
     labels = llrdata.require_labels
-    scores = llrdata.require_scores
+    scores = llrdata.require_source_for_plots('score')
 
     # Separate by hypothesis
     mask_h1 = labels == 1

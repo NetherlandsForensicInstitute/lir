@@ -12,12 +12,12 @@ LOG = logging.getLogger(__name__)
 class LRSystem(Transformer, ABC):
     """General representation of an LR system."""
 
-    def set_score_source(self, score_source: str | None) -> Self:
+    def set_sources_for_plots(self, sources_for_plots: dict[str, str] | None) -> Self:
         """Configure where scores should be extracted from.
 
         Parameters
         ----------
-        score_source : str, optional
+        sources_for_plots : dict, optional
             Pipeline step name to extract scores from (e.g., "scaler", "logistic_regression").
 
         Returns
@@ -25,7 +25,7 @@ class LRSystem(Transformer, ABC):
         Self
             Returns self for method chaining.
         """
-        self.score_source = score_source
+        self.sources_for_plots = sources_for_plots
         return self
 
     def fit(self, instances: InstanceData) -> Self:
@@ -50,11 +50,11 @@ class LRSystem(Transformer, ABC):
         LLRData
             The result with scores attached if configured
         """
-        score_source = getattr(self, 'score_source', None)
+        sources_for_plots = getattr(self, 'sources_for_plots', None)
 
-        # Set capture_step on pipeline if it has the property
-        if hasattr(pipeline, 'capture_step'):
-            pipeline.capture_step = score_source
+        # Set sources_for_plots on pipeline if it has the property
+        if hasattr(pipeline, 'sources_for_plots'):
+            pipeline.sources_for_plots = sources_for_plots
 
         result = pipeline.apply(data)
         llr_data = result.replace_as(LLRData)
@@ -62,12 +62,13 @@ class LRSystem(Transformer, ABC):
         # Extract captured data if available
         captured = getattr(pipeline, '_captured', None)
 
-        if score_source and captured is not None:
+        if sources_for_plots and captured is not None:
             try:
-                if hasattr(captured, 'features'):
-                    scores = captured.features
+                captured_name, captured_data = captured
+                if hasattr(captured_data, 'features'):
+                    scores = captured_data.features
                     data_dict = llr_data.model_dump()
-                    data_dict['scores'] = scores
+                    data_dict[captured_name] = scores
                     llr_data = LLRData(**data_dict)
                 else:
                     LOG.warning('Captured data has no features attribute')

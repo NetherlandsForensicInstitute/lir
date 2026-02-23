@@ -20,7 +20,8 @@ data:
 
 lr_system:
   architecture: specific_source
-  score_source: scaler
+  sources_for_plots: 
+    score: scaler
   modules:
     method: logging_pipeline
     steps:

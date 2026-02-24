@@ -60,7 +60,7 @@ FloatOrArray = TypeVar('FloatOrArray', np.ndarray, float)
 
 
 def odds_to_probability[FloatOrArray: (np.ndarray, float)](odds: FloatOrArray) -> FloatOrArray:
-    """Converts odds to a probability.
+    """Convert odds to a probability.
 
     Returns:
     - 1                , for odds values of inf
@@ -74,13 +74,13 @@ def odds_to_probability[FloatOrArray: (np.ndarray, float)](odds: FloatOrArray) -
 
 
 def probability_to_odds[FloatOrArray: (np.ndarray, float)](p: FloatOrArray) -> FloatOrArray:
-    """Converts a probability to odds."""
+    """Convert a probability to odds."""
     with np.errstate(divide='ignore'):
         return p / (1 - p)
 
 
 def probability_to_logodds[FloatOrArray: (np.ndarray, float)](p: FloatOrArray) -> FloatOrArray:
-    """Converts probability values to their log odds with base 10."""
+    """Convert probability values to their log odds with base 10."""
     with np.errstate(divide='ignore'):
         complement = 1 - p
         return np.log10(p) - np.log10(complement)
@@ -123,7 +123,7 @@ class Bind(partial):
     """
 
     def __call__(self, *args: Any, **keywords: Any) -> Any:
-        """Extends `partial` and accepts the ellipsis as a placeholder."""
+        """Extend `partial` and accept the ellipsis as a placeholder."""
         keywords = {**self.keywords, **keywords}
         iargs = iter(args)
         args = tuple(next(iargs) if arg is ... else arg for arg in self.args)

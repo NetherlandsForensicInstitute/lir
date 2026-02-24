@@ -35,7 +35,7 @@ class SynthesizedNormalBinaryData(DataProvider):
 
     def get_instances(self) -> FeatureData:
         """
-        Returns instances with randomly synthesized data and binary labels.
+        Return instances with randomly synthesized data and binary labels.
 
         The features are drawn from a normal distribution, as configured.
         """

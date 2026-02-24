@@ -69,6 +69,9 @@ class EuclideanDistance(Transformer):
     If the input is a FeatureData object, it is assumed that it contains the element-wise differences, and the square
     root of the sum over these differences is calculated.
 
+    In yaml configurations, it can be used by specifying `euclidean_distance`, e.g.:
+    `scoring: euclidean_distance`
+
     :returns: a FeatureData object with features of shape (n, 1)
     """
 

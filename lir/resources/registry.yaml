@@ -38,6 +38,7 @@ modules:
 
   # comparisons
   element_wise_difference: lir.transform.distance.ElementWiseDifference
+  euclidean_distance: lir.transform.distance.EuclideanDistance
   manhattan_distance: lir.transform.distance.ManhattanDistance
 
   # utility modules

@@ -1,7 +1,7 @@
 import numpy as np
 
 from lir.data.models import PairedFeatureData
-from lir.transform.distance import ElementWiseDifference, ManhattanDistance
+from lir.transform.distance import ElementWiseDifference, EuclideanDistance, ManhattanDistance
 
 
 def test_element_wise():
@@ -26,3 +26,17 @@ def test_manhattan():
 
     element_wise_diff = ElementWiseDifference().apply(features)
     assert np.all(manhattan.apply(element_wise_diff).features == np.ones((10, 1)) * 100)
+
+
+def test_euclidean():
+    euclidean_distance = EuclideanDistance()
+    features = PairedFeatureData(
+        features=np.stack([np.ones((10, 100)), np.ones((10, 100)) * 2], axis=1), n_trace_instances=1, n_ref_instances=1
+    )
+
+    assert features.features.shape == (10, 2, 100)
+    assert euclidean_distance.apply(features).features.shape == (10, 1)
+    assert np.all(euclidean_distance.apply(features).features == np.ones((10, 1)) * np.sqrt(100))
+
+    element_wise_diff = ElementWiseDifference().apply(features)
+    assert np.all(euclidean_distance.apply(element_wise_diff).features == np.ones((10, 1)) * np.sqrt(100))

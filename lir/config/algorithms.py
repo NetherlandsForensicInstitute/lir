@@ -6,6 +6,7 @@ from lir.bounding import LLRBounder
 from lir.config.base import ContextAwareDict, YamlParseError, config_parser, pop_field
 from lir.config.transform import parse_module
 from lir.transform import TransformerWrapper
+from lir.util import partial
 
 
 def _unwrap_bounder(bounder: object, context: list[str]) -> LLRBounder:
@@ -31,7 +32,7 @@ def mcmc(config: ContextAwareDict, output_dir: Path) -> McmcLLRModel:
             config['bounding'] = None
         else:
             context = config.context + ['bounding'] if isinstance(bounding_config, str) else bounding_config.context
-            bounder = parse_module(bounding_config, output_dir, context)
+            bounder = partial(parse_module, bounding_config, output_dir, context)
             config['bounding'] = _unwrap_bounder(bounder, context)
 
     mcmc_class: Any = McmcLLRModel

@@ -1,3 +1,4 @@
+from collections.abc import Callable
 from typing import Any, Self
 
 import numpy as np
@@ -9,7 +10,7 @@ from lir.data.models import FeatureData, InstanceData, LLRData
 from lir.transform import Transformer
 
 
-elub_bounder = ELUBBounder()
+elub_bounder_factory = ELUBBounder
 
 
 class McmcLLRModel(Transformer):
@@ -27,7 +28,7 @@ class McmcLLRModel(Transformer):
         parameters_h1: dict[str, dict[str, float | int | str]] | None,
         distribution_h2: str,
         parameters_h2: dict[str, dict[str, float | int | str]] | None,
-        bounding: LLRBounder | None = elub_bounder,
+        bounder_factory: Callable[[], LLRBounder] | None = elub_bounder_factory,
         interval: tuple[float, float] = (0.05, 0.95),
         **mcmc_kwargs: Any,
     ):
@@ -38,13 +39,13 @@ class McmcLLRModel(Transformer):
         :param parameters_h1: definition of the parameters of distribution_h1, and their prior distributions
         :param distribution_h2: statistical distribution used to model H2, for example 'normal' or 'binomial'
         :param parameters_h2: definition of the parameters of distribution_h2, and their prior distributions
-        :param bounder: bounding method to apply to the unbound llrs, to prevent overextrapolation
+        :param bounder_factory: bounding method to apply to the unbound llrs, to prevent overextrapolation
         :param interval: lower and upper bounds of the credible interval in range 0..1; default: (0.05, 0.95)
         :param mcmc_kwargs: mcmc simulation settings, see `McmcModel.__init__` for more details.
         """
         self.model_h1 = McmcModel(distribution_h1, parameters_h1, **mcmc_kwargs)
         self.model_h2 = McmcModel(distribution_h2, parameters_h2, **mcmc_kwargs)
-        self.bounding = bounding
+        self.bounder_factory = bounder_factory
         self.bounders: list[LLRBounder] | None = None
         self.interval = interval
 
@@ -54,14 +55,14 @@ class McmcLLRModel(Transformer):
 
         self.model_h1.fit(instances.features[instances.require_labels == 1])
         self.model_h2.fit(instances.features[instances.require_labels == 0])
-        if self.bounding is not None:
+        if self.bounder_factory is not None:
             # determine the bounds based on the LLRs of the training data, each sample results into an LR-system
             logp_h1 = self.model_h1.transform(instances.features)
             logp_h2 = self.model_h2.transform(instances.features)
             llrs = logp_h1 - logp_h2
 
             # determine the bounds for each LR-system individually
-            self.bounders = [self.bounding.__class__() for _ in range(llrs.shape[1])]
+            self.bounders = [self.bounder_factory() for _ in range(llrs.shape[1])]
             for i_system in range(llrs.shape[1]):
                 llr_data = LLRData(features=llrs[:, i_system], labels=instances.require_labels)
                 self.bounders[i_system] = self.bounders[i_system].fit(llr_data)
@@ -73,12 +74,12 @@ class McmcLLRModel(Transformer):
         logp_h1 = self.model_h1.transform(instances.features)
         logp_h2 = self.model_h2.transform(instances.features)
         llrs = logp_h1 - logp_h2
-        if (self.bounding is not None) and (self.bounders is not None):
+        if (self.bounder_factory is not None) and (self.bounders is not None):
             # apply the bounders one by one
             for i_system in range(llrs.shape[1]):
                 llr_data = LLRData(features=llrs[:, i_system], labels=instances.require_labels)
-                bounded_llr_data = self.bounders[i_system].apply(llr_data)
-                llrs[:, i_system] = bounded_llr_data.llrs
+                bound_llr_data = self.bounders[i_system].apply(llr_data)
+                llrs[:, i_system] = bound_llr_data.llrs
         quantiles = np.quantile(llrs, [0.5] + list(self.interval), axis=1, method='midpoint')
         return instances.replace_as(LLRData, features=quantiles.transpose(1, 0))
 

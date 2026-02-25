@@ -60,7 +60,7 @@ def test_mcmc_apply_with_bounding_handles_llrdata_correctly():
         parameters_h1={'mu': {'prior': 'normal', 'mu': 0, 'sigma': 1}},
         distribution_h2='normal',
         parameters_h2={'mu': {'prior': 'normal', 'mu': 0, 'sigma': 1}},
-        bounding=_NoopBounder(),
+        bounder_factory=_NoopBounder,
     )
     cast(Any, llr_model).model_h1 = _DummyModel(output=np.array([[0.2, 0.4], [0.1, 0.3]]))
     cast(Any, llr_model).model_h2 = _DummyModel(output=np.array([[0.1, 0.2], [0.0, 0.1]]))

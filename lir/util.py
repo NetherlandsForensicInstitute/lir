@@ -20,7 +20,24 @@ AnyType = TypeVar('AnyType', bound=Any)
 
 
 def check_type[AnyType: Any](type_class: type[AnyType], v: Any, message: str | None = None) -> AnyType:
-    """Check if a given input is of the expected, specified type."""
+    """
+    Check if a given input is of the expected, specified type. If so, return the input value.
+
+    Parameters
+    ----------
+    type_class : type
+        The expected type of the input value.
+    v : Any
+        The input value to be checked against the expected type.
+    message : str, optional
+        An optional message to be included in the error if the type check fails. If not provided, a default message
+        indicating the expected type will be used.
+
+    Returns
+    -------
+    AnyType
+        The input value `v` if it is of the expected type.
+    """
     if isinstance(v, type_class):
         return v
     else:
@@ -29,7 +46,23 @@ def check_type[AnyType: Any](type_class: type[AnyType], v: Any, message: str | N
 
 
 def get_classes_from_Xy(X: np.ndarray, y: np.ndarray, classes: list[Any] | None = None) -> np.ndarray:
-    """Get the classification classes from labeled data."""
+    """
+    Get the classification classes from labeled data.
+
+    Parameters
+    ----------
+    X : np.ndarray
+        The input data array, where rows correspond to samples and columns correspond to features.
+    y : np.ndarray
+        The target labels corresponding to each sample in `X`. This should be a 1-dimensional array.
+    classes : list[Any] | None, optional
+        An optional list of classes to be used. If not provided, the unique values in `y` will be used.
+
+    Returns
+    -------
+    np.ndarray
+        An array of unique classes found in `y` if `classes` is None; otherwise, an array of the provided `classes`.
+    """
     assert len(X.shape) >= 1, f'expected: X has at least 1 dimensions; found: {len(X.shape)} dimensions'
     assert len(y.shape) == 1, f'expected: y is a 1-dimensional array; found: {len(y.shape)} dimensions'
     assert X.shape[0] == y.size, f'dimensions of X and y do not match; found: {X.shape[0]} != {y.size}'
@@ -38,10 +71,20 @@ def get_classes_from_Xy(X: np.ndarray, y: np.ndarray, classes: list[Any] | None 
 
 
 def Xn_to_Xy(*Xn: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-    """Convert Xn to Xy format.
+    """
+    Convert Xn to Xy format.
 
-    Xn is a format where samples are divided into separate variables based on class.
-    Xy is a format where all samples are concatenated, with an equal length variable y indicating class.
+    Parameters
+    ----------
+    *Xn : np.ndarray
+        Variable number of arrays, where each array corresponds to a class and contains the samples for that class.
+
+    Returns
+    -------
+    tuple[np.ndarray, np.ndarray]
+        A tuple containing:
+        - X: A 2D array where all samples from the input arrays are concatenated together.
+        - y: A 1D array of the same length as the number of samples in X, where each element indicates the class label.
     """
     split_Xn = [np.asarray(X) for X in Xn]
     X = np.concatenate(split_Xn)
@@ -50,10 +93,23 @@ def Xn_to_Xy(*Xn: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
 
 
 def Xy_to_Xn(X: np.ndarray, y: np.ndarray, classes: list[int] | None = None) -> list[np.ndarray]:
-    """Convert Xy to Xn format.
+    """
+    Convert Xy to Xn format.
 
-    Xn is a format where samples are divided into separate variables based on class.
-    Xy is a format where all samples are concatenated, with an equal length variable y indicating class.
+    Parameters
+    ----------
+    X : np.ndarray
+        A 2D array where rows correspond to samples and columns correspond to features.
+    y : np.ndarray
+        A 1D array of the same length as the number of samples in X, where each element indicates the class label.
+    classes : list[int] | None, optional
+        An optional list of class labels to be used for splitting the data. If not provided, the unique values in `y`
+        will be used as class labels.
+
+    Returns
+    -------
+    list[np.ndarray]
+        A list of arrays, where each array corresponds to a class and contains the samples for that class.
     """
     if classes is None:
         classes = [0, 1]
@@ -66,12 +122,19 @@ FloatOrArray = TypeVar('FloatOrArray', np.ndarray, float)
 
 
 def odds_to_probability[FloatOrArray: (np.ndarray, float)](odds: FloatOrArray) -> FloatOrArray:
-    """Convert odds to a probability.
+    """
+    Convert odds to a probability.
+
+    Parameters
+    ----------
+    odds : FloatOrArray
+        The odds to be converted to probability.
 
     Returns
     -------
-    - 1                , for odds values of inf
-    - odds / (1 + odds), otherwise
+    FloatOrArray
+        The input odds converted to probability. This is 1 if the input odds is infinity, and otherwise calculated as
+        odds / (1 + odds).
     """
     inf_values = odds == np.inf
     with np.errstate(invalid='ignore'):
@@ -81,36 +144,109 @@ def odds_to_probability[FloatOrArray: (np.ndarray, float)](odds: FloatOrArray) -
 
 
 def probability_to_odds[FloatOrArray: (np.ndarray, float)](p: FloatOrArray) -> FloatOrArray:
-    """Convert a probability to odds."""
+    """
+    Convert a probability to odds.
+
+    Parameters
+    ----------
+    p : FloatOrArray
+        The probability to be converted to odds.
+
+    Returns
+    -------
+    FloatOrArray
+        The input probability converted to odds. This is infinity if the input probability is 1, and otherwise
+        calculated as p / (1 - p).
+    """
     with np.errstate(divide='ignore'):
         return p / (1 - p)
 
 
 def probability_to_logodds[FloatOrArray: (np.ndarray, float)](p: FloatOrArray) -> FloatOrArray:
-    """Convert probability values to their log odds with base 10."""
+    """
+    Convert probability values to their log odds with base 10.
+
+    Parameters
+    ----------
+    p : FloatOrArray
+        The probability values to be converted to log odds.
+
+    Returns
+    -------
+    FloatOrArray
+        The input probability values converted to log odds with base 10.
+    """
     with np.errstate(divide='ignore'):
         complement = 1 - p
         return np.log10(p) - np.log10(complement)
 
 
 def logodds_to_probability[FloatOrArray: (np.ndarray, float)](log_odds: FloatOrArray) -> FloatOrArray:
-    """Convert 10-base logarithm of odds to probability."""
+    """
+    Convert 10-base logarithm of odds to probability.
+
+    Parameters
+    ----------
+    log_odds : FloatOrArray
+        The 10-base logarithm of odds to be converted to probability.
+
+    Returns
+    -------
+    FloatOrArray
+        The input 10-base logarithm of odds converted to probability.
+    """
     return odds_to_probability(logodds_to_odds(log_odds))
 
 
 def logodds_to_odds[FloatOrArray: (np.ndarray, float)](log_odds: FloatOrArray) -> FloatOrArray:
-    """Convert 10-base logarithm odds to odds."""
+    """
+    Convert 10-base logarithm odds to odds.
+
+    Parameters
+    ----------
+    log_odds : FloatOrArray
+        The 10-base logarithm of odds to be converted to odds.
+
+    Returns
+    -------
+    FloatOrArray
+        The input 10-base logarithm of odds converted to odds.
+    """
     with np.errstate(divide='ignore'):
         return 10**log_odds
 
 
 def odds_to_logodds[FloatOrArray: (np.ndarray, float)](odds: FloatOrArray) -> FloatOrArray:
-    """Convert odds to 10-base logarithm odds."""
+    """
+    Convert odds to 10-base logarithm odds.
+
+    Parameters
+    ----------
+    odds : FloatOrArray
+        The odds to be converted to 10-base logarithm odds.
+
+    Returns
+    -------
+    FloatOrArray
+        The input odds converted to 10-base logarithm odds.
+    """
     return np.log10(odds)
 
 
 def ln_to_log10[FloatOrArray: (np.ndarray, float)](ln_data: FloatOrArray) -> FloatOrArray:
-    """Convert natural logarithm to 10-base logarithm."""
+    """
+    Convert natural logarithm to 10-base logarithm.
+
+    Parameters
+    ----------
+    ln_data : FloatOrArray
+        Data in natural logarithm form to be converted to 10-base logarithm.
+
+    Returns
+    -------
+    FloatOrArray
+        The input data converted from natural logarithm to 10-base logarithm.
+    """
     return np.log10(np.e) * ln_data
 
 
@@ -174,13 +310,28 @@ def validate_yaml(yaml_path: Path) -> None:
 
 
 class Bind(partial):
-    """Wrap `partial` to support the ellipsis (...) as a placeholder.
+    """
+    Wrap `partial` to support the ellipsis (...) as a placeholder.
 
     Can be used to fix parameters not at the end of the list of parameters (which is a limitation of partial).
     """
 
     def __call__(self, *args: Any, **keywords: Any) -> Any:
-        """Extend `partial` and accept the ellipsis as a placeholder."""
+        """
+        Extend `partial` and accept the ellipsis as a placeholder.
+
+        Parameters
+        ----------
+        *args
+            Positional arguments to be passed to the original function.
+        **keywords
+            Keyword arguments to be passed to the original function.
+
+        Returns
+        -------
+        Any
+            A new function with the same behavior as the original function, but with the specified parameters fixed.
+        """
         keywords = {**self.keywords, **keywords}
         iargs = iter(args)
         args = tuple(next(iargs) if arg is ... else arg for arg in self.args)

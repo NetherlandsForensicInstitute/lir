@@ -158,5 +158,4 @@ exclude_files = [
 
     "lir/__init__.py",
     "lir/aggregation.py",
-    "lir/bounding.py",
 ]

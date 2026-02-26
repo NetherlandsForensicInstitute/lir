@@ -102,13 +102,23 @@ class Pipeline(Transformer):
         """
         self._captured = None
 
+        # If the user wants to capture the starting data, do that before applying any steps.
+        if self.sources_for_plots is not None:
+            for key, step_name in self.sources_for_plots.items():
+                if step_name == 'STARTING_DATA':
+                    self._captured = (key, instances)
+
+        # Apply each step in the pipeline sequentially.
         for name, module in self.steps:
             instances = module.apply(instances)
-            if self.sources_for_plots is not None:
-                for k, v in self.sources_for_plots.items():
-                    if name == v:
-                        self._captured = (k, instances)
 
+            # If the user wants to capture the output of this step, do that before applying the next step.
+            if self.sources_for_plots is not None:
+                for key, step_name in self.sources_for_plots.items():
+                    if name == step_name:
+                        self._captured = (key, instances)
+
+        # Validate that all requested sources for plots were captured.
         if self.sources_for_plots is not None and self._captured is None:
             available = [name for name, _ in self.steps]
             raise ValueError(f"Step '{list(self.sources_for_plots.keys())}' not found. Available: {available}")
@@ -265,6 +275,12 @@ class LoggingPipeline(Pipeline):
         """
         self._captured = None
 
+        if self.sources_for_plots is not None:
+            # If the user wants to capture the starting data, do that before applying any steps.
+            for k, v in self.sources_for_plots.items():
+                if v == 'STARTING_DATA':
+                    self._captured = (k, instances)
+
         # initialize the csv builder
         write_mode = 'w' if self.n_batches == 0 else 'a'
         csv_builder = DataFileBuilderCsv(self.output_file, write_mode=write_mode)
@@ -287,6 +303,7 @@ class LoggingPipeline(Pipeline):
             for module_name, module in self.steps:
                 instances = module.apply(instances)
 
+                # if the user wants to capture the output of this step, do that before applying the next step.
                 if self.sources_for_plots is not None:
                     for k, v in self.sources_for_plots.items():
                         if module_name == v:
@@ -314,6 +331,7 @@ class LoggingPipeline(Pipeline):
 
         self.n_batches += 1
 
+        # Validate that all requested sources for plots were captured.
         if self.sources_for_plots is not None and self._captured is None:
             available = [name for name, _ in self.steps]
             raise ValueError(f"Step(s) '{list(self.sources_for_plots.keys())}' not found. Available: {available}")

@@ -161,5 +161,4 @@ exclude_files = [
     "lir/bounding.py",
     "lir/main.py",
     "lir/persistence.py",
-    "lir/registry.py",
 ]

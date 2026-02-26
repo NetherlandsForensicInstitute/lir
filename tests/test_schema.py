@@ -11,7 +11,7 @@ from lir.util import validate_yaml
 
 
 ROOT = Path(__file__).resolve().parent.parent  # Go up to project root
-SCHEMA_PATH = ROOT / 'configs' / 'lir.schema.json'
+SCHEMA_PATH = ROOT / 'lir.schema.json'
 YAML_DIR = ROOT / 'examples'
 
 

@@ -152,7 +152,7 @@ def validate_yaml(yaml_path: Path) -> None:
     :raises yaml.YAMLError: if the YAML is invalid
     :raises ValidationError: if the YAML doesn't conform to the schema
     """
-    schema_path = Path(__file__).parent.parent / 'configs' / 'lir.schema.json'
+    schema_path = Path(__file__).parent.parent / 'lir.schema.json'
 
     if not schema_path.exists():
         raise FileNotFoundError(f'Schema file not found: {schema_path}')

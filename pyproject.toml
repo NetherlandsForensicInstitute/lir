@@ -160,5 +160,4 @@ exclude_files = [
     "lir/persistence.py",
     "lir/registry.py",
     "lir/visualization.py",
-    "lir/util.py",
 ]

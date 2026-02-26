@@ -8,7 +8,19 @@ from lir.lrsystems.lrsystems import LRSystem
 
 
 def load_model(path: Path) -> LRSystem:
-    """Load previously cached model."""
+    """
+    Load previously cached model.
+
+    Parameters
+    ----------
+    path : Path
+        The path to the .pkl file containing the model.
+
+    Returns
+    -------
+    LRSystem
+        The loaded model.
+    """
     try:
         with open(path, 'rb') as f:
             # It is assumed exclusively `LRSystem` models will be loaded, which are considered safe
@@ -18,14 +30,32 @@ def load_model(path: Path) -> LRSystem:
 
 
 def save_model(path: Path, model: LRSystem) -> None:
-    """Save a model to disk."""
+    """
+    Save a model to disk.
+
+    Parameters
+    ----------
+    path : Path
+        The path to the .pkl file where the model should be saved.
+    model : LRSystem
+        The model to be saved.
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, 'wb') as f:
         f.write(pickle.dumps(model))
 
 
 class SaveModel(Aggregation):
-    """Write the model to a file."""
+    """
+    Write the model to a file.
+
+    Parameters
+    ----------
+    output_dir : Path
+        The directory where the model should be written.
+    filename : PathLike | str
+        The filename to be created for the model.
+    """
 
     def __init__(self, output_dir: Path, filename: PathLike | str = 'model.pkl') -> None:
         """
@@ -37,14 +67,25 @@ class SaveModel(Aggregation):
         If `filename` is an absolute path, or if `filename` is relative to `output_dir`, then the model is saved to this
         file as-is, instead of to a file in a newly created subdirectory.
 
-        :param output_dir: the directory where the model should be written
-        :param filename: the filename to be created for the model
+        Parameters
+        ----------
+        output_dir : Path
+            The directory where the model should be written.
+        filename : PathLike | str
+            The filename to be created for the model.
         """
         self.output_dir = output_dir
         self.filename = Path(filename)
 
     def report(self, data: AggregationData) -> None:
-        """Create a directory for the run and write the trained LR system model to file."""
+        """
+        Create a directory for the run and write the trained LR system model to file.
+
+        Parameters
+        ----------
+        data : AggregationData
+            The data to be aggregated, containing the trained LR system model and the run name.
+        """
         path = self._resolve_output_path(self.output_dir, self.filename, data.run_name)
         save_model(path, data.lrsystem)
 
@@ -54,8 +95,17 @@ def parse_save_model(config: ContextAwareDict, output_dir: Path) -> SaveModel:
     """
     Parse a configuration section that describes how a `SaveModel` instance should be instantiated.
 
-    :param config: the configuration section
-    :param output_dir: directory where the instantiated object may write its output
+    Parameters
+    ----------
+    config : ContextAwareDict
+        The configuration section.
+    output_dir : Path
+        Directory where the instantiated object may write its output.
+
+    Returns
+    -------
+    SaveModel
+        The instantiated object.
     """
     filename = pop_field(config, 'filename', default='model.pkl', validate=str)
     check_is_empty(config)

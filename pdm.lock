@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:b71db4eb0f46d729e6e5840f3429d6c27cfa43be22698976e3f7c78fb4fb7846"
+content_hash = "sha256:55baeccf85686de8a12827d778f1951fea981dd7b2dc5ec060a01bd9789898e9"
 
 [[metadata.targets]]
 requires_python = ">=3.12,<3.15"
@@ -1845,6 +1845,21 @@ dependencies = [
 files = [
     {file = "numpy_typing_compat-20251206.2.3-py3-none-any.whl", hash = "sha256:bfa2e4c4945413e84552cbd34a6d368c88a06a54a896e77ced760521b08f0f61"},
     {file = "numpy_typing_compat-20251206.2.3.tar.gz", hash = "sha256:18e00e0f4f2040fe98574890248848c7c6831a975562794da186cf4f3c90b935"},
+]
+
+[[package]]
+name = "numpydoc"
+version = "1.10.0"
+requires_python = ">=3.10"
+summary = "Sphinx extension to support docstrings in Numpy format"
+groups = ["dev"]
+dependencies = [
+    "sphinx>=6",
+    "tomli>=1.1.0; python_version < \"3.11\"",
+]
+files = [
+    {file = "numpydoc-1.10.0-py3-none-any.whl", hash = "sha256:3149da9874af890bcc2a82ef7aae5484e5aa81cb2778f08e3c307ba6d963721b"},
+    {file = "numpydoc-1.10.0.tar.gz", hash = "sha256:3f7970f6eee30912260a6b31ac72bba2432830cd6722569ec17ee8d3ef5ffa01"},
 ]
 
 [[package]]

@@ -50,6 +50,7 @@ dev = [
     "myst-parser>=5.0.0",
     "jupyter-sphinx>=0.5.3",
     "types-requests>=2.32.4.20250913",
+    "numpydoc>=1.10.0",
 ]
 
 [tool.pdm]
@@ -58,7 +59,7 @@ version = {source = "scm"}
 [tool.pdm.scripts]
 all = {composite = ["check", "test"]}
 all_with_quicktest = {composite = ["check", "quicktest"]}
-check = {composite = ["format-check", "lint", "mypy"]}
+check = {composite = ["format-check", "lint", "mypy", "lint-docs"]}
 fix-all = {composite = ["lint-fix", "format-fix"]}
 lint = "ruff check lir tests docs"
 lint-fix = "ruff check --fix lir tests docs"
@@ -70,6 +71,7 @@ test = "coverage run --branch --source lir --module pytest --strict-markers test
 quicktest = {composite = ["test --testmon"]}
 test-coverage = "coverage report"
 lir = "python -m lir"
+lint-docs = {shell = 'numpydoc lint lir/*.py lir/*/*.py'}
 generate-docs= {composite = ["sphinx-build -M html docs build"]}
 serve-docs = {composite = ["generate-docs", "python -m http.server -d build/html"]}
 
@@ -119,9 +121,7 @@ lint.select = [
     "UP",   # pyupgrade
 ]
 lint.per-file-ignores = {"tests/*" = ["D"]}  # ignore missing docstrings in tests
-
-[tool.ruff.lint.pydocstyle]
-convention = "numpy"
+lint.pydocstyle.convention = "numpy"
 
 [tool.mypy]
 # allow redefinition of inferred / assigned types
@@ -135,3 +135,33 @@ strict_optional = true
 warn_unused_configs = true
 # do not warn about missing imports
 ignore_missing_imports = true
+
+[tool.numpydoc_validation]
+checks = [
+    "all",   # report on all checks, except the below
+    "GL08",
+    "EX01",
+    "SA01",
+    "ES01",
+]
+exclude_files = [
+    "lir/transform/*",
+    "lir/plotting/*",
+    "lir/metrics/*",
+    "lir/lrsystems/*",
+    "lir/experiments/*",
+    "lir/metrics/*",
+    "lir/datasets/*",
+    "lir/data/*",
+    "lir/config/*",
+    "lir/algorithms/*",
+
+    "lir/__init__.py",
+    "lir/aggregation.py",
+    "lir/bounding.py",
+    "lir/main.py",
+    "lir/persistence.py",
+    "lir/registry.py",
+    "lir/visualization.py",
+    "lir/util.py",
+]

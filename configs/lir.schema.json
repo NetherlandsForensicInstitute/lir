@@ -144,11 +144,12 @@
           "type": "string",
           "description": "Name of the data splitting strategy.",
           "enum": [
-            "binary_train_test_split",
-            "binary_cross_validation",
-            "multiclass_train_test_split",
-            "multiclass_cross_validation",
-            "predefined_train_test_split"
+            "train_test",
+            "cross_validation",
+            "train_test_sources",
+            "cross_validation_sources",
+            "predefined_train_test",
+            "train_test_pairs"
           ]
         },
         "folds": {

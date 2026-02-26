@@ -111,7 +111,7 @@ def main(input_args: list[str] | None = None) -> None:
     parser.add_argument(
         '--validate',
         help='validate a YAML file against the schema',
-        metavar='FILENAME',
+        action='store_true',
     )
     parser.add_argument(
         '--n-jobs',
@@ -134,20 +134,20 @@ def main(input_args: list[str] | None = None) -> None:
             print(name)
         return
 
-    if args.validate:
-        try:
-            validate_yaml(Path(args.validate))
-            print(f'✓ {args.validate} is valid')
-        except FileNotFoundError as e:
-            error(str(e))
-        except Exception as e:
-            error(f'Error validating {args.validate}: {e}')
-        return
-
     ### an experiment setup is required beyond this point ###
 
     if not args.setup:
         parser.error('missing FILENAME argument')
+
+    if args.validate:
+        try:
+            validate_yaml(Path(args.setup))
+            print(f'✓ {args.setup} is valid')
+        except FileNotFoundError as e:
+            error(str(e))
+        except Exception as e:
+            error(f'Error validating {args.setup}: {e}')
+        return
 
     # Add directories (setup file and current folder) to sys.path for custom components.
     sys.path.append(str(Path(args.setup).resolve().parent))

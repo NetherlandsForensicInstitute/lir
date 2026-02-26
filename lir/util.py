@@ -8,8 +8,7 @@ from pathlib import Path
 from typing import Any, TypeVar
 
 import numpy as np
-import yaml
-from confidence import Configuration
+from confidence import Configuration, loadf
 from confidence.models import ConfigurationSequence
 from jsonschema import validate
 
@@ -126,8 +125,11 @@ def warn_deprecated() -> None:
 def to_native_dict(cfg: Any) -> Any:
     """Recursively convert confidence Configuration objects to native Python dicts/lists.
 
-    Accesses each value through cfg[key] to trigger reference resolution. The confidence
-    library doesn't have a built-in method for this, so we manually traverse and resolve.
+    Accesses each value through cfg[key] to trigger reference resolution. The confidence ibrary doesn't have a built-in
+    method for this, so we manually traverse and resolve.
+
+    Similary to lir.config.base._expand, but this method returns native dicts/lists instead of
+    ContextAwareDict/ContextAwareList.
     """
     match cfg:
         case Configuration():
@@ -161,12 +163,9 @@ def validate_yaml(yaml_path: Path) -> None:
     with open(schema_path) as f:
         schema = json.load(f)
 
-    with open(yaml_path) as f:
-        data = yaml.safe_load(f)
-
     # Resolve ${...} references before validation
     context = {'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')}  # noqa: DTZ005
-    cfg = Configuration(data, context)
+    cfg = Configuration(loadf(yaml_path), context)
     data = to_native_dict(cfg)
 
     # Validate data against schema

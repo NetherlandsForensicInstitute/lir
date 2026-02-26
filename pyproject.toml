@@ -146,7 +146,6 @@ checks = [
 ]
 exclude_files = [
     "lir/transform/*",
-    "lir/plotting/*",
     "lir/lrsystems/*",
     "lir/experiments/*",
     "lir/datasets/*",

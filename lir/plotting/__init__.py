@@ -26,9 +26,24 @@ H2_COLOR = 'blue'
 
 
 class Canvas:
-    """Representation of an empty canvas, to be used in plotting multiple visualizations."""
+    """
+    Representation of an empty canvas, to be used in plotting multiple visualizations.
+
+    Parameters
+    ----------
+    ax : Axes
+        Matplotlib axes instance used by wrapped plotting methods.
+    """
 
     def __init__(self, ax: Axes):
+        """
+        Initialize a plotting canvas wrapper.
+
+        Parameters
+        ----------
+        ax : Axes
+            Matplotlib axes instance used by wrapped plotting methods.
+        """
         self.ax = ax
 
         self.ece = partial(ece, ax)
@@ -40,7 +55,21 @@ class Canvas:
         self.llr_interval = partial(llr_interval, ax)
 
     def title(self, label: str, **kwargs: Any) -> Any:
-        """Set the title of the axes (wrapper for set_title)."""
+        """
+        Set the title of the axes (wrapper for `set_title`).
+
+        Parameters
+        ----------
+        label : str
+            Title text.
+        **kwargs : Any
+            Additional keyword arguments forwarded to `Axes.set_title`.
+
+        Returns
+        -------
+        Any
+            Return value from `Axes.set_title`.
+        """
         return self.ax.set_title(label, **kwargs)
 
     def __getattr__(self, attr: str) -> Any:
@@ -51,8 +80,18 @@ def savefig(path: str) -> _GeneratorContextManager[Canvas]:
     """
     Create a plotting context and write the figure to a file when the context exits.
 
-    Example
+    Parameters
+    ----------
+    path : str
+        Path to the output file. The figure is written as a PNG image.
+
+    Returns
     -------
+    _GeneratorContextManager[Canvas]
+        Context manager yielding a `Canvas` and saving on exit.
+
+    Examples
+    --------
     .. code-block:: python
 
         with savefig(path) as ax:
@@ -60,11 +99,6 @@ def savefig(path: str) -> _GeneratorContextManager[Canvas]:
 
     A call to :func:`savefig` is equivalent to calling :func:`axes` with
     ``savefig=path``.
-
-    Parameters
-    ----------
-    path : str
-        Path to the output file. The figure is written as a PNG image.
     """
     return axes(savefig=path)
 
@@ -73,8 +107,13 @@ def show() -> _GeneratorContextManager[Canvas]:
     """
     Create a plotting context and show the figure when the context exits.
 
-    Example
+    Returns
     -------
+    _GeneratorContextManager[Canvas]
+        Context manager yielding a `Canvas` and showing the figure on exit.
+
+    Examples
+    --------
     .. code-block:: python
 
         with show() as ax:
@@ -88,10 +127,23 @@ def show() -> _GeneratorContextManager[Canvas]:
 
 @contextmanager
 def axes(savefig: PathLike | str | None = None, show: bool | None = None) -> Iterator[Canvas]:
-    """Create a plotting context.
+    """
+    Create a plotting context.
 
-    Example
+    Parameters
+    ----------
+    savefig : PathLike | str | None, optional
+        File path to save the figure on context exit.
+    show : bool | None, optional
+        Whether to display the figure on context exit.
+
+    Returns
     -------
+    Iterator[Canvas]
+        Iterator yielding a `Canvas` instance for plotting.
+
+    Examples
+    --------
     .. code-block:: python
 
         with axes() as ax:
@@ -114,18 +166,19 @@ def pav(
     add_misleading: int = 0,
     show_scatter: bool = True,
 ) -> None:
-    """Generate a plot of pre-calibrated versus post-calibrated LRs using Pool Adjacent Violators (PAV).
+    """
+    Generate a plot of pre-calibrated versus post-calibrated LRs using Pool Adjacent Violators (PAV).
 
     Parameters
     ----------
     ax : Axes
-        The matplotlib axes object to plot on
+        The matplotlib axes object to plot on.
     llrdata : LLRData
-        The LLRData object containing likelihood ratios and labels
+        The LLRData object containing likelihood ratios and labels.
     add_misleading : int, optional
-        number of misleading evidence points to add on both sides (default: ``0``)
+        Number of misleading evidence points to add on both sides (default: ``0``).
     show_scatter : bool, optional
-        If True, show individual LRs (default: ``True``)
+        If `True`, show individual LRs (default: ``True``).
     """
     llrs = llrdata.llrs
     y = llrdata.labels
@@ -250,18 +303,19 @@ def lr_histogram(
     bins: int = 20,
     weighted: bool = True,
 ) -> None:
-    """Plot the 10log lrs.
+    """
+    Plot the 10log LRs.
 
     Parameters
     ----------
     ax : Axes
-        The matplotlib axes object to plot on
+        The matplotlib axes object to plot on.
     llrdata : LLRData
-        The LLRData object containing likelihood ratios and labels
+        The LLRData object containing likelihood ratios and labels.
     bins : int
-        number of bins to divide scores into (default: 20)
+        Number of bins to divide scores into (default: 20).
     weighted : bool
-        if y-axis should be weighted for frequency within each class (default: True)
+        If y-axis should be weighted for frequency within each class (default: `True`).
     """
     llrs = llrdata.llrs
     y = llrdata.require_labels
@@ -281,16 +335,17 @@ def lr_histogram(
 
 
 def tippett(ax: Axes, llrdata: LLRData, plot_type: int = 1) -> None:
-    """Plot empirical cumulative distribution functions of same-source and different-sources lrs.
+    """
+    Plot empirical cumulative distribution functions of same-source and different-sources LRs.
 
     Parameters
     ----------
     ax : Axes
-        The matplotlib axes object to plot on
+        The matplotlib axes object to plot on.
     llrdata : LLRData
-        The LLRData object containing likelihood ratios and labels
+        The LLRData object containing likelihood ratios and labels.
     plot_type : int
-        must be either 1 or 2 (default: 1).
+        Must be either 1 or 2 (default: 1).
         In type 1 both curves show proportion of lrs greater than or equal to the
         x-axis value, while in type 2 the curve for same-source shows the
         proportion of lrs smaller than or equal to the x-axis value.
@@ -317,12 +372,13 @@ def tippett(ax: Axes, llrdata: LLRData, plot_type: int = 1) -> None:
 
 
 def llr_interval(ax: Axes, llrdata: LLRData) -> None:
-    """Plot the lr's on the x axis, with the relative interval score on the y axis.
+    """
+    Plot the LRs on the x-axis, with the relative interval score on the y-axis.
 
     Parameters
     ----------
     ax : Axes
-        The matplotlib axes object to plot on
+        The matplotlib axes object to plot on.
     llrdata : LLRData
         The LLRData object containing the likelihood ratios and interval scores.
     """
@@ -352,7 +408,8 @@ def score_distribution(
     bins: int = 20,
     weighted: bool = True,
 ) -> None:
-    """Plot the distributions of scores calculated by the (fitted) lr_system.
+    """
+    Plot the distributions of scores calculated by the (fitted) LR system.
 
     If `weighted` is `True`, the y-axis represents the probability density
     within the class, and `inf` is the fraction of instances. Otherwise, the
@@ -361,16 +418,16 @@ def score_distribution(
     Parameters
     ----------
     ax : Axes
-        The matplotlib axes object to plot on
+        The matplotlib axes object to plot on.
     scores : np.ndarray
-        scores of (fitted) lr_system (1d-array)
+        Scores of the (fitted) LR system (1d-array).
     y : np.ndarray
-        a numpy array of labels (0 or 1, 1d-array of same length as `scores`)
+        A numpy array of labels (0 or 1, 1d-array of same length as `scores`).
     bins : int
-        number of bins to divide scores into (default: 20)
+        Number of bins to divide scores into (default: 20).
     weighted : bool
-        if y-axis should be the probability density within each class,
-        instead of counts (default: True)
+        If y-axis should be the probability density within each class,
+        instead of counts (default: `True`).
     """
     plt.rcParams.update({'font.size': 15})
 

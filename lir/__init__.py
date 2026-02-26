@@ -11,8 +11,14 @@ from lir.transform import Transformer as Transformer  # as required by linting, 
 
 
 def is_interactive() -> bool:
-    """Determine if the LiR tool is running from the CLI and should be interactive.
+    """
+    Determine if the LiR tool is running from the CLI and should be interactive.
 
     This method is used, for example, to determine if a progress bar should be shown.
+
+    Returns
+    -------
+    bool
+        `True` when standard output is connected to a terminal, otherwise `False`.
     """
     return sys.stdout.isatty()

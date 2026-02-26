@@ -144,14 +144,10 @@ checks = [
 exclude_files = [
     "lir/transform/*",
     "lir/plotting/*",
-    "lir/metrics/*",
     "lir/lrsystems/*",
     "lir/experiments/*",
-    "lir/metrics/*",
     "lir/datasets/*",
     "lir/data/*",
     "lir/config/*",
     "lir/algorithms/*",
-
-    "lir/__init__.py",
 ]

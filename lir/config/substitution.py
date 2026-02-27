@@ -123,7 +123,7 @@ def _parse_categorical_option(spec: Any, path: str, option_index: int | None) ->
     return HyperparameterOption(name, {path: value})
 
 
-@config_parser
+@config_parser(reference='lir.config.substitution.parse_categorical')
 def parse_categorical(spec: ContextAwareDict, output_path: Path) -> 'CategoricalHyperparameter':
     """Parse the `parameters` section of the configuration into a `CategoricalVariable` object."""
     path = pop_field(spec, 'path')
@@ -153,7 +153,7 @@ def _parse_clustered_option(spec: ContextAwareDict) -> HyperparameterOption:
     return HyperparameterOption(option_name, substitutions)
 
 
-@config_parser
+@config_parser(reference='lir.config.substitution.parse_clustered')
 def parse_clustered(spec: ContextAwareDict, output_path: Path) -> CategoricalHyperparameter:
     """
     Parse the configuration section of a clustered hyperparameter.
@@ -175,7 +175,7 @@ def parse_clustered(spec: ContextAwareDict, output_path: Path) -> CategoricalHyp
     return CategoricalHyperparameter(parameter_name, options)
 
 
-@config_parser
+@config_parser(reference='lir.config.substitution.parse_constant')
 def parse_constant(spec: ContextAwareDict, output_path: Path) -> CategoricalHyperparameter:
     """
     Parse the configuration section of a constant.
@@ -227,7 +227,7 @@ class FloatHyperparameter(Hyperparameter):
         return [HyperparameterOption(str(value), {self.path: value}) for value in values]
 
 
-@config_parser
+@config_parser(reference='lir.config.substitution.parse_float')
 def parse_float(spec: ContextAwareDict, output_path: Path) -> 'FloatHyperparameter':
     """Parse the `parameters` section of the configuration into a `CategoricalVariable` object."""
     path = pop_field(spec, 'path')
@@ -311,7 +311,7 @@ class FolderHyperparameter(Hyperparameter):
         return options
 
 
-@config_parser
+@config_parser(reference='lir.config.substitution.parse_folder')
 def parse_folder(spec: ContextAwareDict, output_path: Path) -> 'FolderHyperparameter':
     """Parse the `parameters` section of the configuration into a `FolderHyperparameter` object."""
     folder = pop_field(spec, 'folder')

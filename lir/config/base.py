@@ -1,5 +1,7 @@
+import inspect
 from abc import ABC, abstractmethod
 from collections.abc import Callable, Mapping, Sequence
+from functools import partial, wraps
 from pathlib import Path
 from typing import Any, TypeVar
 
@@ -140,7 +142,22 @@ class GenericConfigParser(ConfigParser):
         return self.get_type_name(self.component_class)
 
 
-def config_parser(func: Callable[[ContextAwareDict, Path], Any]) -> Callable:
+def get_full_name(obj: Any) -> str:
+    """
+    Return the full name of an importable object.
+
+    .. code-block:: python
+
+        from lir import FeatureData
+        print(get_full_name(FeatureData))
+        'lir.FeatureData'
+    """
+    return f'{obj.__module__}.{obj.__name__}'
+
+
+def config_parser(
+    func: Callable[[ContextAwareDict, Path], Any] | None = None, /, reference: str | Any | None = None
+) -> Callable:
     """
     Wrap a parsing function in a ``ConfigParser`` object using a decorator.
 
@@ -165,18 +182,34 @@ def config_parser(func: Callable[[ContextAwareDict, Path], Any]) -> Callable:
     :meth:`parse` method executes the original function body. See the
     documentation of :class:`ConfigParser` for the meaning of the arguments.
     """
+    if func is None:
+        # take the optional arguments
+        return partial(config_parser, reference=reference)
 
     class ConfigParserFunction(ConfigParser):
+        __doc__ = func.__doc__
+
         def parse(
             self,
             config: ContextAwareDict,
             output_dir: Path,
         ) -> Any:
-            return func(config, output_dir)
+            return func(config, output_dir)  # type: ignore
 
         def reference(self) -> str:
-            """Return the full name of the function argument `func`."""
-            return f'{func.__globals__["__name__"]}.{func.__name__}'
+            # return the reference argument, if any
+            if reference is not None:
+                return reference if isinstance(reference, str) else get_full_name(reference)
+
+            assert func is not None  # at this point, func is always available
+
+            # return the return type of the function, if available
+            return_type = inspect.signature(func).return_annotation
+            if not isinstance(return_type, str):
+                return get_full_name(return_type)
+
+            # last resort: fallback to wrapped function name
+            return get_full_name(func)
 
     return ConfigParserFunction
 

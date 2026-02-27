@@ -100,56 +100,56 @@ class AggregatePlot(Aggregation):
         plt.close(fig)
 
 
-@config_parser
+@config_parser(reference=pav)
 def plot_pav(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
     """Corresponding registry function to generate aggregate PAV plot."""
     plot_name = pop_field(config, 'plot_name', default='PAV')
     return AggregatePlot(pav, plot_name, output_dir, **config)
 
 
-@config_parser
+@config_parser(reference=ece)
 def plot_ece(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
     """Corresponding registry function to generate aggregate ECE plot."""
     plot_name = pop_field(config, 'plot_name', default='ECE')
     return AggregatePlot(ece, plot_name, output_dir, **config)
 
 
-@config_parser
+@config_parser(reference=lr_histogram)
 def plot_lr_histogram(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
     """Corresponding registry function to generate aggregate LR Histogram."""
     plot_name = pop_field(config, 'plot_name', default='LR_Histogram')
     return AggregatePlot(lr_histogram, plot_name, output_dir, **config)
 
 
-@config_parser
+@config_parser(reference=llr_interval)
 def plot_llr_interval(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
     """Corresponding registry function to generate aggregate LLR interval plot."""
     plot_name = pop_field(config, 'plot_name', default='LLR_Interval')
     return AggregatePlot(llr_interval, plot_name, output_dir, **config)
 
 
-@config_parser
+@config_parser(reference=llr_overestimation)
 def plot_llr_overestimation(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
     """Corresponding registry function to generate aggregate LLR overestimation plot."""
     plot_name = pop_field(config, 'plot_name', default='LLR_Overestimation')
     return AggregatePlot(llr_overestimation, plot_name, output_dir, **config)
 
 
-@config_parser
+@config_parser(reference=nbe)
 def plot_nbe(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
     """Corresponding registry function to generate aggregate NBE plot."""
     plot_name = pop_field(config, 'plot_name', default='NBE')
     return AggregatePlot(nbe, plot_name, output_dir, **config)
 
 
-@config_parser
+@config_parser(reference=tippett)
 def plot_tippett(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
     """Corresponding registry function to generate aggregate Tippett plot."""
     plot_name = pop_field(config, 'plot_name', default='Tippett')
     return AggregatePlot(tippett, plot_name, output_dir, **config)
 
 
-@config_parser
+@config_parser(reference=invariance_delta_functions)
 def plot_invariance_delta_function(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
     """Corresponding registry function to generate aggregate invariance delta function plot."""
     plot_name = pop_field(config, 'plot_name', default='Invariance_Delta_Functions')

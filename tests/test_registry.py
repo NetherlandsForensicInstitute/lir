@@ -5,11 +5,17 @@ import pytest
 import lir
 from lir import registry
 from lir.config.base import GenericConfigParser
+from lir.registry import _get_attribute_by_name
 
 
 def test_registry_items_available():
     for name in registry.registry():
-        registry.get(name, default_config_parser=GenericConfigParser)
+        try:
+            component = registry.get(name, default_config_parser=GenericConfigParser)
+            full_name = component.reference()
+            _get_attribute_by_name(full_name)
+        except Exception as e:
+            pytest.fail(f'invalid registry entry: {name}: {e}')
 
 
 @pytest.mark.parametrize(

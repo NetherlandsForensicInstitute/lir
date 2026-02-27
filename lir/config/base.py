@@ -1,7 +1,7 @@
 import inspect
 from abc import ABC, abstractmethod
 from collections.abc import Callable, Mapping, Sequence
-from functools import partial, wraps
+from functools import partial
 from pathlib import Path
 from typing import Any, TypeVar
 

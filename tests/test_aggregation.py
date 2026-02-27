@@ -31,7 +31,9 @@ def test_registry_items_available(synthesized_llrs_with_interval: LLRData, tmp_p
             parser = registry.get(name, default_config_parser=GenericConfigParser)
             args = _expand([], args_by_method.get(name, {}))
             obj = parser.parse(args, tmp_path_factory.mktemp('output'))
-            assert isinstance(obj, Aggregation), f'registry item is not an instance of `Aggregation`: {name}'
+            assert isinstance(obj, Aggregation), (
+                f'registry item is not an instance of `Aggregation`: {name}; found: {type(obj)}'
+            )
 
             # generate output
             try:

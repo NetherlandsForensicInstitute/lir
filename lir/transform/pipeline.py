@@ -86,7 +86,20 @@ def pipeline(config: ContextAwareDict, output_dir: Path) -> Pipeline:
 
 
 class LoggingPipeline(Pipeline):
-    """A pipeline that writes debugging output to a CSV file."""
+    """
+    A pipeline that writes debugging output to a CSV file.
+
+    This pipeline act like a normal ``Pipeline``, but has a CSV file as a side effect. Depending on the settings and the
+    data, the CSV file may have the following columns:
+
+    - ``batch``: if the data strategy yields multiple train/test splits, the batch value is the sequence number of the
+      test set
+    - ``label``: the hypothesis label
+
+    In addition, there may be columns for the input features and output of individual steps. These columns are named
+    ``featuresI`` for input features or ``stepnameI`` for step output, where ``stepname`` is replaced by the name of the
+    step, and ``I`` refers to the index of the feature value.
+    """
 
     def __init__(
         self,

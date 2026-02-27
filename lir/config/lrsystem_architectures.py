@@ -46,7 +46,7 @@ class ParsedLRSystem(LRSystem):
 
 
 @config_parser
-def specific_source(config: ContextAwareDict, output_dir: Path) -> LRSystem:
+def specific_source(config: ContextAwareDict, output_dir: Path) -> BinaryLRSystem:
     """Construct a specific-source LR system based on the provided configuration.
 
     The `specific_source` function name corresponds with the naming scheme in the
@@ -66,7 +66,7 @@ def specific_source(config: ContextAwareDict, output_dir: Path) -> LRSystem:
 
 
 @config_parser
-def score_based(config: ContextAwareDict, output_dir: Path) -> LRSystem:
+def score_based(config: ContextAwareDict, output_dir: Path) -> ScoreBasedSystem:
     """Construct a score-based LR system based on the provided configuration.
 
     The `score_based` function name corresponds with the naming scheme in the

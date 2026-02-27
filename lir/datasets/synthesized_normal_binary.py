@@ -46,7 +46,7 @@ class SynthesizedNormalBinaryData(DataProvider):
 
 
 @config_parser
-def synthesized_normal_binary(config: ContextAwareDict, _: Path) -> DataProvider:
+def synthesized_normal_binary(config: ContextAwareDict, _: Path) -> SynthesizedNormalBinaryData:
     """Set up (binary class) data source class to obtain normally distributed data from configuration."""
     seed = pop_field(config, 'seed', required=False)
     h1 = pop_field(config, 'h1')

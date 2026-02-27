@@ -61,7 +61,7 @@ class SynthesizedNormalMulticlassData(DataProvider):
 
 
 @config_parser
-def synthesized_normal_multiclass(config: ContextAwareDict, _: Path) -> DataProvider:
+def synthesized_normal_multiclass(config: ContextAwareDict, _: Path) -> SynthesizedNormalMulticlassData:
     """Set up (multiple class) data source class to obtain normally distributed data from configuration."""
     seed = pop_field(config, 'seed', validate=int, required=False)
 

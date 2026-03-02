@@ -229,7 +229,7 @@ class FloatHyperparameter(Hyperparameter):
 
 @config_parser(reference='lir.config.substitution.parse_float')
 def parse_float(spec: ContextAwareDict, output_path: Path) -> 'FloatHyperparameter':
-    """Parse the `parameters` section of the configuration into a `CategoricalVariable` object."""
+    """Parse the `parameters` section of the configuration into a `FloatHyperparameter` object."""
     path = pop_field(spec, 'path')
     low = pop_field(spec, 'low')
     high = pop_field(spec, 'high')

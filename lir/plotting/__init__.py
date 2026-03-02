@@ -317,7 +317,7 @@ def tippett(ax: Axes, llrdata: LLRData, plot_type: int = 1) -> None:
 
 
 def llr_interval(ax: Axes, llrdata: LLRData) -> None:
-    """Plot the lr's on the x-as, with the relative interval score on the y-as.
+    """Plot the lr's on the x axis, with the relative interval score on the y axis.
 
     Parameters
     ----------

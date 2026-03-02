@@ -1,0 +1,24 @@
+:py:mod:`lir.algorithms`
+========================
+
+.. py:module:: lir.algorithms
+
+.. autodoc2-docstring:: lir.algorithms
+   :parser: myst
+   :allowtitles:
+
+Submodules
+----------
+
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   lir.algorithms.bayeserror
+   lir.algorithms.percentile_rank
+   lir.algorithms.logistic_regression
+   lir.algorithms.bootstraps
+   lir.algorithms.invariance_bounds
+   lir.algorithms.llr_overestimation
+   lir.algorithms.kde
+   lir.algorithms.isotonic_regression

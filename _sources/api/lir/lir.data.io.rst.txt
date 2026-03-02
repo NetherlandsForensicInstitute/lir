@@ -1,0 +1,114 @@
+:py:mod:`lir.data.io`
+=====================
+
+.. py:module:: lir.data.io
+
+.. autodoc2-docstring:: lir.data.io
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`RemoteResource <lir.data.io.RemoteResource>`
+     - .. autodoc2-docstring:: lir.data.io.RemoteResource
+          :parser: myst
+          :summary:
+   * - :py:obj:`DataFileBuilderCsv <lir.data.io.DataFileBuilderCsv>`
+     - .. autodoc2-docstring:: lir.data.io.DataFileBuilderCsv
+          :parser: myst
+          :summary:
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`search_path <lir.data.io.search_path>`
+     - .. autodoc2-docstring:: lir.data.io.search_path
+          :parser: myst
+          :summary:
+
+Data
+~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`LOG <lir.data.io.LOG>`
+     - .. autodoc2-docstring:: lir.data.io.LOG
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:data:: LOG
+   :canonical: lir.data.io.LOG
+   :value: 'getLogger(...)'
+
+   .. autodoc2-docstring:: lir.data.io.LOG
+      :parser: myst
+
+.. py:class:: RemoteResource(url: str, local_directory: pathlib.Path)
+   :canonical: lir.data.io.RemoteResource
+
+   .. autodoc2-docstring:: lir.data.io.RemoteResource
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.data.io.RemoteResource.__init__
+      :parser: myst
+
+   .. py:method:: open(filename: str, mode: str = 'r') -> typing.IO[typing.Any]
+      :canonical: lir.data.io.RemoteResource.open
+
+      .. autodoc2-docstring:: lir.data.io.RemoteResource.open
+         :parser: myst
+
+.. py:class:: DataFileBuilderCsv(path: pathlib.Path, write_mode: str = 'w', write_header: bool | None = None)
+   :canonical: lir.data.io.DataFileBuilderCsv
+
+   .. autodoc2-docstring:: lir.data.io.DataFileBuilderCsv
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.data.io.DataFileBuilderCsv.__init__
+      :parser: myst
+
+   .. py:method:: _get_headers(prefix: str, dimensions: list[int | list[str]]) -> list[str]
+      :canonical: lir.data.io.DataFileBuilderCsv._get_headers
+      :staticmethod:
+
+      .. autodoc2-docstring:: lir.data.io.DataFileBuilderCsv._get_headers
+         :parser: myst
+
+   .. py:method:: add_column(data: numpy.ndarray, header_prefix: str = '', dimension_headers: dict[int, list[str]] | None = None) -> None
+      :canonical: lir.data.io.DataFileBuilderCsv.add_column
+
+      .. autodoc2-docstring:: lir.data.io.DataFileBuilderCsv.add_column
+         :parser: myst
+
+   .. py:method:: write() -> None
+      :canonical: lir.data.io.DataFileBuilderCsv.write
+
+      .. autodoc2-docstring:: lir.data.io.DataFileBuilderCsv.write
+         :parser: myst
+
+.. py:function:: search_path(path: pathlib.Path) -> pathlib.Path
+   :canonical: lir.data.io.search_path
+
+   .. autodoc2-docstring:: lir.data.io.search_path
+      :parser: myst

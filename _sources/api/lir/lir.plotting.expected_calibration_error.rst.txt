@@ -1,0 +1,42 @@
+:py:mod:`lir.plotting.expected_calibration_error`
+=================================================
+
+.. py:module:: lir.plotting.expected_calibration_error
+
+.. autodoc2-docstring:: lir.plotting.expected_calibration_error
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`plot_ece <lir.plotting.expected_calibration_error.plot_ece>`
+     - .. autodoc2-docstring:: lir.plotting.expected_calibration_error.plot_ece
+          :parser: myst
+          :summary:
+   * - :py:obj:`calculate_ece <lir.plotting.expected_calibration_error.calculate_ece>`
+     - .. autodoc2-docstring:: lir.plotting.expected_calibration_error.calculate_ece
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:function:: plot_ece(ax: typing.Any, llrdata: lir.data.models.LLRData, log_prior_odds_range: tuple[float, float] = (-3, 3), show_pav: bool = True, ylim: str = 'neutral') -> None
+   :canonical: lir.plotting.expected_calibration_error.plot_ece
+
+   .. autodoc2-docstring:: lir.plotting.expected_calibration_error.plot_ece
+      :parser: myst
+
+.. py:function:: calculate_ece(lrs: numpy.ndarray, y: numpy.ndarray, priors: numpy.ndarray) -> numpy.ndarray
+   :canonical: lir.plotting.expected_calibration_error.calculate_ece
+
+   .. autodoc2-docstring:: lir.plotting.expected_calibration_error.calculate_ece
+      :parser: myst

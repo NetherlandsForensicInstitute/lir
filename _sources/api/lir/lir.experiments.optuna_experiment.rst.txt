@@ -1,0 +1,64 @@
+:py:mod:`lir.experiments.optuna_experiment`
+===========================================
+
+.. py:module:: lir.experiments.optuna_experiment
+
+.. autodoc2-docstring:: lir.experiments.optuna_experiment
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`OptunaExperiment <lir.experiments.optuna_experiment.OptunaExperiment>`
+     - .. autodoc2-docstring:: lir.experiments.optuna_experiment.OptunaExperiment
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:class:: OptunaExperiment(name: str, data_config: lir.config.substitution.ContextAwareDict, outputs: collections.abc.Sequence[lir.aggregation.Aggregation], output_path: pathlib.Path, baseline_config: lir.config.substitution.ContextAwareDict, hyperparameters: list[lir.config.substitution.Hyperparameter], n_trials: int, metric_function: collections.abc.Callable[[lir.data.models.LLRData], float])
+   :canonical: lir.experiments.optuna_experiment.OptunaExperiment
+
+   Bases: :py:obj:`lir.experiments.Experiment`
+
+   .. autodoc2-docstring:: lir.experiments.optuna_experiment.OptunaExperiment
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.experiments.optuna_experiment.OptunaExperiment.__init__
+      :parser: myst
+
+   .. py:method:: _get_parameter_value(trial: optuna.Trial, param: lir.config.substitution.Hyperparameter) -> lir.config.substitution.HyperparameterOption
+      :canonical: lir.experiments.optuna_experiment.OptunaExperiment._get_parameter_value
+      :staticmethod:
+
+      .. autodoc2-docstring:: lir.experiments.optuna_experiment.OptunaExperiment._get_parameter_value
+         :parser: myst
+
+   .. py:method:: _get_hyperparameter_substitutions(trial: optuna.Trial) -> dict[str, lir.config.substitution.HyperparameterOption]
+      :canonical: lir.experiments.optuna_experiment.OptunaExperiment._get_hyperparameter_substitutions
+
+      .. autodoc2-docstring:: lir.experiments.optuna_experiment.OptunaExperiment._get_hyperparameter_substitutions
+         :parser: myst
+
+   .. py:method:: _objective(trial: optuna.Trial) -> float
+      :canonical: lir.experiments.optuna_experiment.OptunaExperiment._objective
+
+      .. autodoc2-docstring:: lir.experiments.optuna_experiment.OptunaExperiment._objective
+         :parser: myst
+
+   .. py:method:: _generate_and_run() -> None
+      :canonical: lir.experiments.optuna_experiment.OptunaExperiment._generate_and_run
+
+      .. autodoc2-docstring:: lir.experiments.optuna_experiment.OptunaExperiment._generate_and_run
+         :parser: myst

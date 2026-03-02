@@ -1,0 +1,128 @@
+:py:mod:`lir.algorithms.bootstraps`
+===================================
+
+.. py:module:: lir.algorithms.bootstraps
+
+.. autodoc2-docstring:: lir.algorithms.bootstraps
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`Bootstrap <lir.algorithms.bootstraps.Bootstrap>`
+     - .. autodoc2-docstring:: lir.algorithms.bootstraps.Bootstrap
+          :parser: myst
+          :summary:
+   * - :py:obj:`BootstrapAtData <lir.algorithms.bootstraps.BootstrapAtData>`
+     - .. autodoc2-docstring:: lir.algorithms.bootstraps.BootstrapAtData
+          :parser: myst
+          :summary:
+   * - :py:obj:`BootstrapEquidistant <lir.algorithms.bootstraps.BootstrapEquidistant>`
+     - .. autodoc2-docstring:: lir.algorithms.bootstraps.BootstrapEquidistant
+          :parser: myst
+          :summary:
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`bootstrap <lir.algorithms.bootstraps.bootstrap>`
+     - .. autodoc2-docstring:: lir.algorithms.bootstraps.bootstrap
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:class:: Bootstrap(steps: list[tuple[str, typing.Any]], n_bootstraps: int = 400, interval: tuple[float, float] = (0.05, 0.95), seed: int | None = None)
+   :canonical: lir.algorithms.bootstraps.Bootstrap
+
+   Bases: :py:obj:`lir.transform.pipeline.Pipeline`, :py:obj:`abc.ABC`
+
+   .. autodoc2-docstring:: lir.algorithms.bootstraps.Bootstrap
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.algorithms.bootstraps.Bootstrap.__init__
+      :parser: myst
+
+   .. py:method:: get_bootstrap_data(instances: lir.data.models.InstanceData) -> lir.data.models.InstanceData
+      :canonical: lir.algorithms.bootstraps.Bootstrap.get_bootstrap_data
+      :abstractmethod:
+
+      .. autodoc2-docstring:: lir.algorithms.bootstraps.Bootstrap.get_bootstrap_data
+         :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.InstanceData) -> lir.data.models.LLRData
+      :canonical: lir.algorithms.bootstraps.Bootstrap.apply
+
+      .. autodoc2-docstring:: lir.algorithms.bootstraps.Bootstrap.apply
+         :parser: myst
+
+   .. py:method:: fit_apply(instances: lir.data.models.InstanceData) -> lir.data.models.LLRData
+      :canonical: lir.algorithms.bootstraps.Bootstrap.fit_apply
+
+      .. autodoc2-docstring:: lir.algorithms.bootstraps.Bootstrap.fit_apply
+         :parser: myst
+
+   .. py:method:: fit(instances: lir.data.models.InstanceData) -> typing.Self
+      :canonical: lir.algorithms.bootstraps.Bootstrap.fit
+
+      .. autodoc2-docstring:: lir.algorithms.bootstraps.Bootstrap.fit
+         :parser: myst
+
+.. py:class:: BootstrapAtData(steps: list[tuple[str, typing.Any]], n_bootstraps: int = 400, interval: tuple[float, float] = (0.05, 0.95), seed: int | None = None)
+   :canonical: lir.algorithms.bootstraps.BootstrapAtData
+
+   Bases: :py:obj:`lir.algorithms.bootstraps.Bootstrap`
+
+   .. autodoc2-docstring:: lir.algorithms.bootstraps.BootstrapAtData
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.algorithms.bootstraps.BootstrapAtData.__init__
+      :parser: myst
+
+   .. py:method:: get_bootstrap_data(instances: lir.data.models.InstanceData) -> lir.data.models.InstanceData
+      :canonical: lir.algorithms.bootstraps.BootstrapAtData.get_bootstrap_data
+
+      .. autodoc2-docstring:: lir.algorithms.bootstraps.BootstrapAtData.get_bootstrap_data
+         :parser: myst
+
+.. py:class:: BootstrapEquidistant(steps: list[tuple[str, typing.Any]], n_bootstraps: int = 400, interval: tuple[float, float] = (0.05, 0.95), seed: int | None = None, n_points: int | None = 1000)
+   :canonical: lir.algorithms.bootstraps.BootstrapEquidistant
+
+   Bases: :py:obj:`lir.algorithms.bootstraps.Bootstrap`
+
+   .. autodoc2-docstring:: lir.algorithms.bootstraps.BootstrapEquidistant
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.algorithms.bootstraps.BootstrapEquidistant.__init__
+      :parser: myst
+
+   .. py:method:: get_bootstrap_data(instances: lir.data.models.InstanceData) -> lir.data.models.FeatureData
+      :canonical: lir.algorithms.bootstraps.BootstrapEquidistant.get_bootstrap_data
+
+      .. autodoc2-docstring:: lir.algorithms.bootstraps.BootstrapEquidistant.get_bootstrap_data
+         :parser: myst
+
+.. py:function:: bootstrap(modules_config: lir.config.base.ContextAwareDict, output_dir: pathlib.Path) -> lir.algorithms.bootstraps.Bootstrap
+   :canonical: lir.algorithms.bootstraps.bootstrap
+
+   .. autodoc2-docstring:: lir.algorithms.bootstraps.bootstrap
+      :parser: myst

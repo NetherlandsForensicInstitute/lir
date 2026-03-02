@@ -1,0 +1,45 @@
+:py:mod:`lir.lrsystems`
+=======================
+
+.. py:module:: lir.lrsystems
+
+.. autodoc2-docstring:: lir.lrsystems
+   :parser: myst
+   :allowtitles:
+
+Submodules
+----------
+
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   lir.lrsystems.lrsystems
+   lir.lrsystems.score_based
+   lir.lrsystems.binary_lrsystem
+   lir.lrsystems.two_level
+
+Package Contents
+----------------
+
+Data
+~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`__all__ <lir.lrsystems.__all__>`
+     - .. autodoc2-docstring:: lir.lrsystems.__all__
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:data:: __all__
+   :canonical: lir.lrsystems.__all__
+   :value: ['LRSystem', 'BinaryLRSystem', 'ScoreBasedSystem', 'TwoLevelSystem']
+
+   .. autodoc2-docstring:: lir.lrsystems.__all__
+      :parser: myst

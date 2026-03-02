@@ -1,0 +1,251 @@
+:py:mod:`lir.registry`
+======================
+
+.. py:module:: lir.registry
+
+.. autodoc2-docstring:: lir.registry
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`ConfigParserLoader <lir.registry.ConfigParserLoader>`
+     - .. autodoc2-docstring:: lir.registry.ConfigParserLoader
+          :parser: myst
+          :summary:
+   * - :py:obj:`ClassLoader <lir.registry.ClassLoader>`
+     - .. autodoc2-docstring:: lir.registry.ClassLoader
+          :parser: myst
+          :summary:
+   * - :py:obj:`FederatedLoader <lir.registry.FederatedLoader>`
+     - .. autodoc2-docstring:: lir.registry.FederatedLoader
+          :parser: myst
+          :summary:
+   * - :py:obj:`YamlRegistry <lir.registry.YamlRegistry>`
+     - .. autodoc2-docstring:: lir.registry.YamlRegistry
+          :parser: myst
+          :summary:
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`_get_attribute_by_name <lir.registry._get_attribute_by_name>`
+     - .. autodoc2-docstring:: lir.registry._get_attribute_by_name
+          :parser: myst
+          :summary:
+   * - :py:obj:`_load_package_registry <lir.registry._load_package_registry>`
+     - .. autodoc2-docstring:: lir.registry._load_package_registry
+          :parser: myst
+          :summary:
+   * - :py:obj:`registry <lir.registry.registry>`
+     - .. autodoc2-docstring:: lir.registry.registry
+          :parser: myst
+          :summary:
+   * - :py:obj:`get <lir.registry.get>`
+     - .. autodoc2-docstring:: lir.registry.get
+          :parser: myst
+          :summary:
+
+Data
+~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`LOG <lir.registry.LOG>`
+     - .. autodoc2-docstring:: lir.registry.LOG
+          :parser: myst
+          :summary:
+   * - :py:obj:`_REGISTRY <lir.registry._REGISTRY>`
+     - .. autodoc2-docstring:: lir.registry._REGISTRY
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:data:: LOG
+   :canonical: lir.registry.LOG
+   :value: 'getLogger(...)'
+
+   .. autodoc2-docstring:: lir.registry.LOG
+      :parser: myst
+
+.. py:function:: _get_attribute_by_name(name: str) -> typing.Any
+   :canonical: lir.registry._get_attribute_by_name
+
+   .. autodoc2-docstring:: lir.registry._get_attribute_by_name
+      :parser: myst
+
+.. py:exception:: ComponentNotFoundError()
+   :canonical: lir.registry.ComponentNotFoundError
+
+   Bases: :py:obj:`ValueError`
+
+   .. autodoc2-docstring:: lir.registry.ComponentNotFoundError
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.registry.ComponentNotFoundError.__init__
+      :parser: myst
+
+.. py:exception:: InvalidRegistryEntryError()
+   :canonical: lir.registry.InvalidRegistryEntryError
+
+   Bases: :py:obj:`ValueError`
+
+   .. autodoc2-docstring:: lir.registry.InvalidRegistryEntryError
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.registry.InvalidRegistryEntryError.__init__
+      :parser: myst
+
+.. py:class:: ConfigParserLoader
+   :canonical: lir.registry.ConfigParserLoader
+
+   Bases: :py:obj:`abc.ABC`, :py:obj:`collections.abc.Iterable`
+
+   .. autodoc2-docstring:: lir.registry.ConfigParserLoader
+      :parser: myst
+
+   .. py:method:: _get_config_parser(result_type: typing.Any, default_config_parser: collections.abc.Callable[[typing.Any], lir.config.base.ConfigParser] | None) -> lir.config.base.ConfigParser
+      :canonical: lir.registry.ConfigParserLoader._get_config_parser
+      :staticmethod:
+
+      .. autodoc2-docstring:: lir.registry.ConfigParserLoader._get_config_parser
+         :parser: myst
+
+   .. py:method:: get(key: str, default_config_parser: collections.abc.Callable[[typing.Any], lir.config.base.ConfigParser] | None = None, search_path: list[str] | None = None) -> lir.config.base.ConfigParser
+      :canonical: lir.registry.ConfigParserLoader.get
+      :abstractmethod:
+
+      .. autodoc2-docstring:: lir.registry.ConfigParserLoader.get
+         :parser: myst
+
+.. py:class:: ClassLoader
+   :canonical: lir.registry.ClassLoader
+
+   Bases: :py:obj:`lir.registry.ConfigParserLoader`
+
+   .. autodoc2-docstring:: lir.registry.ClassLoader
+      :parser: myst
+
+   .. py:method:: __iter__() -> collections.abc.Iterator[str]
+      :canonical: lir.registry.ClassLoader.__iter__
+
+      .. autodoc2-docstring:: lir.registry.ClassLoader.__iter__
+         :parser: myst
+
+   .. py:method:: get(key: str, default_config_parser: collections.abc.Callable[[typing.Any], lir.config.base.ConfigParser] | None = None, search_path: list[str] | None = None) -> lir.config.base.ConfigParser
+      :canonical: lir.registry.ClassLoader.get
+
+      .. autodoc2-docstring:: lir.registry.ClassLoader.get
+         :parser: myst
+
+.. py:class:: FederatedLoader(registries: list[lir.registry.ConfigParserLoader])
+   :canonical: lir.registry.FederatedLoader
+
+   Bases: :py:obj:`lir.registry.ConfigParserLoader`
+
+   .. autodoc2-docstring:: lir.registry.FederatedLoader
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.registry.FederatedLoader.__init__
+      :parser: myst
+
+   .. py:method:: __iter__() -> collections.abc.Iterator[str]
+      :canonical: lir.registry.FederatedLoader.__iter__
+
+      .. autodoc2-docstring:: lir.registry.FederatedLoader.__iter__
+         :parser: myst
+
+   .. py:method:: get(key: str, default_config_parser: collections.abc.Callable[[typing.Any], lir.config.base.ConfigParser] | None = GenericConfigParser, search_path: list[str] | None = None) -> lir.config.base.ConfigParser
+      :canonical: lir.registry.FederatedLoader.get
+
+      .. autodoc2-docstring:: lir.registry.FederatedLoader.get
+         :parser: myst
+
+.. py:function:: _load_package_registry() -> YamlRegistry
+   :canonical: lir.registry._load_package_registry
+
+   .. autodoc2-docstring:: lir.registry._load_package_registry
+      :parser: myst
+
+.. py:function:: registry() -> lir.registry.ConfigParserLoader
+   :canonical: lir.registry.registry
+
+   .. autodoc2-docstring:: lir.registry.registry
+      :parser: myst
+
+.. py:function:: get(name: str, default_config_parser: collections.abc.Callable[[typing.Any], lir.config.base.ConfigParser] | None = None, search_path: list[str] | None = None) -> lir.config.base.ConfigParser
+   :canonical: lir.registry.get
+
+   .. autodoc2-docstring:: lir.registry.get
+      :parser: myst
+
+.. py:class:: YamlRegistry(cfg: confidence.Configuration)
+   :canonical: lir.registry.YamlRegistry
+
+   Bases: :py:obj:`lir.registry.ConfigParserLoader`
+
+   .. autodoc2-docstring:: lir.registry.YamlRegistry
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.registry.YamlRegistry.__init__
+      :parser: myst
+
+   .. py:method:: __iter__() -> collections.abc.Iterator[str]
+      :canonical: lir.registry.YamlRegistry.__iter__
+
+      .. autodoc2-docstring:: lir.registry.YamlRegistry.__iter__
+         :parser: myst
+
+   .. py:method:: __str__() -> str
+      :canonical: lir.registry.YamlRegistry.__str__
+
+   .. py:method:: _parse(key: str, spec: collections.abc.Mapping[str, str], default_config_parser: collections.abc.Callable[[typing.Any], lir.config.base.ConfigParser] | None) -> lir.config.base.ConfigParser
+      :canonical: lir.registry.YamlRegistry._parse
+      :staticmethod:
+
+      .. autodoc2-docstring:: lir.registry.YamlRegistry._parse
+         :parser: myst
+
+   .. py:method:: _find(key: str, search_path: list[str] | None) -> typing.Any
+      :canonical: lir.registry.YamlRegistry._find
+
+      .. autodoc2-docstring:: lir.registry.YamlRegistry._find
+         :parser: myst
+
+   .. py:method:: get(key: str, default_config_parser: collections.abc.Callable[[typing.Any], lir.config.base.ConfigParser] | None = None, search_path: list[str] | None = None) -> lir.config.base.ConfigParser
+      :canonical: lir.registry.YamlRegistry.get
+
+      .. autodoc2-docstring:: lir.registry.YamlRegistry.get
+         :parser: myst
+
+.. py:data:: _REGISTRY
+   :canonical: lir.registry._REGISTRY
+   :type: lir.registry.ConfigParserLoader | None
+   :value: None
+
+   .. autodoc2-docstring:: lir.registry._REGISTRY
+      :parser: myst

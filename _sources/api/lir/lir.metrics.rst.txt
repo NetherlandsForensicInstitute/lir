@@ -1,0 +1,82 @@
+:py:mod:`lir.metrics`
+=====================
+
+.. py:module:: lir.metrics
+
+.. autodoc2-docstring:: lir.metrics
+   :parser: myst
+   :allowtitles:
+
+Submodules
+----------
+
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   lir.metrics.overestimation
+   lir.metrics.devpav
+
+Package Contents
+----------------
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`cllr <lir.metrics.cllr>`
+     - .. autodoc2-docstring:: lir.metrics.cllr
+          :parser: myst
+          :summary:
+   * - :py:obj:`cllr_min <lir.metrics.cllr_min>`
+     - .. autodoc2-docstring:: lir.metrics.cllr_min
+          :parser: myst
+          :summary:
+   * - :py:obj:`cllr_cal <lir.metrics.cllr_cal>`
+     - .. autodoc2-docstring:: lir.metrics.cllr_cal
+          :parser: myst
+          :summary:
+   * - :py:obj:`llr_upper_bound <lir.metrics.llr_upper_bound>`
+     - .. autodoc2-docstring:: lir.metrics.llr_upper_bound
+          :parser: myst
+          :summary:
+   * - :py:obj:`llr_lower_bound <lir.metrics.llr_lower_bound>`
+     - .. autodoc2-docstring:: lir.metrics.llr_lower_bound
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:function:: cllr(llr_data: lir.data.models.LLRData, weights: tuple[float, float] = (1, 1)) -> float
+   :canonical: lir.metrics.cllr
+
+   .. autodoc2-docstring:: lir.metrics.cllr
+      :parser: myst
+
+.. py:function:: cllr_min(llr_data: lir.data.models.LLRData, weights: tuple[float, float] = (1, 1)) -> float
+   :canonical: lir.metrics.cllr_min
+
+   .. autodoc2-docstring:: lir.metrics.cllr_min
+      :parser: myst
+
+.. py:function:: cllr_cal(llr_data: lir.data.models.LLRData, weights: tuple[float, float] = (1, 1)) -> float
+   :canonical: lir.metrics.cllr_cal
+
+   .. autodoc2-docstring:: lir.metrics.cllr_cal
+      :parser: myst
+
+.. py:function:: llr_upper_bound(llrs: lir.data.models.LLRData) -> float | None
+   :canonical: lir.metrics.llr_upper_bound
+
+   .. autodoc2-docstring:: lir.metrics.llr_upper_bound
+      :parser: myst
+
+.. py:function:: llr_lower_bound(llrs: lir.data.models.LLRData) -> float | None
+   :canonical: lir.metrics.llr_lower_bound
+
+   .. autodoc2-docstring:: lir.metrics.llr_lower_bound
+      :parser: myst

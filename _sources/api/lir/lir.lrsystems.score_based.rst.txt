@@ -1,0 +1,51 @@
+:py:mod:`lir.lrsystems.score_based`
+===================================
+
+.. py:module:: lir.lrsystems.score_based
+
+.. autodoc2-docstring:: lir.lrsystems.score_based
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`ScoreBasedSystem <lir.lrsystems.score_based.ScoreBasedSystem>`
+     - .. autodoc2-docstring:: lir.lrsystems.score_based.ScoreBasedSystem
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:class:: ScoreBasedSystem(preprocessing_pipeline: lir.Transformer | None, pairing_function: lir.transform.pairing.PairingMethod, evaluation_pipeline: lir.Transformer | None)
+   :canonical: lir.lrsystems.score_based.ScoreBasedSystem
+
+   Bases: :py:obj:`lir.lrsystems.lrsystems.LRSystem`
+
+   .. autodoc2-docstring:: lir.lrsystems.score_based.ScoreBasedSystem
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.lrsystems.score_based.ScoreBasedSystem.__init__
+      :parser: myst
+
+   .. py:method:: fit(instances: lir.data.models.InstanceData) -> typing.Self
+      :canonical: lir.lrsystems.score_based.ScoreBasedSystem.fit
+
+      .. autodoc2-docstring:: lir.lrsystems.score_based.ScoreBasedSystem.fit
+         :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.InstanceData) -> lir.lrsystems.lrsystems.LLRData
+      :canonical: lir.lrsystems.score_based.ScoreBasedSystem.apply
+
+      .. autodoc2-docstring:: lir.lrsystems.score_based.ScoreBasedSystem.apply
+         :parser: myst

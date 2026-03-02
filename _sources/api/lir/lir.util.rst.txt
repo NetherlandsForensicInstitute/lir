@@ -1,0 +1,209 @@
+:py:mod:`lir.util`
+==================
+
+.. py:module:: lir.util
+
+.. autodoc2-docstring:: lir.util
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`Bind <lir.util.Bind>`
+     - .. autodoc2-docstring:: lir.util.Bind
+          :parser: myst
+          :summary:
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`check_type <lir.util.check_type>`
+     - .. autodoc2-docstring:: lir.util.check_type
+          :parser: myst
+          :summary:
+   * - :py:obj:`get_classes_from_Xy <lir.util.get_classes_from_Xy>`
+     - .. autodoc2-docstring:: lir.util.get_classes_from_Xy
+          :parser: myst
+          :summary:
+   * - :py:obj:`Xn_to_Xy <lir.util.Xn_to_Xy>`
+     - .. autodoc2-docstring:: lir.util.Xn_to_Xy
+          :parser: myst
+          :summary:
+   * - :py:obj:`Xy_to_Xn <lir.util.Xy_to_Xn>`
+     - .. autodoc2-docstring:: lir.util.Xy_to_Xn
+          :parser: myst
+          :summary:
+   * - :py:obj:`odds_to_probability <lir.util.odds_to_probability>`
+     - .. autodoc2-docstring:: lir.util.odds_to_probability
+          :parser: myst
+          :summary:
+   * - :py:obj:`probability_to_odds <lir.util.probability_to_odds>`
+     - .. autodoc2-docstring:: lir.util.probability_to_odds
+          :parser: myst
+          :summary:
+   * - :py:obj:`probability_to_logodds <lir.util.probability_to_logodds>`
+     - .. autodoc2-docstring:: lir.util.probability_to_logodds
+          :parser: myst
+          :summary:
+   * - :py:obj:`logodds_to_probability <lir.util.logodds_to_probability>`
+     - .. autodoc2-docstring:: lir.util.logodds_to_probability
+          :parser: myst
+          :summary:
+   * - :py:obj:`logodds_to_odds <lir.util.logodds_to_odds>`
+     - .. autodoc2-docstring:: lir.util.logodds_to_odds
+          :parser: myst
+          :summary:
+   * - :py:obj:`odds_to_logodds <lir.util.odds_to_logodds>`
+     - .. autodoc2-docstring:: lir.util.odds_to_logodds
+          :parser: myst
+          :summary:
+   * - :py:obj:`ln_to_log10 <lir.util.ln_to_log10>`
+     - .. autodoc2-docstring:: lir.util.ln_to_log10
+          :parser: myst
+          :summary:
+   * - :py:obj:`warn_deprecated <lir.util.warn_deprecated>`
+     - .. autodoc2-docstring:: lir.util.warn_deprecated
+          :parser: myst
+          :summary:
+
+Data
+~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`LR <lir.util.LR>`
+     - .. autodoc2-docstring:: lir.util.LR
+          :parser: myst
+          :summary:
+   * - :py:obj:`AnyType <lir.util.AnyType>`
+     - .. autodoc2-docstring:: lir.util.AnyType
+          :parser: myst
+          :summary:
+   * - :py:obj:`FloatOrArray <lir.util.FloatOrArray>`
+     - .. autodoc2-docstring:: lir.util.FloatOrArray
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:data:: LR
+   :canonical: lir.util.LR
+   :value: 'namedtuple(...)'
+
+   .. autodoc2-docstring:: lir.util.LR
+      :parser: myst
+
+.. py:data:: AnyType
+   :canonical: lir.util.AnyType
+   :value: 'TypeVar(...)'
+
+   .. autodoc2-docstring:: lir.util.AnyType
+      :parser: myst
+
+.. py:function:: check_type(type_class: type[lir.util.check_type.AnyType], v: typing.Any, message: str | None = None) -> lir.util.check_type.AnyType
+   :canonical: lir.util.check_type
+
+   .. autodoc2-docstring:: lir.util.check_type
+      :parser: myst
+
+.. py:function:: get_classes_from_Xy(X: numpy.ndarray, y: numpy.ndarray, classes: list[typing.Any] | None = None) -> numpy.ndarray
+   :canonical: lir.util.get_classes_from_Xy
+
+   .. autodoc2-docstring:: lir.util.get_classes_from_Xy
+      :parser: myst
+
+.. py:function:: Xn_to_Xy(*Xn: numpy.ndarray) -> tuple[numpy.ndarray, numpy.ndarray]
+   :canonical: lir.util.Xn_to_Xy
+
+   .. autodoc2-docstring:: lir.util.Xn_to_Xy
+      :parser: myst
+
+.. py:function:: Xy_to_Xn(X: numpy.ndarray, y: numpy.ndarray, classes: list[int] | None = None) -> list[numpy.ndarray]
+   :canonical: lir.util.Xy_to_Xn
+
+   .. autodoc2-docstring:: lir.util.Xy_to_Xn
+      :parser: myst
+
+.. py:data:: FloatOrArray
+   :canonical: lir.util.FloatOrArray
+   :value: 'TypeVar(...)'
+
+   .. autodoc2-docstring:: lir.util.FloatOrArray
+      :parser: myst
+
+.. py:function:: odds_to_probability(odds: lir.util.odds_to_probability.FloatOrArray) -> lir.util.odds_to_probability.FloatOrArray
+   :canonical: lir.util.odds_to_probability
+
+   .. autodoc2-docstring:: lir.util.odds_to_probability
+      :parser: myst
+
+.. py:function:: probability_to_odds(p: lir.util.probability_to_odds.FloatOrArray) -> lir.util.probability_to_odds.FloatOrArray
+   :canonical: lir.util.probability_to_odds
+
+   .. autodoc2-docstring:: lir.util.probability_to_odds
+      :parser: myst
+
+.. py:function:: probability_to_logodds(p: lir.util.probability_to_logodds.FloatOrArray) -> lir.util.probability_to_logodds.FloatOrArray
+   :canonical: lir.util.probability_to_logodds
+
+   .. autodoc2-docstring:: lir.util.probability_to_logodds
+      :parser: myst
+
+.. py:function:: logodds_to_probability(log_odds: lir.util.logodds_to_probability.FloatOrArray) -> lir.util.logodds_to_probability.FloatOrArray
+   :canonical: lir.util.logodds_to_probability
+
+   .. autodoc2-docstring:: lir.util.logodds_to_probability
+      :parser: myst
+
+.. py:function:: logodds_to_odds(log_odds: lir.util.logodds_to_odds.FloatOrArray) -> lir.util.logodds_to_odds.FloatOrArray
+   :canonical: lir.util.logodds_to_odds
+
+   .. autodoc2-docstring:: lir.util.logodds_to_odds
+      :parser: myst
+
+.. py:function:: odds_to_logodds(odds: lir.util.odds_to_logodds.FloatOrArray) -> lir.util.odds_to_logodds.FloatOrArray
+   :canonical: lir.util.odds_to_logodds
+
+   .. autodoc2-docstring:: lir.util.odds_to_logodds
+      :parser: myst
+
+.. py:function:: ln_to_log10(ln_data: lir.util.ln_to_log10.FloatOrArray) -> lir.util.ln_to_log10.FloatOrArray
+   :canonical: lir.util.ln_to_log10
+
+   .. autodoc2-docstring:: lir.util.ln_to_log10
+      :parser: myst
+
+.. py:function:: warn_deprecated() -> None
+   :canonical: lir.util.warn_deprecated
+
+   .. autodoc2-docstring:: lir.util.warn_deprecated
+      :parser: myst
+
+.. py:class:: Bind
+   :canonical: lir.util.Bind
+
+   Bases: :py:obj:`functools.partial`
+
+   .. autodoc2-docstring:: lir.util.Bind
+      :parser: myst
+
+   .. py:method:: __call__(*args: typing.Any, **keywords: typing.Any) -> typing.Any
+      :canonical: lir.util.Bind.__call__
+
+      .. autodoc2-docstring:: lir.util.Bind.__call__
+         :parser: myst

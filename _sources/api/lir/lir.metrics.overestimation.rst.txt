@@ -1,0 +1,32 @@
+:py:mod:`lir.metrics.overestimation`
+====================================
+
+.. py:module:: lir.metrics.overestimation
+
+.. autodoc2-docstring:: lir.metrics.overestimation
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`llr_overestimation <lir.metrics.overestimation.llr_overestimation>`
+     - .. autodoc2-docstring:: lir.metrics.overestimation.llr_overestimation
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:function:: llr_overestimation(llrs: numpy.ndarray, y: numpy.ndarray, **kwargs: typing.Any) -> float
+   :canonical: lir.metrics.overestimation.llr_overestimation
+
+   .. autodoc2-docstring:: lir.metrics.overestimation.llr_overestimation
+      :parser: myst

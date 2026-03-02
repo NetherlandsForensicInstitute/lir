@@ -1,0 +1,58 @@
+:py:mod:`lir.config.util`
+=========================
+
+.. py:module:: lir.config.util
+
+.. autodoc2-docstring:: lir.config.util
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`TeeParser <lir.config.util.TeeParser>`
+     - .. autodoc2-docstring:: lir.config.util.TeeParser
+          :parser: myst
+          :summary:
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`simplify_data_structure <lir.config.util.simplify_data_structure>`
+     - .. autodoc2-docstring:: lir.config.util.simplify_data_structure
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:class:: TeeParser
+   :canonical: lir.config.util.TeeParser
+
+   Bases: :py:obj:`lir.config.base.ConfigParser`
+
+   .. autodoc2-docstring:: lir.config.util.TeeParser
+      :parser: myst
+
+   .. py:method:: parse(config: lir.config.base.ContextAwareDict, output_dir: pathlib.Path) -> typing.Any
+      :canonical: lir.config.util.TeeParser.parse
+
+      .. autodoc2-docstring:: lir.config.util.TeeParser.parse
+         :parser: myst
+
+.. py:function:: simplify_data_structure(data: typing.Any) -> dict | list | str | float | int | bool | None
+   :canonical: lir.config.util.simplify_data_structure
+
+   .. autodoc2-docstring:: lir.config.util.simplify_data_structure
+      :parser: myst

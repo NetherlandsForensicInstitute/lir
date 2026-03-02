@@ -1,0 +1,21 @@
+:py:mod:`lir.datasets`
+======================
+
+.. py:module:: lir.datasets
+
+.. autodoc2-docstring:: lir.datasets
+   :parser: myst
+   :allowtitles:
+
+Submodules
+----------
+
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   lir.datasets.feature_data_csv
+   lir.datasets.synthesized_normal_multiclass
+   lir.datasets.synthesized_normal_binary
+   lir.datasets.alcohol_breath_analyser
+   lir.datasets.glass

@@ -1,0 +1,45 @@
+:py:mod:`lir.experiments.predefined_experiment`
+===============================================
+
+.. py:module:: lir.experiments.predefined_experiment
+
+.. autodoc2-docstring:: lir.experiments.predefined_experiment
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`PredefinedExperiment <lir.experiments.predefined_experiment.PredefinedExperiment>`
+     - .. autodoc2-docstring:: lir.experiments.predefined_experiment.PredefinedExperiment
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:class:: PredefinedExperiment(name: str, data_configs: list[tuple[lir.config.base.ContextAwareDict, dict[str, typing.Any]]], outputs: collections.abc.Sequence[lir.aggregation.Aggregation], output_path: pathlib.Path, lrsystem_configs: list[tuple[lir.config.base.ContextAwareDict, dict[str, typing.Any]]])
+   :canonical: lir.experiments.predefined_experiment.PredefinedExperiment
+
+   Bases: :py:obj:`lir.experiments.Experiment`
+
+   .. autodoc2-docstring:: lir.experiments.predefined_experiment.PredefinedExperiment
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.experiments.predefined_experiment.PredefinedExperiment.__init__
+      :parser: myst
+
+   .. py:method:: _generate_and_run() -> None
+      :canonical: lir.experiments.predefined_experiment.PredefinedExperiment._generate_and_run
+
+      .. autodoc2-docstring:: lir.experiments.predefined_experiment.PredefinedExperiment._generate_and_run
+         :parser: myst

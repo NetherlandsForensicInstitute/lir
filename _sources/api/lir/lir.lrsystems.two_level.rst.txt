@@ -1,0 +1,180 @@
+:py:mod:`lir.lrsystems.two_level`
+=================================
+
+.. py:module:: lir.lrsystems.two_level
+
+.. autodoc2-docstring:: lir.lrsystems.two_level
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`TwoLevelModelNormalKDE <lir.lrsystems.two_level.TwoLevelModelNormalKDE>`
+     - .. autodoc2-docstring:: lir.lrsystems.two_level.TwoLevelModelNormalKDE
+          :parser: myst
+          :summary:
+   * - :py:obj:`TwoLevelSystem <lir.lrsystems.two_level.TwoLevelSystem>`
+     - .. autodoc2-docstring:: lir.lrsystems.two_level.TwoLevelSystem
+          :parser: myst
+          :summary:
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`_split_pairs <lir.lrsystems.two_level._split_pairs>`
+     - .. autodoc2-docstring:: lir.lrsystems.two_level._split_pairs
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:class:: TwoLevelModelNormalKDE()
+   :canonical: lir.lrsystems.two_level.TwoLevelModelNormalKDE
+
+   .. autodoc2-docstring:: lir.lrsystems.two_level.TwoLevelModelNormalKDE
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.lrsystems.two_level.TwoLevelModelNormalKDE.__init__
+      :parser: myst
+
+   .. py:method:: fit_on_unpaired_instances(X: numpy.ndarray, y: numpy.ndarray) -> lir.lrsystems.two_level.TwoLevelModelNormalKDE
+      :canonical: lir.lrsystems.two_level.TwoLevelModelNormalKDE.fit_on_unpaired_instances
+
+      .. autodoc2-docstring:: lir.lrsystems.two_level.TwoLevelModelNormalKDE.fit_on_unpaired_instances
+         :parser: myst
+
+   .. py:method:: transform(X_trace: numpy.ndarray, X_ref: numpy.ndarray) -> numpy.ndarray
+      :canonical: lir.lrsystems.two_level.TwoLevelModelNormalKDE.transform
+
+      .. autodoc2-docstring:: lir.lrsystems.two_level.TwoLevelModelNormalKDE.transform
+         :parser: myst
+
+   .. py:method:: predict_proba(X_trace: numpy.ndarray, X_ref: numpy.ndarray) -> numpy.ndarray
+      :canonical: lir.lrsystems.two_level.TwoLevelModelNormalKDE.predict_proba
+
+      .. autodoc2-docstring:: lir.lrsystems.two_level.TwoLevelModelNormalKDE.predict_proba
+         :parser: myst
+
+   .. py:method:: _predict_log10_lr_score(X_trace: numpy.ndarray, X_ref: numpy.ndarray) -> numpy.ndarray
+      :canonical: lir.lrsystems.two_level.TwoLevelModelNormalKDE._predict_log10_lr_score
+
+      .. autodoc2-docstring:: lir.lrsystems.two_level.TwoLevelModelNormalKDE._predict_log10_lr_score
+         :parser: myst
+
+   .. py:method:: _get_n_features(X: numpy.ndarray, feature_ix: int = 2) -> int
+      :canonical: lir.lrsystems.two_level.TwoLevelModelNormalKDE._get_n_features
+      :staticmethod:
+
+      .. autodoc2-docstring:: lir.lrsystems.two_level.TwoLevelModelNormalKDE._get_n_features
+         :parser: myst
+
+   .. py:method:: _get_n_sources(y: numpy.ndarray) -> int
+      :canonical: lir.lrsystems.two_level.TwoLevelModelNormalKDE._get_n_sources
+      :staticmethod:
+
+      .. autodoc2-docstring:: lir.lrsystems.two_level.TwoLevelModelNormalKDE._get_n_sources
+         :parser: myst
+
+   .. py:method:: _get_mean_covariance_within(X: numpy.ndarray, y: numpy.ndarray) -> numpy.ndarray
+      :canonical: lir.lrsystems.two_level.TwoLevelModelNormalKDE._get_mean_covariance_within
+      :staticmethod:
+
+      .. autodoc2-docstring:: lir.lrsystems.two_level.TwoLevelModelNormalKDE._get_mean_covariance_within
+         :parser: myst
+
+   .. py:method:: _get_means_per_source(X: numpy.ndarray, y: numpy.ndarray) -> numpy.ndarray
+      :canonical: lir.lrsystems.two_level.TwoLevelModelNormalKDE._get_means_per_source
+      :staticmethod:
+
+      .. autodoc2-docstring:: lir.lrsystems.two_level.TwoLevelModelNormalKDE._get_means_per_source
+         :parser: myst
+
+   .. py:method:: _get_kernel_bandwidth_squared(n_sources: int, n_features_train: int) -> float
+      :canonical: lir.lrsystems.two_level.TwoLevelModelNormalKDE._get_kernel_bandwidth_squared
+      :staticmethod:
+
+      .. autodoc2-docstring:: lir.lrsystems.two_level.TwoLevelModelNormalKDE._get_kernel_bandwidth_squared
+         :parser: myst
+
+   .. py:method:: _get_between_covariance(X: numpy.ndarray, y: numpy.ndarray, mean_within_covars: numpy.ndarray) -> numpy.ndarray
+      :canonical: lir.lrsystems.two_level.TwoLevelModelNormalKDE._get_between_covariance
+      :staticmethod:
+
+      .. autodoc2-docstring:: lir.lrsystems.two_level.TwoLevelModelNormalKDE._get_between_covariance
+         :parser: myst
+
+   .. py:method:: _predict_covariances_trace_ref(X_trace: numpy.ndarray, X_ref: numpy.ndarray) -> tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray, numpy.ndarray, numpy.ndarray, numpy.ndarray]
+      :canonical: lir.lrsystems.two_level.TwoLevelModelNormalKDE._predict_covariances_trace_ref
+
+      .. autodoc2-docstring:: lir.lrsystems.two_level.TwoLevelModelNormalKDE._predict_covariances_trace_ref
+         :parser: myst
+
+   .. py:method:: _predict_updated_ref_mean(X_ref: numpy.ndarray, covars_ref_inv: numpy.ndarray) -> numpy.ndarray
+      :canonical: lir.lrsystems.two_level.TwoLevelModelNormalKDE._predict_updated_ref_mean
+
+      .. autodoc2-docstring:: lir.lrsystems.two_level.TwoLevelModelNormalKDE._predict_updated_ref_mean
+         :parser: myst
+
+   .. py:method:: _predict_ln_num(X_trace: numpy.ndarray, X_ref: numpy.ndarray, covars_ref_inv: numpy.ndarray, covars_trace_update_inv: numpy.ndarray, updated_ref_mean: numpy.ndarray) -> numpy.floating
+      :canonical: lir.lrsystems.two_level.TwoLevelModelNormalKDE._predict_ln_num
+
+      .. autodoc2-docstring:: lir.lrsystems.two_level.TwoLevelModelNormalKDE._predict_ln_num
+         :parser: myst
+
+   .. py:method:: _predict_ln_den_term(X_ref_or_trace: numpy.ndarray, covars_inv: numpy.ndarray) -> numpy.floating
+      :canonical: lir.lrsystems.two_level.TwoLevelModelNormalKDE._predict_ln_den_term
+
+      .. autodoc2-docstring:: lir.lrsystems.two_level.TwoLevelModelNormalKDE._predict_ln_den_term
+         :parser: myst
+
+   .. py:method:: _predict_log10_LR_from_formula_Bolck(covars_trace: numpy.ndarray, covars_trace_update: numpy.ndarray, ln_num: numpy.floating, ln_den_left: numpy.floating, ln_den_right: numpy.floating) -> numpy.floating
+      :canonical: lir.lrsystems.two_level.TwoLevelModelNormalKDE._predict_log10_LR_from_formula_Bolck
+
+      .. autodoc2-docstring:: lir.lrsystems.two_level.TwoLevelModelNormalKDE._predict_log10_LR_from_formula_Bolck
+         :parser: myst
+
+.. py:function:: _split_pairs(pairs: numpy.ndarray, n_trace: int) -> tuple[numpy.ndarray, numpy.ndarray]
+   :canonical: lir.lrsystems.two_level._split_pairs
+
+   .. autodoc2-docstring:: lir.lrsystems.two_level._split_pairs
+      :parser: myst
+
+.. py:class:: TwoLevelSystem(preprocessing_pipeline: lir.Transformer | None, pairing_function: lir.transform.pairing.PairingMethod, postprocessing_pipeline: lir.Transformer | None, n_trace_instances: int, n_ref_instances: int)
+   :canonical: lir.lrsystems.two_level.TwoLevelSystem
+
+   Bases: :py:obj:`lir.lrsystems.lrsystems.LRSystem`
+
+   .. autodoc2-docstring:: lir.lrsystems.two_level.TwoLevelSystem
+      :parser: myst
+
+   .. rubric:: Initialization
+
+   .. autodoc2-docstring:: lir.lrsystems.two_level.TwoLevelSystem.__init__
+      :parser: myst
+
+   .. py:method:: fit(instances: lir.data.models.InstanceData) -> typing.Self
+      :canonical: lir.lrsystems.two_level.TwoLevelSystem.fit
+
+      .. autodoc2-docstring:: lir.lrsystems.two_level.TwoLevelSystem.fit
+         :parser: myst
+
+   .. py:method:: apply(instances: lir.data.models.InstanceData) -> lir.lrsystems.lrsystems.LLRData
+      :canonical: lir.lrsystems.two_level.TwoLevelSystem.apply
+
+      .. autodoc2-docstring:: lir.lrsystems.two_level.TwoLevelSystem.apply
+         :parser: myst

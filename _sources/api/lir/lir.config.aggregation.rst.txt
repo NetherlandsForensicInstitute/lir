@@ -1,0 +1,52 @@
+:py:mod:`lir.config.aggregation`
+================================
+
+.. py:module:: lir.config.aggregation
+
+.. autodoc2-docstring:: lir.config.aggregation
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`parse_aggregation <lir.config.aggregation.parse_aggregation>`
+     - .. autodoc2-docstring:: lir.config.aggregation.parse_aggregation
+          :parser: myst
+          :summary:
+   * - :py:obj:`parse_aggregations <lir.config.aggregation.parse_aggregations>`
+     - .. autodoc2-docstring:: lir.config.aggregation.parse_aggregations
+          :parser: myst
+          :summary:
+   * - :py:obj:`subset_aggregation <lir.config.aggregation.subset_aggregation>`
+     - .. autodoc2-docstring:: lir.config.aggregation.subset_aggregation
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:function:: parse_aggregation(config: lir.config.base.ContextAwareDict | str, output_dir: pathlib.Path, context: list[str] | None = None) -> lir.aggregation.Aggregation
+   :canonical: lir.config.aggregation.parse_aggregation
+
+   .. autodoc2-docstring:: lir.config.aggregation.parse_aggregation
+      :parser: myst
+
+.. py:function:: parse_aggregations(config: lir.config.base.ContextAwareList | lir.config.base.ContextAwareDict | str, output_dir: pathlib.Path, context: list[str] | None = None) -> list[lir.aggregation.Aggregation]
+   :canonical: lir.config.aggregation.parse_aggregations
+
+   .. autodoc2-docstring:: lir.config.aggregation.parse_aggregations
+      :parser: myst
+
+.. py:function:: subset_aggregation(config: lir.config.base.ContextAwareDict, output_dir: pathlib.Path) -> lir.aggregation.SubsetAggregation
+   :canonical: lir.config.aggregation.subset_aggregation
+
+   .. autodoc2-docstring:: lir.config.aggregation.subset_aggregation
+      :parser: myst

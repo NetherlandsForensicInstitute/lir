@@ -1,0 +1,112 @@
+:py:mod:`lir.main`
+==================
+
+.. py:module:: lir.main
+
+.. autodoc2-docstring:: lir.main
+   :parser: myst
+   :allowtitles:
+
+Module Contents
+---------------
+
+Functions
+~~~~~~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`setup_logging <lir.main.setup_logging>`
+     - .. autodoc2-docstring:: lir.main.setup_logging
+          :parser: myst
+          :summary:
+   * - :py:obj:`initialize_logfile <lir.main.initialize_logfile>`
+     - .. autodoc2-docstring:: lir.main.initialize_logfile
+          :parser: myst
+          :summary:
+   * - :py:obj:`copy_yaml_definition <lir.main.copy_yaml_definition>`
+     - .. autodoc2-docstring:: lir.main.copy_yaml_definition
+          :parser: myst
+          :summary:
+   * - :py:obj:`initialize_experiments <lir.main.initialize_experiments>`
+     - .. autodoc2-docstring:: lir.main.initialize_experiments
+          :parser: myst
+          :summary:
+   * - :py:obj:`error <lir.main.error>`
+     - .. autodoc2-docstring:: lir.main.error
+          :parser: myst
+          :summary:
+   * - :py:obj:`main <lir.main.main>`
+     - .. autodoc2-docstring:: lir.main.main
+          :parser: myst
+          :summary:
+
+Data
+~~~~
+
+.. list-table::
+   :class: autosummary longtable
+   :align: left
+
+   * - :py:obj:`LOG <lir.main.LOG>`
+     - .. autodoc2-docstring:: lir.main.LOG
+          :parser: myst
+          :summary:
+   * - :py:obj:`DEFAULT_LOGLEVEL <lir.main.DEFAULT_LOGLEVEL>`
+     - .. autodoc2-docstring:: lir.main.DEFAULT_LOGLEVEL
+          :parser: myst
+          :summary:
+
+API
+~~~
+
+.. py:data:: LOG
+   :canonical: lir.main.LOG
+   :value: 'getLogger(...)'
+
+   .. autodoc2-docstring:: lir.main.LOG
+      :parser: myst
+
+.. py:data:: DEFAULT_LOGLEVEL
+   :canonical: lir.main.DEFAULT_LOGLEVEL
+   :value: None
+
+   .. autodoc2-docstring:: lir.main.DEFAULT_LOGLEVEL
+      :parser: myst
+
+.. py:function:: setup_logging(level_increase: int) -> None
+   :canonical: lir.main.setup_logging
+
+   .. autodoc2-docstring:: lir.main.setup_logging
+      :parser: myst
+
+.. py:function:: initialize_logfile(output_dir: pathlib.Path) -> None
+   :canonical: lir.main.initialize_logfile
+
+   .. autodoc2-docstring:: lir.main.initialize_logfile
+      :parser: myst
+
+.. py:function:: copy_yaml_definition(output_dir: pathlib.Path, config_yaml_path: pathlib.Path) -> None
+   :canonical: lir.main.copy_yaml_definition
+
+   .. autodoc2-docstring:: lir.main.copy_yaml_definition
+      :parser: myst
+
+.. py:function:: initialize_experiments(cfg: confidence.Configuration) -> tuple[collections.abc.Mapping[str, lir.experiments.Experiment], pathlib.Path]
+   :canonical: lir.main.initialize_experiments
+
+   .. autodoc2-docstring:: lir.main.initialize_experiments
+      :parser: myst
+
+.. py:function:: error(msg: str, e: Exception | None = None) -> None
+   :canonical: lir.main.error
+
+   .. autodoc2-docstring:: lir.main.error
+      :parser: myst
+
+.. py:function:: main(input_args: list[str] | None = None) -> None
+   :canonical: lir.main.main
+
+   .. autodoc2-docstring:: lir.main.main
+      :parser: myst

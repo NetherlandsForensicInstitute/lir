@@ -20,9 +20,13 @@ DEFAULT_LOGLEVEL = logging.WARNING
 
 
 def setup_logging(level_increase: int) -> None:
-    """Set up logging to stderr and to a file.
+    """
+    Set up logging to stderr and to a file.
 
-    :param level_increase: log level for stderr, relative to the default log level
+    Parameters
+    ----------
+    level_increase : int
+        Log level for stderr, relative to the default log level.
     """
     loglevel = max(logging.DEBUG, min(logging.CRITICAL, DEFAULT_LOGLEVEL - level_increase * 10))
 
@@ -39,7 +43,14 @@ def setup_logging(level_increase: int) -> None:
 
 
 def initialize_logfile(output_dir: Path) -> None:
-    """Set up logfile for debugging purposes when running experiment."""
+    """
+    Set up logfile for debugging purposes when running experiment.
+
+    Parameters
+    ----------
+    output_dir : Path
+        The directory where the logfile should be created.
+    """
     output_dir.mkdir(parents=True, exist_ok=True)
     fh = logging.FileHandler(output_dir / 'log.txt')
     fh.setFormatter(logging.Formatter('[%(asctime)-15s %(levelname)s] %(name)s: %(message)s'))
@@ -48,7 +59,16 @@ def initialize_logfile(output_dir: Path) -> None:
 
 
 def copy_yaml_definition(output_dir: Path, config_yaml_path: Path) -> None:
-    """Copy the YAML definition for a given LR system experiment to persist the used configuration."""
+    """
+    Copy the YAML definition for a given LR system experiment to persist the used configuration.
+
+    Parameters
+    ----------
+    output_dir : Path
+        The directory where the YAML definition should be copied.
+    config_yaml_path : Path
+        The path to the YAML file describing the experiment configuration.
+    """
     output_dir.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(config_yaml_path, output_dir / 'config.yaml')
 
@@ -56,14 +76,22 @@ def copy_yaml_definition(output_dir: Path, config_yaml_path: Path) -> None:
 def initialize_experiments(
     cfg: confidence.Configuration,
 ) -> tuple[Mapping[str, Experiment], Path]:
-    """Extract which Experiment to run as dictated in the configuration.
+    """
+    Extract which Experiment to run as dictated in the configuration.
 
     The following pre-defined variables are injected to the configuration:
 
     - `timestamp`: a formatted timestamp of the current date/time
 
-    :param cfg: a `Configuration` object describing the experiments
-    :return: a tuple with two elements: (1) mapping of names to experiments; (2) path to output directory
+    Parameters
+    ----------
+    cfg : confidence.Configuration
+        A `Configuration` object describing the experiments.
+
+    Returns
+    -------
+    tuple[Mapping[str, Experiment], Path]
+        A tuple with two elements: (1) mapping of names to experiments; (2) path to output directory.
     """
     cfg = confidence.Configuration(cfg, {'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')})  # noqa: DTZ005
 
@@ -76,14 +104,30 @@ def initialize_experiments(
 
 
 def error(msg: str, e: Exception | None = None) -> None:
-    """Stop execution with given error message or raise exception."""
+    """
+    Stop execution with given error message or raise exception.
+
+    Parameters
+    ----------
+    msg : str
+        The error message to be printed to stderr.
+    e : Exception | None
+        The exception to be raised, or None to not raise an exception.
+    """
     sys.stderr.write(f'{msg}{" (see log for details)" if e else ""}\n')
     LOG.debug(f'abort: {msg}', exc_info=e)
     sys.exit(1)
 
 
 def main(input_args: list[str] | None = None) -> None:
-    """Provide Command Line Interface (CLI) to LiR."""
+    """
+    Run all or some of the parts of project.
+
+    Parameters
+    ----------
+    input_args : list[str] | None
+        The command-line arguments to parse, or None to parse the actual command-line arguments.
+    """
     parser = argparse.ArgumentParser(description='Run all or some of the parts of project')
 
     parser.add_argument(

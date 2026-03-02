@@ -51,12 +51,12 @@ def plot_ece(
 
     Parameters
     ----------
+    ax : matplotlib.axes.Axes
+        Matplotlib axes to plot into.
     llrdata : LLRData
         LLR data containing LLR values and corresponding labels.
     log_prior_odds_range : tuple[float, float], optional
         Range of log prior odds shown on the x-axis, given as ``(min, max)``.
-    ax : matplotlib.axes.Axes, optional
-        Matplotlib axes to plot into. If ``None``, the current axes are used.
     show_pav : bool, optional
         Whether to include the PAV-transformed LRs in the plot.
     ylim : {"neutral", "zoomed"}, optional
@@ -118,16 +118,25 @@ def plot_ece(
 
 
 def calculate_ece(lrs: np.ndarray, y: np.ndarray, priors: np.ndarray) -> np.ndarray:
-    """Calculate empirical cross-entropy (ECE) of a set of LRs and corresponding ground-truth labels.
+    """
+    Calculate empirical cross-entropy (ECE) of a set of LRs and corresponding ground-truth labels.
 
     An entropy is calculated for each element of `priors`.
 
-    :param lrs: an array of LRs
-    :param y: an array of ground-truth labels of the LRs (values 0 for Hd or 1
-        for Hp); must be of the same length as `lrs`.
-    :param priors: an array of prior probabilities of the samples being drawn
-        from class 1 (values in range [0..1])
-    :returns: an array of entropy values of the same length as `priors`
+    Parameters
+    ----------
+    lrs : np.ndarray
+        Array of likelihood ratios.
+    y : np.ndarray
+        Array of ground-truth labels for the LRs (`0` for Hd or `1` for Hp),
+        with the same length as `lrs`.
+    priors : np.ndarray
+        Array of prior probabilities for class 1 (values in the range `[0, 1]`).
+
+    Returns
+    -------
+    np.ndarray
+        Array of entropy values with the same length as `priors`.
     """
     assert np.all(lrs >= 0), 'invalid input for LR values'
     assert np.all(np.unique(y) == np.array([0, 1])), 'label set must be [0, 1]'

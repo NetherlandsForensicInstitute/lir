@@ -16,7 +16,20 @@ LOG = logging.getLogger(__name__)
 
 
 def _get_attribute_by_name(name: str) -> Any:
-    """Resolve the corresponding function or class in this project from the configuration string."""
+    """
+    Resolve the corresponding function or class in this project from the configuration string.
+
+    Parameters
+    ----------
+    name : str
+        The name of the function or class to resolve, specified as a full path (
+        for example: 'lir.transform.base.BaseTransform').
+
+    Returns
+    -------
+    Any
+        The function or class corresponding to the given name.
+    """
     parts = name.split('.')
 
     LOG.debug(f'{name} is being resolved')
@@ -59,7 +72,8 @@ class InvalidRegistryEntryError(ValueError):
 
 
 class ConfigParserLoader(ABC, Iterable):
-    """Base class for a configuration parser loader.
+    """
+    Base class for a configuration parser loader.
 
     A configuration parser is able to interpret a dictionary-style configuration loaded from a YAML. Sub classes are
     expected to implement the `get()` method.
@@ -86,16 +100,25 @@ class ConfigParserLoader(ABC, Iterable):
         default_config_parser: Callable[[Any], ConfigParser] | None = None,
         search_path: list[str] | None = None,
     ) -> ConfigParser:
-        """Retrieve a value for a given key name.
+        """
+        Retrieve a value for a given key name.
 
         The key may resolve to a `ConfigParser` class, or it is passed as an argument to `default_config_parser`, which
         in turn returns a `ConfigParser` class.
 
-        :param key: the key name to resolve
-        :param default_config_parser: a function that returns a `ConfigParser` if the `key` does not resolve to a
-            `ConfigParser`
-        :param search_path: the domain of the search query
-        :return: a `ConfigParser` object
+        Parameters
+        ----------
+        key : str
+            The key name to resolve.
+        default_config_parser : Callable[[Any], ConfigParser] | None, optional
+            A function that returns a `ConfigParser` if the `key` does not resolve to a `ConfigParser`, by default None.
+        search_path : list[str] | None, optional
+            The domain of the search query, by default None.
+
+        Returns
+        -------
+        ConfigParser
+            A `ConfigParser` object.
         """
         raise NotImplementedError
 
@@ -112,7 +135,23 @@ class ClassLoader(ConfigParserLoader):
         default_config_parser: Callable[[Any], ConfigParser] | None = None,
         search_path: list[str] | None = None,
     ) -> ConfigParser:
-        """Get the accompanying config parser class from the registry."""
+        """
+        Get the accompanying config parser class from the registry.
+
+        Parameters
+        ----------
+        key : str
+            The key name to resolve, expected to be a full class name (for example: 'lir.transform.base.BaseTransform').
+        default_config_parser : Callable[[Any], ConfigParser] | None, optional
+            A function that returns a `ConfigParser` if the `key` does not resolve to a `ConfigParser`, by default None.
+        search_path : list[str] | None, optional
+            The domain of the search query, by default None.
+
+        Returns
+        -------
+        ConfigParser
+            A `ConfigParser` object.
+        """
         parts = key.split('.')
         if len(parts) < 2:
             raise ComponentNotFoundError(f'no full class name: {key}')
@@ -128,9 +167,24 @@ class ClassLoader(ConfigParserLoader):
 
 
 class FederatedLoader(ConfigParserLoader):
-    """A configuration parser loader that delegates resolution to other loaders."""
+    """
+    A configuration parser loader that delegates resolution to other loaders.
+
+    Parameters
+    ----------
+    registries : list[ConfigParserLoader]
+        A list of configuration parser loaders to delegate to, in order of priority.
+    """
 
     def __init__(self, registries: list[ConfigParserLoader]):
+        """
+        Initialize the federated loader with a list of registries to delegate to.
+
+        Parameters
+        ----------
+        registries : list[ConfigParserLoader]
+            A list of configuration parser loaders to delegate to, in order of priority.
+        """
         self.registries = registries
 
     def __iter__(self) -> Iterator[str]:
@@ -143,7 +197,23 @@ class FederatedLoader(ConfigParserLoader):
         default_config_parser: Callable[[Any], ConfigParser] | None = GenericConfigParser,
         search_path: list[str] | None = None,
     ) -> ConfigParser:
-        """Get the accompanying config parser class from the registry."""
+        """
+        Get the accompanying config parser class from the registry.
+
+        Parameters
+        ----------
+        key : str
+            The key name to resolve.
+        default_config_parser : Callable[[Any], ConfigParser] | None, optional
+            A function that returns a `ConfigParser` if the `key` does not resolve to a `ConfigParser`.
+        search_path : list[str] | None, optional
+            The domain of the search query, by default None.
+
+        Returns
+        -------
+        ConfigParser
+            A `ConfigParser` object.
+        """
         errors = []
         for r in self.registries:
             try:
@@ -170,7 +240,14 @@ def _load_package_registry() -> 'YamlRegistry':
 
 
 def registry() -> ConfigParserLoader:
-    """Provide access to a centralized registry of available configuration options."""
+    """
+    Provide access to a centralized registry of available configuration options.
+
+    Returns
+    -------
+    ConfigParserLoader
+        A configuration parser loader that can be used to retrieve configuration parsers for various components.
+    """
     global _REGISTRY
     if _REGISTRY is None:
         try:
@@ -187,12 +264,29 @@ def get(
     default_config_parser: Callable[[Any], ConfigParser] | None = None,
     search_path: list[str] | None = None,
 ) -> ConfigParser:
-    """Retrieve corresponding value for a given key name from the central registry."""
+    """
+    Retrieve corresponding value for a given key name from the central registry.
+
+    Parameters
+    ----------
+    name : str
+        The key name to resolve.
+    default_config_parser : Callable[[Any], ConfigParser] | None, optional
+        A function that returns a `ConfigParser` if the `key` does not resolve to a `ConfigParser`, by default None.
+    search_path : list[str] | None, optional
+        The domain of the search query, by default None.
+
+    Returns
+    -------
+    ConfigParser
+        A `ConfigParser` object.
+    """
     return registry().get(name, default_config_parser, search_path)
 
 
 class YamlRegistry(ConfigParserLoader):
-    """Representation of a YAML-based registry.
+    """
+    Representation of a YAML-based registry.
 
     The YAML registry is expected to define "sections" as the top-level
     key names, followed by keys referring to (paths to) classnames or
@@ -200,6 +294,11 @@ class YamlRegistry(ConfigParserLoader):
 
     This registry parses this YAML mapping and provides access to these
     values through a `get()` method.
+
+    Parameters
+    ----------
+    cfg : confidence.Configuration
+        The configuration object containing the registry entries.
     """
 
     def __init__(self, cfg: confidence.Configuration):
@@ -244,10 +343,23 @@ class YamlRegistry(ConfigParserLoader):
         return parser
 
     def _find(self, key: str, search_path: list[str] | None) -> Any:
-        """Locate the value for a given key name in the YAML-based registry.
+        """
+        Locate the value for a given key name in the YAML-based registry.
 
         The search path is used to prefix the key name with possible
         domain (for example: 'modules' or 'data_provider').
+
+        Parameters
+        ----------
+        key : str
+            The key name to resolve.
+        search_path : list[str] | None, optional
+            The domain of the search query, by default None.
+
+        Returns
+        -------
+        Any
+            The value associated with the key in the registry.
         """
         try_keys = [key]
 
@@ -280,6 +392,20 @@ class YamlRegistry(ConfigParserLoader):
                 class: ObjectName
 
         In the example, ``ObjectName`` refers to a Python object available in the current runtime.
+
+        Parameters
+        ----------
+        key : str
+            The key name to resolve.
+        default_config_parser : Callable[[Any], ConfigParser] | None, optional
+            A function that returns a `ConfigParser` if the `key` does not resolve to a `ConfigParser`, by default None.
+        search_path : list[str] | None, optional
+            The domain of the search query, by default None.
+
+        Returns
+        -------
+        ConfigParser
+            A `ConfigParser` object.
         """
         spec = self._find(key, search_path)
         if isinstance(spec, str):

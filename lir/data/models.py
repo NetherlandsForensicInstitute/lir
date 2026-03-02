@@ -65,7 +65,8 @@ class InstanceData(BaseModel, ABC):
     This class imposes no restrictions on the actual instance data. Sub class implementations will specialize in
     particular data types.
 
-    Attributes:
+    Attributes
+    ----------
     - `labels`: The hypothesis labels of the instances, as a 1-dimensional array with one value per instance, can be
       either 0 or 1.
     - `source_ids`: The ids of all sources that contributed to the instances. Each instance is from a single source,
@@ -362,7 +363,8 @@ class FeatureData(InstanceData):
 
     More than 2 dimensions may be used for paired data, see `PairedFeatureData`.
 
-    Attributes:
+    Attributes
+    ----------
     - features: an array of instance features, with one row per instance
     """
 
@@ -408,7 +410,8 @@ class PairedFeatureData(FeatureData):
 
     The `source_ids`, if available, must have two values for each item, i.e. 2 columns.
 
-    Attributes:
+    Attributes
+    ----------
     - n_trace_instances: the number of trace instances in each pair
     - n_ref_instances: the number of reference instances in each pair
     - features: the features of all instances in the pair, with pairs along the first dimension, and instances along the
@@ -476,7 +479,8 @@ class LLRData(FeatureData):
 
     The values are also accessible by the attributes `llrs` and `llr_intervals`.
 
-    Attributes:
+    Attributes
+    ----------
     - llrs: 1-dimensional numpy array of LLR values
     - has_intervals: indicate whether the LLR's have intervals
     - llr_intervals: numpy array of LLR values of dimensions (n, 2), or `None` if the LLR's have no intervals

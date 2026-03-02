@@ -16,7 +16,7 @@ data:
       std: 2
       size: 100
   splits:
-    strategy: binary_train_test_split
+    strategy: train_test
     test_size: 0.3
     seed: 42
 

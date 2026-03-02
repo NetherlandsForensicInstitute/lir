@@ -28,7 +28,7 @@ class McmcLLRModel(Transformer):
         parameters_h1: dict[str, dict[str, float | int | str]] | None,
         distribution_h2: str,
         parameters_h2: dict[str, dict[str, float | int | str]] | None,
-        bounder_factory: Callable[[], LLRBounder] | None = elub_bounder_factory,
+        bounding: Callable[[], LLRBounder] | None = elub_bounder_factory,
         interval: tuple[float, float] = (0.05, 0.95),
         **mcmc_kwargs: Any,
     ):
@@ -39,13 +39,13 @@ class McmcLLRModel(Transformer):
         :param parameters_h1: definition of the parameters of distribution_h1, and their prior distributions
         :param distribution_h2: statistical distribution used to model H2, for example 'normal' or 'binomial'
         :param parameters_h2: definition of the parameters of distribution_h2, and their prior distributions
-        :param bounder_factory: bounding method to apply to the unbound llrs, to prevent overextrapolation
+        :param bounding: bounding method to apply to the unbound llrs, to prevent overextrapolation
         :param interval: lower and upper bounds of the credible interval in range 0..1; default: (0.05, 0.95)
         :param mcmc_kwargs: mcmc simulation settings, see `McmcModel.__init__` for more details.
         """
         self.model_h1 = McmcModel(distribution_h1, parameters_h1, **mcmc_kwargs)
         self.model_h2 = McmcModel(distribution_h2, parameters_h2, **mcmc_kwargs)
-        self.bounder_factory = bounder_factory
+        self.bounder_factory = bounding
         self.bounders: list[LLRBounder] | None = None
         self.interval = interval
 

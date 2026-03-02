@@ -136,7 +136,7 @@ def calculate_expected_utility(
 
 
 class ELUBBounder(LLRBounder):
-    """Calculate the Emperical Upper and Lower Bounds for a given LR system.
+    """Calculate the Empirical Upper and Lower Bounds for a given LR system.
 
     Class that, given an LR system, outputs the same LRs as the system but bounded by the Empirical Upper and Lower
     Bounds as described in
@@ -171,5 +171,5 @@ class ELUBBounder(LLRBounder):
     """
 
     def calculate_bounds(self, llrdata: LLRData) -> tuple[float | None, float | None]:
-        """Calculate the LLR emperical upper and lower bounds (ELUB)."""
+        """Calculate the LLR empirical upper and lower bounds (ELUB)."""
         return elub(llrdata, add_misleading=1)

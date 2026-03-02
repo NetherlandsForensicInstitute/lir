@@ -13,6 +13,7 @@ from lir import registry
 from lir.config.base import YamlParseError, _expand, pop_field
 from lir.config.experiment_strategies import parse_experiments
 from lir.experiments import Experiment
+from lir.util import validate_yaml
 
 
 LOG = logging.getLogger(__name__)
@@ -108,6 +109,11 @@ def main(input_args: list[str] | None = None) -> None:
         action='store_true',
     )
     parser.add_argument(
+        '--validate',
+        help='validate a YAML file against the schema',
+        action='store_true',
+    )
+    parser.add_argument(
         '--n-jobs',
         help='Enable parallel execution of experiments. Use 0 or 1 to disable parallelism, or -1 to use all available'
         ' cores, -2 to use all but one core, etc. The parallelism is at the experiment level, so each experiment will'
@@ -132,6 +138,16 @@ def main(input_args: list[str] | None = None) -> None:
 
     if not args.setup:
         parser.error('missing FILENAME argument')
+
+    if args.validate:
+        try:
+            validate_yaml(Path(args.setup))
+            print(f'✓ {args.setup} is valid')
+        except FileNotFoundError as e:
+            error(str(e))
+        except Exception as e:
+            error(f'Error validating {args.setup}: {e}')
+        return
 
     # Add directories (setup file and current folder) to sys.path for custom components.
     sys.path.append(str(Path(args.setup).resolve().parent))

@@ -263,7 +263,7 @@ class FeatureDataCsvStreamParser(FeatureDataCsvParser):
 
 
 class FeatureDataCsvHttpParser(FeatureDataCsvParser):
-    """Read data from a stream."""
+    """Read CSV data from a URL."""
 
     def __init__(self, url: str, session: requests.Session, **kwargs: Any):
         """
@@ -307,9 +307,9 @@ def _parse_extra_field(config: ContextAwareDict) -> ExtraField:
     return ExtraField(name, columns, cell_type)
 
 
-def _parse_feature_data_csv(
-    parser_class: type[FeatureDataCsvParser], config: ContextAwareDict, **kwargs: Any
-) -> FeatureDataCsvParser:
+def _parse_feature_data_csv[ParserType: FeatureDataCsvParser](
+    parser_class: type[ParserType], config: ContextAwareDict, **kwargs: Any
+) -> ParserType:
     extra_fields_config = pop_field(config, 'extra_fields', default=[], validate=partial(check_type, list))
     extra_fields = [_parse_extra_field(field_config) for field_config in extra_fields_config]
 
@@ -318,7 +318,7 @@ def _parse_feature_data_csv(
 
 
 @config_parser
-def feature_data_csv_http_parser(config: ContextAwareDict, output_dir: Path) -> FeatureDataCsvParser:
+def feature_data_csv_http_parser(config: ContextAwareDict, output_dir: Path) -> FeatureDataCsvHttpParser:
     """
     Initialize the CSV parser that reads data from a stream.
 
@@ -340,6 +340,6 @@ def feature_data_csv_http_parser(config: ContextAwareDict, output_dir: Path) -> 
 
 
 @config_parser
-def feature_data_csv_file_parser(config: ContextAwareDict, output_dir: Path) -> FeatureDataCsvParser:
+def feature_data_csv_file_parser(config: ContextAwareDict, output_dir: Path) -> FeatureDataCsvFileParser:
     """Initialize the CSV parser that reads data from a stream."""
     return _parse_feature_data_csv(FeatureDataCsvFileParser, config)

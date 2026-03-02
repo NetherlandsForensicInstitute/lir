@@ -184,7 +184,7 @@ class LoggingPipeline(Pipeline):
         return instances
 
 
-@config_parser
+@config_parser(reference=LoggingPipeline)
 def logging_pipeline(config: ContextAwareDict, output_dir: Path) -> Pipeline:
     """Construct a scikit-learn Pipeline based on the provided configuration."""
     if config is None:

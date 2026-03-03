@@ -45,12 +45,8 @@ class SaveModel(Aggregation):
 
     def report(self, data: AggregationData) -> None:
         """Create a directory for the run and write the trained LR system model to file."""
-        if self.filename.is_absolute() or self.filename.is_relative_to(self.output_dir):
-            save_model(self.filename, data.lrsystem)
-        else:
-            dirname = self.output_dir / data.run_name if data.run_name else self.output_dir
-            dirname.mkdir(parents=True, exist_ok=True)
-            save_model(dirname / self.filename, data.lrsystem)
+        path = self._resolve_output_path(self.output_dir, self.filename, data.run_name)
+        save_model(path, data.lrsystem)
 
 
 @config_parser

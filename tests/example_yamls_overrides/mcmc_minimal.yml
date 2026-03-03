@@ -1,0 +1,23 @@
+# Test override for mcmc_minimal.yml
+# This provides sensible defaults for automated testing
+# (minimal data, fast MCMC settings, local output path)
+
+output_path: tests/yaml_output/mcmc_minimal
+
+data:
+  provider:
+    h1:
+      size: 25
+    h2:
+      size: 25
+  splits:
+    strategy: binary_train_test_split
+    split: 0.5
+
+lr_system:
+  comparing:
+    steps:
+      calibration:
+        chain_count: 1
+        tune_count: 20
+        draw_count: 20

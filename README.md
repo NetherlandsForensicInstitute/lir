@@ -18,7 +18,7 @@ References
 Installation
 ------------
 
-LIR is compatible with Python 3.12 and later. The easiest way to install LIR is to use `pip`:
+LIR is compatible with Python 3.12 / 3.13/ 3.14. The easiest way to install LIR is to use `pip`:
 
 ```shell
 pip install lir

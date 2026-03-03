@@ -7,7 +7,6 @@ from functools import partial
 from pathlib import Path
 from typing import IO, Any, NamedTuple
 
-import numpy as np
 from matplotlib import pyplot as plt
 
 from lir.algorithms.bayeserror import plot_nbe as nbe
@@ -16,6 +15,7 @@ from lir.algorithms.llr_overestimation import plot_llr_overestimation as llr_ove
 from lir.config.base import ContextAwareDict, YamlParseError, check_is_empty, config_parser, pop_field
 from lir.config.data import parse_data_provider
 from lir.config.metrics import parse_individual_metric
+from lir.data.io import DataFileBuilderCsv
 from lir.data.models import DataProvider, LLRData, get_instances_by_category
 from lir.lrsystems.lrsystems import LRSystem
 from lir.plotting import llr_interval, lr_histogram, pav, tippett
@@ -66,6 +66,15 @@ class Aggregation(ABC):
         cleared, or other things that need to finish / tear down.
         """
         pass
+
+    @staticmethod
+    def _resolve_output_path(output_dir: Path, filename: Path, run_name: str) -> Path:
+        if filename.is_absolute() or filename.is_relative_to(output_dir):
+            return filename
+
+        dirname = output_dir / run_name if run_name else output_dir
+        dirname.mkdir(parents=True, exist_ok=True)
+        return dirname / filename
 
 
 class AggregatePlot(Aggregation):
@@ -238,29 +247,6 @@ class CaseLLRToCsv(Aggregation):
         self.case_data_provider = case_data_provider
         self.filename = Path(filename)
 
-    def _get_output_path(self, run_name: str) -> Path:
-        if self.filename.is_absolute() or self.filename.is_relative_to(self.output_dir):
-            return self.filename
-
-        dirname = self.output_dir / run_name if run_name else self.output_dir
-        dirname.mkdir(parents=True, exist_ok=True)
-        return dirname / self.filename
-
-    @staticmethod
-    def _feature_columns(features: np.ndarray, header: list[str] | None = None) -> tuple[list[str], list[np.ndarray]]:
-        if features.ndim < 2:
-            raise ValueError(f'unsupported feature shape for CSV export: {features.shape}')
-
-        features_2d = features.reshape(features.shape[0], -1)
-        feature_count = features_2d.shape[1]
-
-        if header is not None and len(header) == feature_count:
-            column_names = [str(column) for column in header]
-        else:
-            column_names = [f'feature_{index}' for index in range(feature_count)]
-
-        return column_names, [features_2d[:, i] for i in range(feature_count)]
-
     def report(self, data: AggregationData) -> None:
         """Apply the full-data-fitted LR system to the case data and store the resulting LLRs as CSV."""
         if data.get_full_fit_lrsystem is not None:
@@ -276,22 +262,7 @@ class CaseLLRToCsv(Aggregation):
         case_instances = self.case_data_provider.get_instances().replace(labels=None)
         case_llrs = lrsystem.apply(case_instances)
 
-        path = self._get_output_path(data.run_name)
-        path.parent.mkdir(parents=True, exist_ok=True)
-
-        feature_header = getattr(case_instances, 'header', None)
-        feature_headers, feature_values = self._feature_columns(case_instances.features, feature_header)
-
-        columns: list[tuple[str, np.ndarray]] = list(zip(feature_headers, feature_values, strict=True))
-        columns.append(('llr', case_llrs.llrs))
-
-        if case_llrs.has_intervals and case_llrs.llr_intervals is not None:
-            columns.extend(
-                [
-                    ('llr_interval_low', case_llrs.llr_intervals[:, 0]),
-                    ('llr_interval_high', case_llrs.llr_intervals[:, 1]),
-                ]
-            )
+        path = self._resolve_output_path(self.output_dir, self.filename, data.run_name)
 
         if len(case_instances) != len(case_llrs):
             raise ValueError(
@@ -299,11 +270,24 @@ class CaseLLRToCsv(Aggregation):
                 f'{len(case_instances)} case rows vs {len(case_llrs)} LLR rows.'
             )
 
-        with open(path, 'w', newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow([name for name, _ in columns])
-            for row in zip(*(values for _, values in columns), strict=True):
-                writer.writerow(row)
+        csv_builder = DataFileBuilderCsv(path)
+
+        features_2d = case_instances.features.reshape(case_instances.features.shape[0], -1)
+        feature_count = features_2d.shape[1]
+        raw_header = getattr(case_instances, 'header', None)
+        if raw_header is not None and len(raw_header) == feature_count:
+            feature_headers: list[str] = [str(h) for h in raw_header]
+        else:
+            feature_headers = [f'feature_{i}' for i in range(feature_count)]
+        csv_builder.add_column(features_2d, dimension_headers={1: feature_headers})
+
+        csv_builder.add_column(case_llrs.llrs, 'llr')
+
+        if case_llrs.has_intervals and case_llrs.llr_intervals is not None:
+            csv_builder.add_column(case_llrs.llr_intervals[:, 0], 'llr_interval_low')
+            csv_builder.add_column(case_llrs.llr_intervals[:, 1], 'llr_interval_high')
+
+        csv_builder.write()
 
 
 @config_parser

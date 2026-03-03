@@ -583,7 +583,7 @@ class DataProvider(ABC):
     """
 
     @abstractmethod
-    def get_instances(self) -> FeatureData:
+    def get_instances(self) -> InstanceData:
         """Return an InstanceData object, containing data for a set of instances."""
         raise NotImplementedError
 
@@ -592,7 +592,7 @@ class DataStrategy(ABC):
     """Base class for data (splitting) strategies."""
 
     @abstractmethod
-    def apply(self, instances: FeatureData) -> Iterable[tuple[FeatureData, FeatureData]]:
+    def apply[DataType: InstanceData](self, instances: DataType) -> Iterable[tuple[DataType, DataType]]:
         """Provide iterator to access training and test set.
 
         Returns an iterator over tuples of a training set and a test set. Both the training set and the test

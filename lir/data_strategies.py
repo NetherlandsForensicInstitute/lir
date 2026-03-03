@@ -6,7 +6,7 @@ import numpy as np
 import sklearn
 from sklearn.model_selection import GroupKFold, GroupShuffleSplit, KFold
 
-from lir.data.models import DataStrategy, FeatureData, InstanceDataType
+from lir.data.models import DataStrategy, InstanceData, InstanceDataType
 
 
 class TrainTestSplit(DataStrategy):
@@ -45,7 +45,7 @@ class TrainTestSplit(DataStrategy):
         self.test_size = test_size
         self.seed = seed
 
-    def apply(self, instances: FeatureData) -> Iterator[tuple[FeatureData, FeatureData]]:
+    def apply[DataType: InstanceData](self, instances: DataType) -> Iterator[tuple[DataType, DataType]]:
         """
         Split the data into a training set and a test set.
 

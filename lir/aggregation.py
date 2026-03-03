@@ -16,7 +16,7 @@ from lir.config.base import ContextAwareDict, YamlParseError, check_is_empty, co
 from lir.config.data import parse_data_provider
 from lir.config.metrics import parse_individual_metric
 from lir.data.io import DataFileBuilderCsv
-from lir.data.models import DataProvider, LLRData, get_instances_by_category
+from lir.data.models import DataProvider, FeatureData, LLRData, check_type, get_instances_by_category
 from lir.lrsystems.lrsystems import LRSystem
 from lir.plotting import llr_interval, lr_histogram, pav, tippett
 from lir.plotting.expected_calibration_error import plot_ece as ece
@@ -260,6 +260,7 @@ class CaseLLRToCsv(Aggregation):
 
         # Ensure the case data does not contain labels by setting them to None.
         case_instances = self.case_data_provider.get_instances().replace(labels=None)
+        case_instances = check_type(FeatureData, case_instances)
         case_llrs = lrsystem.apply(case_instances)
 
         path = self._resolve_output_path(self.output_dir, self.filename, data.run_name)
@@ -295,6 +296,7 @@ def case_llr_csv(config: ContextAwareDict, output_dir: Path) -> CaseLLRToCsv:
     """Parse output configuration for case LLR generation and CSV export."""
     case_data_provider = parse_data_provider(pop_field(config, 'case_llr_data'), output_dir)
     filename = pop_field(config, 'filename', default='case_llr.csv', validate=str)
+    filename = check_type(str, filename)
     check_is_empty(config)
     return CaseLLRToCsv(output_dir, case_data_provider, filename)
 

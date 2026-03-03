@@ -214,6 +214,14 @@
         "intermediate_output": {
           "type": "boolean",
           "description": "Whether to enable intermediate output logging (uses logging_pipeline as default)."
+        },
+        "sources_for_plots": {
+          "type": "object",
+          "description": "Mapping from a plot data key to a pipeline step name. Captures intermediate outputs at the specified pipeline step for use in score-based plots (e.g., score_distribution, score_llr). The special value 'STARTING_DATA' captures the input before any steps are applied. Example: {score: scaler}.",
+          "additionalProperties": {
+            "type": "string",
+            "description": "Name of the pipeline step whose output should be captured, or 'STARTING_DATA' to capture input data before any steps."
+          }
         }
       },
       "required": ["architecture"],
@@ -520,6 +528,8 @@
             "nbe",
             "invariance_delta_function",
             "tippett",
+            "score_llr",
+            "score_distribution",
             "save_model"
           ]
         },
@@ -540,6 +550,8 @@
                 "nbe",
                 "invariance_delta_function",
                 "tippett",
+                "score_llr",
+                "score_distribution",
                 "save_model"
               ]
             },

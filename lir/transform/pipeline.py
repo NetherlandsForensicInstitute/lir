@@ -29,12 +29,15 @@ class Pipeline(Transformer):
     A module may be a scikit-learn style transformer, estimator, or a LIR `Transformer`
     """
 
-    def __init__(self, steps: list[tuple[str, Transformer | Any]]):
+    def __init__(self, steps: list[tuple[str, Transformer | Any]], sources_for_plots: dict[str, str] | None = None):
         """Initialize a new Pipeline object.
 
         :param steps: the steps of the pipeline as a list of (name, module) tuples.
+        :param sources_for_plots: optional dictionary of step names to capture intermediate output from.
         """
         self.steps = [(name, as_transformer(module)) for name, module in steps]
+        self.sources_for_plots = sources_for_plots
+        self._captured: tuple[str, InstanceData] | None = None
 
     def fit(self, instances: InstanceData) -> Self:
         """Fit the model on the instance data."""
@@ -49,8 +52,29 @@ class Pipeline(Transformer):
 
     def apply(self, instances: InstanceData) -> InstanceData:
         """Apply the fitted model on the instance data."""
-        for _name, module in self.steps:
+        self._captured = None
+
+        # If the user wants to capture the starting data, do that before applying any steps.
+        if self.sources_for_plots is not None:
+            for key, step_name in self.sources_for_plots.items():
+                if step_name == 'STARTING_DATA':
+                    self._captured = (key, instances)
+
+        # Apply each step in the pipeline sequentially.
+        for name, module in self.steps:
             instances = module.apply(instances)
+
+            # If the user wants to capture the output of this step, do that before applying the next step.
+            if self.sources_for_plots is not None:
+                for key, step_name in self.sources_for_plots.items():
+                    if name == step_name:
+                        self._captured = (key, instances)
+
+        # Validate that all requested sources for plots were captured.
+        if self.sources_for_plots is not None and self._captured is None:
+            available = [name for name, _ in self.steps]
+            raise ValueError(f"Step '{list(self.sources_for_plots.keys())}' not found. Available: {available}")
+
         return instances
 
     def fit_apply(self, instances: InstanceData) -> InstanceData:
@@ -112,6 +136,7 @@ class LoggingPipeline(Pipeline):
         self,
         steps: list[tuple[str, Transformer | Any]],
         output_file: PathLike,
+        sources_for_plots: dict[str, str] | None = None,
         include_batch_number: bool = True,
         include_labels: bool = True,
         include_fields: list[str] | None = None,
@@ -122,6 +147,7 @@ class LoggingPipeline(Pipeline):
 
         :param steps: the steps of the pipeline as a list of (name, module) tuples.
         :param output_file: the name of the generated output file
+        :param capture_step: optional name of a step to capture intermediate output from.
         :param include_batch_number: (bool) whether the zero-indexed batch number should be included in the output,
             e.g. for cross-validation (defaults to True)
         :param include_labels: (bool) whether the labels should be included, if available (defaults to True)
@@ -129,7 +155,7 @@ class LoggingPipeline(Pipeline):
         :param include_steps: a list of steps to include (defaults to all)
         :param include_input: (bool) whether to write the input features (defaults to True)
         """
-        super().__init__(steps)
+        super().__init__(steps, sources_for_plots)
         self.output_file = Path(output_file)
         self.include_batch_number = include_batch_number
         self.include_labels = include_labels
@@ -140,6 +166,14 @@ class LoggingPipeline(Pipeline):
 
     def apply(self, instances: InstanceData) -> InstanceData:
         """Apply the pipeline to the incoming instances."""
+        self._captured = None
+
+        if self.sources_for_plots is not None:
+            # If the user wants to capture the starting data, do that before applying any steps.
+            for k, v in self.sources_for_plots.items():
+                if v == 'STARTING_DATA':
+                    self._captured = (k, instances)
+
         # initialize the csv builder
         write_mode = 'w' if self.n_batches == 0 else 'a'
         csv_builder = DataFileBuilderCsv(self.output_file, write_mode=write_mode)
@@ -162,9 +196,17 @@ class LoggingPipeline(Pipeline):
             for module_name, module in self.steps:
                 instances = module.apply(instances)
 
+                # if the user wants to capture the output of this step, do that before applying the next step.
+                if self.sources_for_plots is not None:
+                    for k, v in self.sources_for_plots.items():
+                        if module_name == v:
+                            self._captured = (k, instances)
+
                 if module_name in self.include_steps:
                     instances = check_type(
-                        FeatureData, instances, message=f'expected FeatureData as output of pipeline step {module_name}'
+                        FeatureData,
+                        instances,
+                        message=f'expected FeatureData as output of pipeline step {module_name}',
                     )
                     header = getattr(instances, 'header', None) or module_name
                     csv_builder.add_column(instances.features, header)
@@ -181,6 +223,12 @@ class LoggingPipeline(Pipeline):
             csv_builder.write()
 
         self.n_batches += 1
+
+        # Validate that all requested sources for plots were captured.
+        if self.sources_for_plots is not None and self._captured is None:
+            available = [name for name, _ in self.steps]
+            raise ValueError(f"Step(s) '{list(self.sources_for_plots.keys())}' not found. Available: {available}")
+
         return instances
 
 

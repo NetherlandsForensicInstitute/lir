@@ -514,6 +514,20 @@ class LLRData(FeatureData):
         """:return: a tuple (min_llr, max_llr)"""
         return self.llr_lower_bound, self.llr_upper_bound
 
+    def source_for_plot(self, source_key: str) -> np.ndarray | None:
+        """:return: intermediate scores if available, or None"""
+        return self.model_extra.get(source_key) if self.model_extra is not None else None
+
+    def require_source_for_plots(self, source_key: str) -> np.ndarray:
+        """:return: intermediate scores, or raise an error if not available"""
+        if self.model_extra is None or source_key not in self.model_extra:
+            raise ValueError(
+                f'{source_key} are not available for this instance. '
+                f"Use the `{source_key}` as key in 'sources_for_plots' in your LR system to capture {source_key}. "
+                f'Currently available sources: {list(self.model_extra.keys()) if self.model_extra else "none"}'
+            )
+        return self.model_extra[source_key]
+
     @model_validator(mode='after')
     def check_features_are_llrs(self) -> Self:
         """Validate the feature data."""

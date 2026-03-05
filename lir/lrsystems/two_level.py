@@ -478,6 +478,7 @@ class TwoLevelSystem(LRSystem):
         :param postprocessing_pipeline: a postprocessing pipeline that is applied *after* applying the two level model;
             it takes LLRs as input.
         """
+        super().__init__()
         self.preprocessing_pipeline = preprocessing_pipeline or Pipeline([])
         self.pairing_function = pairing_function
         self.postprocessing_pipeline = postprocessing_pipeline or Pipeline([])
@@ -507,6 +508,4 @@ class TwoLevelSystem(LRSystem):
 
         pairs = self.pairing_function.pair(instances, self.n_trace_instances, self.n_ref_instances)
         pair_llrs = pairs.replace_as(LLRData, features=self.model.transform(pairs.features_trace, pairs.features_ref))
-        pair_llrs = self.postprocessing_pipeline.apply(pair_llrs)
-
-        return pair_llrs.replace_as(LLRData)
+        return self._apply_pipeline_and_attach_scores(self.postprocessing_pipeline, pair_llrs)

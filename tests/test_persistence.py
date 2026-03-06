@@ -5,9 +5,9 @@ from unittest import mock
 import confidence
 import pytest
 from _pytest.tmpdir import TempPathFactory
-from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 
+from lir.algorithms.kde import KDECalibrator
 from lir.config.base import _expand
 from lir.data.models import FeatureData
 from lir.lrsystems.binary_lrsystem import BinaryLRSystem
@@ -15,7 +15,6 @@ from lir.lrsystems.lrsystems import LRSystem
 from lir.persistence import load_model, parse_save_model, save_model
 from lir.transform import as_transformer
 from lir.transform.pipeline import Pipeline
-from lir.util import probability_to_logodds
 
 
 @pytest.fixture
@@ -24,8 +23,7 @@ def trained_lr_system(synthesized_normal_data: FeatureData) -> LRSystem:
     pipeline = Pipeline(
         steps=[
             ('scaler', as_transformer(StandardScaler())),
-            ('clf', as_transformer(LogisticRegression(class_weight='balanced'))),
-            ('to_llr', as_transformer(probability_to_logodds)),
+            ('kde', as_transformer(transformer_like=KDECalibrator(bandwidth=(0.1, 0.2)))),
         ]
     )
     lrsystem = BinaryLRSystem(pipeline=pipeline)

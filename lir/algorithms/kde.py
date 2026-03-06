@@ -1,3 +1,4 @@
+import functools
 import logging
 import math
 import warnings
@@ -37,6 +38,11 @@ def compensate_and_remove_neginf_inf(
     return log_odds, y, numerator, denominator
 
 
+def _fixed_bandwidth(X: Any, y: Any, *, bandwidth_0: float, bandwidth_1: float) -> tuple[float, float]:
+    """Return a fixed bandwidth pair. Module-level so it is picklable."""
+    return (bandwidth_0, bandwidth_1)
+
+
 def parse_bandwidth(
     bandwidth: Callable | str | float | tuple[float, float] | None,
 ) -> Callable[[Any, Any], tuple[float, float]]:
@@ -65,12 +71,12 @@ def parse_bandwidth(
 
         # tuple or list
         case [int() | float() as bandwidth_0, int() | float() as bandwidth_1]:
-            # Lambda function casting input to a tuple of the bandwidth ranges
-            return lambda X, y: (bandwidth_0, bandwidth_1)
+            # Use functools.partial (picklable) instead of a lambda closure
+            return functools.partial(_fixed_bandwidth, bandwidth_0=bandwidth_0, bandwidth_1=bandwidth_1)
 
         case float() | int():
-            # Lambda function casting input to a tuple of the bandwidth ranges
-            return lambda X, y: (0 + bandwidth, bandwidth)
+            # Use functools.partial (picklable) instead of a lambda closure
+            return functools.partial(_fixed_bandwidth, bandwidth_0=float(bandwidth), bandwidth_1=float(bandwidth))
 
         case _:
             raise ValueError(f'Invalid `bandwidth` type: {type(bandwidth)} (value={bandwidth!r})')

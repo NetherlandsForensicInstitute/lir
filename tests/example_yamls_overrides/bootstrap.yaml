@@ -1,3 +1,5 @@
 # Override specific values from the example YAML for testing convenience
 
 output_path: tests/yaml_output
+
+lr_system.modules.n_bootstraps: 2

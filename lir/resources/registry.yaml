@@ -44,6 +44,7 @@ modules:
   # utility modules
   tee: lir.config.util.TeeParser
   csv_writer: lir.config.transform.csv_writer
+  identity: lir.transform.Identity
 
   # classifiers
   logistic_regression:

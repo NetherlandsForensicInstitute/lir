@@ -5,38 +5,39 @@ data:
     method: synthesized_normal_binary
     seed: 42
     h1:
-      mean: 1
+      mean: 2
       std: 1
-      size: 1000
+      size: 60
     h2:
-      mean: -1
+      mean: -2
       std: 1
-      size: 1000
+      size: 60
 
   splits:
-    strategy: cross_validation
-    folds: 5
+    strategy: train_test
+    test_size: .5
     seed: 42
 
 lr_system:
   architecture: specific_source
   modules:
     method: bootstrap
-    n_bootstraps: 2
+    n_bootstraps: 400
     seed: 0
     points: data
     # n_points: 100
     steps:
-      kde:
-        method: kde
-        bandwidth:
-          - 0.05  
-          - 0.23 
-      elub: elub_bounder
+      clf: logit
+      bounding: identity
         
 experiments:
   - name: model_selection
-    strategy: single_run
+    strategy: grid
+    hyperparameters:
+      - path: modules.steps.bounding
+        options:
+          - identity
+          - iv_bounder
     lr_system: ${lr_system}
     data: ${data}
     output:
@@ -46,5 +47,5 @@ experiments:
         - cllr_min
         - cllr_cal
       - pav
-      - ece
       - llr_interval
+      - lr_histogram

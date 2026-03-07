@@ -16,6 +16,14 @@ def test_registry_items_available(synthesized_llrs_with_interval: LLRData, tmp_p
     # define a mapping from output aggregator to initialization arguments
     args_by_method = {
         'output.csv': {'columns': []},
+        'output.case_llr': {
+            'case_llr_data': {
+                'method': 'synthesized_normal_binary',
+                'seed': 42,
+                'h1': {'mean': 1, 'std': 1, 'size': 10},
+                'h2': {'mean': -1, 'std': 1, 'size': 10},
+            }
+        },
         'output.by_category': {'category_field': 'my_category_field', 'output': 'pav'},
     }
 

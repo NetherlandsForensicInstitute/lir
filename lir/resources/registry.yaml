@@ -47,6 +47,7 @@ modules:
   csv_writer: lir.config.transform.csv_writer
   save_features: lir.transform.save_features.SaveFeatureTransformer
   validate_feature_data_type: lir.transform.data_validator.ValidateFeatureDataType
+  identity: lir.transform.Identity
 
   # classifiers
   logistic_regression:

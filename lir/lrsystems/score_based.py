@@ -78,4 +78,6 @@ class ScoreBasedSystem(LRSystem):
         """
         instances = self.preprocessing_pipeline.apply(instances)
         pairs = self.pairing_function.pair(instances, 1, 1)
-        return self._apply_pipeline_and_attach_scores(self.evaluation_pipeline, pairs)
+        pair_llrs = self.evaluation_pipeline.apply(pairs)
+
+        return LLRData(**pair_llrs.model_dump())

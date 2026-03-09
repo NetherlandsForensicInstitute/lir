@@ -522,14 +522,25 @@ def score_llr(ax: Axes, llrdata: LLRData) -> None:
     ax : Axes
         The matplotlib axes object to plot on
     llrdata : LLRData
-        The LLRData object containing likelihood ratios and labels.
-        Must have scores available.
+        The LLRData object containing likelihood ratios and labels. Must have scores available. If labels are present,
+        use them in the plots to color the points by hypothesis. If not, plot all points in the same color.
     """
     llrs = llrdata.llrs
-    labels = llrdata.require_labels
+    labels = llrdata.labels
     scores = llrdata.require_source_for_plots('score')
 
-    # Separate by hypothesis
+    # General settings; do them regardless of labels.
+    ax.axhline(y=0, color='gray', linestyle='--', linewidth=0.5)
+    ax.set_xlabel('Intermediate Score')
+    ax.set_ylabel('log$_{10}$(LR)')
+
+    # If no labels, plot all points in the same color and return.
+    if labels is None:
+        ax.scatter(scores, llrs, alpha=0.5, label='Data points', color='gray')
+        ax.legend()
+
+        return
+
     mask_h1 = labels == 1
     mask_h2 = labels == 0
 
@@ -538,8 +549,4 @@ def score_llr(ax: Axes, llrdata: LLRData) -> None:
 
     ax.scatter(scores[mask_h1], llrs[mask_h1], alpha=0.5, label=f'H1 (n={n_h1})', color=H1_COLOR)
     ax.scatter(scores[mask_h2], llrs[mask_h2], alpha=0.5, label=f'H2 (n={n_h2})', color=H2_COLOR)
-
-    ax.axhline(y=0, color='gray', linestyle='--', linewidth=0.5)
-    ax.set_xlabel('Intermediate Score')
-    ax.set_ylabel('log$_{10}$(LR)')
     ax.legend()

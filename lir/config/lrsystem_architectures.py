@@ -98,6 +98,7 @@ def specific_source(config: ContextAwareDict, output_dir: Path) -> BinaryLRSyste
 
     The config can contain:
      - modules: module configuration for the pipeline
+     - sources_for_plots: optional dict mapping field names to pipeline step names
      - intermediate_output: boolean flag to determine whether to use logging pipeline as default
 
     If any other fields are present, an exception is raised.
@@ -114,11 +115,12 @@ def specific_source(config: ContextAwareDict, output_dir: Path) -> BinaryLRSyste
     BinaryLRSystem
         Configured specific-source LR system.
     """
+    sources_for_plots = pop_field(config, 'sources_for_plots', required=False, validate=dict)
     pipeline = parse_module(
         pop_field(config, 'modules'), output_dir, config.context, default_method=parse_default_pipeline(config)
     )
     check_is_empty(config)
-    return BinaryLRSystem(pipeline)
+    return BinaryLRSystem(pipeline, sources_for_plots)
 
 
 @config_parser
@@ -236,7 +238,6 @@ def parse_lrsystem(config: ContextAwareDict, output_dir: Path) -> ParsedLRSystem
     lrsystem_config = config.clone()  # save for later
 
     architecture = pop_field(config, 'architecture')
-    sources_for_plots = pop_field(config, 'sources_for_plots', required=False, validate=dict)
 
     try:
         parser = registry.get(architecture, search_path=['lrsystem_architectures'])
@@ -245,9 +246,6 @@ def parse_lrsystem(config: ContextAwareDict, output_dir: Path) -> ParsedLRSystem
 
     lrsystem = parser.parse(config, output_dir)
 
-    # Set sources for plots if configured
-    if sources_for_plots:
-        lrsystem.set_sources_for_plots(sources_for_plots)
     return ParsedLRSystem(lrsystem, lrsystem_config)
 
 

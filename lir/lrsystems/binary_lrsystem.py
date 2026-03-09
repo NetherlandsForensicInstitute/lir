@@ -1,8 +1,8 @@
 from typing import Self
 
-from lir import Transformer
 from lir.data.models import InstanceData
 from lir.lrsystems.lrsystems import LLRData, LRSystem
+from lir.lrsystems.score_based import Pipeline
 
 
 class BinaryLRSystem(LRSystem):
@@ -21,7 +21,7 @@ class BinaryLRSystem(LRSystem):
         Transformer pipeline used to fit and score instances.
     """
 
-    def __init__(self, pipeline: Transformer, sources_for_plots: dict[str, str] | None = None):
+    def __init__(self, pipeline: Pipeline, sources_for_plots: dict[str, str] | None = None):
         super().__init__()
         self.pipeline = pipeline
         self.pipeline.sources_for_plots = sources_for_plots

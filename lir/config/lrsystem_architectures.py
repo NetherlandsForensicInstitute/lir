@@ -17,10 +17,10 @@ from lir.config.substitution import (
     substitute_parameters,
 )
 from lir.config.transform import parse_module
-from lir.data.models import InstanceData, LLRData
+from lir.data.models import InstanceData, LLRData, check_type
 from lir.lrsystems.binary_lrsystem import BinaryLRSystem
 from lir.lrsystems.lrsystems import LRSystem
-from lir.lrsystems.score_based import ScoreBasedSystem
+from lir.lrsystems.score_based import Pipeline, ScoreBasedSystem
 from lir.lrsystems.two_level import TwoLevelSystem
 from lir.registry import ComponentNotFoundError
 
@@ -119,6 +119,7 @@ def specific_source(config: ContextAwareDict, output_dir: Path) -> BinaryLRSyste
     pipeline = parse_module(
         pop_field(config, 'modules'), output_dir, config.context, default_method=parse_default_pipeline(config)
     )
+    pipeline = check_type(Pipeline, pipeline)
     check_is_empty(config)
     return BinaryLRSystem(pipeline, sources_for_plots)
 

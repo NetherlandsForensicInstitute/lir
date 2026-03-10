@@ -85,18 +85,6 @@ To specify the schema in PyCharm, see [this official documentation entry](https:
     2. Open settings (`ctrl` + `,`), find the `Yaml: Schemas` settings and create an entry with `lir.schema.json` as item and `*.yaml` as value.
 
 
-Datasets
---------
-There are currently a number of datasets implemented for this project:
-
-- glass: LA-ICP-MS measurements of elemental concentration from floatglass. The data will be downloaded automatically from https://github.com/NetherlandsForensicInstitute/elemental_composition_glass when used in the pipeline for the first time.
-
-### Simulations
-It is straightforward to simulate data for experimentation. Currently two very simple simulations
-`synthesized_normal_binary` and `synthesized_normal_multiclass` are available, with sources and measurements drawn from
-normal distributions.
-
-
 Contributing / Development
 -----------
 

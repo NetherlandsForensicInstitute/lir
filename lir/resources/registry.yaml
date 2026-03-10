@@ -12,6 +12,7 @@ data_strategies:
   train_test_sources: lir.data_strategies.SourcesTrainTestSplit
   cross_validation_sources: lir.data_strategies.SourcesCrossValidation
   predefined_train_test: lir.data_strategies.PredefinedTrainTestSplit
+  predefined_cross_validation: lir.data_strategies.PredefinedCrossValidation
   train_test_pairs: lir.data_strategies.PairsTrainTestSplit
 data_providers:
   synthesized_normal_binary: lir.datasets.synthesized_normal_binary.synthesized_normal_binary

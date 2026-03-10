@@ -149,7 +149,6 @@ checks = [
     "GL01", 
     "GL02",
     "GL03",
-    "YD01", # Yield section
     "SS03",
     "SS05",
 ]

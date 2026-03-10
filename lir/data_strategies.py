@@ -49,7 +49,10 @@ class TrainTestSplit(DataStrategy):
         """
         Split the data into a training set and a test set.
 
-        :return: an iterator over a single item, which is a tuple of the training set and the test set.
+        Yields
+        ------
+        tuple[DataType, DataType]
+            An iterator over a single item, which is a tuple of the training set and the test set.
         """
         indexes = np.arange(len(instances))
         indexes_train, indexes_test = sklearn.model_selection.train_test_split(
@@ -133,7 +136,10 @@ class SourcesTrainTestSplit(DataStrategy):
         """
         Split the data into a training set and a test set.
 
-        :return: an iterator over a single item, which is a tuple of the training set and the test set.
+        Yields
+        ------
+        tuple[DataType, DataType]
+            An iterator over a single item, which is a tuple of the training set and the test set.
         """
         splitter = GroupShuffleSplit(test_size=self.test_size, n_splits=1, random_state=self.seed)
         ((train_index, test_index),) = splitter.split(np.arange(len(instances)), groups=instances.source_ids_1d)
@@ -198,7 +204,10 @@ class PairsTrainTestSplit(DataStrategy):
         """
         Split the data into a training set and a test set.
 
-        :return: an iterator over a single item, which is a tuple of the training set and the test set.
+        Yields
+        ------
+        tuple[DataType, DataType]
+            An iterator over a single item, which is a tuple of the training set and the test set.
         """
         source_ids = instances.source_ids
         if source_ids is None or len(source_ids.shape) != 2 or source_ids.shape[1] != 2:
@@ -246,7 +255,10 @@ class PredefinedTrainTestSplit(DataStrategy):
         """
         Split the data into a training set and a test set.
 
-        :return: an iterator over a single item, which is a tuple of the training set and the test set.
+        Yields
+        ------
+        tuple[DataType, DataType]
+            An iterator over a single item, which is a tuple of the training set and the test set.
         """
         if 'role_assignments' not in instances.all_fields:
             raise ValueError('`role_assignments` field is missing')

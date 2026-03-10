@@ -60,8 +60,8 @@ class FeatureDataCsvParser(DataProvider, ABC):
     - :class:`FeatureDataCsvStreamParser` for reading from a stream.
 
 
-    Example
-    -------
+    Examples
+    --------
     Assume a CSV file containing two features and source identifiers:
 
     .. code-block:: text

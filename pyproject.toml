@@ -143,11 +143,13 @@ checks = [
     "EX01",
     "SA01",
     "ES01",
-]
-exclude_files = [
-    "lir/transform/*",
-    "lir/lrsystems/*",
-    "lir/experiments/*",
-    "lir/datasets/*",
-    "lir/data/*",
+    # After this line should be fixed
+    "RT01", # Return section
+    "PR01", # Parameters section
+    "GL01", 
+    "GL02",
+    "GL03",
+    "YD01", # Yield section
+    "SS03",
+    "SS05",
 ]

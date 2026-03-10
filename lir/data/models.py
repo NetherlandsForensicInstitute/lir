@@ -486,7 +486,6 @@ class LLRData(FeatureData):
     - llr_intervals: numpy array of LLR values of dimensions (n, 2), or `None` if the LLR's have no intervals
     - llr_upper_bound: upper bound applied to the LLRs, or `None` if no upper bound was applied
     - llr_lower_bound: lower bound applied to the LLRs, or `None` if no lower bound was applied
-
     """
 
     llr_upper_bound: float | None = None

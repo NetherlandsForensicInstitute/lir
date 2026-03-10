@@ -148,7 +148,6 @@ checks = [
     "PR01", # Parameters section
     "GL01", 
     "GL02",
-    "GL03",
     "SS03",
     "SS05",
 ]

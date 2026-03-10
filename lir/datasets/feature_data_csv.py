@@ -59,7 +59,6 @@ class FeatureDataCsvParser(DataProvider, ABC):
     - :class:`FeatureDataCsvHttpParser` for reading from a URL;
     - :class:`FeatureDataCsvStreamParser` for reading from a stream.
 
-
     Examples
     --------
     Assume a CSV file containing two features and source identifiers:

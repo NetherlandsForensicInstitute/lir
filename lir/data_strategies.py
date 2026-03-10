@@ -31,7 +31,6 @@ class TrainTestSplit(DataStrategy):
           strategy: train_test
           test_size: 0.2  # the (hold-out) test set  is 20% of the data
           seed: 42  # optional
-
     """
 
     def __init__(self, test_size: float | int, seed: int | None = None):
@@ -77,7 +76,6 @@ class CrossValidation(DataStrategy):
           strategy: cross_validation
           folds: 5  # the number k in k-fold cross-validation
           seed: 42  # optional
-
     """
 
     def __init__(self, folds: int, seed: int | None = None):

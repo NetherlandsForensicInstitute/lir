@@ -150,5 +150,4 @@ exclude_files = [
     "lir/experiments/*",
     "lir/datasets/*",
     "lir/data/*",
-    "lir/config/*",
 ]

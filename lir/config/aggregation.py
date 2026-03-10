@@ -25,10 +25,19 @@ def parse_aggregation(
     Other properties are passed as parameters. If `config` is a `str`, then its value is the aggregation method, and it
     has no parameters.
 
-    :param config: the configuration as a dictionary or str
-    :param output_dir: the output directory
-    :param context: the context cof the configuration (if `config` is a str)
-    :return: an Aggregation object
+    Parameters
+    ----------
+    config : ContextAwareDict | str
+        The configuration as a dictionary or string.
+    output_dir : Path
+        Output directory where derived artefacts are written.
+    context : list[str] | None, optional
+        Context for error reporting when ``config`` is provided as a string.
+
+    Returns
+    -------
+    Aggregation
+        Parsed aggregation instance.
     """
     # Normalise configuration into (class_name, args)
     if isinstance(config, str):
@@ -59,10 +68,19 @@ def parse_aggregations(
     """
     Parse a list of configurations for aggregation.
 
-    :param config: the configuration section of a single aggregation, or a list of aggregation configurations
-    :param output_dir: the output directory for the aggregations
-    :param context: the context cof the configuration (if `config` is a `str`)
-    :return: a list of Aggregation objects
+    Parameters
+    ----------
+    config : ContextAwareList | ContextAwareDict | str
+        Configuration for a single aggregation or a list of aggregation configurations.
+    output_dir : Path
+        Output directory for the aggregation instances.
+    context : list[str] | None, optional
+        Context for error reporting when ``config`` is provided as a string.
+
+    Returns
+    -------
+    list[Aggregation]
+        Parsed aggregation instances.
     """
     context = context or getattr(config, 'context', None) or []
     if isinstance(config, list):
@@ -76,9 +94,17 @@ def subset_aggregation(config: ContextAwareDict, output_dir: Path) -> SubsetAggr
     """
     Parse a configuration section for a categorized subset aggregation.
 
-    :param config: the configuration section
-    :param output_dir: the output directory
-    :return: a SubsetAggregation object
+    Parameters
+    ----------
+    config : ContextAwareDict
+        Configuration section.
+    output_dir : Path
+        Output directory.
+
+    Returns
+    -------
+    SubsetAggregation
+        Parsed subset aggregation object.
     """
     check_type(dict, config, 'output configuration should be a dictionary')
     category_field = pop_field(config, 'category_field')

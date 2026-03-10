@@ -12,11 +12,24 @@ from lir.data.models import DataProvider, DataStrategy
 
 
 def parse_data_object(cfg: ContextAwareDict, output_path: Path) -> tuple[DataProvider, DataStrategy]:
-    """Parse data provider and data strategy from configuration.
+    """
+    Parse data provider and data strategy from configuration.
 
     The `provider` and `splits` fields are parsed, which are expected to refer
     to specific implementations of `DataProvider` and `DataStrategy`, respectively.
     See `parse_data_provider` and `parse_data_strategy` for more information.
+
+    Parameters
+    ----------
+    cfg : ContextAwareDict
+        Configuration section containing provider and split strategy.
+    output_path : Path
+        Output path for created objects.
+
+    Returns
+    -------
+    tuple[DataProvider, DataStrategy]
+        Parsed data provider and strategy.
     """
     provider, strategy = (
         parse_data_provider(pop_field(cfg, 'provider'), output_path),
@@ -27,13 +40,26 @@ def parse_data_object(cfg: ContextAwareDict, output_path: Path) -> tuple[DataPro
 
 
 def parse_data_strategy(cfg: ContextAwareDict, output_path: Path) -> DataStrategy:
-    """Instantiate specific implementation of `DataStrategy` as configured.
+    """
+    Instantiate specific implementation of `DataStrategy` as configured.
 
     The `strategy` field is parsed, which is expected to refer to a name in
     the registry. See for example `lir.data_setup.binary_cross_validation`
     or `lir.data_setup.binary_train_test_split`.
 
     Data setup configuration is provided under the `data_setup` key.
+
+    Parameters
+    ----------
+    cfg : ContextAwareDict
+        Data strategy configuration.
+    output_path : Path
+        Output path for created objects.
+
+    Returns
+    -------
+    DataStrategy
+        Parsed data strategy instance.
     """
     strategy = pop_field(cfg, 'strategy')
 
@@ -53,13 +79,26 @@ def parse_data_strategy(cfg: ContextAwareDict, output_path: Path) -> DataStrateg
 
 
 def parse_data_provider(cfg: ContextAwareDict, output_path: Path) -> DataProvider:
-    """Instantiate specific implementation of `DataProvider` as configured.
+    """
+    Instantiate specific implementation of `DataProvider` as configured.
 
     The `method` field is parsed, which is expected to refer to a name in
     the registry. See for example `lir.config.data_sources.synthesized_normal_binary`
     or `lir.config.data_sources.synthesized_normal_multiclass`.
 
     Data sources are provided under the `data_sources` key.
+
+    Parameters
+    ----------
+    cfg : ContextAwareDict
+        Data provider configuration.
+    output_path : Path
+        Output path for created objects.
+
+    Returns
+    -------
+    DataProvider
+        Parsed data provider instance.
     """
     provider = pop_field(cfg, 'method')
 

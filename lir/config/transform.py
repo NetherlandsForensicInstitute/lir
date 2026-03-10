@@ -22,16 +22,30 @@ from lir.transform import (
 
 
 class GenericTransformerConfigParser(ConfigParser):
-    """Parser class to help parse the defined component into its corresponding `Transformer` object.
+    """
+    Parser class to help parse the defined component into its corresponding `Transformer` object.
 
     Since the scikit-learn `Pipeline` expects a `fit()` and `transform()` method on each of the pipeline steps,
     the configured components should adhere to this contract and implement these methods.
 
     The `parse()` function offered in this helper class, implements a branching strategy to determine
     which strategy is best suited to make the component compatible with the scikit-learn pipeline.
+
+    Parameters
+    ----------
+    component_class : object
+        Component class or callable to adapt to the transformer interface.
     """
 
     def __init__(self, component_class: object):
+        """
+        Initialise parser for a transformer-like component.
+
+        Parameters
+        ----------
+        component_class : object
+            Component class or callable to adapt to the transformer interface.
+        """
         super().__init__()
         self.component_class = component_class
 
@@ -40,7 +54,21 @@ class GenericTransformerConfigParser(ConfigParser):
         config: ContextAwareDict,
         output_dir: Path,
     ) -> Transformer:
-        """Prepare the defined component to support the expected methods in the scikit-learn `Pipeline`."""
+        """
+        Prepare a configured component for use in a scikit-learn pipeline.
+
+        Parameters
+        ----------
+        config : ContextAwareDict
+            Constructor arguments for the component class.
+        output_dir : Path
+            Unused output directory argument required by parser API.
+
+        Returns
+        -------
+        Transformer
+            Component adapted to the ``Transformer`` interface.
+        """
         if inspect.isclass(self.component_class):
             try:
                 instance = self.component_class(**config)
@@ -76,14 +104,43 @@ class GenericTransformerConfigParser(ConfigParser):
 
 
 class NumpyWrappingConfigParser(ConfigParser):
-    """Wrap a Transformer to add a header to FeatureData."""
+    """
+    Wrap a Transformer to add a header to FeatureData.
+
+    Parameters
+    ----------
+    module_parser : ConfigParser
+        Parser used to create the wrapped transformer.
+    """
 
     def __init__(self, module_parser: ConfigParser):
+        """
+        Initialise parser that wraps module output in ``NumpyTransformer``.
+
+        Parameters
+        ----------
+        module_parser : ConfigParser
+            Parser used to create the wrapped transformer.
+        """
         super().__init__()
         self.module_parser = module_parser
 
     def parse(self, config: ContextAwareDict, output_dir: Path) -> Transformer:
-        """Parse the provided header configuration."""
+        """
+        Parse the provided header configuration.
+
+        Parameters
+        ----------
+        config : ContextAwareDict
+            Configuration possibly containing ``header`` and module fields.
+        output_dir : Path
+            Output directory passed to the wrapped parser.
+
+        Returns
+        -------
+        Transformer
+            Wrapped transformer that preserves numpy headers.
+        """
         header = config.pop('header') if 'header' in config else None
         return NumpyTransformer(
             self.module_parser.parse(config, output_dir),
@@ -91,7 +148,14 @@ class NumpyWrappingConfigParser(ConfigParser):
         )
 
     def reference(self) -> str:
-        """Return the full name of the `module_parser` class argument."""
+        """
+        Return the full name of the ``module_parser`` class argument.
+
+        Returns
+        -------
+        str
+            Reference string for the wrapped parser.
+        """
         return self.module_parser.reference()
 
 
@@ -126,13 +190,13 @@ def parse_module(
 
     Parameters
     ----------
-    module_config : dict or str or None
+    module_config : ContextAwareDict | str | None
         Specification of the module.
-    output_dir : str or pathlib.Path
+    output_dir : Path
         Directory where any output produced by the module is written.
-    config_context_path : str
+    config_context_path : list[str]
         Context path of this configuration, used for error reporting.
-    default_method : str, optional
+    default_method : str | None, optional
         Default value for the ``method`` field if it is not provided.
 
     Returns
@@ -154,7 +218,21 @@ def parse_module(
 
 @config_parser
 def csv_writer(config: ContextAwareDict, output_dir: Path) -> CsvWriter:
-    """Set up a CSV Writer object, according to the configuration."""
+    """
+    Set up a CSV writer from configuration.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        CSV writer configuration.
+    output_dir : Path
+        Output directory used to derive default CSV path.
+
+    Returns
+    -------
+    CsvWriter
+        Configured CSV writer.
+    """
     if 'path' not in config:
         config |= {'path': output_dir / f'{config.context[-1]}.csv'}
     return CsvWriter(**config)

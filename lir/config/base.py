@@ -10,39 +10,142 @@ from lir.transform.pairing import PairingMethod
 
 
 class YamlParseError(ValueError):
-    """Error raised when parsing YAML configuration fails, mentioning specific YAML path."""
+    """
+    Error raised when parsing YAML configuration fails, mentioning specific YAML path.
+
+    Parameters
+    ----------
+    config_context_path : list[str]
+        Dot-path to the failing configuration node.
+    message : str
+        Human-readable validation or parsing message.
+    """
 
     def __init__(self, config_context_path: list[str], message: str):
+        """
+        Initialise the parse error.
+
+        Parameters
+        ----------
+        config_context_path : list[str]
+            Dot-path to the failing configuration node.
+        message : str
+            Human-readable validation or parsing message.
+        """
         prefix = f'{".".join(config_context_path)}: ' if config_context_path else ''
         super().__init__(f'{prefix}{message}')
 
 
 class ContextAwareDict(dict):
-    """Dictionary wrapper which has knowledge about its context."""
+    """
+    Dictionary wrapper which has knowledge about its context.
+
+    Parameters
+    ----------
+    context : list[str]
+        YAML path used for contextual error messages.
+    *args : Any
+        Positional arguments passed to ``dict``.
+    **kwargs : Any
+        Keyword arguments passed to ``dict``.
+    """
 
     def __init__(self, context: list[str], *args: Any, **kwargs: Any):
+        """
+        Create a context-aware dictionary.
+
+        Parameters
+        ----------
+        context : list[str]
+            YAML path used for contextual error messages.
+        *args : Any
+            Positional arguments passed to ``dict``.
+        **kwargs : Any
+            Keyword arguments passed to ``dict``.
+        """
         super().__init__(*args, **kwargs)
         self.context = context
 
     def clone(self, context: list[str] | None = None) -> 'ContextAwareDict':
-        """Allow creating a new instance of the ContextAware dictionary, keeping the context."""
+        """
+        Create a cloned dictionary with expanded nested context.
+
+        Parameters
+        ----------
+        context : list[str] | None, optional
+            Replacement context. If omitted, the current context is reused.
+
+        Returns
+        -------
+        ContextAwareDict
+            Cloned and context-aware dictionary.
+        """
         return _expand(context if context is not None else self.context, self)
 
 
 class ContextAwareList(list):
-    """List wrapper which has knowledge about its context."""
+    """
+    List wrapper which has knowledge about its context.
+
+    Parameters
+    ----------
+    context : list[str]
+        YAML path used for contextual error messages.
+    *args : Any
+        Positional arguments passed to ``list``.
+    **kwargs : Any
+        Keyword arguments passed to ``list``.
+    """
 
     def __init__(self, context: list[str], *args: Any, **kwargs: Any):
+        """
+        Create a context-aware list.
+
+        Parameters
+        ----------
+        context : list[str]
+            YAML path used for contextual error messages.
+        *args : Any
+            Positional arguments passed to ``list``.
+        **kwargs : Any
+            Keyword arguments passed to ``list``.
+        """
         super().__init__(*args, **kwargs)
         self.context = context
 
     def clone(self, context: list[str] | None = None) -> 'ContextAwareList':
-        """Allow creating a new instance of the ContextAware dictionary, keeping the context."""
+        """
+        Create a cloned list with expanded nested context.
+
+        Parameters
+        ----------
+        context : list[str] | None, optional
+            Replacement context. If omitted, the current context is reused.
+
+        Returns
+        -------
+        ContextAwareList
+            Cloned and context-aware list.
+        """
         return _expand(context if context is not None else self.context, self)
 
 
 def _expand(context: list[str], cfg: Any) -> Any:
-    """Unpack the data structure iteratively into the appropriate underlying representation."""
+    """
+    Expand nested values into context-aware containers.
+
+    Parameters
+    ----------
+    context : list[str]
+        Current YAML path.
+    cfg : Any
+        Value to expand recursively.
+
+    Returns
+    -------
+    Any
+        Expanded value where mappings and sequences are wrapped in context-aware types.
+    """
     if isinstance(cfg, Mapping):
         return ContextAwareDict(context, [(key, _expand(context + [key], value)) for key, value in cfg.items()])
     elif isinstance(cfg, str):
@@ -53,7 +156,8 @@ def _expand(context: list[str], cfg: Any) -> Any:
 
 
 class ConfigParser(ABC):
-    """Abstract base configuration parser class.
+    """
+    Abstract base configuration parser class.
 
     Each implementation should implement a custom `parse()` method
     which is dedicated to parsing a specific aspect, e.g. the configuration
@@ -66,22 +170,40 @@ class ConfigParser(ABC):
         config: ContextAwareDict,
         output_dir: Path,
     ) -> Any:
-        """Dedicated function to parse a specific section of a YAML configuration.
+        """
+        Parse a specific configuration section.
 
-        Arguments:
-        - config: a section of a YAML configuration
-        - config_context_path: the path in the YAML configuration to `config`, the section to be parsed
-        - output_dir: the directory where the returned object may write results during its lifetime
+        Parameters
+        ----------
+        config : ContextAwareDict
+            Configuration section to parse.
+        output_dir : Path
+            Directory where produced outputs may be written.
 
-        Returns: an object that is configured according to `config`.
+        Returns
+        -------
+        Any
+            Object configured from ``config``.
         """
         raise NotImplementedError
 
     @staticmethod
-    def get_type_name(cls: Any) -> str:
-        """Return the full type name of the `cls` argument."""
-        module = cls.__module__
-        return f'{module}.{cls.__qualname__}'
+    def get_type_name(obj: Any) -> str:
+        """
+        Return the fully qualified type name.
+
+        Parameters
+        ----------
+        obj : Any
+            Class or object with ``__module__`` and ``__qualname__`` attributes.
+
+        Returns
+        -------
+        str
+            Fully qualified name.
+        """
+        module = obj.__module__
+        return f'{module}.{obj.__qualname__}'
 
     def reference(self) -> str:
         """
@@ -89,14 +211,34 @@ class ConfigParser(ABC):
 
         By default, return the name of this class. In a subclass that was initialized with another class or function
         that does the actual work, the name of that class is returned.
+
+        Returns
+        -------
+        str
+            Fully qualified class name for this parser instance.
         """
         return self.get_type_name(self.__class__)
 
 
 class GenericFunctionConfigParser(ConfigParser):
-    """Parser for callable functions or component classes."""
+    """
+    Parser for callable functions or component classes.
+
+    Parameters
+    ----------
+    component_class : Callable
+        Callable that should be exposed by this parser.
+    """
 
     def __init__(self, component_class: Callable):
+        """
+        Initialise the parser.
+
+        Parameters
+        ----------
+        component_class : Callable
+            Callable that should be exposed by this parser.
+        """
         super().__init__()
         self.component_class = component_class
 
@@ -105,21 +247,57 @@ class GenericFunctionConfigParser(ConfigParser):
         config: ContextAwareDict,
         output_dir: Path,
     ) -> Callable:
-        """Perform the parsing, based on component class."""
+        """
+        Parse configuration into a callable.
+
+        Parameters
+        ----------
+        config : ContextAwareDict
+            Configuration section for validation context.
+        output_dir : Path
+            Unused output directory argument required by the parser API.
+
+        Returns
+        -------
+        Callable
+            Resolved callable object.
+        """
         if callable(self.component_class):
             return self.component_class
 
         raise YamlParseError(config.context, f'unrecognized module type: `{self.component_class}`')
 
     def reference(self) -> str:
-        """Return the full name of the `component_class` function argument."""
+        """
+        Return the fully qualified name of the wrapped callable.
+
+        Returns
+        -------
+        str
+            Fully qualified callable name.
+        """
         return self.get_type_name(self.component_class)
 
 
 class GenericConfigParser(ConfigParser):
-    """Return an instantiation of a class, initialized with the specified arguments."""
+    """
+    Return an instantiation of a class, initialized with the specified arguments.
+
+    Parameters
+    ----------
+    component_class : type[Any]
+        Class to instantiate from configuration values.
+    """
 
     def __init__(self, component_class: type[Any]):
+        """
+        Initialise the parser.
+
+        Parameters
+        ----------
+        component_class : type[Any]
+            Class to instantiate from configuration values.
+        """
         super().__init__()
         self.component_class = component_class
 
@@ -128,7 +306,21 @@ class GenericConfigParser(ConfigParser):
         config: ContextAwareDict,
         output_dir: Path,
     ) -> Any:
-        """Perform parsing of a class, based on configuration."""
+        """
+        Instantiate the configured component class.
+
+        Parameters
+        ----------
+        config : ContextAwareDict
+            Keyword arguments for class initialisation.
+        output_dir : Path
+            Unused output directory argument required by the parser API.
+
+        Returns
+        -------
+        Any
+            Instantiated object.
+        """
         try:
             return self.component_class(**config)
         except Exception as e:
@@ -138,7 +330,14 @@ class GenericConfigParser(ConfigParser):
             )
 
     def reference(self) -> str:
-        """Return the full name of the `component_class` class argument."""
+        """
+        Return the fully qualified name of the wrapped class.
+
+        Returns
+        -------
+        str
+            Fully qualified class name.
+        """
         return self.get_type_name(self.component_class)
 
 
@@ -151,6 +350,16 @@ def get_full_name(obj: Any) -> str:
         from lir import FeatureData
         print(get_full_name(FeatureData))
         'lir.FeatureData'
+
+    Parameters
+    ----------
+    obj : Any
+        Importable object.
+
+    Returns
+    -------
+    str
+        Fully qualified object name.
     """
     return f'{obj.__module__}.{obj.__name__}'
 
@@ -181,6 +390,18 @@ def config_parser(
     After decoration, ``foo`` is replaced by a ``ConfigParser`` instance whose
     :meth:`parse` method executes the original function body. See the
     documentation of :class:`ConfigParser` for the meaning of the arguments.
+
+    Parameters
+    ----------
+    func : Callable[[ContextAwareDict, Path], Any] | None, optional
+        Function to wrap as a config parser.
+    reference : str | Any | None, optional
+        Explicit reference name or object used in generated metadata.
+
+    Returns
+    -------
+    Callable
+        Decorator result or wrapped ``ConfigParser`` implementation.
     """
     if func is None:
         # take the optional arguments
@@ -219,7 +440,8 @@ def parse_pairing_config(
     output_dir: Path,
     context: list[str],
 ) -> PairingMethod:
-    """Parse and delegate pairing to the corresponding function for the defined pairing method.
+    """
+    Parse and delegate pairing to the corresponding function for the defined pairing method.
 
     The argument `module_config` defines the pairing method. If its value is a `str`, the registry is queried and the
     corresponding pairing method is returned. If its value is a `dict`, the pairing method is defined
@@ -228,6 +450,20 @@ def parse_pairing_config(
     configuration parser of the pairing method.
 
     If the registry cannot resolve the pairing method, an exception is raised.
+
+    Parameters
+    ----------
+    module_config : ContextAwareDict | str
+        Pairing method configuration.
+    output_dir : Path
+        Output directory for parser calls.
+    context : list[str]
+        Context used when ``module_config`` is a string.
+
+    Returns
+    -------
+    PairingMethod
+        Parsed pairing method.
     """
     if isinstance(module_config, str):
         class_name = module_config
@@ -245,7 +481,21 @@ AnyType = TypeVar('AnyType')
 
 
 def check_not_none[AnyType](v: AnyType | None, message: str | None = None) -> AnyType:
-    """Validate the value to not be equal to None."""
+    """
+    Validate a value is not ``None``.
+
+    Parameters
+    ----------
+    v : AnyType | None
+        Value to validate.
+    message : str | None, optional
+        Error message used when ``v`` is ``None``.
+
+    Returns
+    -------
+    AnyType
+        Original non-``None`` value.
+    """
     if v is None:
         raise ValueError(message or 'value None is not allowed here')
     return v
@@ -274,10 +524,19 @@ def check_type(type_class: Any, v: YamlValueType, message: str | None = None) ->
     - str
     - NoneType
 
-    :param type_class: the target type
-    :param v: the value to check
-    :param message: an optional message that is used in case of an error
-    :return: the value
+    Parameters
+    ----------
+    type_class : Any
+        Target type or tuple of target types.
+    v : YamlValueType
+        Value to validate.
+    message : str | None, optional
+        Error message used when validation fails.
+
+    Returns
+    -------
+    Any
+        Original value when type validation succeeds.
     """
     if isinstance(v, type_class):
         return v
@@ -297,14 +556,24 @@ def pop_field(
     """
     Validate and retrieve the value for a given field, after which it is removed from the configuration.
 
-    :param config: the configuration
-    :param field: the field to obtain from the `config`
-    :param default: the value to return if the field is not found; defaults to `None`; if the value is not `None`, the
-        `required` argument defaults to `False`
-    :param required: if `True` and the field was not found, raise an error; defaults to `True` unless `default` is not
-        `None`
-    :param validate: a callable to validate the value type
-    :return: the field value or the default value or an error is raised
+    Parameters
+    ----------
+    config : ContextAwareDict | Any
+        Configuration object to pop from.
+    field : str
+        Field name to retrieve.
+    default : Any, optional
+        Value to return when ``field`` is absent.
+    required : bool | None, optional
+        Whether to raise when the field is absent. Defaults to ``True`` when
+        ``default`` is ``None``.
+    validate : Callable[[Any], Any] | None, optional
+        Optional validator applied to the popped value.
+
+    Returns
+    -------
+    Any
+        Popped field value or ``default``.
     """
     # get required status and default value from function arguments
     required = required if required is not None else (default is None)
@@ -335,11 +604,24 @@ def check_is_empty(
     config: ContextAwareDict,
     accept_keys: Sequence[str] | None = None,
 ) -> None:
-    """Ensure all defined expected arguments are parsed and warn about ignored arguments.
+    """
+    Ensure all defined expected arguments are parsed and warn about ignored arguments.
 
     If any unexpected arguments remain, a `YamlParseError` is raised indicating the
     argument was unexpected and not taken into account (i.e. not parsed). This methodology ensures
     the user does not assume arguments are parsed that are in fact not recognized.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        Configuration to validate for remaining keys.
+    accept_keys : Sequence[str] | None, optional
+        Keys that may remain without raising an error.
+
+    Returns
+    -------
+    None
+        This function raises on invalid input and otherwise returns ``None``.
     """
     for key in config:
         if not accept_keys or key not in accept_keys:

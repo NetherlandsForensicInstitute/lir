@@ -29,25 +29,69 @@ LOG = logging.getLogger(__name__)
 
 
 class ParsedLRSystem(LRSystem):
-    """Represent a given initialized LR system based on the provided configuration."""
+    """
+    Represent a given initialized LR system based on the provided configuration.
+
+    Parameters
+    ----------
+    lrsystem : LRSystem
+        Underlying LR system implementation.
+    config : ContextAwareDict
+        Original LR system configuration.
+    """
 
     def __init__(self, lrsystem: LRSystem, config: ContextAwareDict):
+        """
+        Initialise a parsed LR system wrapper.
+
+        Parameters
+        ----------
+        lrsystem : LRSystem
+            Underlying LR system implementation.
+        config : ContextAwareDict
+            Original LR system configuration.
+        """
         self.lrsystem = lrsystem
         self.config = config
 
     def fit(self, instances: InstanceData) -> Self:
-        """Fit the LR system on the instance data."""
+        """
+        Fit the LR system on instance data.
+
+        Parameters
+        ----------
+        instances : InstanceData
+            Training instances.
+
+        Returns
+        -------
+        Self
+            This wrapper instance.
+        """
         self.lrsystem.fit(instances)
         return self
 
     def apply(self, instances: InstanceData) -> LLRData:
-        """Use the fitted LR system to calculate LLR data for the input instance data."""
+        """
+        Apply the fitted LR system.
+
+        Parameters
+        ----------
+        instances : InstanceData
+            Instances to score.
+
+        Returns
+        -------
+        LLRData
+            Computed likelihood-ratio data.
+        """
         return self.lrsystem.apply(instances)
 
 
 @config_parser
 def specific_source(config: ContextAwareDict, output_dir: Path) -> BinaryLRSystem:
-    """Construct a specific-source LR system based on the provided configuration.
+    """
+    Construct a specific-source LR system based on the provided configuration.
 
     The `specific_source` function name corresponds with the naming scheme in the
     registry. See for example: `lir.config.lrsystems.specific_source`.
@@ -57,6 +101,18 @@ def specific_source(config: ContextAwareDict, output_dir: Path) -> BinaryLRSyste
      - intermediate_output: boolean flag to determine whether to use logging pipeline as default
 
     If any other fields are present, an exception is raised.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        Specific-source architecture configuration.
+    output_dir : Path
+        Output directory passed to nested module parsers.
+
+    Returns
+    -------
+    BinaryLRSystem
+        Configured specific-source LR system.
     """
     pipeline = parse_module(
         pop_field(config, 'modules'), output_dir, config.context, default_method=parse_default_pipeline(config)
@@ -67,7 +123,8 @@ def specific_source(config: ContextAwareDict, output_dir: Path) -> BinaryLRSyste
 
 @config_parser
 def score_based(config: ContextAwareDict, output_dir: Path) -> ScoreBasedSystem:
-    """Construct a score-based LR system based on the provided configuration.
+    """
+    Construct a score-based LR system based on the provided configuration.
 
     The `score_based` function name corresponds with the naming scheme in the
     registry. See for example: `lir.config.lrsystems.score_based`.
@@ -79,6 +136,18 @@ def score_based(config: ContextAwareDict, output_dir: Path) -> ScoreBasedSystem:
      - intermediate_output: boolean flag to determine whether to use logging pipeline as default
 
     If any other fields are present, an exception is raised.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        Score-based architecture configuration.
+    output_dir : Path
+        Output directory passed to nested module parsers.
+
+    Returns
+    -------
+    ScoreBasedSystem
+        Configured score-based LR system.
     """
     default_pipeline = parse_default_pipeline(config)
 
@@ -96,7 +165,8 @@ def score_based(config: ContextAwareDict, output_dir: Path) -> ScoreBasedSystem:
 
 @config_parser
 def two_level(config: ContextAwareDict, output_dir: Path) -> TwoLevelSystem:
-    """Construct a two-level LR system based on the provided configuration.
+    """
+    Construct a two-level LR system based on the provided configuration.
 
     The `two_level` function name corresponds with the naming scheme in the
     registry. See for example: `lir.config.lrsystems.two_level`.
@@ -110,6 +180,18 @@ def two_level(config: ContextAwareDict, output_dir: Path) -> TwoLevelSystem:
     - intermediate_output: boolean flag to determine whether to use logging pipeline as default
 
     If any other fields are present, an exception is raised.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        Two-level architecture configuration.
+    output_dir : Path
+        Output directory passed to nested module parsers.
+
+    Returns
+    -------
+    TwoLevelSystem
+        Configured two-level LR system.
     """
     default_pipeline = parse_default_pipeline(config)
 
@@ -134,9 +216,22 @@ def two_level(config: ContextAwareDict, output_dir: Path) -> TwoLevelSystem:
 
 
 def parse_lrsystem(config: ContextAwareDict, output_dir: Path) -> ParsedLRSystem:
-    """Determine and initialise corresponding LR system from configuration values.
+    """
+    Determine and initialise corresponding LR system from configuration values.
 
     LR systems are provided under the `architectures` key.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        LR system configuration.
+    output_dir : Path
+        Output directory for nested parser calls.
+
+    Returns
+    -------
+    ParsedLRSystem
+        Wrapper containing parsed LR system and source configuration.
     """
     lrsystem_config = config.clone()  # save for later
 
@@ -161,11 +256,17 @@ def augment_config(
     base configuration. Results are written to a subdirectory of `output_dir` that is named by its parameter
     substitutions and prefixed by `dirname_prefix`.
 
-    :param baseline_config: the base LR system configuration
-    :param hyperparameters: hyperparameter substitutions that override parts of the base configuration
-    :param output_dir: the directory where create a results directory
-    :param dirname_prefix: the prefix of the created directory name
-    :return: the LR system
+    Parameters
+    ----------
+    baseline_config : ContextAwareDict
+        Base LR system configuration.
+    hyperparameters : dict[str, HyperparameterOption]
+        Hyperparameter substitutions overriding parts of the base configuration.
+
+    Returns
+    -------
+    ContextAwareDict
+        Augmented LR system configuration.
     """
     substitutions = dict(itertools.chain(*[opt.substitutions.items() for opt in hyperparameters.values()]))
 
@@ -182,10 +283,18 @@ def augment_config(
 
 
 def parse_default_pipeline(config: ContextAwareDict) -> str:
-    """Parse the intermediate result field from configuration, with the goal of determining the default pipeline method.
+    """
+    Parse the intermediate output flag to determine the default pipeline method.
 
-    :param config: the configuration dictionary
-    :return: the default method to use ('logging_pipeline' or 'pipeline')
+    Parameters
+    ----------
+    config : ContextAwareDict
+        Configuration dictionary.
+
+    Returns
+    -------
+    str
+        Default method name (``'logging_pipeline'`` or ``'pipeline'``).
     """
     intermediate_output = pop_field(config, 'intermediate_output', default=False)
     default_method = 'logging_pipeline' if intermediate_output else 'pipeline'

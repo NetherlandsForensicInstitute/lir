@@ -260,13 +260,25 @@ def warn_deprecated() -> None:
 
 
 def to_native_dict(cfg: Any) -> Any:
-    """Recursively convert confidence Configuration objects to native Python dicts/lists.
+    """
+    Recursively convert confidence Configuration objects to native Python dicts/lists.
 
     Accesses each value through cfg[key] to trigger reference resolution. The confidence ibrary doesn't have a built-in
     method for this, so we manually traverse and resolve.
 
     Similary to lir.config.base._expand, but this method returns native dicts/lists instead of
     ContextAwareDict/ContextAwareList.
+
+    Parameters
+    ----------
+    cfg : Any
+        The input configuration object, which can be a confidence Configuration, ConfigurationSequence, dict, list, or
+        any other type.
+
+    Returns
+    -------
+    Any
+        The input Configuration object converted to a native Python dict or list.
     """
     match cfg:
         case Configuration():
@@ -282,12 +294,22 @@ def to_native_dict(cfg: Any) -> Any:
 
 
 def validate_yaml(yaml_path: Path) -> None:
-    """Validate a YAML file against the schema.
+    """
+    Validate a YAML file against the schema.
 
-    :param yaml_path: path to the YAML file to validate
-    :raises FileNotFoundError: if the YAML or schema file doesn't exist
-    :raises yaml.YAMLError: if the YAML is invalid
-    :raises ValidationError: if the YAML doesn't conform to the schema
+    Parameters
+    ----------
+    yaml_path : Path
+        The path to the YAML file to be validated.
+    
+    Raises
+    ------
+    FileNotFoundError
+        If the YAML file or the schema file does not exist.
+    yaml.YAMLError
+        If the YAML file is not valid YAML.
+    ValidationError
+        If the YAML file does not conform to the schema.
     """
     schema_path = Path(__file__).parent.parent / 'lir.schema.json'
 

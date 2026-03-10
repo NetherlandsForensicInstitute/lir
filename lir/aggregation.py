@@ -442,7 +442,18 @@ def metrics_csv(config: ContextAwareDict, output_dir: Path) -> WriteMetricsToCsv
 
 
 class CaseLLRToCsv(Aggregation):
-    """Aggregation that applies a full-data-fitted LR system to case data and stores LLRs as CSV."""
+    """
+    Aggregation that applies a full-data-fitted LR system to case data and stores LLRs as CSV.
+
+    Parameters
+    ----------
+    output_dir : Path
+        Directory where the CSV file will be written.
+    case_data_provider : DataProvider
+        Provider for the case data to apply the LR system to.
+    filename : str, optional
+        Name of the output CSV file, by default 'case_llr.csv'.
+    """
 
     def __init__(self, output_dir: Path, case_data_provider: DataProvider, filename: str = 'case_llr.csv') -> None:
         self.output_dir = output_dir
@@ -450,7 +461,14 @@ class CaseLLRToCsv(Aggregation):
         self.filename = Path(filename)
 
     def report(self, data: AggregationData) -> None:
-        """Apply the full-data-fitted LR system to the case data and store the resulting LLRs as CSV."""
+        """
+        Apply the full-data-fitted LR system to the case data and store the resulting LLRs as CSV.
+
+        Parameters
+        ----------
+        data : AggregationData
+            Aggregation data containing the fitted LR system and case data.
+        """
         if data.get_full_fit_lrsystem is not None:
             lrsystem = data.get_full_fit_lrsystem()
         else:
@@ -495,7 +513,21 @@ class CaseLLRToCsv(Aggregation):
 
 @config_parser
 def case_llr_csv(config: ContextAwareDict, output_dir: Path) -> CaseLLRToCsv:
-    """Parse output configuration for case LLR generation and CSV export."""
+    """
+    Parse output configuration for case LLR generation and CSV export.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        Configuration dictionary containing case LLR output settings.
+    output_dir : Path
+        Directory where the CSV file will be written.
+
+    Returns
+    -------
+    CaseLLRToCsv
+        Configured CaseLLRToCsv aggregation instance.
+    """
     case_data_provider = parse_data_provider(pop_field(config, 'case_llr_data'), output_dir)
     filename = pop_field(config, 'filename', default='case_llr.csv', validate=str)
     filename = check_type(str, filename)

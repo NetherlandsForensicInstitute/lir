@@ -11,7 +11,8 @@ from lir.util import check_type, probability_to_logodds
 
 
 class IsotonicRegression(sklearn.isotonic.IsotonicRegression):
-    """Wrap SKlearn implementation to support infinite values.
+    """
+    Wrap SKlearn implementation to support infinite values.
 
     Sklearn implementation IsotonicRegression throws an error when values are Inf or -Inf when in fact
     IsotonicRegression can handle infinite values. This wrapper around the sklearn implementation of IsotonicRegression
@@ -19,20 +20,25 @@ class IsotonicRegression(sklearn.isotonic.IsotonicRegression):
     """
 
     def fit(self, X: ArrayLike, y: ArrayLike, sample_weight: ArrayLike | tuple | None = None) -> 'IsotonicRegression':
-        """Fit the model using X, y as training data.
+        """
+        Fit the model using X, y as training data.
 
         X is stored for future use, as :meth:`transform` needs X to interpolate
         new input data.
 
-        :param X: array-like of shape (n_samples,)
-            Training data.
-        :param y: array-like of shape (n_samples,)
-            Training target.
-        :param sample_weight: array-like of shape (n_samples,), default=None
-            Weights. If set to None, all weights will be set to 1 (equal
-            weights).
+        Parameters
+        ----------
+        X : ArrayLike
+            Training data with shape ``(n_samples,)``.
+        y : ArrayLike
+            Training target with shape ``(n_samples,)``.
+        sample_weight : ArrayLike | tuple | None, optional
+            Sample weights. If `None`, equal weights are used.
 
-        :return: Returns an instance of self.
+        Returns
+        -------
+        IsotonicRegression
+            Fitted estimator.
         """
         check_params = dict(accept_sparse=False, ensure_2d=False, ensure_all_finite=False)  # noqa: C408
         X = check_array(X, dtype=[np.float64, np.float32], **check_params)
@@ -64,12 +70,18 @@ class IsotonicRegression(sklearn.isotonic.IsotonicRegression):
         return self
 
     def transform(self, T: ArrayLike) -> np.ndarray:
-        """Transform new data by linear interpolation.
+        """
+        Transform new data by linear interpolation.
 
-        :param T: array-like of shape (n_samples,)
+        Parameters
+        ----------
+        T : ArrayLike
             Data to transform.
-        :return: array, shape=(n_samples,)
-            The transformed data
+
+        Returns
+        -------
+        np.ndarray
+            The transformed data.
         """
         dtype = self._necessary_X_.dtype if hasattr(self, '_necessary_X_') else np.float64
 
@@ -104,7 +116,8 @@ class IsotonicRegression(sklearn.isotonic.IsotonicRegression):
 
 
 class IsotonicCalibrator(Transformer):
-    """Calculate LR from a score belonging to one of two distributions using isotonic regression.
+    """
+    Calculate LR from a score belonging to one of two distributions using isotonic regression.
 
     Calculates a likelihood ratio of a score value, provided it is from one of
     two distributions. Uses isotonic regression for interpolation.
@@ -113,15 +126,39 @@ class IsotonicCalibrator(Transformer):
 
     - has an initialization argument that provides the option of adding misleading data points
     - outputs logodds instead of probabilities
+
+    Parameters
+    ----------
+    add_misleading : int, optional
+        Number of synthetic misleading points to add to reduce extreme LRs.
     """
 
     def __init__(self, add_misleading: int = 0):
-        """:param add_misleading:"""
+        """
+        Initialize an isotonic calibrator.
+
+        Parameters
+        ----------
+        add_misleading : int, optional
+            Number of synthetic misleading points to add to reduce extreme LRs.
+        """
         self.add_misleading = add_misleading
         self._ir = IsotonicRegression(out_of_bounds='clip')
 
     def fit(self, instances: InstanceData) -> Self:
-        """Allow fitting the estimator on the given data."""
+        """
+        Fit the estimator on the given data.
+
+        Parameters
+        ----------
+        instances : InstanceData
+            Training instances.
+
+        Returns
+        -------
+        Self
+            Fitted calibrator.
+        """
         y = instances.check_both_labels()
         instances = check_type(FeatureData, instances).replace_as(LLRData)
 
@@ -144,11 +181,35 @@ class IsotonicCalibrator(Transformer):
         return self
 
     def apply(self, instances: InstanceData) -> LLRData:
-        """Transform a given value, using the fitted Isotonic Regression model."""
+        """
+        Transform instances using the fitted isotonic regression model.
+
+        Parameters
+        ----------
+        instances : InstanceData
+            Instances to transform.
+
+        Returns
+        -------
+        LLRData
+            Calibrated log-likelihood-ratio data.
+        """
         instances = check_type(FeatureData, instances).replace_as(LLRData)
         probs = self._ir.transform(instances.llrs)
         return instances.replace_as(LLRData, features=probability_to_logodds(probs).reshape(-1, 1))
 
     def fit_apply(self, instances: InstanceData) -> LLRData:
-        """Fit and apply the calibrator to the given data."""
+        """
+        Fit and apply the calibrator to the given data.
+
+        Parameters
+        ----------
+        instances : InstanceData
+            Instances to fit and transform.
+
+        Returns
+        -------
+        LLRData
+            Calibrated log-likelihood-ratio data.
+        """
         return self.fit(instances).apply(instances)

@@ -20,6 +20,23 @@ class McmcLLRModel(Transformer):
     Using samples from the posterior distributions of the model parameters, a posterior distribution of the LR is
     obtained. The median of this distribution is used as best estimate for the LR; a credible interval is also
     determined.
+
+    Parameters
+    ----------
+    distribution_h1 : str
+        Statistical distribution used to model H1.
+    parameters_h1 : dict[str, dict[str, float | int | str]] | None
+        Parameter definitions and priors for the H1 distribution.
+    distribution_h2 : str
+        Statistical distribution used to model H2.
+    parameters_h2 : dict[str, dict[str, float | int | str]] | None
+        Parameter definitions and priors for the H2 distribution.
+    bounding : Callable[[], LLRBounder] | None, optional
+        Bounding method factory to prevent over-extrapolation.
+    interval : tuple[float, float], optional
+        Lower and upper bounds of the credible interval in range ``[0, 1]``.
+    **mcmc_kwargs : Any
+        Additional MCMC simulation settings passed to `McmcModel`.
     """
 
     def __init__(
@@ -35,13 +52,22 @@ class McmcLLRModel(Transformer):
         """
         Initialise the MCMC model, based on distributions and parameters.
 
-        :param distribution_h1: statistical distribution used to model H1, for example 'normal' or 'binomial'
-        :param parameters_h1: definition of the parameters of distribution_h1, and their prior distributions
-        :param distribution_h2: statistical distribution used to model H2, for example 'normal' or 'binomial'
-        :param parameters_h2: definition of the parameters of distribution_h2, and their prior distributions
-        :param bounding: bounding method to apply to the unbound llrs, to prevent overextrapolation
-        :param interval: lower and upper bounds of the credible interval in range 0..1; default: (0.05, 0.95)
-        :param mcmc_kwargs: mcmc simulation settings, see `McmcModel.__init__` for more details.
+        Parameters
+        ----------
+        distribution_h1 : str
+            Statistical distribution used to model H1.
+        parameters_h1 : dict[str, dict[str, float | int | str]] | None
+            Parameter definitions and priors for the H1 distribution.
+        distribution_h2 : str
+            Statistical distribution used to model H2.
+        parameters_h2 : dict[str, dict[str, float | int | str]] | None
+            Parameter definitions and priors for the H2 distribution.
+        bounding : Callable[[], LLRBounder] | None, optional
+            Bounding method factory to prevent over-extrapolation.
+        interval : tuple[float, float], optional
+            Lower and upper bounds of the credible interval in range ``[0, 1]``.
+        **mcmc_kwargs : Any
+            Additional MCMC simulation settings passed to `McmcModel`.
         """
         self.model_h1 = McmcModel(distribution_h1, parameters_h1, **mcmc_kwargs)
         self.model_h2 = McmcModel(distribution_h2, parameters_h2, **mcmc_kwargs)
@@ -50,7 +76,19 @@ class McmcLLRModel(Transformer):
         self.interval = interval
 
     def fit(self, instances: InstanceData) -> Self:
-        """Fit the defined model to the supplied instances."""
+        """
+        Fit the defined model to the supplied instances.
+
+        Parameters
+        ----------
+        instances : InstanceData
+            Training instances.
+
+        Returns
+        -------
+        Self
+            Fitted model.
+        """
         instances = check_type(FeatureData, instances)
 
         self.model_h1.fit(instances.features[instances.require_labels == 1])
@@ -69,7 +107,19 @@ class McmcLLRModel(Transformer):
         return self
 
     def apply(self, instances: InstanceData) -> LLRData:
-        """Apply the fitted model to the supplied instances."""
+        """
+        Apply the fitted model to the supplied instances.
+
+        Parameters
+        ----------
+        instances : InstanceData
+            Instances to transform.
+
+        Returns
+        -------
+        LLRData
+            LLR estimates with median and credible interval columns.
+        """
         instances = check_type(FeatureData, instances)
         logp_h1 = self.model_h1.transform(instances.features)
         logp_h2 = self.model_h2.transform(instances.features)
@@ -85,7 +135,31 @@ class McmcLLRModel(Transformer):
 
 
 class McmcModel:
-    """Use Markov Chain Monte Carlo simulations to fit a statistical distribution."""
+    """
+    Use Markov Chain Monte Carlo simulations to fit a statistical distribution.
+
+    Parameters
+    ----------
+    distribution : str
+        Statistical distribution used, for example `'normal'` or `'binomial'`.
+    parameters : dict[str, dict[str, float | int | str]] | None
+        Definitions of distribution parameters and their prior distributions.
+    chain_count : int, optional
+        Number of parallel MCMC chains.
+    tune_count : int, optional
+        Number of tune/warm-up/burn-in samples per chain.
+    draw_count : int, optional
+        Number of posterior draws per chain.
+    random_seed : int | None, optional
+        Random seed.
+
+    Notes
+    -----
+    Supported distributions are `betabinomial`, `binomial`, and `normal`.
+    Parameter names follow the PyMC naming conventions. The `parameters` dictionary maps
+    each model parameter to a prior specification containing a `prior` key and the
+    corresponding prior parameters.
+    """
 
     def __init__(
         self,
@@ -97,25 +171,22 @@ class McmcModel:
         random_seed: int | None = None,
     ):
         """
-        Define the MCMC model and settings to be used.
+        Initialize the MCMC model.
 
-        :param distribution: statistical distribution used, for example 'normal' or 'binomial'
-        :param parameters: definition of the parameters of the distribution, and their prior distributions; see below.
-        :param chain_count: number of parallel mcmc chains
-        :param tune_count: number of tune/warm-up/burn-in samples per chain
-        :param draw_count: number of samples to draw from each chain
-        :param random_seed: random seed
-
-        Currently supported distributions are: 'betabinomial', 'binomial', 'normal'.
-        Names of the parameters are based on the nomenclature used in pymc for distribution parameters:
-        https://www.pymc.io/projects/docs/en/stable/api/distributions.html. The parameters should be provided as a
-        dictionary where the keys are the names of the parameter used for the selected statistical distribution, and the
-        values are dictionaries with a key 'prior', defining the prior distribution used for that parameter (currently
-        supported values are 'beta', 'normal' and 'uniform'), and with additional keys corresponding to the names of the
-        parameters used for that prior distribution (the dict values are the values of these parameters).
-        For example, for a binomial distribution: parameters = {'p': {'prior': 'beta', 'alpha': 0.5, 'beta': 0.5}}.
-        Or for a betabinomial distribution: parameters = {'alpha': {'prior': 'uniform', 'lower': 0.01, 'upper': 100},
-        'beta': {'prior': 'uniform', 'lower': 0.01, 'upper': 100}}.
+        Parameters
+        ----------
+        distribution : str
+            Statistical distribution used for modeling.
+        parameters : dict[str, dict[str, float | int | str]] | None
+            Definitions of distribution parameters and prior distributions.
+        chain_count : int, optional
+            Number of parallel MCMC chains.
+        tune_count : int, optional
+            Number of tune/warm-up samples per chain.
+        draw_count : int, optional
+            Number of posterior draws per chain.
+        random_seed : int | None, optional
+            Random seed for reproducibility.
         """
         self.distribution = distribution.lower()
         self.parameters = parameters
@@ -131,7 +202,15 @@ class McmcModel:
 
         The posteriors are based on the specified prior distributions of these parameters and observed feature values.
 
-        :param features: observed feature values, used to update the prior distributions of the parameters with
+        Parameters
+        ----------
+        features : np.ndarray
+            Observed feature values used to update parameter priors.
+
+        Returns
+        -------
+        Self
+            Fitted model with posterior samples.
         """
         try:
             import pymc as pm
@@ -190,7 +269,15 @@ class McmcModel:
         distribution, to get samples of the posterior distribution of the (log10) probability, evaluated for specified
         feature values.
 
-        :param features: feature values for which the probabilities are to be calculated
+        Parameters
+        ----------
+        features : np.ndarray
+            Feature values for which probabilities are calculated.
+
+        Returns
+        -------
+        np.ndarray
+            Samples of log10 probabilities.
         """
         # Prepare features and parameters for 2d-evaluations (number of samples * number of requested feature values)
         sample_count = len(self.parameter_samples[list(self.parameter_samples.keys())[0]])

@@ -301,7 +301,7 @@ def validate_yaml(yaml_path: Path) -> None:
     ----------
     yaml_path : Path
         The path to the YAML file to be validated.
-    
+
     Raises
     ------
     FileNotFoundError

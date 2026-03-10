@@ -21,19 +21,37 @@ LOG = logging.getLogger(__name__)
 
 
 class LogitCalibrator(Transformer):
-    """Calculate LR from a score, belonging to one of two distributions using Logistic Regression.
+    """
+    Calculate LR from a score, belonging to one of two distributions using logistic regression.
 
     Calculates a likelihood ratio of a score value, provided it is from one of
     two distributions. Uses logistic regression for interpolation.
 
     Infinite values in the input are ignored, except if they are misleading, which is an error.
+
+    Parameters
+    ----------
+    **kwargs : dict
+        Additional keyword arguments forwarded to `sklearn.linear_model.LogisticRegression`.
     """
 
     def __init__(self, **kwargs: dict):
         self._logit = sklearn.linear_model.LogisticRegression(class_weight='balanced', **kwargs)
 
     def fit(self, instances: InstanceData) -> Self:
-        """Fit the model on the data."""
+        """
+        Fit the model on the data.
+
+        Parameters
+        ----------
+        instances : InstanceData
+            Training instances.
+
+        Returns
+        -------
+        Self
+            Fitted calibrator.
+        """
         instances = check_type(FeatureData, instances)
         if not isinstance(FeatureData, LLRData):
             instances = instances.replace_as(LLRData)
@@ -50,7 +68,19 @@ class LogitCalibrator(Transformer):
         return self
 
     def apply(self, instances: InstanceData) -> LLRData:
-        """Calculate LLR data from the fitted model, using instance data."""
+        """
+        Calculate LLR data from the fitted model.
+
+        Parameters
+        ----------
+        instances : InstanceData
+            Instances to calibrate.
+
+        Returns
+        -------
+        LLRData
+            Calibrated log-likelihood-ratio data.
+        """
         instances = check_type(FeatureData, instances)
         if not isinstance(FeatureData, LLRData):
             instances = instances.replace_as(LLRData)
@@ -72,15 +102,26 @@ class LogitCalibrator(Transformer):
 
 
 def _negative_log_likelihood_balanced(X: np.ndarray, y: np.ndarray, model: Callable, params: list) -> np.ndarray:
-    """Calculate the negative log likelihood (llh) of probabilistic binary classifier.
+    """
+    Calculate the balanced negative log-likelihood of a probabilistic binary classifier.
 
     The llh is balanced in the sense that the total weight of '1'-labels is equal to the total weight of '0'-labels.
 
-    :param X: n * 1 np.array of scores
-    :param y: n * 1 np.array of labels (Booleans). H1 --> 1, H2 --> 0.
-    :param model: model that links score to posterior probabilities
-    :param params: mapping of parameter names to values of the model.
-    :returns: neg_llh_balanced: float, balanced negative log likelihood (base = exp)
+    Parameters
+    ----------
+    X : np.ndarray
+        Score array.
+    y : np.ndarray
+        Label array with values 0 and 1.
+    model : Callable
+        Model that links scores to posterior probabilities.
+    params : list
+        Model parameter values.
+
+    Returns
+    -------
+    np.ndarray
+        Balanced negative log-likelihood values.
     """
     probs = model(X, *params)
     neg_llh_balanced = -np.sum(np.log(probs**y * (1 - probs) ** (1 - y)) / (y * np.sum(y) + (1 - y) * np.sum(1 - y)))
@@ -88,7 +129,8 @@ def _negative_log_likelihood_balanced(X: np.ndarray, y: np.ndarray, model: Calla
 
 
 class FourParameterLogisticCalibrator(Transformer):
-    """Calculate LR of a score, belonging to one of two distributions, using a logistic model.
+    """
+    Calculate LR of a score, belonging to one of two distributions, using a logistic model.
 
     Calculates a likelihood ratio of a score value, provided it is from one of two distributions.
     Depending on the training data, a 2-, 3- or 4-parameter logistic model is used.
@@ -102,8 +144,15 @@ class FourParameterLogisticCalibrator(Transformer):
         """
         Fit the calibrator to data.
 
-        :param instances: InstanceData to fit the calibrator to.
-        :returns: Self
+        Parameters
+        ----------
+        instances : InstanceData
+            Training instances.
+
+        Returns
+        -------
+        Self
+            Fitted calibrator.
         """
         instances = check_type(FeatureData, instances)
         if not isinstance(FeatureData, LLRData):
@@ -156,10 +205,18 @@ class FourParameterLogisticCalibrator(Transformer):
         return self
 
     def apply(self, instances: InstanceData) -> LLRData:
-        """Apply the fitted calibrator to new data.
+        """
+        Apply the fitted calibrator to new data.
 
-        :param instances: InstanceData to apply the calibrator to.
-        :returns: LLRData with calibrated log-likelihood ratios.
+        Parameters
+        ----------
+        instances : InstanceData
+            Instances to calibrate.
+
+        Returns
+        -------
+        LLRData
+            Calibrated log-likelihood-ratio data.
         """
         if self.coef_ is None:
             raise ValueError('trying to use a model before fitting')
@@ -174,17 +231,28 @@ class FourParameterLogisticCalibrator(Transformer):
 
     @staticmethod
     def _four_pl_model(s: np.ndarray, a: float, b: float, c: float, d: float) -> np.ndarray:
-        """Apply the calculation for a given array of scores.
+        """
+        Apply the four-parameter logistic model to input scores.
 
         4-parameter logistic model that links score to posterior probability.
 
-        :param s: n * 1 np.array of scores
-        :param a: logistic parameter
-        :param b: logistic parameter
-        :param c: floor of posterior probability
-        :param d: ceiling of posterior probability
+        Parameters
+        ----------
+        s : np.ndarray
+            Score array.
+        a : float
+            Logistic parameter.
+        b : float
+            Logistic parameter.
+        c : float
+            Floor of posterior probability.
+        d : float
+            Ceiling of posterior probability.
 
-        :returns p: n * 1 np.array. Posterior probabilities of succes.
+        Returns
+        -------
+        np.ndarray
+            Posterior probabilities of success.
         """
         p = c + ((1 - c) / (1 + d)) * 1 / (1 + np.exp(-a * s - b))
         return p

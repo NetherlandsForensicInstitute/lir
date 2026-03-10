@@ -1,6 +1,6 @@
 output_path: output/${timestamp}_specific_source
 
-data:
+data: &data
   provider:
     method: synthesized_normal_binary
     seed: 42
@@ -17,7 +17,7 @@ data:
     strategy: train_test
     test_size: 0.5
 
-lr_system:
+lr_system: &lr_system
   architecture: specific_source
   modules:
     steps:
@@ -27,8 +27,8 @@ lr_system:
 experiments:
   - name: exp1
     strategy: grid
-    lr_system: ${lr_system}
-    data: ${data}
+    lr_system: *lr_system
+    data: *data
     hyperparameters:
       - path: modules.steps.clf
         options:
@@ -44,8 +44,8 @@ experiments:
 
   - name: exp2
     strategy: single_run
-    lr_system: ${lr_system}
-    data: ${data}
+    lr_system: *lr_system
+    data: *data
     output:
       - method: metrics
         columns:

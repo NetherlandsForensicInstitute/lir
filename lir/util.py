@@ -136,8 +136,14 @@ def odds_to_probability[FloatOrArray: (np.ndarray, float)](odds: FloatOrArray) -
         The input odds converted to probability. This is 1 if the input odds is infinity, and otherwise calculated as
         odds / (1 + odds).
     """
-    inf_values = odds == np.inf
-    with np.errstate(invalid='ignore'):
+    if np.any(odds < 0):
+        raise ValueError('negative value encountered for odds')
+
+    if not isinstance(odds, np.ndarray):
+        return odds_to_probability(np.array([odds]))[0]
+
+    inf_values = np.isinf(odds)
+    with np.errstate(invalid='ignore', divide='ignore'):
         p = np.divide(odds, (1 + odds))
     p[inf_values] = 1
     return p
@@ -158,8 +164,11 @@ def probability_to_odds[FloatOrArray: (np.ndarray, float)](p: FloatOrArray) -> F
         The input probability converted to odds. This is infinity if the input probability is 1, and otherwise
         calculated as p / (1 - p).
     """
-    with np.errstate(divide='ignore'):
-        return p / (1 - p)
+    if np.any(p < 0) or np.any(p > 1):
+        raise ValueError('invalid value encountered for probability')
+
+    with np.errstate(divide='ignore', invalid='raise'):
+        return np.divide(p, (1 - p))
 
 
 def probability_to_logodds[FloatOrArray: (np.ndarray, float)](p: FloatOrArray) -> FloatOrArray:
@@ -176,7 +185,7 @@ def probability_to_logodds[FloatOrArray: (np.ndarray, float)](p: FloatOrArray) -
     FloatOrArray
         The input probability values converted to log odds with base 10.
     """
-    with np.errstate(divide='ignore'):
+    with np.errstate(divide='ignore', invalid='raise'):
         complement = 1 - p
         return np.log10(p) - np.log10(complement)
 
@@ -230,7 +239,11 @@ def odds_to_logodds[FloatOrArray: (np.ndarray, float)](odds: FloatOrArray) -> Fl
     FloatOrArray
         The input odds converted to 10-base logarithm odds.
     """
-    return np.log10(odds)
+    if np.any(odds < 0):
+        raise ValueError('negative value encountered for odds')
+
+    with np.errstate(divide='ignore', invalid='raise'):
+        return np.log10(odds)
 
 
 def ln_to_log10[FloatOrArray: (np.ndarray, float)](ln_data: FloatOrArray) -> FloatOrArray:

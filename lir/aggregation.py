@@ -13,8 +13,10 @@ from lir.algorithms.bayeserror import plot_nbe as nbe
 from lir.algorithms.invariance_bounds import plot_invariance_delta_functions as invariance_delta_functions
 from lir.algorithms.llr_overestimation import plot_llr_overestimation as llr_overestimation
 from lir.config.base import ContextAwareDict, YamlParseError, check_is_empty, config_parser, pop_field
+from lir.config.data import parse_data_provider
 from lir.config.metrics import parse_individual_metric
-from lir.data.models import LLRData, get_instances_by_category
+from lir.data.io import DataFileBuilderCsv
+from lir.data.models import DataProvider, FeatureData, LLRData, check_type, get_instances_by_category
 from lir.lrsystems.lrsystems import LRSystem
 from lir.plotting import llr_interval, lr_histogram, pav, tippett
 from lir.plotting.expected_calibration_error import plot_ece as ece
@@ -29,6 +31,7 @@ class AggregationData(NamedTuple):
     Fields:
     - llrdata: the LLR data containing LLRs and labels.
     - lrsystem: the model that produced the results
+    - get_full_fit_lrsystem: optional callable that lazily provides a model fitted on full data (ignoring splits)
     - parameters: parameters that identify the system producing the results
     - run_name: string representation of the run that produced the results
     """
@@ -37,6 +40,7 @@ class AggregationData(NamedTuple):
     lrsystem: LRSystem
     parameters: dict[str, Any]
     run_name: str
+    get_full_fit_lrsystem: Callable[[], LRSystem] | None = None
 
 
 class Aggregation(ABC):
@@ -62,6 +66,15 @@ class Aggregation(ABC):
         cleared, or other things that need to finish / tear down.
         """
         pass
+
+    @staticmethod
+    def _resolve_output_path(output_dir: Path, filename: Path, run_name: str) -> Path:
+        if filename.is_absolute() or filename.is_relative_to(output_dir):
+            return filename
+
+        dirname = output_dir / run_name if run_name else output_dir
+        dirname.mkdir(parents=True, exist_ok=True)
+        return dirname / filename
 
 
 class AggregatePlot(Aggregation):
@@ -226,6 +239,68 @@ def metrics_csv(config: ContextAwareDict, output_dir: Path) -> WriteMetricsToCsv
     return WriteMetricsToCsv(output_dir / 'metrics.csv', columns)
 
 
+class CaseLLRToCsv(Aggregation):
+    """Aggregation that applies a full-data-fitted LR system to case data and stores LLRs as CSV."""
+
+    def __init__(self, output_dir: Path, case_data_provider: DataProvider, filename: str = 'case_llr.csv') -> None:
+        self.output_dir = output_dir
+        self.case_data_provider = case_data_provider
+        self.filename = Path(filename)
+
+    def report(self, data: AggregationData) -> None:
+        """Apply the full-data-fitted LR system to the case data and store the resulting LLRs as CSV."""
+        if data.get_full_fit_lrsystem is not None:
+            lrsystem = data.get_full_fit_lrsystem()
+        else:
+            LOG.warning(
+                f'No full-data-fitted model factory available for run `{data.run_name}`; '
+                f'using split-trained model instead.'
+            )
+            lrsystem = data.lrsystem
+
+        # Ensure the case data does not contain labels by setting them to None.
+        case_instances = self.case_data_provider.get_instances().replace(labels=None)
+        case_instances = check_type(FeatureData, case_instances)
+        case_llrs = lrsystem.apply(case_instances)
+
+        path = self._resolve_output_path(self.output_dir, self.filename, data.run_name)
+
+        if len(case_instances) != len(case_llrs):
+            raise ValueError(
+                f'Cannot export original case features to case_llr.csv because row counts differ: '
+                f'{len(case_instances)} case rows vs {len(case_llrs)} LLR rows.'
+            )
+
+        csv_builder = DataFileBuilderCsv(path)
+
+        features_2d = case_instances.features.reshape(case_instances.features.shape[0], -1)
+        feature_count = features_2d.shape[1]
+        raw_header = getattr(case_instances, 'header', None)
+        if raw_header is not None and len(raw_header) == feature_count:
+            feature_headers: list[str] = [str(h) for h in raw_header]
+        else:
+            feature_headers = [f'feature_{i}' for i in range(feature_count)]
+        csv_builder.add_column(features_2d, dimension_headers={1: feature_headers})
+
+        csv_builder.add_column(case_llrs.llrs, 'llr')
+
+        if case_llrs.has_intervals and case_llrs.llr_intervals is not None:
+            csv_builder.add_column(case_llrs.llr_intervals[:, 0], 'llr_interval_low')
+            csv_builder.add_column(case_llrs.llr_intervals[:, 1], 'llr_interval_high')
+
+        csv_builder.write()
+
+
+@config_parser
+def case_llr_csv(config: ContextAwareDict, output_dir: Path) -> CaseLLRToCsv:
+    """Parse output configuration for case LLR generation and CSV export."""
+    case_data_provider = parse_data_provider(pop_field(config, 'case_llr_data'), output_dir)
+    filename = pop_field(config, 'filename', default='case_llr.csv', validate=str)
+    filename = check_type(str, filename)
+    check_is_empty(config)
+    return CaseLLRToCsv(output_dir, case_data_provider, filename)
+
+
 class SubsetAggregation(Aggregation):
     """
     Aggregation method that manages data categorization.
@@ -256,7 +331,11 @@ class SubsetAggregation(Aggregation):
             category_str = '_'.join(str(v) for v in category.reshape(-1))
             run_name = f'{run_name_prefix}{category_str}'
             category_data = AggregationData(
-                subset, data.lrsystem, data.parameters | {self.category_field: category}, run_name
+                llrdata=subset,
+                lrsystem=data.lrsystem,
+                parameters=data.parameters | {self.category_field: category},
+                run_name=run_name,
+                get_full_fit_lrsystem=data.get_full_fit_lrsystem,
             )
 
             for output in self.aggregation_methods:

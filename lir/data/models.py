@@ -99,7 +99,7 @@ class InstanceData(BaseModel, ABC):
 
     @property
     def source_ids_1d(self) -> np.ndarray:
-        """:return: the attribute `source_ids` as a 1-dimensional array, with one source id per instance"""
+        """:return: the attribute `source_ids` as a 1-dimensional array, with one source id per instance."""
         if self.source_ids is None:
             raise ValueError('source_ids not available')
         if len(self.source_ids.shape) != 1:
@@ -108,7 +108,7 @@ class InstanceData(BaseModel, ABC):
 
     @abstractmethod
     def __len__(self) -> int:
-        """:return: the number of instances in this dataset"""
+        """:return: the number of instances in this dataset."""
         raise NotImplementedError
 
     def __getitem__(self, indexes: np.ndarray | int) -> Self:
@@ -309,7 +309,7 @@ class InstanceData(BaseModel, ABC):
 
     @property
     def all_fields(self) -> list[str]:
-        """:return: a list of all fields, including both mandatory and extra fields"""
+        """:return: a list of all fields, including both mandatory and extra fields."""
         all_fields = list(type(self).model_fields.keys())
         if self.model_extra:
             all_fields += list(self.model_extra.keys())
@@ -317,7 +317,7 @@ class InstanceData(BaseModel, ABC):
 
     @property
     def has_labels(self) -> bool:
-        """:return: True iff the instances are labeled"""
+        """:return: True iff the instances are labeled."""
         return self.labels is not None
 
     def replace(self, **kwargs: Any) -> Self:
@@ -493,7 +493,7 @@ class LLRData(FeatureData):
 
     @property
     def llrs(self) -> np.ndarray:
-        """:return: 1-dimensional numpy array of LLR values"""
+        """:return: 1-dimensional numpy array of LLR values."""
         if len(self.features.shape) == 1:
             return self.features
         else:
@@ -501,12 +501,12 @@ class LLRData(FeatureData):
 
     @property
     def has_intervals(self) -> bool:
-        """:return: indicate whether the LLR's have intervals"""
+        """:return: indicate whether the LLR's have intervals."""
         return len(self.features.shape) == 2 and self.features.shape[1] == 3
 
     @property
     def llr_intervals(self) -> np.ndarray | None:
-        """:return: numpy array of LLR values of dimensions (n, 2), or `None` if the LLR's have no intervals"""
+        """:return: numpy array of LLR values of dimensions (n, 2), or `None` if the LLR's have no intervals."""
         if self.has_intervals:
             return self.features[:, 1:]
         else:
@@ -514,7 +514,7 @@ class LLRData(FeatureData):
 
     @property
     def llr_bounds(self) -> tuple[float | None, float | None]:
-        """:return: a tuple (min_llr, max_llr)"""
+        """:return: a tuple (min_llr, max_llr)."""
         return self.llr_lower_bound, self.llr_upper_bound
 
     @model_validator(mode='after')

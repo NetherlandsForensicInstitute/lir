@@ -165,7 +165,7 @@ class SourcesCrossValidation(DataStrategy):
     """
 
     def __init__(self, folds: int):
-        """:param folds: the number of train/test splits to return"""
+        """:param folds: the number of train/test splits to return."""
         self.folds = folds
 
     def apply(self, instances: InstanceDataType) -> Iterator[tuple[InstanceDataType, InstanceDataType]]:

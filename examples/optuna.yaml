@@ -5,7 +5,7 @@
 
 output_path: output/${timestamp}_optuna_example
 
-data:
+data: &data
   provider:
     method: data_providers.glass
     cache_dir: cache/glass
@@ -13,7 +13,7 @@ data:
   splits:
     strategy: predefined_train_test
 
-lr_system:
+lr_system: &lr_system
   architecture: score_based
   preprocessing:
     steps:
@@ -52,8 +52,8 @@ experiments:
     strategy: optuna
     primary_metric: cllr
     n_trials: 20
-    lr_system: ${lr_system}
-    data: ${data}
+    lr_system: *lr_system
+    data: *data
 
     # The parameters may be categorical or float. The `float` parameter type takes the following arguments:
     #

@@ -18,7 +18,7 @@ output_path: output/${timestamp}_glass_example
 # The data consist of a pre-defined training/test set combination. The training data has three instances per source; the
 # test data has five instances per source, from which to draw two-to-three pairs for LR calculations.
 #
-data:
+data: &data
   provider:
     method: data_providers.glass
     cache_dir: cache/glass
@@ -28,7 +28,7 @@ data:
 
 # This defines a score-based LR system. We may later experiment with different parameter values by augmenting this
 # system.
-score_based_lr_system:
+score_based_lr_system: &score_based_lr_system
   # The `score_based` architecture takes three arguments:
   # - `preprocessing`: a pipeline of modules that takes instance features as input and may do some preprocessing;
   # - `pairing`: a pairing method that takes instances as input and produces same-source and different-source pairs;
@@ -72,7 +72,7 @@ score_based_lr_system:
         bandwidth: silverman
       bounding: elub_bounder  # prevent excessive extrapolation by applying an LLR bounder
 
-two_level_lr_system:
+two_level_lr_system: &two_level_lr_system
   # The `two_level` architecture takes three arguments:
   # - `preprocessing`: a pipeline that takes instance features as input and may do some preprocessing;
   # - `pairing`: a pairing method that takes instances as input and produces same-source and different-source pairs;
@@ -164,8 +164,8 @@ experiments:
   # a `type` field with the corresponding value `categorical`, `cluster`, or `float`.
   - name: model_selection
     strategy: grid  # use a grid search
-    lr_system: ${score_based_lr_system}  # refer the the previously defined `score_based_lr_system`
-    data: ${data}  # refer to the previously defined data
+    lr_system: *score_based_lr_system  # refer the the previously defined `score_based_lr_system`
+    data: *data  # refer to the previously defined data
 
     hyperparameters:
       - name: clf
@@ -198,7 +198,7 @@ experiments:
   - name: architecture_evaluation
     strategy: grid
     lr_system:  # do not specify any base LR system at this point; it will be substituted anyway
-    data: ${data}
+    data: *data
     hyperparameters:
       # to vary the architecture, we substitute the entire LR system, whose path is referred to by the empty string ""
       - name: architecture
@@ -206,11 +206,11 @@ experiments:
           - option_name: score_based
             substitutions:
               - path: ""
-                value: ${score_based_lr_system}
+                value: *score_based_lr_system
           - option_name: tlm
             substitutions:
               - path: ""
-                value: ${two_level_lr_system}
+                value: *two_level_lr_system
     output:
       - method: metrics
         columns:
@@ -224,8 +224,8 @@ experiments:
 
   - name: validation
     strategy: single_run
-    lr_system: ${score_based_lr_system}
-    data: ${data}
+    lr_system: *score_based_lr_system
+    data: *data
     output:
       - metrics
       # A shorthand notation is used here. This is equivalent to:

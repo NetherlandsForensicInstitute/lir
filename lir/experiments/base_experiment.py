@@ -15,7 +15,18 @@ from lir.lrsystems.lrsystems import LRSystem
 
 
 class Experiment(ABC):
-    """Representation of an experiment pipeline run for each provided LR system."""
+    """
+    Representation of an experiment pipeline run for each provided LR system.
+
+    Parameters
+    ----------
+    name : str
+        Name used to identify this object in outputs and logs.
+    outputs : Sequence[Aggregation]
+        Output aggregation definitions executed after each run.
+    output_path : Path
+        Path where generated outputs are written.
+    """
 
     def __init__(
         self,
@@ -35,7 +46,8 @@ class Experiment(ABC):
         run_name: str,
         data_config: ContextAwareDict,
     ) -> LLRData:
-        """Run experiment on a single LR system configuration using the provided data.
+        """
+        Run experiment on a single LR system configuration using the provided data.
 
         The LR system is fitted using the training subset data and
         subsequently used to determine LLRs for the test subset data. The results are stored in
@@ -47,6 +59,24 @@ class Experiment(ABC):
 
         Next to this, the configuration of both the data and LR system are stored in the output
         directory for future reference.
+
+        Parameters
+        ----------
+        lrsystem_config : ContextAwareDict
+            LR-system configuration for a single run.
+        split_data : Iterable[tuple[InstanceData, InstanceData]]
+            Train/test split produced by the selected data strategy.
+        parameters : dict[str, Any]
+            Parameter substitutions applied for this run.
+        run_name : str
+            Name of the current run used in result bookkeeping.
+        data_config : ContextAwareDict
+            Data configuration used to construct datasets for runs.
+
+        Returns
+        -------
+        LLRData
+            Likelihood-ratio data produced by applying the LR system.
         """
         run_output_dir = self.output_path / run_name
         run_output_dir.mkdir(exist_ok=True, parents=True)
@@ -113,7 +143,8 @@ class Experiment(ABC):
         raise NotImplementedError
 
     def run(self) -> None:
-        """Run experiment the configured experiment(s).
+        """
+        Run experiment the configured experiment(s).
 
         This method ensures that all outputs are properly closed after the experiment run.
         """

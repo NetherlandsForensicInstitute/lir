@@ -13,7 +13,19 @@ LOG = logging.getLogger(__name__)
 
 
 def _validate_labels(labels: np.ndarray | None) -> np.ndarray | None:
-    """Check if labels have the correct shape."""
+    """
+    Check if labels have the correct shape.
+
+    Parameters
+    ----------
+    labels : np.ndarray | None
+        Value passed via ``labels``.
+
+    Returns
+    -------
+    np.ndarray | None
+        Validated label array, or ``None`` when labels are absent.
+    """
     if labels is None:
         return labels
 
@@ -27,7 +39,19 @@ def _validate_labels(labels: np.ndarray | None) -> np.ndarray | None:
 
 
 def _validate_source_ids(source_ids: np.ndarray | None) -> np.ndarray | None:
-    """Check if source_ids have the correct shape."""
+    """
+    Check if source_ids have the correct shape.
+
+    Parameters
+    ----------
+    source_ids : np.ndarray | None
+        Value passed via ``source_ids``.
+
+    Returns
+    -------
+    np.ndarray | None
+        Validated source-id array, or ``None`` when source IDs are absent.
+    """
     if source_ids is None:
         return source_ids
 
@@ -81,14 +105,28 @@ class InstanceData(BaseModel, ABC):
 
     @property
     def require_labels(self) -> np.ndarray:
-        """Returns `labels` and guarantee that it is not None (or raise an error)."""
+        """
+        Return `labels` and guarantee that it is not None (or raise an error).
+
+        Returns
+        -------
+        np.ndarray
+            Label array guaranteed to contain values for both hypotheses.
+        """
         if self.labels is None:
             raise ValueError('labels not set')
         return self.labels
 
     @model_validator(mode='after')
     def check_sourceids_labels_match(self) -> Self:
-        """Validate the source_ids and labels have matching shapes."""
+        """
+        Validate the source_ids and labels have matching shapes.
+
+        Returns
+        -------
+        Self
+            This instance data object after post-init validation.
+        """
         if self.labels is not None and self.source_ids is not None and self.labels.shape[0] != self.source_ids.shape[0]:
             raise ValueError(
                 f'dimensions of labels and source_ids do not match; "'
@@ -99,7 +137,14 @@ class InstanceData(BaseModel, ABC):
 
     @property
     def source_ids_1d(self) -> np.ndarray:
-        """:return: the attribute `source_ids` as a 1-dimensional array, with one source id per instance."""
+        """
+        Return source identifiers as a one-dimensional array.
+
+        Returns
+        -------
+        np.ndarray
+            One-dimensional source-id array with one source per instance.
+        """
         if self.source_ids is None:
             raise ValueError('source_ids not available')
         if len(self.source_ids.shape) != 1:
@@ -108,7 +153,14 @@ class InstanceData(BaseModel, ABC):
 
     @abstractmethod
     def __len__(self) -> int:
-        """:return: the number of instances in this dataset."""
+        """
+        Return the number of instances in this dataset.
+
+        Returns
+        -------
+        int
+            Number of instances represented by this object.
+        """
         raise NotImplementedError
 
     def __getitem__(self, indexes: np.ndarray | int) -> Self:
@@ -118,8 +170,15 @@ class InstanceData(BaseModel, ABC):
         All `ndarray` fields are indexed using `indexes`.
         All other fields are taken as-is.
 
-        :param indexes: the indexes to select
-        :return: a subset of this dataset
+        Parameters
+        ----------
+        indexes : np.ndarray | int
+            Value passed via ``indexes``.
+
+        Returns
+        -------
+        Self
+            New instance data object containing only selected rows.
         """
         data = {}
         for field in self.all_fields:
@@ -141,8 +200,12 @@ class InstanceData(BaseModel, ABC):
         """
         Return labels or raise an error if they are missing or if they do not represent both hypotheses.
 
-        :return: the labels
         :raise: ValueError if hypothesis labels are missing or either label is not represented.
+
+        Returns
+        -------
+        np.ndarray
+            Label array containing both classes 0 and 1.
         """
         if self.labels is None:
             raise ValueError('labels not set')
@@ -178,6 +241,16 @@ class InstanceData(BaseModel, ABC):
         Numpy fields are concatenated using `np.concatenate`. Other fields are copied as-is.
 
         Returns a new object with the concatenated instances.
+
+        Parameters
+        ----------
+        *others : 'InstanceData'
+            Value passed via ``others``.
+
+        Returns
+        -------
+        Self
+            New instance data object with concatenated rows.
         """
         for instances in others:
             if not self.has_same_type(instances):
@@ -201,6 +274,16 @@ class InstanceData(BaseModel, ABC):
         - `other` has the same class
         - `other` has the same fields
         - all fields have the same type
+
+        Parameters
+        ----------
+        other : Any
+            Value passed via ``other``.
+
+        Returns
+        -------
+        bool
+            ``True`` when type, fields, and field value types all match.
         """
         if type(self) is not type(other):
             return False
@@ -220,6 +303,22 @@ class InstanceData(BaseModel, ABC):
 
         All objects must have the same types and fields, and the same values for all non-numpy array
         fields, or an error is raised. Numpy fields are concatenated using `fn`. Other fields are copied as-is.
+
+        Parameters
+        ----------
+        others : 'list[InstanceData] | InstanceData'
+            Value passed via ``others``.
+        fn : Callable
+            Value passed via ``fn``.
+        *args : Any
+            Additional positional arguments forwarded to the underlying call.
+        **kwargs : Any
+            Additional keyword arguments forwarded to the underlying call.
+
+        Returns
+        -------
+        Self
+            New instance data object after applying the combination function.
         """
         if isinstance(others, InstanceData):
             others = [others]
@@ -265,6 +364,20 @@ class InstanceData(BaseModel, ABC):
         Apply a custom function to this InstanceData object.
 
         The function `fn` is applied to all Numpy fields. Other fields are copied as-is.
+
+        Parameters
+        ----------
+        fn : Callable
+            Value passed via ``fn``.
+        *args : Any
+            Additional positional arguments forwarded to the underlying call.
+        **kwargs : Any
+            Additional keyword arguments forwarded to the underlying call.
+
+        Returns
+        -------
+        Self
+            New instance data object after applying the function to numpy fields.
         """
         # initialize the dictionary of fields to be updated
         data: dict[str, np.ndarray | None] = {}
@@ -291,6 +404,16 @@ class InstanceData(BaseModel, ABC):
         - the method `has_same_type()` returns `True`
         - all numpy fields in `other` have the same shape and the same values
         - all other fields are compared using the `!=` operator
+
+        Parameters
+        ----------
+        other : Any
+            Value passed via ``other``.
+
+        Returns
+        -------
+        bool
+            ``True`` when all fields are equal under the class comparison rules.
         """
         if not self.has_same_type(other):
             return False
@@ -309,7 +432,14 @@ class InstanceData(BaseModel, ABC):
 
     @property
     def all_fields(self) -> list[str]:
-        """:return: a list of all fields, including both mandatory and extra fields."""
+        """
+        Return all available field names for this data object.
+
+        Returns
+        -------
+        list[str]
+            Names of all standard and extra fields available on the instance.
+        """
         all_fields = list(type(self).model_fields.keys())
         if self.model_extra:
             all_fields += list(self.model_extra.keys())
@@ -317,15 +447,29 @@ class InstanceData(BaseModel, ABC):
 
     @property
     def has_labels(self) -> bool:
-        """:return: True iff the instances are labeled."""
+        """
+        Indicate whether label values are available.
+
+        Returns
+        -------
+        bool
+            ``True`` when label information is present.
+        """
         return self.labels is not None
 
     def replace(self, **kwargs: Any) -> Self:
         """
         Return a modified copy with updated values.
 
-        :param kwargs: the fields to replace
-        :return: the modified copy
+        Parameters
+        ----------
+        **kwargs : Any
+            Additional keyword arguments forwarded to the underlying call.
+
+        Returns
+        -------
+        Self
+            Copy of this object with the provided fields replaced.
         """
         return self.replace_as(type(self), **kwargs)
 
@@ -333,9 +477,17 @@ class InstanceData(BaseModel, ABC):
         """
         Return a modified copy with updated data type and values.
 
-        :param datatype: the return type
-        :param kwargs: the fields to replace
-        :return: the modified copy
+        Parameters
+        ----------
+        datatype : type['InstanceDataType']
+            Value passed via ``datatype``.
+        **kwargs : Any
+            Additional keyword arguments forwarded to the underlying call.
+
+        Returns
+        -------
+        'InstanceDataType'
+            Instance data object produced by this operation.
         """
         args = self.model_dump()
         args.update(kwargs)
@@ -343,7 +495,19 @@ class InstanceData(BaseModel, ABC):
 
 
 def _validate_features(features: np.ndarray) -> np.ndarray:
-    """Check if labels have the correct shape."""
+    """
+    Check if labels have the correct shape.
+
+    Parameters
+    ----------
+    features : np.ndarray
+        Value passed via ``features``.
+
+    Returns
+    -------
+    np.ndarray
+        Feature array reshaped to at least two dimensions.
+    """
     if len(features.shape) < 2:
         LOG.debug(f'1d features are silently converted to 2d; found shape: {features.shape}')
         features = np.expand_dims(features, axis=1)
@@ -375,7 +539,14 @@ class FeatureData(InstanceData):
 
     @model_validator(mode='after')
     def check_matching_shapes(self) -> Self:
-        """Validate the shape of the features and the labels are matching."""
+        """
+        Validate the shape of the features and the labels are matching.
+
+        Returns
+        -------
+        Self
+            This feature-data object after shape consistency checks.
+        """
         if self.labels is not None and self.labels.shape[0] != self.features.shape[0]:
             raise ValueError(
                 f'dimensions of labels and features do not match; {self.labels.shape[0]} != {self.features.shape[0]}'
@@ -389,7 +560,14 @@ class FeatureData(InstanceData):
 
     @model_validator(mode='after')
     def check_features(self) -> Self:
-        """Validate the features."""
+        """
+        Validate the features.
+
+        Returns
+        -------
+        Self
+            This feature-data object after numeric type validation.
+        """
         if not np.issubdtype(self.features.dtype, np.number):
             raise ValueError(f'features should be numeric; found: {self.features.dtype}')
         return self
@@ -429,34 +607,76 @@ class PairedFeatureData(FeatureData):
 
     @property
     def features_trace(self) -> np.ndarray:
-        """Get the features of the trace instances."""
+        """
+        Get the features of the trace instances.
+
+        Returns
+        -------
+        np.ndarray
+            Feature tensor slice containing trace-instance features.
+        """
         return self.features[:, : self.n_trace_instances]
 
     @property
     def features_ref(self) -> np.ndarray:
-        """Get the features of the reference instances."""
+        """
+        Get the features of the reference instances.
+
+        Returns
+        -------
+        np.ndarray
+            Feature tensor slice containing reference-instance features.
+        """
         return self.features[:, self.n_trace_instances :]  # noqa: E203
 
     @property
     def source_ids_trace(self) -> np.ndarray | None:
-        """Get the source ids of the trace instances."""
+        """
+        Get the source ids of the trace instances.
+
+        Returns
+        -------
+        np.ndarray | None
+            Trace source IDs when available, otherwise ``None``.
+        """
         return self.source_ids[:, 0] if self.source_ids else None
 
     @property
     def source_ids_ref(self) -> np.ndarray | None:
-        """Get the source ids of the reference instances."""
+        """
+        Get the source ids of the reference instances.
+
+        Returns
+        -------
+        np.ndarray | None
+            Reference source IDs when available, otherwise ``None``.
+        """
         return self.source_ids[:, 1] if self.source_ids else None
 
     @model_validator(mode='after')
     def check_sourceid_shape(self) -> Self:
-        """Override the `InstanceData` implementation."""
+        """
+        Override the `InstanceData` implementation.
+
+        Returns
+        -------
+        Self
+            This paired-feature object after source-id shape validation.
+        """
         if self.source_ids is not None and (len(self.source_ids.shape) != 2 or self.source_ids.shape[1] != 2):
             raise ValueError(f'source_ids should be 2-dimensional with 2 columns; found shape {self.source_ids.shape}')
         return self
 
     @model_validator(mode='after')
     def check_features_dimensions(self) -> Self:
-        """Validate feature dimensions."""
+        """
+        Validate feature dimensions.
+
+        Returns
+        -------
+        Self
+            This paired-feature object after feature-dimension validation.
+        """
         if len(self.features.shape) < 3:
             raise ValueError(f'features should have 3 or more dimensions; found shape: {self.features.shape}')
         if self.features.shape[1] != self.n_trace_instances + self.n_ref_instances:
@@ -493,7 +713,14 @@ class LLRData(FeatureData):
 
     @property
     def llrs(self) -> np.ndarray:
-        """:return: 1-dimensional numpy array of LLR values."""
+        """
+        Return the core LLR values.
+
+        Returns
+        -------
+        np.ndarray
+            One-dimensional array containing the central LLR values.
+        """
         if len(self.features.shape) == 1:
             return self.features
         else:
@@ -501,12 +728,26 @@ class LLRData(FeatureData):
 
     @property
     def has_intervals(self) -> bool:
-        """:return: indicate whether the LLR's have intervals."""
+        """
+        Indicate whether interval bounds are present for each LLR.
+
+        Returns
+        -------
+        bool
+            ``True`` when lower and upper interval bounds are included.
+        """
         return len(self.features.shape) == 2 and self.features.shape[1] == 3
 
     @property
     def llr_intervals(self) -> np.ndarray | None:
-        """:return: numpy array of LLR values of dimensions (n, 2), or `None` if the LLR's have no intervals."""
+        """
+        Return interval bounds for each LLR when available.
+
+        Returns
+        -------
+        np.ndarray | None
+            Two-column array with lower and upper LLR bounds, if available.
+        """
         if self.has_intervals:
             return self.features[:, 1:]
         else:
@@ -514,12 +755,26 @@ class LLRData(FeatureData):
 
     @property
     def llr_bounds(self) -> tuple[float | None, float | None]:
-        """:return: a tuple (min_llr, max_llr)."""
+        """
+        Return global lower and upper bounds applied to LLR values.
+
+        Returns
+        -------
+        tuple[float | None, float | None]
+            Tuple containing global lower and upper LLR clipping bounds.
+        """
         return self.llr_lower_bound, self.llr_upper_bound
 
     @model_validator(mode='after')
     def check_features_are_llrs(self) -> Self:
-        """Validate the feature data."""
+        """
+        Validate the feature data.
+
+        Returns
+        -------
+        Self
+            This LLR object after validating LLR-specific feature constraints.
+        """
         if len(self.features.shape) > 2:
             raise ValueError(f'features must have 1 or 2 dimensions; shape: {self.features.shape}')
 
@@ -537,10 +792,23 @@ class LLRData(FeatureData):
 
     @classmethod
     def _concatenate_field(cls, field: str, values: list[Any]) -> Any:
-        """Remove `llr_upper_bound` and `llr_lower_bound` when having different values.
+        """
+        Remove `llr_upper_bound` and `llr_lower_bound` when having different values.
 
         The fields `llr_upper_bound` and `llr_lower_bound` may have different values which is not allowed by default.
         Remove them instead of trying to combine them.
+
+        Parameters
+        ----------
+        field : str
+            Value passed via ``field``.
+        values : list[Any]
+            Value passed via ``values``.
+
+        Returns
+        -------
+        Any
+            Concatenated field value with LLR-bound handling for mixed values.
         """
         match field:
             case 'llr_upper_bound' | 'llr_lower_bound':
@@ -572,22 +840,43 @@ FeatureDataType = TypeVar('FeatureDataType', bound=FeatureData)
 
 
 def concatenate_instances(first: InstanceDataType, *others: InstanceDataType) -> InstanceDataType:
-    """Concatenate the results of the InstanceData objects.
+    """
+    Concatenate the results of the InstanceData objects.
 
     Alias for `first.concatenate(*others)`.
+
+    Parameters
+    ----------
+    first : InstanceDataType
+        Value passed via ``first``.
+    *others : InstanceDataType
+        Value passed via ``others``.
+
+    Returns
+    -------
+    InstanceDataType
+        Instance data object produced by this operation.
     """
     return first.concatenate(*others)
 
 
 class DataProvider(ABC):
-    """Base class for data providers.
+    """
+    Base class for data providers.
 
     Each data provider should provide access to instance data by implementing the `get_instances()` method.
     """
 
     @abstractmethod
     def get_instances(self) -> InstanceData:
-        """Return an InstanceData object, containing data for a set of instances."""
+        """
+        Return an InstanceData object, containing data for a set of instances.
+
+        Returns
+        -------
+        InstanceData
+            Instance data object produced by this operation.
+        """
         raise NotImplementedError
 
 
@@ -596,10 +885,21 @@ class DataStrategy(ABC):
 
     @abstractmethod
     def apply[DataType: InstanceData](self, instances: DataType) -> Iterable[tuple[DataType, DataType]]:
-        """Provide iterator to access training and test set.
+        """
+        Provide iterator to access training and test set.
 
         Returns an iterator over tuples of a training set and a test set. Both the training set and the test
         is represented by an `InstanceData` object.
+
+        Parameters
+        ----------
+        instances : DataType
+            Input instances to be processed by this method.
+
+        Returns
+        -------
+        Iterable[tuple[DataType, DataType]]
+            Iterable of ``(train_set, test_set)`` splits for the provided data.
         """
         raise NotImplementedError
 
@@ -619,10 +919,14 @@ def get_instances_by_category[InstanceDataType: InstanceData](
     The returned value is an iterator with each item being a tuple of the category and the subset of instances of that
     category.
 
-    :param instances: the set of instances to draw from
-    :param category_field: the name of the field in instances that indicates the categories
-    :param category_shape: the optional shape of the category field
-    :return: tuples of categories and corresponding subsets of instances
+    Parameters
+    ----------
+    instances : InstanceDataType
+        Input instances to be processed by this method.
+    category_field : str
+        Value passed via ``category_field``.
+    category_shape : tuple[int] | None
+        Value passed via ``category_shape``.
     """
     # extract the category values from the instances
     if not hasattr(instances, category_field):

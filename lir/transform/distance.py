@@ -6,7 +6,8 @@ from lir.util import check_type
 
 
 class ElementWiseDifference(Transformer):
-    """Calculate the element-wise absolute difference between pairs.
+    """
+    Calculate the element-wise absolute difference between pairs.
 
     Takes an array of sample pairs and returns the element-wise absolute difference.
 
@@ -19,7 +20,19 @@ class ElementWiseDifference(Transformer):
     """
 
     def apply(self, instances: InstanceData) -> FeatureData:
-        """Calculate the absolute difference between all elements in the instance data (pairs)."""
+        """
+        Calculate the absolute difference between all elements in the instance data (pairs).
+
+        Parameters
+        ----------
+        instances : InstanceData
+            Input instances to be processed by this method.
+
+        Returns
+        -------
+        FeatureData
+            FeatureData object parsed from the source.
+        """
         instances = check_type(PairedFeatureData, instances)
         if instances.n_ref_instances != 1 or instances.n_trace_instances != 1:
             raise ValueError(
@@ -31,7 +44,8 @@ class ElementWiseDifference(Transformer):
 
 
 class ManhattanDistance(Transformer):
-    """Calculate the Manhattan distance between pairs.
+    """
+    Calculate the Manhattan distance between pairs.
 
     Takes a PairedFeatureData object or a FeatureData object and returns the manhattan distance.
 
@@ -40,12 +54,22 @@ class ManhattanDistance(Transformer):
 
     If the input is a FeatureData object, it is assumed that it contains the element-wise differences, and the sum over
     these differences is calculated.
-
-    :returns: a FeatureData object with features of shape (n, 1)
     """
 
     def apply(self, instances: InstanceData) -> FeatureData:
-        """Calculate the Manhattan distance between all elements in the instance data (pairs)."""
+        """
+        Calculate the Manhattan distance between all elements in the instance data (pairs).
+
+        Parameters
+        ----------
+        instances : InstanceData
+            Input instances to be processed by this method.
+
+        Returns
+        -------
+        FeatureData
+            FeatureData object parsed from the source.
+        """
         instances = check_type(FeatureData, instances)
 
         # if the data are paired instances, calculate the element wise difference first
@@ -60,7 +84,8 @@ class ManhattanDistance(Transformer):
 
 
 class EuclideanDistance(Transformer):
-    """Calculate the Euclidean distance between pairs.
+    """
+    Calculate the Euclidean distance between pairs.
 
     Takes a PairedFeatureData object or a FeatureData object and returns the euclidean distance.
 
@@ -72,12 +97,22 @@ class EuclideanDistance(Transformer):
 
     In yaml configurations, it can be used by specifying `euclidean_distance`, e.g.:
     `scoring: euclidean_distance`
-
-    :returns: a FeatureData object with features of shape (n, 1)
     """
 
     def apply(self, instances: InstanceData) -> FeatureData:
-        """Calculate the Euclidean distance between all elements in the instance data (pairs)."""
+        """
+        Calculate the Euclidean distance between all elements in the instance data (pairs).
+
+        Parameters
+        ----------
+        instances : InstanceData
+            Input instances to be processed by this method.
+
+        Returns
+        -------
+        FeatureData
+            FeatureData object parsed from the source.
+        """
         instances = check_type(FeatureData, instances)
 
         # if the data are paired instances, calculate the element wise difference first

@@ -17,7 +17,20 @@ class SynthesizedDimension(NamedTuple):
 
 
 class SynthesizedNormalMulticlassData(DataProvider):
-    """Implementation of a data source generating normally distributed multiclass data."""
+    """
+    Implementation of a data source generating normally distributed multiclass data.
+
+    Parameters
+    ----------
+    dimensions : list[SynthesizedDimension]
+        Number of feature dimensions to include in the header.
+    population_size : int
+        Number of sources to sample in the synthetic population.
+    sources_size : int
+        Number of source groups represented in the dataset.
+    seed : int | None
+        Random seed controlling stochastic behaviour for reproducible results.
+    """
 
     def __init__(
         self,
@@ -50,6 +63,11 @@ class SynthesizedNormalMulticlassData(DataProvider):
         Return instances with randomly synthesized data and multi-class labels.
 
         The features are drawn from a normal distribution, as configured.
+
+        Returns
+        -------
+        FeatureData
+            FeatureData object parsed from the source.
         """
         rng = np.random.default_rng(seed=self.seed)
 
@@ -62,7 +80,21 @@ class SynthesizedNormalMulticlassData(DataProvider):
 
 @config_parser
 def synthesized_normal_multiclass(config: ContextAwareDict, _: Path) -> SynthesizedNormalMulticlassData:
-    """Set up (multiple class) data source class to obtain normally distributed data from configuration."""
+    """
+    Set up (multiple class) data source class to obtain normally distributed data from configuration.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        Configuration mapping used to construct this component.
+    _ : Path
+        Unused argument required by the parser interface.
+
+    Returns
+    -------
+    SynthesizedNormalMulticlassData
+        Configured multiclass synthesized data provider.
+    """
     seed = pop_field(config, 'seed', validate=int, required=False)
 
     population = pop_field(config, 'population')

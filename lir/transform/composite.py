@@ -14,14 +14,25 @@ class CategoricalCompositeTransformer(Transformer):
     Composite transformer.
 
     Incoming data is categorized by a category field. For each category, a separate transformer is used.
+
+    Parameters
+    ----------
+    factory : Callable[[], Transformer]
+        Value passed via ``factory``.
+    category_field : str
+        Value passed via ``category_field``.
     """
 
     def __init__(self, factory: Callable[[], Transformer], category_field: str):
         """
         Initialize the composite transformer.
 
-        :param factory: a callable that takes a category field and returns a transformer.
-        :param category_field: the category field to use
+        Parameters
+        ----------
+        factory : Callable[[], Transformer]
+            Value passed via ``factory``.
+        category_field : str
+            Value passed via ``category_field``.
         """
         self.factory = factory
         self.category_field = category_field
@@ -42,7 +53,15 @@ class CategoricalCompositeTransformer(Transformer):
         """
         Fit the transformer for all categories found in `instances`.
 
-        :param instances: a set of instances
+        Parameters
+        ----------
+        instances : InstanceData
+            Input instances to be processed by this method.
+
+        Returns
+        -------
+        Self
+            This composite transformer instance after fitting category models.
         """
         # reset
         self._transformers = {}
@@ -60,8 +79,15 @@ class CategoricalCompositeTransformer(Transformer):
         """
         Apply the specialized transformers for all instances in `instances`, based on their categories.
 
-        :param instances: a set of instances
-        :return: the transformed instances
+        Parameters
+        ----------
+        instances : InstanceData
+            Input instances to be processed by this method.
+
+        Returns
+        -------
+        InstanceData
+            Instance data object produced by this operation.
         """
         if self._category_shape is None:
             raise ValueError('apply() called before fit()')

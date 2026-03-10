@@ -20,6 +20,11 @@ class GlassData(DataProvider):
     set of five instances per source.
 
     Data are retrieved from the web as needed and stored locally for later use.
+
+    Parameters
+    ----------
+    cache_dir : PathLike
+        Cache directory used for storing downloaded dataset files.
     """
 
     def __init__(self, cache_dir: PathLike):
@@ -29,7 +34,21 @@ class GlassData(DataProvider):
         )
 
     def _load_data(self, file: str, role: RoleAssignment) -> FeatureData:
-        """Return a tuple of features, source_ids and instance_ids."""
+        """
+        Return a tuple of features, source_ids and instance_ids.
+
+        Parameters
+        ----------
+        file : str
+            Path to the input file.
+        role : RoleAssignment
+            Role label assigned to rows in this split.
+
+        Returns
+        -------
+        FeatureData
+            FeatureData object parsed from the source.
+        """
         source_ids = []
         instance_ids = []
         values = []
@@ -73,6 +92,11 @@ class GlassData(DataProvider):
         - source_ids: a 1d array of source ids (str)
         - instance_ids: a 1d array of unique instance ids (str)
         - role_assignments: a 1d array of role assignments (values "train" or "test")
+
+        Returns
+        -------
+        FeatureData
+            FeatureData object parsed from the source.
         """
         training_data = self._load_data('training.csv', RoleAssignment.TRAIN)
         duplo = self._load_data('duplo.csv', RoleAssignment.TEST)

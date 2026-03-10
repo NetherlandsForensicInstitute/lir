@@ -26,7 +26,7 @@ system configuration used by the pipeline.
               - name: svm
                 method: svm
                 probability: True
-"""  # noqa: D214, D405, D406, D407, D411 (allow for `parameters` in docstring)
+"""  # noqa: D214, D405, D406, D407, D411
 
 import json
 import logging
@@ -93,7 +93,10 @@ class Hyperparameter(ABC):
         """
         Get a list of values that a hyperparameter can take in the context of a particular experiment.
 
-        :return: a list of `HyperparameterOption`
+        Returns
+        -------
+        list[HyperparameterOption]
+            List of options for this hyperparameter.
         """
         raise NotImplementedError
 

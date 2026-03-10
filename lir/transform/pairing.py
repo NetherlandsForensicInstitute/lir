@@ -8,7 +8,8 @@ from lir.util import check_type
 
 
 class PairingMethod(ABC):
-    """Base class for pairing methods.
+    """
+    Base class for pairing methods.
 
     A pairing method should implement the `pair()` function.
     """
@@ -31,20 +32,41 @@ class PairingMethod(ABC):
         are 0=different source, 1=same source.
         Any other attributes are combined into tuples.
 
-        :param instances: An array of instance features, with one row per instance.
-        :param n_trace_instances: Number of instances per trace.
-        :param n_ref_instances: Number of instances per reference source.
-        :return: instance pairs
+        Parameters
+        ----------
+        instances : InstanceData
+            Input instances to be processed by this method.
+        n_trace_instances : int
+            Number of trace instances to include in each pairing.
+        n_ref_instances : int
+            Number of reference instances to include in each pairing.
+
+        Returns
+        -------
+        PairedFeatureData
+            FeatureData object parsed from the source.
         """
         raise NotImplementedError
 
 
 class SourcePairing(PairingMethod):
-    """Construct pairs of sources (i.e. classes) from an array of instances.
+    """
+    Construct pairs of sources (i.e. classes) from an array of instances.
 
     While pairing at instance level results in pairs of instances, some same-source and some different-source, pairing
     at source level results in pairing of multiple instances of source A against multiple instances of source B, where A
     and B can be same-source or different-source.
+
+    Parameters
+    ----------
+    same_source_limit : int | None
+        Limit for the number or fraction of same-source pairs.
+    different_source_limit : int | None
+        Limit for the number or fraction of different-source pairs.
+    ratio_limit : int | None
+        Maximum allowed ratio between same-source and different-source pairs.
+    seed : Any | int
+        Random seed controlling stochastic behaviour for reproducible results.
     """
 
     def __init__(
@@ -128,7 +150,8 @@ class SourcePairing(PairingMethod):
         n_trace_instances: int = 1,
         n_ref_instances: int = 1,
     ) -> PairedFeatureData:
-        """Pair sources.
+        """
+        Pair sources.
 
         Takes a FeatureData object that contains instances.
         Returns pairs as a PairedFeatureData object.
@@ -136,10 +159,19 @@ class SourcePairing(PairingMethod):
         The input is expected to have source_ids, that govern how pairs are compiled.
         The input instances may be used in a pair, either as a trace instance or as a reference instance.
 
-        :param instances: the set of instances to be paired
-        :param n_trace_instances: the number of trace instances in each pair
-        :param n_ref_instances: the number of reference instances in each pair
-        :return: paired instances
+        Parameters
+        ----------
+        instances : InstanceData
+            Input instances to be processed by this method.
+        n_trace_instances : int
+            Number of trace instances to include in each pairing.
+        n_ref_instances : int
+            Number of reference instances to include in each pairing.
+
+        Returns
+        -------
+        PairedFeatureData
+            FeatureData object parsed from the source.
         """
         instances = check_type(FeatureData, instances)
 
@@ -204,10 +236,22 @@ class SourcePairing(PairingMethod):
 
 
 class InstancePairing(PairingMethod):
-    """Construct pairs from a set of instances.
+    """
+    Construct pairs from a set of instances.
 
     Note that this pairing method may cause performance problems with large datasets,
     even if the number of instances in the output is limited.
+
+    Parameters
+    ----------
+    same_source_limit : int | None
+        Limit for the number or fraction of same-source pairs.
+    different_source_limit : int | None
+        Limit for the number or fraction of different-source pairs.
+    ratio_limit : float | None
+        Maximum allowed ratio between same-source and different-source pairs.
+    seed : int | None
+        Random seed controlling stochastic behaviour for reproducible results.
     """
 
     def __init__(
@@ -223,15 +267,22 @@ class InstancePairing(PairingMethod):
         Note that this pairing method may cause performance problems with large datasets,
         even if the number of instances in the output is limited.
 
-        :param same_source_limit: the maximum number of same source pairs (None = no limit)
-        :param different_source_limit: the maximum number of different source pairs (None = no limit; 'balanced' =
             number of same source pairs)
-        :param ratio_limit: maximum ratio between same source and different source pairs.
                 Ratio = ds pairs / ss pairs. The number of ds pairs will not exceed ratio_limit * ss pairs.
                 If both ratio and same_source_limit/different_source_limit are specified,
                 the number of pairs is chosen such that the ratio_limit is preserved and
                 the limit(s) are not exceeded, while taking as many pairs as possible within these constraints.
-        :param seed: seed to make pairing reproducible
+
+        Parameters
+        ----------
+        same_source_limit : int | None
+            Limit for the number or fraction of same-source pairs.
+        different_source_limit : int | None
+            Limit for the number or fraction of different-source pairs.
+        ratio_limit : float | None
+            Maximum allowed ratio between same-source and different-source pairs.
+        seed : int | None
+            Random seed controlling stochastic behaviour for reproducible results.
         """
         self._ss_limit = same_source_limit
         self._ds_limit = different_source_limit
@@ -241,7 +292,14 @@ class InstancePairing(PairingMethod):
 
     @property
     def rng(self) -> np.random.Generator:
-        """Obtain a random number generator using a provided seed."""
+        """
+        Obtain a random number generator using a provided seed.
+
+        Returns
+        -------
+        np.random.Generator
+            Random number generator initialized from the configured seed.
+        """
         if not self.__rng:
             self.__rng = np.random.default_rng(seed=self._seed)
         return self.__rng
@@ -252,12 +310,22 @@ class InstancePairing(PairingMethod):
         n_trace_instances: int = 1,
         n_ref_instances: int = 1,
     ) -> PairedFeatureData:
-        """Construct pairs.
+        """
+        Construct pairs.
 
-        :param instances: the set of instances to be paired
-        :param n_trace_instances: the number of trace instances in each pair (must be 1 for this pairing method)
-        :param n_ref_instances: the number of reference instances in each pair (must be 1 for this pairing method)
-        :return: paired instances
+        Parameters
+        ----------
+        instances : InstanceData
+            Input instances to be processed by this method.
+        n_trace_instances : int
+            Number of trace instances to include in each pairing.
+        n_ref_instances : int
+            Number of reference instances to include in each pairing.
+
+        Returns
+        -------
+        PairedFeatureData
+            FeatureData object parsed from the source.
         """
         instances = check_type(FeatureData, instances)
         if instances.source_ids is None:

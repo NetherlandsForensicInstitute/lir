@@ -13,9 +13,17 @@ LOG = logging.getLogger(__name__)
 
 
 class RemoteResource:
-    """Provide method to open files from remote source.
+    """
+    Provide method to open files from remote source.
 
     This can be handy if any resource is located on e.g. a GitHub repository.
+
+    Parameters
+    ----------
+    url : str
+        URL of the remote resource to read.
+    local_directory : Path
+        Local cache directory used for downloaded data.
     """
 
     def __init__(self, url: str, local_directory: Path):
@@ -23,7 +31,21 @@ class RemoteResource:
         self.local_directory = local_directory
 
     def open(self, filename: str, mode: str = 'r') -> IO[Any]:
-        """Return an open file stream for a remote resource."""
+        """
+        Return an open file stream for a remote resource.
+
+        Parameters
+        ----------
+        filename : str
+            Filename to open from disk.
+        mode : str
+            Value passed via ``mode``.
+
+        Returns
+        -------
+        IO[Any]
+            Open file handle for the requested resource.
+        """
         local_path = self.local_directory / filename
         if not local_path.exists():
             url = f'{self.url}/{filename}'
@@ -35,9 +57,19 @@ class RemoteResource:
 
 
 class DataFileBuilderCsv:
-    """DataFileBuilderCsv Class.
+    """
+    DataFileBuilderCsv Class.
 
     This class adds convenience methods to write data to an output CSV file.
+
+    Parameters
+    ----------
+    path : Path
+        Filesystem path used by this operation.
+    write_mode : str
+        File mode used when writing output data.
+    write_header : bool | None
+        Whether to write a header row before data rows.
     """
 
     def __init__(self, path: Path, write_mode: str = 'w', write_header: bool | None = None):
@@ -60,9 +92,17 @@ class DataFileBuilderCsv:
         length of the dimension. If it is `list[str]`, it is a meaningful header for the dimension and its length is
         equal to the size of the dimension.
 
-        :param prefix: prefix for all headers
-        :param dimensions: dimension of each row in the data
-        :return: a flattened array of headers
+        Parameters
+        ----------
+        prefix : str
+            Prefix used when generating column names.
+        dimensions : list[int | list[str]]
+            Number of feature dimensions to include in the header.
+
+        Returns
+        -------
+        list[str]
+            Flattened list of generated header names.
         """
         full_shape = [d if isinstance(d, int) else len(d) for d in dimensions]
         full_header = np.full(shape=full_shape, fill_value=prefix)
@@ -100,10 +140,16 @@ class DataFileBuilderCsv:
         The data argument is an arbitrary numpy array. Its first dimension are the rows. Any other dimension will be
         columns in the CSV output.
 
-        :param header_prefix: the prefix for all headers
-        :param dimension_headers: a mapping from dimensions to its headers; the dimension corresponds to the dimensions
             of the data. Because dimension 0 corresponds to rows, it should have no headers
-        :param data:
+
+        Parameters
+        ----------
+        data : np.ndarray
+            Data object to be written or transformed.
+        header_prefix : str
+            Prefix used for generated header names.
+        dimension_headers : dict[int, list[str]] | None
+            Optional explicit names for feature dimensions.
         """
         dimension_headers = dimension_headers or {}
 
@@ -155,6 +201,16 @@ def search_path(path: Path) -> Path:
     elements one by one, and if it exists, it is normalized by `Path.resolve()` and returned.
 
     If the file is not found, it is normalized and made absolute by `Path.resolve()` and returned.
+
+    Parameters
+    ----------
+    path : Path
+        Filesystem path used by this operation.
+
+    Returns
+    -------
+    Path
+        Absolute path to the resolved file location.
     """
     if path.is_absolute():
         return path.resolve()

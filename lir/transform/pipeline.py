@@ -27,7 +27,28 @@ class Pipeline(Transformer):
     """
     A pipeline of processing modules.
 
-    A module may be a scikit-learn style transformer, estimator, or a LIR `Transformer`
+    Each step in the pipeline may be a
+
+    - a scikit-learn style transformer (with ``fit()`` and ``transform()`` functions),
+    - a scikit-learn style estimator (with ``fit()`` and ``predict_proba()``), or
+    - a LiR ``Transformer`` object.
+
+    Example:
+
+    .. code-block:: python
+
+        from sklearn.preprocessing import StandardScaler
+        from sklearn.ensemble import RandomForestClassifier
+        from lir.transform.pipeline import Pipeline
+        from lir.algorithms.logistic_regression import LogitCalibrator
+        from lir.util import probability_to_odds
+
+        pipeline = Pipeline(steps=[
+                ('scaler', StandardScaler()),       # a scikit-learn transformer, for scaling the data
+                ('clf', RandomForestClassifier()),  # a scikit-learn estimator, to calculate pseudo-probabilities
+                ('to_odds', probability_to_odds),   # a plain function, to convert probabilities to pseudo-LLRs
+                ('calibrator', LogitCalibrator()),  # a LiR transformer, to calibrate the LLRs
+        ])
 
     Parameters
     ----------

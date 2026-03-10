@@ -92,6 +92,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
         label_column: str | None = None,
         instance_id_column: str | None = None,
         role_assignment_column: str | None = None,
+        fold_assignment_column: str | None = None,
         extra_fields: list[ExtraField] | None = None,
         ignore_columns: list[str] | None = None,
         head: int | None = None,
@@ -107,6 +108,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
         :param label_column: the name of the column that contains the hypothesis label (0 or 1)
         :param instance_id_column: the name of the column that contains the instance id (str)
         :param role_assignment_column: the name of the column that contains the role assignment ("train" or "test")
+        :param fold_assignment_column: the name of the column that contains the fold assignment (Any)
         :param extra_fields: extra fields to read, in addition to the above
         :param ignore_columns: the names of the columns that should be ignored
         :param head: read at most this number of rows from the file only, and ignore all others
@@ -121,6 +123,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
         self.label_column = label_column
         self.instance_id_column = instance_id_column
         self.role_assignment_column = role_assignment_column
+        self.fold_assignment_column = fold_assignment_column
         self.extra_fields = extra_fields or []
         self.ignore_columns = ignore_columns or []
         self._head = head
@@ -156,6 +159,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
                 ('label_column', self.label_column),
                 ('instance_id_column', self.instance_id_column),
                 ('role_assignment_column', self.role_assignment_column),
+                ('fold_assignment_column', self.fold_assignment_column),
             ]
             + [('source_id_column', column_name) for column_name in self.source_id_columns]
             + [
@@ -181,6 +185,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
         labels = []
         instance_ids = []
         role_assignments = []
+        fold_assignment_column = []
         features = []
         extra_values = defaultdict(list)
 
@@ -198,6 +203,8 @@ class FeatureDataCsvParser(DataProvider, ABC):
                         reader.line_num, self.role_assignment_column, row[self.role_assignment_column], RoleAssignment
                     ).value
                 )
+            if self.fold_assignment_column is not None:
+                fold_assignment_column.append(row[self.fold_assignment_column])
             for field in self.extra_fields:
                 extra_values[field.name].append(field.parse_row(row))
             features.append(
@@ -218,6 +225,14 @@ class FeatureDataCsvParser(DataProvider, ABC):
             data['instance_ids'] = np.array(instance_ids)
         if self.role_assignment_column is not None:
             data['role_assignments'] = np.array(role_assignments)
+        if self.fold_assignment_column is not None:
+            if len(set(fold_assignment_column)) < 2:
+                raise ValueError(
+                    f'{self._message_prefix}fold assignment column `{self.fold_assignment_column}` should contain at '
+                    f'least two different values; found: {set(fold_assignment_column)}'
+                )
+
+            data['fold_assignments'] = np.array(fold_assignment_column)
 
         return FeatureData(**data)  # type: ignore
 

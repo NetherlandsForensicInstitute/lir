@@ -29,26 +29,15 @@ pygments_style = 'sphinx'  # enable syntax highlighting
 # modindex_common_prefix = ['lir.']
 
 extensions = [
-    'autodoc2',
-    'myst_parser',
+    'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
-    'sphinx_rtd_theme',
     'sphinx.ext.napoleon',
+    'sphinx.ext.viewcode',
+    'myst_parser',
+    'sphinx_rtd_theme',
     'sphinx_jinja',
     'jupyter_sphinx',
 ]
-
-autodoc2_packages = [
-    '../lir',
-]
-
-autodoc2_output_dir = 'api'
-
-autodoc2_docstring_parser_regexes = [
-    (r'.*', 'myst'),
-]
-
-myst_enable_extensions = ['fieldlist']
 
 templates_path = ['_templates']
 exclude_patterns = []
@@ -57,7 +46,6 @@ exclude_patterns = []
 autosummary_generate = True
 
 # Napoleon settings
-napoleon_google_docstring = True
 napoleon_numpy_docstring = True
 napoleon_include_init_with_doc = False
 napoleon_include_private_with_doc = False

@@ -46,7 +46,6 @@ dev = [
     "sphinx-rtd-theme>=3.1.0",
     "sphinxcontrib-napoleon>=0.7",
     "sphinx-jinja>=2.0.2",
-    "sphinx-autodoc2>=0.5.0",
     "myst-parser>=5.0.0",
     "jupyter-sphinx>=0.5.3",
     "types-requests>=2.32.4.20250913",
@@ -72,7 +71,8 @@ quicktest = {composite = ["test --testmon"]}
 test-coverage = "coverage report"
 lir = "python -m lir"
 lint-docs = {shell = 'numpydoc lint lir/*.py lir/*/*.py'}
-generate-docs= {composite = ["sphinx-build -M html docs build"]}
+apidoc = "sphinx-apidoc -f -e -M -o docs/api lir"
+generate-docs = {composite = ["apidoc", "sphinx-build -M html docs build"]}
 serve-docs = {composite = ["generate-docs", "python -m http.server -d build/html"]}
 
 [tool.ruff]

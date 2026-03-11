@@ -5,7 +5,9 @@ Experiment components
 ---------------------
 
 The preferred way to set up an experiment is to use a YAML configuration.
-Use the [LR system selection helper](lrsystem_yaml.md) to learn how to use the YAML interface.
+Use the `LR system selection helper`_  to learn how to use the YAML interface.
+
+.. _LR system selection helper: /lrsystem_yaml.html
 
 This page lists the components that may be needed to set up an experiment.
 

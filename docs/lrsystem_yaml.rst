@@ -3,7 +3,9 @@ LR System selection helper
 
 This page is written for researchers that have collected data and wish to make an LR system using that data.
 
-Before you begin, make sure that you have a [working version of LiR](index.html).
+Before you begin, make sure that you have a `working version of LiR`_.
+
+.. _working version of LiR: /installation.html
 
 An LR system is an automated statistical method in which two hypotheses are modeled and which can produce LRs for the hypothesis pair.
 These LRs can be made based on validation data for which it is known what the true hypothesis is, so that the LR system can be validated.
@@ -100,8 +102,10 @@ Some other columns are optional, for more information see HERE
 It is possible to make a score-based common-source LR system or a feature-based common-source LR system.
 
 If you don't know what that distinction means, you can:
-  - choose 'score-based' and you will build an LR system similar to [here] (link to practitioner's guide).
+  - choose 'score-based' and you will build an LR system similar our `notebook`_.
   - ask advice from your favourite forensic statistician.
+
+.. _notebook: https://colab.research.google.com/github/NetherlandsForensicInstitute/lir/blob/practitioner_guide/practitioners_guide_glass.ipynb
 
 If you do know what the distinction means but you are unsure what is best for your data, you can use this repository to build multiple LR systems, perform validation and compare the results.
 

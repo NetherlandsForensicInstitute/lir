@@ -18,7 +18,7 @@ class Experiment(ABC):
     """
     Representation of an experiment pipeline run for each provided LR system.
 
-    Parameters
+    Attributes
     ----------
     name : str
         Name used to identify this object in outputs and logs.

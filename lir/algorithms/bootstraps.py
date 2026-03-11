@@ -32,7 +32,7 @@ class Bootstrap(Pipeline, ABC):
     The AtData variant allows for more complex data types, while the Equidistant variant is only suitable for continuous
     features.
 
-    Parameters
+    Attributes
     ----------
     steps : list[tuple[str, Any]]
         The pipeline steps to bootstrap.
@@ -222,7 +222,7 @@ class BootstrapEquidistant(Bootstrap):
 
     See the Bootstrap class for more details.
 
-    Parameters
+    Attributes
     ----------
     steps : list[tuple[str, Any]]
         The pipeline steps to bootstrap.

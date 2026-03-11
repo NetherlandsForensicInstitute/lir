@@ -49,7 +49,7 @@ class SaveModel(Aggregation):
     """
     Write the model to a file.
 
-    Parameters
+    Attributes
     ----------
     output_dir : Path
         The directory where the model should be written.

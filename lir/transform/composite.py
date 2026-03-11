@@ -15,7 +15,7 @@ class CategoricalCompositeTransformer(Transformer):
 
     Incoming data is categorized by a category field. For each category, a separate transformer is used.
 
-    Parameters
+    Attributes
     ----------
     factory : Callable[[], Transformer]
         Value passed via ``factory``.

@@ -71,7 +71,7 @@ class Hyperparameter(ABC):
     """
     Base class for all hyperparameters.
 
-    Parameters
+    Attributes
     ----------
     name : str
         Hyperparameter name.
@@ -109,7 +109,7 @@ class CategoricalHyperparameter(Hyperparameter):
     - path: the path of this hyperparameter in the LR system configuration
     - options: a list of options
 
-    Parameters
+    Attributes
     ----------
     name : str
         Hyperparameter name.
@@ -315,7 +315,7 @@ class FloatHyperparameter(Hyperparameter):
     - ``log`` (optional): If ``True``, search in logarithmic space instead of
     linear space. Cannot be combined with ``step``. Defaults to ``False``.
 
-    Parameters
+    Attributes
     ----------
     path : str
         Configuration path to substitute.
@@ -430,7 +430,7 @@ class FolderHyperparameter(Hyperparameter):
            - '*.tmp'
            - 'ignore_this_file.csv'
 
-    Parameters
+    Attributes
     ----------
     path : str
         Configuration path to substitute.

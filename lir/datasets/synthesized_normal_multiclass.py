@@ -20,7 +20,7 @@ class SynthesizedNormalMulticlassData(DataProvider):
     """
     Implementation of a data source generating normally distributed multiclass data.
 
-    Parameters
+    Attributes
     ----------
     dimensions : list[SynthesizedDimension]
         Number of feature dimensions to include in the header.

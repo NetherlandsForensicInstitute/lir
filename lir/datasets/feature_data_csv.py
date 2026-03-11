@@ -66,7 +66,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
     - :class:`FeatureDataCsvHttpParser` for reading from a URL;
     - :class:`FeatureDataCsvStreamParser` for reading from a stream.
 
-    Parameters
+    Attributes
     ----------
     source_id_column : str | list[str] | None
         Column name(s) containing source identifiers.
@@ -279,7 +279,7 @@ class FeatureDataCsvFileParser(FeatureDataCsvParser):
     """
     Read CSV data from file.
 
-    Parameters
+    Attributes
     ----------
     file : PathLike
         Path to the input file.
@@ -320,7 +320,7 @@ class FeatureDataCsvStreamParser(FeatureDataCsvParser):
     """
     Read data from a streamed CSV.
 
-    Parameters
+    Attributes
     ----------
     fp : IO
         Open file-like object to read from.
@@ -359,7 +359,7 @@ class FeatureDataCsvHttpParser(FeatureDataCsvParser):
     """
     Read CSV data from a URL.
 
-    Parameters
+    Attributes
     ----------
     url : str
         URL of the remote resource to read.

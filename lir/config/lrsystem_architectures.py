@@ -32,7 +32,7 @@ class ParsedLRSystem(LRSystem):
     """
     Represent a given initialized LR system based on the provided configuration.
 
-    Parameters
+    Attributes
     ----------
     lrsystem : LRSystem
         Underlying LR system implementation.

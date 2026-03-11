@@ -29,7 +29,7 @@ class Canvas:
     """
     Representation of an empty canvas, to be used in plotting multiple visualizations.
 
-    Parameters
+    Attributes
     ----------
     ax : Axes
         Matplotlib axes instance used by wrapped plotting methods.

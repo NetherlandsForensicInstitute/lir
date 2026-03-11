@@ -21,7 +21,7 @@ class McmcLLRModel(Transformer):
     obtained. The median of this distribution is used as best estimate for the LR; a credible interval is also
     determined.
 
-    Parameters
+    Attributes
     ----------
     distribution_h1 : str
         Statistical distribution used to model H1.
@@ -138,7 +138,7 @@ class McmcModel:
     """
     Use Markov Chain Monte Carlo simulations to fit a statistical distribution.
 
-    Parameters
+    Attributes
     ----------
     distribution : str
         Statistical distribution used, for example `'normal'` or `'binomial'`.

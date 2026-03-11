@@ -32,7 +32,7 @@ class TrainTestSplit(DataStrategy):
           test_size: 0.2  # the (hold-out) test set  is 20% of the data
           seed: 42  # optional
 
-    Parameters
+    Attributes
     ----------
     test_size : float | int
         Size of the test set. If float, should be between 0.0 and 1.0 and represent the proportion of the dataset to
@@ -96,7 +96,7 @@ class CrossValidation(DataStrategy):
           folds: 5  # the number k in k-fold cross-validation
           seed: 42  # optional
 
-    Parameters
+    Attributes
     ----------
     folds : int
         Number of cross-validation folds to generate.
@@ -155,7 +155,7 @@ class SourcesTrainTestSplit(DataStrategy):
 
     This class internally uses ``sklearn.model_selection.GroupShuffleSplit``.
 
-    Parameters
+    Attributes
     ----------
     test_size : float | int
         Fraction or absolute number of items assigned to the test split.
@@ -218,7 +218,7 @@ class SourcesCrossValidation(DataStrategy):
 
     This class internally uses ``sklearn.model_selection.GroupKFold``.
 
-    Parameters
+    Attributes
     ----------
     folds : int
         Number of cross-validation folds to generate.
@@ -252,7 +252,7 @@ class PairsTrainTestSplit(DataStrategy):
     set or the test set. The pairs are assigned to training or testing if both of their sources have that role. Pairs
     with mixed roles are omitted.
 
-    Parameters
+    Attributes
     ----------
     test_size : float | int
         Fraction or absolute number of items assigned to the test split.

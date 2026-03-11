@@ -681,7 +681,7 @@ class TwoLevelSystem(LRSystem):
 
     See also: `TwoLevelModelNormalKDE`
 
-    Parameters
+    Attributes
     ----------
     preprocessing_pipeline : Transformer | None
         Pipeline that preprocesses instances before pairing and evaluation.

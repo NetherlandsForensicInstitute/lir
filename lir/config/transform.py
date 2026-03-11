@@ -31,7 +31,7 @@ class GenericTransformerConfigParser(ConfigParser):
     The `parse()` function offered in this helper class, implements a branching strategy to determine
     which strategy is best suited to make the component compatible with the scikit-learn pipeline.
 
-    Parameters
+    Attributes
     ----------
     component_class : object
         Component class or callable to adapt to the transformer interface.
@@ -107,7 +107,7 @@ class NumpyWrappingConfigParser(ConfigParser):
     """
     Wrap a Transformer to add a header to FeatureData.
 
-    Parameters
+    Attributes
     ----------
     module_parser : ConfigParser
         Parser used to create the wrapped transformer.

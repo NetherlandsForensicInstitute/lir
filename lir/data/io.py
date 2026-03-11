@@ -18,7 +18,7 @@ class RemoteResource:
 
     This can be handy if any resource is located on e.g. a GitHub repository.
 
-    Parameters
+    Attributes
     ----------
     url : str
         URL of the remote resource to read.
@@ -62,7 +62,7 @@ class DataFileBuilderCsv:
 
     This class adds convenience methods to write data to an output CSV file.
 
-    Parameters
+    Attributes
     ----------
     path : Path
         Filesystem path used by this operation.

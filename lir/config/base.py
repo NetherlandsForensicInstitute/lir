@@ -13,7 +13,7 @@ class YamlParseError(ValueError):
     """
     Error raised when parsing YAML configuration fails, mentioning specific YAML path.
 
-    Parameters
+    Attributes
     ----------
     config_context_path : list[str]
         Dot-path to the failing configuration node.
@@ -40,7 +40,7 @@ class ContextAwareDict(dict):
     """
     Dictionary wrapper which has knowledge about its context.
 
-    Parameters
+    Attributes
     ----------
     context : list[str]
         YAML path used for contextual error messages.
@@ -87,7 +87,7 @@ class ContextAwareList(list):
     """
     List wrapper which has knowledge about its context.
 
-    Parameters
+    Attributes
     ----------
     context : list[str]
         YAML path used for contextual error messages.
@@ -224,7 +224,7 @@ class GenericFunctionConfigParser(ConfigParser):
     """
     Parser for callable functions or component classes.
 
-    Parameters
+    Attributes
     ----------
     component_class : Callable
         Callable that should be exposed by this parser.
@@ -283,7 +283,7 @@ class GenericConfigParser(ConfigParser):
     """
     Return an instantiation of a class, initialized with the specified arguments.
 
-    Parameters
+    Attributes
     ----------
     component_class : type[Any]
         Class to instantiate from configuration values.

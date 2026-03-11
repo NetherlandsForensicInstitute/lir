@@ -170,7 +170,7 @@ class FederatedLoader(ConfigParserLoader):
     """
     A configuration parser loader that delegates resolution to other loaders.
 
-    Parameters
+    Attributes
     ----------
     registries : list[ConfigParserLoader]
         A list of configuration parser loaders to delegate to, in order of priority.
@@ -295,7 +295,7 @@ class YamlRegistry(ConfigParserLoader):
     This registry parses this YAML mapping and provides access to these
     values through a `get()` method.
 
-    Parameters
+    Attributes
     ----------
     cfg : confidence.Configuration
         The configuration object containing the registry entries.

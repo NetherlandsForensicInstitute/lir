@@ -15,7 +15,7 @@ class SynthesizedNormalData:
     for debugging purposes or gaining insight in the effect of varying parts within the
     LR system pipeline.
 
-    Parameters
+    Attributes
     ----------
     mean : float
         Mean value of the generated normal distribution.
@@ -52,7 +52,7 @@ class SynthesizedNormalBinaryData(DataProvider):
     """
     Implementation of a data source generating normally distributed binary class data.
 
-    Parameters
+    Attributes
     ----------
     h1_params : SynthesizedNormalData
         Distribution parameters used to sample class-1 data.

@@ -127,7 +127,7 @@ class IsotonicCalibrator(Transformer):
     - has an initialization argument that provides the option of adding misleading data points
     - outputs logodds instead of probabilities
 
-    Parameters
+    Attributes
     ----------
     add_misleading : int, optional
         Number of synthetic misleading points to add to reduce extreme LRs.

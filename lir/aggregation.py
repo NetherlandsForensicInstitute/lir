@@ -92,7 +92,7 @@ class AggregatePlot(Aggregation):
     """
     Aggregation that generates plots by repeatedly calling a plotting function.
 
-    Parameters
+    Attributes
     ----------
     plot_fn : Callable
         The plotting function to be used for generating plots.
@@ -341,7 +341,7 @@ class WriteMetricsToCsv(Aggregation):
     """
     Helper class to write aggregated results to CSV file.
 
-    Parameters
+    Attributes
     ----------
     path : Path
         The path to the CSV file where the metrics will be written.
@@ -445,7 +445,7 @@ class CaseLLRToCsv(Aggregation):
     """
     Aggregation that applies a full-data-fitted LR system to case data and stores LLRs as CSV.
 
-    Parameters
+    Attributes
     ----------
     output_dir : Path
         Directory where the CSV file will be written.
@@ -541,7 +541,7 @@ class SubsetAggregation(Aggregation):
 
     A separate aggregation method is used for each category.
 
-    Parameters
+    Attributes
     ----------
     aggregation_methods : list[Aggregation]
         A list of methods to aggregate results by category.

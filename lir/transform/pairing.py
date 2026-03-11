@@ -57,7 +57,7 @@ class SourcePairing(PairingMethod):
     at source level results in pairing of multiple instances of source A against multiple instances of source B, where A
     and B can be same-source or different-source.
 
-    Parameters
+    Attributes
     ----------
     same_source_limit : int | None
         Limit for the number or fraction of same-source pairs.
@@ -242,7 +242,7 @@ class InstancePairing(PairingMethod):
     Note that this pairing method may cause performance problems with large datasets,
     even if the number of instances in the output is limited.
 
-    Parameters
+    Attributes
     ----------
     same_source_limit : int | None
         Limit for the number or fraction of same-source pairs.

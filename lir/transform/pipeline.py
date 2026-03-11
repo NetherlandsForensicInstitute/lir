@@ -50,7 +50,7 @@ class Pipeline(Transformer):
                 ('calibrator', LogitCalibrator()),  # a LiR transformer, to calibrate the LLRs
         ])
 
-    Parameters
+    Attributes
     ----------
     steps : list[tuple[str, Transformer | Any]]
         Ordered transformer steps executed by this pipeline.
@@ -202,7 +202,7 @@ class LoggingPipeline(Pipeline):
     ``featuresI`` for input features or ``stepnameI`` for step output, where ``stepname`` is replaced by the name of the
     step, and ``I`` refers to the index of the feature value.
 
-    Parameters
+    Attributes
     ----------
     steps : list[tuple[str, Transformer | Any]]
         Ordered transformer steps executed by this pipeline.

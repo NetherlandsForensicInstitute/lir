@@ -29,7 +29,7 @@ class LogitCalibrator(Transformer):
 
     Infinite values in the input are ignored, except if they are misleading, which is an error.
 
-    Parameters
+    Attributes
     ----------
     **kwargs : dict
         Additional keyword arguments forwarded to `sklearn.linear_model.LogisticRegression`.

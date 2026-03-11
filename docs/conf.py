@@ -84,7 +84,7 @@ def get_apidocs_uri(class_name: str | ConfigParser) -> str:
     for i in range(1, len(parts)):
         module_name = '.'.join(parts[:-i])
         if is_module(module_name):
-            return f'api/lir/{module_name}.html#{class_name}'
+            return f'api/{module_name}.html#{class_name}'
 
     return 'api/lir.html'
 

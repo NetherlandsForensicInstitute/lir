@@ -8,11 +8,21 @@ from lir.data.models import DataProvider, FeatureData
 
 
 class SynthesizedNormalData:
-    """Representation of normally distributed data, leveraging a number generator.
+    """
+    Representation of normally distributed data, leveraging a number generator.
 
     The generated data can be used to generate normally distributed data and is useful
     for debugging purposes or gaining insight in the effect of varying parts within the
     LR system pipeline.
+
+    Parameters
+    ----------
+    mean : float
+        Mean value of the generated normal distribution.
+    std : float
+        Standard deviation of the generated normal distribution.
+    size : int | tuple[int, int]
+        Number of samples to generate.
     """
 
     def __init__(self, mean: float, std: float, size: int | tuple[int, int]):
@@ -22,12 +32,35 @@ class SynthesizedNormalData:
         self.size = (size, 1) if isinstance(size, int) else size
 
     def get(self, rng: numpy.random.Generator) -> np.ndarray:
-        """Draw random samples from a normally distributed data set."""
+        """
+        Draw random samples from a normally distributed data set.
+
+        Parameters
+        ----------
+        rng : numpy.random.Generator
+            Random number generator used for sampling.
+
+        Returns
+        -------
+        np.ndarray
+            Randomly sampled values for this distribution configuration.
+        """
         return rng.normal(loc=self.mean, scale=self.std, size=self.size)
 
 
 class SynthesizedNormalBinaryData(DataProvider):
-    """Implementation of a data source generating normally distributed binary class data."""
+    """
+    Implementation of a data source generating normally distributed binary class data.
+
+    Parameters
+    ----------
+    h1_params : SynthesizedNormalData
+        Distribution parameters used to sample class-1 data.
+    h2_params : SynthesizedNormalData
+        Distribution parameters used to sample class-2 data.
+    seed : int | None
+        Random seed controlling stochastic behaviour for reproducible results.
+    """
 
     def __init__(self, h1_params: SynthesizedNormalData, h2_params: SynthesizedNormalData, seed: int | None = None):
         self.data_parameters = [h1_params, h2_params]
@@ -38,6 +71,11 @@ class SynthesizedNormalBinaryData(DataProvider):
         Return instances with randomly synthesized data and binary labels.
 
         The features are drawn from a normal distribution, as configured.
+
+        Returns
+        -------
+        FeatureData
+            FeatureData object parsed from the source.
         """
         rng = np.random.default_rng(seed=self.seed)
         features = np.concatenate([data_class.get(rng) for data_class in self.data_parameters])
@@ -47,7 +85,21 @@ class SynthesizedNormalBinaryData(DataProvider):
 
 @config_parser
 def synthesized_normal_binary(config: ContextAwareDict, _: Path) -> SynthesizedNormalBinaryData:
-    """Set up (binary class) data source class to obtain normally distributed data from configuration."""
+    """
+    Set up (binary class) data source class to obtain normally distributed data from configuration.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        Configuration mapping used to construct this component.
+    _ : Path
+        Unused argument required by the parser interface.
+
+    Returns
+    -------
+    SynthesizedNormalBinaryData
+        Configured binary synthesized data provider.
+    """
     seed = pop_field(config, 'seed', required=False)
     h1 = pop_field(config, 'h1')
     h2 = pop_field(config, 'h2')

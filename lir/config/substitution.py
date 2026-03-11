@@ -26,7 +26,7 @@ system configuration used by the pipeline.
               - name: svm
                 method: svm
                 probability: True
-"""  # noqa: D214, D405, D406, D407, D411 (allow for `parameters` in docstring)
+"""  # noqa: D214, D405, D406, D407, D411
 
 import json
 import logging
@@ -68,9 +68,24 @@ class HyperparameterOption(NamedTuple):
 
 
 class Hyperparameter(ABC):
-    """Base class for all hyperparameters."""
+    """
+    Base class for all hyperparameters.
+
+    Parameters
+    ----------
+    name : str
+        Hyperparameter name.
+    """
 
     def __init__(self, name: str):
+        """
+        Initialise a hyperparameter.
+
+        Parameters
+        ----------
+        name : str
+            Hyperparameter name.
+        """
         self.name = name
 
     @abstractmethod
@@ -78,7 +93,10 @@ class Hyperparameter(ABC):
         """
         Get a list of values that a hyperparameter can take in the context of a particular experiment.
 
-        :return: a list of `HyperparameterOption`
+        Returns
+        -------
+        list[HyperparameterOption]
+            List of options for this hyperparameter.
         """
         raise NotImplementedError
 
@@ -90,19 +108,59 @@ class CategoricalHyperparameter(Hyperparameter):
     A categorical hyperparameter has the following fields in a YAML configuration:
     - path: the path of this hyperparameter in the LR system configuration
     - options: a list of options
+
+    Parameters
+    ----------
+    name : str
+        Hyperparameter name.
+    options : list[HyperparameterOption]
+        Available options.
     """
 
     def __init__(self, name: str, options: list[HyperparameterOption]):
+        """
+        Initialise a categorical hyperparameter.
+
+        Parameters
+        ----------
+        name : str
+            Hyperparameter name.
+        options : list[HyperparameterOption]
+            Available options.
+        """
         super().__init__(name)
         self._options = options
 
     def options(self) -> list[HyperparameterOption]:
-        """Provide API access to the options for the hyperparameter."""
+        """
+        Provide API access to the options for the hyperparameter.
+
+        Returns
+        -------
+        list[HyperparameterOption]
+            Configured categorical options.
+        """
         return self._options
 
 
 def _parse_categorical_option(spec: Any, path: str, option_index: int | None) -> HyperparameterOption:
-    """Parse a section describing an option value of a categorical hyperparameter."""
+    """
+    Parse one categorical option specification.
+
+    Parameters
+    ----------
+    spec : Any
+        Option specification.
+    path : str
+        Target substitution path.
+    option_index : int | None
+        Position of this option in the list.
+
+    Returns
+    -------
+    HyperparameterOption
+        Parsed option.
+    """
     name = None
     if isinstance(spec, Mapping):
         # use the explicityly declared name, if any
@@ -125,7 +183,21 @@ def _parse_categorical_option(spec: Any, path: str, option_index: int | None) ->
 
 @config_parser(reference='lir.config.substitution.parse_categorical')
 def parse_categorical(spec: ContextAwareDict, output_path: Path) -> 'CategoricalHyperparameter':
-    """Parse the `parameters` section of the configuration into a `CategoricalVariable` object."""
+    """
+    Parse a categorical hyperparameter from configuration.
+
+    Parameters
+    ----------
+    spec : ContextAwareDict
+        Hyperparameter specification.
+    output_path : Path
+        Unused output path required by parser API.
+
+    Returns
+    -------
+    CategoricalHyperparameter
+        Parsed categorical hyperparameter.
+    """
     path = pop_field(spec, 'path')
     name = pop_field(spec, 'name', default=path or 'lrsystem')
 
@@ -138,6 +210,19 @@ def parse_categorical(spec: ContextAwareDict, output_path: Path) -> 'Categorical
 
 
 def _parse_substitution(spec: ContextAwareDict) -> tuple[str, Any]:
+    """
+    Parse one substitution specification.
+
+    Parameters
+    ----------
+    spec : ContextAwareDict
+        Substitution specification with ``path`` and ``value`` fields.
+
+    Returns
+    -------
+    tuple[str, Any]
+        Path and value pair.
+    """
     path = pop_field(spec, 'path')
     value = pop_field(spec, 'value')
     check_is_empty(spec)
@@ -167,6 +252,18 @@ def parse_clustered(spec: ContextAwareDict, output_path: Path) -> CategoricalHyp
     Each option has the following options:
     - name: a descriptive name for this option
     - substitutions: a list of substitutions, with a `path` and `value` field each
+
+    Parameters
+    ----------
+    spec : ContextAwareDict
+        Hyperparameter specification.
+    output_path : Path
+        Unused output path required by parser API.
+
+    Returns
+    -------
+    CategoricalHyperparameter
+        Parsed clustered hyperparameter.
     """
     parameter_name = pop_field(spec, 'name')
     options = pop_field(spec, 'options')
@@ -185,6 +282,18 @@ def parse_constant(spec: ContextAwareDict, output_path: Path) -> CategoricalHype
 
     - path: the path of this hyperparameter in the LR system configuration
     - value: the substitution value
+
+    Parameters
+    ----------
+    spec : ContextAwareDict
+        Hyperparameter specification.
+    output_path : Path
+        Unused output path required by parser API.
+
+    Returns
+    -------
+    CategoricalHyperparameter
+        Parsed constant as a single-option categorical hyperparameter.
     """
     path = pop_field(spec, 'path')
     value = pop_field(spec, 'value')
@@ -205,9 +314,38 @@ class FloatHyperparameter(Hyperparameter):
     - ``step`` (optional): Step size for a linear grid search.
     - ``log`` (optional): If ``True``, search in logarithmic space instead of
     linear space. Cannot be combined with ``step``. Defaults to ``False``.
+
+    Parameters
+    ----------
+    path : str
+        Configuration path to substitute.
+    low : float
+        Lower bound.
+    high : float
+        Upper bound.
+    step : float | None
+        Optional step size for grid options.
+    log : bool
+        Whether to sample in log space.
     """
 
     def __init__(self, path: str, low: float, high: float, step: float | None, log: bool):
+        """
+        Initialise a floating-point hyperparameter.
+
+        Parameters
+        ----------
+        path : str
+            Configuration path to substitute.
+        low : float
+            Lower bound.
+        high : float
+            Upper bound.
+        step : float | None
+            Optional step size for grid options.
+        log : bool
+            Whether to sample in log space.
+        """
         super().__init__(path)
         self.path = path
         self.low = low
@@ -216,7 +354,14 @@ class FloatHyperparameter(Hyperparameter):
         self.log = log
 
     def options(self) -> list[HyperparameterOption]:
-        """Provide API access to the options for the hyperparameter."""
+        """
+        Provide API access to the options for the hyperparameter.
+
+        Returns
+        -------
+        list[HyperparameterOption]
+            Enumerated hyperparameter options.
+        """
         if self.step is None:
             raise ValueError(
                 f'unable to generate options for floating point hyperparameter {self.path}: no step size defined'
@@ -229,7 +374,21 @@ class FloatHyperparameter(Hyperparameter):
 
 @config_parser(reference='lir.config.substitution.parse_float')
 def parse_float(spec: ContextAwareDict, output_path: Path) -> 'FloatHyperparameter':
-    """Parse the `parameters` section of the configuration into a `FloatHyperparameter` object."""
+    """
+    Parse a floating-point hyperparameter from configuration.
+
+    Parameters
+    ----------
+    spec : ContextAwareDict
+        Hyperparameter specification.
+    output_path : Path
+        Unused output path required by parser API.
+
+    Returns
+    -------
+    FloatHyperparameter
+        Parsed floating-point hyperparameter.
+    """
     path = pop_field(spec, 'path')
     low = pop_field(spec, 'low')
     high = pop_field(spec, 'high')
@@ -271,6 +430,15 @@ class FolderHyperparameter(Hyperparameter):
            - '*.tmp'
            - 'ignore_this_file.csv'
 
+    Parameters
+    ----------
+    path : str
+        Configuration path to substitute.
+    folder : str
+        Folder containing candidate files.
+    ignore_files : list[str] | None, optional
+        Filename patterns to exclude.
+
     Raises
     ------
     ValueError
@@ -281,6 +449,18 @@ class FolderHyperparameter(Hyperparameter):
     """
 
     def __init__(self, path: str, folder: str, ignore_files: list[str] | None = None):
+        """
+        Initialise a folder hyperparameter.
+
+        Parameters
+        ----------
+        path : str
+            Configuration path to substitute.
+        folder : str
+            Folder containing candidate files.
+        ignore_files : list[str] | None, optional
+            Filename patterns to exclude.
+        """
         super().__init__(path)
 
         # Search for the folder in the python PATH. Results in an absolute path.
@@ -295,7 +475,14 @@ class FolderHyperparameter(Hyperparameter):
         self.ignore_files = ignore_files if ignore_files is not None else []
 
     def options(self) -> list[HyperparameterOption]:
-        """Generate the options by walking over the folder."""
+        """
+        Generate options by walking over the folder.
+
+        Returns
+        -------
+        list[HyperparameterOption]
+            File-based options discovered in the folder.
+        """
         options = []
         for dirpath, _, filenames in self.folder_path.walk():
             for filename in filenames:
@@ -313,7 +500,21 @@ class FolderHyperparameter(Hyperparameter):
 
 @config_parser(reference='lir.config.substitution.parse_folder')
 def parse_folder(spec: ContextAwareDict, output_path: Path) -> 'FolderHyperparameter':
-    """Parse the `parameters` section of the configuration into a `FolderHyperparameter` object."""
+    """
+    Parse a folder hyperparameter from configuration.
+
+    Parameters
+    ----------
+    spec : ContextAwareDict
+        Hyperparameter specification.
+    output_path : Path
+        Unused output path required by parser API.
+
+    Returns
+    -------
+    FolderHyperparameter
+        Parsed folder hyperparameter.
+    """
     folder = pop_field(spec, 'folder')
     path = pop_field(spec, 'path')
     ignore_files = pop_field(spec, 'ignore_files', required=False)
@@ -325,7 +526,21 @@ def parse_parameter(
     spec: ContextAwareDict,
     output_dir: Path,
 ) -> Hyperparameter:
-    """Parse the parameters section of the configuration into a dedicated value wrapper object."""
+    """
+    Parse one parameter specification into a hyperparameter object.
+
+    Parameters
+    ----------
+    spec : ContextAwareDict
+        Parameter specification.
+    output_dir : Path
+        Output directory used by nested parser calls.
+
+    Returns
+    -------
+    Hyperparameter
+        Parsed hyperparameter object.
+    """
     if 'type' in spec:
         parameter_type = pop_field(spec, 'type')  # read from specified configuration
 
@@ -348,12 +563,22 @@ def parse_parameter(
 
 
 def _assign(struct: ContextAwareDict | ContextAwareList, path: list[str], value: Any) -> None:
-    """Assign a new value to a path within an hierarchical `dict` structure.
+    """
+    Assign a new value to a path within an hierarchical `dict` structure.
 
-    Parameters:
-    - struct is the `dict` that is modified in-place
-    - path is the path within the dict, as a list of `str`
-    - value is the value to be assigned
+    Parameters
+    ----------
+    struct : ContextAwareDict | ContextAwareList
+        Structure that is modified in-place.
+    path : list[str]
+        Path within the structure.
+    value : Any
+        Value to assign.
+
+    Returns
+    -------
+    None
+        This function mutates ``struct`` in-place.
     """
     if isinstance(struct, list):
         index = int(path[0])
@@ -394,10 +619,19 @@ def substitute_parameters(
     """
     Substitute parameters in an LR system configuration and return the updated configuration.
 
-    :param base_config: the original LR system configuration
-    :param hyperparameters: the hyperparameters and their values
-    :param context: the context path of the augmented configuration
-    :return: the augmented LR system configuration
+    Parameters
+    ----------
+    base_config : ContextAwareDict
+        Original LR system configuration.
+    hyperparameters : Mapping[str, Any]
+        Hyperparameters and their replacement values.
+    context : list[str]
+        Context path of the augmented configuration.
+
+    Returns
+    -------
+    ContextAwareDict
+        Augmented LR system configuration.
     """
     if '' in hyperparameters:
         # if the root is assigned, don't bother substituting and return the assigned value immediately

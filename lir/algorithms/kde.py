@@ -19,13 +19,20 @@ LOG = logging.getLogger(__name__)
 def compensate_and_remove_neginf_inf(
     log_odds: np.ndarray, y: np.ndarray
 ) -> tuple[np.ndarray, np.ndarray, float, float]:
-    """For Gaussian and KDE-calibrator fitting: remove negInf, Inf and compensate.
+    """
+    Remove infinite log-odds values and compute compensation factors.
 
-    :param log_odds: n * 1 np.array of log-odds
-    :param y: n * 1 np.array of labels (Booleans).
+    Parameters
+    ----------
+    log_odds : np.ndarray
+        Array of log-odds.
+    y : np.ndarray
+        Array of labels.
 
-    :returns: log_odds (with negInf and Inf removed), y (with negInf and Inf removed),
-                numerator compensator, denominator compensator
+    Returns
+    -------
+    tuple[np.ndarray, np.ndarray, float, float]
+        Finite log-odds, corresponding labels, numerator compensator, and denominator compensator.
     """
     X_finite = np.isfinite(log_odds).flatten()
     el_H1 = np.logical_and(X_finite, y == 1)
@@ -39,20 +46,46 @@ def compensate_and_remove_neginf_inf(
 
 
 def _fixed_bandwidth(X: Any, y: Any, *, bandwidth_0: float, bandwidth_1: float) -> tuple[float, float]:
-    """Return a fixed bandwidth pair. Module-level so it is picklable."""
+    """
+    Return a fixed bandwidth pair.
+
+    Parameters
+    ----------
+    X : Any
+        Unused input data placeholder.
+    y : Any
+        Unused input labels placeholder.
+    bandwidth_0 : float
+        Bandwidth for class 0.
+    bandwidth_1 : float
+        Bandwidth for class 1.
+
+    Returns
+    -------
+    tuple[float, float]
+        Fixed bandwidths for class 0 and class 1.
+    """
     return (bandwidth_0, bandwidth_1)
 
 
 def parse_bandwidth(
     bandwidth: Callable | str | float | tuple[float, float] | None,
 ) -> Callable[[Any, Any], tuple[float, float]]:
-    """Parse and return the corresponding bandwidth based on input type.
+    """
+    Parse and return the corresponding bandwidth strategy based on input type.
 
     Returns bandwidth as a tuple of two (optional) floats.
     Extrapolates a single bandwidth.
 
-    :param bandwidth: provided bandwidth
-    :return: bandwidth used for kde0, bandwidth used for kde1
+    Parameters
+    ----------
+    bandwidth : Callable | str | float | tuple[float, float] | None
+        Bandwidth specification.
+
+    Returns
+    -------
+    Callable[[Any, Any], tuple[float, float]]
+        Callable that computes bandwidths for class 0 and class 1.
     """
     match bandwidth:
         case None:
@@ -83,23 +116,26 @@ def parse_bandwidth(
 
 
 class KDECalibrator(Transformer):
-    """Calculate LR from a score, belonging to one of two distributions using KDE.
+    """
+    Calculate LR from a score, belonging to one of two distributions using KDE.
 
     Calculates a likelihood ratio of a score value, provided it is from one of
     two distributions. Uses kernel density estimation (KDE) for interpolation.
+
+    Parameters
+    ----------
+    bandwidth : Callable | str | float | tuple[float, float] | None, optional
+        Bandwidth specification for KDE.
     """
 
     def __init__(self, bandwidth: Callable | str | float | tuple[float, float] | None = None):
-        """Initialize a new KDECalibrator instance.
+        """
+        Initialize a new KDECalibrator instance.
 
-        :param bandwidth:
-            * If bandwidth has a float value, this value is used as the bandwidth for both distributions.
-            * If bandwidth is a tuple, it should contain two floating point values: the bandwidth for the distribution
-              of the classes with labels 0 and 1, respectively.
-            * If bandwidth has the str value "silverman", Silverman's rule of thumb is used as the bandwidth for both
-              distributions separately.
-            * If bandwidth is callable, it should accept two arguments, `X` and `y`, and return a tuple of two values
-              which are the bandwidths for the two distributions.
+        Parameters
+        ----------
+        bandwidth : Callable | str | float | tuple[float, float] | None, optional
+                Bandwidth specification for KDE.
         """
         self.bandwidth: Callable = parse_bandwidth(bandwidth)
         self._kde0: KernelDensity | None = None
@@ -109,11 +145,20 @@ class KDECalibrator(Transformer):
 
     @staticmethod
     def bandwidth_silverman(X: np.ndarray, y: np.ndarray) -> tuple[float, float]:
-        """Estimate the optimal bandwidth parameter using Silverman's rule of thumb.
+        """
+        Estimate bandwidths using Silverman's rule of thumb.
 
-        :param X: n * 1 np.array of scores
-        :param y: n * 1 np.array of labels (Booleans).
-        :returns: bandwidth for class 0, bandwidth for class 1
+        Parameters
+        ----------
+        X : np.ndarray
+            Score array.
+        y : np.ndarray
+            Label array.
+
+        Returns
+        -------
+        tuple[float, float]
+            Bandwidth for class 0 and class 1.
         """
         assert len(X) > 0 and len(y) > 0
 
@@ -140,7 +185,19 @@ class KDECalibrator(Transformer):
         return bandwidth[0], bandwidth[1]
 
     def fit(self, instances: InstanceData) -> Self:
-        """Fit the KDE model on the data."""
+        """
+        Fit the KDE model on the data.
+
+        Parameters
+        ----------
+        instances : InstanceData
+            Training instances.
+
+        Returns
+        -------
+        Self
+            Fitted calibrator.
+        """
         instances = check_type(FeatureData, instances)
         instances = instances.replace_as(LLRData)
 
@@ -161,10 +218,18 @@ class KDECalibrator(Transformer):
         return self
 
     def apply(self, instances: InstanceData) -> LLRData:
-        """Provide LLR's as output.
+        """
+        Provide calibrated LLRs as output.
 
-        :param instances: InstanceData to apply the calibrator to.
-        :returns: LLRData with calibrated log-likelihood ratios.
+        Parameters
+        ----------
+        instances : InstanceData
+            Instances to calibrate.
+
+        Returns
+        -------
+        LLRData
+            Calibrated log-likelihood-ratio data.
         """
         if self._kde0 is None or self._kde1 is None or self.numerator is None or self.denominator is None:
             raise ValueError('KDECalibrator.apply() called before fit')

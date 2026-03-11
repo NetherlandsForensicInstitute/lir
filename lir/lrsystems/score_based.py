@@ -8,12 +8,22 @@ from lir.transform.pipeline import Pipeline
 
 
 class ScoreBasedSystem(LRSystem):
-    """Provide a representation of a common source, score-based LR system.
+    """
+    Provide a representation of a common source, score-based LR system.
 
     In this strategy, it is possible to prepare the data within
     a `preprocessing_pipeline`, create corresponding pairs of instances using
     the `pairing_function` and subsequently calculate scores as well as transform
     these scores to LLR's in the final `evaluation_pipeline`.
+
+    Parameters
+    ----------
+    preprocessing_pipeline : Transformer | None
+        Pipeline that preprocesses instances before pairing and evaluation.
+    pairing_function : PairingMethod
+        Pairing method used to construct trace/reference comparisons.
+    evaluation_pipeline : Transformer | None
+        Pipeline that converts scores to likelihood-ratio outputs.
     """
 
     def __init__(
@@ -27,20 +37,43 @@ class ScoreBasedSystem(LRSystem):
         self.evaluation_pipeline = evaluation_pipeline or Pipeline([])
 
     def fit(self, instances: InstanceData) -> Self:
-        """Fit the model on the instance data."""
+        """
+        Fit the model on the instance data.
+
+        Parameters
+        ----------
+        instances : InstanceData
+            Input instances to be processed by this method.
+
+        Returns
+        -------
+        Self
+            This LR system instance after fitting the evaluation pipeline.
+        """
         instances = self.preprocessing_pipeline.fit_apply(instances)
         pairs = self.pairing_function.pair(instances, 1, 1)
         self.evaluation_pipeline.fit(pairs)
         return self
 
     def apply(self, instances: InstanceData) -> LLRData:
-        """Use LR system to calculate LLR data from the instances.
+        """
+        Use LR system to calculate LLR data from the instances.
 
         Applies the score-based LR system on a set of instances, optionally with corresponding labels, and returns a
         representation of the calculated LLR data through the `LLRData` tuple.
 
         The system takes instances as input, and calculates LLRs for pairs of instances. That means that there is a 2-1
         relation between input and output data.
+
+        Parameters
+        ----------
+        instances : InstanceData
+            Input instances to be processed by this method.
+
+        Returns
+        -------
+        LLRData
+            Likelihood-ratio data produced by applying the LR system.
         """
         instances = self.preprocessing_pipeline.apply(instances)
         pairs = self.pairing_function.pair(instances, 1, 1)

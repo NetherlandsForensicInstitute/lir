@@ -14,7 +14,21 @@ class TeeParser(ConfigParser):
         config: ContextAwareDict,
         output_dir: Path,
     ) -> Any:
-        """Read configuration for modules section and provide wrapped corresponding transformers."""
+        """
+        Read configuration for modules section and provide wrapped corresponding transformers.
+
+        Parameters
+        ----------
+        config : ContextAwareDict
+            Configuration for the `Tee` transformer, containing a `modules` field with a list of module configurations.
+        output_dir : Path
+            Output directory for the parsed modules.
+
+        Returns
+        -------
+        Any
+            A `Tee` transformer wrapping the parsed modules.
+        """
         transformers = []
         modules = pop_field(config, 'modules')
         for module_config in modules:
@@ -24,9 +38,20 @@ class TeeParser(ConfigParser):
 
 
 def simplify_data_structure(data: Any) -> dict | list | str | float | int | bool | None:
-    """Simplify data structure: specialized data types are replaced.
+    """
+    Simplify data structure: specialized data types are replaced.
 
     For example, `ContextAwareDict` is replaced by `dict`.
+
+    Parameters
+    ----------
+    data : Any
+        Input data to simplify.
+
+    Returns
+    -------
+    dict | list | str | float | int | bool | None
+        Simplified structure containing only plain Python container and scalar types.
     """
     match data:
         case dict():

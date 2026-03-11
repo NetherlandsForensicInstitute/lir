@@ -6,7 +6,21 @@ from lir.util import Xy_to_Xn, logodds_to_odds
 
 
 def _calcsurface(c1: tuple[float, float], c2: tuple[float, float]) -> float:
-    """Calculate the desired surface for two xy-coordinates."""
+    """
+    Calculate the desired surface for two xy-coordinates.
+
+    Parameters
+    ----------
+    c1 : tuple[float, float]
+        First coordinate as `(x, y)`.
+    c2 : tuple[float, float]
+        Second coordinate as `(x, y)`.
+
+    Returns
+    -------
+    float
+        Surface between line segment `c1`-`c2` and the identity line.
+    """
     # step 1: calculate intersection (xs, ys) of straight line through coordinates with identity line (if slope (a) = 1,
     # there is no intersection and surface of this parallelogram is equal to deltaY * deltaX)
 
@@ -71,14 +85,19 @@ def _devpavcalculator(lrs: np.ndarray, pav_lrs: np.ndarray, y: np.ndarray) -> fl
     """
     Calculate devPAV for PAV-transformed LRs.
 
-    Parameters:
-    - lrs: np.ndarray of LR values.
-    - pav_lrs: np.ndarray of LRs after PAV transformation.
-    - y: np.ndarray of labels (1 for H1 and 0 for H2).
+    Parameters
+    ----------
+    lrs : np.ndarray
+        Array of LR values.
+    pav_lrs : np.ndarray
+        Array of LRs after PAV transformation.
+    y : np.ndarray
+        Array of labels (`1` for H1 and `0` for H2).
 
-    Returns:
-    - float: devPAV value
-
+    Returns
+    -------
+    float
+        DevPAV value.
     """
     # split same-source and different-source LRs and PAV-LRs
     ds_lrs, ss_lrs = Xy_to_Xn(lrs, y)
@@ -128,7 +147,19 @@ def _devpavcalculator(lrs: np.ndarray, pav_lrs: np.ndarray, y: np.ndarray) -> fl
 
 
 def devpav(llrs: LLRData) -> float:
-    """Calculate devPAV for LR data under H1 and H2."""
+    """
+    Calculate devPAV for LR data under H1 and H2.
+
+    Parameters
+    ----------
+    llrs : LLRData
+        LLRs and their metadata, wrapped in an `LLRData` object.
+
+    Returns
+    -------
+    float
+        DevPAV score.
+    """
     labels = llrs.check_both_labels()
     cal = IsotonicCalibrator()
     pavllrs = cal.fit_apply(llrs)

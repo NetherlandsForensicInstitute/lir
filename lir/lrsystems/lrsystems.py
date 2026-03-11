@@ -9,17 +9,39 @@ class LRSystem(Transformer, ABC):
     """General representation of an LR system."""
 
     def fit(self, instances: InstanceData) -> Self:
-        """Fit the LR system on a set of features and corresponding labels.
+        """
+        Fit the LR system on a set of features and corresponding labels.
 
         The number of labels must be equal to the number of instances.
+
+        Parameters
+        ----------
+        instances : InstanceData
+            Input instances to be processed by this method.
+
+        Returns
+        -------
+        Self
+            This LR system instance after optional fitting.
         """
         return self
 
     @abstractmethod
     def apply(self, instances: InstanceData) -> LLRData:
-        """Use the LR system to calculate the LLR data from the instances.
+        """
+        Use the LR system to calculate the LLR data from the instances.
 
         Applies the LR system on a set of instances, optionally with corresponding labels, and returns a
         representation of the calculated LLR data through the `LLRData` tuple.
+
+        Parameters
+        ----------
+        instances : InstanceData
+            Input instances to be processed by this method.
+
+        Returns
+        -------
+        LLRData
+            Likelihood-ratio data produced by applying the LR system.
         """
         raise NotImplementedError

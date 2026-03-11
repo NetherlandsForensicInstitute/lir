@@ -19,7 +19,28 @@ from lir.experiments import Experiment
 
 
 class OptunaExperiment(Experiment):
-    """Representation of an experiment run for each provided LR system."""
+    """
+    Representation of an experiment run for each provided LR system.
+
+    Parameters
+    ----------
+    name : str
+        Name used to identify this object in outputs and logs.
+    data_config : ContextAwareDict
+        Data configuration used to construct datasets for runs.
+    outputs : Sequence[Aggregation]
+        Output aggregation definitions executed after each run.
+    output_path : Path
+        Path where generated outputs are written.
+    baseline_config : ContextAwareDict
+        Baseline configuration to be tuned during optimisation.
+    hyperparameters : list[Hyperparameter]
+        Hyperparameters varied during optimisation.
+    n_trials : int
+        Number of optimisation trials to execute.
+    metric_function : Callable[[LLRData], float]
+        Value passed via ``metric_function``.
+    """
 
     def __init__(
         self,

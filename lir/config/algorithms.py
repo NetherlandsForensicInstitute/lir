@@ -9,7 +9,21 @@ from lir.util import partial
 
 @config_parser
 def mcmc(config: ContextAwareDict, output_dir: Path) -> McmcLLRModel:
-    """Parse MCMC module config and resolve optional `bounding` to an `LLRBounder` instance."""
+    """
+    Parse MCMC module configuration.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        Configuration for the MCMC model.
+    output_dir : Path
+        Output directory used by nested parser calls.
+
+    Returns
+    -------
+    McmcLLRModel
+        Configured MCMC model instance.
+    """
     if 'bounding' in config:
         bounding_config = pop_field(config, 'bounding')
         if bounding_config is None:

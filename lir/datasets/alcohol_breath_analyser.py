@@ -4,20 +4,33 @@ from lir.data.models import DataProvider, LLRData
 
 
 class AlcoholBreathAnalyser(DataProvider):
-    """Alcohol Breath Analyser example class.
+    """
+    Alcohol Breath Analyser example class.
 
     Example from paper:
         Peter Vergeer, Andrew van Es, Arent de Jongh, Ivo Alberink and Reinoud
         Stoel, Numerical likelihood ratios outputted by LR systems are often
         based on extrapolation: When to stop extrapolating? In: Science and
         Justice 56 (2016) 482–491.
+
+    Parameters
+    ----------
+    ill_calibrated : bool
+        Whether to load the intentionally ill-calibrated variant of the dataset.
     """
 
     def __init__(self, ill_calibrated: bool = False):
         self.ill_calibrated = ill_calibrated
 
     def get_instances(self) -> LLRData:
-        """Provide LLR data for example system."""
+        """
+        Provide LLR data for example system.
+
+        Returns
+        -------
+        LLRData
+            Likelihood-ratio data produced by applying the LR system.
+        """
         positive_lr = 1000 if self.ill_calibrated else 90
         lrs = np.concatenate(
             [

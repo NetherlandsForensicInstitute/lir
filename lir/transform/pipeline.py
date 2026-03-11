@@ -24,20 +24,42 @@ __all__ = [
 
 
 class Pipeline(Transformer):
-    """A pipeline of processing modules.
+    """
+    A pipeline of processing modules.
 
     A module may be a scikit-learn style transformer, estimator, or a LIR `Transformer`
+
+    Parameters
+    ----------
+    steps : list[tuple[str, Transformer | Any]]
+        Ordered transformer steps executed by this pipeline.
     """
 
     def __init__(self, steps: list[tuple[str, Transformer | Any]]):
-        """Initialize a new Pipeline object.
+        """
+        Initialize a new Pipeline object.
 
-        :param steps: the steps of the pipeline as a list of (name, module) tuples.
+        Parameters
+        ----------
+        steps : list[tuple[str, Transformer | Any]]
+            Ordered transformer steps executed by this pipeline.
         """
         self.steps = [(name, as_transformer(module)) for name, module in steps]
 
     def fit(self, instances: InstanceData) -> Self:
-        """Fit the model on the instance data."""
+        """
+        Fit the model on the instance data.
+
+        Parameters
+        ----------
+        instances : InstanceData
+            Input instances to be processed by this method.
+
+        Returns
+        -------
+        Self
+            The fitted pipeline instance.
+        """
         for _name, module in self.steps[:-1]:
             instances = module.fit_apply(instances)
 
@@ -48,20 +70,58 @@ class Pipeline(Transformer):
         return self
 
     def apply(self, instances: InstanceData) -> InstanceData:
-        """Apply the fitted model on the instance data."""
+        """
+        Apply the fitted model on the instance data.
+
+        Parameters
+        ----------
+        instances : InstanceData
+            Input instances to be processed by this method.
+
+        Returns
+        -------
+        InstanceData
+            Instance data object produced by this operation.
+        """
         for _name, module in self.steps:
             instances = module.apply(instances)
         return instances
 
     def fit_apply(self, instances: InstanceData) -> InstanceData:
-        """Combine fitting the transformer/estimator and applying the model to the instances."""
+        """
+        Combine fitting the transformer/estimator and applying the model to the instances.
+
+        Parameters
+        ----------
+        instances : InstanceData
+            Input instances to be processed by this method.
+
+        Returns
+        -------
+        InstanceData
+            Instance data object produced by this operation.
+        """
         for _name, module in self.steps:
             instances = module.fit_apply(instances)
         return instances
 
 
 def parse_steps(config: ContextAwareDict | None, output_dir: Path) -> list[tuple[str, Transformer]]:
-    """Parse the defined pipeline steps in the configuration and return the initialized modules as a list."""
+    """
+    Parse the defined pipeline steps in the configuration and return the initialized modules as a list.
+
+    Parameters
+    ----------
+    config : ContextAwareDict | None
+        Configuration mapping used to construct this component.
+    output_dir : Path
+        Directory where generated outputs are written.
+
+    Returns
+    -------
+    list[tuple[str, Transformer]]
+        List of (name, module) tuples for the pipeline steps.
+    """
     if config is None:
         return []
     if not isinstance(config, ContextAwareDict):
@@ -82,7 +142,21 @@ def parse_steps(config: ContextAwareDict | None, output_dir: Path) -> list[tuple
 
 @config_parser
 def pipeline(config: ContextAwareDict, output_dir: Path) -> Pipeline:
-    """Construct a scikit-learn Pipeline based on the provided configuration."""
+    """
+    Construct a scikit-learn Pipeline based on the provided configuration.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        Configuration mapping used to construct this component.
+    output_dir : Path
+        Directory where generated outputs are written.
+
+    Returns
+    -------
+    Pipeline
+        The constructed pipeline instance.
+    """
     if config is None:
         return Pipeline([])
 
@@ -106,6 +180,23 @@ class LoggingPipeline(Pipeline):
     In addition, there may be columns for the input features and output of individual steps. These columns are named
     ``featuresI`` for input features or ``stepnameI`` for step output, where ``stepname`` is replaced by the name of the
     step, and ``I`` refers to the index of the feature value.
+
+    Parameters
+    ----------
+    steps : list[tuple[str, Transformer | Any]]
+        Ordered transformer steps executed by this pipeline.
+    output_file : PathLike
+        Destination file used to log intermediate pipeline output.
+    include_batch_number : bool
+        Whether to include the batch number in logged output.
+    include_labels : bool
+        Whether to include labels in logged output.
+    include_fields : list[str] | None
+        Additional instance fields to include in logged output.
+    include_steps : list[str] | None
+        Whether to include step names in logged output.
+    include_input : bool
+        Whether to include original inputs in logged output.
     """
 
     def __init__(
@@ -118,16 +209,27 @@ class LoggingPipeline(Pipeline):
         include_steps: list[str] | None = None,
         include_input: bool = True,
     ):
-        """Initialize a new LoggingPipeline instance.
+        """
+        Initialize a new LoggingPipeline instance.
 
-        :param steps: the steps of the pipeline as a list of (name, module) tuples.
-        :param output_file: the name of the generated output file
-        :param include_batch_number: (bool) whether the zero-indexed batch number should be included in the output,
             e.g. for cross-validation (defaults to True)
-        :param include_labels: (bool) whether the labels should be included, if available (defaults to True)
-        :param include_fields: a list of the names of extra fields to include (defaults to none)
-        :param include_steps: a list of steps to include (defaults to all)
-        :param include_input: (bool) whether to write the input features (defaults to True)
+
+        Parameters
+        ----------
+        steps : list[tuple[str, Transformer | Any]]
+            Ordered transformer steps executed by this pipeline.
+        output_file : PathLike
+            Destination file used to log intermediate pipeline output.
+        include_batch_number : bool
+            Whether to include the batch number in logged output.
+        include_labels : bool
+            Whether to include labels in logged output.
+        include_fields : list[str] | None
+            Additional instance fields to include in logged output.
+        include_steps : list[str] | None
+            Whether to include step names in logged output.
+        include_input : bool
+            Whether to include original inputs in logged output.
         """
         super().__init__(steps)
         self.output_file = Path(output_file)
@@ -139,7 +241,19 @@ class LoggingPipeline(Pipeline):
         self.n_batches = 0
 
     def apply(self, instances: InstanceData) -> InstanceData:
-        """Apply the pipeline to the incoming instances."""
+        """
+        Apply the pipeline to the incoming instances.
+
+        Parameters
+        ----------
+        instances : InstanceData
+            Input instances to be processed by this method.
+
+        Returns
+        -------
+        InstanceData
+            Instance data object produced by this operation.
+        """
         # initialize the csv builder
         write_mode = 'w' if self.n_batches == 0 else 'a'
         csv_builder = DataFileBuilderCsv(self.output_file, write_mode=write_mode)
@@ -186,7 +300,21 @@ class LoggingPipeline(Pipeline):
 
 @config_parser(reference=LoggingPipeline)
 def logging_pipeline(config: ContextAwareDict, output_dir: Path) -> Pipeline:
-    """Construct a scikit-learn Pipeline based on the provided configuration."""
+    """
+    Construct a scikit-learn Pipeline based on the provided configuration.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        Configuration mapping used to construct this component.
+    output_dir : Path
+        Directory where generated outputs are written.
+
+    Returns
+    -------
+    Pipeline
+        Logging pipeline configured from the provided YAML section.
+    """
     if config is None:
         return Pipeline([])
 

@@ -13,7 +13,22 @@ from lir.experiments import Experiment
 
 
 class PredefinedExperiment(Experiment):
-    """Representation of an experiment run for each provided LR system."""
+    """
+    Representation of an experiment run for each provided LR system.
+
+    Parameters
+    ----------
+    name : str
+        Name used to identify this object in outputs and logs.
+    data_configs : list[tuple[ContextAwareDict, dict[str, Any]]]
+        Data configurations evaluated by this experiment.
+    outputs : Sequence[Aggregation]
+        Output aggregation definitions executed after each run.
+    output_path : Path
+        Path where generated outputs are written.
+    lrsystem_configs : list[tuple[ContextAwareDict, dict[str, Any]]]
+        LR-system configurations evaluated by this experiment.
+    """
 
     def __init__(
         self,

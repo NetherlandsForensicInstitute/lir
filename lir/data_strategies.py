@@ -32,15 +32,28 @@ class TrainTestSplit(DataStrategy):
           test_size: 0.2  # the (hold-out) test set  is 20% of the data
           seed: 42  # optional
 
+    Parameters
+    ----------
+    test_size : float | int
+        Size of the test set. If float, should be between 0.0 and 1.0 and represent the proportion of the dataset to
+        include in the test split. If int, represents the absolute number of test samples.
+    seed : int | None
+        Random seed controlling stochastic behaviour for reproducible results.
     """
 
     def __init__(self, test_size: float | int, seed: int | None = None):
         """
         Initialize the object.
 
-        :param test_size: If float, should be between 0.0 and 1.0 and represent the proportion of the dataset to include
             in the test split. If int, represents the absolute number of test samples.
-        :param seed: The random state.
+
+        Parameters
+        ----------
+        test_size : float | int
+            Size of the test set. If float, should be between 0.0 and 1.0 and represent the proportion of the dataset to
+            include in the test split. If int, represents the absolute number of test samples.
+        seed : int | None
+            Random seed controlling stochastic behaviour for reproducible results.
         """
         self.test_size = test_size
         self.seed = seed
@@ -49,7 +62,15 @@ class TrainTestSplit(DataStrategy):
         """
         Split the data into a training set and a test set.
 
-        :return: an iterator over a single item, which is a tuple of the training set and the test set.
+        Parameters
+        ----------
+        instances : DataType
+            Instances to split.
+
+        Yields
+        ------
+        tuple[DataType, DataType]
+            An iterator over a single item, which is a tuple of the training set and the test set.
         """
         indexes = np.arange(len(instances))
         indexes_train, indexes_test = sklearn.model_selection.train_test_split(
@@ -75,21 +96,38 @@ class CrossValidation(DataStrategy):
           folds: 5  # the number k in k-fold cross-validation
           seed: 42  # optional
 
+    Parameters
+    ----------
+    folds : int
+        Number of cross-validation folds to generate.
+    seed : int | None
+        Random seed controlling stochastic behaviour for reproducible results.
     """
 
     def __init__(self, folds: int, seed: int | None = None):
         """
-        Initialize the object.
+        Initialize the object for K-fold cross-validation.
 
-        :param folds: The number of train/test splits to return.
-        :param seed: The random state.
+        Parameters
+        ----------
+        folds : int
+            Number of cross-validation folds to generate.
+        seed : int | None
+            Random seed controlling stochastic behaviour for reproducible results.
         """
         self.folds = folds
         self.seed = seed
         self.shuffle = True if self.seed is not None else False  # noqa: SIM210
 
     def apply(self, instances: InstanceDataType) -> Iterator[tuple[InstanceDataType, InstanceDataType]]:
-        """Return an iterator over *k* train/test splits."""
+        """
+        Return an iterator over *k* train/test splits.
+
+        Parameters
+        ----------
+        instances : InstanceDataType
+            Input instances to be processed by this method.
+        """
         kf = KFold(n_splits=self.folds, shuffle=self.shuffle, random_state=self.seed)
         for train_index, test_index in kf.split(np.arange(len(instances)), y=instances.labels):
             yield instances[train_index], instances[test_index]
@@ -116,6 +154,13 @@ class SourcesTrainTestSplit(DataStrategy):
           seed: 42        # optional
 
     This class internally uses ``sklearn.model_selection.GroupShuffleSplit``.
+
+    Parameters
+    ----------
+    test_size : float | int
+        Fraction or absolute number of items assigned to the test split.
+    seed : int | None
+        Random seed controlling stochastic behaviour for reproducible results.
     """
 
     def __init__(self, test_size: float | int, seed: int | None = None):
@@ -124,7 +169,13 @@ class SourcesTrainTestSplit(DataStrategy):
 
         :param test_size: If float, should be between 0.0 and 1.0 and represent the proportion of sources to include in
             the test split (rounded up). If int, represents the absolute number of test sources.
-        :param seed: The random state.
+
+        Parameters
+        ----------
+        test_size : float | int
+            Fraction or absolute number of items assigned to the test split.
+        seed : int | None
+            Random seed controlling stochastic behaviour for reproducible results.
         """
         self.test_size = test_size
         self.seed = seed
@@ -133,7 +184,15 @@ class SourcesTrainTestSplit(DataStrategy):
         """
         Split the data into a training set and a test set.
 
-        :return: an iterator over a single item, which is a tuple of the training set and the test set.
+        Parameters
+        ----------
+        instances : InstanceDataType
+            Input instances to be processed by this method.
+
+        Yields
+        ------
+        tuple[DataType, DataType]
+            An iterator over a single item, which is a tuple of the training set and the test set.
         """
         splitter = GroupShuffleSplit(test_size=self.test_size, n_splits=1, random_state=self.seed)
         ((train_index, test_index),) = splitter.split(np.arange(len(instances)), groups=instances.source_ids_1d)
@@ -158,10 +217,14 @@ class SourcesCrossValidation(DataStrategy):
           folds: 5
 
     This class internally uses ``sklearn.model_selection.GroupKFold``.
+
+    Parameters
+    ----------
+    folds : int
+        Number of cross-validation folds to generate.
     """
 
     def __init__(self, folds: int):
-        """:param folds: the number of train/test splits to return"""
         self.folds = folds
 
     def apply(self, instances: InstanceDataType) -> Iterator[tuple[InstanceDataType, InstanceDataType]]:
@@ -169,6 +232,11 @@ class SourcesCrossValidation(DataStrategy):
         Perform *k*-fold cross-validation.
 
         Return an iterator over *k* train/test splits.
+
+        Parameters
+        ----------
+        instances : InstanceDataType
+            Input instances to be processed by this method.
         """
         kf = GroupKFold(n_splits=self.folds)
 
@@ -177,19 +245,31 @@ class SourcesCrossValidation(DataStrategy):
 
 
 class PairsTrainTestSplit(DataStrategy):
-    """A train/test split policy for paired instances.
+    """
+    A train/test split policy for paired instances.
 
     The input data should have ``source_ids`` with two columns. This split assigns all sources to either the training
     set or the test set. The pairs are assigned to training or testing if both of their sources have that role. Pairs
     with mixed roles are omitted.
+
+    Parameters
+    ----------
+    test_size : float | int
+        Fraction or absolute number of items assigned to the test split.
+    seed : int | None
+        Random seed controlling stochastic behaviour for reproducible results.
     """
 
     def __init__(self, test_size: float | int, seed: int | None = None):
         """
         Initialize the object.
 
-        :param test_size: The proportion of sources to include in the test set.
-        :param seed: The random state.
+        Parameters
+        ----------
+        test_size : float | int
+            Fraction or absolute number of items assigned to the test split.
+        seed : int | None
+            Random seed controlling stochastic behaviour for reproducible results.
         """
         self.test_size = test_size
         self.seed = seed
@@ -198,7 +278,15 @@ class PairsTrainTestSplit(DataStrategy):
         """
         Split the data into a training set and a test set.
 
-        :return: an iterator over a single item, which is a tuple of the training set and the test set.
+        Parameters
+        ----------
+        instances : InstanceDataType
+            Input instances to be processed by this method.
+
+        Yields
+        ------
+        tuple[DataType, DataType]
+            An iterator over a single item, which is a tuple of the training set and the test set.
         """
         source_ids = instances.source_ids
         if source_ids is None or len(source_ids.shape) != 2 or source_ids.shape[1] != 2:
@@ -246,7 +334,15 @@ class PredefinedTrainTestSplit(DataStrategy):
         """
         Split the data into a training set and a test set.
 
-        :return: an iterator over a single item, which is a tuple of the training set and the test set.
+        Parameters
+        ----------
+        instances : InstanceDataType
+            Input instances to be processed by this method.
+
+        Yields
+        ------
+        tuple[DataType, DataType]
+            An iterator over a single item, which is a tuple of the training set and the test set.
         """
         if 'role_assignments' not in instances.all_fields:
             raise ValueError('`role_assignments` field is missing')
@@ -283,7 +379,10 @@ class PredefinedCrossValidation(DataStrategy):
         identifier. The strategy will return one train/test split for each unique fold identifier, using the instances
         with that identifier as the test set and the others as the training set.
 
-        :return: an iterator over train/test splits.
+        Parameters
+        ----------
+        instances : InstanceDataType
+            Input instances to be processed by this method.
         """
         if 'fold_assignments' not in instances.all_fields:
             raise ValueError('`fold_assignments` field is missing')

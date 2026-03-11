@@ -24,13 +24,22 @@ def plot_nbe(
     add_misleading: int = 1,
     step_size: float = 0.01,
 ) -> None:
-    """Generate the visual NBE plot using matplotlib.
+    """
+    Generate the visual NBE plot using matplotlib.
 
-    :param ax: the matplotlib axis to plot on
-    :param llrdata: the LLR data containing LLRs and labels
-    :param log_lr_threshold_range: the range of log LR threshold values
-    :param add_misleading: number of misleading evidence points to add
-    :param step_size: step size for the log LR threshold range
+    Parameters
+    ----------
+    ax : plt.Axes
+        The matplotlib axis to plot on.
+    llrdata : LLRData
+        An instance of LLRData containing LLRs and ground-truth labels.
+    log_lr_threshold_range : tuple[float, float] | None, optional
+        The range of log LR threshold values to consider for the plot. If None, it will be determined based on the
+        minimum and maximum LLRs in the data, with a margin of 0.5 added to both ends. Default is None.
+    add_misleading : int, optional
+        The number of consequential misleading LLRs to be added to both sides (labels 0 and 1). Default is 1.
+    step_size : float, optional
+        The step size for the log LR threshold range, determining the resolution of the plot. Default is 0.01.
     """
     llrs = llrdata.llrs
     y = llrdata.labels
@@ -60,14 +69,24 @@ def elub(
     step_size: float = 0.01,
     substitute_extremes: tuple[float, float] = (-9, 9),
 ) -> tuple[float, float]:
-    """Calculate and return the empirical upper and lower bound log10-LRs (ELUB LLRs).
+    """
+    Calculate and return the empirical upper and lower bound log10-LRs (ELUB LLRs).
 
-    :param llrdata: An instance of LLRData containing LLRs and ground-truth labels
-    :param add_misleading: the number of consequential misleading LLRs to be added
-        to both sides (labels 0 and 1)
-    :param step_size: required accuracy on a 10-base logarithmic scale
-    :param substitute_extremes: tuple of scalars: substitute for extreme LRs, i.e.
-        LRs of 0 and inf are substituted by these values
+    Parameters
+    ----------
+    llrdata : LLRData
+        An instance of LLRData containing LLRs and ground-truth labels.
+    add_misleading : int, optional
+        The number of consequential misleading LLRs to be added to both sides (labels 0 and 1).
+    step_size : float, optional
+        Required accuracy on a 10-base logarithmic scale.
+    substitute_extremes : tuple[float, float], optional
+        The values to substitute for extreme LRs, i.e. LRs of 0 and inf are substituted by these values.
+
+    Returns
+    -------
+    tuple[float, float]
+        A tuple containing the lower and upper ELUB log10-LRs.
     """
     llrs = llrdata.llrs
     y = llrdata.labels
@@ -109,14 +128,24 @@ def elub(
 def calculate_expected_utility(
     lrs: np.ndarray, y: np.ndarray, threshold_lrs: np.ndarray, add_misleading: int = 0
 ) -> float:
-    """Calculate the expected utility of a set of LRs for a given threshold.
+    """
+    Calculate the expected utility of a set of LRs for a given threshold.
 
-    :param lrs: an array of LRs
-    :param y: an array of ground-truth labels (values 0 for Hd or 1 for Hp);
-        must be of the same length as `lrs`
-    :param threshold_lrs: an array of threshold lrs: minimum LR for acceptance
-    :param add_misleading: the number of consequential misleading LRs to be added.
-    :returns: an array of utility values, one element for each threshold LR
+    Parameters
+    ----------
+    lrs : np.ndarray
+        Array of LRs.
+    y : np.ndarray
+        Array of ground-truth labels (0 for Hd or 1 for Hp), with the same length as `lrs`.
+    threshold_lrs : np.ndarray
+        Array of threshold LRs used as acceptance thresholds.
+    add_misleading : int, optional
+        Number of consequential misleading LRs to add.
+
+    Returns
+    -------
+    float
+        Expected utility values, one element for each threshold LR.
     """
     m_accept = lrs.reshape(len(lrs), 1) > threshold_lrs.reshape(1, len(threshold_lrs))
 
@@ -136,7 +165,8 @@ def calculate_expected_utility(
 
 
 class ELUBBounder(LLRBounder):
-    """Calculate the Empirical Upper and Lower Bounds for a given LR system.
+    """
+    Calculate the Empirical Upper and Lower Bounds for a given LR system.
 
     Class that, given an LR system, outputs the same LRs as the system but bounded by the Empirical Upper and Lower
     Bounds as described in
@@ -171,5 +201,17 @@ class ELUBBounder(LLRBounder):
     """
 
     def calculate_bounds(self, llrdata: LLRData) -> tuple[float | None, float | None]:
-        """Calculate the LLR empirical upper and lower bounds (ELUB)."""
+        """
+        Calculate the LLR empirical upper and lower bounds (ELUB).
+
+        Parameters
+        ----------
+        llrdata : LLRData
+            An instance of LLRData containing LLRs and ground-truth labels.
+
+        Returns
+        -------
+        tuple[float | None, float | None]
+            A tuple containing the lower and upper bounds. If the bounds cannot be calculated, returns (None, None).
+        """
         return elub(llrdata, add_misleading=1)

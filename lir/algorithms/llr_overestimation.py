@@ -15,7 +15,8 @@ def plot_llr_overestimation(
     ax: plt.Axes = plt,  # type: ignore
     **kwargs: Any,
 ) -> None:
-    """Plot the LLR-overestimation as function of the system LLR.
+    """
+    Plot LLR-overestimation as a function of the system LLR.
 
     The LLR-overestimation is defined as the log-10 of the ratio between
         (1) the system LRs; the outputs of the LR-system, and
@@ -26,11 +27,16 @@ def plot_llr_overestimation(
     An interval around the LLR-overestimation can be calculated using fiducial distributions. The average absolute
     LLR-overestimation can be used as single metric.
 
-    :param llrdata: An instance of LLRData containing LLRs and ground-truth labels
-    :param num_fids: number of fiducial distributions to base the interval on; use 0 for no interval
-    :param ax: matplotlib axes to plot into
-    :param kwargs: additional arguments to pass to :func:`calc_llr_overestimation`
-        and/or :func:`calc_fiducial_density_functions`.
+    Parameters
+    ----------
+    llrdata : LLRData
+        LLR data containing LLRs and ground-truth labels.
+    num_fids : int, optional
+        Number of fiducial distributions to base the interval on; use 0 for no interval.
+    ax : plt.Axes, optional
+        Matplotlib axes to plot into.
+    **kwargs : Any
+        Additional arguments passed to `calc_llr_overestimation` and/or `calc_fiducial_density_functions`.
     """
     llrs, y = llrdata.llrs, llrdata.labels
     if y is None:
@@ -67,7 +73,8 @@ def calc_llr_overestimation(
     alpha: float = 0.05,
     **kwargs: Any,
 ) -> tuple[np.ndarray | None, np.ndarray | None, np.ndarray | None]:
-    """Calculate the LLR-overestimation as function of the system LLR.
+    """
+    Calculate LLR-overestimation as a function of the system LLR.
 
      The LLR-overestimation is defined as the log-10 of the ratio between
         (1) the system LRs; the outputs of the LR-system, and
@@ -80,14 +87,27 @@ def calc_llr_overestimation(
      - The relative frequencies are estimated with KDE using Silverman's rule-of-thumb for the bandwidths.
      - An interval around the LLR-overestimation can be calculated using fiducial distributions.
 
-    :param llrs: the log-10 likelihood ratios (LLRs), as calculated by the LR-system
-    :param y: the corresponding labels (0 for H2 or Hd, 1 for H1 or Hp)
-    :param num_grid_points: number of points used in the grid to calculate the LLR-overestimation on
-    :param bw: two bandwidths for the KDEs of H1 & H2; for each specify a method (string) or a value (float)
-    :param num_fids: number of fiducial distributions to base the interval on; use 0 for no interval
-    :param alpha: level of confidence to use for the interval
-    :param kwargs: additional arguments to pass to :func:`calc_fiducial_density_functions`
-    :returns: a tuple of LLRs, their overestimation (best estimate), and their overestimation interval
+    Parameters
+    ----------
+    llrs : np.ndarray
+        Log10 likelihood ratios as calculated by the LR system.
+    y : np.ndarray
+        Corresponding labels (0 for H2/Hd, 1 for H1/Hp).
+    num_fids : int, optional
+        Number of fiducial distributions used for intervals.
+    bw : tuple[str | float, str | float], optional
+        Bandwidth specifications for KDEs of H1 and H2.
+    num_grid_points : int, optional
+        Number of grid points used for calculating overestimation.
+    alpha : float, optional
+        Confidence level used for the interval.
+    **kwargs : Any
+        Additional arguments passed to `calc_fiducial_density_functions`.
+
+    Returns
+    -------
+    tuple[np.ndarray | None, np.ndarray | None, np.ndarray | None]
+        Tuple of LLR grid, overestimation best estimate, and overestimation interval.
     """
     # Convert the LRs to log10 values (LLRs)
     llr_h1 = llrs[y == 1]
@@ -163,16 +183,30 @@ def calc_fiducial_density_functions(
     smoothing_sample_size_correction: float = 1,
     seed: None | int = None,
 ) -> np.ndarray:
-    """Calculate (smoothed) density functions of fiducial distributions of a dataset.
+    """
+    Calculate smoothed density functions of fiducial distributions for a dataset.
 
-    :param data: 1-dimensional array of data points
-    :param grid: 1-dimensional array of equally spaced grid points, at which to calculate the density functions
-    :param df_type: type of density function (df) to generate: either probability ('pdf') or cumulative ('cdf')
-    :param num_fids: number of fiducial distributions to generate
-    :param smoothing_grid_fraction: fraction of grid points to use as half window during smoothing
-    :param smoothing_sample_size_correction: value to use for sample size correction of smoothing window; 0 is no
-        correction
-    :param seed: seed for random number generator used draw samples from a uniform distribution.
+    Parameters
+    ----------
+    data : np.ndarray
+        One-dimensional array of data points.
+    grid : np.ndarray
+        One-dimensional array of equally spaced grid points.
+    df_type : str, optional
+        Density function type: `'pdf'` or `'cdf'`.
+    num_fids : int, optional
+        Number of fiducial distributions to generate.
+    smoothing_grid_fraction : float, optional
+        Fraction of grid points used as half window for smoothing.
+    smoothing_sample_size_correction : float, optional
+        Sample-size correction factor for smoothing window size.
+    seed : int | None, optional
+        Random seed for fiducial sampling.
+
+    Returns
+    -------
+    np.ndarray
+        Density-function values evaluated on `grid`.
     """
     # Generate cdfs of the fiducial distributions: sorted random draws from a uniform distribution
     rng = np.random.default_rng(seed)

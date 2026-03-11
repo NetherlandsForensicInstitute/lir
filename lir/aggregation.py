@@ -26,14 +26,21 @@ LOG = logging.getLogger(__name__)
 
 
 class AggregationData(NamedTuple):
-    """Representation of aggregated data.
+    """
+    Representation of aggregated data.
 
-    Fields:
-    - llrdata: the LLR data containing LLRs and labels.
-    - lrsystem: the model that produced the results
-    - get_full_fit_lrsystem: optional callable that lazily provides a model fitted on full data (ignoring splits)
-    - parameters: parameters that identify the system producing the results
-    - run_name: string representation of the run that produced the results
+    Attributes
+    ----------
+    llrdata : LLRData
+        The LLR data containing LLRs and labels.
+    lrsystem : LRSystem
+        The model that produced the results.
+    parameters : dict[str, Any]
+        Parameters that identify the system producing the results.
+    run_name : str
+        String representation of the run that produced the results.
+    get_full_fit_lrsystem : Callable[[], LRSystem] | None
+        Optional callable that lazily provides a model fitted on full data (ignoring splits).
     """
 
     llrdata: LLRData
@@ -44,7 +51,8 @@ class AggregationData(NamedTuple):
 
 
 class Aggregation(ABC):
-    """Base representation of an aggregated data collection.
+    """
+    Base representation of an aggregated data collection.
 
     Other classes may extend from this class.
     """
@@ -54,7 +62,10 @@ class Aggregation(ABC):
         """
         Report that new results are available.
 
-        :param data: a named tuple containing the results
+        Parameters
+        ----------
+        data : AggregationData
+            The aggregated data to be reported.
         """
         raise NotImplementedError
 
@@ -78,16 +89,61 @@ class Aggregation(ABC):
 
 
 class AggregatePlot(Aggregation):
-    """Aggregation that generates plots by repeatedly calling a plotting function."""
+    """
+    Aggregation that generates plots by repeatedly calling a plotting function.
 
-    def __init__(self, plot_fn: Callable, plot_name: str, output_dir: Path | None = None, **kwargs: Any) -> None:
-        self.output_path = output_dir
+    Parameters
+    ----------
+    plot_fn : Callable
+        The plotting function to be used for generating plots.
+    plot_name : str
+        The name of the plot.
+    output_path : Path | None, optional
+        The directory where the plots will be saved. If `None`, plots are not saved.
+    **kwargs : Any
+        Additional arguments to be passed to the plotting function.
+
+    Attributes
+    ----------
+    output_path : Path | None
+        The directory where the plots will be saved. If `None`, plots are not saved.
+    plot_fn : Callable
+        The plotting function to be used for generating plots.
+    plot_name : str
+        The name of the plot.
+    plot_fn_args : dict[str, Any]
+        Additional arguments to be passed to the plotting function.
+    """
+
+    def __init__(self, plot_fn: Callable, plot_name: str, output_path: Path | None = None, **kwargs: Any) -> None:
+        """
+        Initialize the AggregatePlot.
+
+        Parameters
+        ----------
+        plot_fn : Callable
+            The plotting function to be used for generating plots.
+        plot_name : str
+            The name of the plot.
+        output_path : Path | None, optional
+            The directory where the plots will be saved. If `None`, plots are not saved.
+        **kwargs : Any
+            Additional arguments to be passed to the plotting function.
+        """
+        self.output_path = output_path
         self.plot_fn = plot_fn
         self.plot_name = plot_name
         self.plot_fn_args = kwargs
 
     def report(self, data: AggregationData) -> None:
-        """Plot the data when new results are available."""
+        """
+        Plot the data when new results are available.
+
+        Parameters
+        ----------
+        data : AggregationData
+            The aggregated data to be plotted.
+        """
         fig, ax = plt.subplots()
 
         llrdata = data.llrdata
@@ -115,69 +171,194 @@ class AggregatePlot(Aggregation):
 
 @config_parser(reference=pav)
 def plot_pav(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    """Corresponding registry function to generate aggregate PAV plot."""
+    """
+    Corresponding registry function to generate aggregate PAV plot.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        The configuration dictionary for the plot.
+    output_dir : Path
+        The directory where the plot will be saved.
+
+    Returns
+    -------
+    AggregatePlot
+        An instance of the AggregatePlot class configured to generate PAV plots.
+    """
     plot_name = pop_field(config, 'plot_name', default='PAV')
     return AggregatePlot(pav, plot_name, output_dir, **config)
 
 
 @config_parser(reference=ece)
 def plot_ece(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    """Corresponding registry function to generate aggregate ECE plot."""
+    """
+    Corresponding registry function to generate aggregate ECE plot.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        The configuration dictionary for the plot.
+    output_dir : Path
+        The directory where the plot will be saved.
+
+    Returns
+    -------
+    AggregatePlot
+        An instance of the AggregatePlot class configured to generate ECE plots.
+    """
     plot_name = pop_field(config, 'plot_name', default='ECE')
     return AggregatePlot(ece, plot_name, output_dir, **config)
 
 
 @config_parser(reference=lr_histogram)
 def plot_lr_histogram(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    """Corresponding registry function to generate aggregate LR Histogram."""
+    """
+    Corresponding registry function to generate aggregate LR Histogram.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        The configuration dictionary for the plot.
+    output_dir : Path
+        The directory where the plot will be saved.
+
+    Returns
+    -------
+    AggregatePlot
+        An instance of the AggregatePlot class configured to generate LR Histogram plots.
+    """
     plot_name = pop_field(config, 'plot_name', default='LR_Histogram')
     return AggregatePlot(lr_histogram, plot_name, output_dir, **config)
 
 
 @config_parser(reference=llr_interval)
 def plot_llr_interval(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    """Corresponding registry function to generate aggregate LLR interval plot."""
+    """
+    Corresponding registry function to generate aggregate LLR interval plot.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        The configuration dictionary for the plot.
+    output_dir : Path
+        The directory where the plot will be saved.
+
+    Returns
+    -------
+    AggregatePlot
+        An instance of the AggregatePlot class configured to generate LLR interval plots.
+    """
     plot_name = pop_field(config, 'plot_name', default='LLR_Interval')
     return AggregatePlot(llr_interval, plot_name, output_dir, **config)
 
 
 @config_parser(reference=llr_overestimation)
 def plot_llr_overestimation(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    """Corresponding registry function to generate aggregate LLR overestimation plot."""
+    """
+    Corresponding registry function to generate aggregate LLR overestimation plot.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        The configuration dictionary for the plot.
+    output_dir : Path
+        The directory where the plot will be saved.
+
+    Returns
+    -------
+    AggregatePlot
+        An instance of the AggregatePlot class configured to generate LLR overestimation plots.
+    """
     plot_name = pop_field(config, 'plot_name', default='LLR_Overestimation')
     return AggregatePlot(llr_overestimation, plot_name, output_dir, **config)
 
 
 @config_parser(reference=nbe)
 def plot_nbe(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    """Corresponding registry function to generate aggregate NBE plot."""
+    """
+    Corresponding registry function to generate aggregate NBE plot.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        The configuration dictionary for the plot.
+    output_dir : Path
+        The directory where the plot will be saved.
+
+    Returns
+    -------
+    AggregatePlot
+        An instance of the AggregatePlot class configured to generate NBE plots.
+    """
     plot_name = pop_field(config, 'plot_name', default='NBE')
     return AggregatePlot(nbe, plot_name, output_dir, **config)
 
 
 @config_parser(reference=tippett)
 def plot_tippett(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    """Corresponding registry function to generate aggregate Tippett plot."""
+    """
+    Corresponding registry function to generate aggregate Tippett plot.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        The configuration dictionary for the plot.
+    output_dir : Path
+        The directory where the plot will be saved.
+
+    Returns
+    -------
+    AggregatePlot
+        An instance of the AggregatePlot class configured to generate Tippett plots.
+    """
     plot_name = pop_field(config, 'plot_name', default='Tippett')
     return AggregatePlot(tippett, plot_name, output_dir, **config)
 
 
 @config_parser(reference=invariance_delta_functions)
 def plot_invariance_delta_function(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-    """Corresponding registry function to generate aggregate invariance delta function plot."""
+    """
+    Corresponding registry function to generate aggregate invariance delta function plot.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        The configuration dictionary for the plot.
+    output_dir : Path
+        The directory where the plot will be saved.
+
+    Returns
+    -------
+    AggregatePlot
+        An instance of the AggregatePlot class configured to generate invariance delta function plots.
+    """
     plot_name = pop_field(config, 'plot_name', default='Invariance_Delta_Functions')
     return AggregatePlot(invariance_delta_functions, plot_name, output_dir, **config)
 
 
 class WriteMetricsToCsv(Aggregation):
-    """Helper class to write aggregated results to CSV file."""
+    """
+    Helper class to write aggregated results to CSV file.
+
+    Parameters
+    ----------
+    path : Path
+        The path to the CSV file where the metrics will be written.
+    columns : Mapping[str, Callable]
+        A mapping of column names to metric functions that compute the values for those columns.
+    """
 
     def __init__(self, path: Path, columns: Mapping[str, Callable]):
         """
         Initialize the class.
 
-        :param path: the path to the CSV file
-        :param columns: the columns as a dictionary of names to metric functions
+        Parameters
+        ----------
+        path : Path
+            The path to the CSV file where the metrics will be written.
+        columns : Mapping[str, Callable]
+            A mapping of column names to metric functions that compute the values for those columns.
         """
         self.path = path
         self._file: IO[Any] | None = None
@@ -193,7 +374,14 @@ class WriteMetricsToCsv(Aggregation):
             return ''
 
     def report(self, data: AggregationData) -> None:
-        """Write the metrics to CSV."""
+        """
+        Write the metrics to CSV.
+
+        Parameters
+        ----------
+        data : AggregationData
+            The aggregated data for which to compute and write the metrics.
+        """
         columns = [
             (key, self._safe_call(partial(metric, data.llrdata), f'calculating metric {key} failed'))
             for key, metric in self.columns.items()
@@ -225,7 +413,21 @@ class WriteMetricsToCsv(Aggregation):
 
 @config_parser
 def metrics_csv(config: ContextAwareDict, output_dir: Path) -> WriteMetricsToCsv:
-    """Corresponding registry function to leverage CSV Writer class to write results to disk."""
+    """
+    Corresponding registry function to leverage CSV Writer class to write results to disk.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        The configuration dictionary for the metrics CSV.
+    output_dir : Path
+        The directory where the metrics CSV will be saved.
+
+    Returns
+    -------
+    WriteMetricsToCsv
+        An instance of the WriteMetricsToCsv class configured to write metrics to a CSV file.
+    """
     columns = pop_field(config, 'columns', default=['cllr', 'cllr_min'])
     if not isinstance(columns, Sequence):
         raise YamlParseError(
@@ -240,7 +442,18 @@ def metrics_csv(config: ContextAwareDict, output_dir: Path) -> WriteMetricsToCsv
 
 
 class CaseLLRToCsv(Aggregation):
-    """Aggregation that applies a full-data-fitted LR system to case data and stores LLRs as CSV."""
+    """
+    Aggregation that applies a full-data-fitted LR system to case data and stores LLRs as CSV.
+
+    Parameters
+    ----------
+    output_dir : Path
+        Directory where the CSV file will be written.
+    case_data_provider : DataProvider
+        Provider for the case data to apply the LR system to.
+    filename : str, optional
+        Name of the output CSV file, by default 'case_llr.csv'.
+    """
 
     def __init__(self, output_dir: Path, case_data_provider: DataProvider, filename: str = 'case_llr.csv') -> None:
         self.output_dir = output_dir
@@ -248,7 +461,14 @@ class CaseLLRToCsv(Aggregation):
         self.filename = Path(filename)
 
     def report(self, data: AggregationData) -> None:
-        """Apply the full-data-fitted LR system to the case data and store the resulting LLRs as CSV."""
+        """
+        Apply the full-data-fitted LR system to the case data and store the resulting LLRs as CSV.
+
+        Parameters
+        ----------
+        data : AggregationData
+            Aggregation data containing the fitted LR system and case data.
+        """
         if data.get_full_fit_lrsystem is not None:
             lrsystem = data.get_full_fit_lrsystem()
         else:
@@ -293,7 +513,21 @@ class CaseLLRToCsv(Aggregation):
 
 @config_parser
 def case_llr_csv(config: ContextAwareDict, output_dir: Path) -> CaseLLRToCsv:
-    """Parse output configuration for case LLR generation and CSV export."""
+    """
+    Parse output configuration for case LLR generation and CSV export.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        Configuration dictionary containing case LLR output settings.
+    output_dir : Path
+        Directory where the CSV file will be written.
+
+    Returns
+    -------
+    CaseLLRToCsv
+        Configured CaseLLRToCsv aggregation instance.
+    """
     case_data_provider = parse_data_provider(pop_field(config, 'case_llr_data'), output_dir)
     filename = pop_field(config, 'filename', default='case_llr.csv', validate=str)
     filename = check_type(str, filename)
@@ -306,14 +540,25 @@ class SubsetAggregation(Aggregation):
     Aggregation method that manages data categorization.
 
     A separate aggregation method is used for each category.
+
+    Parameters
+    ----------
+    aggregation_methods : list[Aggregation]
+        A list of methods to aggregate results by category.
+    category_field : str
+        The name of the category field.
     """
 
     def __init__(self, aggregation_methods: list[Aggregation], category_field: str):
         """
         Initialize the subset aggregation method.
 
-        :param aggregation_methods: a list of methods to aggregate results by category
-        :param category_field: the name of the category field
+        Parameters
+        ----------
+        aggregation_methods : list[Aggregation]
+            A list of methods to aggregate results by category.
+        category_field : str
+            The name of the category field.
         """
         self.aggregation_methods = aggregation_methods
         self.category_field = category_field
@@ -324,7 +569,10 @@ class SubsetAggregation(Aggregation):
 
         The data are categorized into subsets and forwarded to the actual aggregation method.
 
-        :param data: a named tuple containing the results
+        Parameters
+        ----------
+        data : AggregationData
+            The aggregated data to be reported.
         """
         run_name_prefix = f'{data.run_name}/' if data.run_name else ''
         for category, subset in get_instances_by_category(data.llrdata, self.category_field):

@@ -39,15 +39,28 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         self._output_dir: Path
 
     def primary_metric(self) -> Callable:
-        """Parse the `primary_metric` field."""
+        """
+        Parse the ``primary_metric`` field.
+
+        Returns
+        -------
+        Callable
+            Metric function used for optimisation.
+        """
         metric_name = pop_field(self._config, 'primary_metric')
         return parse_individual_metric(metric_name, self._output_dir, self._config.context)
 
     def output_list(self) -> Sequence[Aggregation]:
-        """Initialize corresponding aggregation classes based on the `output` section.
+        """
+        Initialize corresponding aggregation classes based on the ``output`` section.
 
         The initialized aggregation classes are returned as a sequence, to be iterated over in a
         later stage.
+
+        Returns
+        -------
+        Sequence[Aggregation]
+            Aggregation objects used to collect experiment outputs.
         """
         config: ContextAwareDict = pop_field(self._config, 'output', required=False)
         if not config:
@@ -57,7 +70,19 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
 
     @abstractmethod
     def get_experiment(self, name: str) -> Experiment:
-        """Get the experiment by `name` for the defined LR system."""
+        """
+        Get an experiment by name.
+
+        Parameters
+        ----------
+        name : str
+            Experiment name.
+
+        Returns
+        -------
+        Experiment
+            Experiment instance configured by this strategy.
+        """
         raise NotImplementedError
 
     def _parse_config_with_parameters(
@@ -65,11 +90,20 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         config_field: str,
         parameters_field: str,
     ) -> tuple[ContextAwareDict, list[Hyperparameter]]:
-        """Extract a configuration section and its associated parameters.
+        """
+        Extract a configuration section and its associated parameters.
 
-        :param config_field: the name of the field containing the baseline configuration
-        :param parameters_field: the name of the field containing the parameters to vary
-        :return: a tuple of (baseline_config, list of hyperparameters)
+        Parameters
+        ----------
+        config_field : str
+            Field containing the baseline configuration.
+        parameters_field : str
+            Field containing parameters to vary.
+
+        Returns
+        -------
+        tuple[ContextAwareDict, list[Hyperparameter]]
+            Baseline configuration and parsed hyperparameters.
         """
         baseline_config = pop_field(self._config, config_field)
         if baseline_config is None:
@@ -83,17 +117,29 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         return baseline_config, parameters
 
     def data_config(self) -> tuple[ContextAwareDict, list[Hyperparameter]]:
-        """Prepare the data provider and data strategy from the configuration.
+        """
+        Prepare the data provider and data strategy from the configuration.
 
         The (hyper)parameters to vary for the data provider and data strategy are also parsed.
+
+        Returns
+        -------
+        tuple[ContextAwareDict, list[Hyperparameter]]
+            Data configuration and associated hyperparameters.
         """
         return self._parse_config_with_parameters('data', 'dataparameters')
 
     def lrsystem_config(self) -> tuple[ContextAwareDict, list[Hyperparameter]]:
-        """Parse the LR System section including hyperparameters.
+        """
+        Parse the LR system section including hyperparameters.
 
         The baseline configuration is provided along with the specified parameters to vary (the
         defined hyperparameters).
+
+        Returns
+        -------
+        tuple[ContextAwareDict, list[Hyperparameter]]
+            LR system configuration and associated hyperparameters.
         """
         return self._parse_config_with_parameters('lr_system', 'hyperparameters')
 
@@ -102,7 +148,21 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         config: ContextAwareDict,
         output_dir: Path,
     ) -> Experiment:
-        """Parse the experiment section of the configuration."""
+        """
+        Parse the experiment section of the configuration.
+
+        Parameters
+        ----------
+        config : ContextAwareDict
+            Experiment strategy configuration.
+        output_dir : Path
+            Base output directory for this experiment.
+
+        Returns
+        -------
+        Experiment
+            Parsed experiment.
+        """
         self._config = config
 
         experiment_name = pop_field(config, 'name', default=f'unnamed_experiment{config.context[-1]}')
@@ -118,7 +178,19 @@ class SingleRunStrategy(ExperimentStrategyConfigParser):
     """Prepare Experiment consisting of a single run using configuration values."""
 
     def get_experiment(self, name: str) -> Experiment:
-        """Get an experiment for a single run, based on its name."""
+        """
+        Get an experiment for a single run.
+
+        Parameters
+        ----------
+        name : str
+            Experiment name.
+
+        Returns
+        -------
+        Experiment
+            Predefined single-run experiment.
+        """
         return PredefinedExperiment(
             name,
             [(pop_field(self._config, 'data'), {})],
@@ -132,18 +204,25 @@ def create_configs_from_hyperparameters(
     baseline_config: ContextAwareDict,
     parameters: list[Hyperparameter],
 ) -> list[tuple[ContextAwareDict, dict[str, Any]]]:
-    """Create configurations for all combinations of hyperparameter options.
+    """
+    Create configurations for all combinations of hyperparameter options.
 
     Generates a Cartesian product of all hyperparameter options and creates a configuration
     for each combination by substituting the values into the baseline configuration.
 
     This is used for both dataparameters and lrsystem hyperparameters in grid search.
 
-    :param baseline_config: the baseline configuration to augment
-    :param parameters: the hyperparameters to vary
-    :return: a list of tuples, where each tuple contains:
-        - the augmented configuration with substituted values
-        - a dict mapping parameter names to the substituted values
+    Parameters
+    ----------
+    baseline_config : ContextAwareDict
+        Baseline configuration to augment.
+    parameters : list[Hyperparameter]
+        Hyperparameters to vary.
+
+    Returns
+    -------
+    list[tuple[ContextAwareDict, dict[str, Any]]]
+        Augmented configurations and applied substitutions.
     """
     configs = []
     parameter_names = [param.name for param in parameters]
@@ -161,7 +240,19 @@ class GridStrategy(ExperimentStrategyConfigParser):
     """Prepare Experiment consisting of multiple runs using configuration values."""
 
     def get_experiment(self, name: str) -> Experiment:
-        """Get experiment for the grid strategy run, based on its name."""
+        """
+        Get experiment for a grid search strategy.
+
+        Parameters
+        ----------
+        name : str
+            Experiment name.
+
+        Returns
+        -------
+        Experiment
+            Predefined experiment with all parameter combinations.
+        """
         lrsystem_configs = create_configs_from_hyperparameters(*self.lrsystem_config())
         data_configs = create_configs_from_hyperparameters(*self.data_config())
 
@@ -178,7 +269,19 @@ class OptunaStrategy(ExperimentStrategyConfigParser):
     """Prepare Experiment for optimizing configuration parameters."""
 
     def get_experiment(self, name: str) -> Experiment:
-        """Get experiment for the optuna run, based on its name."""
+        """
+        Get experiment for an Optuna optimisation strategy.
+
+        Parameters
+        ----------
+        name : str
+            Experiment name.
+
+        Returns
+        -------
+        Experiment
+            Optuna-backed experiment.
+        """
         baseline_config, parameters = self.lrsystem_config()
         n_trials = pop_field(self._config, 'n_trials', validate=int)
 
@@ -195,9 +298,22 @@ class OptunaStrategy(ExperimentStrategyConfigParser):
 
 
 def parse_experiment_strategy(config: ContextAwareDict, output_path: Path) -> Experiment:
-    """Instantiate the corresponding experiment strategy class, e.g. for a single or grid run.
+    """
+    Instantiate the corresponding experiment strategy class, e.g. for a single or grid run.
 
     A corresponding Experiment class is returned.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        Experiment strategy configuration.
+    output_path : Path
+        Output path for experiment artefacts.
+
+    Returns
+    -------
+    Experiment
+        Parsed experiment strategy instance.
     """
     strategy_name = pop_field(config, 'strategy')
     strategy_parser = registry.get(strategy_name, search_path=['experiment_strategies'])
@@ -208,9 +324,17 @@ def parse_experiments(cfg: ContextAwareDict, output_path: Path) -> Mapping[str, 
     """
     Extract which Experiment to run as dictated in the configuration.
 
-    :param cfg: a `dict` object describing the experiments
-    :param output_path: the filesystem path to the results directory
-    :return: a mapping of names to experiments
+    Parameters
+    ----------
+    cfg : ContextAwareDict
+        Configuration section describing experiments.
+    output_path : Path
+        Filesystem path to the results directory.
+
+    Returns
+    -------
+    Mapping[str, Experiment]
+        Mapping from experiment name to parsed experiment.
     """
     experiments_config_section = pop_field(cfg, 'experiments', validate=partial(check_type, list))
 

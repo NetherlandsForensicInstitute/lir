@@ -6,14 +6,23 @@ from lir.util import Xy_to_Xn, logodds_to_odds
 
 
 def cllr(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
-    """Calculate a log likelihood ratio cost (C_llr) for a series of log likelihood ratios.
+    """
+    Calculate a log likelihood ratio cost (C_llr) for a series of log likelihood ratios.
 
     Nico Brümmer and Johan du Preez, Application-independent evaluation of speaker detection, In: Computer Speech and
     Language 20(2-3), 2006.
 
-    :param llr_data: LLRs and their metadata, wrapped in an LLRData object
-    :param weights: the relative weights of the classes
-    :return: CLLR, the log likelihood ratio cost
+    Parameters
+    ----------
+    llr_data : LLRData
+        LLRs and their metadata, wrapped in an `LLRData` object.
+    weights : tuple[float, float], optional
+        The relative weights of the classes.
+
+    Returns
+    -------
+    float
+        CLLR, the log likelihood ratio cost.
     """
     llrs, y = llr_data.llrs, llr_data.require_labels
 
@@ -30,11 +39,20 @@ def cllr(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
 
 
 def cllr_min(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
-    """Estimate the discriminative power from a collection of log likelihood ratios.
+    """
+    Estimate the discriminative power from a collection of log likelihood ratios.
 
-    :param llr_data: LLRs and their metadata, wrapped in an LLRData object
-    :param weights: the relative weights of the classes
-    :return: CLLR_min, a measure of discrimination
+    Parameters
+    ----------
+    llr_data : LLRData
+        LLRs and their metadata, wrapped in an `LLRData` object.
+    weights : tuple[float, float], optional
+        The relative weights of the classes.
+
+    Returns
+    -------
+    float
+        CLLR_min, a measure of discrimination.
     """
     if not np.all(np.unique(llr_data.require_labels) == [0, 1]):
         return np.nan
@@ -46,11 +64,20 @@ def cllr_min(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
 
 
 def cllr_cal(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
-    """Calculate the difference between the C_llr before and after isotonic calibration.
+    """
+    Calculate the difference between the C_llr before and after isotonic calibration.
 
-    :param llr_data: LLRs and their metadata, wrapped in an LLRData object
-    :param weights: the relative weights of the classes
-    :return: CLLR_cal, the difference after isotonic calibration
+    Parameters
+    ----------
+    llr_data : LLRData
+        LLRs and their metadata, wrapped in an `LLRData` object.
+    weights : tuple[float, float], optional
+        The relative weights of the classes.
+
+    Returns
+    -------
+    float
+        CLLR_cal, the difference after isotonic calibration.
     """
     cllr_min_val = cllr_min(llr_data, weights)
     cllr_val = cllr(llr_data, weights)
@@ -59,22 +86,38 @@ def cllr_cal(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
 
 
 def llr_upper_bound(llrs: LLRData) -> float | None:
-    """Provide corresponding upper bound for provided LLR data.
+    """
+    Provide corresponding upper bound for provided LLR data.
 
     When an LLRData object contains an upper bound, return it. If not, return None.
 
-    :param llrs: LLRs and their metadata, wrapped in an LLRData object
-    :return: the LLR upper bound, or None
+    Parameters
+    ----------
+    llrs : LLRData
+        LLRs and their metadata, wrapped in an `LLRData` object.
+
+    Returns
+    -------
+    float | None
+        The LLR upper bound, or `None`.
     """
     return llrs.llr_upper_bound
 
 
 def llr_lower_bound(llrs: LLRData) -> float | None:
-    """Provide corresponding lower bound for provided LLR data.
+    """
+    Provide corresponding lower bound for provided LLR data.
 
     When an LLRData object contains a lower bound, return it. If not, return None.
 
-    :param llrs: LLRs and their metadata, wrapped in an LLRData object
-    :return: the LLR lower bound, or None
+    Parameters
+    ----------
+    llrs : LLRData
+        LLRs and their metadata, wrapped in an `LLRData` object.
+
+    Returns
+    -------
+    float | None
+        The LLR lower bound, or `None`.
     """
     return llrs.llr_lower_bound

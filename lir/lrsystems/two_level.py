@@ -58,13 +58,26 @@ class TwoLevelModelNormalKDE:
         self.between_covars: np.ndarray | None = None
 
     def fit_on_unpaired_instances(self, X: np.ndarray, y: np.ndarray) -> 'TwoLevelModelNormalKDE':
-        """Fit the model on unpaired instances.
+        """
+        Fit the model on unpaired instances.
 
         X np.ndarray of measurements, rows are sources/repetitions, columns are features
         y np 1d-array of labels. For each source a unique identifier (label). Repetitions get the same label.
 
         Construct the necessary matrices/scores/etc based on test data (X) so that we can predict a score later on.
         Store any calculated parameters in `self`.
+
+        Parameters
+        ----------
+        X : np.ndarray
+            Value passed via ``X``.
+        y : np.ndarray
+            Value passed via ``y``.
+
+        Returns
+        -------
+        'TwoLevelModelNormalKDE'
+            Fitted two-level KDE model instance.
         """
         assert len(X.shape) == 2, f'fit(X, y) requires X to be 2-dimensional; found dimensions {X.shape}'
         self.n_sources = self._get_n_sources(y)
@@ -78,7 +91,8 @@ class TwoLevelModelNormalKDE:
         return self
 
     def transform(self, X_trace: np.ndarray, X_ref: np.ndarray) -> np.ndarray:
-        """Transform the input data using the fitted model.
+        """
+        Transform the input data using the fitted model.
 
         Predict odds scores, making use of the parameters constructed during `self.fit()` (which should
         now be stored in `self`).
@@ -87,13 +101,26 @@ class TwoLevelModelNormalKDE:
         X_ref measurements of reference object. np.ndarray of shape (instances, repetitions_ref, features)
 
         returns: odds of same source / different source: one-dimensional np.ndarray with one element per instance
+
+        Parameters
+        ----------
+        X_trace : np.ndarray
+            Value passed via ``X_trace``.
+        X_ref : np.ndarray
+            Value passed via ``X_ref``.
+
+        Returns
+        -------
+        np.ndarray
+            Log10 LR scores for each trace/reference pair.
         """
         assert self.model_fitted, 'fit() must be called before transform()'
         log10_lr_score = self._predict_log10_lr_score(X_trace, X_ref)
         return log10_lr_score
 
     def predict_proba(self, X_trace: np.ndarray, X_ref: np.ndarray) -> np.ndarray:
-        """Predict probability scores, using the fitted model.
+        """
+        Predict probability scores, using the fitted model.
 
         Predict probability scores, making use of the parameters constructed during `self.fit()` (which should
         now be stored in `self`).
@@ -102,6 +129,18 @@ class TwoLevelModelNormalKDE:
         X_ref measurements of reference object. np.ndarray of shape (instances, repetitions_ref, features)
 
         returns: probabilities for same source and different source: np.ndarray with shape (instances, 2)
+
+        Parameters
+        ----------
+        X_trace : np.ndarray
+            Value passed via ``X_trace``.
+        X_ref : np.ndarray
+            Value passed via ``X_ref``.
+
+        Returns
+        -------
+        np.ndarray
+            Two-column probability matrix for Hd and Hp.
         """
         logodds_score = self.transform(X_trace, X_ref)
         p0 = 1 / (1 + 10**logodds_score)
@@ -109,7 +148,8 @@ class TwoLevelModelNormalKDE:
         return np.stack([p0, p1], axis=1)
 
     def _predict_log10_lr_score(self, X_trace: np.ndarray, X_ref: np.ndarray) -> np.ndarray:
-        """Predict natural log LR scores (ln_LR scores) using the fitted model.
+        """
+        Predict natural log LR scores (ln_LR scores) using the fitted model.
 
         Predict ln_LR scores, making use of the parameters constructed during `self.fit()` (which should
                 now be stored in `self`).
@@ -117,6 +157,18 @@ class TwoLevelModelNormalKDE:
         X_trace measurements of trace object. np.ndarray of shape (instances, repetitions_trace, features)
         X_ref measurements of reference object. np.ndarray of shape (instances, repetitions_ref, features)
         returns: log10_LR_scores according to the two_level_model in Bolck et al. np.ndarray of shape (instances,)
+
+        Parameters
+        ----------
+        X_trace : np.ndarray
+            Value passed via ``X_trace``.
+        X_ref : np.ndarray
+            Value passed via ``X_ref``.
+
+        Returns
+        -------
+        np.ndarray
+            Log10 LR scores predicted for all input pairs.
         """
         if not self.model_fitted:
             raise ValueError('The model is not fitted; fit it before you use it for predicting')
@@ -165,21 +217,47 @@ class TwoLevelModelNormalKDE:
 
     @staticmethod
     def _get_n_features(X: np.ndarray, feature_ix: int = 2) -> int:
-        """Calculate the number of features in `X`."""
+        """
+        Calculate the number of features in `X`.
+
+        Parameters
+        ----------
+        X : np.ndarray
+            Value passed via ``X``.
+        feature_ix : int
+            Value passed via ``feature_ix``.
+
+        Returns
+        -------
+        int
+            Number of feature dimensions in the provided array.
+        """
         return X.shape[feature_ix]
 
     @staticmethod
     def _get_n_sources(y: np.ndarray) -> int:
-        """Calculate the number of sources in `y`.
+        """
+        Calculate the number of sources in `y`.
 
         Y np 1d-array of labels. labels from {1, ..., n} with n the number of sources. Repetitions get the same label.
         returns: number of sources in y (int).
+
+        Parameters
+        ----------
+        y : np.ndarray
+            Value passed via ``y``.
+
+        Returns
+        -------
+        int
+            Number of unique source labels.
         """
         return len(np.unique(y))
 
     @staticmethod
     def _get_mean_covariance_within(X: np.ndarray, y: np.ndarray) -> np.ndarray:
-        """Calculate a matrix of mean covariances within each of the sources.
+        """
+        Calculate a matrix of mean covariances within each of the sources.
 
         X np.array of measurements, rows are sources/repetitions, columns are features
         y np 1d-array of labels. labels from {1, ..., n} with n the number of sources. Repetitions get the same label.
@@ -187,6 +265,18 @@ class TwoLevelModelNormalKDE:
 
         This function calculates a matrix of mean covariances within each of the sources, it does so by grouping the
         data per source, calculating the covariance matrices per source and then taking the mean per feature.
+
+        Parameters
+        ----------
+        X : np.ndarray
+            Value passed via ``X``.
+        y : np.ndarray
+            Value passed via ``y``.
+
+        Returns
+        -------
+        np.ndarray
+            Mean within-source covariance matrix.
         """
         # Get unique sources
         unique_sources = np.unique(y)
@@ -215,11 +305,24 @@ class TwoLevelModelNormalKDE:
 
     @staticmethod
     def _get_means_per_source(X: np.ndarray, y: np.ndarray) -> np.ndarray:
-        """Provide numpy array of means per source.
+        """
+        Provide numpy array of means per source.
 
         X np.array of measurements, rows are sources/repetitions, columns are features
         y np 1d-array of labels. For each source a unique identifier (label). Repetitions get the same label.
         returns: means per source in a np.array matrix of size: number of sources * number of features.
+
+        Parameters
+        ----------
+        X : np.ndarray
+            Value passed via ``X``.
+        y : np.ndarray
+            Value passed via ``y``.
+
+        Returns
+        -------
+        np.ndarray
+            Matrix of per-source mean feature vectors.
         """
         # Get unique sources and calculate means for each
         unique_sources = np.unique(y)
@@ -227,10 +330,23 @@ class TwoLevelModelNormalKDE:
 
     @staticmethod
     def _get_kernel_bandwidth_squared(n_sources: int, n_features_train: int) -> float:
-        """Calculate kernel bandwidth and return it.
+        """
+        Calculate kernel bandwidth and return it.
 
         Reference: 'Density estimation for statistics and data analysis', B.W. Silverman,
             page 86 formula 4.14 with A(K) the second row in the table on page 87.
+
+        Parameters
+        ----------
+        n_sources : int
+            Value passed via ``n_sources``.
+        n_features_train : int
+            Value passed via ``n_features_train``.
+
+        Returns
+        -------
+        float
+            Squared kernel bandwidth computed with Silverman's rule.
         """
         # calculate kernel bandwidth and square it, using Silverman's rule for multivariate data
         kernel_bandwidth = (4 / ((n_features_train + 2) * n_sources)) ** (1 / (n_features_train + 4))
@@ -238,12 +354,27 @@ class TwoLevelModelNormalKDE:
 
     @staticmethod
     def _get_between_covariance(X: np.ndarray, y: np.ndarray, mean_within_covars: np.ndarray) -> np.ndarray:
-        """Calculate and return the between covariance.
+        """
+        Calculate and return the between covariance.
 
         X np.array of measurements, rows are objects, columns are variables
         y np 1d-array of labels. labels from {1, ..., n} with n the number of objects. Repetitions get the same label.
         returns: estimated covariance of true mean of the features between sources in the population in a np.array
             square matrix with number of features^2 as dimension.
+
+        Parameters
+        ----------
+        X : np.ndarray
+            Value passed via ``X``.
+        y : np.ndarray
+            Value passed via ``y``.
+        mean_within_covars : np.ndarray
+            Value passed via ``mean_within_covars``.
+
+        Returns
+        -------
+        np.ndarray
+            Estimated between-source covariance matrix.
         """
         # Get unique sources and their repetition counts
         unique_sources, counts = np.unique(y, return_counts=True)
@@ -277,7 +408,8 @@ class TwoLevelModelNormalKDE:
     def _predict_covariances_trace_ref(
         self, X_trace: np.ndarray, X_ref: np.ndarray
     ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-        """Calculate and return covariances of trace references.
+        """
+        Calculate and return covariances of trace references.
 
         X_tr np.array of measurements of trace object, rows are repetitions, columns are features
         X_ref np.array of measurements of reference object, rows are repetitions, columns features
@@ -290,6 +422,18 @@ class TwoLevelModelNormalKDE:
             covars_trace_inv is the inverse of covars_trace,
             covars_trace_update_inv is the inverse of covars_trace_update,
             covars_ref_inv is the inverse of covars_ref.
+
+        Parameters
+        ----------
+        X_trace : np.ndarray
+            Value passed via ``X_trace``.
+        X_ref : np.ndarray
+            Value passed via ``X_ref``.
+
+        Returns
+        -------
+        tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]
+            Trace/reference covariance matrices and their inverses for scoring.
         """
         kernel_bandwidth_sq = check_not_none(self.kernel_bandwidth_sq)
         between_covars = check_not_none(self.between_covars)
@@ -326,10 +470,23 @@ class TwoLevelModelNormalKDE:
         )
 
     def _predict_updated_ref_mean(self, X_ref: np.ndarray, covars_ref_inv: np.ndarray) -> np.ndarray:
-        """Calculate and return bayesian update of reference mean given KDE background means.
+        """
+        Calculate and return bayesian update of reference mean given KDE background means.
 
         X_ref np.array of measurements of reference object, rows are repetitions, columns features
         returns: updated_ref_mean, bayesian update of reference mean given KDE background means.
+
+        Parameters
+        ----------
+        X_ref : np.ndarray
+            Value passed via ``X_ref``.
+        covars_ref_inv : np.ndarray
+            Value passed via ``covars_ref_inv``.
+
+        Returns
+        -------
+        np.ndarray
+            Bayesian-updated reference means for each background source.
         """
         kernel_bandwidth_sq = check_not_none(self.kernel_bandwidth_sq)
         between_covars = check_not_none(self.between_covars)
@@ -359,7 +516,8 @@ class TwoLevelModelNormalKDE:
         covars_trace_update_inv: np.ndarray,
         updated_ref_mean: np.ndarray,
     ) -> np.floating:
-        """Perform calculation to predict natural log of numerator.
+        """
+        Perform calculation to predict natural log of numerator.
 
         See Bolck et al. formula in appendix. The formula consists of three sum_terms (and some other terms).
         The numerator sum term is calculated here.
@@ -373,6 +531,24 @@ class TwoLevelModelNormalKDE:
         covars_ref_inv, covars_trace_update_inv, np.arrays as calculated by _predict_covariances_trace_ref
         updated_ref_mean np.array with same dimensions as X, calculated by _predict_updated_ref_mean
         returns: ln_num1, natural log of numerator of the LR-formula in Bolck et al.
+
+        Parameters
+        ----------
+        X_trace : np.ndarray
+            Value passed via ``X_trace``.
+        X_ref : np.ndarray
+            Value passed via ``X_ref``.
+        covars_ref_inv : np.ndarray
+            Value passed via ``covars_ref_inv``.
+        covars_trace_update_inv : np.ndarray
+            Value passed via ``covars_trace_update_inv``.
+        updated_ref_mean : np.ndarray
+            Value passed via ``updated_ref_mean``.
+
+        Returns
+        -------
+        np.floating
+            Natural-log numerator term of the LR formula.
         """
         means_per_source = check_not_none(self.means_per_source)
         mean_X_trace = np.mean(X_trace, axis=0).reshape(1, -1)
@@ -391,7 +567,8 @@ class TwoLevelModelNormalKDE:
         return logsumexp(ln_num_terms)
 
     def _predict_ln_den_term(self, X_ref_or_trace: np.ndarray, covars_inv: np.ndarray) -> np.floating:
-        """Perform calculation and return natural log of a denominator term of the LR-formula.
+        """
+        Perform calculation and return natural log of a denominator term of the LR-formula.
 
         See Bolck et al. formula in appendix. The formula consists of three sum_terms (and some other terms).
         A denominator sum term is calculated here.
@@ -399,6 +576,18 @@ class TwoLevelModelNormalKDE:
         X_ref_or_trace np.array of measurements of reference or trace object, rows are repetitions, columns are features
         U_inv, np.array with respective covariance matrix as calculated by _predict_covariances_trace_ref
         returns: ln_den, natural log of a denominator term of the LR-formula in Bolck et al.
+
+        Parameters
+        ----------
+        X_ref_or_trace : np.ndarray
+            Value passed via ``X_ref_or_trace``.
+        covars_inv : np.ndarray
+            Value passed via ``covars_inv``.
+
+        Returns
+        -------
+        np.floating
+            Natural-log denominator term of the LR formula.
         """
         means_per_source = check_not_none(self.means_per_source)
         # calculate mean of reference or trace measurements and difference vectors (in matrix form)
@@ -419,13 +608,32 @@ class TwoLevelModelNormalKDE:
         ln_den_left: np.floating,
         ln_den_right: np.floating,
     ) -> np.floating:
-        """Predict 10-base logarithm LR's from the Bolck formula.
+        """
+        Predict 10-base logarithm LR's from the Bolck formula.
 
         X_trace np.array of measurements of trace object, rows are repetitions, columns are variables
         covars_trace, covars_trace_update, np.arrays as calculated by _predict_covariances_trace_ref
         ln_num, ln_den_left, ln_den_right: terms in big fraction in Bolck et al, as calculated by _predict_ln_num
             and _predict_ln_den_term
         returns: log10_LR_score, 10log of LR according to the LR-formula in Bolck et al.
+
+        Parameters
+        ----------
+        covars_trace : np.ndarray
+            Value passed via ``covars_trace``.
+        covars_trace_update : np.ndarray
+            Value passed via ``covars_trace_update``.
+        ln_num : np.floating
+            Value passed via ``ln_num``.
+        ln_den_left : np.floating
+            Value passed via ``ln_den_left``.
+        ln_den_right : np.floating
+            Value passed via ``ln_den_right``.
+
+        Returns
+        -------
+        np.floating
+            Final base-10 logarithm LR score.
         """
         assert self.n_sources is not None
         # calculate ln LR_score and change base to 10log
@@ -442,12 +650,22 @@ class TwoLevelModelNormalKDE:
 
 
 def _split_pairs(pairs: np.ndarray, n_trace: int) -> tuple[np.ndarray, np.ndarray]:
-    """Split the input array along the second dimension at position `n_trace`.
+    """
+    Split the input array along the second dimension at position `n_trace`.
 
-    :param pairs: a feature array of dimension: (pairs, instances, features)
-    :param n_trace: the number of trace instances
-    :return: a tuple of two arrays of trace features and reference features, both of dimension:
         (pairs, instances, features)
+
+    Parameters
+    ----------
+    pairs : np.ndarray
+        Value passed via ``pairs``.
+    n_trace : int
+        Value passed via ``n_trace``.
+
+    Returns
+    -------
+    tuple[np.ndarray, np.ndarray]
+        Tuple of trace features and reference features.
     """
     trace_features = pairs[:, :n_trace, :]
     ref_features = pairs[:, n_trace:, :]
@@ -455,12 +673,26 @@ def _split_pairs(pairs: np.ndarray, n_trace: int) -> tuple[np.ndarray, np.ndarra
 
 
 class TwoLevelSystem(LRSystem):
-    """Implement two level model, common-source feature-based LR system architecture.
+    """
+    Implement two level model, common-source feature-based LR system architecture.
 
     During the training phase, the system calculates statistics on the unpaired instances. On application, it
     calculates LRs for same-source and different-source pairs. Each side of the pair may consist of multiple instances.
 
     See also: `TwoLevelModelNormalKDE`
+
+    Parameters
+    ----------
+    preprocessing_pipeline : Transformer | None
+        Pipeline that preprocesses instances before pairing and evaluation.
+    pairing_function : PairingMethod
+        Pairing method used to construct trace/reference comparisons.
+    postprocessing_pipeline : Transformer | None
+        Value passed via ``postprocessing_pipeline``.
+    n_trace_instances : int
+        Number of trace instances to include in each pairing.
+    n_ref_instances : int
+        Number of reference instances to include in each pairing.
     """
 
     def __init__(
@@ -471,12 +703,23 @@ class TwoLevelSystem(LRSystem):
         n_trace_instances: int,
         n_ref_instances: int,
     ):
-        """Initialize a new TwoLevelSystem instance.
+        """
+        Initialize a new TwoLevelSystem instance.
 
-        :param preprocessing_pipeline: a preprocessing pipeline that is applied on unpaired instances
-        :param pairing_function: a function to generate same-source and different-source pairs
-        :param postprocessing_pipeline: a postprocessing pipeline that is applied *after* applying the two level model;
             it takes LLRs as input.
+
+        Parameters
+        ----------
+        preprocessing_pipeline : Transformer | None
+            Pipeline that preprocesses instances before pairing and evaluation.
+        pairing_function : PairingMethod
+            Pairing method used to construct trace/reference comparisons.
+        postprocessing_pipeline : Transformer | None
+            Value passed via ``postprocessing_pipeline``.
+        n_trace_instances : int
+            Number of trace instances to include in each pairing.
+        n_ref_instances : int
+            Number of reference instances to include in each pairing.
         """
         self.preprocessing_pipeline = preprocessing_pipeline or Pipeline([])
         self.pairing_function = pairing_function
@@ -486,7 +729,19 @@ class TwoLevelSystem(LRSystem):
         self.n_ref_instances = n_ref_instances
 
     def fit(self, instances: InstanceData) -> Self:
-        """Fit the model based on the instance data."""
+        """
+        Fit the model based on the instance data.
+
+        Parameters
+        ----------
+        instances : InstanceData
+            Input instances to be processed by this method.
+
+        Returns
+        -------
+        Self
+            This LR system instance after fitting all components.
+        """
         instances = self.preprocessing_pipeline.fit_apply(instances)
         instances = check_type(FeatureData, instances, 'preprocessing pipeline should return FeatureData')
         self.model.fit_on_unpaired_instances(instances.features, instances.source_ids_1d)
@@ -498,10 +753,21 @@ class TwoLevelSystem(LRSystem):
         return self
 
     def apply(self, instances: InstanceData) -> LLRData:
-        """Apply this LR system on a set of instances and return LLR data.
+        """
+        Apply this LR system on a set of instances and return LLR data.
 
         Applies the two level LR system on a set of instances,
         and returns a representation of the calculated LLR data through the `LLRData` tuple.
+
+        Parameters
+        ----------
+        instances : InstanceData
+            Input instances to be processed by this method.
+
+        Returns
+        -------
+        LLRData
+            Likelihood-ratio data produced by applying the LR system.
         """
         instances = self.preprocessing_pipeline.apply(instances)
 

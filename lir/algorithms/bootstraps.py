@@ -15,7 +15,8 @@ from lir.util import check_type
 
 
 class Bootstrap(Pipeline, ABC):
-    """Bootstrap system that estimates confidence intervals around the best estimate of a pipeline.
+    """
+    Bootstrap system that estimates confidence intervals around the best estimate of a pipeline.
 
     This bootstrap system creates bootstrap samples from the training data, fits the pipeline on each sample,
     and then computes confidence intervals for the pipeline outputs based on the variability across the bootstrap
@@ -30,6 +31,17 @@ class Bootstrap(Pipeline, ABC):
 
     The AtData variant allows for more complex data types, while the Equidistant variant is only suitable for continuous
     features.
+
+    Parameters
+    ----------
+    steps : list[tuple[str, Any]]
+        The pipeline steps to bootstrap.
+    n_bootstraps : int, optional
+        Number of bootstrap samples to generate.
+    interval : tuple[float, float], optional
+        Lower and upper quantiles for the confidence interval.
+    seed : int | None, optional
+        Random seed for reproducibility.
     """
 
     def __init__(
@@ -39,13 +51,19 @@ class Bootstrap(Pipeline, ABC):
         interval: tuple[float, float] = (0.05, 0.95),
         seed: int | None = None,
     ):
-        """Initialize the TrainDataBootstrap with the given pipeline steps, number of bootstraps, and interval.
+        """
+        Initialize the bootstrap instance.
 
-        :param steps: list[tuple[str, Any]]: The steps of the pipeline to be bootstrapped.
-        :param n_bootstraps: int: The number of bootstrap samples to generate. Default is 400.
-        :param interval: tuple[float, float]: The lower and upper quantiles for the confidence interval.
-                                             Default: (0.05,0.95).
-        :param seed: int | None: The random seed for reproducibility. Default is None.
+        Parameters
+        ----------
+        steps : list[tuple[str, Any]]
+            The pipeline steps to bootstrap.
+        n_bootstraps : int, optional
+            Number of bootstrap samples to generate.
+        interval : tuple[float, float], optional
+            Lower and upper quantiles for the confidence interval.
+        seed : int | None, optional
+            Random seed for reproducibility.
         """
         super().__init__(steps)
 
@@ -58,18 +76,37 @@ class Bootstrap(Pipeline, ABC):
 
     @abstractmethod
     def get_bootstrap_data(self, instances: InstanceData) -> InstanceData:
-        """Get the data points to use for interval estimation.
+        """
+        Get the data points to use for interval estimation.
 
-        :param instances: FeatureData: The feature data to fit the bootstrap system on.
-        :return FeatureData: The feature data to use for interval estimation.
+        This method should be implemented by subclasses to specify how the data points for interval estimation are
+        obtained.
+
+        Parameters
+        ----------
+        instances : InstanceData
+            The feature data to fit the bootstrap system on.
+
+        Returns
+        -------
+        InstanceData
+            The feature data to use for interval estimation.
         """
         raise NotImplementedError
 
     def apply(self, instances: InstanceData) -> LLRData:
-        """Transform the provided instances to include the best estimate and confidence intervals.
+        """
+        Transform the provided instances to include the best estimate and confidence intervals.
 
-        :param instances: FeatureData: The feature data to transform.
-        :return LLRData: The transformed feature data with best estimate and confidence intervals.
+        Parameters
+        ----------
+        instances : InstanceData
+            The feature data to transform.
+
+        Returns
+        -------
+        LLRData
+            The transformed feature data with best estimate and confidence intervals.
         """
         if self.f_delta_interval_lower is None or self.f_delta_interval_upper is None:
             raise ValueError('Bootstrap intervals have not been computed. Please fit the bootstrap first.')
@@ -85,18 +122,34 @@ class Bootstrap(Pipeline, ABC):
         )
 
     def fit_apply(self, instances: InstanceData) -> LLRData:
-        """Combine fitting and transforming in one step.
+        """
+        Combine fitting and transforming in one step.
 
-        :param instances: FeatureData: The feature data to fit and transform.
-        :return LLRData: The transformed feature data with best estimate and confidence intervals.
+        Parameters
+        ----------
+        instances : InstanceData
+            The feature data to fit and transform.
+
+        Returns
+        -------
+        LLRData
+            The transformed feature data with best estimate and confidence intervals.
         """
         return self.fit(instances).apply(instances)
 
     def fit(self, instances: InstanceData) -> Self:
-        """Fit the bootstrap system to the provided instances.
+        """
+        Fit the bootstrap system to the provided instances.
 
-        :param instances: FeatureData: The feature data to fit the bootstrap system on.
-        :return Self: The fitted bootstrap system.
+        Parameters
+        ----------
+        instances : InstanceData
+            The feature data to fit the bootstrap system on.
+
+        Returns
+        -------
+        Self
+            The fitted bootstrap system.
         """
         all_vals = []
         rng = np.random.default_rng(self.seed)
@@ -138,24 +191,49 @@ class Bootstrap(Pipeline, ABC):
 
 
 class BootstrapAtData(Bootstrap):
-    """Bootstrap system that uses the original training data points for interval estimation.
+    """
+    Bootstrap system that uses the original training data points for interval estimation.
 
     See the Bootstrap class for more details.
     """
 
     def get_bootstrap_data(self, instances: InstanceData) -> InstanceData:
-        """Get the data points to use for interval estimation. The original training data points are used.
+        """
+        Get the data points to use for interval estimation.
 
-        :param instances: FeatureData: The feature data to fit the bootstrap system on.
-        :return FeatureData: The feature data to use for interval estimation.
+        The original training data points are used.
+
+        Parameters
+        ----------
+        instances : InstanceData
+            The feature data to fit the bootstrap system on.
+
+        Returns
+        -------
+        InstanceData
+            The feature data to use for interval estimation.
         """
         return instances
 
 
 class BootstrapEquidistant(Bootstrap):
-    """Bootstrap system that uses equidistant points within the range of the training data for interval estimation.
+    """
+    Bootstrap system that uses equidistant points within the range of the training data for interval estimation.
 
     See the Bootstrap class for more details.
+
+    Parameters
+    ----------
+    steps : list[tuple[str, Any]]
+        The pipeline steps to bootstrap.
+    n_bootstraps : int, optional
+        Number of bootstrap samples to generate.
+    interval : tuple[float, float], optional
+        Lower and upper quantiles for the confidence interval.
+    seed : int | None, optional
+        Random seed for reproducibility.
+    n_points : int | None, optional
+        Number of equidistant points to use for interval estimation.
     """
 
     def __init__(
@@ -166,26 +244,42 @@ class BootstrapEquidistant(Bootstrap):
         seed: int | None = None,
         n_points: int | None = 1000,
     ):
-        """Initialize the instance with the given pipeline steps, number of bootstraps, and interval.
+        """
+        Initialize the instance with the given pipeline steps, number of bootstraps, and interval.
 
-        :param steps: list[tuple[str, Any]]: The steps of the pipeline to be bootstrapped.
-        :param n_bootstraps: int: The number of bootstrap samples to generate. Default is 400.
-        :param interval: tuple[float, float]: The lower and upper quantiles for the confidence interval.
-                                             Default: (0.05,0.95).
-        :param seed: int | None: The random seed for reproducibility. Default is None.
-        :param n_points: int | None: The number of equidistant points to use for interval estimation. Default is 1000.
-                                    If None, uses the number of instances in the training data.
+        Parameters
+        ----------
+        steps : list[tuple[str, Any]]
+            The steps of the pipeline to be bootstrapped.
+        n_bootstraps : int, optional
+            The number of bootstrap samples to generate. Default is 400.
+        interval : tuple[float, float], optional
+            The lower and upper quantiles for the confidence interval. Default: (0.05,0.95).
+        seed : int | None, optional
+            The random seed for reproducibility. Default is None.
+        n_points : int | None, optional
+            The number of equidistant points to use for interval estimation. Default is 1000. If None, uses the number
+            of instances in the training data.
         """
         super().__init__(steps, n_bootstraps, interval, seed)
         self.n_points = n_points
 
     def get_bootstrap_data(self, instances: InstanceData) -> FeatureData:
-        """Get the data points to use for interval estimation.
+        """
+        Get the data points to use for interval estimation.
 
         This is done by creating equidistant points within the range of the training data.
 
-        :param instances: FeatureData: The feature data to fit the bootstrap system on.
-        :return FeatureData: The feature data to use for interval estimation.
+        Parameters
+        ----------
+        instances : InstanceData
+            The feature data to fit the bootstrap system on.
+
+        Returns
+        -------
+        FeatureData
+            The feature data to use for interval estimation, consisting of equidistant points within the range of the
+            training data.
         """
         instances = check_type(FeatureData, instances)
         if instances.features.ndim != 2 or instances.features.shape[1] != 1:
@@ -215,9 +309,17 @@ def bootstrap(modules_config: ContextAwareDict, output_dir: Path) -> Bootstrap:
 
     Any other arguments are passed directly to the `__init__()` method of the bootstrapping class.
 
-    :param modules_config: the configuration
-    :param output_dir: where to write output, if any
-    :return: a bootstrapping object
+    Parameters
+    ----------
+    modules_config : ContextAwareDict
+        Bootstrap module configuration.
+    output_dir : Path
+        Output directory used for parsing nested pipeline steps.
+
+    Returns
+    -------
+    Bootstrap
+        A configured bootstrapping object.
     """
     bootstrap_methods = {
         'data': BootstrapAtData,

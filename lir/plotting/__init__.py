@@ -62,7 +62,7 @@ class Canvas:
         self.nbe = partial(nbe, ax)
         self.pav = partial(pav, ax)
         self.score_distribution = partial(score_distribution, ax)
-        self.score_llr = partial(score_llr, ax)
+        self.score_to_llr = partial(score_to_llr, ax)
         self.tippett = partial(tippett, ax)
         self.llr_interval = partial(llr_interval, ax)
 
@@ -514,7 +514,7 @@ def score_distribution(
         ax.set_ylabel('count')
 
 
-def score_llr(ax: Axes, llrdata: LLRData) -> None:
+def score_to_llr(ax: Axes, llrdata: LLRData) -> None:
     """Plot intermediate scores vs final LLRs, colored by hypothesis.
 
     Parameters

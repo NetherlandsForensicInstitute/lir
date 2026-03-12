@@ -9,7 +9,7 @@ from lir.algorithms.invariance_bounds import IVBounder
 from lir.data.models import DataProvider, FeatureData, LLRData
 from lir.datasets.alcohol_breath_analyser import AlcoholBreathAnalyser
 from lir.transform.pipeline import Pipeline
-from lir.util import Xn_to_Xy, probability_to_logodds
+from lir.util import Xn_to_Xy, odds_to_logodds, probability_to_logodds
 
 
 class UnboundLRs(DataProvider):
@@ -74,7 +74,7 @@ class TestBounding(unittest.TestCase):
     def test_extreme_smallset(self):
         lrs = np.array([np.inf, 0])
         y = np.array([1, 0])
-        data = LLRData(features=np.log10(lrs), labels=y)
+        data = LLRData(features=odds_to_logodds(lrs), labels=y)
 
         bounds = invariance_bounds.calculate_invariance_bounds(data)
         np.testing.assert_almost_equal((-0.477, 0.477), bounds[:2])
@@ -82,7 +82,7 @@ class TestBounding(unittest.TestCase):
     def test_extreme(self):
         lrs = np.array([np.inf, np.inf, np.inf, 0, 0, 0])
         y = np.array([1, 1, 1, 0, 0, 0])
-        data = LLRData(features=np.log10(lrs), labels=y)
+        data = LLRData(features=odds_to_logodds(lrs), labels=y)
 
         bounds = invariance_bounds.calculate_invariance_bounds(data)
         np.testing.assert_almost_equal((-0.845, 0.845), bounds[:2])
@@ -91,13 +91,13 @@ class TestBounding(unittest.TestCase):
         lrs = np.array([0.01, 0.1, 1, 10, 100])
 
         bounds_bad = invariance_bounds.calculate_invariance_bounds(
-            LLRData(features=np.log10(lrs), labels=np.array([1, 1, 1, 0, 0]))
+            LLRData(features=odds_to_logodds(lrs), labels=np.array([1, 1, 1, 0, 0]))
         )
         bounds_good1 = invariance_bounds.calculate_invariance_bounds(
-            LLRData(features=np.log10(lrs), labels=np.array([0, 0, 1, 1, 1]))
+            LLRData(features=odds_to_logodds(lrs), labels=np.array([0, 0, 1, 1, 1]))
         )
         bounds_good2 = invariance_bounds.calculate_invariance_bounds(
-            LLRData(features=np.log10(lrs), labels=np.array([0, 0, 0, 1, 1]))
+            LLRData(features=odds_to_logodds(lrs), labels=np.array([0, 0, 0, 1, 1]))
         )
 
         np.testing.assert_almost_equal((0, 0), bounds_bad[:2])
@@ -107,26 +107,26 @@ class TestBounding(unittest.TestCase):
     def test_neutral_smallset(self):
         lrs = np.array([1, 1])
         y = np.array([1, 0])
-        data = LLRData(features=np.log10(lrs), labels=y)
+        data = LLRData(features=odds_to_logodds(lrs), labels=y)
         bounds = invariance_bounds.calculate_invariance_bounds(data)
         np.testing.assert_almost_equal((0, 0), bounds[:2])
 
     def test_bias(self):
         lrs = np.ones(10) * 10
         y = np.concatenate([np.ones(9), np.zeros(1)])
-        data = LLRData(features=np.log10(lrs), labels=y)
+        data = LLRData(features=odds_to_logodds(lrs), labels=y)
         bounds = invariance_bounds.calculate_invariance_bounds(data)
         np.testing.assert_almost_equal((0, 0.102), bounds[:2])
 
         lrs = np.concatenate([np.ones(10) * 10, np.ones(1)])
         y = np.concatenate([np.ones(10), np.zeros(1)])
-        data = LLRData(features=np.log10(lrs), labels=y)
+        data = LLRData(features=odds_to_logodds(lrs), labels=y)
         bounds = invariance_bounds.calculate_invariance_bounds(data)
         np.testing.assert_almost_equal((0, 0.581), bounds[:2])
 
         lrs = np.concatenate([np.ones(10) * 1000, np.ones(1) * 1.1])
         y = np.concatenate([np.ones(10), np.zeros(1)])
-        data = LLRData(features=np.log10(lrs), labels=y)
+        data = LLRData(features=odds_to_logodds(lrs), labels=y)
         bounds = invariance_bounds.calculate_invariance_bounds(data)
         np.testing.assert_almost_equal((0, 0.581), bounds[:2])
 

@@ -201,14 +201,16 @@ class SourcePairing(PairingMethod):
         )
 
         # reduce the number of different source pairs, if necessary
-        n_ds_pairs = min(
-            x
-            for x in [
-                (len(ss_paired_data) * self._ratio_limit if ss_paired_data and self._ratio_limit else None),
-                self._ds_limit,
-                different_source_pairs.shape[0],
-            ]
-            if x is not None
+        n_ds_pairs = int(
+            min(
+                x
+                for x in [
+                    len(ss_paired_data) * self._ratio_limit if ss_paired_data and self._ratio_limit else None,
+                    self._ds_limit,
+                    different_source_pairs.shape[0],
+                ]
+                if x is not None
+            )
         )
 
         if n_ds_pairs < different_source_pairs.shape[0]:

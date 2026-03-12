@@ -23,6 +23,15 @@ def test_instance_pairing_seed():
     assert pairing0.pair(instances) == pairing1.pair(instances)
 
 
+@pytest.mark.parametrize('ratio_limit', [1, 7, 1.0, 7.0, 0.5])
+def test_source_pairing_ratio(ratio_limit: int | float):
+    dimensions = [SynthesizedDimension(population_mean=0, population_std=5, sources_std=1)]
+    data = SynthesizedNormalMulticlassData(dimensions, population_size=100, sources_size=2, seed=0)
+
+    pairs = SourcePairing(ratio_limit=ratio_limit).pair(data.get_instances())
+    assert np.sum(pairs.labels == 0) / np.sum(pairs.labels == 1) == pytest.approx(ratio_limit)
+
+
 @pytest.mark.parametrize(
     'pairing,n_pairs_found,features,source_ids,n_trace_instances,n_ref_instances',
     [
@@ -199,13 +208,16 @@ class TestPairing(unittest.TestCase):
 
         assert np.all(pairs.instance_indices[:, 0] != pairs.instance_indices[:, 1]), 'identity in pairs'
 
-    def test_pairing_ratio1(self):
+    def do_test_pairing_ratio1(self, ratio_limit: float | int):
         # test ratio
-        ratio_limit = 7
         pairing_ratio = InstancePairing(ratio_limit=ratio_limit)
         pairs = pairing_ratio.pair(self.instances)
         ratio = np.sum(pairs.labels == 0) / np.sum(pairs.labels == 1)
         self.assertEqual(ratio, ratio_limit, 'ratio ss ds pairs not correct')
+
+    def test_pairing_ratio1(self):
+        for ratio_limit in [1, 7, 1.0, 7.0]:
+            self.do_test_pairing_ratio1(ratio_limit)
 
     def test_pairing_ratio2(self):
         # if ratio_limit exceeds highest possible ratio, all ds pairs are selected

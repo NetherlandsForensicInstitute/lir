@@ -419,17 +419,15 @@ def score_distribution(
     ----------
     ax : Axes
         The matplotlib axes object to plot on.
-    scores : np.ndarray
-        Scores of the (fitted) LR system (1d-array).
-    y : np.ndarray
-        A numpy array of labels (0 or 1, 1d-array of same length as `scores`).
+    llrdata : LLRData
+        The LLRData object containing the scores and labels. Must have scores available.
     bins : int
         Number of bins to divide scores into (default: 20).
     weighted : bool
         If y-axis should be the probability density within each class,
         instead of counts (default: `True`).
     """
-    scores = llrdata.require_source_for_plots('score')
+    scores = llrdata.require_feature_for_plots('score')
     y = llrdata.require_labels
 
     plt.rcParams.update({'font.size': 15})
@@ -509,14 +507,14 @@ def score_to_llr(ax: Axes, llrdata: LLRData) -> None:
     Parameters
     ----------
     ax : Axes
-        The matplotlib axes object to plot on
+        The matplotlib axes object to plot on.
     llrdata : LLRData
         The LLRData object containing likelihood ratios and labels. Must have scores available. If labels are present,
         use them in the plots to color the points by hypothesis. If not, plot all points in the same color.
     """
     llrs = llrdata.llrs
     labels = llrdata.labels
-    scores = llrdata.require_source_for_plots('score')
+    scores = llrdata.require_feature_for_plots('score')
 
     # General settings; do them regardless of labels.
     ax.axhline(y=0, color='gray', linestyle='--', linewidth=0.5)

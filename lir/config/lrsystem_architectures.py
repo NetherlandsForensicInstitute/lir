@@ -17,12 +17,13 @@ from lir.config.substitution import (
     substitute_parameters,
 )
 from lir.config.transform import parse_module
-from lir.data.models import InstanceData, LLRData, check_type
+from lir.data.models import InstanceData, LLRData
 from lir.lrsystems.binary_lrsystem import BinaryLRSystem
 from lir.lrsystems.lrsystems import LRSystem
 from lir.lrsystems.score_based import Pipeline, ScoreBasedSystem
 from lir.lrsystems.two_level import TwoLevelSystem
 from lir.registry import ComponentNotFoundError
+from lir.util import check_type
 
 
 LOG = logging.getLogger(__name__)
@@ -115,13 +116,13 @@ def specific_source(config: ContextAwareDict, output_dir: Path) -> BinaryLRSyste
     BinaryLRSystem
         Configured specific-source LR system.
     """
-    sources_for_plots = pop_field(config, 'sources_for_plots', required=False, validate=dict)
+    save_features_after_step = pop_field(config, 'save_features_after_step', required=False, validate=dict)
     pipeline = parse_module(
         pop_field(config, 'modules'), output_dir, config.context, default_method=parse_default_pipeline(config)
     )
     pipeline = check_type(Pipeline, pipeline)
     check_is_empty(config)
-    return BinaryLRSystem(pipeline, sources_for_plots)
+    return BinaryLRSystem(pipeline, save_features_after_step)
 
 
 @config_parser
@@ -246,7 +247,6 @@ def parse_lrsystem(config: ContextAwareDict, output_dir: Path) -> ParsedLRSystem
         raise YamlParseError(config.context, f'{e}')
 
     lrsystem = parser.parse(config, output_dir)
-
     return ParsedLRSystem(lrsystem, lrsystem_config)
 
 

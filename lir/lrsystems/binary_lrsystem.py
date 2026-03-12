@@ -19,12 +19,16 @@ class BinaryLRSystem(LRSystem):
     ----------
     pipeline : Transformer
         Transformer pipeline used to fit and score instances.
+    save_features_after_step : dict[str, str] | None
+        Optional dictionary of step names to capture intermediate output from. The keys of the dictionary are the
+        names of the fields in which to save the features, and the values are the names of the steps after which to save
+        the features. If a value is 'STARTING_DATA', the features are saved before applying any steps.
     """
 
-    def __init__(self, pipeline: Pipeline, sources_for_plots: dict[str, str] | None = None):
+    def __init__(self, pipeline: Pipeline, save_features_after_step: dict[str, str] | None = None):
         super().__init__()
         self.pipeline = pipeline
-        self.pipeline.sources_for_plots = sources_for_plots
+        self.pipeline.save_features_after_step = save_features_after_step
 
     def fit(self, instances: InstanceData) -> Self:
         """

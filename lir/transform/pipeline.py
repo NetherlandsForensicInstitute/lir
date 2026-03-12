@@ -54,6 +54,9 @@ class Pipeline(Transformer):
         """
         self.steps = [(name, as_transformer(module)) for name, module in steps]
         self.save_features_after_step = save_features_after_step
+        self.save_features_after_step_reversed = (
+            {v: k for k, v in save_features_after_step.items()} if save_features_after_step else {}
+        )
 
     def fit(self, instances: InstanceData) -> Self:
         """
@@ -93,19 +96,18 @@ class Pipeline(Transformer):
             Instance data object produced by this operation.
         """
         # If the user wants to capture the starting data, do that before applying any steps.
-        if self.save_features_after_step is not None:
-            for key, step_name in self.save_features_after_step.items():
-                if step_name == 'STARTING_DATA':
-                    instances = instances.replace(**{key: check_type(FeatureData, instances).features})
+        if 'STARTING_DATA' in self.save_features_after_step_reversed:
+            key = self.save_features_after_step_reversed['STARTING_DATA']
+            instances = instances.replace(**{key: check_type(FeatureData, instances).features})
 
         # Apply each step in the pipeline sequentially.
         for name, module in self.steps:
             instances = module.apply(instances)
             # If the user wants to capture the output of this step, do that before applying the next step.
-            if self.save_features_after_step is not None:
-                for key, step_name in self.save_features_after_step.items():
-                    if name == step_name:
-                        instances = instances.replace(**{key: check_type(FeatureData, instances).features})
+            if name in self.save_features_after_step_reversed:
+                key = self.save_features_after_step_reversed[name]
+                instances = instances.replace(**{key: check_type(FeatureData, instances).features})
+
         return instances
 
     def fit_apply(self, instances: InstanceData) -> InstanceData:
@@ -258,11 +260,10 @@ class LoggingPipeline(Pipeline):
         InstanceData
             Instance data object produced by this operation.
         """
-        if self.save_features_after_step is not None:
-            # If the user wants to capture the starting data, do that before applying any steps.
-            for k, v in self.save_features_after_step.items():
-                if v == 'STARTING_DATA':
-                    instances = instances.replace(**{k: check_type(FeatureData, instances).features})
+        # If the user wants to capture the starting data, do that before applying any steps.
+        if 'STARTING_DATA' in self.save_features_after_step_reversed:
+            key = self.save_features_after_step_reversed['STARTING_DATA']
+            instances = instances.replace(**{key: check_type(FeatureData, instances).features})
 
         # initialize the csv builder
         write_mode = 'w' if self.n_batches == 0 else 'a'
@@ -287,10 +288,9 @@ class LoggingPipeline(Pipeline):
                 instances = module.apply(instances)
 
                 # if the user wants to capture the output of this step, do that before applying the next step.
-                if self.save_features_after_step is not None:
-                    for k, v in self.save_features_after_step.items():
-                        if module_name == v:
-                            instances = instances.replace(**{k: check_type(FeatureData, instances).features})
+                if module_name in self.save_features_after_step_reversed:
+                    key = self.save_features_after_step_reversed[module_name]
+                    instances = instances.replace(**{key: check_type(FeatureData, instances).features})
 
                 if module_name in self.include_steps:
                     instances = check_type(

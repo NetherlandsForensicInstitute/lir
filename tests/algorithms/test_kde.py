@@ -5,8 +5,8 @@ import numpy as np
 import pytest
 
 from lir.algorithms.kde import KDECalibrator, parse_bandwidth
-from lir.data.models import LLRData
-from lir.util import Xn_to_Xy, logodds_to_odds, odds_to_probability, probability_to_logodds
+from lir.data.models import FeatureData, LLRData
+from lir.util import Xn_to_Xy, logodds_to_odds, odds_to_logodds, probability_to_logodds
 
 
 def test_kde_dimensions():
@@ -50,8 +50,7 @@ class TestKDECalibrator(unittest.TestCase):
 
     def test_kde_calibrator(self):
         X, y = Xn_to_Xy(self.score_class0, self.score_class1)
-        X = odds_to_probability(X)
-        X = probability_to_logodds(X)
+        X = odds_to_logodds(X)
         desired = [
             3.59562799e-02,
             1.75942116e-11,
@@ -143,7 +142,7 @@ class TestKDECalibrator(unittest.TestCase):
     [
         ([1, 2], (1, 2)),  # list input (`Sized` type)
         ((1, 2), (1, 2)),  # tuple input (`Sized` type)
-        (lambda X, y: (1234, 5678), (1234, 5678)),  # callable function
+        (lambda _: (1234, 5678), (1234, 5678)),  # callable function
         ('silverman', (1.05922384, 0.46105395)),  # Silverman algorithm
         (123.45, (123.45, 123.45)),  # float
         (12, (12, 12)),  # integer
@@ -155,7 +154,7 @@ def test_kde_bandwidth_parsing_supported_types(bandwidth_definition, expected_ba
     samples_one_feature = np.asarray([[1], [2], [3]])
     labels = np.asarray([0, 1, 1])
 
-    bandwidth = bandwidth_fn(X=samples_one_feature, y=labels)
+    bandwidth = bandwidth_fn(FeatureData(features=samples_one_feature, labels=labels))
 
     assert np.allclose(bandwidth, expected_bandwidth)
 

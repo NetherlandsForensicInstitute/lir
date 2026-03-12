@@ -3,58 +3,51 @@ import logging
 import math
 import warnings
 from collections.abc import Callable
-from typing import Any, Self
+from typing import Self
 
 import numpy as np
 from sklearn.neighbors import KernelDensity
 
 from lir import Transformer
 from lir.data.models import FeatureData, InstanceData, LLRData
-from lir.util import Xy_to_Xn, check_type, ln_to_log10
+from lir.util import check_type, ln_to_log10
 
 
 LOG = logging.getLogger(__name__)
 
 
-def compensate_and_remove_neginf_inf(
-    log_odds: np.ndarray, y: np.ndarray
-) -> tuple[np.ndarray, np.ndarray, float, float]:
+def _compensate_and_remove_neginf_inf(data: LLRData) -> tuple[LLRData, float, float]:
     """
     Remove infinite log-odds values and compute compensation factors.
 
     Parameters
     ----------
-    log_odds : np.ndarray
-        Array of log-odds.
-    y : np.ndarray
-        Array of labels.
+    data : LLRData
+        The LLRs.
 
     Returns
     -------
     tuple[np.ndarray, np.ndarray, float, float]
         Finite log-odds, corresponding labels, numerator compensator, and denominator compensator.
     """
-    X_finite = np.isfinite(log_odds).flatten()
-    el_H1 = np.logical_and(X_finite, y == 1)
-    el_H2 = np.logical_and(X_finite, y == 0)
-    n_H1 = np.sum(y)
+    X_finite = np.isfinite(data.llrs)
+    el_H1 = np.logical_and(X_finite, data.labels == 1)
+    el_H2 = np.logical_and(X_finite, data.labels == 0)
+    n_H1 = np.sum(data.require_labels)
     numerator = np.sum(el_H1) / n_H1
-    denominator = np.sum(el_H2) / (len(y) - n_H1)
-    y = y[X_finite]
-    log_odds = log_odds[X_finite]
-    return log_odds, y, numerator, denominator
+    denominator = np.sum(el_H2) / (len(data) - n_H1)
+
+    return data[X_finite], numerator, denominator
 
 
-def _fixed_bandwidth(X: Any, y: Any, *, bandwidth_0: float, bandwidth_1: float) -> tuple[float, float]:
+def _fixed_bandwidth(instances: FeatureData, *, bandwidth_0: float, bandwidth_1: float) -> tuple[float, float]:
     """
     Return a fixed bandwidth pair.
 
     Parameters
     ----------
-    X : Any
+    instances : FeatureData
         Unused input data placeholder.
-    y : Any
-        Unused input labels placeholder.
     bandwidth_0 : float
         Bandwidth for class 0.
     bandwidth_1 : float
@@ -65,12 +58,15 @@ def _fixed_bandwidth(X: Any, y: Any, *, bandwidth_0: float, bandwidth_1: float) 
     tuple[float, float]
         Fixed bandwidths for class 0 and class 1.
     """
-    return (bandwidth_0, bandwidth_1)
+    return bandwidth_0, bandwidth_1
+
+
+BandwidthFunction = Callable[[FeatureData], tuple[float, float]]
 
 
 def parse_bandwidth(
     bandwidth: Callable | str | float | tuple[float, float] | None,
-) -> Callable[[Any, Any], tuple[float, float]]:
+) -> BandwidthFunction:
     """
     Parse and return the corresponding bandwidth strategy based on input type.
 
@@ -128,7 +124,7 @@ class KDECalibrator(Transformer):
         Bandwidth specification for KDE.
     """
 
-    def __init__(self, bandwidth: Callable | str | float | tuple[float, float] | None = None):
+    def __init__(self, bandwidth: BandwidthFunction | str | float | tuple[float, float] | None = None):
         """
         Initialize a new KDECalibrator instance.
 
@@ -137,35 +133,46 @@ class KDECalibrator(Transformer):
         bandwidth : Callable | str | float | tuple[float, float] | None, optional
                 Bandwidth specification for KDE.
         """
-        self.bandwidth: Callable = parse_bandwidth(bandwidth)
+        self.bandwidth = parse_bandwidth(bandwidth)
         self._kde0: KernelDensity | None = None
         self._kde1: KernelDensity | None = None
         self.numerator: float | None = None
         self.denominator: float | None = None
 
     @staticmethod
-    def bandwidth_silverman(X: np.ndarray, y: np.ndarray) -> tuple[float, float]:
-        """
+    def bandwidth_silverman(instances: FeatureData) -> tuple[float, float]:
+        r"""
         Estimate bandwidths using Silverman's rule of thumb.
+
+        This method calculates the bandwidth for both hypotheses separately. It uses two parameters:
+        - the standard deviation of the training data
+        - the size of the training data
+
+        If the instances have values for `source_ids`, the size is calculated as the number of distinct source ids.
+        Otherwise, the size is the number of instances.
+
+        The bandwidth is calculated as follows, where σ is the standard deviation and n is the size.
+
+        .. math::
+
+            \left( \frac{4 \sigma^5}{3 n} \right)^{\frac{1}{5}}
 
         Parameters
         ----------
-        X : np.ndarray
-            Score array.
-        y : np.ndarray
-            Label array.
+        instances : FeatureData
+            Feature data to be used for bandwidth calculation.
 
         Returns
         -------
         tuple[float, float]
             Bandwidth for class 0 and class 1.
         """
-        assert len(X) > 0 and len(y) > 0
-
         bandwidth = []
-        for label in np.unique(y):
-            values = X[y == label]
-            std = np.std(values)
+        for label in np.unique(instances.require_both_labels):
+            features = instances.features[instances.labels == label]
+            std = np.std(features)
+            size = len(np.unique(instances.source_ids)) if instances.source_ids is not None else features.shape[0]
+
             if std == 0:
                 # can happen eg if std(values) = 0
                 warnings.warn(
@@ -176,11 +183,11 @@ class KDECalibrator(Transformer):
                 LOG.info('found a silverman bandwidth of 0 (using dummy value)')
                 std = 1
 
-            v = math.pow(std, 5) / len(values) * 4.0 / 3
+            v = math.pow(std, 5) / size * 4.0 / 3
             bandwidth.append(math.pow(v, 0.2))
-
-        if len(bandwidth) != 2:
-            raise ValueError(f'expected 2 classes; found: {len(bandwidth)} classes: {y}')
+            LOG.debug(
+                f'calculated KDE bandwidth: {bandwidth[-1]}; used silverman with parameters: size={size}; std={std}'
+            )
 
         return bandwidth[0], bandwidth[1]
 
@@ -207,14 +214,11 @@ class KDECalibrator(Transformer):
         # KDE needs finite scale. Inf and negInf are treated as point masses at the extremes.
         # Remove them from data for KDE and calculate fraction data that is left.
         # LRs in finite range will be corrected for fractions in the apply function
-        X, y, self.numerator, self.denominator = compensate_and_remove_neginf_inf(
-            instances.llrs.reshape(-1, 1), instances.require_labels
-        )
-        X0, X1 = Xy_to_Xn(X, y)
+        data, self.numerator, self.denominator = _compensate_and_remove_neginf_inf(instances)
 
-        bandwidth0, bandwidth1 = self.bandwidth(X, y)
-        self._kde0 = KernelDensity(kernel='gaussian', bandwidth=bandwidth0).fit(X0)
-        self._kde1 = KernelDensity(kernel='gaussian', bandwidth=bandwidth1).fit(X1)
+        bandwidth0, bandwidth1 = self.bandwidth(data)
+        self._kde0 = KernelDensity(kernel='gaussian', bandwidth=bandwidth0).fit(data[data.labels == 0].features)
+        self._kde1 = KernelDensity(kernel='gaussian', bandwidth=bandwidth1).fit(data[data.labels == 1].features)
         return self
 
     def apply(self, instances: InstanceData) -> LLRData:
@@ -273,4 +277,7 @@ class KDECalibrator(Transformer):
         llrs_output[finite_llrs_index] = log10_compensator + log10_dif
 
         probabilities = np.stack([p0, p1], axis=1)
-        return instances.replace(features=llrs_output, probabilities=probabilities)
+        return instances.replace(
+            features=llrs_output,
+            probabilities=probabilities,
+        )

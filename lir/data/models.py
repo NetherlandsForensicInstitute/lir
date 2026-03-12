@@ -111,11 +111,27 @@ class InstanceData(BaseModel, ABC):
         Returns
         -------
         np.ndarray
-            Label array guaranteed to contain values for both hypotheses.
+            Label array guaranteed to contain hypothesis labels.
         """
         if self.labels is None:
             raise ValueError('labels not set')
         return self.labels
+
+    @property
+    def require_both_labels(self) -> np.ndarray:
+        """
+        Return `labels` and guarantee that it is not None and that both labels are represented (or raise an error).
+
+        Returns
+        -------
+        np.ndarray
+            Label array guaranteed to contain values for both hypotheses.
+        """
+        if not np.all(np.unique(self.require_labels) == np.arange(2)):
+            raise ValueError(
+                f'expected data for both hypotheses; found hypothesis labels: {np.unique(self.require_labels)}'
+            )
+        return self.require_labels
 
     @model_validator(mode='after')
     def check_sourceids_labels_match(self) -> Self:

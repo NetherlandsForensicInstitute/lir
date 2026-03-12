@@ -54,13 +54,15 @@ class Pipeline(Transformer):
     ----------
     steps : list[tuple[str, Transformer | Any]]
         Ordered transformer steps executed by this pipeline.
-    sources_for_plots : dict[str, str] | None
+    save_features_after_step : dict[str, str] | None
         Optional dictionary of step names to capture intermediate output from.
     """
 
-    def __init__(self, steps: list[tuple[str, Transformer | Any]], sources_for_plots: dict[str, str] | None = None):
+    def __init__(
+        self, steps: list[tuple[str, Transformer | Any]], save_features_after_step: dict[str, str] | None = None
+    ):
         self.steps = [(name, as_transformer(module)) for name, module in steps]
-        self.sources_for_plots = sources_for_plots
+        self.save_features_after_step = save_features_after_step
 
     def fit(self, instances: InstanceData) -> Self:
         """
@@ -100,8 +102,8 @@ class Pipeline(Transformer):
             Instance data object produced by this operation.
         """
         # If the user wants to capture the starting data, do that before applying any steps.
-        if self.sources_for_plots is not None:
-            for key, step_name in self.sources_for_plots.items():
+        if self.save_features_after_step is not None:
+            for key, step_name in self.save_features_after_step.items():
                 if step_name == 'STARTING_DATA':
                     instances = instances.replace(**{key: check_type(FeatureData, instances).features})
 
@@ -109,8 +111,8 @@ class Pipeline(Transformer):
         for name, module in self.steps:
             instances = module.apply(instances)
             # If the user wants to capture the output of this step, do that before applying the next step.
-            if self.sources_for_plots is not None:
-                for key, step_name in self.sources_for_plots.items():
+            if self.save_features_after_step is not None:
+                for key, step_name in self.save_features_after_step.items():
                     if name == step_name:
                         instances = instances.replace(**{key: check_type(FeatureData, instances).features})
         return instances
@@ -215,8 +217,10 @@ class LoggingPipeline(Pipeline):
         Ordered transformer steps executed by this pipeline.
     output_file : PathLike
         Destination file used to log intermediate pipeline output.
-    sources_for_plots : str | None
-        Optional name of a step to capture intermediate output from.
+    save_features_after_step : dict[str, str] | None
+        Optional dictionary of step names to capture intermediate output from. The keys of the dictionary are the
+        names of the fields in which to save the features, and the values are the names of the steps after which to save
+        the features. If a value is 'STARTING_DATA', the features are saved before applying any steps.
     include_batch_number : bool
         Whether to include the batch number in logged output.
     include_labels : bool
@@ -233,14 +237,14 @@ class LoggingPipeline(Pipeline):
         self,
         steps: list[tuple[str, Transformer | Any]],
         output_file: PathLike,
-        sources_for_plots: dict[str, str] | None = None,
+        save_features_after_step: dict[str, str] | None = None,
         include_batch_number: bool = True,
         include_labels: bool = True,
         include_fields: list[str] | None = None,
         include_steps: list[str] | None = None,
         include_input: bool = True,
     ):
-        super().__init__(steps, sources_for_plots)
+        super().__init__(steps, save_features_after_step)
         self.output_file = Path(output_file)
         self.include_batch_number = include_batch_number
         self.include_labels = include_labels
@@ -263,9 +267,9 @@ class LoggingPipeline(Pipeline):
         InstanceData
             Instance data object produced by this operation.
         """
-        if self.sources_for_plots is not None:
+        if self.save_features_after_step is not None:
             # If the user wants to capture the starting data, do that before applying any steps.
-            for k, v in self.sources_for_plots.items():
+            for k, v in self.save_features_after_step.items():
                 if v == 'STARTING_DATA':
                     instances = instances.replace(**{k: check_type(FeatureData, instances).features})
 
@@ -292,8 +296,8 @@ class LoggingPipeline(Pipeline):
                 instances = module.apply(instances)
 
                 # if the user wants to capture the output of this step, do that before applying the next step.
-                if self.sources_for_plots is not None:
-                    for k, v in self.sources_for_plots.items():
+                if self.save_features_after_step is not None:
+                    for k, v in self.save_features_after_step.items():
                         if module_name == v:
                             instances = instances.replace(**{k: check_type(FeatureData, instances).features})
 

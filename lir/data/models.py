@@ -765,16 +765,54 @@ class LLRData(FeatureData):
         """
         return self.llr_lower_bound, self.llr_upper_bound
 
-    def source_for_plot(self, source_key: str) -> np.ndarray | None:
-        """:return: intermediate scores if available, or None"""
+    def feature_for_plot(self, source_key: str) -> np.ndarray | None:
+        """
+        Return the feature values for a given source key, or None if not available.
+
+        The return value has to be saved during the LR system execution by using the `save_features_after_step`
+        configuration option. If the feature values for the given source key are not available, this method returns
+        `None`. Use the `require_feature_for_plots` if you want to raise an error instead of returning `None` when the
+        feature values are not available.
+
+        Parameters
+        ----------
+        source_key : str
+            Key identifying the source of the feature values to be returned.
+
+        Returns
+        -------
+        np.ndarray | None
+            Feature values for the specified source key, or ``None`` if not available.
+        """
         return self.model_extra.get(source_key) if self.model_extra is not None else None
 
-    def require_source_for_plots(self, source_key: str) -> np.ndarray:
-        """:return: intermediate scores, or raise an error if not available"""
+    def require_feature_for_plots(self, source_key: str) -> np.ndarray:
+        """
+        Return the feature values for a given source key, raising an error if not available.
+
+        If the feature values for the given source key are not available, this method raises a ValueError with an
+        informative error message. Use the `feature_for_plot` method if you want to return `None` instead of raising an
+        error when the feature values for the given source key are not available.
+
+        Parameters
+        ----------
+        source_key : str
+            Key identifying the source of the feature values to be returned.
+
+        Returns
+        -------
+        np.ndarray
+            Feature values for the specified source key.
+
+        Raises
+        ------
+        ValueError
+            If the feature values for the given source key are not available.
+        """
         if self.model_extra is None or source_key not in self.model_extra:
             raise ValueError(
                 f'{source_key} are not available for this instance. '
-                f"Use the `{source_key}` as key in 'sources_for_plots' in your LR system to capture {source_key}. "
+                f"Use the `{source_key}` in 'save_features_after_step' in your LR system to capture {source_key}."
                 f'Currently available sources: {list(self.model_extra.keys()) if self.model_extra else "none"}'
             )
         return self.model_extra[source_key]

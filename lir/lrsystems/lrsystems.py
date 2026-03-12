@@ -1,12 +1,8 @@
-import logging
 from abc import ABC, abstractmethod
 from typing import Self
 
 from lir import Transformer
 from lir.data.models import InstanceData, LLRData
-
-
-LOG = logging.getLogger(__name__)
 
 
 class LRSystem(Transformer, ABC):

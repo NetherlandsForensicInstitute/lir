@@ -5,7 +5,7 @@
    self
    guides
    reference
-   API reference <api/index>
+   API reference <api/modules>
    terminology
 
 

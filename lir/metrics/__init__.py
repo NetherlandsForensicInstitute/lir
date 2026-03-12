@@ -33,6 +33,9 @@ def cllr(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
     #   over -> ignore scalar overflow
     with np.errstate(divide='ignore', over='ignore'):
         lrs0, lrs1 = Xy_to_Xn(lrs, y)
+        if (weights[0] > 0 and len(lrs0) == 0) or (weights[1] > 0 and len(lrs1) == 0):
+            return np.nan
+
         cllr0 = weights[0] * np.mean(np.log2(1 + lrs0)) if weights[0] > 0 else 0
         cllr1 = weights[1] * np.mean(np.log2(1 + 1 / lrs1)) if weights[1] > 0 else 0
         return float((cllr0 + cllr1) / sum(weights))

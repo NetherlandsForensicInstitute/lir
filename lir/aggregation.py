@@ -92,7 +92,7 @@ class AggregatePlot(Aggregation):
     """
     Aggregation that generates plots by repeatedly calling a plotting function.
 
-    Attributes
+    Parameters
     ----------
     plot_fn : Callable
         The plotting function to be used for generating plots.

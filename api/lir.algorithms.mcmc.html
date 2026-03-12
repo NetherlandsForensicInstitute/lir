@@ -1,0 +1,294 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.algorithms.mcmc module &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lir.algorithms.percentile_rank module" href="lir.algorithms.percentile_rank.html" />
+    <link rel="prev" title="lir.algorithms.logistic_regression module" href="lir.algorithms.logistic_regression.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="lir.html">lir package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">lir</a></li>
+          <li class="breadcrumb-item"><a href="lir.html">lir package</a></li>
+          <li class="breadcrumb-item"><a href="lir.algorithms.html">lir.algorithms package</a></li>
+      <li class="breadcrumb-item active">lir.algorithms.mcmc module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/lir.algorithms.mcmc.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-lir.algorithms.mcmc">
+<span id="lir-algorithms-mcmc-module"></span><h1>lir.algorithms.mcmc module<a class="headerlink" href="#module-lir.algorithms.mcmc" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.algorithms.mcmc.McmcLLRModel">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.algorithms.mcmc.</span></span><span class="sig-name descname"><span class="pre">McmcLLRModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distribution_h1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters_h1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">float</span> <span class="pre">|</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">str]]</span> <span class="pre">|</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distribution_h2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters_h2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">float</span> <span class="pre">|</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">str]]</span> <span class="pre">|</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounding</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable[[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">~lir.bounding.LLRBounder]</span> <span class="pre">|</span> <span class="pre">None</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;class</span> <span class="pre">'lir.algorithms.bayeserror.ELUBBounder'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple[float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">float]</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">0.95)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**mcmc_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lir/algorithms/mcmc.html#McmcLLRModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.algorithms.mcmc.McmcLLRModel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="lir.transform.html#lir.transform.Transformer" title="lir.transform.Transformer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transformer</span></code></a></p>
+<p>Use Markov Chain Monte Carlo simulations to fit a statistical distribution for each of the two hypotheses.</p>
+<p>Using samples from the posterior distributions of the model parameters, a posterior distribution of the LR is
+obtained. The median of this distribution is used as best estimate for the LR; a credible interval is also
+determined.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>distribution_h1</strong> (<em>str</em>) – Statistical distribution used to model H1.</p></li>
+<li><p><strong>parameters_h1</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>dict</em><em>[</em><em>str</em><em>, </em><em>float</em><em> | </em><em>int</em><em> | </em><em>str</em><em>]</em><em>] </em><em>| </em><em>None</em>) – Parameter definitions and priors for the H1 distribution.</p></li>
+<li><p><strong>distribution_h2</strong> (<em>str</em>) – Statistical distribution used to model H2.</p></li>
+<li><p><strong>parameters_h2</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>dict</em><em>[</em><em>str</em><em>, </em><em>float</em><em> | </em><em>int</em><em> | </em><em>str</em><em>]</em><em>] </em><em>| </em><em>None</em>) – Parameter definitions and priors for the H2 distribution.</p></li>
+<li><p><strong>bounding</strong> (<em>Callable</em><em>[</em><em>[</em><em>]</em><em>, </em><a class="reference internal" href="lir.bounding.html#lir.bounding.LLRBounder" title="lir.bounding.LLRBounder"><em>LLRBounder</em></a><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – Bounding method factory to prevent over-extrapolation.</p></li>
+<li><p><strong>interval</strong> (<em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>, </em><em>optional</em>) – Lower and upper bounds of the credible interval in range <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code>.</p></li>
+<li><p><strong>**mcmc_kwargs</strong> (<em>Any</em>) – Additional MCMC simulation settings passed to <cite>McmcModel</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.mcmc.McmcLLRModel.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.data.models.html#lir.data.models.LLRData" title="lir.data.models.LLRData"><span class="pre">LLRData</span></a></span></span><a class="reference internal" href="../_modules/lir/algorithms/mcmc.html#McmcLLRModel.apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.algorithms.mcmc.McmcLLRModel.apply" title="Link to this definition"></a></dt>
+<dd><p>Apply the fitted model to the supplied instances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instances</strong> (<a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><em>InstanceData</em></a>) – Instances to transform.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LLR estimates with median and credible interval columns.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="lir.data.models.html#lir.data.models.LLRData" title="lir.data.models.LLRData">LLRData</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.mcmc.McmcLLRModel.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">InstanceData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference internal" href="../_modules/lir/algorithms/mcmc.html#McmcLLRModel.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.algorithms.mcmc.McmcLLRModel.fit" title="Link to this definition"></a></dt>
+<dd><p>Fit the defined model to the supplied instances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instances</strong> (<a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><em>InstanceData</em></a>) – Training instances.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Fitted model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Self</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.algorithms.mcmc.McmcModel">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.algorithms.mcmc.</span></span><span class="sig-name descname"><span class="pre">McmcModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distribution</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chain_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tune_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">draw_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lir/algorithms/mcmc.html#McmcModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.algorithms.mcmc.McmcModel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Use Markov Chain Monte Carlo simulations to fit a statistical distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>distribution</strong> (<em>str</em>) – Statistical distribution used, for example <cite>‘normal’</cite> or <cite>‘binomial’</cite>.</p></li>
+<li><p><strong>parameters</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>dict</em><em>[</em><em>str</em><em>, </em><em>float</em><em> | </em><em>int</em><em> | </em><em>str</em><em>]</em><em>] </em><em>| </em><em>None</em>) – Definitions of distribution parameters and their prior distributions.</p></li>
+<li><p><strong>chain_count</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of parallel MCMC chains.</p></li>
+<li><p><strong>tune_count</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of tune/warm-up/burn-in samples per chain.</p></li>
+<li><p><strong>draw_count</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of posterior draws per chain.</p></li>
+<li><p><strong>random_seed</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Random seed.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Supported distributions are <cite>betabinomial</cite>, <cite>binomial</cite>, and <cite>normal</cite>.
+Parameter names follow the PyMC naming conventions. The <cite>parameters</cite> dictionary maps
+each model parameter to a prior specification containing a <cite>prior</cite> key and the
+corresponding prior parameters.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.mcmc.McmcModel.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference internal" href="../_modules/lir/algorithms/mcmc.html#McmcModel.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.algorithms.mcmc.McmcModel.fit" title="Link to this definition"></a></dt>
+<dd><p>Draw samples from the posterior distributions of the parameters of a specified statistical distribution.</p>
+<p>The posteriors are based on the specified prior distributions of these parameters and observed feature values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>features</strong> (<em>np.ndarray</em>) – Observed feature values used to update parameter priors.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Fitted model with posterior samples.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.algorithms.mcmc.McmcModel.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/lir/algorithms/mcmc.html#McmcModel.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.algorithms.mcmc.McmcModel.transform" title="Link to this definition"></a></dt>
+<dd><p>Get samples of the posterior distribution of the (log10) probability.</p>
+<p>Use the samples of the posterior distributions of the parameters, in combination with the selected statistical
+distribution, to get samples of the posterior distribution of the (log10) probability, evaluated for specified
+feature values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>features</strong> (<em>np.ndarray</em>) – Feature values for which probabilities are calculated.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Samples of log10 probabilities.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lir.algorithms.logistic_regression.html" class="btn btn-neutral float-left" title="lir.algorithms.logistic_regression module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lir.algorithms.percentile_rank.html" class="btn btn-neutral float-right" title="lir.algorithms.percentile_rank module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

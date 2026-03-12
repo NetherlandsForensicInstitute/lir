@@ -1,0 +1,457 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.util module &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lir.visualization module" href="lir.visualization.html" />
+    <link rel="prev" title="lir.registry module" href="lir.registry.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="lir.html">lir package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="lir.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">lir</a></li>
+          <li class="breadcrumb-item"><a href="lir.html">lir package</a></li>
+      <li class="breadcrumb-item active">lir.util module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/lir.util.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-lir.util">
+<span id="lir-util-module"></span><h1>lir.util module<a class="headerlink" href="#module-lir.util" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.util.Bind">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.util.</span></span><span class="sig-name descname"><span class="pre">Bind</span></span><a class="reference internal" href="../_modules/lir/util.html#Bind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.util.Bind" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">partial</span></code></p>
+<p>Wrap <cite>partial</cite> to support the ellipsis (…) as a placeholder.</p>
+<p>Can be used to fix parameters not at the end of the list of parameters (which is a limitation of partial).</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.util.LR">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.util.</span></span><span class="sig-name descname"><span class="pre">LR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lir.util.LR" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.util.LR.lr">
+<span class="sig-name descname"><span class="pre">lr</span></span><a class="headerlink" href="#lir.util.LR.lr" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.util.LR.p0">
+<span class="sig-name descname"><span class="pre">p0</span></span><a class="headerlink" href="#lir.util.LR.p0" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.util.LR.p1">
+<span class="sig-name descname"><span class="pre">p1</span></span><a class="headerlink" href="#lir.util.LR.p1" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.util.Xn_to_Xy">
+<span class="sig-prename descclassname"><span class="pre">lir.util.</span></span><span class="sig-name descname"><span class="pre">Xn_to_Xy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">Xn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lir/util.html#Xn_to_Xy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.util.Xn_to_Xy" title="Link to this definition"></a></dt>
+<dd><p>Convert Xn to Xy format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>*Xn</strong> (<em>np.ndarray</em>) – Variable number of arrays, where each array corresponds to a class and contains the samples for that class.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing:
+- X: A 2D array where all samples from the input arrays are concatenated together.
+- y: A 1D array of the same length as the number of samples in X, where each element indicates the class label.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[np.ndarray, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.util.Xy_to_Xn">
+<span class="sig-prename descclassname"><span class="pre">lir.util.</span></span><span class="sig-name descname"><span class="pre">Xy_to_Xn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lir/util.html#Xy_to_Xn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.util.Xy_to_Xn" title="Link to this definition"></a></dt>
+<dd><p>Convert Xy to Xn format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em>) – A 2D array where rows correspond to samples and columns correspond to features.</p></li>
+<li><p><strong>y</strong> (<em>np.ndarray</em>) – A 1D array of the same length as the number of samples in X, where each element indicates the class label.</p></li>
+<li><p><strong>classes</strong> (<em>list</em><em>[</em><em>int</em><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – An optional list of class labels to be used for splitting the data. If not provided, the unique values in <cite>y</cite>
+will be used as class labels.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of arrays, where each array corresponds to a class and contains the samples for that class.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.util.check_type">
+<span class="sig-prename descclassname"><span class="pre">lir.util.</span></span><span class="sig-name descname"><span class="pre">check_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_class</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">type</span><span class="p"><span class="pre">[</span></span><span class="pre">AnyType</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">AnyType</span></span></span><a class="reference internal" href="../_modules/lir/util.html#check_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.util.check_type" title="Link to this definition"></a></dt>
+<dd><p>Check if a given input is of the expected, specified type. If so, return the input value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>type_class</strong> (<em>type</em>) – The expected type of the input value.</p></li>
+<li><p><strong>v</strong> (<em>Any</em>) – The input value to be checked against the expected type.</p></li>
+<li><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – An optional message to be included in the error if the type check fails. If not provided, a default message
+indicating the expected type will be used.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The input value <cite>v</cite> if it is of the expected type.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>AnyType</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.util.get_classes_from_Xy">
+<span class="sig-prename descclassname"><span class="pre">lir.util.</span></span><span class="sig-name descname"><span class="pre">get_classes_from_Xy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/lir/util.html#get_classes_from_Xy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.util.get_classes_from_Xy" title="Link to this definition"></a></dt>
+<dd><p>Get the classification classes from labeled data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em>) – The input data array, where rows correspond to samples and columns correspond to features.</p></li>
+<li><p><strong>y</strong> (<em>np.ndarray</em>) – The target labels corresponding to each sample in <cite>X</cite>. This should be a 1-dimensional array.</p></li>
+<li><p><strong>classes</strong> (<em>list</em><em>[</em><em>Any</em><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – An optional list of classes to be used. If not provided, the unique values in <cite>y</cite> will be used.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An array of unique classes found in <cite>y</cite> if <cite>classes</cite> is None; otherwise, an array of the provided <cite>classes</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.util.ln_to_log10">
+<span class="sig-prename descclassname"><span class="pre">lir.util.</span></span><span class="sig-name descname"><span class="pre">ln_to_log10</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ln_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FloatOrArray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">FloatOrArray</span></span></span><a class="reference internal" href="../_modules/lir/util.html#ln_to_log10"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.util.ln_to_log10" title="Link to this definition"></a></dt>
+<dd><p>Convert natural logarithm to 10-base logarithm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ln_data</strong> (<em>FloatOrArray</em>) – Data in natural logarithm form to be converted to 10-base logarithm.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The input data converted from natural logarithm to 10-base logarithm.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>FloatOrArray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.util.logodds_to_odds">
+<span class="sig-prename descclassname"><span class="pre">lir.util.</span></span><span class="sig-name descname"><span class="pre">logodds_to_odds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_odds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FloatOrArray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">FloatOrArray</span></span></span><a class="reference internal" href="../_modules/lir/util.html#logodds_to_odds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.util.logodds_to_odds" title="Link to this definition"></a></dt>
+<dd><p>Convert 10-base logarithm odds to odds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>log_odds</strong> (<em>FloatOrArray</em>) – The 10-base logarithm of odds to be converted to odds.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The input 10-base logarithm of odds converted to odds.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>FloatOrArray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.util.logodds_to_probability">
+<span class="sig-prename descclassname"><span class="pre">lir.util.</span></span><span class="sig-name descname"><span class="pre">logodds_to_probability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_odds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FloatOrArray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">FloatOrArray</span></span></span><a class="reference internal" href="../_modules/lir/util.html#logodds_to_probability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.util.logodds_to_probability" title="Link to this definition"></a></dt>
+<dd><p>Convert 10-base logarithm of odds to probability.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>log_odds</strong> (<em>FloatOrArray</em>) – The 10-base logarithm of odds to be converted to probability.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The input 10-base logarithm of odds converted to probability.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>FloatOrArray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.util.odds_to_logodds">
+<span class="sig-prename descclassname"><span class="pre">lir.util.</span></span><span class="sig-name descname"><span class="pre">odds_to_logodds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">odds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FloatOrArray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">FloatOrArray</span></span></span><a class="reference internal" href="../_modules/lir/util.html#odds_to_logodds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.util.odds_to_logodds" title="Link to this definition"></a></dt>
+<dd><p>Convert odds to 10-base logarithm odds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>odds</strong> (<em>FloatOrArray</em>) – The odds to be converted to 10-base logarithm odds.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The input odds converted to 10-base logarithm odds.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>FloatOrArray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.util.odds_to_probability">
+<span class="sig-prename descclassname"><span class="pre">lir.util.</span></span><span class="sig-name descname"><span class="pre">odds_to_probability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">odds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FloatOrArray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">FloatOrArray</span></span></span><a class="reference internal" href="../_modules/lir/util.html#odds_to_probability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.util.odds_to_probability" title="Link to this definition"></a></dt>
+<dd><p>Convert odds to a probability.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>odds</strong> (<em>FloatOrArray</em>) – The odds to be converted to probability.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The input odds converted to probability. This is 1 if the input odds is infinity, and otherwise calculated as
+odds / (1 + odds).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>FloatOrArray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.util.probability_to_logodds">
+<span class="sig-prename descclassname"><span class="pre">lir.util.</span></span><span class="sig-name descname"><span class="pre">probability_to_logodds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FloatOrArray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">FloatOrArray</span></span></span><a class="reference internal" href="../_modules/lir/util.html#probability_to_logodds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.util.probability_to_logodds" title="Link to this definition"></a></dt>
+<dd><p>Convert probability values to their log odds with base 10.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>p</strong> (<em>FloatOrArray</em>) – The probability values to be converted to log odds.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The input probability values converted to log odds with base 10.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>FloatOrArray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.util.probability_to_odds">
+<span class="sig-prename descclassname"><span class="pre">lir.util.</span></span><span class="sig-name descname"><span class="pre">probability_to_odds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FloatOrArray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">FloatOrArray</span></span></span><a class="reference internal" href="../_modules/lir/util.html#probability_to_odds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.util.probability_to_odds" title="Link to this definition"></a></dt>
+<dd><p>Convert a probability to odds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>p</strong> (<em>FloatOrArray</em>) – The probability to be converted to odds.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The input probability converted to odds. This is infinity if the input probability is 1, and otherwise
+calculated as p / (1 - p).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>FloatOrArray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.util.to_native_dict">
+<span class="sig-prename descclassname"><span class="pre">lir.util.</span></span><span class="sig-name descname"><span class="pre">to_native_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../_modules/lir/util.html#to_native_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.util.to_native_dict" title="Link to this definition"></a></dt>
+<dd><p>Recursively convert confidence Configuration objects to native Python dicts/lists.</p>
+<p>Accesses each value through cfg[key] to trigger reference resolution. The confidence ibrary doesn’t have a built-in
+method for this, so we manually traverse and resolve.</p>
+<p>Similary to lir.config.base._expand, but this method returns native dicts/lists instead of
+ContextAwareDict/ContextAwareList.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cfg</strong> (<em>Any</em>) – The input configuration object, which can be a confidence Configuration, ConfigurationSequence, dict, list, or
+any other type.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The input Configuration object converted to a native Python dict or list.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.util.validate_yaml">
+<span class="sig-prename descclassname"><span class="pre">lir.util.</span></span><span class="sig-name descname"><span class="pre">validate_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">yaml_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/lir/util.html#validate_yaml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.util.validate_yaml" title="Link to this definition"></a></dt>
+<dd><p>Validate a YAML file against the schema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>yaml_path</strong> (<em>Path</em>) – The path to the YAML file to be validated.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>FileNotFoundError</strong> – If the YAML file or the schema file does not exist.</p></li>
+<li><p><strong>yaml.YAMLError</strong> – If the YAML file is not valid YAML.</p></li>
+<li><p><strong>ValidationError</strong> – If the YAML file does not conform to the schema.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.util.warn_deprecated">
+<span class="sig-prename descclassname"><span class="pre">lir.util.</span></span><span class="sig-name descname"><span class="pre">warn_deprecated</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/lir/util.html#warn_deprecated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.util.warn_deprecated" title="Link to this definition"></a></dt>
+<dd><p>Provide template message for deprecated functions.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lir.registry.html" class="btn btn-neutral float-left" title="lir.registry module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lir.visualization.html" class="btn btn-neutral float-right" title="lir.visualization module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

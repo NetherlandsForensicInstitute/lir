@@ -1,0 +1,7 @@
+lir.visualization module
+========================
+
+.. automodule:: lir.visualization
+   :members:
+   :show-inheritance:
+   :undoc-members:

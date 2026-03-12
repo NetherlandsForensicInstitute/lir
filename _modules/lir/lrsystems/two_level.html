@@ -1,0 +1,964 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.lrsystems.two_level &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/lir.html">lir package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../lir.html">lir</a></li>
+      <li class="breadcrumb-item active">lir.lrsystems.two_level</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lir.lrsystems.two_level</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Self</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="kn">import</span> <span class="n">logsumexp</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir</span><span class="w"> </span><span class="kn">import</span> <span class="n">Transformer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_not_none</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.data.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeatureData</span><span class="p">,</span> <span class="n">InstanceData</span><span class="p">,</span> <span class="n">check_type</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.lrsystems.lrsystems</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLRData</span><span class="p">,</span> <span class="n">LRSystem</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.transform.pairing</span><span class="w"> </span><span class="kn">import</span> <span class="n">PairingMethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.transform.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
+
+
+<div class="viewcode-block" id="TwoLevelModelNormalKDE">
+<a class="viewcode-back" href="../../../api/lir.lrsystems.two_level.html#lir.lrsystems.TwoLevelModelNormalKDE">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TwoLevelModelNormalKDE</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implement two-level model as outlined by Bolck et al.</span>
+
+<span class="sd">    An implementation of the two-level model as outlined in FSI191(2009)42 by Bolck et al. &quot;Different likelihood</span>
+<span class="sd">       ratio approaches to evaluate the strength of evidence of MDMA tablet comparisons&quot;.</span>
+
+<span class="sd">       Model description:</span>
+
+<span class="sd">       Definitions</span>
+<span class="sd">       X_ij = vector, measurement of reference j, ith repetition, with i=1..n</span>
+<span class="sd">       Y_kl = vector, measurement of trace l, kth repetition, with k=1..m</span>
+
+<span class="sd">       Model:</span>
+
+<span class="sd">       First level of variance:</span>
+<span class="sd">       X_ij ~ N(theta_j, sigma_within)</span>
+<span class="sd">       Y_kl ~ N(theta_k, sigma_within)</span>
+<span class="sd">       where theta_j is the true but unknown mean of the reference and theta_k the true but unknown mean of the trace.</span>
+<span class="sd">       sigma_within is assumed equal for trace and reference (and for repeated measurements of some background data)</span>
+
+<span class="sd">       Second level of variance:</span>
+<span class="sd">       theta_j ~ theta_k ~ KDE(means background database, h)</span>
+<span class="sd">       with h the kernel bandwidth.</span>
+
+<span class="sd">       H1: theta_j = theta_k</span>
+<span class="sd">       H2: theta_j independent of theta_k</span>
+
+<span class="sd">       Numerator LR = Integral_theta N(X_Mean|theta, sigma_within, n) * N(Y_mean|theta, sigma_within, m) * \</span>
+<span class="sd">            KDE(theta|means background database, h)</span>
+<span class="sd">       Denominator LR = Integral_theta N(X_Mean|theta, sigma_within, n) * KDE(theta|means background database, h) * \</span>
+<span class="sd">            Integral_theta N(Y_Mean|theta, sigma_within, m) * KDE(theta|means background database, h)</span>
+
+<span class="sd">       In Bolck et al. in the appendix one finds a closed-form solution for the evaluation of these integrals.</span>
+
+<span class="sd">       sigma_within and h (and other parameters) are estimated from repeated measurements of background data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_fitted</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_features_train</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_sources</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mean_within_covars</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">means_per_source</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kernel_bandwidth_sq</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">between_covars</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="TwoLevelModelNormalKDE.fit_on_unpaired_instances">
+<a class="viewcode-back" href="../../../api/lir.lrsystems.two_level.html#lir.lrsystems.TwoLevelModelNormalKDE.fit_on_unpaired_instances">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit_on_unpaired_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;TwoLevelModelNormalKDE&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fit the model on unpaired instances.</span>
+
+<span class="sd">        X np.ndarray of measurements, rows are sources/repetitions, columns are features</span>
+<span class="sd">        y np 1d-array of labels. For each source a unique identifier (label). Repetitions get the same label.</span>
+
+<span class="sd">        Construct the necessary matrices/scores/etc based on test data (X) so that we can predict a score later on.</span>
+<span class="sd">        Store any calculated parameters in `self`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : np.ndarray</span>
+<span class="sd">            Value passed via ``X``.</span>
+<span class="sd">        y : np.ndarray</span>
+<span class="sd">            Value passed via ``y``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        &#39;TwoLevelModelNormalKDE&#39;</span>
+<span class="sd">            Fitted two-level KDE model instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;fit(X, y) requires X to be 2-dimensional; found dimensions </span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_sources</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_n_sources</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_features_train</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mean_within_covars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_mean_covariance_within</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">means_per_source</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_means_per_source</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kernel_bandwidth_sq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_kernel_bandwidth_squared</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_sources</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_features_train</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">between_covars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_between_covariance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_within_covars</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_fitted</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="TwoLevelModelNormalKDE.transform">
+<a class="viewcode-back" href="../../../api/lir.lrsystems.two_level.html#lir.lrsystems.TwoLevelModelNormalKDE.transform">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_trace</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">X_ref</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Transform the input data using the fitted model.</span>
+
+<span class="sd">        Predict odds scores, making use of the parameters constructed during `self.fit()` (which should</span>
+<span class="sd">        now be stored in `self`).</span>
+
+<span class="sd">        X_trace measurements of trace object. np.ndarray of shape (instances, repetitions_trace, features)</span>
+<span class="sd">        X_ref measurements of reference object. np.ndarray of shape (instances, repetitions_ref, features)</span>
+
+<span class="sd">        returns: odds of same source / different source: one-dimensional np.ndarray with one element per instance</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X_trace : np.ndarray</span>
+<span class="sd">            Value passed via ``X_trace``.</span>
+<span class="sd">        X_ref : np.ndarray</span>
+<span class="sd">            Value passed via ``X_ref``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            Log10 LR scores for each trace/reference pair.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_fitted</span><span class="p">,</span> <span class="s1">&#39;fit() must be called before transform()&#39;</span>
+        <span class="n">log10_lr_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predict_log10_lr_score</span><span class="p">(</span><span class="n">X_trace</span><span class="p">,</span> <span class="n">X_ref</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">log10_lr_score</span></div>
+
+
+<div class="viewcode-block" id="TwoLevelModelNormalKDE.predict_proba">
+<a class="viewcode-back" href="../../../api/lir.lrsystems.two_level.html#lir.lrsystems.TwoLevelModelNormalKDE.predict_proba">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_trace</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">X_ref</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predict probability scores, using the fitted model.</span>
+
+<span class="sd">        Predict probability scores, making use of the parameters constructed during `self.fit()` (which should</span>
+<span class="sd">        now be stored in `self`).</span>
+
+<span class="sd">        X_trace measurements of trace object. np.ndarray of shape (instances, repetitions_trace, features)</span>
+<span class="sd">        X_ref measurements of reference object. np.ndarray of shape (instances, repetitions_ref, features)</span>
+
+<span class="sd">        returns: probabilities for same source and different source: np.ndarray with shape (instances, 2)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X_trace : np.ndarray</span>
+<span class="sd">            Value passed via ``X_trace``.</span>
+<span class="sd">        X_ref : np.ndarray</span>
+<span class="sd">            Value passed via ``X_ref``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            Two-column probability matrix for Hd and Hp.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logodds_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_trace</span><span class="p">,</span> <span class="n">X_ref</span><span class="p">)</span>
+        <span class="n">p0</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">10</span><span class="o">**</span><span class="n">logodds_score</span><span class="p">)</span>
+        <span class="n">p1</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">p0</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">p0</span><span class="p">,</span> <span class="n">p1</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_predict_log10_lr_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_trace</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">X_ref</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predict natural log LR scores (ln_LR scores) using the fitted model.</span>
+
+<span class="sd">        Predict ln_LR scores, making use of the parameters constructed during `self.fit()` (which should</span>
+<span class="sd">                now be stored in `self`).</span>
+
+<span class="sd">        X_trace measurements of trace object. np.ndarray of shape (instances, repetitions_trace, features)</span>
+<span class="sd">        X_ref measurements of reference object. np.ndarray of shape (instances, repetitions_ref, features)</span>
+<span class="sd">        returns: log10_LR_scores according to the two_level_model in Bolck et al. np.ndarray of shape (instances,)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X_trace : np.ndarray</span>
+<span class="sd">            Value passed via ``X_trace``.</span>
+<span class="sd">        X_ref : np.ndarray</span>
+<span class="sd">            Value passed via ``X_ref``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            Log10 LR scores predicted for all input pairs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_fitted</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The model is not fitted; fit it before you use it for predicting&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_n_features</span><span class="p">(</span><span class="n">X_trace</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_features_train</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;The number of features in the training data is different from the number of features in the trace&#39;</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_n_features</span><span class="p">(</span><span class="n">X_ref</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_features_train</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;The number of features in the training data is different from the number of features in the reference&#39;</span>
+            <span class="p">)</span>
+
+        <span class="n">log10lr</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># TODO use matrix multiplication instead of for-loop (means that all functions called here should be adjusted)</span>
+        <span class="k">for</span> <span class="n">x_trace</span><span class="p">,</span> <span class="n">x_ref</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">X_trace</span><span class="p">,</span> <span class="n">X_ref</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="n">x_trace</span> <span class="o">=</span> <span class="n">x_trace</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">x_trace</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+            <span class="n">x_ref</span> <span class="o">=</span> <span class="n">x_ref</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">x_ref</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+
+            <span class="p">(</span>
+                <span class="n">covars_trace</span><span class="p">,</span>
+                <span class="n">covars_trace_update</span><span class="p">,</span>
+                <span class="n">covars_ref</span><span class="p">,</span>
+                <span class="n">covars_trace_inv</span><span class="p">,</span>
+                <span class="n">covars_trace_update_inv</span><span class="p">,</span>
+                <span class="n">covars_ref_inv</span><span class="p">,</span>
+            <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predict_covariances_trace_ref</span><span class="p">(</span><span class="n">x_trace</span><span class="p">,</span> <span class="n">x_ref</span><span class="p">)</span>
+            <span class="n">updated_ref_mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predict_updated_ref_mean</span><span class="p">(</span><span class="n">x_ref</span><span class="p">,</span> <span class="n">covars_ref_inv</span><span class="p">)</span>
+            <span class="n">ln_num</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predict_ln_num</span><span class="p">(</span>
+                <span class="n">x_trace</span><span class="p">,</span>
+                <span class="n">x_ref</span><span class="p">,</span>
+                <span class="n">covars_ref_inv</span><span class="p">,</span>
+                <span class="n">covars_trace_update_inv</span><span class="p">,</span>
+                <span class="n">updated_ref_mean</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">ln_den_left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predict_ln_den_term</span><span class="p">(</span><span class="n">x_ref</span><span class="p">,</span> <span class="n">covars_ref_inv</span><span class="p">)</span>
+            <span class="n">ln_den_right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predict_ln_den_term</span><span class="p">(</span><span class="n">x_trace</span><span class="p">,</span> <span class="n">covars_trace_inv</span><span class="p">)</span>
+
+            <span class="n">log10lr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_predict_log10_LR_from_formula_Bolck</span><span class="p">(</span>
+                    <span class="n">covars_trace</span><span class="p">,</span> <span class="n">covars_trace_update</span><span class="p">,</span> <span class="n">ln_num</span><span class="p">,</span> <span class="n">ln_den_left</span><span class="p">,</span> <span class="n">ln_den_right</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">log10lr</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_n_features</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">feature_ix</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate the number of features in `X`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : np.ndarray</span>
+<span class="sd">            Value passed via ``X``.</span>
+<span class="sd">        feature_ix : int</span>
+<span class="sd">            Value passed via ``feature_ix``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int</span>
+<span class="sd">            Number of feature dimensions in the provided array.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">feature_ix</span><span class="p">]</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_n_sources</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate the number of sources in `y`.</span>
+
+<span class="sd">        Y np 1d-array of labels. labels from {1, ..., n} with n the number of sources. Repetitions get the same label.</span>
+<span class="sd">        returns: number of sources in y (int).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        y : np.ndarray</span>
+<span class="sd">            Value passed via ``y``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int</span>
+<span class="sd">            Number of unique source labels.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_mean_covariance_within</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate a matrix of mean covariances within each of the sources.</span>
+
+<span class="sd">        X np.array of measurements, rows are sources/repetitions, columns are features</span>
+<span class="sd">        y np 1d-array of labels. labels from {1, ..., n} with n the number of sources. Repetitions get the same label.</span>
+<span class="sd">        returns: mean within covariance matrix, np.array.</span>
+
+<span class="sd">        This function calculates a matrix of mean covariances within each of the sources, it does so by grouping the</span>
+<span class="sd">        data per source, calculating the covariance matrices per source and then taking the mean per feature.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : np.ndarray</span>
+<span class="sd">            Value passed via ``X``.</span>
+<span class="sd">        y : np.ndarray</span>
+<span class="sd">            Value passed via ``y``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            Mean within-source covariance matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get unique sources</span>
+        <span class="n">unique_sources</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="c1"># Collect covariance matrices for sources with multiple repetitions</span>
+        <span class="n">covariance_matrices</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">unique_sources</span><span class="p">:</span>
+            <span class="c1"># Get measurements for this source</span>
+            <span class="n">source_measurements</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="n">source</span><span class="p">]</span>
+
+            <span class="c1"># Only include sources with more than one repetition</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">source_measurements</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># Calculate covariance matrix for this source</span>
+                <span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">source_measurements</span><span class="p">,</span> <span class="n">rowvar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="c1"># Ensure cov_matrix is always 2D (handle single feature case)</span>
+                <span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">)</span>
+                <span class="n">covariance_matrices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">)</span>
+
+        <span class="c1"># Calculate mean covariance matrix across all sources</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">covariance_matrices</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># If no sources have multiple repetitions, return zero matrix</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">covariance_matrices</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_means_per_source</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provide numpy array of means per source.</span>
+
+<span class="sd">        X np.array of measurements, rows are sources/repetitions, columns are features</span>
+<span class="sd">        y np 1d-array of labels. For each source a unique identifier (label). Repetitions get the same label.</span>
+<span class="sd">        returns: means per source in a np.array matrix of size: number of sources * number of features.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : np.ndarray</span>
+<span class="sd">            Value passed via ``X``.</span>
+<span class="sd">        y : np.ndarray</span>
+<span class="sd">            Value passed via ``y``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            Matrix of per-source mean feature vectors.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get unique sources and calculate means for each</span>
+        <span class="n">unique_sources</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="n">source</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">unique_sources</span><span class="p">])</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_kernel_bandwidth_squared</span><span class="p">(</span><span class="n">n_sources</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_features_train</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate kernel bandwidth and return it.</span>
+
+<span class="sd">        Reference: &#39;Density estimation for statistics and data analysis&#39;, B.W. Silverman,</span>
+<span class="sd">            page 86 formula 4.14 with A(K) the second row in the table on page 87.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        n_sources : int</span>
+<span class="sd">            Value passed via ``n_sources``.</span>
+<span class="sd">        n_features_train : int</span>
+<span class="sd">            Value passed via ``n_features_train``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Squared kernel bandwidth computed with Silverman&#39;s rule.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># calculate kernel bandwidth and square it, using Silverman&#39;s rule for multivariate data</span>
+        <span class="n">kernel_bandwidth</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span> <span class="o">/</span> <span class="p">((</span><span class="n">n_features_train</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">n_sources</span><span class="p">))</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_features_train</span> <span class="o">+</span> <span class="mi">4</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">kernel_bandwidth</span><span class="o">**</span><span class="mi">2</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_between_covariance</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">mean_within_covars</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate and return the between covariance.</span>
+
+<span class="sd">        X np.array of measurements, rows are objects, columns are variables</span>
+<span class="sd">        y np 1d-array of labels. labels from {1, ..., n} with n the number of objects. Repetitions get the same label.</span>
+<span class="sd">        returns: estimated covariance of true mean of the features between sources in the population in a np.array</span>
+<span class="sd">            square matrix with number of features^2 as dimension.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : np.ndarray</span>
+<span class="sd">            Value passed via ``X``.</span>
+<span class="sd">        y : np.ndarray</span>
+<span class="sd">            Value passed via ``y``.</span>
+<span class="sd">        mean_within_covars : np.ndarray</span>
+<span class="sd">            Value passed via ``mean_within_covars``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            Estimated between-source covariance matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get unique sources and their repetition counts</span>
+        <span class="n">unique_sources</span><span class="p">,</span> <span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># calculate kappa; kappa represents the &quot;average&quot; number of repetitions per source</span>
+        <span class="c1"># get the repetitions per source as a column vector</span>
+        <span class="n">reps</span> <span class="o">=</span> <span class="n">counts</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">sum_reps_sq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">reps</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">kappa</span> <span class="o">=</span> <span class="p">((</span><span class="n">reps</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">-</span> <span class="n">sum_reps_sq</span> <span class="o">/</span> <span class="n">reps</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">reps</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+
+        <span class="c1"># calculate sum_of_squares between</span>
+        <span class="c1"># substitute rows with their corresponding group means</span>
+        <span class="n">group_means</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">unique_sources</span><span class="p">:</span>
+            <span class="n">source_mask</span> <span class="o">=</span> <span class="n">y</span> <span class="o">==</span> <span class="n">source</span>
+            <span class="n">source_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">source_mask</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">group_means</span><span class="p">[</span><span class="n">source_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">source_mean</span>
+
+        <span class="c1"># calculate covariance of measurements</span>
+        <span class="n">cov_between_measurement</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">group_means</span><span class="p">,</span> <span class="n">rowvar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># Ensure cov_between_measurement is always 2D (handle single feature case)</span>
+        <span class="n">cov_between_measurement</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">cov_between_measurement</span><span class="p">)</span>
+        <span class="n">sum_squares_between</span> <span class="o">=</span> <span class="n">cov_between_measurement</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">group_means</span><span class="p">)</span>
+
+        <span class="c1"># calculate between covariance matrix</span>
+        <span class="c1"># Kappa converts within variance at measurement level to within variance at mean of source level and</span>
+        <span class="c1">#   scales the SSQ_between to a mean between variance</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">sum_squares_between</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">reps</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">mean_within_covars</span><span class="p">)</span> <span class="o">/</span> <span class="n">kappa</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_predict_covariances_trace_ref</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">X_trace</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">X_ref</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate and return covariances of trace references.</span>
+
+<span class="sd">        X_tr np.array of measurements of trace object, rows are repetitions, columns are features</span>
+<span class="sd">        X_ref np.array of measurements of reference object, rows are repetitions, columns features</span>
+<span class="sd">        returns: covariance matrices of the trace and reference data and their respective inverses needed for</span>
+<span class="sd">        LR calculation;</span>
+<span class="sd">            covars_trace is the covariance matrix for the trace data given a KDE background mean (U_h0),</span>
+<span class="sd">            covars_trace_update is the covariance matrix for the trace mean with a bayesian update of reference mean</span>
+<span class="sd">            given a KDE background mean (U_hn),</span>
+<span class="sd">            covars_ref is the covariance matrix for the reference data given a KDE background mean (U_hx),</span>
+<span class="sd">            covars_trace_inv is the inverse of covars_trace,</span>
+<span class="sd">            covars_trace_update_inv is the inverse of covars_trace_update,</span>
+<span class="sd">            covars_ref_inv is the inverse of covars_ref.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X_trace : np.ndarray</span>
+<span class="sd">            Value passed via ``X_trace``.</span>
+<span class="sd">        X_ref : np.ndarray</span>
+<span class="sd">            Value passed via ``X_ref``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]</span>
+<span class="sd">            Trace/reference covariance matrices and their inverses for scoring.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">kernel_bandwidth_sq</span> <span class="o">=</span> <span class="n">check_not_none</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel_bandwidth_sq</span><span class="p">)</span>
+        <span class="n">between_covars</span> <span class="o">=</span> <span class="n">check_not_none</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">between_covars</span><span class="p">)</span>
+        <span class="n">mean_within_covars</span> <span class="o">=</span> <span class="n">check_not_none</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mean_within_covars</span><span class="p">)</span>
+
+        <span class="c1"># Number of trace and reference measurements</span>
+        <span class="n">n_trace</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_trace</span><span class="p">)</span>
+        <span class="n">n_reference</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_ref</span><span class="p">)</span>
+        <span class="c1"># Calculate covariance matrix for the trace data, given the training data (U_h0)</span>
+        <span class="n">covars_trace</span> <span class="o">=</span> <span class="n">kernel_bandwidth_sq</span> <span class="o">*</span> <span class="n">between_covars</span> <span class="o">+</span> <span class="n">mean_within_covars</span> <span class="o">/</span> <span class="n">n_trace</span>
+        <span class="c1"># Calculate covariance matrix for the reference data, given the training data (U_hx)</span>
+        <span class="n">covars_ref</span> <span class="o">=</span> <span class="n">kernel_bandwidth_sq</span> <span class="o">*</span> <span class="n">between_covars</span> <span class="o">+</span> <span class="n">mean_within_covars</span> <span class="o">/</span> <span class="n">n_reference</span>
+        <span class="c1"># take the inverses</span>
+        <span class="n">covars_trace_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">covars_trace</span><span class="p">)</span>
+        <span class="n">covars_ref_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">covars_ref</span><span class="p">)</span>
+        <span class="c1"># Calculate T_hn</span>
+        <span class="n">T_hn</span> <span class="o">=</span> <span class="n">kernel_bandwidth_sq</span> <span class="o">*</span> <span class="n">between_covars</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">((</span><span class="n">kernel_bandwidth_sq</span> <span class="o">*</span> <span class="n">between_covars</span><span class="p">),</span> <span class="n">covars_ref_inv</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">kernel_bandwidth_sq</span> <span class="o">*</span> <span class="n">between_covars</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="c1"># Calculate covariance matrix for the trace data, given the training data and with a Bayesian update with</span>
+        <span class="c1">#   the reference data under Hp (U_hn)</span>
+        <span class="n">covars_trace_update</span> <span class="o">=</span> <span class="n">T_hn</span> <span class="o">+</span> <span class="n">mean_within_covars</span> <span class="o">/</span> <span class="n">n_trace</span>
+        <span class="n">covars_trace_update_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">covars_trace_update</span><span class="p">)</span>
+
+        <span class="c1"># TODO covars_trace redundant to return?</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">covars_trace</span><span class="p">,</span>
+            <span class="n">covars_trace_update</span><span class="p">,</span>
+            <span class="n">covars_ref</span><span class="p">,</span>
+            <span class="n">covars_trace_inv</span><span class="p">,</span>
+            <span class="n">covars_trace_update_inv</span><span class="p">,</span>
+            <span class="n">covars_ref_inv</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_predict_updated_ref_mean</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_ref</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">covars_ref_inv</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate and return bayesian update of reference mean given KDE background means.</span>
+
+<span class="sd">        X_ref np.array of measurements of reference object, rows are repetitions, columns features</span>
+<span class="sd">        returns: updated_ref_mean, bayesian update of reference mean given KDE background means.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X_ref : np.ndarray</span>
+<span class="sd">            Value passed via ``X_ref``.</span>
+<span class="sd">        covars_ref_inv : np.ndarray</span>
+<span class="sd">            Value passed via ``covars_ref_inv``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            Bayesian-updated reference means for each background source.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">kernel_bandwidth_sq</span> <span class="o">=</span> <span class="n">check_not_none</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel_bandwidth_sq</span><span class="p">)</span>
+        <span class="n">between_covars</span> <span class="o">=</span> <span class="n">check_not_none</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">between_covars</span><span class="p">)</span>
+        <span class="n">mean_within_covars</span> <span class="o">=</span> <span class="n">check_not_none</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mean_within_covars</span><span class="p">)</span>
+        <span class="n">means_per_source</span> <span class="o">=</span> <span class="n">check_not_none</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">means_per_source</span><span class="p">)</span>
+
+        <span class="n">n_reference</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_ref</span><span class="p">)</span>
+        <span class="n">mean_X_reference</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X_ref</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># calculate the two terms for mu_h and add, see Bolck et al</span>
+        <span class="n">mu_h_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">kernel_bandwidth_sq</span> <span class="o">*</span> <span class="n">between_covars</span><span class="p">,</span> <span class="n">covars_ref_inv</span><span class="p">),</span>
+            <span class="n">mean_X_reference</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">mu_h_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">mean_within_covars</span> <span class="o">/</span> <span class="n">n_reference</span><span class="p">,</span> <span class="n">covars_ref_inv</span><span class="p">),</span>
+            <span class="n">means_per_source</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">mu_h_1</span> <span class="o">+</span> <span class="n">mu_h_2</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_predict_ln_num</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X_trace</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">X_ref</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">covars_ref_inv</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">covars_trace_update_inv</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">updated_ref_mean</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform calculation to predict natural log of numerator.</span>
+
+<span class="sd">        See Bolck et al. formula in appendix. The formula consists of three sum_terms (and some other terms).</span>
+<span class="sd">        The numerator sum term is calculated here.</span>
+<span class="sd">        The numerator is based on the product of two Gaussian PDFs.</span>
+<span class="sd">        The first PDF: ref_mean ~ N(background_mean, U_hx).</span>
+<span class="sd">        The second PDF: trace_mean ~ N(updated_ref_mean, U_hn).</span>
+<span class="sd">        In this function log of the PDF is taken (so the exponentiation is left out and the product becomes a sum).</span>
+
+<span class="sd">        X_trace np.array of measurements of trace object, rows are repetitions, columns are variables</span>
+<span class="sd">        X_ref np.array of measurements of reference object, rows are repetitions, columns are variables</span>
+<span class="sd">        covars_ref_inv, covars_trace_update_inv, np.arrays as calculated by _predict_covariances_trace_ref</span>
+<span class="sd">        updated_ref_mean np.array with same dimensions as X, calculated by _predict_updated_ref_mean</span>
+<span class="sd">        returns: ln_num1, natural log of numerator of the LR-formula in Bolck et al.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X_trace : np.ndarray</span>
+<span class="sd">            Value passed via ``X_trace``.</span>
+<span class="sd">        X_ref : np.ndarray</span>
+<span class="sd">            Value passed via ``X_ref``.</span>
+<span class="sd">        covars_ref_inv : np.ndarray</span>
+<span class="sd">            Value passed via ``covars_ref_inv``.</span>
+<span class="sd">        covars_trace_update_inv : np.ndarray</span>
+<span class="sd">            Value passed via ``covars_trace_update_inv``.</span>
+<span class="sd">        updated_ref_mean : np.ndarray</span>
+<span class="sd">            Value passed via ``updated_ref_mean``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.floating</span>
+<span class="sd">            Natural-log numerator term of the LR formula.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">means_per_source</span> <span class="o">=</span> <span class="n">check_not_none</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">means_per_source</span><span class="p">)</span>
+        <span class="n">mean_X_trace</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X_trace</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">mean_X_reference</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X_ref</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># calculate difference vectors (in matrix form)</span>
+        <span class="n">dif_trace</span> <span class="o">=</span> <span class="n">mean_X_trace</span> <span class="o">-</span> <span class="n">updated_ref_mean</span>
+        <span class="n">dif_ref</span> <span class="o">=</span> <span class="n">mean_X_reference</span> <span class="o">-</span> <span class="n">means_per_source</span>
+
+        <span class="c1"># calculate matrix products and sums</span>
+        <span class="n">ln_num_terms</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">dif_trace</span><span class="p">,</span> <span class="n">covars_trace_update_inv</span><span class="p">)</span> <span class="o">*</span> <span class="n">dif_trace</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">dif_ref</span><span class="p">,</span> <span class="n">covars_ref_inv</span><span class="p">)</span> <span class="o">*</span> <span class="n">dif_ref</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+
+        <span class="c1"># exponentiate, sum and take log again</span>
+        <span class="k">return</span> <span class="n">logsumexp</span><span class="p">(</span><span class="n">ln_num_terms</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_predict_ln_den_term</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_ref_or_trace</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">covars_inv</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform calculation and return natural log of a denominator term of the LR-formula.</span>
+
+<span class="sd">        See Bolck et al. formula in appendix. The formula consists of three sum_terms (and some other terms).</span>
+<span class="sd">        A denominator sum term is calculated here.</span>
+
+<span class="sd">        X_ref_or_trace np.array of measurements of reference or trace object, rows are repetitions, columns are features</span>
+<span class="sd">        U_inv, np.array with respective covariance matrix as calculated by _predict_covariances_trace_ref</span>
+<span class="sd">        returns: ln_den, natural log of a denominator term of the LR-formula in Bolck et al.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X_ref_or_trace : np.ndarray</span>
+<span class="sd">            Value passed via ``X_ref_or_trace``.</span>
+<span class="sd">        covars_inv : np.ndarray</span>
+<span class="sd">            Value passed via ``covars_inv``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.floating</span>
+<span class="sd">            Natural-log denominator term of the LR formula.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">means_per_source</span> <span class="o">=</span> <span class="n">check_not_none</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">means_per_source</span><span class="p">)</span>
+        <span class="c1"># calculate mean of reference or trace measurements and difference vectors (in matrix form)</span>
+        <span class="n">mean_X_ref_or_trace</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X_ref_or_trace</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">dif_ref</span> <span class="o">=</span> <span class="n">mean_X_ref_or_trace</span> <span class="o">-</span> <span class="n">means_per_source</span>
+
+        <span class="c1"># calculate matrix products and sums</span>
+        <span class="n">ln_den_terms</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">dif_ref</span><span class="p">,</span> <span class="n">covars_inv</span><span class="p">)</span> <span class="o">*</span> <span class="n">dif_ref</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># exponentiate, sum and take log again</span>
+        <span class="k">return</span> <span class="n">logsumexp</span><span class="p">(</span><span class="n">ln_den_terms</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_predict_log10_LR_from_formula_Bolck</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">covars_trace</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">covars_trace_update</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">ln_num</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">,</span>
+        <span class="n">ln_den_left</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">,</span>
+        <span class="n">ln_den_right</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predict 10-base logarithm LR&#39;s from the Bolck formula.</span>
+
+<span class="sd">        X_trace np.array of measurements of trace object, rows are repetitions, columns are variables</span>
+<span class="sd">        covars_trace, covars_trace_update, np.arrays as calculated by _predict_covariances_trace_ref</span>
+<span class="sd">        ln_num, ln_den_left, ln_den_right: terms in big fraction in Bolck et al, as calculated by _predict_ln_num</span>
+<span class="sd">            and _predict_ln_den_term</span>
+<span class="sd">        returns: log10_LR_score, 10log of LR according to the LR-formula in Bolck et al.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        covars_trace : np.ndarray</span>
+<span class="sd">            Value passed via ``covars_trace``.</span>
+<span class="sd">        covars_trace_update : np.ndarray</span>
+<span class="sd">            Value passed via ``covars_trace_update``.</span>
+<span class="sd">        ln_num : np.floating</span>
+<span class="sd">            Value passed via ``ln_num``.</span>
+<span class="sd">        ln_den_left : np.floating</span>
+<span class="sd">            Value passed via ``ln_den_left``.</span>
+<span class="sd">        ln_den_right : np.floating</span>
+<span class="sd">            Value passed via ``ln_den_right``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.floating</span>
+<span class="sd">            Final base-10 logarithm LR score.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_sources</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="c1"># calculate ln LR_score and change base to 10log</span>
+        <span class="n">ln_LR_score</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_sources</span><span class="p">)</span>
+            <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">covars_trace_update</span><span class="p">))</span>
+            <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">covars_trace</span><span class="p">))</span>
+            <span class="o">+</span> <span class="n">ln_num</span>
+            <span class="o">-</span> <span class="n">ln_den_left</span>
+            <span class="o">-</span> <span class="n">ln_den_right</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ln_LR_score</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_split_pairs</span><span class="p">(</span><span class="n">pairs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">n_trace</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Split the input array along the second dimension at position `n_trace`.</span>
+
+<span class="sd">        (pairs, instances, features)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pairs : np.ndarray</span>
+<span class="sd">        Value passed via ``pairs``.</span>
+<span class="sd">    n_trace : int</span>
+<span class="sd">        Value passed via ``n_trace``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple[np.ndarray, np.ndarray]</span>
+<span class="sd">        Tuple of trace features and reference features.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">trace_features</span> <span class="o">=</span> <span class="n">pairs</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_trace</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">ref_features</span> <span class="o">=</span> <span class="n">pairs</span><span class="p">[:,</span> <span class="n">n_trace</span><span class="p">:,</span> <span class="p">:]</span>
+    <span class="k">return</span> <span class="n">trace_features</span><span class="p">,</span> <span class="n">ref_features</span>
+
+
+<div class="viewcode-block" id="TwoLevelSystem">
+<a class="viewcode-back" href="../../../api/lir.lrsystems.two_level.html#lir.lrsystems.TwoLevelSystem">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TwoLevelSystem</span><span class="p">(</span><span class="n">LRSystem</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implement two level model, common-source feature-based LR system architecture.</span>
+
+<span class="sd">    During the training phase, the system calculates statistics on the unpaired instances. On application, it</span>
+<span class="sd">    calculates LRs for same-source and different-source pairs. Each side of the pair may consist of multiple instances.</span>
+
+<span class="sd">    See also: `TwoLevelModelNormalKDE`</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    preprocessing_pipeline : Transformer | None</span>
+<span class="sd">        Pipeline that preprocesses instances before pairing and evaluation.</span>
+<span class="sd">    pairing_function : PairingMethod</span>
+<span class="sd">        Pairing method used to construct trace/reference comparisons.</span>
+<span class="sd">    postprocessing_pipeline : Transformer | None</span>
+<span class="sd">        Value passed via ``postprocessing_pipeline``.</span>
+<span class="sd">    n_trace_instances : int</span>
+<span class="sd">        Number of trace instances to include in each pairing.</span>
+<span class="sd">    n_ref_instances : int</span>
+<span class="sd">        Number of reference instances to include in each pairing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">preprocessing_pipeline</span><span class="p">:</span> <span class="n">Transformer</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">pairing_function</span><span class="p">:</span> <span class="n">PairingMethod</span><span class="p">,</span>
+        <span class="n">postprocessing_pipeline</span><span class="p">:</span> <span class="n">Transformer</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">n_trace_instances</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">n_ref_instances</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a new TwoLevelSystem instance.</span>
+
+<span class="sd">            it takes LLRs as input.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        preprocessing_pipeline : Transformer | None</span>
+<span class="sd">            Pipeline that preprocesses instances before pairing and evaluation.</span>
+<span class="sd">        pairing_function : PairingMethod</span>
+<span class="sd">            Pairing method used to construct trace/reference comparisons.</span>
+<span class="sd">        postprocessing_pipeline : Transformer | None</span>
+<span class="sd">            Value passed via ``postprocessing_pipeline``.</span>
+<span class="sd">        n_trace_instances : int</span>
+<span class="sd">            Number of trace instances to include in each pairing.</span>
+<span class="sd">        n_ref_instances : int</span>
+<span class="sd">            Number of reference instances to include in each pairing.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preprocessing_pipeline</span> <span class="o">=</span> <span class="n">preprocessing_pipeline</span> <span class="ow">or</span> <span class="n">Pipeline</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pairing_function</span> <span class="o">=</span> <span class="n">pairing_function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">postprocessing_pipeline</span> <span class="o">=</span> <span class="n">postprocessing_pipeline</span> <span class="ow">or</span> <span class="n">Pipeline</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">TwoLevelModelNormalKDE</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_trace_instances</span> <span class="o">=</span> <span class="n">n_trace_instances</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_ref_instances</span> <span class="o">=</span> <span class="n">n_ref_instances</span>
+
+<div class="viewcode-block" id="TwoLevelSystem.fit">
+<a class="viewcode-back" href="../../../api/lir.lrsystems.two_level.html#lir.lrsystems.TwoLevelSystem.fit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fit the model based on the instance data.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceData</span>
+<span class="sd">            Input instances to be processed by this method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Self</span>
+<span class="sd">            This LR system instance after fitting all components.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocessing_pipeline</span><span class="o">.</span><span class="n">fit_apply</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="n">check_type</span><span class="p">(</span><span class="n">FeatureData</span><span class="p">,</span> <span class="n">instances</span><span class="p">,</span> <span class="s1">&#39;preprocessing pipeline should return FeatureData&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit_on_unpaired_instances</span><span class="p">(</span><span class="n">instances</span><span class="o">.</span><span class="n">features</span><span class="p">,</span> <span class="n">instances</span><span class="o">.</span><span class="n">source_ids_1d</span><span class="p">)</span>
+
+        <span class="n">pairs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pairing_function</span><span class="o">.</span><span class="n">pair</span><span class="p">(</span><span class="n">instances</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_trace_instances</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_ref_instances</span><span class="p">)</span>
+        <span class="n">pair_llrs</span> <span class="o">=</span> <span class="n">pairs</span><span class="o">.</span><span class="n">replace_as</span><span class="p">(</span><span class="n">LLRData</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">pairs</span><span class="o">.</span><span class="n">features_trace</span><span class="p">,</span> <span class="n">pairs</span><span class="o">.</span><span class="n">features_ref</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">postprocessing_pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">pair_llrs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="TwoLevelSystem.apply">
+<a class="viewcode-back" href="../../../api/lir.lrsystems.two_level.html#lir.lrsystems.TwoLevelSystem.apply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LLRData</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply this LR system on a set of instances and return LLR data.</span>
+
+<span class="sd">        Applies the two level LR system on a set of instances,</span>
+<span class="sd">        and returns a representation of the calculated LLR data through the `LLRData` tuple.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceData</span>
+<span class="sd">            Input instances to be processed by this method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        LLRData</span>
+<span class="sd">            Likelihood-ratio data produced by applying the LR system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocessing_pipeline</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span>
+
+        <span class="n">pairs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pairing_function</span><span class="o">.</span><span class="n">pair</span><span class="p">(</span><span class="n">instances</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_trace_instances</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_ref_instances</span><span class="p">)</span>
+        <span class="n">pair_llrs</span> <span class="o">=</span> <span class="n">pairs</span><span class="o">.</span><span class="n">replace_as</span><span class="p">(</span><span class="n">LLRData</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">pairs</span><span class="o">.</span><span class="n">features_trace</span><span class="p">,</span> <span class="n">pairs</span><span class="o">.</span><span class="n">features_ref</span><span class="p">))</span>
+        <span class="n">pair_llrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">postprocessing_pipeline</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pair_llrs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">pair_llrs</span><span class="o">.</span><span class="n">replace_as</span><span class="p">(</span><span class="n">LLRData</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

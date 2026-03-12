@@ -1,0 +1,7 @@
+lir.config.algorithms module
+============================
+
+.. automodule:: lir.config.algorithms
+   :members:
+   :show-inheritance:
+   :undoc-members:

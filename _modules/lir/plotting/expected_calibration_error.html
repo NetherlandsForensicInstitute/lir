@@ -1,0 +1,330 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.plotting.expected_calibration_error &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/lir.html">lir package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../lir.html">lir</a></li>
+          <li class="breadcrumb-item"><a href="../plotting.html">lir.plotting</a></li>
+      <li class="breadcrumb-item active">lir.plotting.expected_calibration_error</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lir.plotting.expected_calibration_error</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Empirical cross-entropy (ECE).</span>
+
+<span class="sd">The discrimination and calibration of the LRs reported by some systems can also</span>
+<span class="sd">be measured separately. The empirical cross entropy (ECE) plot is a graphical</span>
+<span class="sd">way of doing this.</span>
+
+<span class="sd">ECE is computed as the average of:</span>
+
+<span class="sd">- ``-P(Hp) * log2(P(Hp | LR_i))`` over all ``LR_i`` for which ``Hp`` is true, and</span>
+<span class="sd">- ``-P(Hd) * log2(P(Hd | LR_i))`` over all ``LR_i`` for which ``Hd`` is true.</span>
+
+<span class="sd">References</span>
+<span class="sd">----------</span>
+<span class="sd">Ramos, D. *Forensic Evidence Evaluation Using Automatic Speaker Recognition</span>
+<span class="sd">Systems*. Ph.D. thesis, Universidad Autónoma de Madrid.</span>
+
+<span class="sd">Robertson, B., Vignaux, G. A., &amp; Berger, C. (2016). *Interpreting Evidence:</span>
+<span class="sd">Evaluating Forensic Science in the Courtroom* (2nd ed.), pp. 96–97.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.algorithms.isotonic_regression</span><span class="w"> </span><span class="kn">import</span> <span class="n">IsotonicCalibrator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.data.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLRData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.util</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">logodds_to_odds</span><span class="p">,</span>
+    <span class="n">odds_to_probability</span><span class="p">,</span>
+    <span class="n">probability_to_odds</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="plot_ece">
+<a class="viewcode-back" href="../../../api/lir.plotting.expected_calibration_error.html#lir.plotting.expected_calibration_error.plot_ece">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_ece</span><span class="p">(</span>
+    <span class="n">ax</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="n">llrdata</span><span class="p">:</span> <span class="n">LLRData</span><span class="p">,</span>
+    <span class="n">log_prior_odds_range</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="n">show_pav</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">ylim</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;neutral&#39;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate an ECE plot for a set of LRs and corresponding ground-truth labels.</span>
+
+<span class="sd">    The x-axis shows the log prior odds of a sample being drawn from class 1. The</span>
+<span class="sd">    y-axis shows the expected cost (cross-entropy) for:</span>
+
+<span class="sd">    1. A non-informative system (dotted line),</span>
+<span class="sd">    2. The provided LR values (solid line), and</span>
+<span class="sd">    3. The LR values after PAV transformation (Pool Adjacent Violators; dashed line).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ax : matplotlib.axes.Axes</span>
+<span class="sd">        Matplotlib axes to plot into.</span>
+<span class="sd">    llrdata : LLRData</span>
+<span class="sd">        LLR data containing LLR values and corresponding labels.</span>
+<span class="sd">    log_prior_odds_range : tuple[float, float], optional</span>
+<span class="sd">        Range of log prior odds shown on the x-axis, given as ``(min, max)``.</span>
+<span class="sd">    show_pav : bool, optional</span>
+<span class="sd">        Whether to include the PAV-transformed LRs in the plot.</span>
+<span class="sd">    ylim : {&quot;neutral&quot;, &quot;zoomed&quot;}, optional</span>
+<span class="sd">        Y-axis scaling mode:</span>
+
+<span class="sd">        - ``&quot;neutral&quot;``: Lower limit is 0; upper limit is set slightly above the</span>
+<span class="sd">          maximum of the non-informative reference.</span>
+<span class="sd">        - ``&quot;zoomed&quot;``: Lower limit is 0; upper limit is set to approximately 10%</span>
+<span class="sd">          above the maximum ECE value of the LRs (this may clip part of the</span>
+<span class="sd">          non-informative reference line).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">llrdata</span><span class="o">.</span><span class="n">require_labels</span>
+
+    <span class="n">log_prior_odds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">*</span><span class="n">log_prior_odds_range</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+    <span class="n">prior_odds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">log_prior_odds</span><span class="p">)</span>
+
+    <span class="c1"># plot reference</span>
+    <span class="k">if</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="s1">&#39;reference&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">text</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span> <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span><span class="o">.</span><span class="n">get_texts</span><span class="p">()]:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">log_prior_odds</span><span class="p">,</span>
+            <span class="n">calculate_ece</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="n">labels</span><span class="p">,</span> <span class="n">odds_to_probability</span><span class="p">(</span><span class="n">prior_odds</span><span class="p">)),</span>
+            <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="s1">&#39;reference&#39;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="c1"># plot LRs</span>
+    <span class="n">ece_values</span> <span class="o">=</span> <span class="n">calculate_ece</span><span class="p">(</span><span class="n">logodds_to_odds</span><span class="p">(</span><span class="n">llrdata</span><span class="o">.</span><span class="n">llrs</span><span class="p">),</span> <span class="n">labels</span><span class="p">,</span> <span class="n">odds_to_probability</span><span class="p">(</span><span class="n">prior_odds</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">log_prior_odds</span><span class="p">,</span>
+        <span class="n">ece_values</span><span class="p">,</span>
+        <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s1">&#39;LRs&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">show_pav</span><span class="p">:</span>
+        <span class="c1"># plot PAV LRs</span>
+        <span class="n">pav_llrs</span> <span class="o">=</span> <span class="n">IsotonicCalibrator</span><span class="p">()</span><span class="o">.</span><span class="n">fit_apply</span><span class="p">(</span><span class="n">llrdata</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">log_prior_odds</span><span class="p">,</span>
+            <span class="n">calculate_ece</span><span class="p">(</span><span class="n">logodds_to_odds</span><span class="p">(</span><span class="n">pav_llrs</span><span class="o">.</span><span class="n">llrs</span><span class="p">),</span> <span class="n">labels</span><span class="p">,</span> <span class="n">odds_to_probability</span><span class="p">(</span><span class="n">prior_odds</span><span class="p">)),</span>
+            <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="s1">&#39;PAV LRs&#39;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;prior log$_</span><span class="si">{10}</span><span class="s1">$(odds)&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;empirical cross-entropy&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ylim</span> <span class="o">==</span> <span class="s1">&#39;neutral&#39;</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">ylim</span> <span class="o">==</span> <span class="s1">&#39;zoomed&#39;</span><span class="p">:</span>
+        <span class="n">ylim_value</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ece_values</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.1</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">ylim_value</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ylim must be one of [&#39;neutral&#39;, &#39;zoomed&#39;], but got `</span><span class="si">{</span><span class="n">ylim</span><span class="si">}</span><span class="s2">`&quot;</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">log_prior_odds_range</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="calculate_ece">
+<a class="viewcode-back" href="../../../api/lir.plotting.expected_calibration_error.html#lir.plotting.expected_calibration_error.calculate_ece">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_ece</span><span class="p">(</span><span class="n">lrs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">priors</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate empirical cross-entropy (ECE) of a set of LRs and corresponding ground-truth labels.</span>
+
+<span class="sd">    An entropy is calculated for each element of `priors`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    lrs : np.ndarray</span>
+<span class="sd">        Array of likelihood ratios.</span>
+<span class="sd">    y : np.ndarray</span>
+<span class="sd">        Array of ground-truth labels for the LRs (`0` for Hd or `1` for Hp),</span>
+<span class="sd">        with the same length as `lrs`.</span>
+<span class="sd">    priors : np.ndarray</span>
+<span class="sd">        Array of prior probabilities for class 1 (values in the range `[0, 1]`).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        Array of entropy values with the same length as `priors`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">lrs</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">),</span> <span class="s1">&#39;invalid input for LR values&#39;</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])),</span> <span class="s1">&#39;label set must be [0, 1]&#39;</span>
+
+    <span class="n">prior_odds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">probability_to_odds</span><span class="p">(</span><span class="n">priors</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">lrs</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">priors</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">lrs</span><span class="p">)))</span>
+    <span class="n">posterior_odds</span> <span class="o">=</span> <span class="n">prior_odds</span> <span class="o">*</span> <span class="n">lrs</span>
+    <span class="n">posterior_p</span> <span class="o">=</span> <span class="n">odds_to_probability</span><span class="p">(</span><span class="n">posterior_odds</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">):</span>
+        <span class="n">ece0</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">priors</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">priors</span><span class="p">),</span> <span class="mi">1</span><span class="p">)))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">posterior_p</span><span class="p">[:,</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">ece1</span> <span class="o">=</span> <span class="o">-</span><span class="n">priors</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">priors</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">posterior_p</span><span class="p">[:,</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">1</span><span class="p">])</span>
+
+    <span class="n">ece0</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">ece0</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+    <span class="n">ece1</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">ece1</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+
+    <span class="n">avg0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">ece0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">avg1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">ece1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">avg0</span> <span class="o">+</span> <span class="n">avg1</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

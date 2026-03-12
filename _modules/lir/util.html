@@ -1,0 +1,583 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.util &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/lir.html">lir package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/lir.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../lir.html">lir</a></li>
+      <li class="breadcrumb-item active">lir.util</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lir.util</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">collections</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">TypeVar</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">confidence</span><span class="w"> </span><span class="kn">import</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">loadf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">confidence.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigurationSequence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jsonschema</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate</span>
+
+
+<span class="n">LR</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;LR&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;lr&#39;</span><span class="p">,</span> <span class="s1">&#39;p0&#39;</span><span class="p">,</span> <span class="s1">&#39;p1&#39;</span><span class="p">])</span>
+
+
+<span class="n">AnyType</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;AnyType&#39;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">Any</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="check_type">
+<a class="viewcode-back" href="../../api/lir.util.html#lir.util.check_type">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_type</span><span class="p">[</span><span class="n">AnyType</span><span class="p">:</span> <span class="n">Any</span><span class="p">](</span><span class="n">type_class</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">AnyType</span><span class="p">],</span> <span class="n">v</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AnyType</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if a given input is of the expected, specified type. If so, return the input value.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    type_class : type</span>
+<span class="sd">        The expected type of the input value.</span>
+<span class="sd">    v : Any</span>
+<span class="sd">        The input value to be checked against the expected type.</span>
+<span class="sd">    message : str, optional</span>
+<span class="sd">        An optional message to be included in the error if the type check fails. If not provided, a default message</span>
+<span class="sd">        indicating the expected type will be used.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    AnyType</span>
+<span class="sd">        The input value `v` if it is of the expected type.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">type_class</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">v</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">message</span> <span class="ow">or</span> <span class="sa">f</span><span class="s1">&#39;expected type: </span><span class="si">{</span><span class="n">type_class</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s1">; found: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_classes_from_Xy">
+<a class="viewcode-back" href="../../api/lir.util.html#lir.util.get_classes_from_Xy">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_classes_from_Xy</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">classes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the classification classes from labeled data.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : np.ndarray</span>
+<span class="sd">        The input data array, where rows correspond to samples and columns correspond to features.</span>
+<span class="sd">    y : np.ndarray</span>
+<span class="sd">        The target labels corresponding to each sample in `X`. This should be a 1-dimensional array.</span>
+<span class="sd">    classes : list[Any] | None, optional</span>
+<span class="sd">        An optional list of classes to be used. If not provided, the unique values in `y` will be used.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        An array of unique classes found in `y` if `classes` is None; otherwise, an array of the provided `classes`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;expected: X has at least 1 dimensions; found: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s1"> dimensions&#39;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;expected: y is a 1-dimensional array; found: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s1"> dimensions&#39;</span>
+    <span class="k">assert</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">y</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;dimensions of X and y do not match; found: </span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1"> != </span><span class="si">{</span><span class="n">y</span><span class="o">.</span><span class="n">size</span><span class="si">}</span><span class="s1">&#39;</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="k">if</span> <span class="n">classes</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">classes</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Xn_to_Xy">
+<a class="viewcode-back" href="../../api/lir.util.html#lir.util.Xn_to_Xy">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">Xn_to_Xy</span><span class="p">(</span><span class="o">*</span><span class="n">Xn</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert Xn to Xy format.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    *Xn : np.ndarray</span>
+<span class="sd">        Variable number of arrays, where each array corresponds to a class and contains the samples for that class.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple[np.ndarray, np.ndarray]</span>
+<span class="sd">        A tuple containing:</span>
+<span class="sd">        - X: A 2D array where all samples from the input arrays are concatenated together.</span>
+<span class="sd">        - y: A 1D array of the same length as the number of samples in X, where each element indicates the class label.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">split_Xn</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="k">for</span> <span class="n">X</span> <span class="ow">in</span> <span class="n">Xn</span><span class="p">]</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">split_Xn</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">)</span> <span class="o">*</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">X</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">split_Xn</span><span class="p">)])</span>
+    <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span></div>
+
+
+
+<div class="viewcode-block" id="Xy_to_Xn">
+<a class="viewcode-back" href="../../api/lir.util.html#lir.util.Xy_to_Xn">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">Xy_to_Xn</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">classes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert Xy to Xn format.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : np.ndarray</span>
+<span class="sd">        A 2D array where rows correspond to samples and columns correspond to features.</span>
+<span class="sd">    y : np.ndarray</span>
+<span class="sd">        A 1D array of the same length as the number of samples in X, where each element indicates the class label.</span>
+<span class="sd">    classes : list[int] | None, optional</span>
+<span class="sd">        An optional list of class labels to be used for splitting the data. If not provided, the unique values in `y`</span>
+<span class="sd">        will be used as class labels.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[np.ndarray]</span>
+<span class="sd">        A list of arrays, where each array corresponds to a class and contains the samples for that class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">classes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">classes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">new_classes</span> <span class="o">=</span> <span class="n">get_classes_from_Xy</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">classes</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">X</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="n">yvalue</span><span class="p">]</span> <span class="k">for</span> <span class="n">yvalue</span> <span class="ow">in</span> <span class="n">new_classes</span><span class="p">]</span></div>
+
+
+
+<span class="n">FloatOrArray</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;FloatOrArray&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="odds_to_probability">
+<a class="viewcode-back" href="../../api/lir.util.html#lir.util.odds_to_probability">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">odds_to_probability</span><span class="p">[</span><span class="n">FloatOrArray</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">)](</span><span class="n">odds</span><span class="p">:</span> <span class="n">FloatOrArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FloatOrArray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert odds to a probability.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    odds : FloatOrArray</span>
+<span class="sd">        The odds to be converted to probability.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    FloatOrArray</span>
+<span class="sd">        The input odds converted to probability. This is 1 if the input odds is infinity, and otherwise calculated as</span>
+<span class="sd">        odds / (1 + odds).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">odds</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;negative value encountered for odds&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">odds</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">odds_to_probability</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">odds</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">inf_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">odds</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">invalid</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">divide</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">):</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">odds</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">odds</span><span class="p">))</span>
+    <span class="n">p</span><span class="p">[</span><span class="n">inf_values</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">p</span></div>
+
+
+
+<div class="viewcode-block" id="probability_to_odds">
+<a class="viewcode-back" href="../../api/lir.util.html#lir.util.probability_to_odds">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">probability_to_odds</span><span class="p">[</span><span class="n">FloatOrArray</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">)](</span><span class="n">p</span><span class="p">:</span> <span class="n">FloatOrArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FloatOrArray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a probability to odds.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    p : FloatOrArray</span>
+<span class="sd">        The probability to be converted to odds.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    FloatOrArray</span>
+<span class="sd">        The input probability converted to odds. This is infinity if the input probability is 1, and otherwise</span>
+<span class="sd">        calculated as p / (1 - p).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">p</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;invalid value encountered for probability&#39;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="probability_to_logodds">
+<a class="viewcode-back" href="../../api/lir.util.html#lir.util.probability_to_logodds">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">probability_to_logodds</span><span class="p">[</span><span class="n">FloatOrArray</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">)](</span><span class="n">p</span><span class="p">:</span> <span class="n">FloatOrArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FloatOrArray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert probability values to their log odds with base 10.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    p : FloatOrArray</span>
+<span class="sd">        The probability values to be converted to log odds.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    FloatOrArray</span>
+<span class="sd">        The input probability values converted to log odds with base 10.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">):</span>
+        <span class="n">complement</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">p</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">complement</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="logodds_to_probability">
+<a class="viewcode-back" href="../../api/lir.util.html#lir.util.logodds_to_probability">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">logodds_to_probability</span><span class="p">[</span><span class="n">FloatOrArray</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">)](</span><span class="n">log_odds</span><span class="p">:</span> <span class="n">FloatOrArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FloatOrArray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert 10-base logarithm of odds to probability.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    log_odds : FloatOrArray</span>
+<span class="sd">        The 10-base logarithm of odds to be converted to probability.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    FloatOrArray</span>
+<span class="sd">        The input 10-base logarithm of odds converted to probability.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">odds_to_probability</span><span class="p">(</span><span class="n">logodds_to_odds</span><span class="p">(</span><span class="n">log_odds</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="logodds_to_odds">
+<a class="viewcode-back" href="../../api/lir.util.html#lir.util.logodds_to_odds">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">logodds_to_odds</span><span class="p">[</span><span class="n">FloatOrArray</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">)](</span><span class="n">log_odds</span><span class="p">:</span> <span class="n">FloatOrArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FloatOrArray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert 10-base logarithm odds to odds.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    log_odds : FloatOrArray</span>
+<span class="sd">        The 10-base logarithm of odds to be converted to odds.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    FloatOrArray</span>
+<span class="sd">        The input 10-base logarithm of odds converted to odds.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">10</span><span class="o">**</span><span class="n">log_odds</span></div>
+
+
+
+<div class="viewcode-block" id="odds_to_logodds">
+<a class="viewcode-back" href="../../api/lir.util.html#lir.util.odds_to_logodds">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">odds_to_logodds</span><span class="p">[</span><span class="n">FloatOrArray</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">)](</span><span class="n">odds</span><span class="p">:</span> <span class="n">FloatOrArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FloatOrArray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert odds to 10-base logarithm odds.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    odds : FloatOrArray</span>
+<span class="sd">        The odds to be converted to 10-base logarithm odds.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    FloatOrArray</span>
+<span class="sd">        The input odds converted to 10-base logarithm odds.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">odds</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;negative value encountered for odds&#39;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">odds</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ln_to_log10">
+<a class="viewcode-back" href="../../api/lir.util.html#lir.util.ln_to_log10">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">ln_to_log10</span><span class="p">[</span><span class="n">FloatOrArray</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">)](</span><span class="n">ln_data</span><span class="p">:</span> <span class="n">FloatOrArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FloatOrArray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert natural logarithm to 10-base logarithm.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ln_data : FloatOrArray</span>
+<span class="sd">        Data in natural logarithm form to be converted to 10-base logarithm.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    FloatOrArray</span>
+<span class="sd">        The input data converted from natural logarithm to 10-base logarithm.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">e</span><span class="p">)</span> <span class="o">*</span> <span class="n">ln_data</span></div>
+
+
+
+<div class="viewcode-block" id="warn_deprecated">
+<a class="viewcode-back" href="../../api/lir.util.html#lir.util.warn_deprecated">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">warn_deprecated</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Provide template message for deprecated functions.&quot;&quot;&quot;</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s1">&#39;the function `</span><span class="si">{</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">function</span><span class="si">}</span><span class="s1">` is no longer maintained; &#39;</span>
+        <span class="s1">&#39;please check documentation for alternatives&#39;</span><span class="p">,</span>
+        <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="to_native_dict">
+<a class="viewcode-back" href="../../api/lir.util.html#lir.util.to_native_dict">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">to_native_dict</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Recursively convert confidence Configuration objects to native Python dicts/lists.</span>
+
+<span class="sd">    Accesses each value through cfg[key] to trigger reference resolution. The confidence ibrary doesn&#39;t have a built-in</span>
+<span class="sd">    method for this, so we manually traverse and resolve.</span>
+
+<span class="sd">    Similary to lir.config.base._expand, but this method returns native dicts/lists instead of</span>
+<span class="sd">    ContextAwareDict/ContextAwareList.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cfg : Any</span>
+<span class="sd">        The input configuration object, which can be a confidence Configuration, ConfigurationSequence, dict, list, or</span>
+<span class="sd">        any other type.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Any</span>
+<span class="sd">        The input Configuration object converted to a native Python dict or list.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">match</span> <span class="n">cfg</span><span class="p">:</span>
+        <span class="k">case</span> <span class="n">Configuration</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">to_native_dict</span><span class="p">(</span><span class="n">cfg</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">cfg</span><span class="p">}</span>
+        <span class="k">case</span> <span class="n">ConfigurationSequence</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">to_native_dict</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">cfg</span><span class="p">]</span>
+        <span class="k">case</span> <span class="nb">dict</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">to_native_dict</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="k">case</span> <span class="nb">list</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">to_native_dict</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">cfg</span><span class="p">]</span>
+        <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cfg</span></div>
+
+
+
+<div class="viewcode-block" id="validate_yaml">
+<a class="viewcode-back" href="../../api/lir.util.html#lir.util.validate_yaml">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_yaml</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate a YAML file against the schema.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    yaml_path : Path</span>
+<span class="sd">        The path to the YAML file to be validated.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    FileNotFoundError</span>
+<span class="sd">        If the YAML file or the schema file does not exist.</span>
+<span class="sd">    yaml.YAMLError</span>
+<span class="sd">        If the YAML file is not valid YAML.</span>
+<span class="sd">    ValidationError</span>
+<span class="sd">        If the YAML file does not conform to the schema.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">schema_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;lir.schema.json&#39;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">schema_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Schema file not found: </span><span class="si">{</span><span class="n">schema_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">yaml_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;YAML file not found: </span><span class="si">{</span><span class="n">yaml_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">schema_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">schema</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="c1"># Resolve ${...} references before validation</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H-%M-%S&#39;</span><span class="p">)}</span>  <span class="c1"># noqa: DTZ005</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">Configuration</span><span class="p">(</span><span class="n">loadf</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">),</span> <span class="n">context</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">to_native_dict</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+
+    <span class="c1"># Validate data against schema</span>
+    <span class="n">validate</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="n">schema</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Bind">
+<a class="viewcode-back" href="../../api/lir.util.html#lir.util.Bind">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Bind</span><span class="p">(</span><span class="n">partial</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wrap `partial` to support the ellipsis (...) as a placeholder.</span>
+
+<span class="sd">    Can be used to fix parameters not at the end of the list of parameters (which is a limitation of partial).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extend `partial` and accept the ellipsis as a placeholder.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        *args</span>
+<span class="sd">            Positional arguments to be passed to the original function.</span>
+<span class="sd">        **keywords</span>
+<span class="sd">            Keyword arguments to be passed to the original function.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Any</span>
+<span class="sd">            A new function with the same behavior as the original function, but with the specified parameters fixed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">}</span>
+        <span class="n">iargs</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">iargs</span><span class="p">)</span> <span class="k">if</span> <span class="n">arg</span> <span class="ow">is</span> <span class="o">...</span> <span class="k">else</span> <span class="n">arg</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">*</span><span class="n">iargs</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

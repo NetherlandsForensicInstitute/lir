@@ -1,0 +1,384 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.bounding &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/lir.html">lir package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/lir.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../lir.html">lir</a></li>
+      <li class="breadcrumb-item active">lir.bounding</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lir.bounding</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Self</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir</span><span class="w"> </span><span class="kn">import</span> <span class="n">Transformer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.data.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeatureData</span><span class="p">,</span> <span class="n">InstanceData</span><span class="p">,</span> <span class="n">LLRData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_type</span>
+
+
+<span class="n">LOG</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="LLRBounder">
+<a class="viewcode-back" href="../../api/lir.bounding.html#lir.bounding.LLRBounder">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LLRBounder</span><span class="p">(</span><span class="n">Transformer</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for LLR bounders.</span>
+
+<span class="sd">    A bounder updates any LLRs that are out of bounds. Any LLR values within bounds remain unchanged. LLR values that</span>
+<span class="sd">    are out-of-bounds are updated to the nearest bound.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    lower_llr_bound : float | None</span>
+<span class="sd">        The lower bound for the LLRs. If `None`, no lower bound is applied.</span>
+<span class="sd">    upper_llr_bound : float | None</span>
+<span class="sd">        The upper bound for the LLRs. If `None`, no upper bound is applied.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">lower_llr_bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">upper_llr_bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lower_llr_bound</span> <span class="o">=</span> <span class="n">lower_llr_bound</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">upper_llr_bound</span> <span class="o">=</span> <span class="n">upper_llr_bound</span>
+
+<div class="viewcode-block" id="LLRBounder.calculate_bounds">
+<a class="viewcode-back" href="../../api/lir.bounding.html#lir.bounding.LLRBounder.calculate_bounds">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">llrdata</span><span class="p">:</span> <span class="n">LLRData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate and returns appropriate bounds for a set of LLRs and their labels.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        llrdata : LLRData</span>
+<span class="sd">            The LLR data for which to calculate the bounds. This includes the LLRs,</span>
+<span class="sd">            their labels, and any other relevant information.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LLRData</span><span class="p">:</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="n">check_type</span><span class="p">(</span><span class="n">FeatureData</span><span class="p">,</span> <span class="n">instances</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">instances</span><span class="p">,</span> <span class="n">LLRData</span><span class="p">):</span>
+            <span class="n">LOG</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;casting `</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span><span class="si">}</span><span class="s1">` to `LLRData`&#39;</span><span class="p">)</span>
+            <span class="n">instances</span> <span class="o">=</span> <span class="n">instances</span><span class="o">.</span><span class="n">replace_as</span><span class="p">(</span><span class="n">LLRData</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">instances</span>
+
+<div class="viewcode-block" id="LLRBounder.fit">
+<a class="viewcode-back" href="../../api/lir.bounding.html#lir.bounding.LLRBounder.fit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Configure this bounder by calculating bounds.</span>
+
+<span class="sd">        assuming that y=1 corresponds to Hp, y=0 to Hd</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceData</span>
+<span class="sd">            The data to fit the bounder on. This should include the LLRs and their corresponding labels.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Self</span>
+<span class="sd">            The fitted bounder instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">instances</span><span class="o">.</span><span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s1">.fit() requires labeled data&#39;</span><span class="p">)</span>
+
+        <span class="c1"># calculate the bounds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lower_llr_bound</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_llr_bound</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_bounds</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span>
+
+        <span class="c1"># check the sanity of the bounds</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lower_llr_bound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_llr_bound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_llr_bound</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_llr_bound</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;the lower bound must be lower than the upper bound; &#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;lower_llr_bound=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">lower_llr_bound</span><span class="si">}</span><span class="s1">; upper_llr_bound=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">upper_llr_bound</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="LLRBounder.apply">
+<a class="viewcode-back" href="../../api/lir.bounding.html#lir.bounding.LLRBounder.apply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LLRData</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Recalculate the LLR data using the first step calibrator and applying the bounds.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceData</span>
+<span class="sd">            The data to apply the bounder to. This should include the LLRs and their corresponding labels.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        LLRData</span>
+<span class="sd">            The LLR data with the LLRs bounded according to the calculated bounds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span>
+
+        <span class="n">llrs</span> <span class="o">=</span> <span class="n">instances</span><span class="o">.</span><span class="n">features</span>
+
+        <span class="c1"># Clip the LLRs to the bounds, where np.clip handles the None values correctly.</span>
+        <span class="n">llrs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">llrs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_llr_bound</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_llr_bound</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">instances</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+            <span class="n">features</span><span class="o">=</span><span class="n">llrs</span><span class="p">,</span> <span class="n">llr_upper_bound</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">upper_llr_bound</span><span class="p">,</span> <span class="n">llr_lower_bound</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lower_llr_bound</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="StaticBounder">
+<a class="viewcode-back" href="../../api/lir.bounding.html#lir.bounding.StaticBounder">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">StaticBounder</span><span class="p">(</span><span class="n">LLRBounder</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Bound LLRs to constant values.</span>
+
+<span class="sd">    This bounder takes arguments for a lower and upper bound, which may take `None` in which case no bounds are applied.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    lower_llr_bound : float | None</span>
+<span class="sd">        The lower bound for the LLRs. If `None`, no lower bound is applied.</span>
+<span class="sd">    upper_llr_bound : float | None</span>
+<span class="sd">        The upper bound for the LLRs. If `None`, no upper bound is applied.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower_llr_bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">upper_llr_bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">lower_llr_bound</span><span class="p">,</span> <span class="n">upper_llr_bound</span><span class="p">)</span>
+
+<div class="viewcode-block" id="StaticBounder.calculate_bounds">
+<a class="viewcode-back" href="../../api/lir.bounding.html#lir.bounding.StaticBounder.calculate_bounds">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">llrdata</span><span class="p">:</span> <span class="n">LLRData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate and return the lower and upper LLR bounds.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        llrdata : LLRData</span>
+<span class="sd">            Not used, but included for compatibility with the base class.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[float | None, float | None]</span>
+<span class="sd">            The lower and upper LLR bounds, as specified in the constructor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_llr_bound</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_llr_bound</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="NSourceBounder">
+<a class="viewcode-back" href="../../api/lir.bounding.html#lir.bounding.NSourceBounder">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NSourceBounder</span><span class="p">(</span><span class="n">LLRBounder</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Bound LLRs based on the number of sources.</span>
+
+<span class="sd">    This bounder sets the lower LLR bound to -log(N) and the upper bound to log(N), where N is the number of sources.</span>
+
+<span class="sd">    In non-log space, this corresponds to bounding likelihood ratios to [1/N, N]. This is a logical consequence of</span>
+<span class="sd">    having N sources: no source can provide more than N support for one hypothesis over the other.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="NSourceBounder.calculate_bounds">
+<a class="viewcode-back" href="../../api/lir.bounding.html#lir.bounding.NSourceBounder.calculate_bounds">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">llrdata</span><span class="p">:</span> <span class="n">LLRData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate and return the lower and upper LLR bounds.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        llrdata : LLRData</span>
+<span class="sd">            The LLR data for which to calculate the bounds. This should include the source IDs.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[float | None, float | None]</span>
+<span class="sd">            The lower and upper LLR bounds, calculated based on the number of sources.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">llrdata</span><span class="o">.</span><span class="n">source_ids</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s1"> requires source IDs to calculate bounds&#39;</span><span class="p">)</span>
+
+        <span class="n">n_sources</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">llrdata</span><span class="o">.</span><span class="n">source_ids</span><span class="p">,</span> <span class="nb">sorted</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">log_n_sopurces</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">n_sources</span><span class="p">))</span>
+
+        <span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;NSourceBounder: number of sources: N=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">n_sources</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;NSourceBounder: calculated bounds: -log(N)=</span><span class="si">{</span><span class="o">-</span><span class="n">log_n_sopurces</span><span class="si">}</span><span class="s1">, log(N)=</span><span class="si">{</span><span class="n">log_n_sopurces</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">log_n_sopurces</span><span class="p">,</span> <span class="n">log_n_sopurces</span></div>
+</div>
+
+
+
+<span class="n">__all__</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">LLRBounder</span><span class="p">,</span>
+    <span class="n">StaticBounder</span><span class="p">,</span>
+    <span class="n">NSourceBounder</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

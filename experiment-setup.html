@@ -1,0 +1,349 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Setting up an experiment &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="_static/thebelab.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Registry reference" href="reference.html" />
+    <link rel="prev" title="Assessing LR system performance" href="lrsystem-assessment.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Getting started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="guides.html">Guides</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/lir.html">lir package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="guides.html">Guides</a></li>
+      <li class="breadcrumb-item active">Setting up an experiment</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/experiment-setup.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="setting-up-an-experiment">
+<h1>Setting up an experiment<a class="headerlink" href="#setting-up-an-experiment" title="Link to this heading"></a></h1>
+<p>This page shows how write an experiment setup using LiR.</p>
+<p>Before you begin, make sure you have a working <a class="reference external" href="index.html">lir command</a></p>
+<p>Experiments are defined in an experiment setup file. For a quick start, use one of the <a class="reference external" href="lrsystem_yaml.html">examples</a>.</p>
+<p>An experiment setup file is a YAML file with at least the <code class="docutils literal notranslate"><span class="pre">experiments</span></code> property that lists the experiments, and the
+<code class="docutils literal notranslate"><span class="pre">output_path</span></code> property:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">output_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./output</span><span class="w">  </span><span class="c1"># this is where generated output is saved</span>
+<span class="nt">experiments</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">... definition of experiment 1 ...</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">... definition of experiment 2 ...</span>
+</pre></div>
+</div>
+<p>LiR uses the <code class="docutils literal notranslate"><span class="pre">confidence</span></code> package for parsing YAML files. Refer to its <a class="reference external" href="https://github.com/NetherlandsForensicInstitute/confidence">documentation</a> to make the most of it! In
+particular, you may use the <code class="docutils literal notranslate"><span class="pre">timestamp</span></code> variable to substitute the current date and time in the YAML configuration,
+for example:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">output_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./${timestamp}_output</span><span class="w">  </span><span class="c1"># this is where generated output is saved</span>
+<span class="nt">experiments</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">... definition of experiment 1 ...</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">... definition of experiment 2 ...</span>
+</pre></div>
+</div>
+<section id="experiment-definition">
+<h2>Experiment definition<a class="headerlink" href="#experiment-definition" title="Link to this heading"></a></h2>
+<p>An experiment definition has at least a <code class="docutils literal notranslate"><span class="pre">strategy</span></code> property. There can be as many experiment strategies as there are
+reasons to setup an experiment, including:</p>
+<ul class="simple">
+<li><p>calculate LRs, metrics or plots for a particular LR system and dataset (e.g. the <code class="docutils literal notranslate"><span class="pre">single_run</span></code> strategy);</p></li>
+<li><p>optimize hyperparameters of an LR system for a particular dataset (e.g. the <code class="docutils literal notranslate"><span class="pre">optuna</span></code> strategy);</p></li>
+<li><p>assess the quality of a range of LR systems for model selection (e.g. the <code class="docutils literal notranslate"><span class="pre">grid</span></code> strategy);</p></li>
+<li><p>assess the sensitivity of an LR system for particular data parameters (e.g. the <code class="docutils literal notranslate"><span class="pre">grid</span></code> strategy);</p></li>
+<li><p>calculate LRs for data with unknown ground-truth.</p></li>
+</ul>
+<p>A fully working example that uses the <code class="docutils literal notranslate"><span class="pre">single_run</span></code> strategy:</p>
+<p>This experiment definition has the following sections:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>, an arbitrary name of the experiment;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">strategy</span></code>, the experiment strategy;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lr_system</span></code>, which defines the LR system;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code>, which defines the dataset (<code class="docutils literal notranslate"><span class="pre">provider</span></code>) and how it is split into training and test data (<code class="docutils literal notranslate"><span class="pre">splits</span></code>);</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">output</span></code>, which specifies the required output.</p></li>
+</ul>
+<p>Some <a class="reference external" href="reference.html#experiment-strategies">experiment strategies</a> take additional parameters.</p>
+</section>
+<section id="data-organization">
+<h2>Data organization<a class="headerlink" href="#data-organization" title="Link to this heading"></a></h2>
+<p>The <a class="reference external" href="reference.html#data-providers">data provider</a> delivers the dataset. It has at least the <code class="docutils literal notranslate"><span class="pre">method</span></code> property, and any other property is passed
+as a parameter of the data provision method.</p>
+<p>In evaluative settings, the data provider delivers:</p>
+<ul class="simple">
+<li><p>data on instances with hypothesis labels, e.g. for calculating specific-source LRs;</p></li>
+<li><p>data on instances with source ids, e.g. for calculating common-source LRs;</p></li>
+<li><p>data on instance pairs with hypothesis labels, e.g. for calculating common-source LRs.</p></li>
+</ul>
+<p>The <a class="reference external" href="reference.html#data-strategies">data splitting strategy</a> defines how the data is split into a training set and a test set. It has at least the
+<code class="docutils literal notranslate"><span class="pre">strategy</span></code> property, and any other property is passed as a parameter of the data strategy. The data strategy should
+be compatible with the type of data in the dataset.</p>
+<p>Some data strategies, such as cross-validation, split the data several times. In that case, the LR system is trained
+and applied for each train/test split separately, but then the test results are concatenated.</p>
+</section>
+<section id="lr-systems">
+<h2>LR systems<a class="headerlink" href="#lr-systems" title="Link to this heading"></a></h2>
+<p>The LR system section defines the LR system. There are various <a class="reference external" href="reference.html#lr-system-architecture">architectures</a>, and the architecture as well as the
+processing modules should support the input data.</p>
+<p>Depending on the architecture, there may be parameters that specify how data are processed or how instances are paired.
+For example, the <code class="docutils literal notranslate"><span class="pre">score_based</span></code> architecture has a preprocessing method, a pairing method, and a comparing method.</p>
+<p>A <a class="reference external" href="reference.html#pairing-methods">pairing method</a> governs how instances are combined into pairs. Both the preprocessing and the comparing methods are
+<a class="reference external" href="reference.html#lr-system-modules">modules</a> that transform the data, but <em>never</em> change the number of instances or the order of the instances. The
+<code class="docutils literal notranslate"><span class="pre">pipeline</span></code> module can be used to arrange a sequence of modules.</p>
+</section>
+<section id="output">
+<h2>Output<a class="headerlink" href="#output" title="Link to this heading"></a></h2>
+<p>Results are written to the directory in <code class="docutils literal notranslate"><span class="pre">output_path</span></code>.</p>
+<p>By default, a detailed log file is written to <code class="docutils literal notranslate"><span class="pre">output_path/log.txt</span></code>.</p>
+<p>Within <code class="docutils literal notranslate"><span class="pre">output_path</span></code>, a directory is created with the same name as the experiment. In the above example,
+the experiment only has a single run, but other experiment strategies may have multiple. In that case, a separate
+directory is created for each run, with the following files:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data.yaml</span></code>: the data organization that was used for the run;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lrsystem.yaml</span></code>: the LR system setup that was used for the run.</p></li>
+</ul>
+<p>Additionally, we expect to find the output specified in the <code class="docutils literal notranslate"><span class="pre">output</span></code> section. After running the example, the full
+directory listing is as follows.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">output</span><span class="o">/</span><span class="n">log</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">first</span> <span class="n">experiment</span><span class="o">/</span><span class="n">PAV</span><span class="o">.</span><span class="n">png</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">first</span> <span class="n">experiment</span><span class="o">/</span><span class="n">data</span><span class="o">.</span><span class="n">yaml</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">first</span> <span class="n">experiment</span><span class="o">/</span><span class="n">lrsystem</span><span class="o">.</span><span class="n">yaml</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">first</span> <span class="n">experiment</span><span class="o">/</span><span class="n">metrics</span><span class="o">.</span><span class="n">csv</span>
+</pre></div>
+</div>
+</section>
+<section id="hyperparameters-and-data-parameters">
+<h2>Hyperparameters and data parameters<a class="headerlink" href="#hyperparameters-and-data-parameters" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="reference.html#experiment-strategies">Experiments</a> that involve multiple runs have a <code class="docutils literal notranslate"><span class="pre">hyperparameters</span></code> or a <code class="docutils literal notranslate"><span class="pre">dataparameters</span></code> section.</p>
+<p>For example, the <code class="docutils literal notranslate"><span class="pre">grid</span></code> strategy runs the LR system for each combination of hyperparameter values.
+The <code class="docutils literal notranslate"><span class="pre">optuna</span></code> strategy runs the LR system a fixed number of times, while trying to optimize parameter values.</p>
+<section id="model-selection">
+<h3>Model selection<a class="headerlink" href="#model-selection" title="Link to this heading"></a></h3>
+<p>In the <code class="docutils literal notranslate"><span class="pre">single_run</span></code> example, we have a fully working LR system that uses logistic regression to calculate LRs. Let’s
+say we want to try other LR calculation methods as well, and compare the results. To make this work, we use the same
+“baseline LR system”, but make two modifications to the experiment:</p>
+<ul class="simple">
+<li><p>replace the <code class="docutils literal notranslate"><span class="pre">single_run</span></code> strategy by the <code class="docutils literal notranslate"><span class="pre">grid</span></code> strategy; and</p></li>
+<li><p>define a hyperparameter for the LR calculation method.</p></li>
+</ul>
+<p>This will run the LR system three times, once for each LR calculation method. All metrics are collected in
+<code class="docutils literal notranslate"><span class="pre">metrics.csv</span></code> and the output directory lists the following files.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">output</span><span class="o">/</span><span class="n">log</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">model</span> <span class="n">selection</span><span class="o">/</span><span class="n">comparing</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">calibration</span><span class="o">=</span><span class="n">isotonic</span><span class="o">/</span><span class="n">PAV</span><span class="o">.</span><span class="n">png</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">model</span> <span class="n">selection</span><span class="o">/</span><span class="n">comparing</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">calibration</span><span class="o">=</span><span class="n">isotonic</span><span class="o">/</span><span class="n">data</span><span class="o">.</span><span class="n">yaml</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">model</span> <span class="n">selection</span><span class="o">/</span><span class="n">comparing</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">calibration</span><span class="o">=</span><span class="n">isotonic</span><span class="o">/</span><span class="n">lrsystem</span><span class="o">.</span><span class="n">yaml</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">model</span> <span class="n">selection</span><span class="o">/</span><span class="n">comparing</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">calibration</span><span class="o">=</span><span class="n">logit</span><span class="o">/</span><span class="n">PAV</span><span class="o">.</span><span class="n">png</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">model</span> <span class="n">selection</span><span class="o">/</span><span class="n">comparing</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">calibration</span><span class="o">=</span><span class="n">logit</span><span class="o">/</span><span class="n">data</span><span class="o">.</span><span class="n">yaml</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">model</span> <span class="n">selection</span><span class="o">/</span><span class="n">comparing</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">calibration</span><span class="o">=</span><span class="n">logit</span><span class="o">/</span><span class="n">lrsystem</span><span class="o">.</span><span class="n">yaml</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">model</span> <span class="n">selection</span><span class="o">/</span><span class="n">comparing</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">calibration</span><span class="o">=</span><span class="n">kde</span><span class="o">/</span><span class="n">PAV</span><span class="o">.</span><span class="n">png</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">model</span> <span class="n">selection</span><span class="o">/</span><span class="n">comparing</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">calibration</span><span class="o">=</span><span class="n">kde</span><span class="o">/</span><span class="n">data</span><span class="o">.</span><span class="n">yaml</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">model</span> <span class="n">selection</span><span class="o">/</span><span class="n">comparing</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">calibration</span><span class="o">=</span><span class="n">kde</span><span class="o">/</span><span class="n">lrsystem</span><span class="o">.</span><span class="n">yaml</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">model</span> <span class="n">selection</span><span class="o">/</span><span class="n">metrics</span><span class="o">.</span><span class="n">csv</span>
+</pre></div>
+</div>
+</section>
+<section id="sensitivity-analysis">
+<h3>Sensitivity analysis<a class="headerlink" href="#sensitivity-analysis" title="Link to this heading"></a></h3>
+<p>We may also want to know how wel the LR system is able to cope with few data points. This is a similar setup, but since
+we vary the input data, we use <code class="docutils literal notranslate"><span class="pre">dataparameters</span></code> instead of <code class="docutils literal notranslate"><span class="pre">hyperparameters</span></code>, like so:</p>
+<p>Again, this generates the results for the different data sizes, and metrics are collected in <code class="docutils literal notranslate"><span class="pre">metrics.csv</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">output</span><span class="o">/</span><span class="n">log</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">sensitivity</span> <span class="n">analysis</span><span class="o">/</span><span class="n">provider</span><span class="o">.</span><span class="n">head</span><span class="o">=</span><span class="mi">100</span><span class="o">/</span><span class="n">PAV</span><span class="o">.</span><span class="n">png</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">sensitivity</span> <span class="n">analysis</span><span class="o">/</span><span class="n">provider</span><span class="o">.</span><span class="n">head</span><span class="o">=</span><span class="mi">100</span><span class="o">/</span><span class="n">data</span><span class="o">.</span><span class="n">yaml</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">sensitivity</span> <span class="n">analysis</span><span class="o">/</span><span class="n">provider</span><span class="o">.</span><span class="n">head</span><span class="o">=</span><span class="mi">100</span><span class="o">/</span><span class="n">lrsystem</span><span class="o">.</span><span class="n">yaml</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">sensitivity</span> <span class="n">analysis</span><span class="o">/</span><span class="n">provider</span><span class="o">.</span><span class="n">head</span><span class="o">=</span><span class="mi">200</span><span class="o">/</span><span class="n">PAV</span><span class="o">.</span><span class="n">png</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">sensitivity</span> <span class="n">analysis</span><span class="o">/</span><span class="n">provider</span><span class="o">.</span><span class="n">head</span><span class="o">=</span><span class="mi">200</span><span class="o">/</span><span class="n">data</span><span class="o">.</span><span class="n">yaml</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">sensitivity</span> <span class="n">analysis</span><span class="o">/</span><span class="n">provider</span><span class="o">.</span><span class="n">head</span><span class="o">=</span><span class="mi">200</span><span class="o">/</span><span class="n">lrsystem</span><span class="o">.</span><span class="n">yaml</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">sensitivity</span> <span class="n">analysis</span><span class="o">/</span><span class="n">provider</span><span class="o">.</span><span class="n">head</span><span class="o">=</span><span class="mi">300</span><span class="o">/</span><span class="n">PAV</span><span class="o">.</span><span class="n">png</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">sensitivity</span> <span class="n">analysis</span><span class="o">/</span><span class="n">provider</span><span class="o">.</span><span class="n">head</span><span class="o">=</span><span class="mi">300</span><span class="o">/</span><span class="n">data</span><span class="o">.</span><span class="n">yaml</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">sensitivity</span> <span class="n">analysis</span><span class="o">/</span><span class="n">provider</span><span class="o">.</span><span class="n">head</span><span class="o">=</span><span class="mi">300</span><span class="o">/</span><span class="n">lrsystem</span><span class="o">.</span><span class="n">yaml</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">sensitivity</span> <span class="n">analysis</span><span class="o">/</span><span class="n">provider</span><span class="o">.</span><span class="n">head</span><span class="o">=</span><span class="mi">400</span><span class="o">/</span><span class="n">PAV</span><span class="o">.</span><span class="n">png</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">sensitivity</span> <span class="n">analysis</span><span class="o">/</span><span class="n">provider</span><span class="o">.</span><span class="n">head</span><span class="o">=</span><span class="mi">400</span><span class="o">/</span><span class="n">data</span><span class="o">.</span><span class="n">yaml</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">sensitivity</span> <span class="n">analysis</span><span class="o">/</span><span class="n">provider</span><span class="o">.</span><span class="n">head</span><span class="o">=</span><span class="mi">400</span><span class="o">/</span><span class="n">lrsystem</span><span class="o">.</span><span class="n">yaml</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">sensitivity</span> <span class="n">analysis</span><span class="o">/</span><span class="n">provider</span><span class="o">.</span><span class="n">head</span><span class="o">=</span><span class="mi">500</span><span class="o">/</span><span class="n">PAV</span><span class="o">.</span><span class="n">png</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">sensitivity</span> <span class="n">analysis</span><span class="o">/</span><span class="n">provider</span><span class="o">.</span><span class="n">head</span><span class="o">=</span><span class="mi">500</span><span class="o">/</span><span class="n">data</span><span class="o">.</span><span class="n">yaml</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">sensitivity</span> <span class="n">analysis</span><span class="o">/</span><span class="n">provider</span><span class="o">.</span><span class="n">head</span><span class="o">=</span><span class="mi">500</span><span class="o">/</span><span class="n">lrsystem</span><span class="o">.</span><span class="n">yaml</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">sensitivity</span> <span class="n">analysis</span><span class="o">/</span><span class="n">provider</span><span class="o">.</span><span class="n">head</span><span class="o">=</span><span class="mi">600</span><span class="o">/</span><span class="n">PAV</span><span class="o">.</span><span class="n">png</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">sensitivity</span> <span class="n">analysis</span><span class="o">/</span><span class="n">provider</span><span class="o">.</span><span class="n">head</span><span class="o">=</span><span class="mi">600</span><span class="o">/</span><span class="n">data</span><span class="o">.</span><span class="n">yaml</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">sensitivity</span> <span class="n">analysis</span><span class="o">/</span><span class="n">provider</span><span class="o">.</span><span class="n">head</span><span class="o">=</span><span class="mi">600</span><span class="o">/</span><span class="n">lrsystem</span><span class="o">.</span><span class="n">yaml</span>
+<span class="n">output</span><span class="o">/</span><span class="n">my</span> <span class="n">sensitivity</span> <span class="n">analysis</span><span class="o">/</span><span class="n">metrics</span><span class="o">.</span><span class="n">csv</span>
+</pre></div>
+</div>
+</section>
+<section id="advanced-use-of-parameters">
+<h3>Advanced use of parameters<a class="headerlink" href="#advanced-use-of-parameters" title="Link to this heading"></a></h3>
+<p>So far, we only used categorical parameters. There are <a class="reference external" href="reference.html#hyperparameters">other types of parameters</a>, such as numerical parameters,
+cluster parameters or constants.</p>
+<p>In the sensitivity analysis, the data size (<code class="docutils literal notranslate"><span class="pre">provider.head</span></code>) is implicitly understood to be a categorical parameter.
+We may instead use a numerical variable, which yields the exact same results:</p>
+<p>In the examples above, we used the implicit form to specify the parameter values:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">hyperparameters</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">comparing.steps.calibration</span>
+<span class="w">    </span><span class="nt">options</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logit</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">isotonic</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kde</span>
+</pre></div>
+</div>
+<p>This is implicitly understood to be a categorical parameter. However, we can also write it in the explicit form. The
+following is equivalent to the above.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">hyperparameters</span><span class="p">:</span>
+<span class="hll"><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">categorical</span>
+</span><span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">comparing.steps.calibration</span>
+<span class="w">    </span><span class="nt">options</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logit</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">isotonic</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kde</span>
+</pre></div>
+</div>
+<p>In most cases, the <code class="docutils literal notranslate"><span class="pre">type</span></code> property can be omitted, but it may be necessary when using custom parameter types.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lrsystem-assessment.html" class="btn btn-neutral float-left" title="Assessing LR system performance" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="reference.html" class="btn btn-neutral float-right" title="Registry reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

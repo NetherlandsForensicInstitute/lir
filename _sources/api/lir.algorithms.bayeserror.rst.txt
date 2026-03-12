@@ -1,0 +1,7 @@
+lir.algorithms.bayeserror module
+================================
+
+.. automodule:: lir.algorithms.bayeserror
+   :members:
+   :show-inheritance:
+   :undoc-members:

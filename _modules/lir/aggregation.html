@@ -1,0 +1,802 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.aggregation &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/lir.html">lir package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/lir.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../lir.html">lir</a></li>
+      <li class="breadcrumb-item active">lir.aggregation</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lir.aggregation</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">csv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">IO</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">NamedTuple</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.algorithms.bayeserror</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_nbe</span> <span class="k">as</span> <span class="n">nbe</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.algorithms.invariance_bounds</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_invariance_delta_functions</span> <span class="k">as</span> <span class="n">invariance_delta_functions</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.algorithms.llr_overestimation</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_llr_overestimation</span> <span class="k">as</span> <span class="n">llr_overestimation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">YamlParseError</span><span class="p">,</span> <span class="n">check_is_empty</span><span class="p">,</span> <span class="n">config_parser</span><span class="p">,</span> <span class="n">pop_field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_data_provider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_individual_metric</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.data.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataFileBuilderCsv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.data.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataProvider</span><span class="p">,</span> <span class="n">FeatureData</span><span class="p">,</span> <span class="n">LLRData</span><span class="p">,</span> <span class="n">check_type</span><span class="p">,</span> <span class="n">get_instances_by_category</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.lrsystems.lrsystems</span><span class="w"> </span><span class="kn">import</span> <span class="n">LRSystem</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.plotting</span><span class="w"> </span><span class="kn">import</span> <span class="n">llr_interval</span><span class="p">,</span> <span class="n">lr_histogram</span><span class="p">,</span> <span class="n">pav</span><span class="p">,</span> <span class="n">tippett</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.plotting.expected_calibration_error</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_ece</span> <span class="k">as</span> <span class="n">ece</span>
+
+
+<span class="n">LOG</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="AggregationData">
+<a class="viewcode-back" href="../../api/lir.aggregation.html#lir.aggregation.AggregationData">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AggregationData</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Representation of aggregated data.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    llrdata : LLRData</span>
+<span class="sd">        The LLR data containing LLRs and labels.</span>
+<span class="sd">    lrsystem : LRSystem</span>
+<span class="sd">        The model that produced the results.</span>
+<span class="sd">    parameters : dict[str, Any]</span>
+<span class="sd">        Parameters that identify the system producing the results.</span>
+<span class="sd">    run_name : str</span>
+<span class="sd">        String representation of the run that produced the results.</span>
+<span class="sd">    get_full_fit_lrsystem : Callable[[], LRSystem] | None</span>
+<span class="sd">        Optional callable that lazily provides a model fitted on full data (ignoring splits).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">llrdata</span><span class="p">:</span> <span class="n">LLRData</span>
+    <span class="n">lrsystem</span><span class="p">:</span> <span class="n">LRSystem</span>
+    <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="n">run_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">get_full_fit_lrsystem</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">LRSystem</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="Aggregation">
+<a class="viewcode-back" href="../../api/lir.aggregation.html#lir.aggregation.Aggregation">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Aggregation</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base representation of an aggregated data collection.</span>
+
+<span class="sd">    Other classes may extend from this class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Aggregation.report">
+<a class="viewcode-back" href="../../api/lir.aggregation.html#lir.aggregation.Aggregation.report">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">AggregationData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Report that new results are available.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data : AggregationData</span>
+<span class="sd">            The aggregated data to be reported.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="Aggregation.close">
+<a class="viewcode-back" href="../../api/lir.aggregation.html#lir.aggregation.Aggregation.close">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: B027</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Finalize the aggregation; no more results will come in.</span>
+
+<span class="sd">        The close method is called at the end of gathering the aggregation(s) to ensure files are closed, buffers are</span>
+<span class="sd">        cleared, or other things that need to finish / tear down.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_resolve_output_path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">run_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">()</span> <span class="ow">or</span> <span class="n">filename</span><span class="o">.</span><span class="n">is_relative_to</span><span class="p">(</span><span class="n">output_dir</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">filename</span>
+
+        <span class="n">dirname</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="n">run_name</span> <span class="k">if</span> <span class="n">run_name</span> <span class="k">else</span> <span class="n">output_dir</span>
+        <span class="n">dirname</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dirname</span> <span class="o">/</span> <span class="n">filename</span></div>
+
+
+
+<div class="viewcode-block" id="AggregatePlot">
+<a class="viewcode-back" href="../../api/lir.aggregation.html#lir.aggregation.AggregatePlot">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AggregatePlot</span><span class="p">(</span><span class="n">Aggregation</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Aggregation that generates plots by repeatedly calling a plotting function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    plot_fn : Callable</span>
+<span class="sd">        The plotting function to be used for generating plots.</span>
+<span class="sd">    plot_name : str</span>
+<span class="sd">        The name of the plot.</span>
+<span class="sd">    output_path : Path | None, optional</span>
+<span class="sd">        The directory where the plots will be saved. If `None`, plots are not saved.</span>
+<span class="sd">    **kwargs : Any</span>
+<span class="sd">        Additional arguments to be passed to the plotting function.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    output_path : Path | None</span>
+<span class="sd">        The directory where the plots will be saved. If `None`, plots are not saved.</span>
+<span class="sd">    plot_fn : Callable</span>
+<span class="sd">        The plotting function to be used for generating plots.</span>
+<span class="sd">    plot_name : str</span>
+<span class="sd">        The name of the plot.</span>
+<span class="sd">    plot_fn_args : dict[str, Any]</span>
+<span class="sd">        Additional arguments to be passed to the plotting function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plot_fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">plot_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the AggregatePlot.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        plot_fn : Callable</span>
+<span class="sd">            The plotting function to be used for generating plots.</span>
+<span class="sd">        plot_name : str</span>
+<span class="sd">            The name of the plot.</span>
+<span class="sd">        output_path : Path | None, optional</span>
+<span class="sd">            The directory where the plots will be saved. If `None`, plots are not saved.</span>
+<span class="sd">        **kwargs : Any</span>
+<span class="sd">            Additional arguments to be passed to the plotting function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span> <span class="o">=</span> <span class="n">output_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_fn</span> <span class="o">=</span> <span class="n">plot_fn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_name</span> <span class="o">=</span> <span class="n">plot_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_fn_args</span> <span class="o">=</span> <span class="n">kwargs</span>
+
+<div class="viewcode-block" id="AggregatePlot.report">
+<a class="viewcode-back" href="../../api/lir.aggregation.html#lir.aggregation.AggregatePlot.report">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">AggregationData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the data when new results are available.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data : AggregationData</span>
+<span class="sd">            The aggregated data to be plotted.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+        <span class="n">llrdata</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">llrdata</span>
+        <span class="n">run_name</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">run_name</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_fn</span><span class="p">(</span><span class="n">llrdata</span><span class="o">=</span><span class="n">llrdata</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_fn_args</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">LOG</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not generate plot </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_name</span><span class="si">}</span><span class="s1"> for run `</span><span class="si">{</span><span class="n">run_name</span><span class="si">}</span><span class="s1">`: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Only save the figure when an output path is provided.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dir_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span>
+            <span class="n">plot_arguments</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">=</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_fn_args</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_fn_args</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+
+            <span class="n">file_name</span> <span class="o">=</span> <span class="n">dir_name</span> <span class="o">/</span> <span class="n">run_name</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_name</span><span class="si">}{</span><span class="n">plot_arguments</span><span class="si">}</span><span class="s1">.png&#39;</span>
+            <span class="n">file_name</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="n">LOG</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Saving plot </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_name</span><span class="si">}</span><span class="s1"> for run `</span><span class="si">{</span><span class="n">run_name</span><span class="si">}</span><span class="s1">` to </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="nd">@config_parser</span><span class="p">(</span><span class="n">reference</span><span class="o">=</span><span class="n">pav</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_pav</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AggregatePlot</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Corresponding registry function to generate aggregate PAV plot.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : ContextAwareDict</span>
+<span class="sd">        The configuration dictionary for the plot.</span>
+<span class="sd">    output_dir : Path</span>
+<span class="sd">        The directory where the plot will be saved.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    AggregatePlot</span>
+<span class="sd">        An instance of the AggregatePlot class configured to generate PAV plots.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">plot_name</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;plot_name&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;PAV&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">AggregatePlot</span><span class="p">(</span><span class="n">pav</span><span class="p">,</span> <span class="n">plot_name</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+
+
+<span class="nd">@config_parser</span><span class="p">(</span><span class="n">reference</span><span class="o">=</span><span class="n">ece</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_ece</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AggregatePlot</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Corresponding registry function to generate aggregate ECE plot.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : ContextAwareDict</span>
+<span class="sd">        The configuration dictionary for the plot.</span>
+<span class="sd">    output_dir : Path</span>
+<span class="sd">        The directory where the plot will be saved.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    AggregatePlot</span>
+<span class="sd">        An instance of the AggregatePlot class configured to generate ECE plots.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">plot_name</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;plot_name&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;ECE&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">AggregatePlot</span><span class="p">(</span><span class="n">ece</span><span class="p">,</span> <span class="n">plot_name</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+
+
+<span class="nd">@config_parser</span><span class="p">(</span><span class="n">reference</span><span class="o">=</span><span class="n">lr_histogram</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_lr_histogram</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AggregatePlot</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Corresponding registry function to generate aggregate LR Histogram.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : ContextAwareDict</span>
+<span class="sd">        The configuration dictionary for the plot.</span>
+<span class="sd">    output_dir : Path</span>
+<span class="sd">        The directory where the plot will be saved.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    AggregatePlot</span>
+<span class="sd">        An instance of the AggregatePlot class configured to generate LR Histogram plots.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">plot_name</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;plot_name&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;LR_Histogram&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">AggregatePlot</span><span class="p">(</span><span class="n">lr_histogram</span><span class="p">,</span> <span class="n">plot_name</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+
+
+<span class="nd">@config_parser</span><span class="p">(</span><span class="n">reference</span><span class="o">=</span><span class="n">llr_interval</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_llr_interval</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AggregatePlot</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Corresponding registry function to generate aggregate LLR interval plot.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : ContextAwareDict</span>
+<span class="sd">        The configuration dictionary for the plot.</span>
+<span class="sd">    output_dir : Path</span>
+<span class="sd">        The directory where the plot will be saved.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    AggregatePlot</span>
+<span class="sd">        An instance of the AggregatePlot class configured to generate LLR interval plots.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">plot_name</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;plot_name&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;LLR_Interval&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">AggregatePlot</span><span class="p">(</span><span class="n">llr_interval</span><span class="p">,</span> <span class="n">plot_name</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+
+
+<span class="nd">@config_parser</span><span class="p">(</span><span class="n">reference</span><span class="o">=</span><span class="n">llr_overestimation</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_llr_overestimation</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AggregatePlot</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Corresponding registry function to generate aggregate LLR overestimation plot.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : ContextAwareDict</span>
+<span class="sd">        The configuration dictionary for the plot.</span>
+<span class="sd">    output_dir : Path</span>
+<span class="sd">        The directory where the plot will be saved.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    AggregatePlot</span>
+<span class="sd">        An instance of the AggregatePlot class configured to generate LLR overestimation plots.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">plot_name</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;plot_name&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;LLR_Overestimation&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">AggregatePlot</span><span class="p">(</span><span class="n">llr_overestimation</span><span class="p">,</span> <span class="n">plot_name</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+
+
+<span class="nd">@config_parser</span><span class="p">(</span><span class="n">reference</span><span class="o">=</span><span class="n">nbe</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_nbe</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AggregatePlot</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Corresponding registry function to generate aggregate NBE plot.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : ContextAwareDict</span>
+<span class="sd">        The configuration dictionary for the plot.</span>
+<span class="sd">    output_dir : Path</span>
+<span class="sd">        The directory where the plot will be saved.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    AggregatePlot</span>
+<span class="sd">        An instance of the AggregatePlot class configured to generate NBE plots.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">plot_name</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;plot_name&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;NBE&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">AggregatePlot</span><span class="p">(</span><span class="n">nbe</span><span class="p">,</span> <span class="n">plot_name</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+
+
+<span class="nd">@config_parser</span><span class="p">(</span><span class="n">reference</span><span class="o">=</span><span class="n">tippett</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_tippett</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AggregatePlot</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Corresponding registry function to generate aggregate Tippett plot.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : ContextAwareDict</span>
+<span class="sd">        The configuration dictionary for the plot.</span>
+<span class="sd">    output_dir : Path</span>
+<span class="sd">        The directory where the plot will be saved.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    AggregatePlot</span>
+<span class="sd">        An instance of the AggregatePlot class configured to generate Tippett plots.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">plot_name</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;plot_name&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;Tippett&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">AggregatePlot</span><span class="p">(</span><span class="n">tippett</span><span class="p">,</span> <span class="n">plot_name</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+
+
+<span class="nd">@config_parser</span><span class="p">(</span><span class="n">reference</span><span class="o">=</span><span class="n">invariance_delta_functions</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_invariance_delta_function</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AggregatePlot</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Corresponding registry function to generate aggregate invariance delta function plot.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : ContextAwareDict</span>
+<span class="sd">        The configuration dictionary for the plot.</span>
+<span class="sd">    output_dir : Path</span>
+<span class="sd">        The directory where the plot will be saved.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    AggregatePlot</span>
+<span class="sd">        An instance of the AggregatePlot class configured to generate invariance delta function plots.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">plot_name</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;plot_name&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;Invariance_Delta_Functions&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">AggregatePlot</span><span class="p">(</span><span class="n">invariance_delta_functions</span><span class="p">,</span> <span class="n">plot_name</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="WriteMetricsToCsv">
+<a class="viewcode-back" href="../../api/lir.aggregation.html#lir.aggregation.WriteMetricsToCsv">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">WriteMetricsToCsv</span><span class="p">(</span><span class="n">Aggregation</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper class to write aggregated results to CSV file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path : Path</span>
+<span class="sd">        The path to the CSV file where the metrics will be written.</span>
+<span class="sd">    columns : Mapping[str, Callable]</span>
+<span class="sd">        A mapping of column names to metric functions that compute the values for those columns.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">columns</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the class.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path : Path</span>
+<span class="sd">            The path to the CSV file where the metrics will be written.</span>
+<span class="sd">        columns : Mapping[str, Callable]</span>
+<span class="sd">            A mapping of column names to metric functions that compute the values for those columns.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file</span><span class="p">:</span> <span class="n">IO</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_writer</span><span class="p">:</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictWriter</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_safe_call</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">fn</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">LOG</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+
+<div class="viewcode-block" id="WriteMetricsToCsv.report">
+<a class="viewcode-back" href="../../api/lir.aggregation.html#lir.aggregation.WriteMetricsToCsv.report">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">AggregationData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write the metrics to CSV.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data : AggregationData</span>
+<span class="sd">            The aggregated data for which to compute and write the metrics.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_safe_call</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">metric</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">llrdata</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;calculating metric </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1"> failed&#39;</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">metric</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">]</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">metric_value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                    <span class="n">metrics</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">metric_value</span><span class="p">)))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">metrics</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)))</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="o">+</span> <span class="n">metrics</span><span class="p">)</span>
+
+        <span class="c1"># Record column header names only once to the CSV</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_writer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>  <span class="c1"># noqa: SIM115</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictWriter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_file</span><span class="p">,</span> <span class="n">fieldnames</span><span class="o">=</span><span class="n">results</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_writer</span><span class="o">.</span><span class="n">writeheader</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>  <span class="c1"># type: ignore</span></div>
+
+
+<div class="viewcode-block" id="WriteMetricsToCsv.close">
+<a class="viewcode-back" href="../../api/lir.aggregation.html#lir.aggregation.WriteMetricsToCsv.close">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensure the CSV file is properly closed after writing.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+</div>
+
+
+
+<span class="nd">@config_parser</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">metrics_csv</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WriteMetricsToCsv</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Corresponding registry function to leverage CSV Writer class to write results to disk.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : ContextAwareDict</span>
+<span class="sd">        The configuration dictionary for the metrics CSV.</span>
+<span class="sd">    output_dir : Path</span>
+<span class="sd">        The directory where the metrics CSV will be saved.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    WriteMetricsToCsv</span>
+<span class="sd">        An instance of the WriteMetricsToCsv class configured to write metrics to a CSV file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;columns&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;cllr&#39;</span><span class="p">,</span> <span class="s1">&#39;cllr_min&#39;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">columns</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">YamlParseError</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">context</span><span class="p">,</span>
+            <span class="s1">&#39;Invalid metrics configuration; expected a list of metric names.&#39;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">parse_individual_metric</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">context</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">}</span>
+
+    <span class="n">check_is_empty</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">WriteMetricsToCsv</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="s1">&#39;metrics.csv&#39;</span><span class="p">,</span> <span class="n">columns</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="CaseLLRToCsv">
+<a class="viewcode-back" href="../../api/lir.aggregation.html#lir.aggregation.CaseLLRToCsv">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CaseLLRToCsv</span><span class="p">(</span><span class="n">Aggregation</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Aggregation that applies a full-data-fitted LR system to case data and stores LLRs as CSV.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    output_dir : Path</span>
+<span class="sd">        Directory where the CSV file will be written.</span>
+<span class="sd">    case_data_provider : DataProvider</span>
+<span class="sd">        Provider for the case data to apply the LR system to.</span>
+<span class="sd">    filename : str, optional</span>
+<span class="sd">        Name of the output CSV file, by default &#39;case_llr.csv&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">case_data_provider</span><span class="p">:</span> <span class="n">DataProvider</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;case_llr.csv&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">output_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">case_data_provider</span> <span class="o">=</span> <span class="n">case_data_provider</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CaseLLRToCsv.report">
+<a class="viewcode-back" href="../../api/lir.aggregation.html#lir.aggregation.CaseLLRToCsv.report">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">AggregationData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply the full-data-fitted LR system to the case data and store the resulting LLRs as CSV.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data : AggregationData</span>
+<span class="sd">            Aggregation data containing the fitted LR system and case data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">get_full_fit_lrsystem</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lrsystem</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get_full_fit_lrsystem</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">LOG</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;No full-data-fitted model factory available for run `</span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">run_name</span><span class="si">}</span><span class="s1">`; &#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;using split-trained model instead.&#39;</span>
+            <span class="p">)</span>
+            <span class="n">lrsystem</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">lrsystem</span>
+
+        <span class="c1"># Ensure the case data does not contain labels by setting them to None.</span>
+        <span class="n">case_instances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">case_data_provider</span><span class="o">.</span><span class="n">get_instances</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">case_instances</span> <span class="o">=</span> <span class="n">check_type</span><span class="p">(</span><span class="n">FeatureData</span><span class="p">,</span> <span class="n">case_instances</span><span class="p">)</span>
+        <span class="n">case_llrs</span> <span class="o">=</span> <span class="n">lrsystem</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">case_instances</span><span class="p">)</span>
+
+        <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_output_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">run_name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">case_instances</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">case_llrs</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;Cannot export original case features to case_llr.csv because row counts differ: &#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">case_instances</span><span class="p">)</span><span class="si">}</span><span class="s1"> case rows vs </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">case_llrs</span><span class="p">)</span><span class="si">}</span><span class="s1"> LLR rows.&#39;</span>
+            <span class="p">)</span>
+
+        <span class="n">csv_builder</span> <span class="o">=</span> <span class="n">DataFileBuilderCsv</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="n">features_2d</span> <span class="o">=</span> <span class="n">case_instances</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">case_instances</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">feature_count</span> <span class="o">=</span> <span class="n">features_2d</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">raw_header</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">case_instances</span><span class="p">,</span> <span class="s1">&#39;header&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">raw_header</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">raw_header</span><span class="p">)</span> <span class="o">==</span> <span class="n">feature_count</span><span class="p">:</span>
+            <span class="n">feature_headers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">raw_header</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">feature_headers</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;feature_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">feature_count</span><span class="p">)]</span>
+        <span class="n">csv_builder</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="n">features_2d</span><span class="p">,</span> <span class="n">dimension_headers</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="n">feature_headers</span><span class="p">})</span>
+
+        <span class="n">csv_builder</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="n">case_llrs</span><span class="o">.</span><span class="n">llrs</span><span class="p">,</span> <span class="s1">&#39;llr&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">case_llrs</span><span class="o">.</span><span class="n">has_intervals</span> <span class="ow">and</span> <span class="n">case_llrs</span><span class="o">.</span><span class="n">llr_intervals</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">csv_builder</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="n">case_llrs</span><span class="o">.</span><span class="n">llr_intervals</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;llr_interval_low&#39;</span><span class="p">)</span>
+            <span class="n">csv_builder</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="n">case_llrs</span><span class="o">.</span><span class="n">llr_intervals</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;llr_interval_high&#39;</span><span class="p">)</span>
+
+        <span class="n">csv_builder</span><span class="o">.</span><span class="n">write</span><span class="p">()</span></div>
+</div>
+
+
+
+<span class="nd">@config_parser</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">case_llr_csv</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CaseLLRToCsv</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse output configuration for case LLR generation and CSV export.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : ContextAwareDict</span>
+<span class="sd">        Configuration dictionary containing case LLR output settings.</span>
+<span class="sd">    output_dir : Path</span>
+<span class="sd">        Directory where the CSV file will be written.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    CaseLLRToCsv</span>
+<span class="sd">        Configured CaseLLRToCsv aggregation instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">case_data_provider</span> <span class="o">=</span> <span class="n">parse_data_provider</span><span class="p">(</span><span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;case_llr_data&#39;</span><span class="p">),</span> <span class="n">output_dir</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;filename&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;case_llr.csv&#39;</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">check_type</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="n">check_is_empty</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">CaseLLRToCsv</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">case_data_provider</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="SubsetAggregation">
+<a class="viewcode-back" href="../../api/lir.aggregation.html#lir.aggregation.SubsetAggregation">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SubsetAggregation</span><span class="p">(</span><span class="n">Aggregation</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Aggregation method that manages data categorization.</span>
+
+<span class="sd">    A separate aggregation method is used for each category.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    aggregation_methods : list[Aggregation]</span>
+<span class="sd">        A list of methods to aggregate results by category.</span>
+<span class="sd">    category_field : str</span>
+<span class="sd">        The name of the category field.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">aggregation_methods</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Aggregation</span><span class="p">],</span> <span class="n">category_field</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the subset aggregation method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        aggregation_methods : list[Aggregation]</span>
+<span class="sd">            A list of methods to aggregate results by category.</span>
+<span class="sd">        category_field : str</span>
+<span class="sd">            The name of the category field.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aggregation_methods</span> <span class="o">=</span> <span class="n">aggregation_methods</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">category_field</span> <span class="o">=</span> <span class="n">category_field</span>
+
+<div class="viewcode-block" id="SubsetAggregation.report">
+<a class="viewcode-back" href="../../api/lir.aggregation.html#lir.aggregation.SubsetAggregation.report">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">AggregationData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Report that new results are available.</span>
+
+<span class="sd">        The data are categorized into subsets and forwarded to the actual aggregation method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data : AggregationData</span>
+<span class="sd">            The aggregated data to be reported.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">run_name_prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">run_name</span><span class="si">}</span><span class="s1">/&#39;</span> <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">run_name</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">category</span><span class="p">,</span> <span class="n">subset</span> <span class="ow">in</span> <span class="n">get_instances_by_category</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">llrdata</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">category_field</span><span class="p">):</span>
+            <span class="n">category_str</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">category</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">run_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">run_name_prefix</span><span class="si">}{</span><span class="n">category_str</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">category_data</span> <span class="o">=</span> <span class="n">AggregationData</span><span class="p">(</span>
+                <span class="n">llrdata</span><span class="o">=</span><span class="n">subset</span><span class="p">,</span>
+                <span class="n">lrsystem</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">lrsystem</span><span class="p">,</span>
+                <span class="n">parameters</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">parameters</span> <span class="o">|</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">category_field</span><span class="p">:</span> <span class="n">category</span><span class="p">},</span>
+                <span class="n">run_name</span><span class="o">=</span><span class="n">run_name</span><span class="p">,</span>
+                <span class="n">get_full_fit_lrsystem</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get_full_fit_lrsystem</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">aggregation_methods</span><span class="p">:</span>
+                <span class="n">output</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="n">category_data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SubsetAggregation.close">
+<a class="viewcode-back" href="../../api/lir.aggregation.html#lir.aggregation.SubsetAggregation.close">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Close all subset aggregation methods.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">aggregation_methods</span><span class="p">:</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

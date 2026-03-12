@@ -1,0 +1,7 @@
+lir.datasets.glass module
+=========================
+
+.. automodule:: lir.datasets.glass
+   :members:
+   :show-inheritance:
+   :undoc-members:

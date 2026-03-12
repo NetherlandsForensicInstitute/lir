@@ -1,0 +1,7 @@
+lir.algorithms.bootstraps module
+================================
+
+.. automodule:: lir.algorithms.bootstraps
+   :members:
+   :show-inheritance:
+   :undoc-members:

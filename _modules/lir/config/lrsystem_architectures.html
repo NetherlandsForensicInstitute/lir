@@ -1,0 +1,487 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.config.lrsystem_architectures &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/lir.html">lir package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../lir.html">lir</a></li>
+      <li class="breadcrumb-item active">lir.config.lrsystem_architectures</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lir.config.lrsystem_architectures</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Self</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir</span><span class="w"> </span><span class="kn">import</span> <span class="n">registry</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.base</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">YamlParseError</span><span class="p">,</span>
+    <span class="n">check_is_empty</span><span class="p">,</span>
+    <span class="n">config_parser</span><span class="p">,</span>
+    <span class="n">parse_pairing_config</span><span class="p">,</span>
+    <span class="n">pop_field</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.substitution</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ContextAwareDict</span><span class="p">,</span>
+    <span class="n">HyperparameterOption</span><span class="p">,</span>
+    <span class="n">substitute_parameters</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.transform</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_module</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.data.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">InstanceData</span><span class="p">,</span> <span class="n">LLRData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.lrsystems.binary_lrsystem</span><span class="w"> </span><span class="kn">import</span> <span class="n">BinaryLRSystem</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.lrsystems.lrsystems</span><span class="w"> </span><span class="kn">import</span> <span class="n">LRSystem</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.lrsystems.score_based</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScoreBasedSystem</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.lrsystems.two_level</span><span class="w"> </span><span class="kn">import</span> <span class="n">TwoLevelSystem</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">ComponentNotFoundError</span>
+
+
+<span class="n">LOG</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ParsedLRSystem">
+<a class="viewcode-back" href="../../../api/lir.config.lrsystem_architectures.html#lir.config.lrsystem_architectures.ParsedLRSystem">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ParsedLRSystem</span><span class="p">(</span><span class="n">LRSystem</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represent a given initialized LR system based on the provided configuration.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    lrsystem : LRSystem</span>
+<span class="sd">        Underlying LR system implementation.</span>
+<span class="sd">    config : ContextAwareDict</span>
+<span class="sd">        Original LR system configuration.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lrsystem</span><span class="p">:</span> <span class="n">LRSystem</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialise a parsed LR system wrapper.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        lrsystem : LRSystem</span>
+<span class="sd">            Underlying LR system implementation.</span>
+<span class="sd">        config : ContextAwareDict</span>
+<span class="sd">            Original LR system configuration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lrsystem</span> <span class="o">=</span> <span class="n">lrsystem</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+
+<div class="viewcode-block" id="ParsedLRSystem.fit">
+<a class="viewcode-back" href="../../../api/lir.config.lrsystem_architectures.html#lir.config.lrsystem_architectures.ParsedLRSystem.fit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fit the LR system on instance data.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceData</span>
+<span class="sd">            Training instances.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Self</span>
+<span class="sd">            This wrapper instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lrsystem</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="ParsedLRSystem.apply">
+<a class="viewcode-back" href="../../../api/lir.config.lrsystem_architectures.html#lir.config.lrsystem_architectures.ParsedLRSystem.apply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LLRData</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply the fitted LR system.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceData</span>
+<span class="sd">            Instances to score.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        LLRData</span>
+<span class="sd">            Computed likelihood-ratio data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lrsystem</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="nd">@config_parser</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">specific_source</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BinaryLRSystem</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Construct a specific-source LR system based on the provided configuration.</span>
+
+<span class="sd">    The `specific_source` function name corresponds with the naming scheme in the</span>
+<span class="sd">    registry. See for example: `lir.config.lrsystems.specific_source`.</span>
+
+<span class="sd">    The config can contain:</span>
+<span class="sd">     - modules: module configuration for the pipeline</span>
+<span class="sd">     - intermediate_output: boolean flag to determine whether to use logging pipeline as default</span>
+
+<span class="sd">    If any other fields are present, an exception is raised.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : ContextAwareDict</span>
+<span class="sd">        Specific-source architecture configuration.</span>
+<span class="sd">    output_dir : Path</span>
+<span class="sd">        Output directory passed to nested module parsers.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    BinaryLRSystem</span>
+<span class="sd">        Configured specific-source LR system.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">parse_module</span><span class="p">(</span>
+        <span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;modules&#39;</span><span class="p">),</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="n">default_method</span><span class="o">=</span><span class="n">parse_default_pipeline</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">check_is_empty</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">BinaryLRSystem</span><span class="p">(</span><span class="n">pipeline</span><span class="p">)</span>
+
+
+<span class="nd">@config_parser</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">score_based</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ScoreBasedSystem</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Construct a score-based LR system based on the provided configuration.</span>
+
+<span class="sd">    The `score_based` function name corresponds with the naming scheme in the</span>
+<span class="sd">    registry. See for example: `lir.config.lrsystems.score_based`.</span>
+
+<span class="sd">    The config can contain:</span>
+<span class="sd">     - preprocessing: module configuration for preprocessing</span>
+<span class="sd">     - pairing: module configuration for pairing</span>
+<span class="sd">     - comparing: module configuration for comparing between scores</span>
+<span class="sd">     - intermediate_output: boolean flag to determine whether to use logging pipeline as default</span>
+
+<span class="sd">    If any other fields are present, an exception is raised.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : ContextAwareDict</span>
+<span class="sd">        Score-based architecture configuration.</span>
+<span class="sd">    output_dir : Path</span>
+<span class="sd">        Output directory passed to nested module parsers.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ScoreBasedSystem</span>
+<span class="sd">        Configured score-based LR system.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default_pipeline</span> <span class="o">=</span> <span class="n">parse_default_pipeline</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+    <span class="n">preprocessing</span> <span class="o">=</span> <span class="n">parse_module</span><span class="p">(</span>
+        <span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;preprocessing&#39;</span><span class="p">),</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="n">default_method</span><span class="o">=</span><span class="n">default_pipeline</span>
+    <span class="p">)</span>
+    <span class="n">pairing_function</span> <span class="o">=</span> <span class="n">parse_pairing_config</span><span class="p">(</span><span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;pairing&#39;</span><span class="p">),</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+    <span class="n">evaluation</span> <span class="o">=</span> <span class="n">parse_module</span><span class="p">(</span>
+        <span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;comparing&#39;</span><span class="p">),</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="n">default_method</span><span class="o">=</span><span class="n">default_pipeline</span>
+    <span class="p">)</span>
+
+    <span class="n">check_is_empty</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ScoreBasedSystem</span><span class="p">(</span><span class="n">preprocessing</span><span class="p">,</span> <span class="n">pairing_function</span><span class="p">,</span> <span class="n">evaluation</span><span class="p">)</span>
+
+
+<span class="nd">@config_parser</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">two_level</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TwoLevelSystem</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Construct a two-level LR system based on the provided configuration.</span>
+
+<span class="sd">    The `two_level` function name corresponds with the naming scheme in the</span>
+<span class="sd">    registry. See for example: `lir.config.lrsystems.two_level`.</span>
+
+<span class="sd">    The config can contain:</span>
+<span class="sd">    - preprocessing: module for preprocessing trace and reference data</span>
+<span class="sd">    - pairing: configuration for pairing function</span>
+<span class="sd">    - postprocessing: module for postprocessing scores to LLRs</span>
+<span class="sd">    - n_trace_instances: number of trace instances to use</span>
+<span class="sd">    - n_ref_instances: number of reference instances to use</span>
+<span class="sd">    - intermediate_output: boolean flag to determine whether to use logging pipeline as default</span>
+
+<span class="sd">    If any other fields are present, an exception is raised.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : ContextAwareDict</span>
+<span class="sd">        Two-level architecture configuration.</span>
+<span class="sd">    output_dir : Path</span>
+<span class="sd">        Output directory passed to nested module parsers.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    TwoLevelSystem</span>
+<span class="sd">        Configured two-level LR system.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default_pipeline</span> <span class="o">=</span> <span class="n">parse_default_pipeline</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+    <span class="n">preprocessing</span> <span class="o">=</span> <span class="n">parse_module</span><span class="p">(</span>
+        <span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;preprocessing&#39;</span><span class="p">),</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="n">default_method</span><span class="o">=</span><span class="n">default_pipeline</span>
+    <span class="p">)</span>
+    <span class="n">pairing_function</span> <span class="o">=</span> <span class="n">parse_pairing_config</span><span class="p">(</span><span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;pairing&#39;</span><span class="p">),</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+    <span class="n">postprocessing</span> <span class="o">=</span> <span class="n">parse_module</span><span class="p">(</span>
+        <span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;postprocessing&#39;</span><span class="p">),</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="n">default_method</span><span class="o">=</span><span class="n">default_pipeline</span>
+    <span class="p">)</span>
+    <span class="n">n_trace_instances</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;n_trace_instances&#39;</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">n_ref_instances</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;n_ref_instances&#39;</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="n">check_is_empty</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">TwoLevelSystem</span><span class="p">(</span>
+        <span class="n">preprocessing</span><span class="p">,</span>
+        <span class="n">pairing_function</span><span class="p">,</span>
+        <span class="n">postprocessing</span><span class="p">,</span>
+        <span class="n">n_trace_instances</span><span class="p">,</span>
+        <span class="n">n_ref_instances</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<div class="viewcode-block" id="parse_lrsystem">
+<a class="viewcode-back" href="../../../api/lir.config.lrsystem_architectures.html#lir.config.lrsystem_architectures.parse_lrsystem">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_lrsystem</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ParsedLRSystem</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determine and initialise corresponding LR system from configuration values.</span>
+
+<span class="sd">    LR systems are provided under the `architectures` key.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : ContextAwareDict</span>
+<span class="sd">        LR system configuration.</span>
+<span class="sd">    output_dir : Path</span>
+<span class="sd">        Output directory for nested parser calls.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ParsedLRSystem</span>
+<span class="sd">        Wrapper containing parsed LR system and source configuration.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lrsystem_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>  <span class="c1"># save for later</span>
+
+    <span class="n">architecture</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;architecture&#39;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">architecture</span><span class="p">,</span> <span class="n">search_path</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;lrsystem_architectures&#39;</span><span class="p">])</span>
+    <span class="k">except</span> <span class="n">ComponentNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">YamlParseError</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">lrsystem</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ParsedLRSystem</span><span class="p">(</span><span class="n">lrsystem</span><span class="p">,</span> <span class="n">lrsystem_config</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="augment_config">
+<a class="viewcode-back" href="../../../api/lir.config.lrsystem_architectures.html#lir.config.lrsystem_architectures.augment_config">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">augment_config</span><span class="p">(</span>
+    <span class="n">baseline_config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">HyperparameterOption</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ContextAwareDict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse an augmented LR system.</span>
+
+<span class="sd">    The LR system is parsed from a base configuration and a set of parameter substitutions that override parts of the</span>
+<span class="sd">    base configuration. Results are written to a subdirectory of `output_dir` that is named by its parameter</span>
+<span class="sd">    substitutions and prefixed by `dirname_prefix`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    baseline_config : ContextAwareDict</span>
+<span class="sd">        Base LR system configuration.</span>
+<span class="sd">    hyperparameters : dict[str, HyperparameterOption]</span>
+<span class="sd">        Hyperparameter substitutions overriding parts of the base configuration.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ContextAwareDict</span>
+<span class="sd">        Augmented LR system configuration.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">substitutions</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">opt</span><span class="o">.</span><span class="n">substitutions</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="n">hyperparameters</span><span class="o">.</span><span class="n">values</span><span class="p">()]))</span>
+
+    <span class="c1"># generate a descriptive name from the substitutions</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;__&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">=</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">hyperparameters</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span>
+
+    <span class="c1"># generate the YAML context, for debugging and error messages</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="n">baseline_config</span><span class="o">.</span><span class="n">context</span> <span class="o">+</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;substitution[</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">]&#39;</span><span class="p">]</span>
+
+    <span class="c1"># build the augmented configuration for the LR system</span>
+    <span class="n">augmented_config</span> <span class="o">=</span> <span class="n">substitute_parameters</span><span class="p">(</span><span class="n">baseline_config</span><span class="p">,</span> <span class="n">substitutions</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">augmented_config</span></div>
+
+
+
+<div class="viewcode-block" id="parse_default_pipeline">
+<a class="viewcode-back" href="../../../api/lir.config.lrsystem_architectures.html#lir.config.lrsystem_architectures.parse_default_pipeline">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_default_pipeline</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse the intermediate output flag to determine the default pipeline method.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : ContextAwareDict</span>
+<span class="sd">        Configuration dictionary.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        Default method name (``&#39;logging_pipeline&#39;`` or ``&#39;pipeline&#39;``).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">intermediate_output</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;intermediate_output&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">default_method</span> <span class="o">=</span> <span class="s1">&#39;logging_pipeline&#39;</span> <span class="k">if</span> <span class="n">intermediate_output</span> <span class="k">else</span> <span class="s1">&#39;pipeline&#39;</span>
+    <span class="k">if</span> <span class="n">intermediate_output</span><span class="p">:</span>
+        <span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Using logging pipeline by default as `intermediate_output` is set to true.&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">default_method</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,416 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.config.experiment_strategies module &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lir.config.lrsystem_architectures module" href="lir.config.lrsystem_architectures.html" />
+    <link rel="prev" title="lir.config.data module" href="lir.config.data.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="lir.html">lir package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">lir</a></li>
+          <li class="breadcrumb-item"><a href="lir.html">lir package</a></li>
+          <li class="breadcrumb-item"><a href="lir.config.html">lir.config package</a></li>
+      <li class="breadcrumb-item active">lir.config.experiment_strategies module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/lir.config.experiment_strategies.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-lir.config.experiment_strategies">
+<span id="lir-config-experiment-strategies-module"></span><h1>lir.config.experiment_strategies module<a class="headerlink" href="#module-lir.config.experiment_strategies" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.config.experiment_strategies.ExperimentStrategyConfigParser">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.config.experiment_strategies.</span></span><span class="sig-name descname"><span class="pre">ExperimentStrategyConfigParser</span></span><a class="reference internal" href="../_modules/lir/config/experiment_strategies.html#ExperimentStrategyConfigParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.config.experiment_strategies.ExperimentStrategyConfigParser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="lir.config.base.html#lir.config.base.ConfigParser" title="lir.config.base.ConfigParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigParser</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Base class for an experiment strategy configuration parser.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.config.experiment_strategies.ExperimentStrategyConfigParser.data_config">
+<span class="sig-name descname"><span class="pre">data_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">ContextAwareDict</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lir.config.substitution.html#lir.config.substitution.Hyperparameter" title="lir.config.substitution.Hyperparameter"><span class="pre">Hyperparameter</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lir/config/experiment_strategies.html#ExperimentStrategyConfigParser.data_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.config.experiment_strategies.ExperimentStrategyConfigParser.data_config" title="Link to this definition"></a></dt>
+<dd><p>Prepare the data provider and data strategy from the configuration.</p>
+<p>The (hyper)parameters to vary for the data provider and data strategy are also parsed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Data configuration and associated hyperparameters.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[<a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict">ContextAwareDict</a>, list[<a class="reference internal" href="lir.config.substitution.html#lir.config.substitution.Hyperparameter" title="lir.config.substitution.Hyperparameter">Hyperparameter</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.config.experiment_strategies.ExperimentStrategyConfigParser.get_experiment">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">get_experiment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.experiments.base_experiment.html#lir.experiments.base_experiment.Experiment" title="lir.experiments.base_experiment.Experiment"><span class="pre">Experiment</span></a></span></span><a class="reference internal" href="../_modules/lir/config/experiment_strategies.html#ExperimentStrategyConfigParser.get_experiment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.config.experiment_strategies.ExperimentStrategyConfigParser.get_experiment" title="Link to this definition"></a></dt>
+<dd><p>Get an experiment by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Experiment name.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Experiment instance configured by this strategy.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="lir.experiments.html#lir.experiments.Experiment" title="lir.experiments.Experiment">Experiment</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.config.experiment_strategies.ExperimentStrategyConfigParser.lrsystem_config">
+<span class="sig-name descname"><span class="pre">lrsystem_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">ContextAwareDict</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lir.config.substitution.html#lir.config.substitution.Hyperparameter" title="lir.config.substitution.Hyperparameter"><span class="pre">Hyperparameter</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lir/config/experiment_strategies.html#ExperimentStrategyConfigParser.lrsystem_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.config.experiment_strategies.ExperimentStrategyConfigParser.lrsystem_config" title="Link to this definition"></a></dt>
+<dd><p>Parse the LR system section including hyperparameters.</p>
+<p>The baseline configuration is provided along with the specified parameters to vary (the
+defined hyperparameters).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>LR system configuration and associated hyperparameters.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[<a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict">ContextAwareDict</a>, list[<a class="reference internal" href="lir.config.substitution.html#lir.config.substitution.Hyperparameter" title="lir.config.substitution.Hyperparameter">Hyperparameter</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.config.experiment_strategies.ExperimentStrategyConfigParser.output_list">
+<span class="sig-name descname"><span class="pre">output_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lir.aggregation.html#lir.aggregation.Aggregation" title="lir.aggregation.Aggregation"><span class="pre">Aggregation</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lir/config/experiment_strategies.html#ExperimentStrategyConfigParser.output_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.config.experiment_strategies.ExperimentStrategyConfigParser.output_list" title="Link to this definition"></a></dt>
+<dd><p>Initialize corresponding aggregation classes based on the <code class="docutils literal notranslate"><span class="pre">output</span></code> section.</p>
+<p>The initialized aggregation classes are returned as a sequence, to be iterated over in a
+later stage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Aggregation objects used to collect experiment outputs.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Sequence[<a class="reference internal" href="lir.aggregation.html#lir.aggregation.Aggregation" title="lir.aggregation.Aggregation">Aggregation</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.config.experiment_strategies.ExperimentStrategyConfigParser.parse">
+<span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.experiments.base_experiment.html#lir.experiments.base_experiment.Experiment" title="lir.experiments.base_experiment.Experiment"><span class="pre">Experiment</span></a></span></span><a class="reference internal" href="../_modules/lir/config/experiment_strategies.html#ExperimentStrategyConfigParser.parse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.config.experiment_strategies.ExperimentStrategyConfigParser.parse" title="Link to this definition"></a></dt>
+<dd><p>Parse the experiment section of the configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><em>ContextAwareDict</em></a>) – Experiment strategy configuration.</p></li>
+<li><p><strong>output_dir</strong> (<em>Path</em>) – Base output directory for this experiment.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Parsed experiment.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="lir.experiments.html#lir.experiments.Experiment" title="lir.experiments.Experiment">Experiment</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.config.experiment_strategies.ExperimentStrategyConfigParser.primary_metric">
+<span class="sig-name descname"><span class="pre">primary_metric</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span><a class="reference internal" href="../_modules/lir/config/experiment_strategies.html#ExperimentStrategyConfigParser.primary_metric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.config.experiment_strategies.ExperimentStrategyConfigParser.primary_metric" title="Link to this definition"></a></dt>
+<dd><p>Parse the <code class="docutils literal notranslate"><span class="pre">primary_metric</span></code> field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Metric function used for optimisation.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Callable</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.config.experiment_strategies.GridStrategy">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.config.experiment_strategies.</span></span><span class="sig-name descname"><span class="pre">GridStrategy</span></span><a class="reference internal" href="../_modules/lir/config/experiment_strategies.html#GridStrategy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.config.experiment_strategies.GridStrategy" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.config.experiment_strategies.ExperimentStrategyConfigParser" title="lir.config.experiment_strategies.ExperimentStrategyConfigParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExperimentStrategyConfigParser</span></code></a></p>
+<p>Prepare Experiment consisting of multiple runs using configuration values.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.config.experiment_strategies.GridStrategy.get_experiment">
+<span class="sig-name descname"><span class="pre">get_experiment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.experiments.base_experiment.html#lir.experiments.base_experiment.Experiment" title="lir.experiments.base_experiment.Experiment"><span class="pre">Experiment</span></a></span></span><a class="reference internal" href="../_modules/lir/config/experiment_strategies.html#GridStrategy.get_experiment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.config.experiment_strategies.GridStrategy.get_experiment" title="Link to this definition"></a></dt>
+<dd><p>Get experiment for a grid search strategy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Experiment name.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Predefined experiment with all parameter combinations.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="lir.experiments.html#lir.experiments.Experiment" title="lir.experiments.Experiment">Experiment</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.config.experiment_strategies.OptunaStrategy">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.config.experiment_strategies.</span></span><span class="sig-name descname"><span class="pre">OptunaStrategy</span></span><a class="reference internal" href="../_modules/lir/config/experiment_strategies.html#OptunaStrategy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.config.experiment_strategies.OptunaStrategy" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.config.experiment_strategies.ExperimentStrategyConfigParser" title="lir.config.experiment_strategies.ExperimentStrategyConfigParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExperimentStrategyConfigParser</span></code></a></p>
+<p>Prepare Experiment for optimizing configuration parameters.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.config.experiment_strategies.OptunaStrategy.get_experiment">
+<span class="sig-name descname"><span class="pre">get_experiment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.experiments.base_experiment.html#lir.experiments.base_experiment.Experiment" title="lir.experiments.base_experiment.Experiment"><span class="pre">Experiment</span></a></span></span><a class="reference internal" href="../_modules/lir/config/experiment_strategies.html#OptunaStrategy.get_experiment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.config.experiment_strategies.OptunaStrategy.get_experiment" title="Link to this definition"></a></dt>
+<dd><p>Get experiment for an Optuna optimisation strategy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Experiment name.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optuna-backed experiment.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="lir.experiments.html#lir.experiments.Experiment" title="lir.experiments.Experiment">Experiment</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.config.experiment_strategies.SingleRunStrategy">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.config.experiment_strategies.</span></span><span class="sig-name descname"><span class="pre">SingleRunStrategy</span></span><a class="reference internal" href="../_modules/lir/config/experiment_strategies.html#SingleRunStrategy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.config.experiment_strategies.SingleRunStrategy" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.config.experiment_strategies.ExperimentStrategyConfigParser" title="lir.config.experiment_strategies.ExperimentStrategyConfigParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExperimentStrategyConfigParser</span></code></a></p>
+<p>Prepare Experiment consisting of a single run using configuration values.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lir.config.experiment_strategies.SingleRunStrategy.get_experiment">
+<span class="sig-name descname"><span class="pre">get_experiment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.experiments.base_experiment.html#lir.experiments.base_experiment.Experiment" title="lir.experiments.base_experiment.Experiment"><span class="pre">Experiment</span></a></span></span><a class="reference internal" href="../_modules/lir/config/experiment_strategies.html#SingleRunStrategy.get_experiment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.config.experiment_strategies.SingleRunStrategy.get_experiment" title="Link to this definition"></a></dt>
+<dd><p>Get an experiment for a single run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Experiment name.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Predefined single-run experiment.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="lir.experiments.html#lir.experiments.Experiment" title="lir.experiments.Experiment">Experiment</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.config.experiment_strategies.create_configs_from_hyperparameters">
+<span class="sig-prename descclassname"><span class="pre">lir.config.experiment_strategies.</span></span><span class="sig-name descname"><span class="pre">create_configs_from_hyperparameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">baseline_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lir.config.substitution.html#lir.config.substitution.Hyperparameter" title="lir.config.substitution.Hyperparameter"><span class="pre">Hyperparameter</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">ContextAwareDict</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lir/config/experiment_strategies.html#create_configs_from_hyperparameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.config.experiment_strategies.create_configs_from_hyperparameters" title="Link to this definition"></a></dt>
+<dd><p>Create configurations for all combinations of hyperparameter options.</p>
+<p>Generates a Cartesian product of all hyperparameter options and creates a configuration
+for each combination by substituting the values into the baseline configuration.</p>
+<p>This is used for both dataparameters and lrsystem hyperparameters in grid search.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>baseline_config</strong> (<a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><em>ContextAwareDict</em></a>) – Baseline configuration to augment.</p></li>
+<li><p><strong>parameters</strong> (<em>list</em><em>[</em><a class="reference internal" href="lir.config.substitution.html#lir.config.substitution.Hyperparameter" title="lir.config.substitution.Hyperparameter"><em>Hyperparameter</em></a><em>]</em>) – Hyperparameters to vary.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Augmented configurations and applied substitutions.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[tuple[<a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict">ContextAwareDict</a>, dict[str, Any]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.config.experiment_strategies.parse_experiment_strategy">
+<span class="sig-prename descclassname"><span class="pre">lir.config.experiment_strategies.</span></span><span class="sig-name descname"><span class="pre">parse_experiment_strategy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.experiments.base_experiment.html#lir.experiments.base_experiment.Experiment" title="lir.experiments.base_experiment.Experiment"><span class="pre">Experiment</span></a></span></span><a class="reference internal" href="../_modules/lir/config/experiment_strategies.html#parse_experiment_strategy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.config.experiment_strategies.parse_experiment_strategy" title="Link to this definition"></a></dt>
+<dd><p>Instantiate the corresponding experiment strategy class, e.g. for a single or grid run.</p>
+<p>A corresponding Experiment class is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><em>ContextAwareDict</em></a>) – Experiment strategy configuration.</p></li>
+<li><p><strong>output_path</strong> (<em>Path</em>) – Output path for experiment artefacts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Parsed experiment strategy instance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="lir.experiments.html#lir.experiments.Experiment" title="lir.experiments.Experiment">Experiment</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.config.experiment_strategies.parse_experiments">
+<span class="sig-prename descclassname"><span class="pre">lir.config.experiment_strategies.</span></span><span class="sig-name descname"><span class="pre">parse_experiments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="lir.experiments.base_experiment.html#lir.experiments.base_experiment.Experiment" title="lir.experiments.base_experiment.Experiment"><span class="pre">Experiment</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lir/config/experiment_strategies.html#parse_experiments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.config.experiment_strategies.parse_experiments" title="Link to this definition"></a></dt>
+<dd><p>Extract which Experiment to run as dictated in the configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cfg</strong> (<a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><em>ContextAwareDict</em></a>) – Configuration section describing experiments.</p></li>
+<li><p><strong>output_path</strong> (<em>Path</em>) – Filesystem path to the results directory.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Mapping from experiment name to parsed experiment.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Mapping[str, <a class="reference internal" href="lir.experiments.html#lir.experiments.Experiment" title="lir.experiments.Experiment">Experiment</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lir.config.data.html" class="btn btn-neutral float-left" title="lir.config.data module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lir.config.lrsystem_architectures.html" class="btn btn-neutral float-right" title="lir.config.lrsystem_architectures module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

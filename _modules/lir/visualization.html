@@ -1,0 +1,277 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.visualization &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/lir.html">lir package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/lir.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../lir.html">lir</a></li>
+      <li class="breadcrumb-item active">lir.visualization</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lir.visualization</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.data.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLRData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.plotting</span><span class="w"> </span><span class="kn">import</span> <span class="n">savefig</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_save_or_plot</span><span class="p">(</span>
+    <span class="n">ax</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">base_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">plot_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="kc">None</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot to an axis or save plot to file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ax : Any | None</span>
+<span class="sd">        The axis to plot on, if provided.</span>
+<span class="sd">    base_path : Path | None</span>
+<span class="sd">        The base path to save the plot, if ax is not provided.</span>
+<span class="sd">    filename : str</span>
+<span class="sd">        The filename to save the plot as, if ax is not provided.</span>
+<span class="sd">    plot_func : Callable[[Any, Any], None]</span>
+<span class="sd">        The function that generates the plot, taking an axis or figure and data as arguments.</span>
+<span class="sd">    *args : Any</span>
+<span class="sd">        Additional arguments to pass to the plot function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plot_func</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">base_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">base_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">base_path</span> <span class="o">/</span> <span class="n">filename</span>
+        <span class="k">with</span> <span class="n">savefig</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">))</span> <span class="k">as</span> <span class="n">fig</span><span class="p">:</span>
+            <span class="n">plot_func</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Either base_path or ax must be provided.&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="pav">
+<a class="viewcode-back" href="../../api/lir.visualization.html#lir.visualization.pav">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">pav</span><span class="p">(</span><span class="n">base_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">llrdata</span><span class="p">:</span> <span class="n">LLRData</span><span class="p">,</span> <span class="n">ax</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate and handle a PAV plot, either saving to a file or plotting on a given axis.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    base_path : Path | None</span>
+<span class="sd">        The base path to save the plot, if ax is not provided.</span>
+<span class="sd">    llrdata : LLRData</span>
+<span class="sd">        The data to be plotted.</span>
+<span class="sd">    ax : Any | None, optional</span>
+<span class="sd">        The axis to plot on, if provided. If None, the plot will be saved to a file, by default None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_save_or_plot</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="s1">&#39;pav.png&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">obj</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">pav</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">llrdata</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ece">
+<a class="viewcode-back" href="../../api/lir.visualization.html#lir.visualization.ece">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">ece</span><span class="p">(</span><span class="n">base_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">llrdata</span><span class="p">:</span> <span class="n">LLRData</span><span class="p">,</span> <span class="n">ax</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate and handle an ECE plot, either saving to a file or plotting on a given axis.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    base_path : Path | None</span>
+<span class="sd">        The base path to save the plot, if ax is not provided.</span>
+<span class="sd">    llrdata : LLRData</span>
+<span class="sd">        The data to be plotted.</span>
+<span class="sd">    ax : Any | None, optional</span>
+<span class="sd">        The axis to plot on, if provided. If None, the plot will be saved to a file, by default None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_save_or_plot</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="s1">&#39;ece.png&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">obj</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">ece</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">llrdata</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="lr_histogram">
+<a class="viewcode-back" href="../../api/lir.visualization.html#lir.visualization.lr_histogram">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">lr_histogram</span><span class="p">(</span><span class="n">base_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">llrdata</span><span class="p">:</span> <span class="n">LLRData</span><span class="p">,</span> <span class="n">ax</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate and handle a histogram plot of likelihood ratios, either saving to file or plotting on an axis.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    base_path : Path | None</span>
+<span class="sd">        The base path to save the plot, if ax is not provided.</span>
+<span class="sd">    llrdata : LLRData</span>
+<span class="sd">        The data to be plotted.</span>
+<span class="sd">    ax : Any | None, optional</span>
+<span class="sd">        The axis to plot on, if provided. If None, the plot will be saved to a file, by default None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_save_or_plot</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="s1">&#39;histogram.png&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">obj</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">lr_histogram</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">llrdata</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="llr_interval">
+<a class="viewcode-back" href="../../api/lir.visualization.html#lir.visualization.llr_interval">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">llr_interval</span><span class="p">(</span><span class="n">base_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">llrdata</span><span class="p">:</span> <span class="n">LLRData</span><span class="p">,</span> <span class="n">ax</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate and handle a Score-LR plot, either saving to file or plotting on an axis.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    base_path : Path | None</span>
+<span class="sd">        The base path to save the plot, if ax is not provided.</span>
+<span class="sd">    llrdata : LLRData</span>
+<span class="sd">        The data to be plotted.</span>
+<span class="sd">    ax : Any | None, optional</span>
+<span class="sd">        The axis to plot on, if provided. If None, the plot will be saved to a file, by default None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_save_or_plot</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="s1">&#39;llr_interval.png&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">obj</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">llr_interval</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">llrdata</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

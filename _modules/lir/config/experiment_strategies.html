@@ -1,0 +1,566 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.config.experiment_strategies &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/lir.html">lir package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../lir.html">lir</a></li>
+      <li class="breadcrumb-item active">lir.config.experiment_strategies</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lir.config.experiment_strategies</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">product</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir</span><span class="w"> </span><span class="kn">import</span> <span class="n">registry</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.aggregation</span><span class="w"> </span><span class="kn">import</span> <span class="n">Aggregation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.aggregation</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_aggregations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.base</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ConfigParser</span><span class="p">,</span>
+    <span class="n">check_is_empty</span><span class="p">,</span>
+    <span class="n">check_type</span><span class="p">,</span>
+    <span class="n">pop_field</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.lrsystem_architectures</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">augment_config</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_individual_metric</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.substitution</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ContextAwareDict</span><span class="p">,</span>
+    <span class="n">Hyperparameter</span><span class="p">,</span>
+    <span class="n">parse_parameter</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.experiments</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Experiment</span><span class="p">,</span>
+    <span class="n">OptunaExperiment</span><span class="p">,</span>
+    <span class="n">PredefinedExperiment</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="ExperimentStrategyConfigParser">
+<a class="viewcode-back" href="../../../api/lir.config.experiment_strategies.html#lir.config.experiment_strategies.ExperimentStrategyConfigParser">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ExperimentStrategyConfigParser</span><span class="p">(</span><span class="n">ConfigParser</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for an experiment strategy configuration parser.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">:</span> <span class="n">ContextAwareDict</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_dir</span><span class="p">:</span> <span class="n">Path</span>
+
+<div class="viewcode-block" id="ExperimentStrategyConfigParser.primary_metric">
+<a class="viewcode-back" href="../../../api/lir.config.experiment_strategies.html#lir.config.experiment_strategies.ExperimentStrategyConfigParser.primary_metric">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">primary_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parse the ``primary_metric`` field.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Callable</span>
+<span class="sd">            Metric function used for optimisation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">metric_name</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span> <span class="s1">&#39;primary_metric&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">parse_individual_metric</span><span class="p">(</span><span class="n">metric_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">context</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ExperimentStrategyConfigParser.output_list">
+<a class="viewcode-back" href="../../../api/lir.config.experiment_strategies.html#lir.config.experiment_strategies.ExperimentStrategyConfigParser.output_list">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">output_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Aggregation</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize corresponding aggregation classes based on the ``output`` section.</span>
+
+<span class="sd">        The initialized aggregation classes are returned as a sequence, to be iterated over in a</span>
+<span class="sd">        later stage.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Sequence[Aggregation]</span>
+<span class="sd">            Aggregation objects used to collect experiment outputs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">ContextAwareDict</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+
+        <span class="k">return</span> <span class="n">parse_aggregations</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_dir</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ExperimentStrategyConfigParser.get_experiment">
+<a class="viewcode-back" href="../../../api/lir.config.experiment_strategies.html#lir.config.experiment_strategies.ExperimentStrategyConfigParser.get_experiment">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_experiment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Experiment</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get an experiment by name.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : str</span>
+<span class="sd">            Experiment name.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Experiment</span>
+<span class="sd">            Experiment instance configured by this strategy.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_parse_config_with_parameters</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config_field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">parameters_field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ContextAwareDict</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Hyperparameter</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extract a configuration section and its associated parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config_field : str</span>
+<span class="sd">            Field containing the baseline configuration.</span>
+<span class="sd">        parameters_field : str</span>
+<span class="sd">            Field containing parameters to vary.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[ContextAwareDict, list[Hyperparameter]]</span>
+<span class="sd">            Baseline configuration and parsed hyperparameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">baseline_config</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span> <span class="n">config_field</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">baseline_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">baseline_config</span> <span class="o">=</span> <span class="n">ContextAwareDict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">context</span> <span class="o">+</span> <span class="p">[</span><span class="n">config_field</span><span class="p">])</span>
+
+        <span class="n">parameters</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">parameters_field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">:</span>
+            <span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">parameters_field</span><span class="p">)</span>
+            <span class="n">parameters</span> <span class="o">=</span> <span class="p">[</span><span class="n">parse_parameter</span><span class="p">(</span><span class="n">variable</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_dir</span><span class="p">)</span> <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">baseline_config</span><span class="p">,</span> <span class="n">parameters</span>
+
+<div class="viewcode-block" id="ExperimentStrategyConfigParser.data_config">
+<a class="viewcode-back" href="../../../api/lir.config.experiment_strategies.html#lir.config.experiment_strategies.ExperimentStrategyConfigParser.data_config">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">data_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ContextAwareDict</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Hyperparameter</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prepare the data provider and data strategy from the configuration.</span>
+
+<span class="sd">        The (hyper)parameters to vary for the data provider and data strategy are also parsed.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[ContextAwareDict, list[Hyperparameter]]</span>
+<span class="sd">            Data configuration and associated hyperparameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_config_with_parameters</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;dataparameters&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ExperimentStrategyConfigParser.lrsystem_config">
+<a class="viewcode-back" href="../../../api/lir.config.experiment_strategies.html#lir.config.experiment_strategies.ExperimentStrategyConfigParser.lrsystem_config">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">lrsystem_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ContextAwareDict</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Hyperparameter</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parse the LR system section including hyperparameters.</span>
+
+<span class="sd">        The baseline configuration is provided along with the specified parameters to vary (the</span>
+<span class="sd">        defined hyperparameters).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[ContextAwareDict, list[Hyperparameter]]</span>
+<span class="sd">            LR system configuration and associated hyperparameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_config_with_parameters</span><span class="p">(</span><span class="s1">&#39;lr_system&#39;</span><span class="p">,</span> <span class="s1">&#39;hyperparameters&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ExperimentStrategyConfigParser.parse">
+<a class="viewcode-back" href="../../../api/lir.config.experiment_strategies.html#lir.config.experiment_strategies.ExperimentStrategyConfigParser.parse">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span>
+        <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Experiment</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parse the experiment section of the configuration.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config : ContextAwareDict</span>
+<span class="sd">            Experiment strategy configuration.</span>
+<span class="sd">        output_dir : Path</span>
+<span class="sd">            Base output directory for this experiment.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Experiment</span>
+<span class="sd">            Parsed experiment.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">config</span>
+
+        <span class="n">experiment_name</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;unnamed_experiment</span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_dir</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="n">experiment_name</span>
+        <span class="n">exp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_experiment</span><span class="p">(</span><span class="n">experiment_name</span><span class="p">)</span>
+
+        <span class="n">check_is_empty</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">exp</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="SingleRunStrategy">
+<a class="viewcode-back" href="../../../api/lir.config.experiment_strategies.html#lir.config.experiment_strategies.SingleRunStrategy">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SingleRunStrategy</span><span class="p">(</span><span class="n">ExperimentStrategyConfigParser</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prepare Experiment consisting of a single run using configuration values.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SingleRunStrategy.get_experiment">
+<a class="viewcode-back" href="../../../api/lir.config.experiment_strategies.html#lir.config.experiment_strategies.SingleRunStrategy.get_experiment">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_experiment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Experiment</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get an experiment for a single run.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : str</span>
+<span class="sd">            Experiment name.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Experiment</span>
+<span class="sd">            Predefined single-run experiment.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">PredefinedExperiment</span><span class="p">(</span>
+            <span class="n">name</span><span class="p">,</span>
+            <span class="p">[(</span><span class="n">pop_field</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">),</span> <span class="p">{})],</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_list</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_output_dir</span><span class="p">,</span>
+            <span class="p">[(</span><span class="n">pop_field</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span> <span class="s1">&#39;lr_system&#39;</span><span class="p">),</span> <span class="p">{})],</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="create_configs_from_hyperparameters">
+<a class="viewcode-back" href="../../../api/lir.config.experiment_strategies.html#lir.config.experiment_strategies.create_configs_from_hyperparameters">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_configs_from_hyperparameters</span><span class="p">(</span>
+    <span class="n">baseline_config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span>
+    <span class="n">parameters</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Hyperparameter</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">ContextAwareDict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create configurations for all combinations of hyperparameter options.</span>
+
+<span class="sd">    Generates a Cartesian product of all hyperparameter options and creates a configuration</span>
+<span class="sd">    for each combination by substituting the values into the baseline configuration.</span>
+
+<span class="sd">    This is used for both dataparameters and lrsystem hyperparameters in grid search.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    baseline_config : ContextAwareDict</span>
+<span class="sd">        Baseline configuration to augment.</span>
+<span class="sd">    parameters : list[Hyperparameter]</span>
+<span class="sd">        Hyperparameters to vary.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[tuple[ContextAwareDict, dict[str, Any]]]</span>
+<span class="sd">        Augmented configurations and applied substitutions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">configs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">parameter_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">]</span>
+    <span class="n">parameter_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">options</span><span class="p">()</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">value_set</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">parameter_values</span><span class="p">):</span>
+        <span class="n">substitutions</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">parameter_names</span><span class="p">,</span> <span class="n">value_set</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+        <span class="n">substituted_config</span> <span class="o">=</span> <span class="n">augment_config</span><span class="p">(</span><span class="n">baseline_config</span><span class="p">,</span> <span class="n">substitutions</span><span class="p">)</span>
+        <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">substituted_config</span><span class="p">,</span> <span class="n">substitutions</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">configs</span></div>
+
+
+
+<div class="viewcode-block" id="GridStrategy">
+<a class="viewcode-back" href="../../../api/lir.config.experiment_strategies.html#lir.config.experiment_strategies.GridStrategy">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GridStrategy</span><span class="p">(</span><span class="n">ExperimentStrategyConfigParser</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prepare Experiment consisting of multiple runs using configuration values.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="GridStrategy.get_experiment">
+<a class="viewcode-back" href="../../../api/lir.config.experiment_strategies.html#lir.config.experiment_strategies.GridStrategy.get_experiment">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_experiment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Experiment</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get experiment for a grid search strategy.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : str</span>
+<span class="sd">            Experiment name.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Experiment</span>
+<span class="sd">            Predefined experiment with all parameter combinations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">lrsystem_configs</span> <span class="o">=</span> <span class="n">create_configs_from_hyperparameters</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">lrsystem_config</span><span class="p">())</span>
+        <span class="n">data_configs</span> <span class="o">=</span> <span class="n">create_configs_from_hyperparameters</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">data_config</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">PredefinedExperiment</span><span class="p">(</span>
+            <span class="n">name</span><span class="p">,</span>
+            <span class="n">data_configs</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_list</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_output_dir</span><span class="p">,</span>
+            <span class="n">lrsystem_configs</span><span class="p">,</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="OptunaStrategy">
+<a class="viewcode-back" href="../../../api/lir.config.experiment_strategies.html#lir.config.experiment_strategies.OptunaStrategy">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">OptunaStrategy</span><span class="p">(</span><span class="n">ExperimentStrategyConfigParser</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prepare Experiment for optimizing configuration parameters.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="OptunaStrategy.get_experiment">
+<a class="viewcode-back" href="../../../api/lir.config.experiment_strategies.html#lir.config.experiment_strategies.OptunaStrategy.get_experiment">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_experiment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Experiment</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get experiment for an Optuna optimisation strategy.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : str</span>
+<span class="sd">            Experiment name.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Experiment</span>
+<span class="sd">            Optuna-backed experiment.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">baseline_config</span><span class="p">,</span> <span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lrsystem_config</span><span class="p">()</span>
+        <span class="n">n_trials</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span> <span class="s1">&#39;n_trials&#39;</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">OptunaExperiment</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">data_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_config</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">outputs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">output_list</span><span class="p">(),</span>
+            <span class="n">output_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_output_dir</span><span class="p">,</span>
+            <span class="n">baseline_config</span><span class="o">=</span><span class="n">baseline_config</span><span class="p">,</span>
+            <span class="n">hyperparameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span>
+            <span class="n">n_trials</span><span class="o">=</span><span class="n">n_trials</span><span class="p">,</span>
+            <span class="n">metric_function</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">primary_metric</span><span class="p">(),</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="parse_experiment_strategy">
+<a class="viewcode-back" href="../../../api/lir.config.experiment_strategies.html#lir.config.experiment_strategies.parse_experiment_strategy">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_experiment_strategy</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Experiment</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Instantiate the corresponding experiment strategy class, e.g. for a single or grid run.</span>
+
+<span class="sd">    A corresponding Experiment class is returned.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : ContextAwareDict</span>
+<span class="sd">        Experiment strategy configuration.</span>
+<span class="sd">    output_path : Path</span>
+<span class="sd">        Output path for experiment artefacts.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Experiment</span>
+<span class="sd">        Parsed experiment strategy instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">strategy_name</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;strategy&#39;</span><span class="p">)</span>
+    <span class="n">strategy_parser</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">strategy_name</span><span class="p">,</span> <span class="n">search_path</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;experiment_strategies&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">strategy_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="parse_experiments">
+<a class="viewcode-back" href="../../../api/lir.config.experiment_strategies.html#lir.config.experiment_strategies.parse_experiments">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_experiments</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Experiment</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract which Experiment to run as dictated in the configuration.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cfg : ContextAwareDict</span>
+<span class="sd">        Configuration section describing experiments.</span>
+<span class="sd">    output_path : Path</span>
+<span class="sd">        Filesystem path to the results directory.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Mapping[str, Experiment]</span>
+<span class="sd">        Mapping from experiment name to parsed experiment.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">experiments_config_section</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="s1">&#39;experiments&#39;</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">check_type</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span>
+
+    <span class="n">experiments</span><span class="p">:</span> <span class="n">OrderedDict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Experiment</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">exp_config</span> <span class="ow">in</span> <span class="n">experiments_config_section</span><span class="p">:</span>
+        <span class="n">experiment</span> <span class="o">=</span> <span class="n">parse_experiment_strategy</span><span class="p">(</span>
+            <span class="n">exp_config</span><span class="p">,</span>
+            <span class="n">output_path</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">experiment</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">experiments</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;experiment </span><span class="si">{</span><span class="n">experiment</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> already exists&#39;</span><span class="p">)</span>
+
+        <span class="n">experiments</span><span class="p">[</span><span class="n">experiment</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">experiment</span>
+
+    <span class="k">return</span> <span class="n">experiments</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

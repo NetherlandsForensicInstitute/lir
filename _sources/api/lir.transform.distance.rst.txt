@@ -1,0 +1,7 @@
+lir.transform.distance module
+=============================
+
+.. automodule:: lir.transform.distance
+   :members:
+   :show-inheritance:
+   :undoc-members:

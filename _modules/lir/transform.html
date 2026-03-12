@@ -1,0 +1,911 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.transform &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/lir.html">lir package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/lir.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../lir.html">lir</a></li>
+      <li class="breadcrumb-item active">lir.transform</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lir.transform</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">csv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">chain</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">Self</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.data.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeatureData</span><span class="p">,</span> <span class="n">InstanceData</span><span class="p">,</span> <span class="n">InstanceDataType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_type</span>
+
+
+<span class="n">LOG</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="DataWriter">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.DataWriter">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DataWriter</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Representation of a data writer and necessary methods.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DataWriter.writerow">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.DataWriter.writerow">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">writerow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write row to output.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        row : Any</span>
+<span class="sd">            CSV row dictionary to parse.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="SKLearnPipelineModule">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.SKLearnPipelineModule">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SKLearnPipelineModule</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Representation of the interface required for estimators by the scikit-learn `Pipeline`.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SKLearnPipelineModule.fit">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.SKLearnPipelineModule.fit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span> <span class="o">...</span>  <span class="c1"># noqa: D102</span></div>
+
+<div class="viewcode-block" id="SKLearnPipelineModule.transform">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.SKLearnPipelineModule.transform">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span> <span class="o">...</span>  <span class="c1"># noqa: D102</span></div>
+
+<div class="viewcode-block" id="SKLearnPipelineModule.predict_proba">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.SKLearnPipelineModule.predict_proba">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span> <span class="o">...</span>  <span class="c1"># noqa: D102</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="SklearnTransformerType">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.SklearnTransformerType">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SklearnTransformerType</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Representation of the interface required for transformers by the scikit-learn `Pipeline`.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SklearnTransformerType.fit">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.SklearnTransformerType.fit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">features</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span> <span class="o">...</span>  <span class="c1"># noqa: D102</span></div>
+
+<div class="viewcode-block" id="SklearnTransformerType.transform">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.SklearnTransformerType.transform">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">features</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span> <span class="o">...</span>  <span class="c1"># noqa: D102</span></div>
+
+<div class="viewcode-block" id="SklearnTransformerType.fit_transform">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.SklearnTransformerType.fit_transform">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">features</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span> <span class="o">...</span>  <span class="c1"># noqa: D102</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Transformer">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.Transformer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Transformer</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Transformer module which is compatible with the scikit-learn `Pipeline`.</span>
+
+<span class="sd">    The transformer should provide a `transform()` method. Since transformers are not</span>
+<span class="sd">    fitted to the data, the `fit()` simply returns the object it was called upon without</span>
+<span class="sd">    side effects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Transformer.fit">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.Transformer.fit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform (optional) fitting of the instance data.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceData</span>
+<span class="sd">            Input instances to be processed by this method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Self</span>
+<span class="sd">            This transformer instance after fitting.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="Transformer.apply">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.Transformer.apply">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InstanceData</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert the instance data based on the (optionally fitted) model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceData</span>
+<span class="sd">            Input instances to be processed by this method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        InstanceData</span>
+<span class="sd">            Instance data object produced by this operation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="Transformer.fit_apply">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.Transformer.fit_apply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InstanceData</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Combine call to `fit()` with directly following call to `apply()`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceData</span>
+<span class="sd">            Input instances to be processed by this method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        InstanceData</span>
+<span class="sd">            Instance data object produced by this operation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Identity">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.Identity">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Identity</span><span class="p">(</span><span class="n">Transformer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represent the Identity function of a transformer.</span>
+
+<span class="sd">    When `apply()` is called on such a transformer, it simply returns the instances.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Identity.apply">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.Identity.apply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceDataType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InstanceDataType</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simply provide the instances.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceDataType</span>
+<span class="sd">            Input instances to be processed by this method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        InstanceDataType</span>
+<span class="sd">            Instance data object produced by this operation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">instances</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="BinaryClassifierTransformer">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.BinaryClassifierTransformer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BinaryClassifierTransformer</span><span class="p">(</span><span class="n">Transformer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implementation of a binary class classifier as scikit-learn `Pipeline` step.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    estimator : SKLearnPipelineModule</span>
+<span class="sd">        Estimator used to produce transformed or scored outputs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="p">:</span> <span class="n">SKLearnPipelineModule</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimator</span> <span class="o">=</span> <span class="n">estimator</span>
+
+<div class="viewcode-block" id="BinaryClassifierTransformer.fit">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.BinaryClassifierTransformer.fit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fit the model on the provided instances.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceData</span>
+<span class="sd">            Input instances to be processed by this method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Self</span>
+<span class="sd">            This transformer instance after fitting.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="n">check_type</span><span class="p">(</span><span class="n">FeatureData</span><span class="p">,</span> <span class="n">instances</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">instances</span><span class="o">.</span><span class="n">features</span><span class="p">,</span> <span class="n">instances</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="BinaryClassifierTransformer.apply">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.BinaryClassifierTransformer.apply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InstanceData</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert instances by applying the fitted model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceData</span>
+<span class="sd">            Input instances to be processed by this method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        InstanceData</span>
+<span class="sd">            Instance data object produced by this operation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="n">check_type</span><span class="p">(</span><span class="n">FeatureData</span><span class="p">,</span> <span class="n">instances</span><span class="p">)</span>
+
+        <span class="c1"># get probabilities from the estimator</span>
+        <span class="n">probabilities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">instances</span><span class="o">.</span><span class="n">features</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># return a copy of `instances` with the `features` attribute replaced by the newly obtained probabilities</span>
+        <span class="k">return</span> <span class="n">instances</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="n">probabilities</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="SklearnTransformer">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.SklearnTransformer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SklearnTransformer</span><span class="p">(</span><span class="n">Transformer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implementation of a binary class classifier as scikit-learn `Pipeline` step.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    transformer : SklearnTransformerType</span>
+<span class="sd">        Transformer instance wrapped by this adapter.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transformer</span><span class="p">:</span> <span class="n">SklearnTransformerType</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">transformer</span>
+
+<div class="viewcode-block" id="SklearnTransformer.fit">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.SklearnTransformer.fit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fit the model on the provided instances.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceData</span>
+<span class="sd">            Input instances to be processed by this method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Self</span>
+<span class="sd">            This transformer instance after fitting.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="n">check_type</span><span class="p">(</span><span class="n">FeatureData</span><span class="p">,</span> <span class="n">instances</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">instances</span><span class="o">.</span><span class="n">features</span><span class="p">,</span> <span class="n">instances</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="SklearnTransformer.apply">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.SklearnTransformer.apply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InstanceData</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert instances by applying the fitted model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceData</span>
+<span class="sd">            Input instances to be processed by this method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        InstanceData</span>
+<span class="sd">            Instance data object produced by this operation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="n">check_type</span><span class="p">(</span><span class="n">FeatureData</span><span class="p">,</span> <span class="n">instances</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">instances</span><span class="o">.</span><span class="n">replace_as</span><span class="p">(</span><span class="n">FeatureData</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">instances</span><span class="o">.</span><span class="n">features</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="SklearnTransformer.fit_apply">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.SklearnTransformer.fit_apply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FeatureData</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Combine call to `.fit()` followed by `.apply()`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceData</span>
+<span class="sd">            Input instances to be processed by this method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        FeatureData</span>
+<span class="sd">            FeatureData object parsed from the source.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="n">check_type</span><span class="p">(</span><span class="n">FeatureData</span><span class="p">,</span> <span class="n">instances</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">instances</span><span class="o">.</span><span class="n">replace_as</span><span class="p">(</span>
+            <span class="n">FeatureData</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">instances</span><span class="o">.</span><span class="n">features</span><span class="p">,</span> <span class="n">instances</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="FunctionTransformer">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.FunctionTransformer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FunctionTransformer</span><span class="p">(</span><span class="n">Transformer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implementation of a transformer function as scikit-learn `Pipeline` step.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    func : Callable</span>
+<span class="sd">        Callable used to transform input instances.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">func</span>
+
+<div class="viewcode-block" id="FunctionTransformer.apply">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.FunctionTransformer.apply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FeatureData</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Call the custom defined function on the feature data instances and use output as features.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceData</span>
+<span class="sd">            Input instances to be processed by this method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        FeatureData</span>
+<span class="sd">            FeatureData object parsed from the source.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="n">check_type</span><span class="p">(</span><span class="n">FeatureData</span><span class="p">,</span> <span class="n">instances</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">instances</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="n">instances</span><span class="o">.</span><span class="n">features</span><span class="p">))</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Tee">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.Tee">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Tee</span><span class="p">(</span><span class="n">Transformer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implementation of a custom transformer allowing to perform two separate tasks on a given input.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    transformers : list[Transformer]</span>
+<span class="sd">        Collection of transformers applied in sequence or parallel.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transformers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Transformer</span><span class="p">]):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transformers</span> <span class="o">=</span> <span class="n">transformers</span>
+
+<div class="viewcode-block" id="Tee.fit">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.Tee.fit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delegate `fit()` to all specified transformers.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceData</span>
+<span class="sd">            Input instances to be processed by this method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Self</span>
+<span class="sd">            This tee transformer instance after delegating fit.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">transformer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformers</span><span class="p">:</span>
+            <span class="n">transformer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="Tee.apply">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.Tee.apply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InstanceData</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delegate `apply()` to all specified transformers.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceData</span>
+<span class="sd">            Input instances to be processed by this method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        InstanceData</span>
+<span class="sd">            Instance data object produced by this operation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">transformer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformers</span><span class="p">:</span>
+            <span class="n">transformer</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">instances</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="TransformerWrapper">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.TransformerWrapper">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TransformerWrapper</span><span class="p">(</span><span class="n">Transformer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for a transformer wrapper.</span>
+
+<span class="sd">    This class is derived from `AdvancedTransformer` and has a default implementation of all functions</span>
+<span class="sd">    by forwarding the call to the wrapped transformer. A subclass may add or change functionality</span>
+<span class="sd">    by overriding functions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    wrapped_transformer : Transformer</span>
+<span class="sd">        Value passed via ``wrapped_transformer``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wrapped_transformer</span><span class="p">:</span> <span class="n">Transformer</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wrapped_transformer</span> <span class="o">=</span> <span class="n">wrapped_transformer</span>
+
+<div class="viewcode-block" id="TransformerWrapper.fit">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.TransformerWrapper.fit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delegate calls to underlying wrapped transformer but return the Wrapper instance.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceData</span>
+<span class="sd">            Input instances to be processed by this method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Self</span>
+<span class="sd">            This wrapper instance after delegating fit.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wrapped_transformer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="TransformerWrapper.apply">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.TransformerWrapper.apply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InstanceData</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delegate calls to underlying wrapped transformer but return the Wrapper instance.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceData</span>
+<span class="sd">            Input instances to be processed by this method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        InstanceData</span>
+<span class="sd">            Instance data object produced by this operation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">wrapped_transformer</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="NumpyTransformer">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.NumpyTransformer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NumpyTransformer</span><span class="p">(</span><span class="n">TransformerWrapper</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implementation of a transformer wrapper.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    transformer : Transformer</span>
+<span class="sd">        Transformer instance wrapped by this adapter.</span>
+<span class="sd">    header : list[str] | None</span>
+<span class="sd">        Value passed via ``header``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transformer</span><span class="p">:</span> <span class="n">Transformer</span><span class="p">,</span> <span class="n">header</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">transformer</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">header</span>
+
+<div class="viewcode-block" id="NumpyTransformer.apply">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.NumpyTransformer.apply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InstanceData</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extend the instances with the desired header data, call base `apply`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceData</span>
+<span class="sd">            Input instances to be processed by this method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        InstanceData</span>
+<span class="sd">            Instance data object produced by this operation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">:</span>
+            <span class="n">instances</span> <span class="o">=</span> <span class="n">instances</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">instances</span></div>
+
+
+<div class="viewcode-block" id="NumpyTransformer.fit_apply">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.NumpyTransformer.fit_apply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InstanceData</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extend the instances with the desired header data, call base `fit_apply`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceData</span>
+<span class="sd">            Input instances to be processed by this method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        InstanceData</span>
+<span class="sd">            Instance data object produced by this operation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit_apply</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">:</span>
+            <span class="n">instances</span> <span class="o">=</span> <span class="n">instances</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">instances</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="CsvWriter">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.CsvWriter">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CsvWriter</span><span class="p">(</span><span class="n">Transformer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implementation of a transformation step in a scikit-learn Pipeline that writes to CSV.</span>
+
+<span class="sd">    This might be used to obtain temporary or intermediate results for logging or debugging</span>
+<span class="sd">    purposes.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path : Path</span>
+<span class="sd">        Filesystem path used by this operation.</span>
+<span class="sd">    include : list[str] | None</span>
+<span class="sd">        Value passed via ``include``.</span>
+<span class="sd">    header : list[str] | None</span>
+<span class="sd">        Value passed via ``header``.</span>
+<span class="sd">    include_labels : bool</span>
+<span class="sd">        Whether to include labels in logged output.</span>
+<span class="sd">    include_meta : bool</span>
+<span class="sd">        Value passed via ``include_meta``.</span>
+<span class="sd">    include_input : bool</span>
+<span class="sd">        Whether to include original inputs in logged output.</span>
+<span class="sd">    include_batch : bool</span>
+<span class="sd">        Value passed via ``include_batch``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">include</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">header</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">include_labels</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">include_meta</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">include_input</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">include_batch</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;missing argument: path&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">header_prefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">stem</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_files</span> <span class="o">=</span> <span class="n">include</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">header</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">include_labels</span> <span class="o">=</span> <span class="n">include_labels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">include_meta</span> <span class="o">=</span> <span class="n">include_meta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">include_input</span> <span class="o">=</span> <span class="n">include_input</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">include_batch</span> <span class="o">=</span> <span class="n">include_batch</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_batches</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_join_reader</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="k">yield from</span> <span class="n">reader</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_write_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">writer</span><span class="p">:</span> <span class="n">DataWriter</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">FeatureData</span><span class="p">,</span> <span class="n">write_header</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">all_headers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">all_data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">include_labels</span> <span class="ow">and</span> <span class="n">instances</span><span class="o">.</span><span class="n">labels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">all_headers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;label&#39;</span><span class="p">)</span>
+            <span class="n">all_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">instances</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">include_meta</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instances</span><span class="p">,</span> <span class="s1">&#39;meta&#39;</span><span class="p">):</span>
+            <span class="n">meta</span> <span class="o">=</span> <span class="n">instances</span><span class="o">.</span><span class="n">meta</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">meta</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">all_headers</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">header_prefix</span><span class="si">}</span><span class="s1">.meta</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])])</span>
+            <span class="n">all_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">include_batch</span><span class="p">:</span>
+            <span class="n">all_headers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;batch&#39;</span><span class="p">)</span>
+            <span class="n">all_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">instances</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_batches</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">include_input</span><span class="p">:</span>
+            <span class="n">features</span> <span class="o">=</span> <span class="n">instances</span><span class="o">.</span><span class="n">features</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">features</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">: unsupported shape: </span><span class="si">{</span><span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">all_headers</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">header_prefix</span><span class="si">}{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">all_headers</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
+            <span class="n">all_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_files</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_files</span><span class="p">:</span>
+                <span class="n">rows</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_join_reader</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+                <span class="n">all_headers</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">rows</span><span class="p">))</span>
+                <span class="n">all_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">rows</span><span class="p">)))</span>
+
+        <span class="k">if</span> <span class="n">write_header</span><span class="p">:</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">all_headers</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">all_data</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">chain</span><span class="p">(</span><span class="o">*</span><span class="n">row</span><span class="p">))</span>
+
+<div class="viewcode-block" id="CsvWriter.fit_apply">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.CsvWriter.fit_apply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceDataType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InstanceDataType</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provide required `fit_apply()` and return all instances.</span>
+
+<span class="sd">        Since the CsvWriter is implemented as a step (Transformer) in the pipeline, it should support</span>
+<span class="sd">        the `fit_apply` method which is called on all transformers of the pipeline.</span>
+
+<span class="sd">        We don&#39;t need to actually fit or transform anything, so we simply return the instances (as is).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceDataType</span>
+<span class="sd">            Input instances to be processed by this method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        InstanceDataType</span>
+<span class="sd">            Instance data object produced by this operation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">instances</span></div>
+
+
+<div class="viewcode-block" id="CsvWriter.apply">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.CsvWriter.apply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FeatureData</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write numpy feature vector to CSV output file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceData</span>
+<span class="sd">            Input instances to be processed by this method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        FeatureData</span>
+<span class="sd">            FeatureData object parsed from the source.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="n">check_type</span><span class="p">(</span><span class="n">FeatureData</span><span class="p">,</span> <span class="n">instances</span><span class="p">)</span>
+
+        <span class="n">LOG</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;writing CSV file: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">write_mode</span> <span class="o">=</span> <span class="s1">&#39;a&#39;</span>
+            <span class="n">write_header</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">write_mode</span> <span class="o">=</span> <span class="s1">&#39;w&#39;</span>
+            <span class="n">write_header</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">write_mode</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_write_rows</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">instances</span><span class="p">,</span> <span class="n">write_header</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_batches</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="n">instances</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="as_transformer">
+<a class="viewcode-back" href="../../api/lir.transform.html#lir.transform.as_transformer">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">as_transformer</span><span class="p">(</span><span class="n">transformer_like</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transformer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provide a `Transformer` instance of the provided transformer like input.</span>
+
+<span class="sd">    For any transformer-like object, wrap if necessary, and return a `Transformer`.</span>
+
+<span class="sd">    The transformer-like object may be one of the following:</span>
+<span class="sd">    - an instance of `Transformer`, which is returned as-is;</span>
+<span class="sd">    - a scikit-learn style transformer which implements `transform()` and optionally `fit()` and/or `fit_transform()`;</span>
+<span class="sd">    - a scikit-learn style estimator, which implements `fit()` and `predict_proba()`; or</span>
+<span class="sd">    - a callable which takes an `np.ndarray` argument and returns another `np.ndarray`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    transformer_like : Any</span>
+<span class="sd">        Object to convert to the internal Transformer interface.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Transformer</span>
+<span class="sd">        Equivalent object adapted to the internal ``Transformer`` interface.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">transformer_like</span><span class="p">,</span> <span class="n">Transformer</span><span class="p">):</span>
+        <span class="c1"># The component already supports all necessary methods, through the `Transformer` interface.</span>
+        <span class="k">return</span> <span class="n">transformer_like</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">transformer_like</span><span class="p">,</span> <span class="s1">&#39;transform&#39;</span><span class="p">):</span>
+        <span class="c1"># The component implements a `transform()` method, which means we assume it is a sklearn style transformer.</span>
+        <span class="k">return</span> <span class="n">SklearnTransformer</span><span class="p">(</span><span class="n">transformer_like</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">transformer_like</span><span class="p">,</span> <span class="s1">&#39;predict_proba&#39;</span><span class="p">):</span>
+        <span class="c1"># The component has a `predict_proba` method, which means we assume it is a sklearn style estimator</span>
+        <span class="k">return</span> <span class="n">BinaryClassifierTransformer</span><span class="p">(</span><span class="n">transformer_like</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">transformer_like</span><span class="p">):</span>
+        <span class="c1"># The component is a function</span>
+        <span class="k">return</span> <span class="n">FunctionTransformer</span><span class="p">(</span><span class="n">transformer_like</span><span class="p">)</span>
+
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;unknown module type of class </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">transformer_like</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

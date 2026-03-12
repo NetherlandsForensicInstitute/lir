@@ -1,0 +1,7 @@
+lir.experiments.predefined\_experiment module
+=============================================
+
+.. automodule:: lir.experiments.predefined_experiment
+   :members:
+   :show-inheritance:
+   :undoc-members:

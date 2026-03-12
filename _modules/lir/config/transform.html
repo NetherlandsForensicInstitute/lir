@@ -1,0 +1,421 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.config.transform &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#neutral-llrs">Neutral LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#well-calibrated-llrs">Well-calibrated LLRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#badly-calibrated-data">Badly calibrated data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/lir.html">lir package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../lir.html">lir</a></li>
+      <li class="breadcrumb-item active">lir.config.transform</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lir.config.transform</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir</span><span class="w"> </span><span class="kn">import</span> <span class="n">registry</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.base</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ConfigParser</span><span class="p">,</span>
+    <span class="n">ContextAwareDict</span><span class="p">,</span>
+    <span class="n">YamlParseError</span><span class="p">,</span>
+    <span class="n">check_not_none</span><span class="p">,</span>
+    <span class="n">config_parser</span><span class="p">,</span>
+    <span class="n">pop_field</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.transform</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BinaryClassifierTransformer</span><span class="p">,</span>
+    <span class="n">CsvWriter</span><span class="p">,</span>
+    <span class="n">FunctionTransformer</span><span class="p">,</span>
+    <span class="n">Identity</span><span class="p">,</span>
+    <span class="n">NumpyTransformer</span><span class="p">,</span>
+    <span class="n">Transformer</span><span class="p">,</span>
+    <span class="n">as_transformer</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="GenericTransformerConfigParser">
+<a class="viewcode-back" href="../../../api/lir.config.transform.html#lir.config.transform.GenericTransformerConfigParser">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GenericTransformerConfigParser</span><span class="p">(</span><span class="n">ConfigParser</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parser class to help parse the defined component into its corresponding `Transformer` object.</span>
+
+<span class="sd">    Since the scikit-learn `Pipeline` expects a `fit()` and `transform()` method on each of the pipeline steps,</span>
+<span class="sd">    the configured components should adhere to this contract and implement these methods.</span>
+
+<span class="sd">    The `parse()` function offered in this helper class, implements a branching strategy to determine</span>
+<span class="sd">    which strategy is best suited to make the component compatible with the scikit-learn pipeline.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    component_class : object</span>
+<span class="sd">        Component class or callable to adapt to the transformer interface.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component_class</span><span class="p">:</span> <span class="nb">object</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialise parser for a transformer-like component.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        component_class : object</span>
+<span class="sd">            Component class or callable to adapt to the transformer interface.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">component_class</span> <span class="o">=</span> <span class="n">component_class</span>
+
+<div class="viewcode-block" id="GenericTransformerConfigParser.parse">
+<a class="viewcode-back" href="../../../api/lir.config.transform.html#lir.config.transform.GenericTransformerConfigParser.parse">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span>
+        <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transformer</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prepare a configured component for use in a scikit-learn pipeline.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config : ContextAwareDict</span>
+<span class="sd">            Constructor arguments for the component class.</span>
+<span class="sd">        output_dir : Path</span>
+<span class="sd">            Unused output directory argument required by parser API.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Transformer</span>
+<span class="sd">            Component adapted to the ``Transformer`` interface.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_class</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">instance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_class</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="p">)</span>
+
+                <span class="c1"># make sure we have an object of type `Transformer`</span>
+                <span class="k">return</span> <span class="n">as_transformer</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">YamlParseError</span><span class="p">(</span>
+                    <span class="n">config</span><span class="o">.</span><span class="n">context</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s1">&#39;failed to instantiate module </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">component_class</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">Transformer</span><span class="p">):</span>
+                <span class="c1"># The component already supports all necessary methods,</span>
+                <span class="c1"># through the `Transformer` interface.</span>
+                <span class="k">return</span> <span class="n">instance</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s1">&#39;transform&#39;</span><span class="p">):</span>
+                <span class="c1"># The component implements a `transform()` method, which means it</span>
+                <span class="c1"># is a transformer and can be used in the scikit-learn pipeline.</span>
+                <span class="k">return</span> <span class="n">instance</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s1">&#39;predict_proba&#39;</span><span class="p">):</span>
+                <span class="c1"># The component has a `predict_proba` method, which should be used as</span>
+                <span class="c1"># `transform()` step in the pipeline, which the wrapper class provides.</span>
+                <span class="k">return</span> <span class="n">BinaryClassifierTransformer</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_class</span><span class="p">):</span>
+            <span class="c1"># When none of the above conditions apply, the component class might be a function</span>
+            <span class="c1"># or a callable class, which should be used as a `transform()` step in the pipeline,</span>
+            <span class="c1"># which the wrapper provides.</span>
+            <span class="k">return</span> <span class="n">FunctionTransformer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_class</span><span class="p">)</span>
+
+        <span class="k">raise</span> <span class="n">YamlParseError</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;unrecognized module type: `</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">component_class</span><span class="si">}</span><span class="s1">`&#39;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="NumpyWrappingConfigParser">
+<a class="viewcode-back" href="../../../api/lir.config.transform.html#lir.config.transform.NumpyWrappingConfigParser">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NumpyWrappingConfigParser</span><span class="p">(</span><span class="n">ConfigParser</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wrap a Transformer to add a header to FeatureData.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    module_parser : ConfigParser</span>
+<span class="sd">        Parser used to create the wrapped transformer.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_parser</span><span class="p">:</span> <span class="n">ConfigParser</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialise parser that wraps module output in ``NumpyTransformer``.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        module_parser : ConfigParser</span>
+<span class="sd">            Parser used to create the wrapped transformer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">module_parser</span> <span class="o">=</span> <span class="n">module_parser</span>
+
+<div class="viewcode-block" id="NumpyWrappingConfigParser.parse">
+<a class="viewcode-back" href="../../../api/lir.config.transform.html#lir.config.transform.NumpyWrappingConfigParser.parse">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transformer</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parse the provided header configuration.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config : ContextAwareDict</span>
+<span class="sd">            Configuration possibly containing ``header`` and module fields.</span>
+<span class="sd">        output_dir : Path</span>
+<span class="sd">            Output directory passed to the wrapped parser.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Transformer</span>
+<span class="sd">            Wrapped transformer that preserves numpy headers.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;header&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="s1">&#39;header&#39;</span> <span class="ow">in</span> <span class="n">config</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">NumpyTransformer</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">module_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">),</span>
+            <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="NumpyWrappingConfigParser.reference">
+<a class="viewcode-back" href="../../../api/lir.config.transform.html#lir.config.transform.NumpyWrappingConfigParser.reference">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reference</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the full name of the ``module_parser`` class argument.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            Reference string for the wrapped parser.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_parser</span><span class="o">.</span><span class="n">reference</span><span class="p">()</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="parse_module">
+<a class="viewcode-back" href="../../../api/lir.config.transform.html#lir.config.transform.parse_module">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_module</span><span class="p">(</span>
+    <span class="n">module_config</span><span class="p">:</span> <span class="n">ContextAwareDict</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">config_context_path</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">default_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transformer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Construct a ``Transformer`` from a string or configuration section.</span>
+
+<span class="sd">    If ``module_config`` is ``None``, an :class:`Identity` transformer is returned.</span>
+
+<span class="sd">    If ``module_config`` is a dictionary, it must contain a ``method`` field whose</span>
+<span class="sd">    value is the name of an object looked up in the registry. All remaining fields</span>
+<span class="sd">    are passed as initialisation arguments. If no arguments are required, the input</span>
+<span class="sd">    may be given directly as the object name.</span>
+
+<span class="sd">    The resolved object is handled as follows:</span>
+
+<span class="sd">    - If it is a subclass of :class:`ConfigParser`, the class is instantiated and the</span>
+<span class="sd">      result of its :meth:`parse` method is returned.</span>
+<span class="sd">    - If it defines a ``transform`` method, or is a subclass of ``Transformer``, it</span>
+<span class="sd">      is instantiated and returned.</span>
+<span class="sd">    - If it defines a ``predict_proba`` method, it is instantiated, wrapped in</span>
+<span class="sd">      :class:`EstimatorTransformer`, and returned.</span>
+<span class="sd">    - Any other callable is wrapped in :class:`FunctionTransformer` and returned.</span>
+
+<span class="sd">    If ``module_config`` is a string, this function behaves as if a dictionary with a</span>
+<span class="sd">    single field ``method`` set to that string had been provided.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    module_config : ContextAwareDict | str | None</span>
+<span class="sd">        Specification of the module.</span>
+<span class="sd">    output_dir : Path</span>
+<span class="sd">        Directory where any output produced by the module is written.</span>
+<span class="sd">    config_context_path : list[str]</span>
+<span class="sd">        Context path of this configuration, used for error reporting.</span>
+<span class="sd">    default_method : str | None, optional</span>
+<span class="sd">        Default value for the ``method`` field if it is not provided.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Transformer</span>
+<span class="sd">        The constructed transformer instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">module_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Identity</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module_config</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">class_name</span> <span class="o">=</span> <span class="n">module_config</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">ContextAwareDict</span><span class="p">(</span><span class="n">config_context_path</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">module_config</span>
+        <span class="n">class_name</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="s1">&#39;method&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">default_method</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">check_not_none</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">class_name</span><span class="p">,</span> <span class="n">GenericTransformerConfigParser</span><span class="p">,</span> <span class="n">search_path</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;modules&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">)</span></div>
+
+
+
+<span class="nd">@config_parser</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">csv_writer</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CsvWriter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set up a CSV writer from configuration.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : ContextAwareDict</span>
+<span class="sd">        CSV writer configuration.</span>
+<span class="sd">    output_dir : Path</span>
+<span class="sd">        Output directory used to derive default CSV path.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    CsvWriter</span>
+<span class="sd">        Configured CSV writer.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s1">&#39;path&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">|=</span> <span class="p">{</span><span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">.csv&#39;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">CsvWriter</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

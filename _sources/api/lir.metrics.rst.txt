@@ -1,0 +1,16 @@
+lir.metrics package
+===================
+
+.. automodule:: lir.metrics
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   lir.metrics.devpav
+   lir.metrics.overestimation

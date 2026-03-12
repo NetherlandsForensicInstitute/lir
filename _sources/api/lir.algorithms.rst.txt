@@ -1,0 +1,23 @@
+lir.algorithms package
+======================
+
+.. automodule:: lir.algorithms
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   lir.algorithms.bayeserror
+   lir.algorithms.bootstraps
+   lir.algorithms.invariance_bounds
+   lir.algorithms.isotonic_regression
+   lir.algorithms.kde
+   lir.algorithms.llr_overestimation
+   lir.algorithms.logistic_regression
+   lir.algorithms.mcmc
+   lir.algorithms.percentile_rank

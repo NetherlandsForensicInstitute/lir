@@ -29,6 +29,10 @@ class BinaryLRSystem(LRSystem):
         super().__init__()
         self.pipeline = pipeline
         self.pipeline.save_features_after_step = save_features_after_step
+        # Keep the reverse lookup in sync so requested intermediate features are actually captured.
+        self.pipeline.save_features_after_step_reversed = (
+            {v: k for k, v in save_features_after_step.items()} if save_features_after_step else {}
+        )
 
     def fit(self, instances: InstanceData) -> Self:
         """

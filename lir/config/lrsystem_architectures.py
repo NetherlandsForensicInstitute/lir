@@ -98,7 +98,7 @@ def specific_source(config: ContextAwareDict, output_dir: Path) -> BinaryLRSyste
 
     The config can contain:
      - modules: module configuration for the pipeline
-     - sources_for_plots: optional dict mapping field names to pipeline step names
+     - save_features_after_step: optional dict mapping field names to pipeline step names
      - intermediate_output: boolean flag to determine whether to use logging pipeline as default
 
     If any other fields are present, an exception is raised.

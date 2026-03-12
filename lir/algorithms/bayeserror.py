@@ -92,6 +92,9 @@ def elub(
     y = llrdata.labels
     if y is None:
         raise ValueError('LLRData must contain labels to calculate ELUB bounds.')
+    if len(np.unique(y)) != 2:
+        raise ValueError('LLRData must contain both hypothesis labels to calculate ELUB bounds.')
+
     # remove LLRs of -infinity and +infinity
     sanitized_llrs = llrs
     sanitized_llrs[sanitized_llrs < substitute_extremes[0]] = substitute_extremes[0]

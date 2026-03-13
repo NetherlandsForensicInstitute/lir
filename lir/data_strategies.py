@@ -42,19 +42,6 @@ class TrainTestSplit(DataStrategy):
     """
 
     def __init__(self, test_size: float | int, seed: int | None = None):
-        """
-        Initialize the object.
-
-            in the test split. If int, represents the absolute number of test samples.
-
-        Parameters
-        ----------
-        test_size : float | int
-            Size of the test set. If float, should be between 0.0 and 1.0 and represent the proportion of the dataset to
-            include in the test split. If int, represents the absolute number of test samples.
-        seed : int | None
-            Random seed controlling stochastic behaviour for reproducible results.
-        """
         self.test_size = test_size
         self.seed = seed
 
@@ -105,16 +92,6 @@ class CrossValidation(DataStrategy):
     """
 
     def __init__(self, folds: int, seed: int | None = None):
-        """
-        Initialize the object for K-fold cross-validation.
-
-        Parameters
-        ----------
-        folds : int
-            Number of cross-validation folds to generate.
-        seed : int | None
-            Random seed controlling stochastic behaviour for reproducible results.
-        """
         self.folds = folds
         self.seed = seed
         self.shuffle = True if self.seed is not None else False  # noqa: SIM210
@@ -158,25 +135,14 @@ class SourcesTrainTestSplit(DataStrategy):
     Parameters
     ----------
     test_size : float | int
-        Fraction or absolute number of items assigned to the test split.
+        Fraction or absolute number of items assigned to the test split. If float, should be between 0.0 and 1.0 and
+        represent the proportion of sources to include inthe test split (rounded up). If int, represents the absolute
+        number of test sources.
     seed : int | None
         Random seed controlling stochastic behaviour for reproducible results.
     """
 
     def __init__(self, test_size: float | int, seed: int | None = None):
-        """
-        Class initialization.
-
-        :param test_size: If float, should be between 0.0 and 1.0 and represent the proportion of sources to include in
-            the test split (rounded up). If int, represents the absolute number of test sources.
-
-        Parameters
-        ----------
-        test_size : float | int
-            Fraction or absolute number of items assigned to the test split.
-        seed : int | None
-            Random seed controlling stochastic behaviour for reproducible results.
-        """
         self.test_size = test_size
         self.seed = seed
 
@@ -261,16 +227,6 @@ class PairsTrainTestSplit(DataStrategy):
     """
 
     def __init__(self, test_size: float | int, seed: int | None = None):
-        """
-        Initialize the object.
-
-        Parameters
-        ----------
-        test_size : float | int
-            Fraction or absolute number of items assigned to the test split.
-        seed : int | None
-            Random seed controlling stochastic behaviour for reproducible results.
-        """
         self.test_size = test_size
         self.seed = seed
 

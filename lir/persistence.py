@@ -49,6 +49,12 @@ class SaveModel(Aggregation):
     """
     Write the model to a file.
 
+    The model is saved as a pickle file, in a file named `filename`, that is written to a subdirectory of
+    `output_dir`, that is created for each run.
+
+    If `filename` is an absolute path, or if `filename` is relative to `output_dir`, then the model is saved to this
+    file as-is, instead of to a file in a newly created subdirectory.
+
     Parameters
     ----------
     output_dir : Path
@@ -58,22 +64,6 @@ class SaveModel(Aggregation):
     """
 
     def __init__(self, output_dir: Path, filename: PathLike | str = 'model.pkl') -> None:
-        """
-        Initialize the aggregation object.
-
-        The model is saved as a pickle file, in a file named `filename`, that is written to a subdirectory of
-        `output_dir`, that is created for each run.
-
-        If `filename` is an absolute path, or if `filename` is relative to `output_dir`, then the model is saved to this
-        file as-is, instead of to a file in a newly created subdirectory.
-
-        Parameters
-        ----------
-        output_dir : Path
-            The directory where the model should be written.
-        filename : PathLike | str
-            The filename to be created for the model.
-        """
         self.output_dir = output_dir
         self.filename = Path(filename)
 

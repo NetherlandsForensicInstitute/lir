@@ -41,16 +41,6 @@ class ParsedLRSystem(LRSystem):
     """
 
     def __init__(self, lrsystem: LRSystem, config: ContextAwareDict):
-        """
-        Initialise a parsed LR system wrapper.
-
-        Parameters
-        ----------
-        lrsystem : LRSystem
-            Underlying LR system implementation.
-        config : ContextAwareDict
-            Original LR system configuration.
-        """
         self.lrsystem = lrsystem
         self.config = config
 

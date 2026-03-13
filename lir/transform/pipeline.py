@@ -54,9 +54,15 @@ class Pipeline(Transformer):
     ----------
     steps : list[tuple[str, Transformer | Any]]
         Ordered transformer steps executed by this pipeline.
+    save_features_after_step : dict[str, str] | None
+        Optional dictionary of step names to capture intermediate output from. The keys of the dictionary are the
+        names of the fields in which to save the features, and the values are the names of the steps after which to
+        save the features. If a value is 'STARTING_DATA', the features are saved before applying any steps.
     """
 
-    def __init__(self, steps: list[tuple[str, Transformer | Any]]):
+    def __init__(
+        self, steps: list[tuple[str, Transformer | Any]], save_features_after_step: dict[str, str] | None = None
+    ):
         """
         Initialize a new Pipeline object.
 
@@ -64,8 +70,14 @@ class Pipeline(Transformer):
         ----------
         steps : list[tuple[str, Transformer | Any]]
             Ordered transformer steps executed by this pipeline.
+        save_features_after_step : dict[str, str] | None
+            Optional dictionary of step names to capture intermediate output from.
         """
         self.steps = [(name, as_transformer(module)) for name, module in steps]
+        self.save_features_after_step = save_features_after_step
+        self.save_features_after_step_reversed = (
+            {v: k for k, v in save_features_after_step.items()} if save_features_after_step else {}
+        )
 
     def fit(self, instances: InstanceData) -> Self:
         """
@@ -104,8 +116,19 @@ class Pipeline(Transformer):
         InstanceData
             Instance data object produced by this operation.
         """
-        for _name, module in self.steps:
+        # If the user wants to capture the starting data, do that before applying any steps.
+        if 'STARTING_DATA' in self.save_features_after_step_reversed:
+            key = self.save_features_after_step_reversed['STARTING_DATA']
+            instances = instances.replace(**{key: check_type(FeatureData, instances).features})
+
+        # Apply each step in the pipeline sequentially.
+        for name, module in self.steps:
             instances = module.apply(instances)
+            # If the user wants to capture the output of this step, do that before applying the next step.
+            if name in self.save_features_after_step_reversed:
+                key = self.save_features_after_step_reversed[name]
+                instances = instances.replace(**{key: check_type(FeatureData, instances).features})
+
         return instances
 
     def fit_apply(self, instances: InstanceData) -> InstanceData:
@@ -208,6 +231,10 @@ class LoggingPipeline(Pipeline):
         Ordered transformer steps executed by this pipeline.
     output_file : PathLike
         Destination file used to log intermediate pipeline output.
+    save_features_after_step : dict[str, str] | None
+        Optional dictionary of step names to capture intermediate output from. The keys of the dictionary are the
+        names of the fields in which to save the features, and the values are the names of the steps after which to save
+        the features. If a value is 'STARTING_DATA', the features are saved before applying any steps.
     include_batch_number : bool
         Whether to include the batch number in logged output.
     include_labels : bool
@@ -224,35 +251,14 @@ class LoggingPipeline(Pipeline):
         self,
         steps: list[tuple[str, Transformer | Any]],
         output_file: PathLike,
+        save_features_after_step: dict[str, str] | None = None,
         include_batch_number: bool = True,
         include_labels: bool = True,
         include_fields: list[str] | None = None,
         include_steps: list[str] | None = None,
         include_input: bool = True,
     ):
-        """
-        Initialize a new LoggingPipeline instance.
-
-            e.g. for cross-validation (defaults to True)
-
-        Parameters
-        ----------
-        steps : list[tuple[str, Transformer | Any]]
-            Ordered transformer steps executed by this pipeline.
-        output_file : PathLike
-            Destination file used to log intermediate pipeline output.
-        include_batch_number : bool
-            Whether to include the batch number in logged output.
-        include_labels : bool
-            Whether to include labels in logged output.
-        include_fields : list[str] | None
-            Additional instance fields to include in logged output.
-        include_steps : list[str] | None
-            Whether to include step names in logged output.
-        include_input : bool
-            Whether to include original inputs in logged output.
-        """
-        super().__init__(steps)
+        super().__init__(steps, save_features_after_step)
         self.output_file = Path(output_file)
         self.include_batch_number = include_batch_number
         self.include_labels = include_labels
@@ -275,6 +281,11 @@ class LoggingPipeline(Pipeline):
         InstanceData
             Instance data object produced by this operation.
         """
+        # If the user wants to capture the starting data, do that before applying any steps.
+        if 'STARTING_DATA' in self.save_features_after_step_reversed:
+            key = self.save_features_after_step_reversed['STARTING_DATA']
+            instances = instances.replace(**{key: check_type(FeatureData, instances).features})
+
         # initialize the csv builder
         write_mode = 'w' if self.n_batches == 0 else 'a'
         csv_builder = DataFileBuilderCsv(self.output_file, write_mode=write_mode)
@@ -297,9 +308,16 @@ class LoggingPipeline(Pipeline):
             for module_name, module in self.steps:
                 instances = module.apply(instances)
 
+                # if the user wants to capture the output of this step, do that before applying the next step.
+                if module_name in self.save_features_after_step_reversed:
+                    key = self.save_features_after_step_reversed[module_name]
+                    instances = instances.replace(**{key: check_type(FeatureData, instances).features})
+
                 if module_name in self.include_steps:
                     instances = check_type(
-                        FeatureData, instances, message=f'expected FeatureData as output of pipeline step {module_name}'
+                        FeatureData,
+                        instances,
+                        message=f'expected FeatureData as output of pipeline step {module_name}',
                     )
                     header = getattr(instances, 'header', None) or module_name
                     csv_builder.add_column(instances.features, header)
@@ -316,6 +334,7 @@ class LoggingPipeline(Pipeline):
             csv_builder.write()
 
         self.n_batches += 1
+
         return instances
 
 

@@ -721,6 +721,7 @@ class TwoLevelSystem(LRSystem):
         n_ref_instances : int
             Number of reference instances to include in each pairing.
         """
+        super().__init__()
         self.preprocessing_pipeline = preprocessing_pipeline or Pipeline([])
         self.pairing_function = pairing_function
         self.postprocessing_pipeline = postprocessing_pipeline or Pipeline([])

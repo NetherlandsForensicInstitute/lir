@@ -18,7 +18,7 @@ from lir.config.metrics import parse_individual_metric
 from lir.data.io import DataFileBuilderCsv
 from lir.data.models import DataProvider, FeatureData, LLRData, check_type, get_instances_by_category
 from lir.lrsystems.lrsystems import LRSystem
-from lir.plotting import llr_interval, lr_histogram, pav, tippett
+from lir.plotting import llr_interval, lr_histogram, pav, score_distribution, score_to_llr, tippett
 from lir.plotting.expected_calibration_error import plot_ece as ece
 
 
@@ -335,6 +335,48 @@ def plot_invariance_delta_function(config: ContextAwareDict, output_dir: Path) -
     """
     plot_name = pop_field(config, 'plot_name', default='Invariance_Delta_Functions')
     return AggregatePlot(invariance_delta_functions, plot_name, output_dir, **config)
+
+
+@config_parser
+def plot_score_to_llr(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    """
+    Corresponding registry function to generate aggregate score to LLR plot.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        The configuration dictionary for the plot.
+    output_dir : Path
+        The directory where the plot will be saved.
+
+    Returns
+    -------
+    AggregatePlot
+        An instance of the AggregatePlot class configured to generate score to LLR plots.
+    """
+    plot_name = pop_field(config, 'plot_name', default='Score_LLR')
+    return AggregatePlot(score_to_llr, plot_name, output_dir, **config)
+
+
+@config_parser
+def plot_score_distribution(config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    """
+    Corresponding registry function to generate aggregate score distribution plot.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        The configuration dictionary for the plot.
+    output_dir : Path
+        The directory where the plot will be saved.
+
+    Returns
+    -------
+    AggregatePlot
+        An instance of the AggregatePlot class configured to generate score distribution plots.
+    """
+    plot_name = pop_field(config, 'plot_name', default='Score_Distribution')
+    return AggregatePlot(score_distribution, plot_name, output_dir, **config)
 
 
 class WriteMetricsToCsv(Aggregation):

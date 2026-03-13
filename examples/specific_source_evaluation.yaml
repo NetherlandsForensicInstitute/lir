@@ -20,6 +20,8 @@ data:
 
 lr_system:
   architecture: specific_source
+  save_features_after_step: 
+    score: scaler
   modules:
     method: logging_pipeline
     steps:
@@ -71,6 +73,8 @@ experiments:
       - metrics
       - pav
       - ece
+      - score_distribution
+      - score_to_llr
       - method: tippett
         plot_type: 1
       - method: tippett

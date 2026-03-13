@@ -66,7 +66,7 @@ format-check = "ruff format --diff lir tests docs"
 format-fix = "ruff format lir tests docs"
 mypy = "mypy lir"
 # If no args are given to 'test', this will run as if '{args}' is an empty string.
-test = "coverage run --branch --source lir --module pytest --strict-markers tests/ {args}"
+test = "coverage run --branch --source lir --module pytest --strict-markers -W error::RuntimeWarning tests/ {args}"
 quicktest = {composite = ["test --testmon"]}
 test-coverage = "coverage report"
 lir = "python -m lir"

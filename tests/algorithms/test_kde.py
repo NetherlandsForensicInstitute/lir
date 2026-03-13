@@ -149,6 +149,7 @@ class TestKDECalibrator(unittest.TestCase):
         (12, (12, 12)),  # integer
     ],
 )
+@pytest.mark.filterwarnings('ignore')
 def test_kde_bandwidth_parsing_supported_types(bandwidth_definition, expected_bandwidth):
     bandwidth_fn = parse_bandwidth(bandwidth_definition)
 

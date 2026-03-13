@@ -58,7 +58,7 @@ score_based_lr_system:
       scaler: standard_scaler  # apply the scikit-learn `StandardScaler` with default arguments
 
   pairing:
-    method: instance_pairs
+    method: source_pairs
     ratio_limit: 1  # limit the number of different-source pairs to the number of same-source pairs
 
   comparing:
@@ -79,8 +79,8 @@ two_level_lr_system:
   # - `postprocessing`: a pipeline that takes LLRs as input and may do some postprocessing.
   architecture: two_level
 
-  n_trace_instances: 2
-  n_ref_instances: 3
+  n_trace_instances: 1
+  n_ref_instances: 1
   preprocessing: standard_scaler
   pairing:
     method: source_pairs

@@ -354,17 +354,17 @@ def tippett(ax: Axes, llrdata: LLRData, plot_type: int = 1) -> None:
     labels = llrdata.require_labels
 
     lr_0, lr_1 = util.Xy_to_Xn(llrs, labels)
-    xplot0 = np.linspace(np.min(lr_0), np.max(lr_0), 100)
-    xplot1 = np.linspace(np.min(lr_1), np.max(lr_1), 100)
-    perc0 = (sum(i >= xplot0 for i in lr_0) / len(lr_0)) * 100
+    finite_llrs = llrs[np.isfinite(llrs)]
+    xvalues = np.linspace(np.min(finite_llrs), np.max(finite_llrs), 100)
+    perc0 = (sum(i >= xvalues for i in lr_0) / len(lr_0)) * 100
     if plot_type == 1:
-        perc1 = (sum(i >= xplot1 for i in lr_1) / len(lr_1)) * 100
+        perc1 = (sum(i >= xvalues for i in lr_1) / len(lr_1)) * 100
     elif plot_type == 2:
-        perc1 = (sum(i <= xplot1 for i in lr_1) / len(lr_1)) * 100
+        perc1 = (sum(i <= xvalues for i in lr_1) / len(lr_1)) * 100
     else:
         raise ValueError(f'Argument plot_type in tippett() must be either 1 or 2, got `{plot_type}`.')
-    ax.plot(xplot1, perc1, color='b', label=r'LRs given $\mathregular{H_1}$')
-    ax.plot(xplot0, perc0, color='r', label=r'LRs given $\mathregular{H_2}$')
+    ax.plot(xvalues, perc1, color='b', label=r'LRs given $\mathregular{H_1}$')
+    ax.plot(xvalues, perc0, color='r', label=r'LRs given $\mathregular{H_2}$')
     ax.axvline(x=0, color='k', linestyle='--')
     ax.set_xlabel('log$_{10}$(LR)')
     ax.set_ylabel('Cumulative proportion')

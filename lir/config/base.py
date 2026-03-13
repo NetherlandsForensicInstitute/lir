@@ -13,7 +13,7 @@ class YamlParseError(ValueError):
     """
     Error raised when parsing YAML configuration fails, mentioning specific YAML path.
 
-    Attributes
+    Parameters
     ----------
     config_context_path : list[str]
         Dot-path to the failing configuration node.
@@ -22,16 +22,6 @@ class YamlParseError(ValueError):
     """
 
     def __init__(self, config_context_path: list[str], message: str):
-        """
-        Initialise the parse error.
-
-        Parameters
-        ----------
-        config_context_path : list[str]
-            Dot-path to the failing configuration node.
-        message : str
-            Human-readable validation or parsing message.
-        """
         prefix = f'{".".join(config_context_path)}: ' if config_context_path else ''
         super().__init__(f'{prefix}{message}')
 
@@ -40,7 +30,7 @@ class ContextAwareDict(dict):
     """
     Dictionary wrapper which has knowledge about its context.
 
-    Attributes
+    Parameters
     ----------
     context : list[str]
         YAML path used for contextual error messages.
@@ -51,18 +41,6 @@ class ContextAwareDict(dict):
     """
 
     def __init__(self, context: list[str], *args: Any, **kwargs: Any):
-        """
-        Create a context-aware dictionary.
-
-        Parameters
-        ----------
-        context : list[str]
-            YAML path used for contextual error messages.
-        *args : Any
-            Positional arguments passed to ``dict``.
-        **kwargs : Any
-            Keyword arguments passed to ``dict``.
-        """
         super().__init__(*args, **kwargs)
         self.context = context
 
@@ -87,7 +65,7 @@ class ContextAwareList(list):
     """
     List wrapper which has knowledge about its context.
 
-    Attributes
+    Parameters
     ----------
     context : list[str]
         YAML path used for contextual error messages.
@@ -98,18 +76,6 @@ class ContextAwareList(list):
     """
 
     def __init__(self, context: list[str], *args: Any, **kwargs: Any):
-        """
-        Create a context-aware list.
-
-        Parameters
-        ----------
-        context : list[str]
-            YAML path used for contextual error messages.
-        *args : Any
-            Positional arguments passed to ``list``.
-        **kwargs : Any
-            Keyword arguments passed to ``list``.
-        """
         super().__init__(*args, **kwargs)
         self.context = context
 
@@ -224,21 +190,13 @@ class GenericFunctionConfigParser(ConfigParser):
     """
     Parser for callable functions or component classes.
 
-    Attributes
+    Parameters
     ----------
     component_class : Callable
         Callable that should be exposed by this parser.
     """
 
     def __init__(self, component_class: Callable):
-        """
-        Initialise the parser.
-
-        Parameters
-        ----------
-        component_class : Callable
-            Callable that should be exposed by this parser.
-        """
         super().__init__()
         self.component_class = component_class
 
@@ -283,21 +241,13 @@ class GenericConfigParser(ConfigParser):
     """
     Return an instantiation of a class, initialized with the specified arguments.
 
-    Attributes
+    Parameters
     ----------
     component_class : type[Any]
         Class to instantiate from configuration values.
     """
 
     def __init__(self, component_class: type[Any]):
-        """
-        Initialise the parser.
-
-        Parameters
-        ----------
-        component_class : type[Any]
-            Class to instantiate from configuration values.
-        """
         super().__init__()
         self.component_class = component_class
 

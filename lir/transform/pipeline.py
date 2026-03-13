@@ -50,21 +50,13 @@ class Pipeline(Transformer):
                 ('calibrator', LogitCalibrator()),  # a LiR transformer, to calibrate the LLRs
         ])
 
-    Attributes
+    Parameters
     ----------
     steps : list[tuple[str, Transformer | Any]]
         Ordered transformer steps executed by this pipeline.
     """
 
     def __init__(self, steps: list[tuple[str, Transformer | Any]]):
-        """
-        Initialize a new Pipeline object.
-
-        Parameters
-        ----------
-        steps : list[tuple[str, Transformer | Any]]
-            Ordered transformer steps executed by this pipeline.
-        """
         self.steps = [(name, as_transformer(module)) for name, module in steps]
 
     def fit(self, instances: InstanceData) -> Self:
@@ -202,7 +194,7 @@ class LoggingPipeline(Pipeline):
     ``featuresI`` for input features or ``stepnameI`` for step output, where ``stepname`` is replaced by the name of the
     step, and ``I`` refers to the index of the feature value.
 
-    Attributes
+    Parameters
     ----------
     steps : list[tuple[str, Transformer | Any]]
         Ordered transformer steps executed by this pipeline.
@@ -230,28 +222,6 @@ class LoggingPipeline(Pipeline):
         include_steps: list[str] | None = None,
         include_input: bool = True,
     ):
-        """
-        Initialize a new LoggingPipeline instance.
-
-            e.g. for cross-validation (defaults to True)
-
-        Parameters
-        ----------
-        steps : list[tuple[str, Transformer | Any]]
-            Ordered transformer steps executed by this pipeline.
-        output_file : PathLike
-            Destination file used to log intermediate pipeline output.
-        include_batch_number : bool
-            Whether to include the batch number in logged output.
-        include_labels : bool
-            Whether to include labels in logged output.
-        include_fields : list[str] | None
-            Additional instance fields to include in logged output.
-        include_steps : list[str] | None
-            Whether to include step names in logged output.
-        include_input : bool
-            Whether to include original inputs in logged output.
-        """
         super().__init__(steps)
         self.output_file = Path(output_file)
         self.include_batch_number = include_batch_number

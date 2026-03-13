@@ -29,21 +29,32 @@ class Canvas:
     """
     Representation of an empty canvas, to be used in plotting multiple visualizations.
 
+    Parameters
+    ----------
+    ax : Axes
+        Matplotlib axes instance used by wrapped plotting methods.
+
     Attributes
     ----------
     ax : Axes
         Matplotlib axes instance used by wrapped plotting methods.
+    ece : Callable[..., Any]
+        Method to plot expected calibration error (ECE) on this canvas.
+    lr_histogram : Callable[..., Any]
+        Method to plot a histogram of likelihood ratios on this canvas.
+    nbe : Callable[..., Any]
+        Method to plot the Bayes error rate (NBE) on this canvas.
+    pav : Callable[..., Any]
+        Method to plot the Pool Adjacent Violators (PAV) transformation on this canvas.
+    score_distribution : Callable[..., Any]
+        Method to plot the distribution of scores on this canvas.
+    tippett : Callable[..., Any]
+        Method to plot Tippett plots on this canvas.
+    llr_interval : Callable[..., Any]
+        Method to plot LLR intervals on this canvas.
     """
 
     def __init__(self, ax: Axes):
-        """
-        Initialize a plotting canvas wrapper.
-
-        Parameters
-        ----------
-        ax : Axes
-            Matplotlib axes instance used by wrapped plotting methods.
-        """
         self.ax = ax
 
         self.ece = partial(ece, ax)

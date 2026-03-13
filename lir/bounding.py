@@ -19,7 +19,7 @@ class LLRBounder(Transformer, ABC):
     A bounder updates any LLRs that are out of bounds. Any LLR values within bounds remain unchanged. LLR values that
     are out-of-bounds are updated to the nearest bound.
 
-    Attributes
+    Parameters
     ----------
     lower_llr_bound : float | None
         The lower bound for the LLRs. If `None`, no lower bound is applied.
@@ -125,7 +125,7 @@ class StaticBounder(LLRBounder):
 
     This bounder takes arguments for a lower and upper bound, which may take `None` in which case no bounds are applied.
 
-    Attributes
+    Parameters
     ----------
     lower_llr_bound : float | None
         The lower bound for the LLRs. If `None`, no lower bound is applied.

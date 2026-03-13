@@ -16,7 +16,7 @@ class ScoreBasedSystem(LRSystem):
     the `pairing_function` and subsequently calculate scores as well as transform
     these scores to LLR's in the final `evaluation_pipeline`.
 
-    Attributes
+    Parameters
     ----------
     preprocessing_pipeline : Transformer | None
         Pipeline that preprocesses instances before pairing and evaluation.

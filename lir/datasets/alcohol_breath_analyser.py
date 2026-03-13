@@ -13,7 +13,7 @@ class AlcoholBreathAnalyser(DataProvider):
         based on extrapolation: When to stop extrapolating? In: Science and
         Justice 56 (2016) 482–491.
 
-    Attributes
+    Parameters
     ----------
     ill_calibrated : bool
         Whether to load the intentionally ill-calibrated variant of the dataset.

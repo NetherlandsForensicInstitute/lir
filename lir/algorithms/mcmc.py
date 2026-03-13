@@ -21,7 +21,7 @@ class McmcLLRModel(Transformer):
     obtained. The median of this distribution is used as best estimate for the LR; a credible interval is also
     determined.
 
-    Attributes
+    Parameters
     ----------
     distribution_h1 : str
         Statistical distribution used to model H1.
@@ -49,26 +49,6 @@ class McmcLLRModel(Transformer):
         interval: tuple[float, float] = (0.05, 0.95),
         **mcmc_kwargs: Any,
     ):
-        """
-        Initialise the MCMC model, based on distributions and parameters.
-
-        Parameters
-        ----------
-        distribution_h1 : str
-            Statistical distribution used to model H1.
-        parameters_h1 : dict[str, dict[str, float | int | str]] | None
-            Parameter definitions and priors for the H1 distribution.
-        distribution_h2 : str
-            Statistical distribution used to model H2.
-        parameters_h2 : dict[str, dict[str, float | int | str]] | None
-            Parameter definitions and priors for the H2 distribution.
-        bounding : Callable[[], LLRBounder] | None, optional
-            Bounding method factory to prevent over-extrapolation.
-        interval : tuple[float, float], optional
-            Lower and upper bounds of the credible interval in range ``[0, 1]``.
-        **mcmc_kwargs : Any
-            Additional MCMC simulation settings passed to `McmcModel`.
-        """
         self.model_h1 = McmcModel(distribution_h1, parameters_h1, **mcmc_kwargs)
         self.model_h2 = McmcModel(distribution_h2, parameters_h2, **mcmc_kwargs)
         self.bounder_factory = bounding
@@ -138,7 +118,7 @@ class McmcModel:
     """
     Use Markov Chain Monte Carlo simulations to fit a statistical distribution.
 
-    Attributes
+    Parameters
     ----------
     distribution : str
         Statistical distribution used, for example `'normal'` or `'binomial'`.
@@ -170,24 +150,6 @@ class McmcModel:
         draw_count: int = 1000,
         random_seed: int | None = None,
     ):
-        """
-        Initialize the MCMC model.
-
-        Parameters
-        ----------
-        distribution : str
-            Statistical distribution used for modeling.
-        parameters : dict[str, dict[str, float | int | str]] | None
-            Definitions of distribution parameters and prior distributions.
-        chain_count : int, optional
-            Number of parallel MCMC chains.
-        tune_count : int, optional
-            Number of tune/warm-up samples per chain.
-        draw_count : int, optional
-            Number of posterior draws per chain.
-        random_seed : int | None, optional
-            Random seed for reproducibility.
-        """
         self.distribution = distribution.lower()
         self.parameters = parameters
         self.chain_count = chain_count

@@ -127,21 +127,13 @@ class IsotonicCalibrator(Transformer):
     - has an initialization argument that provides the option of adding misleading data points
     - outputs logodds instead of probabilities
 
-    Attributes
+    Parameters
     ----------
     add_misleading : int, optional
         Number of synthetic misleading points to add to reduce extreme LRs.
     """
 
     def __init__(self, add_misleading: int = 0):
-        """
-        Initialize an isotonic calibrator.
-
-        Parameters
-        ----------
-        add_misleading : int, optional
-            Number of synthetic misleading points to add to reduce extreme LRs.
-        """
         self.add_misleading = add_misleading
         self._ir = IsotonicRegression(out_of_bounds='clip')
 

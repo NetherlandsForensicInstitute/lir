@@ -15,7 +15,7 @@ class BinaryLRSystem(LRSystem):
     feature vector X - and a set of (ground-truth) labels are used to train and
     afterward calculate corresponding LLR's for given feature vectors.
 
-    Attributes
+    Parameters
     ----------
     pipeline : Transformer
         Transformer pipeline used to fit and score instances.

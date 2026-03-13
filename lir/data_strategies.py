@@ -32,7 +32,7 @@ class TrainTestSplit(DataStrategy):
           test_size: 0.2  # the (hold-out) test set  is 20% of the data
           seed: 42  # optional
 
-    Attributes
+    Parameters
     ----------
     test_size : float | int
         Size of the test set. If float, should be between 0.0 and 1.0 and represent the proportion of the dataset to
@@ -42,19 +42,6 @@ class TrainTestSplit(DataStrategy):
     """
 
     def __init__(self, test_size: float | int, seed: int | None = None):
-        """
-        Initialize the object.
-
-            in the test split. If int, represents the absolute number of test samples.
-
-        Parameters
-        ----------
-        test_size : float | int
-            Size of the test set. If float, should be between 0.0 and 1.0 and represent the proportion of the dataset to
-            include in the test split. If int, represents the absolute number of test samples.
-        seed : int | None
-            Random seed controlling stochastic behaviour for reproducible results.
-        """
         self.test_size = test_size
         self.seed = seed
 
@@ -96,7 +83,7 @@ class CrossValidation(DataStrategy):
           folds: 5  # the number k in k-fold cross-validation
           seed: 42  # optional
 
-    Attributes
+    Parameters
     ----------
     folds : int
         Number of cross-validation folds to generate.
@@ -105,16 +92,6 @@ class CrossValidation(DataStrategy):
     """
 
     def __init__(self, folds: int, seed: int | None = None):
-        """
-        Initialize the object for K-fold cross-validation.
-
-        Parameters
-        ----------
-        folds : int
-            Number of cross-validation folds to generate.
-        seed : int | None
-            Random seed controlling stochastic behaviour for reproducible results.
-        """
         self.folds = folds
         self.seed = seed
         self.shuffle = True if self.seed is not None else False  # noqa: SIM210
@@ -155,28 +132,17 @@ class SourcesTrainTestSplit(DataStrategy):
 
     This class internally uses ``sklearn.model_selection.GroupShuffleSplit``.
 
-    Attributes
+    Parameters
     ----------
     test_size : float | int
-        Fraction or absolute number of items assigned to the test split.
+        Fraction or absolute number of items assigned to the test split. If float, should be between 0.0 and 1.0 and
+        represent the proportion of sources to include inthe test split (rounded up). If int, represents the absolute
+        number of test sources.
     seed : int | None
         Random seed controlling stochastic behaviour for reproducible results.
     """
 
     def __init__(self, test_size: float | int, seed: int | None = None):
-        """
-        Class initialization.
-
-        :param test_size: If float, should be between 0.0 and 1.0 and represent the proportion of sources to include in
-            the test split (rounded up). If int, represents the absolute number of test sources.
-
-        Parameters
-        ----------
-        test_size : float | int
-            Fraction or absolute number of items assigned to the test split.
-        seed : int | None
-            Random seed controlling stochastic behaviour for reproducible results.
-        """
         self.test_size = test_size
         self.seed = seed
 
@@ -218,7 +184,7 @@ class SourcesCrossValidation(DataStrategy):
 
     This class internally uses ``sklearn.model_selection.GroupKFold``.
 
-    Attributes
+    Parameters
     ----------
     folds : int
         Number of cross-validation folds to generate.
@@ -252,7 +218,7 @@ class PairsTrainTestSplit(DataStrategy):
     set or the test set. The pairs are assigned to training or testing if both of their sources have that role. Pairs
     with mixed roles are omitted.
 
-    Attributes
+    Parameters
     ----------
     test_size : float | int
         Fraction or absolute number of items assigned to the test split.
@@ -261,16 +227,6 @@ class PairsTrainTestSplit(DataStrategy):
     """
 
     def __init__(self, test_size: float | int, seed: int | None = None):
-        """
-        Initialize the object.
-
-        Parameters
-        ----------
-        test_size : float | int
-            Fraction or absolute number of items assigned to the test split.
-        seed : int | None
-            Random seed controlling stochastic behaviour for reproducible results.
-        """
         self.test_size = test_size
         self.seed = seed
 

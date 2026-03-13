@@ -66,7 +66,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
     - :class:`FeatureDataCsvHttpParser` for reading from a URL;
     - :class:`FeatureDataCsvStreamParser` for reading from a stream.
 
-    Attributes
+    Parameters
     ----------
     source_id_column : str | list[str] | None
         Column name(s) containing source identifiers.
@@ -125,33 +125,6 @@ class FeatureDataCsvParser(DataProvider, ABC):
         head: int | None = None,
         message_prefix: str = '',
     ):
-        """
-        Initialize the parser.
-
-        Special columns can be assigned as such or can be ignored (see below). All other columns are interpreted as
-        feature columns. All arguments are optional.
-
-        Parameters
-        ----------
-        source_id_column : str | list[str] | None
-            Column name(s) containing source identifiers.
-        label_column : str | None
-            Column name containing class labels.
-        instance_id_column : str | None
-            Column name containing instance identifiers.
-        role_assignment_column : str | None
-            Column name containing predefined train/test roles.
-        fold_assignment_column : str | None
-            Column name containing predefined fold assignments.
-        extra_fields : list[ExtraField] | None
-            Optional extra fields to parse from each row.
-        ignore_columns : list[str] | None
-            Column names ignored when extracting features.
-        head : int | None
-            Maximum number of rows to read from the source.
-        message_prefix : str
-            Prefix added to parser log and error messages.
-        """
         self.source_id_columns: list[str] = (
             [source_id_column] if isinstance(source_id_column, str) else source_id_column or []
         )
@@ -279,25 +252,15 @@ class FeatureDataCsvFileParser(FeatureDataCsvParser):
     """
     Read CSV data from file.
 
-    Attributes
+    Parameters
     ----------
     file : PathLike
         Path to the input file.
     **kwargs : Any
-        Additional keyword arguments forwarded to the underlying call.
+        Additional keyword arguments forwarded to the underlying FeatureDataCsvParser call.
     """
 
     def __init__(self, file: PathLike, **kwargs: Any):
-        """
-        Initialize the CSV parser that reads data from a file.
-
-        Parameters
-        ----------
-        file : PathLike
-            Path to the input file.
-        **kwargs : Any
-            Additional keyword arguments forwarded to the underlying call.
-        """
         super().__init__(**kwargs, message_prefix=f'{file}: ')
         self.path = Path(file)
 
@@ -320,7 +283,7 @@ class FeatureDataCsvStreamParser(FeatureDataCsvParser):
     """
     Read data from a streamed CSV.
 
-    Attributes
+    Parameters
     ----------
     fp : IO
         Open file-like object to read from.
@@ -329,16 +292,6 @@ class FeatureDataCsvStreamParser(FeatureDataCsvParser):
     """
 
     def __init__(self, fp: IO, **kwargs: Any):
-        """
-        Initialize the CSV parser that reads data from a stream.
-
-        Parameters
-        ----------
-        fp : IO
-            Open file-like object to read from.
-        **kwargs : Any
-            Additional keyword arguments forwarded to the underlying call.
-        """
         super().__init__(**kwargs)
         self.fp = fp
 
@@ -359,7 +312,10 @@ class FeatureDataCsvHttpParser(FeatureDataCsvParser):
     """
     Read CSV data from a URL.
 
-    Attributes
+    By default, this class uses `requests-cache` to cache retrieved data. The cache is persistent and located in
+    the user cache folder, which is written to the log file.
+
+    Parameters
     ----------
     url : str
         URL of the remote resource to read.
@@ -370,21 +326,6 @@ class FeatureDataCsvHttpParser(FeatureDataCsvParser):
     """
 
     def __init__(self, url: str, session: requests.Session, **kwargs: Any):
-        """
-        Initialize the CSV parser that reads data from a stream.
-
-        By default, this class uses `requests-cache` to cache retrieved data. The cache is persistent and located in
-        the user cache folder, which is written to the log file.
-
-        Parameters
-        ----------
-        url : str
-            URL of the remote resource to read.
-        session : requests.Session
-            Value passed via ``session``.
-        **kwargs : Any
-            Additional keyword arguments forwarded to the underlying call.
-        """
         super().__init__(**kwargs, message_prefix=url)
         self.url = url
         self.session = session

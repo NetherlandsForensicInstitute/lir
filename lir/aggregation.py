@@ -116,20 +116,6 @@ class AggregatePlot(Aggregation):
     """
 
     def __init__(self, plot_fn: Callable, plot_name: str, output_path: Path | None = None, **kwargs: Any) -> None:
-        """
-        Initialize the AggregatePlot.
-
-        Parameters
-        ----------
-        plot_fn : Callable
-            The plotting function to be used for generating plots.
-        plot_name : str
-            The name of the plot.
-        output_path : Path | None, optional
-            The directory where the plots will be saved. If `None`, plots are not saved.
-        **kwargs : Any
-            Additional arguments to be passed to the plotting function.
-        """
         self.output_path = output_path
         self.plot_fn = plot_fn
         self.plot_name = plot_name
@@ -341,7 +327,7 @@ class WriteMetricsToCsv(Aggregation):
     """
     Helper class to write aggregated results to CSV file.
 
-    Attributes
+    Parameters
     ----------
     path : Path
         The path to the CSV file where the metrics will be written.
@@ -350,16 +336,6 @@ class WriteMetricsToCsv(Aggregation):
     """
 
     def __init__(self, path: Path, columns: Mapping[str, Callable]):
-        """
-        Initialize the class.
-
-        Parameters
-        ----------
-        path : Path
-            The path to the CSV file where the metrics will be written.
-        columns : Mapping[str, Callable]
-            A mapping of column names to metric functions that compute the values for those columns.
-        """
         self.path = path
         self._file: IO[Any] | None = None
         self._writer: csv.DictWriter | None = None
@@ -445,7 +421,7 @@ class CaseLLRToCsv(Aggregation):
     """
     Aggregation that applies a full-data-fitted LR system to case data and stores LLRs as CSV.
 
-    Attributes
+    Parameters
     ----------
     output_dir : Path
         Directory where the CSV file will be written.
@@ -541,7 +517,7 @@ class SubsetAggregation(Aggregation):
 
     A separate aggregation method is used for each category.
 
-    Attributes
+    Parameters
     ----------
     aggregation_methods : list[Aggregation]
         A list of methods to aggregate results by category.
@@ -550,16 +526,6 @@ class SubsetAggregation(Aggregation):
     """
 
     def __init__(self, aggregation_methods: list[Aggregation], category_field: str):
-        """
-        Initialize the subset aggregation method.
-
-        Parameters
-        ----------
-        aggregation_methods : list[Aggregation]
-            A list of methods to aggregate results by category.
-        category_field : str
-            The name of the category field.
-        """
         self.aggregation_methods = aggregation_methods
         self.category_field = category_field
 

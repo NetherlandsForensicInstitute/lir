@@ -681,7 +681,7 @@ class TwoLevelSystem(LRSystem):
 
     See also: `TwoLevelModelNormalKDE`
 
-    Attributes
+    Parameters
     ----------
     preprocessing_pipeline : Transformer | None
         Pipeline that preprocesses instances before pairing and evaluation.
@@ -703,24 +703,6 @@ class TwoLevelSystem(LRSystem):
         n_trace_instances: int,
         n_ref_instances: int,
     ):
-        """
-        Initialize a new TwoLevelSystem instance.
-
-            it takes LLRs as input.
-
-        Parameters
-        ----------
-        preprocessing_pipeline : Transformer | None
-            Pipeline that preprocesses instances before pairing and evaluation.
-        pairing_function : PairingMethod
-            Pairing method used to construct trace/reference comparisons.
-        postprocessing_pipeline : Transformer | None
-            Value passed via ``postprocessing_pipeline``.
-        n_trace_instances : int
-            Number of trace instances to include in each pairing.
-        n_ref_instances : int
-            Number of reference instances to include in each pairing.
-        """
         self.preprocessing_pipeline = preprocessing_pipeline or Pipeline([])
         self.pairing_function = pairing_function
         self.postprocessing_pipeline = postprocessing_pipeline or Pipeline([])

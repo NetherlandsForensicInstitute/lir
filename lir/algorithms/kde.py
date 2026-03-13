@@ -122,21 +122,13 @@ class KDECalibrator(Transformer):
     Calculates a likelihood ratio of a score value, provided it is from one of
     two distributions. Uses kernel density estimation (KDE) for interpolation.
 
-    Attributes
+    Parameters
     ----------
     bandwidth : Callable | str | float | tuple[float, float] | None, optional
         Bandwidth specification for KDE.
     """
 
     def __init__(self, bandwidth: Callable | str | float | tuple[float, float] | None = None):
-        """
-        Initialize a new KDECalibrator instance.
-
-        Parameters
-        ----------
-        bandwidth : Callable | str | float | tuple[float, float] | None, optional
-                Bandwidth specification for KDE.
-        """
         self.bandwidth: Callable = parse_bandwidth(bandwidth)
         self._kde0: KernelDensity | None = None
         self._kde1: KernelDensity | None = None

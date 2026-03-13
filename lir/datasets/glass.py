@@ -21,7 +21,7 @@ class GlassData(DataProvider):
 
     Data are retrieved from the web as needed and stored locally for later use.
 
-    Attributes
+    Parameters
     ----------
     cache_dir : PathLike
         Cache directory used for storing downloaded dataset files.

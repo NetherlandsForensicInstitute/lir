@@ -170,21 +170,13 @@ class FederatedLoader(ConfigParserLoader):
     """
     A configuration parser loader that delegates resolution to other loaders.
 
-    Attributes
+    Parameters
     ----------
     registries : list[ConfigParserLoader]
         A list of configuration parser loaders to delegate to, in order of priority.
     """
 
     def __init__(self, registries: list[ConfigParserLoader]):
-        """
-        Initialize the federated loader with a list of registries to delegate to.
-
-        Parameters
-        ----------
-        registries : list[ConfigParserLoader]
-            A list of configuration parser loaders to delegate to, in order of priority.
-        """
         self.registries = registries
 
     def __iter__(self) -> Iterator[str]:
@@ -295,7 +287,7 @@ class YamlRegistry(ConfigParserLoader):
     This registry parses this YAML mapping and provides access to these
     values through a `get()` method.
 
-    Attributes
+    Parameters
     ----------
     cfg : confidence.Configuration
         The configuration object containing the registry entries.

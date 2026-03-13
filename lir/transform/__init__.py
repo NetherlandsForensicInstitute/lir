@@ -133,7 +133,7 @@ class BinaryClassifierTransformer(Transformer):
     """
     Implementation of a binary class classifier as scikit-learn `Pipeline` step.
 
-    Attributes
+    Parameters
     ----------
     estimator : SKLearnPipelineModule
         Estimator used to produce transformed or scored outputs.
@@ -186,7 +186,7 @@ class SklearnTransformer(Transformer):
     """
     Implementation of a binary class classifier as scikit-learn `Pipeline` step.
 
-    Attributes
+    Parameters
     ----------
     transformer : SklearnTransformerType
         Transformer instance wrapped by this adapter.
@@ -254,7 +254,7 @@ class FunctionTransformer(Transformer):
     """
     Implementation of a transformer function as scikit-learn `Pipeline` step.
 
-    Attributes
+    Parameters
     ----------
     func : Callable
         Callable used to transform input instances.
@@ -285,7 +285,7 @@ class Tee(Transformer):
     """
     Implementation of a custom transformer allowing to perform two separate tasks on a given input.
 
-    Attributes
+    Parameters
     ----------
     transformers : list[Transformer]
         Collection of transformers applied in sequence or parallel.
@@ -342,7 +342,7 @@ class TransformerWrapper(Transformer):
     by forwarding the call to the wrapped transformer. A subclass may add or change functionality
     by overriding functions.
 
-    Attributes
+    Parameters
     ----------
     wrapped_transformer : Transformer
         Value passed via ``wrapped_transformer``.
@@ -390,7 +390,7 @@ class NumpyTransformer(TransformerWrapper):
     """
     Implementation of a transformer wrapper.
 
-    Attributes
+    Parameters
     ----------
     transformer : Transformer
         Transformer instance wrapped by this adapter.
@@ -448,7 +448,7 @@ class CsvWriter(Transformer):
     This might be used to obtain temporary or intermediate results for logging or debugging
     purposes.
 
-    Attributes
+    Parameters
     ----------
     path : Path
         Filesystem path used by this operation.

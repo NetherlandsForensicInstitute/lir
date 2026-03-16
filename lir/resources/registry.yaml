@@ -82,6 +82,7 @@ metric:
   cllr_cal: lir.metrics.cllr_cal
   llr_lower_bound: lir.metrics.llr_lower_bound
   llr_upper_bound: lir.metrics.llr_upper_bound
+  devpav: lir.algorithms.devpav.devpav
 output:
   metrics: lir.aggregation.metrics_csv
   pav: lir.aggregation.plot_pav

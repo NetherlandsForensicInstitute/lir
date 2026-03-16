@@ -5,7 +5,7 @@ from collections import OrderedDict
 from collections.abc import Callable, Mapping, Sequence
 from functools import partial
 from pathlib import Path
-from typing import IO, Any, NamedTuple
+from typing import IO, Any, NamedTuple, Iterator
 
 from matplotlib import pyplot as plt
 
@@ -18,6 +18,7 @@ from lir.config.metrics import parse_individual_metric
 from lir.data.io import DataFileBuilderCsv
 from lir.data.models import DataProvider, FeatureData, LLRData, check_type, get_instances_by_category
 from lir.lrsystems.lrsystems import LRSystem
+from lir.metrics import Metric
 from lir.plotting import llr_interval, lr_histogram, pav, tippett
 from lir.plotting.expected_calibration_error import plot_ece as ece
 
@@ -47,6 +48,7 @@ class AggregationData(NamedTuple):
     lrsystem: LRSystem
     parameters: dict[str, Any]
     run_name: str
+    runtime_secs: float
     get_full_fit_lrsystem: Callable[[], LRSystem] | None = None
 
 
@@ -331,23 +333,23 @@ class WriteMetricsToCsv(Aggregation):
     ----------
     path : Path
         The path to the CSV file where the metrics will be written.
-    columns : Mapping[str, Callable]
+    columns : Sequence[Metric]
         A mapping of column names to metric functions that compute the values for those columns.
     """
 
-    def __init__(self, path: Path, columns: Mapping[str, Callable]):
+    def __init__(self, path: Path, columns: Sequence[Metric]):
         self.path = path
         self._file: IO[Any] | None = None
         self._writer: csv.DictWriter | None = None
         self.columns = columns
 
-    @staticmethod
-    def _safe_call(fn: Callable, message: str) -> Any:
-        try:
-            return fn()
-        except Exception as e:
-            LOG.warning(f'{message}: {e}')
-            return ''
+    def _get_column_values(self, data: AggregationData) -> Iterator[tuple[str, str]]:
+        # return the parameters
+        yield from data.parameters.items()
+
+        # return the metrics
+        for metric in self.columns:
+            yield from metric.get_values(data)
 
     def report(self, data: AggregationData) -> None:
         """
@@ -358,19 +360,7 @@ class WriteMetricsToCsv(Aggregation):
         data : AggregationData
             The aggregated data for which to compute and write the metrics.
         """
-        columns = [
-            (key, self._safe_call(partial(metric, data.llrdata), f'calculating metric {key} failed'))
-            for key, metric in self.columns.items()
-        ]
-        metrics = []
-        for name, value in columns:
-            if isinstance(value, (list, tuple)):
-                for index, metric_value in enumerate(value):
-                    metrics.append((f'{name}_{index}', str(metric_value)))
-            else:
-                metrics.append((name, str(value)))
-
-        results = OrderedDict(list(data.parameters.items()) + metrics)
+        results = OrderedDict(self._get_column_values(data))
 
         # Record column header names only once to the CSV
         if self._writer is None:
@@ -549,6 +539,7 @@ class SubsetAggregation(Aggregation):
                 lrsystem=data.lrsystem,
                 parameters=data.parameters | {self.category_field: category},
                 run_name=run_name,
+                runtime_secs=data.runtime_secs,
                 get_full_fit_lrsystem=data.get_full_fit_lrsystem,
             )
 

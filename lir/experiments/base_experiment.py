@@ -1,3 +1,4 @@
+import time
 from abc import ABC, abstractmethod
 from collections.abc import Iterable, Sequence
 from copy import deepcopy
@@ -81,6 +82,8 @@ class Experiment(ABC):
         run_output_dir = self.output_path / run_name
         run_output_dir.mkdir(exist_ok=True, parents=True)
 
+        time_start = time.time()
+
         lrsystem = parse_lrsystem(deepcopy(lrsystem_config), run_output_dir)
 
         # Turn the configurations into dictionaries for writing to YAML files.
@@ -113,6 +116,8 @@ class Experiment(ABC):
         # Combine collected numpy arrays after iteration over the train/test split(s)
         combined_llrs: LLRData = concatenate_instances(*llr_sets)
 
+        time_end = time.time()
+
         # Create a lazy factory for full-data-fitted model with memoization
         _cached_full_fit_lrsystem = None
 
@@ -131,6 +136,7 @@ class Experiment(ABC):
             lrsystem=lrsystem,
             parameters=parameters,
             run_name=run_name,
+            runtime_secs=time_end - time_start,
             get_full_fit_lrsystem=get_full_fit_lrsystem,
         )
         for output in self.outputs:

@@ -1,10 +1,73 @@
+import logging
+from abc import ABC
+from typing import Iterable, Callable
+
 import numpy as np
 
+from lir.aggregation import AggregationData
 from lir.algorithms.isotonic_regression import IsotonicCalibrator
 from lir.data.models import LLRData
 from lir.util import Xy_to_Xn, logodds_to_odds
 
 
+LOG = logging.getLogger(__name__)
+
+
+class Metric(ABC):
+    def get_values(self, data: AggregationData) -> Iterable[tuple[str, str]]:
+        raise NotImplementedError
+
+
+def llr_metric(name: str) -> Callable:
+    class LLRMetric(Metric):
+        def __init__(self, metric_name: str, metric_fn: Callable[[LLRData], float]):
+            self.name = metric_name
+            self.metric_fn = metric_fn
+
+        def get_values(self, data: AggregationData) -> Iterable[tuple[str, str]]:
+            try:
+                value = self.metric_fn(data.llrdata)
+                if isinstance(value, (list, tuple)):
+                    for index, metric_value in enumerate(value):
+                        yield f'{self.name}_{index}', str(metric_value)
+                else:
+                    yield self.name, str(value)
+            except Exception as e:
+                LOG.warning(f'calculating metric {self.name} failed: {e}')
+                yield self.name, ''
+
+
+    def wrapper(func: Callable[[LLRData], float]) -> LLRMetric:
+        return LLRMetric(name, func)
+
+    return wrapper
+
+
+def aggregation_metric(name: str) -> Callable:
+    class AggregationMetric(Metric):
+        def __init__(self, metric_name: str, metric_fn: Callable[[AggregationData], str]):
+            self.name = metric_name
+            self.metric_fn = metric_fn
+
+        def get_values(self, data: AggregationData) -> Iterable[tuple[str, str]]:
+            try:
+                yield self.name, self.metric_fn(data)
+            except Exception as e:
+                LOG.warning(f'obtaining value for {self.name} failed: {e}')
+                yield self.name, ''
+
+    def wrapper(func: Callable[[AggregationData], str]) -> AggregationMetric:
+        return AggregationMetric(name, func)
+
+    return wrapper
+
+
+class RuntimeMetric(Metric):
+    def get_value(self, data: AggregationData) -> Iterable[tuple[str, str]]:
+        yield 'runtime', str(data.runtime_secs)
+
+
+@llr_metric
 def cllr(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
     """
     Calculate a log likelihood ratio cost (C_llr) for a series of log likelihood ratios.
@@ -41,6 +104,7 @@ def cllr(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
         return float((cllr0 + cllr1) / sum(weights))
 
 
+@llr_metric
 def cllr_min(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
     """
     Estimate the discriminative power from a collection of log likelihood ratios.
@@ -66,6 +130,7 @@ def cllr_min(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
     return cllr(llrmin, weights)
 
 
+@llr_metric
 def cllr_cal(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
     """
     Calculate the difference between the C_llr before and after isotonic calibration.
@@ -88,6 +153,7 @@ def cllr_cal(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
     return cllr_val - cllr_min_val
 
 
+@llr_metric
 def llr_upper_bound(llrs: LLRData) -> float | None:
     """
     Provide corresponding upper bound for provided LLR data.
@@ -107,6 +173,7 @@ def llr_upper_bound(llrs: LLRData) -> float | None:
     return llrs.llr_upper_bound
 
 
+@llr_metric
 def llr_lower_bound(llrs: LLRData) -> float | None:
     """
     Provide corresponding lower bound for provided LLR data.
@@ -124,3 +191,8 @@ def llr_lower_bound(llrs: LLRData) -> float | None:
         The LLR lower bound, or `None`.
     """
     return llrs.llr_lower_bound
+
+
+@aggregation_metric
+def runtime(data: AggregationData) -> str:
+    return str(data.runtime_secs)

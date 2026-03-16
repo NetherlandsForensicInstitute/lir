@@ -84,14 +84,14 @@ metric:
   devpav: lir.algorithms.devpav.devpav
 output:
   metrics: lir.aggregation.metrics_csv
-  pav: lir.aggregation.plot_pav
-  ece: lir.aggregation.plot_ece
-  lr_histogram: lir.aggregation.plot_lr_histogram
-  llr_interval: lir.aggregation.plot_llr_interval
-  llr_overestimation: lir.aggregation.plot_llr_overestimation
-  nbe: lir.aggregation.plot_nbe
-  invariance_delta_function: lir.aggregation.plot_invariance_delta_function
-  tippett: lir.aggregation.plot_tippett
+  pav: lir.config.plots.pav
+  ece: lir.config.plots.ece
+  lr_histogram: lir.config.plots.lr_histogram
+  llr_interval: lir.config.plots.llr_interval
+  llr_overestimation: lir.config.plots.llr_overestimation
+  nbe: lir.config.plots.nbe
+  invariance_delta_function: lir.config.plots.invariance_delta_function
+  tippett: lir.config.plots.tippett
   save_model: lir.persistence.parse_save_model
   case_llr: lir.aggregation.case_llr_csv
   by_category: lir.config.aggregation.subset_aggregation

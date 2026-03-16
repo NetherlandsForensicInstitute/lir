@@ -5,9 +5,9 @@ from pathlib import Path
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 
+from lir.algorithms.devpav import devpav
 from lir.algorithms.logistic_regression import FourParameterLogisticCalibrator
 from lir.data.models import LLRData
-from lir.metrics.devpav import devpav
 from lir.util import Xn_to_Xy, odds_to_probability, probability_to_logodds
 
 

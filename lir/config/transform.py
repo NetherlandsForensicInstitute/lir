@@ -38,14 +38,6 @@ class GenericTransformerConfigParser(ConfigParser):
     """
 
     def __init__(self, component_class: object):
-        """
-        Initialise parser for a transformer-like component.
-
-        Parameters
-        ----------
-        component_class : object
-            Component class or callable to adapt to the transformer interface.
-        """
         super().__init__()
         self.component_class = component_class
 
@@ -114,14 +106,6 @@ class NumpyWrappingConfigParser(ConfigParser):
     """
 
     def __init__(self, module_parser: ConfigParser):
-        """
-        Initialise parser that wraps module output in ``NumpyTransformer``.
-
-        Parameters
-        ----------
-        module_parser : ConfigParser
-            Parser used to create the wrapped transformer.
-        """
         super().__init__()
         self.module_parser = module_parser
 

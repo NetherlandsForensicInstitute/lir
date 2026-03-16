@@ -24,18 +24,9 @@ class CategoricalCompositeTransformer(Transformer):
     """
 
     def __init__(self, factory: Callable[[], Transformer], category_field: str):
-        """
-        Initialize the composite transformer.
-
-        Parameters
-        ----------
-        factory : Callable[[], Transformer]
-            Value passed via ``factory``.
-        category_field : str
-            Value passed via ``category_field``.
-        """
         self.factory = factory
         self.category_field = category_field
+
         self._transformers: dict[str, Transformer] = {}
         self._category_shape: tuple[int] | None = None
 

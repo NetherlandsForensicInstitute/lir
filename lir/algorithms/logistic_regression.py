@@ -32,7 +32,7 @@ class LogitCalibrator(Transformer):
     Parameters
     ----------
     **kwargs : dict
-        Additional keyword arguments forwarded to `sklearn.linear_model.LogisticRegression`.
+        Keyword arguments forwarded to `sklearn.linear_model.LogisticRegression`.
     """
 
     def __init__(self, **kwargs: dict):

@@ -78,14 +78,6 @@ class Hyperparameter(ABC):
     """
 
     def __init__(self, name: str):
-        """
-        Initialise a hyperparameter.
-
-        Parameters
-        ----------
-        name : str
-            Hyperparameter name.
-        """
         self.name = name
 
     @abstractmethod
@@ -118,16 +110,6 @@ class CategoricalHyperparameter(Hyperparameter):
     """
 
     def __init__(self, name: str, options: list[HyperparameterOption]):
-        """
-        Initialise a categorical hyperparameter.
-
-        Parameters
-        ----------
-        name : str
-            Hyperparameter name.
-        options : list[HyperparameterOption]
-            Available options.
-        """
         super().__init__(name)
         self._options = options
 
@@ -330,22 +312,6 @@ class FloatHyperparameter(Hyperparameter):
     """
 
     def __init__(self, path: str, low: float, high: float, step: float | None, log: bool):
-        """
-        Initialise a floating-point hyperparameter.
-
-        Parameters
-        ----------
-        path : str
-            Configuration path to substitute.
-        low : float
-            Lower bound.
-        high : float
-            Upper bound.
-        step : float | None
-            Optional step size for grid options.
-        log : bool
-            Whether to sample in log space.
-        """
         super().__init__(path)
         self.path = path
         self.low = low
@@ -449,18 +415,6 @@ class FolderHyperparameter(Hyperparameter):
     """
 
     def __init__(self, path: str, folder: str, ignore_files: list[str] | None = None):
-        """
-        Initialise a folder hyperparameter.
-
-        Parameters
-        ----------
-        path : str
-            Configuration path to substitute.
-        folder : str
-            Folder containing candidate files.
-        ignore_files : list[str] | None, optional
-            Filename patterns to exclude.
-        """
         super().__init__(path)
 
         # Search for the folder in the python PATH. Results in an absolute path.

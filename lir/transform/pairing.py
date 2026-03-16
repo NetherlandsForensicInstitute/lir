@@ -239,8 +239,13 @@ class InstancePairing(PairingMethod):
     """
     Construct pairs from a set of instances.
 
-    Note that this pairing method may cause performance problems with large datasets,
-    even if the number of instances in the output is limited.
+    Note that this pairing method may cause performance problems with large datasets, even if the number of instances in
+    the output is limited.
+
+    The ratio is ``ds pairs / ss pairs``. The number of ds pairs will not exceed ``ratio_limit * ss pairs``. If both
+    ``ratio_limit`` and ``same_source_limit``/``different_source_limit`` are specified, the number of pairs is chosen
+    such that the ratio_limit is preserved and the limit(s) are not exceeded, while taking as many pairs as possible
+    within these constraints.
 
     Parameters
     ----------
@@ -261,29 +266,6 @@ class InstancePairing(PairingMethod):
         ratio_limit: float | None = None,
         seed: int | None = None,
     ) -> None:
-        """
-        Construct pairs from a set of instances.
-
-        Note that this pairing method may cause performance problems with large datasets,
-        even if the number of instances in the output is limited.
-
-            number of same source pairs)
-                Ratio = ds pairs / ss pairs. The number of ds pairs will not exceed ratio_limit * ss pairs.
-                If both ratio and same_source_limit/different_source_limit are specified,
-                the number of pairs is chosen such that the ratio_limit is preserved and
-                the limit(s) are not exceeded, while taking as many pairs as possible within these constraints.
-
-        Parameters
-        ----------
-        same_source_limit : int | None
-            Limit for the number or fraction of same-source pairs.
-        different_source_limit : int | None
-            Limit for the number or fraction of different-source pairs.
-        ratio_limit : float | None
-            Maximum allowed ratio between same-source and different-source pairs.
-        seed : int | None
-            Random seed controlling stochastic behaviour for reproducible results.
-        """
         self._ss_limit = same_source_limit
         self._ds_limit = different_source_limit
         self._ratio_limit = ratio_limit

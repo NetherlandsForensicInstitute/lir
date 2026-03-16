@@ -51,20 +51,6 @@ class Bootstrap(Pipeline, ABC):
         interval: tuple[float, float] = (0.05, 0.95),
         seed: int | None = None,
     ):
-        """
-        Initialize the bootstrap instance.
-
-        Parameters
-        ----------
-        steps : list[tuple[str, Any]]
-            The pipeline steps to bootstrap.
-        n_bootstraps : int, optional
-            Number of bootstrap samples to generate.
-        interval : tuple[float, float], optional
-            Lower and upper quantiles for the confidence interval.
-        seed : int | None, optional
-            Random seed for reproducibility.
-        """
         super().__init__(steps)
 
         self.interval = interval
@@ -244,23 +230,6 @@ class BootstrapEquidistant(Bootstrap):
         seed: int | None = None,
         n_points: int | None = 1000,
     ):
-        """
-        Initialize the instance with the given pipeline steps, number of bootstraps, and interval.
-
-        Parameters
-        ----------
-        steps : list[tuple[str, Any]]
-            The steps of the pipeline to be bootstrapped.
-        n_bootstraps : int, optional
-            The number of bootstrap samples to generate. Default is 400.
-        interval : tuple[float, float], optional
-            The lower and upper quantiles for the confidence interval. Default: (0.05,0.95).
-        seed : int | None, optional
-            The random seed for reproducibility. Default is None.
-        n_points : int | None, optional
-            The number of equidistant points to use for interval estimation. Default is 1000. If None, uses the number
-            of instances in the training data.
-        """
         super().__init__(steps, n_bootstraps, interval, seed)
         self.n_points = n_points
 

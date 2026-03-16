@@ -177,14 +177,6 @@ class FederatedLoader(ConfigParserLoader):
     """
 
     def __init__(self, registries: list[ConfigParserLoader]):
-        """
-        Initialize the federated loader with a list of registries to delegate to.
-
-        Parameters
-        ----------
-        registries : list[ConfigParserLoader]
-            A list of configuration parser loaders to delegate to, in order of priority.
-        """
         self.registries = registries
 
     def __iter__(self) -> Iterator[str]:

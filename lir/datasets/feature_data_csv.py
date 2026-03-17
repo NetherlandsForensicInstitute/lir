@@ -2,6 +2,7 @@ import csv
 import io
 import itertools
 import logging
+import re
 from abc import ABC
 from collections import defaultdict
 from collections.abc import Callable
@@ -82,8 +83,8 @@ class FeatureDataCsvParser(DataProvider, ABC):
         Optional extra fields to parse from each row.
     ignore_columns : list[str] | None
         Column names ignored when extracting features.
-    head : int | None
-        Maximum number of rows to read from the source.
+    select_row_fn : Callable[[int], bool] | None
+        Function that decides whether to include a record based on its row number.
     message_prefix : str
         Prefix added to parser log and error messages.
 
@@ -110,7 +111,28 @@ class FeatureDataCsvParser(DataProvider, ABC):
         path: path/to/file.csv
         source_id_column: source_id
         ignore_columns:
-            - name_of_an_irrelevant_column
+          - name_of_an_irrelevant_column
+
+        extra_fields:
+          - name: split     # this will be the attribute name
+            columns:        # the columns should match the column names in the CSV header
+              - split1
+              - split2
+              - split3
+            cell_type: str  # optional type validation: str, int, or float
+
+        select_rows:        # read only rows whose line number matches any of the following patterns (the first record
+                            # is on line 2)
+          - 2               # select line 2 -- the first record
+          - 2-101           # select line 2-101 (inclusive) -- the first 100 records
+          - 2-101,800-899   # select line 2-101 and 800-899
+          - /5              # select every fifth row
+
+    The YAML configuration accepts the same parameters as this class, with two exceptions.
+
+
+
+
     """
 
     def __init__(
@@ -122,7 +144,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
         fold_assignment_column: str | None = None,
         extra_fields: list[ExtraField] | None = None,
         ignore_columns: list[str] | None = None,
-        head: int | None = None,
+        select_row_fn: Callable[[int], bool] | None = None,
         message_prefix: str = '',
     ):
         self.source_id_columns: list[str] = (
@@ -137,7 +159,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
         self.fold_assignment_column = fold_assignment_column
         self.extra_fields = extra_fields or []
         self.ignore_columns = ignore_columns or []
-        self._head = head
+        self._select_row_fn = select_row_fn
         self._message_prefix = message_prefix
 
         # the "extra field" argument allows for including arbitrary fields
@@ -201,7 +223,10 @@ class FeatureDataCsvParser(DataProvider, ABC):
         extra_values = defaultdict(list)
 
         # read the file, row by row
-        for row in itertools.islice(reader, self._head):
+        for i, row in enumerate(reader):
+            if not self._select_row_fn(i+1):
+                continue
+
             if source_ids is not None:
                 source_ids.append([row[column_name] for column_name in self.source_id_columns])
             if self.label_column is not None:
@@ -364,13 +389,65 @@ def _parse_extra_field(config: ContextAwareDict) -> ExtraField:
     return ExtraField(name, columns, cell_type)
 
 
+class MatchIntPattern:
+    @staticmethod
+    def all(_: int) -> bool:
+        return True
+
+    @staticmethod
+    def any_of(functions: list[Callable[[int], bool]], n: int) -> bool:
+        for fn in functions:
+            if fn(n):
+                return True
+        return False
+
+    @staticmethod
+    def equals(expected: int, n: int) -> bool:
+        return n == expected
+
+    @staticmethod
+    def mod(mod: int, n: int) -> bool:
+        return n % mod == 0
+
+    @staticmethod
+    def range(first: int, last: int, n: int) -> bool:
+        return first <= n <= last
+
+    @staticmethod
+    def parse_str(spec: str) -> Callable[[int], bool]:
+        spec = spec.strip()
+        if spec.isnumeric():
+            return partial(MatchIntPattern.equals, int(spec))
+        if re.match(r'^/\d+$', spec):
+            return partial(MatchIntPattern.mod, int(spec[1:]))
+        if ',' in spec:
+            return partial(MatchIntPattern.any_of, [MatchIntPattern.parse_str(item) for item in spec.split(',')])
+        if re.match(r'^\d+-\d+$', spec):
+            return partial(MatchIntPattern.range, *[int(part) for part in spec.split('-')])
+        raise ValueError(f'invalid pattern: {spec}')
+
+    @staticmethod
+    def parse(spec: None | list[str] | str) -> Callable[[int], bool]:
+        match spec:
+            case None:
+                return MatchIntPattern.all
+            case str():
+                return MatchIntPattern.parse_str(spec)
+            case list():
+                return partial(MatchIntPattern.any_of, [MatchIntPattern.parse(item) for item in spec])
+            case _:
+                raise ValueError(f'unknown pattern type: {type(spec)}; the value was: {spec}')
+
+
 def _parse_feature_data_csv[ParserType: FeatureDataCsvParser](
     parser_class: type[ParserType], config: ContextAwareDict, **kwargs: Any
 ) -> ParserType:
     extra_fields_config = pop_field(config, 'extra_fields', default=[], validate=partial(check_type, list))
     extra_fields = [_parse_extra_field(field_config) for field_config in extra_fields_config]
 
-    parser = parser_class(**config, extra_fields=extra_fields, **kwargs)
+    select_row_fn = MatchIntPattern.parse(pop_field(config, 'select_rows', validate=partial(check_type, list), required=False))
+
+    parser = parser_class(**config, extra_fields=extra_fields, select_rows=select_row_fn, **kwargs)
     return parser
 
 

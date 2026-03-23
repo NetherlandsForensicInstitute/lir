@@ -1,6 +1,6 @@
 output_path: output/${timestamp}_bootstrap
 
-data:
+data: &data
   provider:
     method: synthesized_normal_binary
     seed: 42
@@ -18,7 +18,7 @@ data:
     folds: 5
     seed: 42
 
-lr_system:
+lr_system: &lr_system
   architecture: specific_source
   modules:
     method: bootstrap
@@ -37,8 +37,8 @@ lr_system:
 experiments:
   - name: model_selection
     strategy: single_run
-    lr_system: ${lr_system}
-    data: ${data}
+    lr_system: *lr_system
+    data: *data
     output:
       - method: metrics
         columns:

@@ -1,6 +1,6 @@
 output_path: output/${timestamp}_common_source
 
-data:
+data: &data
   provider:
     method: synthesized_normal_multiclass
     seed: 42
@@ -16,7 +16,7 @@ data:
     strategy: cross_validation_sources
     folds: 5
 
-lr_system:
+lr_system: &lr_system
   architecture: score_based
   preprocessing:
     method: csv_writer
@@ -37,8 +37,8 @@ lr_system:
 experiments:
   - name: model_selection
     strategy: grid
-    lr_system: ${lr_system}
-    data: ${data}
+    lr_system: *lr_system
+    data: *data
     hyperparameters:
       - path: comparing.steps.clf
         options:
@@ -57,8 +57,8 @@ experiments:
 
   - name: validation
     strategy: single_run
-    lr_system: ${lr_system}
-    data: ${data}
+    lr_system: *lr_system
+    data: *data
     output:
       - method: metrics
         columns:

@@ -47,7 +47,7 @@ class BoundingExample5(UnboundLRs):
 
     def get_llrs(self) -> tuple[np.ndarray, np.ndarray]:
         dirname = Path(__file__).parent
-        input_path = dirname / 'resources/lr_bounding'
+        input_path = dirname / 'invariance_bounds'
         llrs_h1 = np.loadtxt(input_path / 'LLR_KM.csv')
         llrs_h2 = np.loadtxt(input_path / 'LLR_KNM.csv')
 

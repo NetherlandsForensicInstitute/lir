@@ -21,8 +21,8 @@ def read_data(path):
 
 class TestFourParameterLogisticCalibrator(unittest.TestCase):
     dirname = Path(__file__).parent
-    X_diff = read_data(dirname / 'resources/LRsdifferentnormalLLRdistribmu_s=1N_ss=300.csv')
-    X_same = read_data(dirname / 'resources/LRssamenormalLLRdistribmu_s=1N_ss=300.csv')
+    X_diff = read_data(dirname / 'logistic_regression/LRsdifferentnormalLLRdistribmu_s=1N_ss=300.csv')
+    X_same = read_data(dirname / 'logistic_regression/LRssamenormalLLRdistribmu_s=1N_ss=300.csv')
 
     def get_instances(self):
         X, y = Xn_to_Xy(self.X_diff, self.X_same)

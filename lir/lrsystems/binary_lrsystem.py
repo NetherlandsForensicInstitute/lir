@@ -1,8 +1,8 @@
 from typing import Self
 
+from lir import Transformer
 from lir.data.models import InstanceData
 from lir.lrsystems.lrsystems import LLRData, LRSystem
-from lir.lrsystems.score_based import Pipeline
 
 
 class BinaryLRSystem(LRSystem):
@@ -19,20 +19,10 @@ class BinaryLRSystem(LRSystem):
     ----------
     pipeline : Transformer
         Transformer pipeline used to fit and score instances.
-    save_features_after_step : dict[str, str] | None
-        Optional dictionary of step names to capture intermediate output from. The keys of the dictionary are the
-        names of the fields in which to save the features, and the values are the names of the steps after which to save
-        the features. If a value is 'STARTING_DATA', the features are saved before applying any steps.
     """
 
-    def __init__(self, pipeline: Pipeline, save_features_after_step: dict[str, str] | None = None):
-        super().__init__()
+    def __init__(self, pipeline: Transformer):
         self.pipeline = pipeline
-        self.pipeline.save_features_after_step = save_features_after_step
-        # Keep the reverse lookup in sync so requested intermediate features are actually captured.
-        self.pipeline.save_features_after_step_reversed = (
-            {v: k for k, v in save_features_after_step.items()} if save_features_after_step else {}
-        )
 
     def fit(self, instances: InstanceData) -> Self:
         """

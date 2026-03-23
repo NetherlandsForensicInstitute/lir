@@ -812,7 +812,7 @@ class LLRData(FeatureData):
         if self.model_extra is None or source_key not in self.model_extra:
             raise ValueError(
                 f'{source_key} are not available for this instance. '
-                f"Use the `{source_key}` in 'save_features_after_step' in your LR system to capture {source_key}."
+                f'Add the method `save_features` with parameter `save_as: {source_key}` to your pipeline.'
                 f'Currently available sources: {list(self.model_extra.keys()) if self.model_extra else "none"}'
             )
         return self.model_extra[source_key]

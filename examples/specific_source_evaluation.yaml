@@ -20,12 +20,13 @@ data:
 
 lr_system:
   architecture: specific_source
-  save_features_after_step: 
-    score: scaler
   modules:
     method: logging_pipeline
     steps:
       scaler: standard_scaler
+      save_scores:
+        method: save_features
+        save_as: score
       clf:
         method: logistic_regression
         C: 1

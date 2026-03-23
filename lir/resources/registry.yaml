@@ -45,6 +45,7 @@ modules:
   # utility modules
   tee: lir.config.util.TeeParser
   csv_writer: lir.config.transform.csv_writer
+  save_features: lir.transform.save_features.SaveFeatureTransformer
 
   # classifiers
   logistic_regression:
@@ -91,6 +92,8 @@ output:
   nbe: lir.aggregation.plot_nbe
   invariance_delta_function: lir.aggregation.plot_invariance_delta_function
   tippett: lir.aggregation.plot_tippett
+  score_to_llr: lir.aggregation.plot_score_to_llr
+  score_distribution: lir.aggregation.plot_score_distribution
   save_model: lir.persistence.parse_save_model
   case_llr: lir.aggregation.case_llr_csv
   by_category: lir.config.aggregation.subset_aggregation

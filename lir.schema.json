@@ -520,7 +520,9 @@
             "nbe",
             "invariance_delta_function",
             "tippett",
-            "save_model"
+            "save_model",
+            "score_to_llr",
+            "score_distribution"
           ]
         },
         {

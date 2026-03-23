@@ -24,6 +24,9 @@ lr_system:
     method: logging_pipeline
     steps:
       scaler: standard_scaler
+      save_scores:
+        method: save_features
+        save_as: score
       clf:
         method: logistic_regression
         C: 1
@@ -71,6 +74,8 @@ experiments:
       - metrics
       - pav
       - ece
+      - score_distribution
+      - score_to_llr
       - method: tippett
         plot_type: 1
       - method: tippett

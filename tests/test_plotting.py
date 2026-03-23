@@ -48,6 +48,8 @@ class TestPlotting(unittest.TestCase):
 
         # The reshape(-1, 1) is to simulate single-feature data with one sample per row
         llr_data = LLRData(features=llrs.reshape(-1, 1), labels=y)
+
+        llr_data_with_scores = llr_data.replace(score=llr_data.features)
         llr_data_finite = llr_data[finite_index]
 
         # The LLRData interval is just a 3-column ndarray where each row is:
@@ -90,7 +92,7 @@ class TestPlotting(unittest.TestCase):
                 ax.lr_histogram(llr_data_finite)
 
             with plotting.axes() as ax:
-                ax.score_distribution(llrs, y)
+                ax.score_distribution(llr_data_with_scores)
 
             with plotting.axes() as ax:
                 ax.llr_interval(llr_data_intervals)

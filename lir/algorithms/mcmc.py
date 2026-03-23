@@ -186,26 +186,28 @@ class McmcModel:
             # Define the prior distributions of the model parameters based on their definitions
             priors = {}
             for parameter, parameter_input in self.parameters.items():
-                if parameter_input['prior'] == 'beta':
-                    prior = pm.Beta(parameter, alpha=parameter_input['alpha'], beta=parameter_input['beta'])
-                elif parameter_input['prior'] == 'normal':
-                    prior = pm.Normal(parameter, mu=parameter_input['mu'], sigma=parameter_input['sigma'])
-                elif parameter_input['prior'] == 'uniform':
-                    prior = pm.Uniform(parameter, lower=parameter_input['lower'], upper=parameter_input['upper'])
-                else:
-                    raise ValueError('Unrecognized prior')
+                match parameter_input['prior']:
+                    case 'beta':
+                        prior = pm.Beta(parameter, alpha=parameter_input['alpha'], beta=parameter_input['beta'])
+                    case 'normal':
+                        prior = pm.Normal(parameter, mu=parameter_input['mu'], sigma=parameter_input['sigma'])
+                    case 'uniform':
+                        prior = pm.Uniform(parameter, lower=parameter_input['lower'], upper=parameter_input['upper'])
+                    case _:
+                        raise ValueError('Unrecognized prior')
                 priors.update({parameter: prior})
             # Define the model: priors and the observed data
-            if self.distribution == 'betabinomial':
-                pm.BetaBinomial(
-                    'k', alpha=priors['alpha'], beta=priors['beta'], n=features[:, 1], observed=features[:, 0]
-                )
-            elif self.distribution == 'binomial':
-                pm.Binomial('k', p=priors['p'], n=np.sum(features[:, 1]), observed=np.sum(features[:, 0]))
-            elif self.distribution == 'normal':
-                pm.Normal('x', mu=priors['mu'], sigma=priors['sigma'], observed=features[:, 0])
-            else:
-                raise ValueError('Unrecognized distribution')
+            match self.distribution:
+                case 'betabinomial':
+                    pm.BetaBinomial(
+                        'k', alpha=priors['alpha'], beta=priors['beta'], n=features[:, 1], observed=features[:, 0]
+                    )
+                case 'binomial':
+                    pm.Binomial('k', p=priors['p'], n=np.sum(features[:, 1]), observed=np.sum(features[:, 0]))
+                case 'normal':
+                    pm.Normal('x', mu=priors['mu'], sigma=priors['sigma'], observed=features[:, 0])
+                case _:
+                    raise ValueError('Unrecognized distribution')
             # Do simulations and sample from the posterior distributions
             trace = pm.sample(
                 draws=self.draw_count,
@@ -252,13 +254,14 @@ class McmcModel:
             parameter_2d = np.tile(np.expand_dims(self.parameter_samples[parameter], 0), (len(features), 1))
             parameters_2d.update({parameter: parameter_2d})
         # Calculate e-base log probabilities at specified feature values
-        if self.distribution == 'betabinomial':
-            logp = betabinom.logpmf(features_2d[0], features_2d[1], parameters_2d['alpha'], parameters_2d['beta'])
-        elif self.distribution == 'binomial':
-            logp = binom.logpmf(features_2d[0], features_2d[1], parameters_2d['p'])
-        elif self.distribution in {'normal', 'norm'}:
-            logp = norm.logpdf(features_2d[0], parameters_2d['mu'], parameters_2d['sigma'])
-        else:
-            raise ValueError('Unrecognized distribution')
+        match self.distribution:
+            case 'betabinomial':
+                logp = betabinom.logpmf(features_2d[0], features_2d[1], parameters_2d['alpha'], parameters_2d['beta'])
+            case 'binomial':
+                logp = binom.logpmf(features_2d[0], features_2d[1], parameters_2d['p'])
+            case 'normal' | 'norm':
+                logp = norm.logpdf(features_2d[0], parameters_2d['mu'], parameters_2d['sigma'])
+            case _:
+                raise ValueError('Unrecognized distribution')
         # Return 10-base log probabilities
         return logp / np.log(10)

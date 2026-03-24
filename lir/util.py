@@ -63,9 +63,12 @@ def get_classes_from_Xy(X: np.ndarray, y: np.ndarray, classes: list[Any] | None 
     np.ndarray
         An array of unique classes found in `y` if `classes` is None; otherwise, an array of the provided `classes`.
     """
-    assert len(X.shape) >= 1, f'expected: X has at least 1 dimensions; found: {len(X.shape)} dimensions'
-    assert len(y.shape) == 1, f'expected: y is a 1-dimensional array; found: {len(y.shape)} dimensions'
-    assert X.shape[0] == y.size, f'dimensions of X and y do not match; found: {X.shape[0]} != {y.size}'
+    if len(X.shape) < 1:
+        raise ValueError(f'expected: X is a 1-dimensional array; found: {len(X.shape)} dimensions')
+    if len(y.shape) != 1:
+        raise ValueError(f'expected: y is a 1-dimensional array; found: {len(y.shape)} dimensions')
+    if X.shape[0] != y.size:
+        raise ValueError(f'dimensions of X and y do not match; found: {X.shape[0]} != {y.size}')
 
     return np.unique(y) if classes is None else np.asarray(classes)
 

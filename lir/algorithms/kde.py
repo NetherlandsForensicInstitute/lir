@@ -152,7 +152,8 @@ class KDECalibrator(Transformer):
         tuple[float, float]
             Bandwidth for class 0 and class 1.
         """
-        assert len(X) > 0 and len(y) > 0
+        if len(X) == 0 or len(y) == 0:
+            raise ValueError('X and y must not be empty')
 
         bandwidth = []
         for label in np.unique(y):

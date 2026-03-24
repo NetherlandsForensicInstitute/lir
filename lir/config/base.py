@@ -372,7 +372,8 @@ def config_parser(
             if reference is not None:
                 return reference if isinstance(reference, str) else get_full_name(reference)
 
-            assert func is not None  # at this point, func is always available
+            if func is None:  # at this point, func is always available
+                raise RuntimeError('unexpected error: function is not available for reference')
 
             # return the return type of the function, if available
             return_type = inspect.signature(func).return_annotation

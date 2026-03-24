@@ -79,7 +79,8 @@ class TwoLevelModelNormalKDE:
         'TwoLevelModelNormalKDE'
             Fitted two-level KDE model instance.
         """
-        assert len(X.shape) == 2, f'fit(X, y) requires X to be 2-dimensional; found dimensions {X.shape}'
+        if len(X.shape) != 2:
+            raise ValueError(f'fit(X, y) requires X to be 2-dimensional; found dimensions {X.shape}')
         self.n_sources = self._get_n_sources(y)
         self.n_features_train = X.shape[1]
         self.mean_within_covars = self._get_mean_covariance_within(X, y)
@@ -114,7 +115,8 @@ class TwoLevelModelNormalKDE:
         np.ndarray
             Log10 LR scores for each trace/reference pair.
         """
-        assert self.model_fitted, 'fit() must be called before transform()'
+        if not self.model_fitted:
+            raise RuntimeError('fit() must be called before transform()')
         log10_lr_score = self._predict_log10_lr_score(X_trace, X_ref)
         return log10_lr_score
 
@@ -635,7 +637,8 @@ class TwoLevelModelNormalKDE:
         np.floating
             Final base-10 logarithm LR score.
         """
-        assert self.n_sources is not None
+        if self.n_sources is None:
+            raise RuntimeError('model state is invalid: n_sources is not set; call fit() first')
         # calculate ln LR_score and change base to 10log
         ln_LR_score = (
             np.log(self.n_sources)

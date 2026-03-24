@@ -50,7 +50,7 @@ class RemoteResource:
         if not local_path.exists():
             url = f'{self.url}/{filename}'
             local_path.parent.mkdir(exist_ok=True, parents=True)
-            urllib.request.urlretrieve(url, local_path)
+            urllib.request.urlretrieve(url, local_path)  # noqa: S310
 
         LOG.debug(f'open file: {local_path}')
         return open(local_path, mode)

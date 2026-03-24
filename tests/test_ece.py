@@ -3,6 +3,7 @@
 import unittest
 
 import numpy as np
+import pytest
 
 from lir import metrics
 from lir.data.models import LLRData
@@ -35,13 +36,12 @@ class TestECE(unittest.TestCase):
         data = [
             (np.array([0.1, 10, np.nan]), np.array([0, 1, 1]), 'invalid input for LR values'),
             (np.array([0.1, 10, -1]), np.array([0, 1, 0]), 'invalid input for LR values'),
+            (np.array([0.1, 10, 1]), np.array([0, 1, 2]), 'label set must be [0, 1]*'),
         ]
 
         for lrs, y, msg in data:
-            with self.assertRaises(AssertionError) as context:
+            with pytest.raises(ValueError, match=msg):
                 calculate_ece(lrs, y, np.array([0.5, 0.5]))
-
-            self.assertEqual(context.exception.args[0], msg)
 
 
 if __name__ == '__main__':

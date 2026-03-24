@@ -138,8 +138,10 @@ def calculate_ece(lrs: np.ndarray, y: np.ndarray, priors: np.ndarray) -> np.ndar
     np.ndarray
         Array of entropy values with the same length as `priors`.
     """
-    assert np.all(lrs >= 0), 'invalid input for LR values'
-    assert np.all(np.unique(y) == np.array([0, 1])), 'label set must be [0, 1]'
+    if np.any(lrs < 0) or np.any(np.isnan(lrs)):
+        raise ValueError('invalid input for LR values')
+    if not np.array_equal(np.unique(y), [0, 1]):
+        raise ValueError(f'label set must be [0, 1], but found: {np.unique(y)}')
 
     prior_odds = np.repeat(probability_to_odds(priors), len(lrs)).reshape((len(priors), len(lrs)))
     posterior_odds = prior_odds * lrs

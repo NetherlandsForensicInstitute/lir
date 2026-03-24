@@ -340,11 +340,11 @@ def histogram(
     bins_array = np.histogram_bin_edges(x[np.isfinite(x)], bins=bins).tolist()
     if labels is not None:
         points0, points1 = util.Xy_to_Xn(x, labels)
-        weights0, weights1 = (np.ones_like(points) / len(points) if weighted else None for points in (points0, points1))
+        weights0, weights1 = (np.ones_like(points / len(points)) if weighted else None for points in (points0, points1))
         ax.hist(points1, bins_array, alpha=0.25, weights=weights1, label=f'H1 (n={len(points1)})', color=H1_COLOR)
         ax.hist(points0, bins_array, alpha=0.25, weights=weights0, label=f'H2 (n={len(points0)})', color=H2_COLOR)
     else:
-        weights = np.ones_like(x) / len(x) if weighted else None
+        weights = np.ones_like(x / len(x)) if weighted else None
         ax.hist(x, bins=bins_array, alpha=0.25, weights=weights, label=f'All data (n={len(x)})', color='gray')
     ax.set_xlabel(x_label)
     ax.set_ylabel('count' if not weighted else 'relative frequency')
@@ -396,11 +396,11 @@ def tippett(ax: Axes, llrdata: LLRData, plot_type: int = 1) -> None:
     lr_0, lr_1 = util.Xy_to_Xn(llrs, labels)
     finite_llrs = llrs[np.isfinite(llrs)]
     xvalues = np.linspace(np.min(finite_llrs), np.max(finite_llrs), 100)
-    perc0 = (sum(i >= xvalues for i in lr_0) / len(lr_0)) * 100
+    perc0 = np.mean(np.greater_equal.outer(lr_0, xvalues), axis=0) * 100
     if plot_type == 1:
-        perc1 = (sum(i >= xvalues for i in lr_1) / len(lr_1)) * 100
+        perc1 = np.mean(np.greater_equal.outer(lr_1, xvalues), axis=0) * 100
     elif plot_type == 2:
-        perc1 = (sum(i <= xvalues for i in lr_1) / len(lr_1)) * 100
+        perc1 = np.mean(np.less_equal.outer(lr_1, xvalues), axis=0) * 100
     else:
         raise ValueError(f'Argument plot_type in tippett() must be either 1 or 2, got `{plot_type}`.')
     ax.plot(xvalues, perc1, color='b', label=r'LRs given $\mathregular{H_1}$')

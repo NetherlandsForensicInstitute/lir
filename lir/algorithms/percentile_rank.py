@@ -66,12 +66,14 @@ class PercentileRankTransformer(sklearn.base.TransformerMixin):
         np.ndarray
             Percentile ranks with the same shape as input.
         """
-        assert self.rank_functions, 'transform() called before fit()'
+        if not self.rank_functions:
+            raise RuntimeError('transform() called before fit()')
         original_shape = X.shape
         X = X.reshape(X.shape[0], -1)
-        assert X.shape[1] == len(self.rank_functions), (
-            f'number of features {X.shape[1]} does not match '
-            'the number of features {len(self.rank_functions)} used for fit()'
-        )
+        if X.shape[1] != len(self.rank_functions):
+            raise ValueError(
+                f'number of features {X.shape[1]} does not match '
+                f'the number of features {len(self.rank_functions)} used for fit()'
+            )
         ranks = [self.rank_functions[i](X[:, i]) for i in range(X.shape[1])]
         return np.stack(ranks, axis=1).reshape(*original_shape)

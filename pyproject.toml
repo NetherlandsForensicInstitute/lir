@@ -118,8 +118,12 @@ lint.select = [
     "Q",    # flake8-quotes
     "SIM",  # flake8-simplify
     "UP",   # pyupgrade
+    "S",    # bandit
 ]
-lint.per-file-ignores = {"tests/*" = ["D"]}  # ignore missing docstrings in tests
+lint.per-file-ignores = {"tests/*" = [
+    "D",     # Ignore missing docstrings in tests.
+    "S101",  # Allow use of assert in tests.
+]} 
 lint.pydocstyle.convention = "numpy"
 
 [tool.mypy]

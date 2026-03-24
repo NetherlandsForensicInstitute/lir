@@ -160,8 +160,8 @@ class IsotonicCalibrator(Transformer):
             X = np.concatenate(
                 [
                     X,
-                    np.full_like(self.add_misleading, X.max() + 1),
-                    np.full_like(self.add_misleading, X.min() - 1),
+                    np.full(self.add_misleading, X.max() + 1),
+                    np.full(self.add_misleading, X.min() - 1),
                 ]
             )
             y = np.concatenate([y, np.zeros(self.add_misleading), np.ones(self.add_misleading)])

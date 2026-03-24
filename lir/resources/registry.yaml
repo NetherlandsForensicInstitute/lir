@@ -46,6 +46,7 @@ modules:
   tee: lir.config.util.TeeParser
   csv_writer: lir.config.transform.csv_writer
   save_features: lir.transform.save_features.SaveFeatureTransformer
+  data_enforcer: lir.transform.data_enforcer.DataEnforcer
 
   # classifiers
   logistic_regression:

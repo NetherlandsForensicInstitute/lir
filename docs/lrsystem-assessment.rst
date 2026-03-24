@@ -40,7 +40,7 @@ By definition, the log likelihood ratio cost ``cllr`` equals ``cllr_min`` + ``cl
 .. _cllr: api/lir.metrics.html#lir.metrics.cllr
 .. _cllr_min: api/lir.metrics.html#lir.metrics.cllr_min
 .. _cllr_cal: api/lir.metrics.html#lir.metrics.cllr_cal
-.. _devPAV: api/lir.metrics.html#lir.metrics.devpav.devpav
+.. _devPAV: api/lir.metrics.html#lir.algorithms.devpav.devpav
 
 
 Visualizations
@@ -59,12 +59,117 @@ Examples of visualizations are:
 .. _ECE: api/lir.plotting.html#lir.plotting.expected_calibration_error.plot_ece
 .. _Tippett: api/lir.plotting.html#lir.plotting.tippett
 
+The `PAV transformation`_ is particularly useful to inspect a system (or a set of LLRs, actually) for consistency. It
+optimizes a set of LLRs (for which the ground truth is known) for consistency without changing the order of the LLRs.
+The corresponding visualization shows a scatter plot of the original, "pre-calibrated" LLRs versus the "post-calibrated"
+LLRs, after transformation.
+
+.. _PAV transformation: https://en.wikipedia.org/wiki/Isotonic_regression
+
+How to read a PAV plot? The example below shows how to interpret the different sections of the plot.
+
+.. jupyter-execute::
+    :hide-code:
+
+    from matplotlib.patches import Polygon
+    from sklearn.preprocessing import StandardScaler
+
+    from lir import plotting
+    from lir.algorithms.bayeserror import ELUBBounder
+    from lir.algorithms.logistic_regression import LogitCalibrator
+    from lir.datasets.glass import GlassData
+    from lir.data_strategies import PredefinedTrainTestSplit
+    from lir.lrsystems.score_based import ScoreBasedSystem
+    from lir.transform import as_transformer
+    from lir.transform.distance import ManhattanDistance
+    from lir.transform.pairing import SourcePairing
+    from lir.transform.pipeline import Pipeline
+
+    instances = GlassData(cache_dir='glass-data').get_instances()
+    train, test = next(PredefinedTrainTestSplit().apply(instances))
+
+    scoring = Pipeline(steps=[('diff', ManhattanDistance()), ('calib', LogitCalibrator(random_state=0)), ('elub', ELUBBounder())])
+    lrsystem = ScoreBasedSystem(preprocessing_pipeline=as_transformer(StandardScaler()), evaluation_pipeline=scoring, pairing_function=SourcePairing(ratio_limit=1, seed=0))
+
+    lrsystem.fit(train)
+    llrs = lrsystem.apply(test)
+
+    with plotting.show() as ax:
+        ax.pav(llrs)
+        ax.set_xlim(-1.5, 1.5)
+        ax.set_ylim(-1.5, 1.5)
+        x0, x1 = ax.get_xlim()
+        y0, y1 = ax.get_ylim()
+
+        poly = Polygon([(max(x0, y0), max(x0, y0)), (min(x1, y1), min(x1, y1)), (x0, y1)], facecolor='orange', edgecolor='0.5', alpha=.2)
+        ax.add_patch(poly)
+        ax.text(x0*.5, y1*.25, "bias towards H2", horizontalalignment='center', fontsize=14)
+
+        poly = Polygon([(max(x0, y0), max(x0, y0)), (min(x1, y1), min(x1, y1)), (x1, y0)], facecolor='blue', edgecolor='0.5', alpha=.2)
+        ax.add_patch(poly)
+        ax.text(x1*.5, y0*.5, "bias towards H1", horizontalalignment='center', fontsize=14)
+
+- LLRs that are **on the diagonal** remained unchanged and appear to be well-calibrated. Ideally, all LLRs are somewhere
+  near the diagonal. In that case, the calibration loss will be close to 0.
+- LLRs that appear **above the diagonal** are increased after optimization, and the original LLRs were therefore
+  **biased towards H2**.
+- LLRs thet appear **below the diagonal** are decreased after optimization, and the original LLRs were therefore
+  **biased towards H1**.
+
+Another way to look at it, is to distinguish between overestimated and underestimated LLRs.
+
+.. jupyter-execute::
+    :hide-code:
+
+    with plotting.show() as ax:
+        ax.pav(llrs)
+        ax.set_xlim(-1.5, 1.5)
+        ax.set_ylim(-1.5, 1.5)
+        x0, x1 = ax.get_xlim()
+        y0, y1 = ax.get_ylim()
+
+        #poly = Polygon([(0, 0), (x1, 0), (x1, y0), (0, y0)], facecolor='red', edgecolor='0.5', alpha=.2)
+        #ax.add_patch(poly)
+        #ax.text(x1/2, y0*.5, "misleading", horizontalalignment='center', fontsize=14)
+
+        #poly = Polygon([(0, 0), (x0, 0), (x0, y1), (0, y1)], facecolor='red', edgecolor='0.5', alpha=.2)
+        #ax.add_patch(poly)
+        #ax.text(x0/2, y1*.25, "misleading", horizontalalignment='center', fontsize=14)
+
+        poly = Polygon([(0, 0), (min(x1, y1), min(x1, y1)), (x1, y0), (0, y0)], facecolor='orange', edgecolor='0.5', alpha=.2)
+        ax.add_patch(poly)
+        ax.text(x1*.65, y0*.5, "overestimated", horizontalalignment='center', fontsize=14)
+
+        poly = Polygon([(0, 0), (max(x0, y0), max(x0, y0)), (x0, y1), (0, y1)], facecolor='orange', edgecolor='0.5', alpha=.2)
+        ax.add_patch(poly)
+        ax.text(x0*.65, y1*.25, "overestimated", horizontalalignment='center', fontsize=14)
+
+        poly = Polygon([(0, 0), (min(x1, y1), min(x1, y1)), (0, y1)], facecolor='blue', edgecolor='0.5', alpha=.2)
+        ax.add_patch(poly)
+        ax.text(x1*.35, y1*.75, "underestimated", horizontalalignment='center', fontsize=14)
+
+        poly = Polygon([(0, 0), (max(x0, y0), max(x0, y0)), (0, y0)], facecolor='blue', edgecolor='0.5', alpha=.2)
+        ax.add_patch(poly)
+        ax.text(x0*.35, y0*.75, "underestimated", horizontalalignment='center', fontsize=14)
+
+- Positive LLRs that appear above the diagonal, and negative LLRs that appear below the diagonal, became stronger after
+  optimization (i.e. further away from 0), and the original LLRs were therefore **underestimated**.
+- Positive LLRs that appear below the diagonal, and negative LLRs that appear above the diagonal, became weaker after
+  optimization (i.e. closer to 0), and the original LLRs were therefore **overestimated**.
+
+In any case, bias and overestimation does not say anything about the ground truth of individual instances. In a
+particular dataset, LLRs of 3 can be underestimated, but that doesn't mean that there cannot be an instance with LLR=3
+whose ground truth is H2!
+
+
+Appearance plots and metrics
+----------------------------
 
 Let's see how these metrics and visualizations behave on different types of data.
 
 
 Neutral LLRs
-------------
+^^^^^^^^^^^^
 
 First, non-informative data, where all LLRs are zero (i.e. neutral). These data are not discriminative, but perfectly
 consistent!
@@ -75,7 +180,7 @@ consistent!
     import matplotlib.pyplot as plt
     from lir.data.models import LLRData
     from lir.metrics import cllr, cllr_min, cllr_cal
-    from lir.metrics.devpav import devpav
+    from lir.algorithms.devpav import devpav
     from lir.plotting import lr_histogram, pav, tippett
     from lir.plotting.expected_calibration_error import plot_ece
 
@@ -120,7 +225,7 @@ Observe that:
 
 
 Well-calibrated LLRs
---------------------
+^^^^^^^^^^^^^^^^^^^^
 
 Now, we have LLRs that are both discriminative and consistent, and data of both hypotheses are drawn from a normal
 distribution. It visualizes as follows.
@@ -164,7 +269,7 @@ Observe that, for discriminative and well-calibrated LLRs:
 
 
 Badly calibrated data
----------------------
+^^^^^^^^^^^^^^^^^^^^^
 
 LR systems may misbehave in several ways, resulting in inconsistent LLRs.
 If this happens, check if the the training data is suitable for the test data. Inconsistent LLRs can be caused, for

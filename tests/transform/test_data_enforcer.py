@@ -2,14 +2,14 @@ import numpy as np
 import pytest
 
 from lir import FeatureData
-from lir.transform.data_enforcer import EnforceFeatureDataType
+from lir.transform.data_enforcer import ValidateFeatureDataType
 
 
 def test_data_enforcer():
     features = np.array([[1, 2.0], [3, 4.0], [5, 6.0]], dtype=np.float16)
     instances = FeatureData(features=features)
 
-    data_enforcer = EnforceFeatureDataType()
+    data_enforcer = ValidateFeatureDataType()
     data_enforcer.fit(instances)
 
     # Apply the DataEnforcer to the same data (should pass)

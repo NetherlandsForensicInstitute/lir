@@ -6,7 +6,7 @@ from lir import FeatureData, InstanceData, Transformer
 from lir.transform import check_type
 
 
-class EnforceFeatureDataType(Transformer):
+class ValidateFeatureDataType(Transformer):
     """
     Module that enforces the data types of the features in the instances.
 
@@ -20,7 +20,7 @@ class EnforceFeatureDataType(Transformer):
     """
 
     _features_type: np.dtype
-    _features_size: int
+    _features_size: tuple[int, ...]
 
     def fit(self, instances: InstanceData) -> Self:
         """
@@ -41,7 +41,7 @@ class EnforceFeatureDataType(Transformer):
         instances = check_type(FeatureData, instances)
 
         self._features_type = instances.features.dtype
-        self._features_size = instances.features.shape[1]
+        self._features_size = instances.features.shape[1:]
 
         return self
 
@@ -72,8 +72,8 @@ class EnforceFeatureDataType(Transformer):
         instances = check_type(FeatureData, instances)
 
         # Ensrure that the number of features matches the number of data types determined during fitting.
-        if instances.features.shape[1] != self._features_size:
-            raise ValueError(f'Expected features of size {self._features_size} but got {instances.features.shape[1]}')
+        if instances.features.shape[1:] != self._features_size:
+            raise ValueError(f'Expected features of size {self._features_size} but got {instances.features.shape[1:]}')
 
         # Use np.can_cast to check if the value can be cast to the expected data type, which allows for some flexibility
         # in the data types (e.g., int can be cast to float, but not vice versa).

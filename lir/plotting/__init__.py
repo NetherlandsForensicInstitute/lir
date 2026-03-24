@@ -309,6 +309,48 @@ def pav(
     ax.legend()
 
 
+def histogram(
+    ax: Axes,
+    x: np.ndarray,
+    labels: np.ndarray | None,
+    bins: int = 20,
+    weighted: bool = True,
+    x_label: str = '',
+) -> None:
+    """
+    Plot x as a histogram, optionally separated by class labels.
+
+    This class is mainly used as a helper for plotting LLR or score histograms.
+
+    Parameters
+    ----------
+    ax : Axes
+        The matplotlib axes object to plot on.
+    x : np.ndarray
+        The array of values to plot.
+    labels : np.ndarray | None
+        The array of class labels for each value in x.
+    bins : int
+        Number of bins to divide scores into (default: 20).
+    weighted : bool
+        If y-axis should be weighted for frequency within each class (default: `True`).
+    x_label : str
+        Label for the x-axis (default: '').
+    """
+    bins_array = np.histogram_bin_edges(x[np.isfinite(x)], bins=bins).tolist()
+    if labels is not None:
+        points0, points1 = util.Xy_to_Xn(x, labels)
+        weights0, weights1 = (np.ones_like(points) / len(points) if weighted else None for points in (points0, points1))
+        ax.hist(points1, bins_array, alpha=0.25, weights=weights1, label=f'H1 (n={len(points1)})', color=H1_COLOR)
+        ax.hist(points0, bins_array, alpha=0.25, weights=weights0, label=f'H2 (n={len(points0)})', color=H2_COLOR)
+    else:
+        weights = np.ones_like(x) / len(x) if weighted else None
+        ax.hist(x, bins=bins_array, alpha=0.25, weights=weights, label=f'All data (n={len(x)})', color='gray')
+    ax.set_xlabel(x_label)
+    ax.set_ylabel('count' if not weighted else 'relative frequency')
+    ax.legend()
+
+
 def lr_histogram(
     ax: Axes,
     llrdata: LLRData,
@@ -329,21 +371,7 @@ def lr_histogram(
     weighted : bool
         If y-axis should be weighted for frequency within each class (default: `True`).
     """
-    llrs = llrdata.llrs
-    y = llrdata.require_labels
-
-    bins_array = np.histogram_bin_edges(llrs, bins=bins)
-    points0, points1 = util.Xy_to_Xn(llrs, y)
-    weights0, weights1 = (np.ones_like(points) / len(points) if weighted else None for points in (points0, points1))
-    ax.hist(
-        points1, bins=bins_array.tolist(), alpha=0.25, weights=weights1, label=f'H1 (n={len(points1)})', color=H1_COLOR
-    )
-    ax.hist(
-        points0, bins=bins_array.tolist(), alpha=0.25, weights=weights0, label=f'H2 (n={len(points0)})', color=H2_COLOR
-    )
-    ax.set_xlabel('log$_{10}$(LR)')
-    ax.set_ylabel('count' if not weighted else 'relative frequency')
-    ax.legend()
+    histogram(ax, llrdata.llrs, llrdata.require_labels, bins=bins, weighted=weighted, x_label='log$_{10}$(LR)')
 
 
 def tippett(ax: Axes, llrdata: LLRData, plot_type: int = 1) -> None:
@@ -422,9 +450,8 @@ def score_distribution(
     """
     Plot the distributions of scores calculated by the (fitted) LR system.
 
-    If `weighted` is `True`, the y-axis represents the probability density
-    within the class, and `inf` is the fraction of instances. Otherwise, the
-    y-axis shows the number of instances.
+    If `weighted` is `True`, the y-axis represents the probability density within the class. Otherwise, they-axis shows
+    the number of instances.
 
     Parameters
     ----------
@@ -439,77 +466,7 @@ def score_distribution(
         instead of counts (default: `True`).
     """
     scores = llrdata.require_feature_for_plots('score')
-    y = llrdata.require_labels
-
-    plt.rcParams.update({'font.size': 15})
-
-    bins = np.histogram_bin_edges(scores[np.isfinite(scores)], bins=bins)
-
-    # flip Y-classes to achieve blue bars for H1-true and orange for H2-true
-    y_classes = np.flip(np.unique(y))
-    # create weights vector so y-axis is between 0-1
-    scores_by_class = [scores[y == cls] for cls in y_classes]
-    if weighted:
-        weights = [np.ones_like(data) / len(data) for data in scores_by_class]
-    else:
-        weights = [np.ones_like(data) for data in scores_by_class]
-
-    # handle inf values
-    if np.isinf(scores).any():
-        prop_cycle = plt.rcParams['axes.prop_cycle']
-        colors = prop_cycle.by_key()['color']
-        x_range = np.linspace(min(bins), max(bins), 6).tolist()
-        labels = [str(round(tick, 1)) for tick in x_range]
-        step_size = x_range[2] - x_range[1]
-        bar_width = step_size / 4
-        plot_args_inf = []
-
-        if np.isneginf(scores).any():
-            x_range = [x_range[0] - step_size] + x_range
-            labels = ['-∞'] + labels
-            for i, s in enumerate(scores_by_class):
-                if np.isneginf(s).any():
-                    plot_args_inf.append(
-                        (
-                            colors[i],
-                            x_range[0] + bar_width if i else x_range[0],
-                            np.sum(weights[i][np.isneginf(s)]),
-                        )
-                    )
-
-        if np.isposinf(scores).any():
-            x_range = x_range + [x_range[-1] + step_size]
-            labels.append('∞')
-            for i, s in enumerate(scores_by_class):
-                if np.isposinf(s).any():
-                    plot_args_inf.append(
-                        (
-                            colors[i],
-                            x_range[-1] - bar_width if i else x_range[-1],
-                            np.sum(weights[i][np.isposinf(s)]),
-                        )
-                    )
-
-        ax.set_xticks(x_range, labels)
-
-        for color, x_coord, y_coord in plot_args_inf:
-            ax.bar(x_coord, y_coord, width=bar_width, color=color, alpha=0.3, hatch='/')
-
-    bin_width = bins[1] - bins[0]
-    for cls, weight_vec in zip(y_classes, weights, strict=True):
-        ax.hist(
-            scores[y == cls],
-            bins=bins.tolist(),
-            alpha=0.3,
-            label=f'class {cls}',
-            weights=weight_vec / bin_width if weighted else None,
-        )
-
-    ax.set_xlabel('score')
-    if weighted:
-        ax.set_ylabel('probability density')
-    else:
-        ax.set_ylabel('count')
+    histogram(ax, scores, llrdata.require_labels, bins=bins, weighted=weighted, x_label='score')
 
 
 def score_to_llr(ax: Axes, llrdata: LLRData) -> None:

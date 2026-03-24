@@ -34,10 +34,10 @@ class AlcoholBreathAnalyser(DataProvider):
         positive_lr = 1000 if self.ill_calibrated else 90
         lrs = np.concatenate(
             [
-                np.ones(990) * 0.101,
-                np.ones(10) * positive_lr,
-                np.ones(90) * positive_lr,
-                np.ones(10) * 0.101,
+                np.full(990, 0.101),
+                np.full(10, positive_lr),
+                np.full(90, positive_lr),
+                np.full(10, 0.101),
             ]
         )
         y = np.concatenate([np.zeros(1000), np.ones(100)])

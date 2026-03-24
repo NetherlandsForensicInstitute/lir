@@ -350,7 +350,7 @@ class InstancePairing(PairingMethod):
             rows_diff = self.rng.choice(rows_diff, int(n_ds_pairs), replace=False)
 
         pairing = np.concatenate([pairing[rows_same, :], pairing[rows_diff, :]])
-        pair_labels = np.concatenate([np.ones(rows_same.size), np.zeros(rows_diff.size)])
+        pair_labels = np.concatenate([np.ones_like(rows_same), np.zeros_like(rows_diff)])
 
         # combine features by adding an extra dimension
         paired_data = instances[pairing[:, 0]].combine(instances[pairing[:, 1]], np.stack, axis=1)

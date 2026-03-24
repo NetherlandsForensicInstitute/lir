@@ -513,7 +513,7 @@ class CsvWriter(Transformer):
 
         if self.include_batch:
             all_headers.append('batch')
-            all_data.append(np.ones((len(instances), 1)) * self.n_batches)
+            all_data.append(np.full((len(instances), 1), self.n_batches))
 
         if self.include_input:
             features = instances.features

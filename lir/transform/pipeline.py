@@ -251,7 +251,7 @@ class LoggingPipeline(Pipeline):
 
         # add column: batch
         if self.include_batch_number:
-            csv_builder.add_column(np.ones((len(instances), 1)) * self.n_batches, 'batch')
+            csv_builder.add_column(np.full((len(instances), 1), self.n_batches), 'batch')
 
         # add column: label
         if self.include_labels and instances.labels is not None:

@@ -160,13 +160,13 @@ class IsotonicCalibrator(Transformer):
             X = np.concatenate(
                 [
                     X,
-                    np.ones(self.add_misleading) * (X.max() + 1),
-                    np.ones(self.add_misleading) * (X.min() - 1),
+                    np.full(self.add_misleading, X.max() + 1),
+                    np.full(self.add_misleading, X.min() - 1),
                 ]
             )
             y = np.concatenate([y, np.zeros(self.add_misleading), np.ones(self.add_misleading)])
 
-        prior = np.sum(y) / y.size
+        prior = np.mean(y)
         weight = y * (1 - prior) + (1 - y) * prior
         self._ir.fit(X, y, sample_weight=weight)
 

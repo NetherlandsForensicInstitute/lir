@@ -2,7 +2,6 @@ LR System selection helper
 ===========================
 
 This page is written for researchers that have collected data and wish to make an LR system using that data.
-
 Before you begin, make sure that you have a `working version of LiR`_.
 
 .. _working version of LiR: /installation.html
@@ -13,11 +12,11 @@ Alternatively, LRs can be produced for data for which the true hypothesis is unk
 
 Typically, an LR system will model variants of these two hypotheses:
 
-    - Hypothesis 1: the trace is from the same source as the reference
-    - Hypothesis 2: the trace is from another source than the reference 
+- Hypothesis 1: the trace is from the same source as the reference
+- Hypothesis 2: the trace is from another source than the reference
 
 This document will help you choose a 'yaml-file' where you can make design choices and put in the specifics and which will let you run an experiment using the LR system.
-A yaml-file is a text file in which you write what the code will do for you. The yaml-files are pre-made and can be found in this repository. 
+A yaml-file is a text file in which you write what the code will do for you. The yaml-files are pre-made and can be found in this repository.
 The pre-made yaml-files are templates, for you to adapt to your situation.
 
 To choose which yaml-file is appropriate for you, you need to answer some questions about the data you have and which type of LR system you need.
@@ -27,7 +26,7 @@ Next, you can go to the yaml-file, where you can build your LR system and set up
 - **Do you have one specific (case-related) reference source along with data from other sources, and do you want to model the first hypothesis exclusively with data from that source?**
 
   YES: You probably want a 'specific source' LR system. Go here: :ref:`specific-source-system`
-  
+
   NO: You probably have data from multiple sources that are not case-related.
   That means you probably want a 'common source' LR system. Continue with the following question:
 
@@ -35,9 +34,10 @@ Next, you can go to the yaml-file, where you can build your LR system and set up
 
     YES: You probably want a 'common source - pre-scored' LR system. Go here: :ref:`pre-scored-system`
 
-    NO: Your data probably contain single instances of traces / references and measurements / features of those traces. You want a 'score-based common 
+    NO: Your data probably contain single instances of traces / references and measurements / features of those traces. You want a 'score-based common
     source' LR system or a 'feature-based common source' LR system, go here: :ref:`common-source-system`.
 
+------------
 
 .. _specific-source-system:
 
@@ -45,15 +45,23 @@ Specific source system
 ----------------------
 
 In this LR system, you will:
-model Hypothesis 1 'trace and reference come from the same source' with data from one specific source.
-model Hypothesis 2 'trace and reference come from different sources' with data from other sources.
 
-You'll need your data in csv or txt-format.
+- model Hypothesis 1 'trace and reference come from the same source' with data from one specific source.
+- model Hypothesis 2 'trace and reference come from different sources' with data from other sources.
 
-Here's a minimal example of data that would work:
-'hypothesis_label,feature1,feature2,feature3'
+You'll need your data in ``csv`` or ``txt``-format. Here's a minimal example of data that would work:
 
-It is also possible to use sourceIDs instead of hypothesis label and some other columns are optional, for more information see HERE
+.. code-block:: none
+
+    hypothesis_label, feature1, feature2, feature3
+    1               , 0.1       , 0.2       , 0.3
+    1               , 0.2       , 0.3       , 0.4
+    0               , 0.5       , 0.6       , 0.7
+    0               , 0.6       , 0.7       , 0.8
+
+It is also possible to use ``sourceIDs`` instead of ``hypothesis_label`` and some other columns are optional, for more information see `FeatureDataCsvParser`_.
+
+.. _FeatureDataCsvParser: https://netherlandsforensicinstitute.github.io/lir/api/lir.datasets.feature_data_csv.html#lir.datasets.feature_data_csv.FeatureDataCsvParser
 
 The template-yaml that you should use is: `specificsource.yaml`_ (TODO)
 
@@ -66,8 +74,9 @@ Pre-scored common source system
 --------------------------------
 
 In this LR system, you will:
-    - model Hypothesis 1 'trace and reference come from the same source' with data pairs from multiple sources.
-    - model Hypothesis 2 'trace and reference come from different sources' with data pairs from multiple sources.
+
+- model Hypothesis 1 'trace and reference come from the same source' with data pairs from multiple sources.
+- model Hypothesis 2 'trace and reference come from different sources' with data pairs from multiple sources.
 
 The rows in your data describe source comparisons, and not measurements or features of individual instances. Typically you will have one numerical value per comparison.
 The pairs could be made up of sources or of instances from sources.
@@ -75,9 +84,17 @@ The pairs could be made up of sources or of instances from sources.
 You'll need your data in csv or txt-format.
 
 Here's a minimal example of data that would work:
-'sourceID1,sourceID2,score'
 
-sourceID1 and sourceID2 will be the same value for same-source-comparisons. Some other columns are optional, for more information see HERE
+.. code-block:: none
+
+    sourceID1, sourceID2, score
+    1        , 1        , 0.1
+    1        , 2        , 0.2
+    2        , 2        , 0.5
+    3        , 1        , 0.6
+
+sourceID1 and sourceID2 will be the same value for same-source-comparisons. Some other columns are optional, for more information see `FeatureDataCsvParser`_.
+
 The template-yaml that you should use is: `prescored_commonsource.yaml`_ (TODO)
 
 .. _prescored_commonsource.yaml: https://raw.githubusercontent.com/NetherlandsForensicInstitute/lir/refs/heads/main/examples/prescored_commonsource.yaml
@@ -89,19 +106,28 @@ Common source system
 --------------------
 
 In this LR system, you will:
-    - model Hypothesis 1 'trace and reference come from the same source' with data pairs from multiple sources.
-    - model Hypothesis 2 'trace and reference come from different sources' with data pairs from multiple sources.
+
+- model Hypothesis 1 'trace and reference come from the same source' with data pairs from multiple sources.
+- model Hypothesis 2 'trace and reference come from different sources' with data pairs from multiple sources.
 
 You'll need your data in csv or txt-format.
 
 Here's a minimal example of data that would work:
-'sourceID,feature1,feature2,feature3'
 
-Some other columns are optional, for more information see HERE
+.. code-block:: none
+
+    sourceID, feature1, feature2, feature3
+    1.      , 0.1     , 0.2     , 0.3
+    1.      , 0.2     , 0.3     , 0.4
+    2.      , 0.5     , 0.6     , 0.7
+    3.      , 0.6     , 0.7     , 0.8
+
+Some other columns are optional, for more information see `FeatureDataCsvParser`_.
 
 It is possible to make a score-based common-source LR system or a feature-based common-source LR system.
 
 If you don't know what that distinction means, you can:
+
   - choose 'score-based' and you will build an LR system similar our `notebook`_.
   - ask advice from your favourite forensic statistician.
 

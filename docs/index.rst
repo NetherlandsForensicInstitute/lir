@@ -52,7 +52,9 @@ To evaluate an LR system using the command-line interface, define your experimen
     lir <yaml file>
 
 
-The ``examples`` folder may be a good starting point for setting up an experiment.
+The `examples folder`_ may be a good starting point for setting up an experiment.
+
+.. _examples folder: https://github.com/NetherlandsForensicInstitute/lir/tree/main/examples
 
 The elements of the experiment configuration YAML are looked up in the registry. The following lists all available
 elements in the registry.

@@ -107,7 +107,7 @@ def savefig(path: str) -> _GeneratorContextManager[Canvas]:
     .. code-block:: python
 
         with savefig(path) as ax:
-            ax.pav(lrs, y)
+            ax.pav(llrdata)
 
     A call to :func:`savefig` is equivalent to calling :func:`axes` with
     ``savefig=path``.
@@ -129,7 +129,7 @@ def show() -> _GeneratorContextManager[Canvas]:
     .. code-block:: python
 
         with show() as ax:
-            ax.pav(lrs, y)
+            ax.pav(llrdata)
 
     A call to :func:`show` is equivalent to calling :func:`axes` with
     ``show=True``.
@@ -159,7 +159,7 @@ def axes(savefig: PathLike | str | None = None, show: bool | None = None) -> Ite
     .. code-block:: python
 
         with axes() as ax:
-            ax.pav(lrs, y)
+            ax.pav(llrdata)
     """
     fig, ax = plt.subplots()
     try:

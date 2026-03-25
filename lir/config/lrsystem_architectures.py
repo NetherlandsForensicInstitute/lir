@@ -8,7 +8,6 @@ from lir.config.base import (
     YamlParseError,
     check_is_empty,
     config_parser,
-    parse_pairing_config,
     pop_field,
 )
 from lir.config.substitution import (
@@ -16,7 +15,7 @@ from lir.config.substitution import (
     HyperparameterOption,
     substitute_parameters,
 )
-from lir.config.transform import parse_module
+from lir.config.transform import parse_module, parse_pairing_config
 from lir.data.models import InstanceData, LLRData
 from lir.lrsystems.binary_lrsystem import BinaryLRSystem
 from lir.lrsystems.lrsystems import LRSystem

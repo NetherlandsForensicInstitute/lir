@@ -11,10 +11,25 @@ def load_model(path: Path) -> LRSystem:
     """
     Load previously cached model.
 
+    The model is expected to be stored as a pickle file, and is assumed to exclusively contain an
+    :class:`~lir.lrsystems.lrsystems.LRSystem` instance.
+
+    Example
+    -------
+    .. code-block:: python
+
+        from lir.persistence import load_model
+        from lir import FeatureData
+
+        model = load_model(Path('path/to/model.pkl'))
+        data = FeatureData(...) # some data to apply the model to
+
+        model.apply(data)
+
     Parameters
     ----------
     path : Path
-        The path to the .pkl file containing the model.
+        The path to the ``.pkl`` file containing the model.
 
     Returns
     -------
@@ -33,10 +48,13 @@ def save_model(path: Path, model: LRSystem) -> None:
     """
     Save a model to disk.
 
+    This method is inteded for use with the Python API. For `yaml`-based configuration of model saving, see the
+    :class:`SaveModel` aggregation.
+
     Parameters
     ----------
     path : Path
-        The path to the .pkl file where the model should be saved.
+        The path to the ``.pkl`` file where the model should be saved.
     model : LRSystem
         The model to be saved.
     """
@@ -49,11 +67,13 @@ class SaveModel(Aggregation):
     """
     Write the model to a file.
 
-    The model is saved as a pickle file, in a file named `filename`, that is written to a subdirectory of
-    `output_dir`, that is created for each run.
+    The model is saved as a pickle file, in a file named ``filename``, that is written to a subdirectory of
+    ``output_dir``, that is created for each run.
 
-    If `filename` is an absolute path, or if `filename` is relative to `output_dir`, then the model is saved to this
-    file as-is, instead of to a file in a newly created subdirectory.
+    If ``filename`` is an absolute path, or if ``filename`` is relative to ``output_dir``, then the model is saved to
+    this file as-is, instead of to a file in a newly created subdirectory.
+
+    Once a model is saved, it can be loaded again using the :func:`load_model` function.
 
     Parameters
     ----------

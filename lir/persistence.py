@@ -14,18 +14,6 @@ def load_model(path: Path) -> LRSystem:
     The model is expected to be stored as a pickle file, and is assumed to exclusively contain an
     :class:`~lir.lrsystems.lrsystems.LRSystem` instance.
 
-    Example
-    -------
-    .. code-block:: python
-
-        from lir.persistence import load_model
-        from lir import FeatureData
-
-        model = load_model(Path('path/to/model.pkl'))
-        data = FeatureData(...) # some data to apply the model to
-
-        model.apply(data)
-
     Parameters
     ----------
     path : Path
@@ -35,6 +23,18 @@ def load_model(path: Path) -> LRSystem:
     -------
     LRSystem
         The loaded model.
+
+    Examples
+    --------
+    .. code-block:: python
+
+        from lir.persistence import load_model
+        from lir import FeatureData
+
+        model = load_model(Path('path/to/model.pkl'))
+        data = FeatureData(...) # some data to apply the model to
+
+        model.apply(data)
     """
     try:
         with open(path, 'rb') as f:

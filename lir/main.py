@@ -143,6 +143,14 @@ def main(input_args: list[str] | None = None) -> None:
         action='append',
     )
     parser.add_argument(
+        '--set',
+        metavar='KEY=VALUE',
+        help='override a value in the experiment configuration',
+        action='append',
+        dest='set_value',
+        default=[],
+    )
+    parser.add_argument(
         '--list-experiments',
         help='prints a list of configured experiments',
         action='store_true',
@@ -200,8 +208,11 @@ def main(input_args: list[str] | None = None) -> None:
     sys.path.append(str(Path().resolve()))
     LOG.debug(f'added {Path().resolve()} to sys.path')
 
+    cfg = confidence.loadf(args.setup)
+    cfg = confidence.Configuration(cfg, dict(value.split('=', 1) for value in args.set_value))
+
     try:
-        experiments, output_dir = initialize_experiments(confidence.loadf(args.setup))
+        experiments, output_dir = initialize_experiments(cfg)
     except YamlParseError as e:
         error(f'error while parsing {args.setup}: {str(e)}', e)
         raise  # this statement is not reachable, but helps code validation

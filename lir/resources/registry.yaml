@@ -67,7 +67,11 @@ metric:
   devpav: lir.algorithms.devpav.devpav
 output:
   metrics: lir.aggregation.metrics_csv
-  pav: lir.aggregation.plot_pav
+  pav:
+    class: lir.config.aggregation.parse_aggregate_plot
+    args:
+      method: pav
+
   ece: lir.aggregation.plot_ece
   lr_histogram: lir.aggregation.plot_lr_histogram
   llr_interval: lir.aggregation.plot_llr_interval

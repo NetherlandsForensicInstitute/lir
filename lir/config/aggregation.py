@@ -1,5 +1,6 @@
 from functools import partial
 from pathlib import Path
+from typing import Any
 
 from lir import registry
 from lir.aggregation import Aggregation, SubsetAggregation
@@ -117,3 +118,8 @@ def subset_aggregation(config: ContextAwareDict, output_dir: Path) -> SubsetAggr
         aggregation_methods = [parse_aggregation(aggregation_config, subset_output_dir)]
 
     return SubsetAggregation(aggregation_methods, category_field)
+
+
+class AggregationPlotConfigParser(ConfigParser):
+    def parse(self, config: ContextAwareDict, output_dir: Path) -> Any:
+        pass

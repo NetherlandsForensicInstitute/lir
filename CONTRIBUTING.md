@@ -108,8 +108,8 @@ You can contribute in several ways:
 
 - Follow the project’s established coding standards as configured in `pyproject.toml`
   - This project recommends using `pdm` as the preferred package manager, which provides access to `pdm run all`, performing the checks automatically.
-- Use clear and descriptive commit messages
-- Add comments or documentation where necessary
+- Use clear and descriptive commit messages. These form the basis of the project’s changelog and help others understand the history of changes.
+- Add comments or documentation where necessary. This should be doen following the `numpy` docstring style, as configured in `pyproject.toml`. You can run `pdm run lint-docs` to validate the docstring style of your code.
 
 ### 5. Documentation
 

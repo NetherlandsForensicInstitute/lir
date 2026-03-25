@@ -77,12 +77,15 @@ class ConfigParserLoader(ABC, Iterable):
 
     @staticmethod
     def _get_config_parser(
-        result_type: Any, default_config_parser: Callable[[Any], ConfigParser] | None
+        result_type: Any,
+        default_config_parser: Callable[[Any], ConfigParser] | None,
+        args: Mapping[str, Any] | None = None,
     ) -> ConfigParser:
+        args: Mapping[str, Any] = args or {}
         if inspect.isclass(result_type) and issubclass(result_type, ConfigParser):
-            return result_type()
+            return result_type(**args)
         elif default_config_parser is not None:
-            return default_config_parser(result_type)
+            return default_config_parser(result_type, **args)
         else:
             raise InvalidRegistryEntryError(
                 f'unable to instantiate {result_type}: '
@@ -274,12 +277,39 @@ class YamlRegistry(ConfigParserLoader):
     """
     Representation of a YAML-based registry.
 
-    The YAML registry is expected to define "sections" as the top-level
-    key names, followed by keys referring to (paths to) classnames or
-    functions.
+    The YAML registry is organized into sections as the lop=level key names. Each section can have registry entries. A
+    registry entry is a configuration parser. It can be used in an experiment setup to materialize a component and
+    initialize it with its configuration.
 
-    This registry parses this YAML mapping and provides access to these
-    values through a `get()` method.
+    This registry parses this YAML mapping and provides access to registry antries through a ``get()`` method.
+
+    A registry entry can take the following arguments:
+
+    - class: a ``str`` that can be resolved to a ConfigParser
+    - args: the arguments passed to the config parser
+
+    Example:
+
+    .. code-block:: yaml
+
+        section:
+          entry:
+            class: package.ClassName
+            args:
+              foo: some init argument
+              bar: another init argument
+
+    If the configuration parser only has a ``class`` argument, the alternative notation can be used where the class is
+    passed as a string value to the entry directly. Example:
+
+    .. code-block:: yaml
+
+        section:
+          entry: package.ClassName
+
+    The class of each entry may be a :class:`~lir.config.base.ConfigParser`. If it is not, the registry parser will
+    attempt to use a default configuration parser, depending on the context, and the default configuration parser will
+    be initialized with the object of the registry entry.
 
     Parameters
     ----------
@@ -300,7 +330,7 @@ class YamlRegistry(ConfigParserLoader):
 
     @staticmethod
     def _parse(
-        key: str, spec: Mapping[str, str], default_config_parser: Callable[[Any], ConfigParser] | None
+        key: str, spec: Mapping[str, Any], default_config_parser: Callable[[Any], ConfigParser] | None
     ) -> ConfigParser:
         if 'class' not in spec:
             raise InvalidRegistryEntryError(f'missing value for `class` in registry entry: {key}')
@@ -314,19 +344,11 @@ class YamlRegistry(ConfigParserLoader):
         except Exception as e:
             raise ValueError(f'registry key `{key}` resolved to `{spec.get("class")}` but failed to materialize: {e}')
 
-        parser = ConfigParserLoader._get_config_parser(cls, default_config_parser)
+        parser_init_args = spec.get('args', {})
+        if not isinstance(parser_init_args, Mapping):
+            raise ValueError(f'dictionary expected as argument `args` to `{key}`; found; {type(parser_init_args)}')
 
-        if 'wrapper' in spec:
-            try:
-                wrapper = _get_attribute_by_name(spec.get('wrapper'))  # type: ignore[arg-type]
-            except Exception as e:
-                raise InvalidRegistryEntryError(
-                    f'unable to instantiate class {spec["class"]}: '
-                    f'error while instantiating wrapper class: {spec["wrapper"]}: {e}'
-                )
-            parser = wrapper(parser)
-
-        return parser
+        return ConfigParserLoader._get_config_parser(cls, default_config_parser, args=parser_init_args)
 
     def _find(self, key: str, search_path: list[str] | None) -> Any:
         """

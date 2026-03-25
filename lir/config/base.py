@@ -338,6 +338,19 @@ def config_parser(
     :meth:`parse` method executes the original function body. See the
     documentation of :class:`ConfigParser` for the meaning of the arguments.
 
+    The annotated function will be the reference object that users will be referred to for documentation. If the
+    annotation has a `reference` argument, that value will be used instead. The `reference` value may be a `str` or a
+    Python object. Example of use:
+
+        @config_parser(reference=Bar)
+        def foo(config, config_context_path, output_dir):
+            if "some_argument" not in config or "another_argument" not in config:
+                raise YamlParseError(
+                    config_context_path,
+                    "a required argument is missing",
+                )
+            return Bar(config["some_argument"], config["another_argument"])
+
     Parameters
     ----------
     func : Callable[[ContextAwareDict, Path], Any] | None, optional

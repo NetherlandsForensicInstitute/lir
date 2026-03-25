@@ -30,10 +30,10 @@ def _validate_labels(labels: np.ndarray | None) -> np.ndarray | None:
         return labels
 
     if len(labels.shape) != 1:
-        raise ValueError(f'labels must be 1-dimensional; shape: {labels.shape}')
+        raise ValueError(f'hypothesis_labels must be 1-dimensional; shape: {labels.shape}')
 
     if np.any((labels != 0) & (labels != 1)):
-        raise ValueError(f'labels allowed: 0, 1; found: {np.unique(labels)}')
+        raise ValueError(f'hypothesis_labels allowed: 0, 1; found: {np.unique(labels)}')
 
     return labels
 
@@ -91,7 +91,7 @@ class InstanceData(BaseModel, ABC):
 
     Attributes
     ----------
-    - `labels`: The hypothesis labels of the instances, as a 1-dimensional array with one value per instance, can be
+    - `hypothesis_labels`: The hypothesis labels of the instances, as a 1-dimensional array with one value per instance, can be
       either 0 or 1.
     - `source_ids`: The ids of all sources that contributed to the instances. Each instance is from a single source,
       except if it is a pair, in which case it has two sources. The source ids is either a 1-dimensional array or a
@@ -100,22 +100,22 @@ class InstanceData(BaseModel, ABC):
 
     model_config = ConfigDict(frozen=True, extra='allow', arbitrary_types_allowed=True)
 
-    labels: Annotated[np.ndarray | None, AfterValidator(_validate_labels)] = None
+    hypothesis_labels: Annotated[np.ndarray | None, AfterValidator(_validate_labels)] = None
     source_ids: Annotated[np.ndarray | None, AfterValidator(_validate_source_ids)] = None
 
     @property
     def require_labels(self) -> np.ndarray:
         """
-        Return `labels` and guarantee that it is not None (or raise an error).
+        Return `hypothesis_labels` and guarantee that it is not None (or raise an error).
 
         Returns
         -------
         np.ndarray
             Label array guaranteed to contain values for both hypotheses.
         """
-        if self.labels is None:
-            raise ValueError('labels not set')
-        return self.labels
+        if self.hypothesis_labels is None:
+            raise ValueError('hypothesis_labels not set')
+        return self.hypothesis_labels
 
     @model_validator(mode='after')
     def check_sourceids_labels_match(self) -> Self:
@@ -127,10 +127,10 @@ class InstanceData(BaseModel, ABC):
         Self
             This instance data object after post-init validation.
         """
-        if self.labels is not None and self.source_ids is not None and self.labels.shape[0] != self.source_ids.shape[0]:
+        if self.hypothesis_labels is not None and self.source_ids is not None and self.hypothesis_labels.shape[0] != self.source_ids.shape[0]:
             raise ValueError(
-                f'dimensions of labels and source_ids do not match; "'
-                f'{self.labels.shape[0]} != {self.source_ids.shape[0]}'
+                f'dimensions of hypothesis_labels and source_ids do not match; "'
+                f'{self.hypothesis_labels.shape[0]} != {self.source_ids.shape[0]}'
             )
 
         return self
@@ -207,11 +207,11 @@ class InstanceData(BaseModel, ABC):
         np.ndarray
             Label array containing both classes 0 and 1.
         """
-        if self.labels is None:
-            raise ValueError('labels not set')
-        if not np.all(np.unique(self.labels) == np.arange(2)):
-            raise ValueError(f'not all classes are represented; labels found: {np.unique(self.labels)}')
-        return self.labels
+        if self.hypothesis_labels is None:
+            raise ValueError('hypothesis_labels not set')
+        if not np.all(np.unique(self.hypothesis_labels) == np.arange(2)):
+            raise ValueError(f'not all classes are represented; labels found: {np.unique(self.hypothesis_labels)}')
+        return self.hypothesis_labels
 
     @classmethod
     def _concatenate_field(cls, field: str, values: list[Any]) -> Any:
@@ -341,7 +341,7 @@ class InstanceData(BaseModel, ABC):
                 # apply the function
                 values = fn(values, *args, **kwargs)
 
-                if field == 'labels' and len(values.shape) != 1:
+                if field == 'hypothesis_labels' and len(values.shape) != 1:
                     # drop labels if they are in bad shape
                     data[field] = None
                 else:
@@ -387,7 +387,7 @@ class InstanceData(BaseModel, ABC):
             if isinstance(values, np.ndarray):
                 # we have a numpy array field -> update required
 
-                if field == 'labels' and len(values.shape) != 1:
+                if field == 'hypothesis_labels' and len(values.shape) != 1:
                     # drop labels if they are in bad shape
                     data[field] = None
                 else:
@@ -455,7 +455,7 @@ class InstanceData(BaseModel, ABC):
         bool
             ``True`` when label information is present.
         """
-        return self.labels is not None
+        return self.hypothesis_labels is not None
 
     def replace(self, **kwargs: Any) -> Self:
         """
@@ -547,9 +547,9 @@ class FeatureData(InstanceData):
         Self
             This feature-data object after shape consistency checks.
         """
-        if self.labels is not None and self.labels.shape[0] != self.features.shape[0]:
+        if self.hypothesis_labels is not None and self.hypothesis_labels.shape[0] != self.features.shape[0]:
             raise ValueError(
-                f'dimensions of labels and features do not match; {self.labels.shape[0]} != {self.features.shape[0]}'
+                f'dimensions of hypothesis_labels and features do not match; {self.hypothesis_labels.shape[0]} != {self.features.shape[0]}'
             )
         if self.source_ids is not None and self.source_ids.shape[0] != self.features.shape[0]:
             raise ValueError(

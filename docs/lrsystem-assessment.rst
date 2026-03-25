@@ -208,7 +208,7 @@ consistent!
         fig.show()
 
     # generate neutral LLRs
-    llrs = LLRData(features=np.zeros((6, 1)), labels=np.array([0, 0, 0, 1, 1, 1]))
+    llrs = LLRData(features=np.zeros((6, 1)), hypothesis_labels=np.array([0, 0, 0, 1, 1, 1]))
 
     # show results
     print('results for neutral (non-informative) LLR values')

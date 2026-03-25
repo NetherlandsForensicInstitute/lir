@@ -497,7 +497,7 @@ class CaseLLRToCsv(Aggregation):
             lrsystem = data.lrsystem
 
         # Ensure the case data does not contain labels by setting them to None.
-        case_instances = self.case_data_provider.get_instances().replace(labels=None)
+        case_instances = self.case_data_provider.get_instances().replace(hypothesis_labels=None)
         case_instances = check_type(FeatureData, case_instances)
         case_llrs = lrsystem.apply(case_instances)
 

@@ -37,7 +37,7 @@ class TestIsotonicRegression(unittest.TestCase):
         score_class1 = np.arange(0, 1, 0.1)
         X, y = Xn_to_Xy(score_class0, score_class1)
         irc = IsotonicCalibrator()
-        llrs = irc.fit_apply(LLRData(features=probability_to_logodds(X).reshape(-1, 1), labels=y))
+        llrs = irc.fit_apply(LLRData(features=probability_to_logodds(X).reshape(-1, 1), hypothesis_labels=y))
         lr0, lr1 = Xy_to_Xn(logodds_to_odds(llrs.llrs), y)
         self.assertEqual(score_class0.shape, lr0.shape)
         self.assertEqual(score_class1.shape, lr1.shape)
@@ -51,7 +51,7 @@ class TestIsotonicRegression(unittest.TestCase):
         cllr = _cllr(lr0, lr1)
 
         irc = IsotonicCalibrator()
-        llrs = irc.fit_apply(LLRData(features=odds_to_probability(X).reshape(-1, 1), labels=y))
+        llrs = irc.fit_apply(LLRData(features=odds_to_probability(X).reshape(-1, 1), hypothesis_labels=y))
         lrmin0, lrmin1 = Xy_to_Xn(logodds_to_odds(llrs.llrs), y)
 
         cllrmin = _cllr(lrmin0, lrmin1)
@@ -76,7 +76,7 @@ class TestIsotonicRegression(unittest.TestCase):
         score_class1 = np.arange(0.05, 1.05, 0.1)
         X, y = Xn_to_Xy(score_class0, score_class1)
         irc = IsotonicCalibrator()
-        llrs = irc.fit_apply(LLRData(features=X.reshape(-1, 1), labels=y))
+        llrs = irc.fit_apply(LLRData(features=X.reshape(-1, 1), hypothesis_labels=y))
         lr0, lr1 = Xy_to_Xn(logodds_to_odds(llrs.llrs), y)
         self.assertEqual(score_class0.shape, lr0.shape)
         self.assertEqual(score_class1.shape, lr1.shape)
@@ -111,7 +111,7 @@ class TestLogitCalibrator(unittest.TestCase):
     def get_instances(self) -> LLRData:
         X, y = Xn_to_Xy(self.score_class0, self.score_class1)
         X = odds_to_logodds(X)
-        return LLRData(features=X.reshape(-1, 1), labels=y)
+        return LLRData(features=X.reshape(-1, 1), hypothesis_labels=y)
 
     def test_prob_version(self):
         desired = [
@@ -198,7 +198,7 @@ class TestLogitCalibrator(unittest.TestCase):
             np.inf,
         ]
 
-        instances = LLRData(features=X.reshape(-1, 1), labels=y)
+        instances = LLRData(features=X.reshape(-1, 1), hypothesis_labels=y)
 
         calibrator = LogitCalibrator()
         calibrator.fit(instances)

@@ -27,7 +27,7 @@ def test_specific_source_pipeline(synthesized_normal_data: FeatureData):
     llr_data: LLRData = specific_source_system.apply(data_test)
 
     scores = llr_data.features
-    labels = llr_data.labels
+    labels = llr_data.hypothesis_labels
 
     golden_master_path = Path('tests/golden_master/test_specific_source_pipeline')
     if not Path(f'{golden_master_path}.npz').exists():

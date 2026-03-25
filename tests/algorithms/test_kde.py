@@ -14,7 +14,7 @@ def test_kde_dimensions():
     labels = np.array([0, 0, 0, 0, 0, 1, 1, 1, 1, 1])
 
     kde = KDECalibrator(bandwidth=1)
-    kde.fit_apply(LLRData(features=features, labels=labels))
+    kde.fit_apply(LLRData(features=features, hypothesis_labels=labels))
 
 
 # the X-data for TestKDECalibrator,  TestGaussianCalibrator, TestLogitCalibrator comes from random draws of perfectly
@@ -73,7 +73,7 @@ class TestKDECalibrator(unittest.TestCase):
             1.49097168e05,
         ]
         calibrator = KDECalibrator(bandwidth='silverman')
-        llrs_cal = calibrator.fit_apply(LLRData(features=X.reshape(-1, 1), labels=y))
+        llrs_cal = calibrator.fit_apply(LLRData(features=X.reshape(-1, 1), hypothesis_labels=y))
         np.testing.assert_allclose(logodds_to_odds(llrs_cal.llrs), desired)
 
     def test_on_extreme_values(self):
@@ -134,7 +134,7 @@ class TestKDECalibrator(unittest.TestCase):
             math.inf,
         ]
         calibrator = KDECalibrator(bandwidth='silverman')
-        llrs_cal = calibrator.fit_apply(LLRData(features=X.reshape(-1, 1), labels=y))
+        llrs_cal = calibrator.fit_apply(LLRData(features=X.reshape(-1, 1), hypothesis_labels=y))
         np.testing.assert_allclose(logodds_to_odds(llrs_cal.llrs), desired)
 
 

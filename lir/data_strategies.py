@@ -106,7 +106,7 @@ class CrossValidation(DataStrategy):
             Input instances to be processed by this method.
         """
         kf = KFold(n_splits=self.folds, shuffle=self.shuffle, random_state=self.seed)
-        for train_index, test_index in kf.split(np.arange(len(instances)), y=instances.labels):
+        for train_index, test_index in kf.split(np.arange(len(instances)), y=instances.hypothesis_labels):
             yield instances[train_index], instances[test_index]
 
 

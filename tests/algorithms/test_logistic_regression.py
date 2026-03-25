@@ -27,7 +27,7 @@ class TestFourParameterLogisticCalibrator(unittest.TestCase):
     def get_instances(self):
         X, y = Xn_to_Xy(self.X_diff, self.X_same)
         X = probability_to_logodds(X)
-        return LLRData(features=X.reshape(-1, 1), labels=y)
+        return LLRData(features=X.reshape(-1, 1), hypothesis_labels=y)
 
     def xtest_compare_to_logistic(self):
         instances = self.get_instances()
@@ -36,13 +36,13 @@ class TestFourParameterLogisticCalibrator(unittest.TestCase):
         four_pl_model.fit(instances)
 
         logistic = LogisticRegression(penalty=None, class_weight='balanced')
-        logistic.fit(instances.features, instances.labels)
+        logistic.fit(instances.features, instances.hypothesis_labels)
         logistic_coef = [logistic.coef_[0][0], logistic.intercept_[0]]
         np.testing.assert_allclose(four_pl_model.coef_, logistic_coef, rtol=1e-2)
 
     def test_pl_1_is_0(self):
         instances = self.get_instances()
-        instances += LLRData(features=np.array([-np.inf, -np.inf]), labels=np.array([0, 1]))
+        instances += LLRData(features=np.array([-np.inf, -np.inf]), hypothesis_labels=np.array([0, 1]))
 
         four_pl_model = FourParameterLogisticCalibrator()
         four_pl_model.fit(instances)
@@ -53,7 +53,7 @@ class TestFourParameterLogisticCalibrator(unittest.TestCase):
     def test_pl_0_is_1(self):
         instances = self.get_instances()
         extra_instances_p = np.array([1, 1 - 10**-10, 1, 1 - 10**-10]).reshape(-1, 1)
-        instances += LLRData(features=probability_to_logodds(extra_instances_p), labels=np.array([1, 1, 0, 0]))
+        instances += LLRData(features=probability_to_logodds(extra_instances_p), hypothesis_labels=np.array([1, 1, 0, 0]))
 
         four_pl_model = FourParameterLogisticCalibrator()
         four_pl_model.fit(instances)
@@ -65,7 +65,7 @@ class TestFourParameterLogisticCalibrator(unittest.TestCase):
         instances = self.get_instances()
         extra_instances_p = np.array([0, 10**-10, 1, 1 - 10**-10, 0, 10**-10, 1, 1 - 10**-10]).reshape(-1, 1)
         instances += LLRData(
-            features=probability_to_logodds(extra_instances_p), labels=np.array([1, 1, 1, 1, 0, 0, 0, 0])
+            features=probability_to_logodds(extra_instances_p), hypothesis_labels=np.array([1, 1, 1, 1, 0, 0, 0, 0])
         )
 
         four_pl_model = FourParameterLogisticCalibrator()

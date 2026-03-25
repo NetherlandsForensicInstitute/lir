@@ -42,7 +42,7 @@ def plot_nbe(
         The step size for the log LR threshold range, determining the resolution of the plot. Default is 0.01.
     """
     llrs = llrdata.llrs
-    y = llrdata.labels
+    y = llrdata.hypothesis_labels
     if y is None:
         raise ValueError('LLRData must contain labels to plot NBE.')
 
@@ -89,7 +89,7 @@ def elub(
         A tuple containing the lower and upper ELUB log10-LRs.
     """
     llrs = llrdata.llrs
-    y = llrdata.labels
+    y = llrdata.hypothesis_labels
     if y is None:
         raise ValueError('LLRData must contain labels to calculate ELUB bounds.')
     if len(np.unique(y)) != 2:

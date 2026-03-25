@@ -108,7 +108,7 @@ class SourcePairing(PairingMethod):
                     pair_instances = pair_instances.replace(source_ids=None)
                     result_features.append(
                         pair_instances.apply(np.expand_dims, axis=0).replace(
-                            labels=np.ones(1), source_ids=pair_source_ids
+                            hypothesis_labels=np.ones(1), source_ids=pair_source_ids
                         )
                     )
             else:
@@ -125,7 +125,7 @@ class SourcePairing(PairingMethod):
                     pair_instances = (trace_instances + ref_instances).replace(source_ids=None)
                     result_features.append(
                         pair_instances.apply(np.expand_dims, axis=0).replace(
-                            labels=np.zeros(1), source_ids=pair_source_ids
+                            hypothesis_labels=np.zeros(1), source_ids=pair_source_ids
                         )
                     )
 
@@ -141,7 +141,7 @@ class SourcePairing(PairingMethod):
                 n_trace_instances=n_trace_instances,
                 n_ref_instances=n_ref_instances,
                 features=np.empty(target_shape),
-                labels=np.array([]),
+                hypothesis_labels=np.array([]),
             )
 
     def pair(
@@ -231,7 +231,7 @@ class SourcePairing(PairingMethod):
             labels = np.zeros((0,))
             return PairedFeatureData(
                 features=features,
-                labels=labels,
+                hypothesis_labels=labels,
                 n_trace_instances=n_trace_instances,
                 n_ref_instances=n_ref_instances,
             )
@@ -357,5 +357,5 @@ class InstancePairing(PairingMethod):
 
         # apply the new labels: 1=same_source versus 0=different_source
         return paired_data.replace_as(
-            PairedFeatureData, labels=pair_labels, instance_indices=pairing, n_trace_instances=1, n_ref_instances=1
+            PairedFeatureData, hypothesis_labels=pair_labels, instance_indices=pairing, n_trace_instances=1, n_ref_instances=1
         )

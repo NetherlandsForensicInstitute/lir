@@ -228,7 +228,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
         # finalize the data
         data = {
             'source_ids': np.array(source_ids) if source_ids else None,
-            'labels': np.array(labels) if self.label_column is not None else None,
+            'hypothesis_labels': np.array(labels) if self.label_column is not None else None,
             'features': np.array(features),
         }
         data.update({k: np.array(v) for k, v in extra_values.items()})

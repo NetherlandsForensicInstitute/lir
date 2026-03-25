@@ -193,7 +193,7 @@ def pav(
         If `True`, show individual LRs (default: ``True``).
     """
     llrs = llrdata.llrs
-    y = llrdata.labels
+    y = llrdata.hypothesis_labels
 
     pav = IsotonicCalibrator(add_misleading=add_misleading)
     pav_llrs = pav.fit_apply(llrdata).llrs
@@ -481,7 +481,7 @@ def score_to_llr(ax: Axes, llrdata: LLRData) -> None:
         use them in the plots to color the points by hypothesis. If not, plot all points in the same color.
     """
     llrs = llrdata.llrs
-    labels = llrdata.labels
+    labels = llrdata.hypothesis_labels
     scores = llrdata.require_feature_for_plots('score')
 
     # General settings; do them regardless of labels.

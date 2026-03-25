@@ -13,44 +13,44 @@ class TestDevPAV(unittest.TestCase):
         llrs = odds_to_logodds(lrs)
         y = np.concatenate([np.ones(10)])
         with self.assertRaises(ValueError):
-            devpav(LLRData(features=llrs, labels=y))
+            devpav(LLRData(features=llrs, hypothesis_labels=y))
 
     def test_devpav(self):
         # naive system
         llrs = np.zeros((10, 1))
         y = np.concatenate([np.ones(5), np.zeros(5)])
-        self.assertEqual(devpav(LLRData(features=llrs, labels=y)), 0)
+        self.assertEqual(devpav(LLRData(features=llrs, hypothesis_labels=y)), 0)
 
         # badly calibrated naive system
         lrs = 2 * np.ones(10)
         llrs = odds_to_logodds(lrs)
         y = np.concatenate([np.ones(5), np.zeros(5)])
-        self.assertEqual(devpav(LLRData(features=llrs, labels=y)), np.log10(2))
+        self.assertEqual(devpav(LLRData(features=llrs, hypothesis_labels=y)), np.log10(2))
 
         # infinitely bad calibration
         lrs = np.array([5, 5, 5, 0.2, 0.2, 0.2, np.inf])
         llrs = odds_to_logodds(lrs)
         y = np.concatenate([np.ones(3), np.zeros(4)])
-        self.assertEqual(devpav(LLRData(features=llrs, labels=y)), np.inf)
+        self.assertEqual(devpav(LLRData(features=llrs, hypothesis_labels=y)), np.inf)
 
         # binary system
         lrs = np.array([5, 5, 5, 0.2, 5, 0.2, 0.2, 0.2])
         llrs = odds_to_logodds(lrs)
         y = np.concatenate([np.ones(4), np.zeros(4)])
-        self.assertAlmostEqual(devpav(LLRData(features=llrs, labels=y)), (np.log10(5) - np.log10(3)) / 2)
+        self.assertAlmostEqual(devpav(LLRData(features=llrs, hypothesis_labels=y)), (np.log10(5) - np.log10(3)) / 2)
 
         # somewhat normal
         lrs = np.array([6, 5, 5, 0.2, 5, 0.2, 0.2, 0.1])
         llrs = odds_to_logodds(lrs)
         y = np.concatenate([np.ones(4), np.zeros(4)])
-        self.assertAlmostEqual(devpav(LLRData(features=llrs, labels=y)), (np.log10(5) - np.log10(2)) / 2)
+        self.assertAlmostEqual(devpav(LLRData(features=llrs, hypothesis_labels=y)), (np.log10(5) - np.log10(2)) / 2)
 
         # test on dummy data 3 #######################
         lrs_same = (0.1, 100)
         lrs_dif = (10**-2, 10)
         lrs, y = Xn_to_Xy(lrs_dif, lrs_same)
         llrs = odds_to_logodds(lrs)
-        self.assertEqual(devpav(LLRData(features=llrs, labels=y)), 0.5)
+        self.assertEqual(devpav(LLRData(features=llrs, hypothesis_labels=y)), 0.5)
 
 
 class TestDevpavcalculator(unittest.TestCase):

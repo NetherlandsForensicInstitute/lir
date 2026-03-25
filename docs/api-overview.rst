@@ -67,8 +67,8 @@ So we `pair`_ the instances to get some pairs to compare.
 
     print(f'We have combined the {len(glass_data)} instances into {len(pairs)} pairs.')
     print(f'The paired data has features of all instances in the pairs, so it has type {type(pairs)}.')
-    print(f'Of {len(pairs[pairs.labels==1])} pairs, both instances are from the same source.')
-    print(f'Of {len(pairs[pairs.labels==0])} pairs, both instances are from different sources.')
+    print(f'Of {len(pairs[pairs.hypothesis_labels==1])} pairs, both instances are from the same source.')
+    print(f'Of {len(pairs[pairs.hypothesis_labels==0])} pairs, both instances are from different sources.')
 
 
 We have created a same-source pair for each source that has at least two instances. The number of different-source pairs
@@ -90,8 +90,8 @@ instances for each same-source pair.
 
     print(f'We have combined the {len(glass_data)} instances into {len(pairs_3x2)} pairs.')
     print(f'The paired data has features of all instances in the pairs, so it has type {type(pairs_3x2)}.')
-    print(f'Of {len(pairs_3x2[pairs_3x2.labels==1])} pairs, all instances are from the same source.')
-    print(f'Of {len(pairs_3x2[pairs_3x2.labels==0])} pairs, the instances are from two different sources.')
+    print(f'Of {len(pairs_3x2[pairs_3x2.hypothesis_labels==1])} pairs, all instances are from the same source.')
+    print(f'Of {len(pairs_3x2[pairs_3x2.hypothesis_labels==0])} pairs, the instances are from two different sources.')
 
 
 The actual comparison can take many forms, including a distance or similarity function such as the
@@ -117,8 +117,8 @@ Now it is time to calculate LLRs...
 
     # calculate LLRs
     llrs = LogitCalibrator().fit_apply(distances)
-    different_source_llrs = llrs[llrs.labels==0]
-    same_source_llrs = llrs[llrs.labels==1]
+    different_source_llrs = llrs[llrs.hypothesis_labels==0]
+    same_source_llrs = llrs[llrs.hypothesis_labels==1]
 
     print(f'The set of LLRs has type {type(llrs)}.')
     print(f'The median LLR for different-source pairs is {np.median(different_source_llrs.llrs)}.')

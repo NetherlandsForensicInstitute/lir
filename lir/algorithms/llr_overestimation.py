@@ -38,7 +38,7 @@ def plot_llr_overestimation(
     **kwargs : Any
         Additional arguments passed to `calc_llr_overestimation` and/or `calc_fiducial_density_functions`.
     """
-    llrs, y = llrdata.llrs, llrdata.labels
+    llrs, y = llrdata.llrs, llrdata.hypothesis_labels
     if y is None:
         raise ValueError('LLR-overestimation cannot be calculated: no labels available in the LLRData.')
 

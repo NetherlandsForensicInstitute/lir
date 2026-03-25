@@ -66,7 +66,7 @@ def test_static_bounder(
 ):
     bounder = StaticBounder(lower_bound, upper_bound)
     labels = np.concatenate([np.zeros(1), np.ones(llrs.shape[0] - 1)])
-    llrs = LLRData(features=llrs, labels=labels)
+    llrs = LLRData(features=llrs, hypothesis_labels=labels)
     assert np.all(expected_result == bounder.apply(llrs).llrs)
     assert np.all(expected_result == bounder.fit_apply(llrs).llrs)
     assert np.all(expected_result == bounder.fit(llrs).apply(llrs).llrs)
@@ -141,7 +141,7 @@ def test_n_source_bounder():
     bounder = NSourceBounder()
     llrs = LLRData(
         features=np.array([0.5, -0.2, 1.0, 0.3, -0.7, 0.8]),
-        labels=np.array([1, 0, 1, 0, 0, 1]),
+        hypothesis_labels=np.array([1, 0, 1, 0, 0, 1]),
         source_ids=np.array(['A', 'A', 'B', 'B', 'C', 'C']),
     )
 

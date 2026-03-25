@@ -157,7 +157,7 @@ class BinaryClassifierTransformer(Transformer):
             This transformer instance after fitting.
         """
         instances = check_type(FeatureData, instances)
-        self.estimator.fit(instances.features, instances.labels)
+        self.estimator.fit(instances.features, instances.hypothesis_labels)
         return self
 
     def apply(self, instances: InstanceData) -> InstanceData:
@@ -210,7 +210,7 @@ class SklearnTransformer(Transformer):
             This transformer instance after fitting.
         """
         instances = check_type(FeatureData, instances)
-        self.transformer.fit(instances.features, instances.labels)
+        self.transformer.fit(instances.features, instances.hypothesis_labels)
         return self
 
     def apply(self, instances: InstanceData) -> InstanceData:
@@ -246,7 +246,7 @@ class SklearnTransformer(Transformer):
         """
         instances = check_type(FeatureData, instances)
         return instances.replace_as(
-            FeatureData, features=self.transformer.fit_transform(instances.features, instances.labels)
+            FeatureData, features=self.transformer.fit_transform(instances.features, instances.hypothesis_labels)
         )
 
 
@@ -500,9 +500,9 @@ class CsvWriter(Transformer):
         all_headers: list[str] = []
         all_data: list[np.ndarray] = []
 
-        if self.include_labels and instances.labels is not None:
+        if self.include_labels and instances.hypothesis_labels is not None:
             all_headers.append('label')
-            all_data.append(instances.labels.reshape(-1, 1))
+            all_data.append(instances.hypothesis_labels.reshape(-1, 1))
 
         if self.include_meta and hasattr(instances, 'meta'):
             meta = instances.meta

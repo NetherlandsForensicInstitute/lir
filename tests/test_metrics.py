@@ -26,7 +26,7 @@ from lir.util import Xn_to_Xy, odds_to_logodds
 def test_calculate_cllr(expected: float, h1_lrs: list[float], h2_lrs: list[float]):
     lrs, labels = Xn_to_Xy(np.array(h1_lrs), np.array(h2_lrs))
     llrs = odds_to_logodds(lrs)
-    llr_data = LLRData(features=llrs, labels=labels)
+    llr_data = LLRData(features=llrs, hypothesis_labels=labels)
     pytest.approx(expected, metrics.cllr(llr_data))
 
 
@@ -39,7 +39,7 @@ def test_calculate_cllr(expected: float, h1_lrs: list[float], h2_lrs: list[float
 def test_calculate_cllr_min(expected: float, h1_lrs: list[float], h2_lrs: list[float]):
     lrs, labels = Xn_to_Xy(np.array(h1_lrs), np.array(h2_lrs))
     llrs = odds_to_logodds(lrs)
-    llr_data = LLRData(features=llrs, labels=labels)
+    llr_data = LLRData(features=llrs, hypothesis_labels=labels)
     pytest.approx(expected, metrics.cllr_min(llr_data))
 
 
@@ -58,7 +58,7 @@ def test_calculate_cllr_min(expected: float, h1_lrs: list[float], h2_lrs: list[f
 )
 def test_extreme_cllr(expected: float, h1_llrs: list[float], h2_llrs: list[float]):
     llrs, labels = Xn_to_Xy(np.array(h1_llrs), np.array(h2_llrs))
-    llr_data = LLRData(features=llrs, labels=labels)
+    llr_data = LLRData(features=llrs, hypothesis_labels=labels)
     pytest.approx(expected, metrics.cllr(llr_data))
 
 
@@ -74,7 +74,7 @@ def test_extreme_cllr(expected: float, h1_llrs: list[float], h2_llrs: list[float
 )
 def test_illegal_cllr(h1_llrs, h2_llrs):
     llrs, labels = Xn_to_Xy(np.array(h1_llrs), np.array(h2_llrs))
-    llr_data = LLRData(features=llrs, labels=labels)
+    llr_data = LLRData(features=llrs, hypothesis_labels=labels)
     assert np.isnan(metrics.cllr(llr_data))
 
     if np.all(np.isfinite(llrs)):  # this condition should be removed ?! --> see issue #301

@@ -15,14 +15,14 @@ from lir.util import logodds_to_odds
 class TestECE(unittest.TestCase):
     def _compare_ece_cllr(self, llrs, y):
         error = calculate_ece(logodds_to_odds(llrs), y, np.array([0.5, 0.5]))
-        llr_data = LLRData(features=llrs, labels=y)
+        llr_data = LLRData(features=llrs, hypothesis_labels=y)
         cllr = metrics.cllr(llr_data)
         np.testing.assert_almost_equal(error[0], cllr)
 
     def test_cllr(self):
         breath = AlcoholBreathAnalyser(ill_calibrated=True).get_instances()
         data = [
-            (breath.llrs, breath.labels),
+            (breath.llrs, breath.hypothesis_labels),
             (np.array([-1, 1, np.inf]), np.array([0, 1, 1])),
             (np.array([-1, 1, np.inf]), np.array([0, 1, 0])),
             (np.array([-1, 1, -np.inf]), np.array([0, 1, 1])),

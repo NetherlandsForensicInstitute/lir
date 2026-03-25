@@ -53,7 +53,7 @@ class _DummyModel:
 
 
 def test_mcmc_apply_with_bounding_handles_llrdata_correctly():
-    instances = FeatureData(features=np.array([[0.0], [1.0]]), labels=np.array([0, 1]))
+    instances = FeatureData(features=np.array([[0.0], [1.0]]), hypothesis_labels=np.array([0, 1]))
 
     llr_model = McmcLLRModel(
         distribution_h1='normal',

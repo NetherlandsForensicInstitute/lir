@@ -15,7 +15,6 @@ from lir.transform import (
     CsvWriter,
     FunctionTransformer,
     Identity,
-    NumpyTransformer,
     Transformer,
     as_transformer,
 )
@@ -81,54 +80,6 @@ class GenericTransformerConfigParser(ConfigParser):
             return FunctionTransformer(self.component_class)
 
         raise YamlParseError(config.context, f'unrecognized module type: `{self.component_class}`')
-
-
-class NumpyWrappingConfigParser(ConfigParser):
-    """
-    Wrap a Transformer to add a header to FeatureData.
-
-    Parameters
-    ----------
-    module_parser : ConfigParser
-        Parser used to create the wrapped transformer.
-    """
-
-    def __init__(self, module_parser: ConfigParser):
-        super().__init__()
-        self.module_parser = module_parser
-
-    def parse(self, config: ContextAwareDict, output_dir: Path) -> Transformer:
-        """
-        Parse the provided header configuration.
-
-        Parameters
-        ----------
-        config : ContextAwareDict
-            Configuration possibly containing ``header`` and module fields.
-        output_dir : Path
-            Output directory passed to the wrapped parser.
-
-        Returns
-        -------
-        Transformer
-            Wrapped transformer that preserves numpy headers.
-        """
-        header = config.pop('header') if 'header' in config else None
-        return NumpyTransformer(
-            self.module_parser.parse(config, output_dir),
-            header=header,
-        )
-
-    def reference(self) -> str:
-        """
-        Return the full name of the ``module_parser`` class argument.
-
-        Returns
-        -------
-        str
-            Reference string for the wrapped parser.
-        """
-        return self.module_parser.reference()
 
 
 def parse_module(

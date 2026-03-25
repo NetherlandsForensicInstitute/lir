@@ -385,61 +385,6 @@ class TransformerWrapper(Transformer):
         return self.wrapped_transformer.apply(instances)
 
 
-class NumpyTransformer(TransformerWrapper):
-    """
-    Implementation of a transformer wrapper.
-
-    Parameters
-    ----------
-    transformer : Transformer
-        Transformer instance wrapped by this adapter.
-    header : list[str] | None
-        Value passed via ``header``.
-    """
-
-    def __init__(self, transformer: Transformer, header: list[str] | None):
-        super().__init__(transformer)
-        self.header = header
-
-    def apply(self, instances: InstanceData) -> InstanceData:
-        """
-        Extend the instances with the desired header data, call base `apply`.
-
-        Parameters
-        ----------
-        instances : InstanceData
-            Input instances to be processed by this method.
-
-        Returns
-        -------
-        InstanceData
-            Instance data object produced by this operation.
-        """
-        instances = super().apply(instances)
-        if self.header:
-            instances = instances.replace(header=self.header)
-        return instances
-
-    def fit_apply(self, instances: InstanceData) -> InstanceData:
-        """
-        Extend the instances with the desired header data, call base `fit_apply`.
-
-        Parameters
-        ----------
-        instances : InstanceData
-            Input instances to be processed by this method.
-
-        Returns
-        -------
-        InstanceData
-            Instance data object produced by this operation.
-        """
-        instances = super().fit_apply(instances)
-        if self.header:
-            instances = instances.replace(header=self.header)
-        return instances
-
-
 class CsvWriter(Transformer):
     """
     Implementation of a transformation step in a scikit-learn Pipeline that writes to CSV.

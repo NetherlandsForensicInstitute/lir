@@ -8,7 +8,7 @@ from lir.transform import check_type
 
 class ValidateFeatureDataType(Transformer):
     """
-    Module that enforces the data types of the features in the instances.
+    Module that validates the data types of the features in the instances.
 
     This transformer is useful for ensuring that the data types of the features in the instances are consistent with the
     data types determined during fitting. This can help prevent errors during the application of a model/pipeline.
@@ -60,7 +60,7 @@ class ValidateFeatureDataType(Transformer):
         Returns
         -------
         FeatureData
-            The transformed data with enforced data types.
+            The transformed data with validated data types.
 
         Raises
         ------

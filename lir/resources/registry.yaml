@@ -1,11 +1,17 @@
+# registry.yaml
+#
+# See also: documentation of `lir.registry`
+
 lrsystem_architectures:
   specific_source: lir.config.lrsystem_architectures.specific_source
   score_based: lir.config.lrsystem_architectures.score_based
   two_level: lir.config.lrsystem_architectures.two_level
+
 experiment_strategies:
   single_run: lir.config.experiment_strategies.SingleRunStrategy
   grid: lir.config.experiment_strategies.GridStrategy
   optuna: lir.config.experiment_strategies.OptunaStrategy
+
 data_strategies:
   train_test: lir.data_strategies.TrainTestSplit
   cross_validation: lir.data_strategies.CrossValidation
@@ -14,12 +20,14 @@ data_strategies:
   predefined_train_test: lir.data_strategies.PredefinedTrainTestSplit
   predefined_cross_validation: lir.data_strategies.PredefinedCrossValidation
   train_test_pairs: lir.data_strategies.PairsTrainTestSplit
+
 data_providers:
   synthesized_normal_binary: lir.datasets.synthesized_normal_binary.synthesized_normal_binary
   synthesized_normal_multiclass: lir.datasets.synthesized_normal_multiclass.synthesized_normal_multiclass
   glass: lir.datasets.glass.GlassData
   parse_features_from_csv_file: lir.datasets.feature_data_csv.feature_data_csv_file_parser
   parse_features_from_csv_url: lir.datasets.feature_data_csv.feature_data_csv_http_parser
+
 modules:
   # pipelines
   pipeline: lir.transform.pipeline.pipeline
@@ -61,6 +69,7 @@ modules:
   elub_bounder: lir.algorithms.bayeserror.ELUBBounder
   iv_bounder: lir.algorithms.invariance_bounds.IVBounder
   n_source_bounder: lir.bounding.NSourceBounder
+
 metric:
   cllr: lir.metrics.cllr
   cllr_min: lir.metrics.cllr_min
@@ -68,18 +77,69 @@ metric:
   llr_lower_bound: lir.metrics.llr_lower_bound
   llr_upper_bound: lir.metrics.llr_upper_bound
   devpav: lir.algorithms.devpav.devpav
+
 output:
   metrics: lir.aggregation.metrics_csv
-  pav: lir.aggregation.plot_pav
-  ece: lir.aggregation.plot_ece
-  lr_histogram: lir.aggregation.plot_lr_histogram
-  llr_interval: lir.aggregation.plot_llr_interval
-  llr_overestimation: lir.aggregation.plot_llr_overestimation
-  nbe: lir.aggregation.plot_nbe
-  invariance_delta_function: lir.aggregation.plot_invariance_delta_function
-  tippett: lir.aggregation.plot_tippett
-  score_to_llr: lir.aggregation.plot_score_to_llr
-  score_distribution: lir.aggregation.plot_score_distribution
+  pav:
+    class: lir.config.aggregation.AggregationPlotConfigParser
+    args:
+      method: lir.plotting.pav
+      default_plot_name: 'PAV'
+
+  ece:
+    class: lir.config.aggregation.AggregationPlotConfigParser
+    args:
+      method: lir.plotting.expected_calibration_error.plot_ece
+      default_plot_name: 'ECE'
+
+  lr_histogram:
+    class: lir.config.aggregation.AggregationPlotConfigParser
+    args:
+      method: lir.plotting.lr_histogram
+      default_plot_name: 'LR_Histogram'
+
+  llr_interval:
+    class: lir.config.aggregation.AggregationPlotConfigParser
+    args:
+      method: lir.plotting.llr_interval
+      default_plot_name: 'LLR_Interval'
+
+  llr_overestimation:
+    class: lir.config.aggregation.AggregationPlotConfigParser
+    args:
+      method: lir.algorithms.llr_overestimation.plot_llr_overestimation
+      default_plot_name: 'LLR_Overestimation'
+
+  nbe:
+    class: lir.config.aggregation.AggregationPlotConfigParser
+    args:
+      method: lir.plotting.nbe
+      default_plot_name: 'NBE'
+
+  invariance_delta_function:
+    class: lir.config.aggregation.AggregationPlotConfigParser
+    args:
+      method: lir.algorithms.invariance_bounds.plot_invariance_delta_functions
+      default_plot_name: 'Invariance_Delta_Functions'
+
+  tippett:
+    class: lir.config.aggregation.AggregationPlotConfigParser
+    args:
+      method: lir.plotting.tippett
+      default_plot_name: 'Tippett'
+
+  score_to_llr:
+    class: lir.config.aggregation.AggregationPlotConfigParser
+    args:
+      method: lir.plotting.score_to_llr
+      default_plot_name: 'Score_LLR'
+
+  score_distribution:
+    class: lir.config.aggregation.AggregationPlotConfigParser
+    args:
+      method: lir.plotting.score_distribution
+      default_plot_name: 'Score_Distribution'
+
   save_model: lir.persistence.parse_save_model
   case_llr: lir.aggregation.case_llr_csv
   by_category: lir.config.aggregation.subset_aggregation
@@ -87,6 +147,7 @@ output:
 pairing:
   instance_pairs: lir.transform.pairing.InstancePairing
   source_pairs: lir.transform.pairing.SourcePairing
+
 hyperparameter_types:
   categorical: lir.config.substitution.parse_categorical
   cluster: lir.config.substitution.parse_clustered

@@ -13,13 +13,13 @@ system configuration used by the pipeline.
 
 .. code-block:: yaml
 
-    benchmarks:
-      model_selection_run:
+    experiments:
+      - name: model_selection_run
         lr_system: ...
         ...
-        parameters:
+        hyperparameters:
           - path: comparing.clf
-            values:
+            options:
               - name: logit
                 method: logistic_regression
                 C: 1

@@ -1,0 +1,39 @@
+output_path: ./output/${timestamp}_single_run_example  # This is where generated output is saved.
+experiments:
+  - name: my_experiment               # Choose a descriptive name for the experiment.
+    strategy: single_run              # single_run is the most basic strategy.
+
+    # The data section: which data to use and how to use it.
+    data:
+      provider:                       # The data provider specifies which data to use.
+        method: parse_features_from_csv_url  # We use the generic CSV parser to get glass data.
+        url: https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/refs/heads/main/training.csv
+        source_id_column: Item        # This column identifies the source.
+        ignore_columns:               # We don't need these columns at the moment, so we can safely ignore them.
+          - id
+          - Piece
+
+      splits:                         # The data splitter specifies how to split the data into training and test sets.
+        strategy: train_test_sources  # Use a single train/test split, and split on the source IDs.
+        test_size: 0.5                # Split the data 50/50.
+
+    # The LR system section: this is where the action is.
+    lr_system:
+      architecture: score_based
+      preprocessing: standard_scaler  # The preprocessing is applied on the single measurements, before pairing.
+      pairing:                        # The pairing method governs the way the measurements are paired.
+        method: source_pairs          # The source_pairing method generates one pair for each combination of sources.
+        ratio_limit: 1                # Subsample different-source pairs until their number is the same as the number of
+                                      # same-source pairs.
+      comparing:                      # The comparing module is applied on pairs.
+        method: pipeline              # We need two modules, so we combine them in a pipeline.
+        steps:
+          score: manhattan_distance   # First, we use the manhattan distance to calculate a "score".
+          to_llr: logistic_calibrator # Next, we turn the scores into LLRs.
+
+    # The output section: where results are aggregated.
+    output:
+      - method: metrics
+        columns:
+          - cllr
+          - cllr_min

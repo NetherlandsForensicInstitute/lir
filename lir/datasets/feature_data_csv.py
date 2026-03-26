@@ -326,7 +326,7 @@ class FeatureDataCsvHttpParser(FeatureDataCsvParser):
     """
 
     def __init__(self, url: str, session: requests.Session, **kwargs: Any):
-        super().__init__(**kwargs, message_prefix=url)
+        super().__init__(**kwargs, message_prefix=f'{url}: ')
         self.url = url
         self.session = session
 

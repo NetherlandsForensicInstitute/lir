@@ -18,7 +18,7 @@ data: &data
     test_size: .5
     seed: 42
 
-lr_system: &lr_system
+lr_system:
   architecture: specific_source
   modules:
     method: bootstrap
@@ -38,7 +38,7 @@ experiments:
         options:
           - identity
           - iv_bounder
-    lr_system: *lr_system
+    lr_system: ${lr_system}
     data: *data
     output:
       - method: metrics

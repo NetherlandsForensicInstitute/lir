@@ -106,11 +106,21 @@ class FeatureDataCsvParser(DataProvider, ABC):
     .. code-block:: yaml
 
         data:
-        provider: feature_data_csv
-        path: path/to/file.csv
-        source_id_column: source_id
-        ignore_columns:
-            - name_of_an_irrelevant_column
+          provider: parse_features_from_csv_file
+            path: path/to/file.csv
+            source_id_column: source_id
+            ignore_columns:
+              - name_of_an_irrelevant_column
+
+    .. code-block:: yaml
+
+        data:
+          provider: parse_features_from_csv_url
+            url: https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/refs/heads/main/training.csv
+            source_id_column: Item
+            ignore_columns:
+              - id
+              - Piece
     """
 
     def __init__(

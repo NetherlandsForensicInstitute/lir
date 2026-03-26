@@ -60,7 +60,7 @@ modules:
   # calibrators
   kde: lir.algorithms.kde.KDECalibrator
   isotonic_calibrator:
-    class: lir.algorithms.isotonic_regression.IsotonicRegression
+    class: lir.algorithms.isotonic_regression.IsotonicCalibrator
     wrapper: lir.config.numpy_wrapper
   logistic_calibrator: lir.algorithms.logistic_regression.LogitCalibrator
   mcmc: lir.config.algorithms.mcmc

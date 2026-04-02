@@ -154,10 +154,8 @@ class ClassLoader(ConfigParserLoader):
 
         try:
             result_type = _get_attribute_by_name(key)
-        except AttributeError as e:
-            raise ComponentNotFoundError(str(e))
-        except ModuleNotFoundError as e:
-            raise ComponentNotFoundError(str(e))
+        except (AttributeError, ModuleNotFoundError) as e:
+            raise ComponentNotFoundError from e
 
         return ConfigParserLoader._get_config_parser(result_type, default_config_parser)
 
@@ -210,7 +208,7 @@ class FederatedLoader(ConfigParserLoader):
             except ComponentNotFoundError as e:
                 errors.append(e)
 
-        raise ComponentNotFoundError('; '.join([str(e) for e in errors]))
+        raise ComponentNotFoundError('; '.join(str(e) for e in errors))
 
 
 def _load_package_registry() -> 'YamlRegistry':

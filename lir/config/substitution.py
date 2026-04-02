@@ -151,14 +151,13 @@ def _parse_categorical_option(spec: Any, path: str, option_index: int | None) ->
     # use the explicitly declared value, or default to the full subtree
     value = pop_field(spec, 'value') if isinstance(spec, Mapping) and 'value' in spec else spec
 
-    if name:
-        pass
-    elif isinstance(value, str):
-        name = value
-    elif isinstance(value, (Mapping, list)):
-        name = f'option{option_index}'
-    else:
-        name = str(value)
+    if not name:
+        if isinstance(value, str):
+            name = value
+        elif isinstance(value, (Mapping, list)):
+            name = f'option{option_index}'
+        else:
+            name = str(value)
 
     return HyperparameterOption(name, {path: value})
 

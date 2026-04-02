@@ -3,8 +3,7 @@ from enum import Enum
 from typing import Any
 
 import numpy as np
-import sklearn
-from sklearn.model_selection import GroupKFold, GroupShuffleSplit, KFold
+from sklearn.model_selection import GroupKFold, GroupShuffleSplit, KFold, train_test_split
 
 from lir.data.models import DataStrategy, InstanceData, InstanceDataType
 
@@ -60,7 +59,7 @@ class TrainTestSplit(DataStrategy):
             An iterator over a single item, which is a tuple of the training set and the test set.
         """
         indexes = np.arange(len(instances))
-        indexes_train, indexes_test = sklearn.model_selection.train_test_split(
+        indexes_train, indexes_test = train_test_split(
             indexes, stratify=instances.require_labels, test_size=self.test_size, shuffle=True, random_state=self.seed
         )
 
@@ -247,7 +246,7 @@ class PairsTrainTestSplit(DataStrategy):
         source_ids = instances.source_ids
         if source_ids is None or len(source_ids.shape) != 2 or source_ids.shape[1] != 2:
             raise ValueError(f'expected two-column source_ids; shape found: {getattr(source_ids, "shape", None)}')
-        sources_train, sources_test = sklearn.model_selection.train_test_split(
+        sources_train, sources_test = train_test_split(
             np.unique(source_ids), test_size=self.test_size, shuffle=True, random_state=self.seed
         )
 

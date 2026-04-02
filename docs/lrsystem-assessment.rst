@@ -265,14 +265,14 @@ Observe that, for discriminative and well-calibrated LLRs:
 - the LR histogram shows distinct distributions;
 - in the LR histogram, the peak of the overlap of both distributions is at 0;
 - the PAV plot approximately follows the diagonal;
-- in the ECE plot, the LRs line is close to the PAV-LRs line, and the reference line is wel above both of them.
+- in the ECE plot, the LRs line is close to the PAV-LRs line, and the reference line is well above both of them.
 
 
 Badly calibrated data
 ^^^^^^^^^^^^^^^^^^^^^
 
 LR systems may misbehave in several ways, resulting in inconsistent LLRs.
-If this happens, check if the the training data is suitable for the test data. Inconsistent LLRs can be caused, for
+If this happens, check if the training data is suitable for the test data. Inconsistent LLRs can be caused, for
 example, when the training data are measurements of a different type of glass, when training data are from voice
 recordings of a microphone versus telephone interception in the test data, or any other kind of mismatch between the
 training set and the test set.

@@ -145,7 +145,7 @@ def _parse_categorical_option(spec: Any, path: str, option_index: int | None) ->
     """
     name = None
     if isinstance(spec, Mapping):
-        # use the explicityly declared name, if any
+        # use the explicitly declared name, if any
         name = pop_field(spec, 'option_name', required=False)
 
     # use the explicitly declared value, or default to the full subtree
@@ -364,7 +364,7 @@ def parse_float(spec: ContextAwareDict, output_path: Path) -> 'FloatHyperparamet
     if log and step is not None:
         raise YamlParseError(
             spec.context,
-            'configuration field `log` and `step` cannot be cannot be combined',
+            'configuration field `log` and `step` cannot be combined',
         )
 
     check_is_empty(spec)

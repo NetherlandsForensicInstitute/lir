@@ -60,7 +60,7 @@ def _get_attribute_by_name(name: str) -> Any:
 
 
 class ComponentNotFoundError(ValueError):
-    """Representation of an error when a component class can not be found."""
+    """Representation of an error when a component class cannot be found."""
 
 
 class InvalidRegistryEntryError(ValueError):

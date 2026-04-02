@@ -48,7 +48,7 @@ def save_model(path: Path, model: LRSystem) -> None:
     """
     Save a model to disk.
 
-    This method is inteded for use with the Python API. For `yaml`-based configuration of model saving, see the
+    This method is intended for use with the Python API. For `yaml`-based configuration of model saving, see the
     :class:`SaveModel` aggregation.
 
     Parameters

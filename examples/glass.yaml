@@ -164,7 +164,7 @@ experiments:
   # a `type` field with the corresponding value `categorical`, `cluster`, or `float`.
   - name: model_selection
     strategy: grid  # use a grid search
-    lr_system: *score_based_lr_system  # refer the the previously defined `score_based_lr_system`
+    lr_system: *score_based_lr_system  # refer to the previously defined `score_based_lr_system`
     data: *data  # refer to the previously defined data
 
     hyperparameters:

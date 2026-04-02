@@ -60,7 +60,7 @@ lir --list-registry
 ```
 
 ### Setting up the validation schema
-A schema that validates lir configuration `yaml` files is availible, namely `lir.schema.json`. This schema can be used to validate a specific `yaml` file by using
+A schema that validates lir configuration `yaml` files is available, namely `lir.schema.json`. This schema can be used to validate a specific `yaml` file by using
 ```commandline
 lir --validate your_experiment.yaml
 ```
@@ -72,7 +72,7 @@ Next to this, most modern IDEs support JSON/YAML schema validation.
 To specify the schema in PyCharm, see [this official documentation entry](https://www.jetbrains.com/help/pycharm/yaml.html#select-schema-for-file).
 
 #### Visual Studio Code
-1. Install [RedHat's YAML extesion](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml).
+1. Install [RedHat's YAML extension](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml).
 2. Point the extension to the validation schema. This can be done in two ways:
    1. Add
       ```json

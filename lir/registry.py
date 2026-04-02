@@ -62,13 +62,9 @@ def _get_attribute_by_name(name: str) -> Any:
 class ComponentNotFoundError(ValueError):
     """Representation of an error when a component class can not be found."""
 
-    pass
-
 
 class InvalidRegistryEntryError(ValueError):
     """Representation of an invalid registry entry."""
-
-    pass
 
 
 class ConfigParserLoader(ABC, Iterable):

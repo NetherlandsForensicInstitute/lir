@@ -76,7 +76,6 @@ class Aggregation(ABC):
         The close method is called at the end of gathering the aggregation(s) to ensure files are closed, buffers are
         cleared, or other things that need to finish / tear down.
         """
-        pass
 
     @staticmethod
     def _resolve_output_path(output_dir: Path, filename: Path, run_name: str) -> Path:

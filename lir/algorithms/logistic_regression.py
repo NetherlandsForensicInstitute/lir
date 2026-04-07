@@ -53,7 +53,7 @@ class LogitCalibrator(Transformer):
             Fitted calibrator.
         """
         instances = check_type(FeatureData, instances)
-        if not isinstance(FeatureData, LLRData):
+        if not isinstance(instances, LLRData):
             instances = instances.replace_as(LLRData)
 
         instances.check_misleading_finite()
@@ -82,7 +82,7 @@ class LogitCalibrator(Transformer):
             Calibrated log-likelihood-ratio data.
         """
         instances = check_type(FeatureData, instances)
-        if not isinstance(FeatureData, LLRData):
+        if not isinstance(instances, LLRData):
             instances = instances.replace_as(LLRData)
 
         # initialize llrs_output
@@ -155,7 +155,7 @@ class FourParameterLogisticCalibrator(Transformer):
             Fitted calibrator.
         """
         instances = check_type(FeatureData, instances)
-        if not isinstance(FeatureData, LLRData):
+        if not isinstance(instances, LLRData):
             instances = instances.replace_as(LLRData)
 
         # check for negative inf for '1'-labels or inf for '0'-labels
@@ -222,7 +222,7 @@ class FourParameterLogisticCalibrator(Transformer):
             raise ValueError('trying to use a model before fitting')
 
         instances = check_type(FeatureData, instances)
-        if not isinstance(FeatureData, LLRData):
+        if not isinstance(instances, LLRData):
             instances = instances.replace_as(LLRData)
 
         # build and return calibrated LLRData, reset bounds

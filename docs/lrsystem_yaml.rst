@@ -128,7 +128,7 @@ It is possible to make a score-based common-source LR system or a feature-based 
 
 If you don't know what that distinction means, you can:
 
-  - choose 'score-based' and you will build an LR system similar our `notebook`_.
+  - choose 'score-based' and you will build an LR system similar to our `notebook`_.
   - ask advice from your favourite forensic statistician.
 
 .. _notebook: https://colab.research.google.com/github/NetherlandsForensicInstitute/lir/blob/practitioner_guide/practitioners_guide_glass.ipynb

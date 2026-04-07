@@ -279,10 +279,10 @@ def to_native_dict(cfg: Any) -> Any:
     """
     Recursively convert confidence Configuration objects to native Python dicts/lists.
 
-    Accesses each value through cfg[key] to trigger reference resolution. The confidence ibrary doesn't have a built-in
+    Accesses each value through cfg[key] to trigger reference resolution. The confidence library doesn't have a built-in
     method for this, so we manually traverse and resolve.
 
-    Similary to lir.config.base._expand, but this method returns native dicts/lists instead of
+    Similar to lir.config.base._expand, but this method returns native dicts/lists instead of
     ContextAwareDict/ContextAwareList.
 
     Parameters

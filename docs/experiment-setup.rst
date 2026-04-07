@@ -1,7 +1,7 @@
 Setting up an experiment
 ========================
 
-This page shows how write an experiment setup using LiR.
+This page shows how to write an experiment setup using LiR.
 
 Before you begin, make sure you have a working `lir command`_
 
@@ -36,7 +36,7 @@ for example:
 Experiment definition
 ---------------------
 
-An experiment definition has all the configuration required to run an experiment. There are several ways to setup an
+An experiment definition has all the configuration required to run an experiment. There are several ways to set up an
 experiment, but the most simple strategy is to use a single LR system and run it. This is the ``single_run`` strategy.
 Below is a fully working example:
 
@@ -274,7 +274,7 @@ This will run the LR system three times, once for each LR calculation method. Al
 Sensitivity analysis
 ^^^^^^^^^^^^^^^^^^^^
 
-We may also want to know how wel the LR system is able to cope with few data points.
+We may also want to know how well the LR system is able to cope with few data points.
 
 Therefore, the CSV reader has the argument ``head`` to read only the first ``n`` instances. We are going to use that
 argument to vary the amount of input data. This is similar to the model selection setup, but since

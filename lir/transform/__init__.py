@@ -27,7 +27,6 @@ class DataWriter(Protocol):
         row : Any
             CSV row dictionary to parse.
         """
-        pass
 
 
 class SKLearnPipelineModule(Protocol):

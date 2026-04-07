@@ -1,7 +1,7 @@
 Overview of the Python API
 ==========================
 
-This is an introduction the Python API. You will learn the basic concepts of data handling and LR calculation in LiR.
+This is an introduction to the Python API. You will learn the basic concepts of data handling and LR calculation in LiR.
 
 Data classes
 ------------

@@ -119,6 +119,7 @@ lint.select = [
     "SIM",  # flake8-simplify
     "UP",   # pyupgrade
     "S",    # bandit
+    "PIE",  # flake8-pie
 ]
 lint.per-file-ignores = {"tests/*" = [
     "D",     # Ignore missing docstrings in tests.

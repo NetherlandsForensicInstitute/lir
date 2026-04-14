@@ -1,5 +1,6 @@
 import csv
 import logging
+import shutil
 from abc import ABC, abstractmethod
 from collections import OrderedDict
 from collections.abc import Callable, Mapping, Sequence
@@ -550,6 +551,79 @@ def case_llr_csv(config: ContextAwareDict, output_dir: Path) -> CaseLLRToCsv:
     filename = check_type(str, filename)
     check_is_empty(config)
     return CaseLLRToCsv(output_dir, case_data_provider, filename)
+
+
+class CopyCSV(Aggregation):
+    """
+    Aggregation that copies a CSV file to the output directory when the experiment closes.
+
+    Parameters
+    ----------
+    source_file : Path
+        Path to the CSV file to copy.
+    output_dir : Path
+        Directory where the CSV file will be copied.
+    columns : list[str] | None, optional
+        Columns to include in the output. If ``None``, all columns are copied.
+    new_file_name : str | None, optional
+        Name for the output file. If ``None``, the source file name is used.
+    """
+
+    def __init__(
+        self,
+        source_file: Path,
+        output_dir: Path,
+        columns: list[str] | None = None,
+        new_file_name: str | None = None,
+    ) -> None:
+        self.source_file = Path(source_file)
+        if not self.source_file.is_file():
+            raise FileNotFoundError(f"CopyCSV: File to copy '{self.source_file}' does not exist.")
+        self.output_dir = output_dir
+        self.columns = columns
+        self.new_file_name = new_file_name or self.source_file.name
+
+    def report(self, data: AggregationData) -> None:
+        """No-op: CopyCSV does not process experiment results."""
+
+    def close(self) -> None:
+        """Copy the source CSV file to the output directory."""
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+        dest = self.output_dir / self.new_file_name
+
+        if self.columns is None:
+            shutil.copy2(self.source_file, dest)
+        else:
+            with open(self.source_file, newline='') as src_f, open(dest, 'w', newline='') as dst_f:
+                reader = csv.DictReader(src_f)
+                writer = csv.DictWriter(dst_f, fieldnames=self.columns)
+                writer.writeheader()
+                for row in reader:
+                    writer.writerow({col: row[col] for col in self.columns})
+
+
+@config_parser
+def copy_csv(config: ContextAwareDict, output_dir: Path) -> CopyCSV:
+    """
+    Parse output configuration for copying a CSV file to the output directory.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        Configuration dictionary containing the source file and optional column/filename settings.
+    output_dir : Path
+        Directory where the CSV file will be copied.
+
+    Returns
+    -------
+    CopyCSV
+        Configured CopyCSV aggregation instance.
+    """
+    source_file = Path(pop_field(config, 'source_file'))
+    columns = pop_field(config, 'columns', default=None, required=False)
+    new_file_name = pop_field(config, 'new_file_name', default=None, required=False, validate=lambda v: check_type(str, v))
+    check_is_empty(config)
+    return CopyCSV(source_file, output_dir, columns=columns, new_file_name=new_file_name)
 
 
 class SubsetAggregation(Aggregation):

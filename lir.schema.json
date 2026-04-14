@@ -522,7 +522,8 @@
             "tippett",
             "save_model",
             "score_to_llr",
-            "score_distribution"
+            "score_distribution",
+            "copy_csv"
           ]
         },
         {
@@ -542,7 +543,8 @@
                 "nbe",
                 "invariance_delta_function",
                 "tippett",
-                "save_model"
+                "save_model",
+                "copy_csv"
               ]
             },
             "columns": {
@@ -570,6 +572,14 @@
             "plot_type": {
               "type": "integer",
               "description": "Plot type variant (for tippett output). 1 or 2."
+            },
+            "source_file": {
+              "type": "string",
+              "description": "Path to the CSV file to copy (for copy_csv output)."
+            },
+            "new_file_name": {
+              "type": "string",
+              "description": "Name of the output file (for copy_csv output). Defaults to the source file name."
             }
           },
           "required": ["method"],

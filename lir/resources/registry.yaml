@@ -99,6 +99,7 @@ output:
   score_distribution: lir.aggregation.plot_score_distribution
   save_model: lir.persistence.parse_save_model
   case_llr: lir.aggregation.case_llr_csv
+  copy_csv: lir.aggregation.copy_csv
   by_category: lir.config.aggregation.subset_aggregation
   
 pairing:

@@ -194,9 +194,6 @@ class KDECalibrator(Transformer):
         instances = check_type(FeatureData, instances)
         instances = instances.replace_as(LLRData)
 
-        # check if data is sane
-        instances.check_misleading_finite()
-
         # KDE needs finite scale. Inf and negInf are treated as point masses at the extremes.
         # Remove them from data for KDE and calculate fraction data that is left.
         # LRs in finite range will be corrected for fractions in the apply function

@@ -628,7 +628,8 @@ def copy_csv(config: ContextAwareDict, output_dir: Path) -> CopyCSV:
     """
     source_file = Path(pop_field(config, 'source_file'))
     columns = pop_field(config, 'columns', default=None, required=False)
-    new_file_name = pop_field(config, 'new_file_name', default=None, required=False, validate=lambda v: None if v is None else check_type(str, v))
+    raw_new_file_name = pop_field(config, 'new_file_name', default=None, required=False)
+    new_file_name = check_type(str, raw_new_file_name) if raw_new_file_name is not None else None
     check_is_empty(config)
     return CopyCSV(source_file, output_dir, columns=columns, new_file_name=new_file_name)
 

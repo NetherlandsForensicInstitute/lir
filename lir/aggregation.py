@@ -596,6 +596,13 @@ class CopyCSV(Aggregation):
         else:
             with open(self.source_file, newline='') as src_f, open(dest, 'w', newline='') as dst_f:
                 reader = csv.DictReader(src_f)
+                available = set(reader.fieldnames or [])
+                missing = [col for col in self.columns if col not in available]
+                if missing:
+                    raise ValueError(
+                        f"CopyCSV: columns not found in '{self.source_file}': {missing}. "
+                        f"Available columns: {sorted(available)}"
+                    )
                 writer = csv.DictWriter(dst_f, fieldnames=self.columns)
                 writer.writeheader()
                 for row in reader:
@@ -621,7 +628,7 @@ def copy_csv(config: ContextAwareDict, output_dir: Path) -> CopyCSV:
     """
     source_file = Path(pop_field(config, 'source_file'))
     columns = pop_field(config, 'columns', default=None, required=False)
-    new_file_name = pop_field(config, 'new_file_name', default=None, required=False, validate=lambda v: check_type(str, v))
+    new_file_name = pop_field(config, 'new_file_name', default=None, required=False, validate=lambda v: None if v is None else check_type(str, v))
     check_is_empty(config)
     return CopyCSV(source_file, output_dir, columns=columns, new_file_name=new_file_name)
 

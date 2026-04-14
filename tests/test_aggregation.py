@@ -135,3 +135,17 @@ def test_copy_csv_new_file_name(tmp_path):
 
     assert (output_dir / 'renamed.csv').exists()
     assert not (output_dir / 'source.csv').exists()
+
+
+def test_copy_csv_raises_on_missing_columns(tmp_path):
+    """CopyCSV should raise ValueError with a clear message when requested columns are absent."""
+    source = tmp_path / 'source.csv'
+    with open(source, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['x', 'y'])
+        writer.writerow([1, 2])
+
+    output_dir = tmp_path / 'output'
+    agg = CopyCSV(source, output_dir, columns=['x', 'missing'])
+    with pytest.raises(ValueError, match="CopyCSV: columns not found"):
+        agg.close()

@@ -137,6 +137,28 @@ class TestKDECalibrator(unittest.TestCase):
         llrs_cal = calibrator.fit_apply(LLRData(features=X.reshape(-1, 1), labels=y))
         np.testing.assert_allclose(logodds_to_odds(llrs_cal.llrs), desired)
 
+    def test_accepts_misleading_infinite_values(self):
+        X = np.array(
+            [
+                0.25,
+                0.5,
+                np.inf,
+                0.75,
+                1.0,
+                -np.inf,
+                1.5,
+                2.0,
+            ]
+        )
+        y = np.array([0, 0, 0, 0, 0, 1, 1, 1])
+
+        calibrator = KDECalibrator(bandwidth='silverman')
+        llrs_cal = calibrator.fit_apply(LLRData(features=X.reshape(-1, 1), labels=y))
+
+        assert np.isposinf(llrs_cal.llrs[2])
+        assert np.isneginf(llrs_cal.llrs[5])
+        assert np.isfinite(llrs_cal.llrs[[0, 1, 3, 4, 6, 7]]).all()
+
 
 @pytest.mark.parametrize(
     'bandwidth_definition,expected_bandwidth',

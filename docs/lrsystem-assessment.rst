@@ -19,28 +19,23 @@ Other metrics may have practical use as well. See the table below for a list of 
 .. _widely used: https://doi.org/10.1016/j.fsisyn.2024.100466
 .. _consistency: https://doi.org/10.1016/j.forsciint.2021.110722
 
-+-------------------------------------+--------------------------------+
-| Metric                              | Assessment of                  |
-+=====================================+================================+
-| log likelihood ratio cost (`cllr`_) | discrimination and consistency |
-+-------------------------------------+--------------------------------+
-| minimized cllr (`cllr_min`_)        | discrimination                 |
-+-------------------------------------+--------------------------------+
-| calibration loss (`cllr_cal`_)      | consistency                    |
-+-------------------------------------+--------------------------------+
-| rate of misleading evidence         | mostly consistency             |
-+-------------------------------------+--------------------------------+
-| `devPAV`_                           | consistency                    |
-+-------------------------------------+--------------------------------+
-| expected LR for both hypotheses     | discrimination                 |
-+-------------------------------------+--------------------------------+
++----------------------------------+--------------------------------+--------------------------------+
+| Metric                           | Assessment of                  | Implementation                 |
++==================================+================================+================================+
+| log likelihood ratio cost        | discrimination and consistency | :meth:`~lir.metrics.cllr`      |
++----------------------------------+--------------------------------+--------------------------------+
+| minimized cllr                   | discrimination                 | :meth:`~lir.metrics.cllr_min`  |
++----------------------------------+--------------------------------+--------------------------------+
+| calibration loss                 | consistency                    | :meth:`~lir.metrics.cllr_cal`  |
++----------------------------------+--------------------------------+--------------------------------+
+| rate of misleading evidence      | mostly consistency             |                                |
++----------------------------------+--------------------------------+--------------------------------+
+| devPAV                           | consistency                    | :meth:`~lir.metrics.devPAV`    |
++----------------------------------+--------------------------------+--------------------------------+
+| expected LR for both hypotheses  | discrimination                 |                                |
++----------------------------------+--------------------------------+--------------------------------+
 
-By definition, the log likelihood ratio cost ``cllr`` equals ``cllr_min`` + ``cllr_cal``.
-
-.. _cllr: api/lir.metrics.html#lir.metrics.cllr
-.. _cllr_min: api/lir.metrics.html#lir.metrics.cllr_min
-.. _cllr_cal: api/lir.metrics.html#lir.metrics.cllr_cal
-.. _devPAV: api/lir.metrics.html#lir.algorithms.devpav.devpav
+By definition, the log likelihood ratio cost :meth:`~lir.metrics.cllr` equals :meth:`~lir.metrics.cllr_min` + :meth:`~lir.metrics.cllr_cal`.
 
 
 Visualizations
@@ -49,15 +44,10 @@ Visualizations
 While a one-dimensional metric is often useful, visualizations give more insight in the behavior of the LR system.
 Examples of visualizations are:
 
-- `LR histogram`_, for assessment of discrimination
-- Pool adjacent violators (`PAV`_) transformation, for assessment of consistency
-- Empirical cross-entropy (`ECE`_)
-- `Tippett`_
-
-.. _LR histogram: api/lir.plotting.html#lir.plotting.lr_histogram
-.. _PAV: api/lir.plotting.html#lir.plotting.pav
-.. _ECE: api/lir.plotting.html#lir.plotting.expected_calibration_error.plot_ece
-.. _Tippett: api/lir.plotting.html#lir.plotting.tippett
+- an :meth:`LR histogram <lir.plotting.lr_histogram>`, for assessment of discrimination
+- A visualization of the Pool Adjacent Violators (:meth:`PAV <lir.plotting.pav>`) transformation, for assessment of consistency
+- Empirical Cross-Entropy (:meth:`ECE <lir.plotting.expected_calibration_error.plot_ece>`)
+- a :meth:`Tippett <lir.plotting.tippett>` plot
 
 The `PAV transformation`_ is particularly useful to inspect a system (or a set of LLRs, actually) for consistency. It
 optimizes a set of LLRs (for which the ground truth is known) for consistency without changing the order of the LLRs.

@@ -6,23 +6,20 @@ This is an introduction to the Python API. You will learn the basic concepts of 
 Data classes
 ------------
 
-In LiR, a dataset is represented as an `InstanceData`_ object, be it numeric features, scores, LLRs, or something else.
+In LiR, a dataset is represented as an :class:`~lir.InstanceData` object, be it numeric features, scores, LLRs, or something else.
 
 Specialized sub classes are:
 
-- `FeatureData`_, for instances which has numerical features (sub class of ``InstanceData``);
-- `PairedFeatureData`_, for pairs of instances that have numerical features (sub class of ``FeatureData``);
-- `LLRData`_, for LLRs, with or without intervals (sub class of ``FeatureData``).
+- :class:`~lir.FeatureData`, for instances which has numerical features (sub class of :class:`lir.InstanceData`);
+- :class:`~lir.PairedFeatureData`, for pairs of instances that have numerical features (sub class
+  of :class:`~lir.FeatureData`);
+- :class:`~lir.LLRData`, for LLRs, with or without intervals (sub class of :class:`~lir.FeatureData`).
 
-.. _InstanceData: api/lir.data.html#lir.data.models.InstanceData
-.. _FeatureData: api/lir.data.html#FeatureData
-.. _PairedFeatureData: api/lir.data.html#PairedFeatureData
-.. _LLRData: api/lir.data.html#LLRData
+These objects can be instantiated manually, but in an experimental setup, they are generally provided by a
+:class:`~lir.DataProvider`. A :class:`~lir.DataProvider` is a class that is specialized in generating, parsing or
+fetching a particular type of data.
 
-These objects can be instantiated manually, but in an experimental setup, they are generally provided by a `DataProvider`_.
-A ``DataProvider`` is a class that is specialized in generating, parsing or fetching a particular type of data.
-
-A data provider subclass implements the ``get_instances()`` method.
+A data provider subclass implements the :meth:`~lir.DataProvider.get_instances()` method.
 
 Example for glass data:
 
@@ -95,9 +92,7 @@ instances for each same-source pair.
 
 
 The actual comparison can take many forms, including a distance or similarity function such as the
-`Manhattan distance`_.
-
-.. _Manhattan distance: api/lir.transform.html#lir.transform.distance.ManhattanDistance
+:class:`~lir.transform.distance.ManhattanDistance`.
 
 .. jupyter-execute::
 
@@ -129,15 +124,11 @@ Data strategies
 ---------------
 
 Above, we training the system and calculated LLRs using the same pairs, which is **not** a sound experimental setup!
-In an experiment we work with `data strategies`_. This can be a simple train/test split, or a more
+In an experiment we work with :mod:`lir.data_strategies`. This can be a simple train/test split, or a more
 advanced configuration such as cross-validation.
 
-A data strategy inherits from `DataStrategy`_ and implements an ``apply()`` method that returns an iterator of pairs of training and test sets.
-
-.. _data strategies: api/lir.data.html#module-lir.data_strategies
-.. _DataProvider: api/lir.data.html#lir.data.models.DataProvider
-.. _DataStrategy: api/lir.data.html#lir.data.models.DataStrategy
-.. _Pipeline: api/lir.transform.html#lir.transform.pipeline.Pipeline
+A data strategy inherits from :class:`~lir.DataStrategy` and implements an ``apply()`` method that returns an iterator
+of pairs of training and test sets.
 
 Example:
 
@@ -166,10 +157,12 @@ An LR system may have multiple modules or pipelines as its arguments, each of wh
 a score-based LR system has a preprocessing module, to process single instances, and a comparing module or pipeline, to
 calculate LLRs for the pairs.
 
-The `Pipeline`_ class accepts any LiR module scikit-learn transformer, scikit-learn estimator, or even other
-pipelines as its modules, as long as the module can work with the data.
+The :class:`~lir.transform.pipeline.Pipeline` class accepts any LiR module scikit-learn transformer, scikit-learn
+estimator, or even other pipelines as its modules, as long as the module can work with the data.
 
-For example, the ``StandardScaler`` transforms the data to have mean = 0 and standard deviation = 1.
+For example, the `StandardScaler`_ transforms the data to have mean = 0 and standard deviation = 1.
+
+.. _StandardScaler: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html
 
 Example:
 
@@ -267,6 +260,6 @@ Is this an adequate LR system?
 
 **Next step:** learn how to `assess an LR system's performance`_.
 
-.. _LR system architectures: reference.html#lrsystem-architecture
-.. _selection guide: reference.html#lrsystem_yaml
+.. _LR system architectures: reference.html#lr-system-architecture
+.. _selection guide: lrsystem_yaml.html
 .. _assess an LR system's performance: lrsystem-assessment.html

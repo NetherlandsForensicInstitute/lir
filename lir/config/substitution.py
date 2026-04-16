@@ -294,7 +294,7 @@ class FloatHyperparameter(Hyperparameter):
     - ``high``: Upper bound of the search range.
     - ``step`` (optional): Step size for a linear grid search.
     - ``log`` (optional): If ``True``, search in logarithmic space instead of
-    linear space. Cannot be combined with ``step``. Defaults to ``False``.
+      linear space. Cannot be combined with ``step``. Defaults to ``False``.
 
     Parameters
     ----------

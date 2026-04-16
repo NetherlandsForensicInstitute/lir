@@ -581,6 +581,7 @@ class PairedFeatureData(FeatureData):
     of instances from either source must be at least one.
 
     The `features` attribute has at least 3 dimensions:
+
     - the pairs are along the first dimension;
     - the instances are along the second dimension (e.g. in a comparison of 1 trace instance and 1 reference instance,
       the length of this dimension is 2);

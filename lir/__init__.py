@@ -6,7 +6,6 @@ sampling schemes or techniques, and doing case-based validation and computation 
 """
 
 import sys
-from typing import Any
 
 from lir.data.models import DataProvider, DataStrategy, FeatureData, InstanceData, LLRData, PairedFeatureData
 from lir.transform import Transformer
@@ -26,15 +25,19 @@ def is_interactive() -> bool:
     return sys.stdout.isatty()
 
 
-__all__: list[Any] = [
-    is_interactive,
+__all__ = [
+    'is_interactive',
+    #
     # data.models
-    InstanceData,
-    FeatureData,
-    PairedFeatureData,
-    LLRData,
-    DataProvider,
-    DataStrategy,
+    # -----------
+    'InstanceData',
+    'FeatureData',
+    'PairedFeatureData',
+    'LLRData',
+    'DataProvider',
+    'DataStrategy',
+    #
     # transform
-    Transformer,
+    # ---------
+    'Transformer',
 ]

@@ -5,7 +5,7 @@ from typing import Any
 import numpy as np
 from sklearn.model_selection import GroupKFold, GroupShuffleSplit, KFold, train_test_split
 
-from lir.data.models import DataStrategy, InstanceData, InstanceDataType
+from lir import DataStrategy, InstanceData
 
 
 class TrainTestSplit(DataStrategy):
@@ -95,7 +95,7 @@ class CrossValidation(DataStrategy):
         self.seed = seed
         self.shuffle = True if self.seed is not None else False  # noqa: SIM210
 
-    def apply(self, instances: InstanceDataType) -> Iterator[tuple[InstanceDataType, InstanceDataType]]:
+    def apply[DataType: InstanceData](self, instances: DataType) -> Iterator[tuple[DataType, DataType]]:
         """
         Return an iterator over *k* train/test splits.
 
@@ -145,7 +145,7 @@ class SourcesTrainTestSplit(DataStrategy):
         self.test_size = test_size
         self.seed = seed
 
-    def apply(self, instances: InstanceDataType) -> Iterator[tuple[InstanceDataType, InstanceDataType]]:
+    def apply[DataType: InstanceData](self, instances: DataType) -> Iterator[tuple[DataType, DataType]]:
         """
         Split the data into a training set and a test set.
 
@@ -192,7 +192,7 @@ class SourcesCrossValidation(DataStrategy):
     def __init__(self, folds: int):
         self.folds = folds
 
-    def apply(self, instances: InstanceDataType) -> Iterator[tuple[InstanceDataType, InstanceDataType]]:
+    def apply[DataType: InstanceData](self, instances: DataType) -> Iterator[tuple[DataType, DataType]]:
         """
         Perform *k*-fold cross-validation.
 
@@ -229,7 +229,7 @@ class PairsTrainTestSplit(DataStrategy):
         self.test_size = test_size
         self.seed = seed
 
-    def apply(self, instances: InstanceDataType) -> Iterator[tuple[InstanceDataType, InstanceDataType]]:
+    def apply[DataType: InstanceData](self, instances: DataType) -> Iterator[tuple[DataType, DataType]]:
         """
         Split the data into a training set and a test set.
 
@@ -285,7 +285,7 @@ class PredefinedTrainTestSplit(DataStrategy):
             strategy: predefined_train_test
     """
 
-    def apply(self, instances: InstanceDataType) -> Iterator[tuple[InstanceDataType, InstanceDataType]]:
+    def apply[DataType: InstanceData](self, instances: DataType) -> Iterator[tuple[DataType, DataType]]:
         """
         Split the data into a training set and a test set.
 
@@ -326,7 +326,7 @@ class PredefinedCrossValidation(DataStrategy):
             strategy: predefined_cross_validation
     """
 
-    def apply(self, instances: InstanceDataType) -> Iterator[tuple[InstanceDataType, InstanceDataType]]:
+    def apply[DataType: InstanceData](self, instances: DataType) -> Iterator[tuple[DataType, DataType]]:
         """
         Perform cross-validation based on predefined fold assignments.
 

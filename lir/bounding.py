@@ -1,6 +1,6 @@
 import logging
 from abc import ABC, abstractmethod
-from typing import Any, Self
+from typing import Self
 
 import numpy as np
 
@@ -188,8 +188,8 @@ class NSourceBounder(LLRBounder):
         return -log_n_sources, log_n_sources
 
 
-__all__: list[Any] = [
-    LLRBounder,
-    StaticBounder,
-    NSourceBounder,
+__all__ = [
+    'LLRBounder',
+    'StaticBounder',
+    'NSourceBounder',
 ]

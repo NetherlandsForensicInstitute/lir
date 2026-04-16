@@ -29,7 +29,7 @@ This page lists the components that may be needed to set up an experiment.
 
     {% for name in registry %}
         {% if name.startswith(registry_section) %}
-    - `{{name}} <{{ registry.get(name) | apidocs_uri }}>`_ {{ registry.get(name) | docstr_short }}
+    - {{ name | registry_link }} -- {{ registry.get(name) | docstr_short }}
         {% endif %}
     {% endfor %}
     {% endfor %}
@@ -60,7 +60,7 @@ This page lists the components that may be needed to define an LR system.
 
     {% for name in registry %}
         {% if name.startswith(registry_section) %}
-    - `{{ name }} <{{ registry.get(name) | apidocs_uri }}>`_ {{ registry.get(name) | docstr_short }}
+    - {{ name | registry_link }} -- {{ registry.get(name) | docstr_short }}
         {% endif %}
     {% endfor %}
     {% endfor %}

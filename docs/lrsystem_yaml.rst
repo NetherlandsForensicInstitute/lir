@@ -4,7 +4,7 @@ LR System selection helper
 This page is written for researchers that have collected data and wish to make an LR system using that data.
 Before you begin, make sure that you have a `working version of LiR`_.
 
-.. _working version of LiR: /installation.html
+.. _working version of LiR: /index.html
 
 An LR system is an automated statistical method in which two hypotheses are modeled and which can produce LRs for the hypothesis pair.
 These LRs can be made based on validation data for which it is known what the true hypothesis is, so that the LR system can be validated.
@@ -59,9 +59,8 @@ You'll need your data in ``csv`` or ``txt``-format. Here's a minimal example of 
     0               , 0.5       , 0.6       , 0.7
     0               , 0.6       , 0.7       , 0.8
 
-It is also possible to use ``sourceIDs`` instead of ``hypothesis_label`` and some other columns are optional, for more information see `FeatureDataCsvParser`_.
-
-.. _FeatureDataCsvParser: https://netherlandsforensicinstitute.github.io/lir/api/lir.datasets.feature_data_csv.html#lir.datasets.feature_data_csv.FeatureDataCsvParser
+It is also possible to use ``sourceIDs`` instead of ``hypothesis_label`` and some other columns are optional, for more
+information see :class:`~lir.datasets.feature_data_csv.FeatureDataCsvParser`.
 
 The template-yaml that you should use is: `specificsource.yaml`_ (TODO)
 
@@ -93,7 +92,8 @@ Here's a minimal example of data that would work:
     2        , 2        , 0.5
     3        , 1        , 0.6
 
-sourceID1 and sourceID2 will be the same value for same-source-comparisons. Some other columns are optional, for more information see `FeatureDataCsvParser`_.
+sourceID1 and sourceID2 will be the same value for same-source-comparisons. Some other columns are optional, for more
+information see :class:`lir.datasets.feature_data_csv.FeatureDataCsvParser`.
 
 The template-yaml that you should use is: `prescored_commonsource.yaml`_ (TODO)
 
@@ -122,7 +122,7 @@ Here's a minimal example of data that would work:
     2.      , 0.5     , 0.6     , 0.7
     3.      , 0.6     , 0.7     , 0.8
 
-Some other columns are optional, for more information see `FeatureDataCsvParser`_.
+Some other columns are optional, for more information see :class:`lir.datasets.feature_data_csv.FeatureDataCsvParser`.
 
 It is possible to make a score-based common-source LR system or a feature-based common-source LR system.
 

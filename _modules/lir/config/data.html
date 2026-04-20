@@ -1,0 +1,296 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.config.data &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#appearance-plots-and-metrics">Appearance plots and metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/lir.html">lir package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.DataProvider"><code class="docutils literal notranslate"><span class="pre">DataProvider</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.DataStrategy"><code class="docutils literal notranslate"><span class="pre">DataStrategy</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.FeatureData"><code class="docutils literal notranslate"><span class="pre">FeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.InstanceData"><code class="docutils literal notranslate"><span class="pre">InstanceData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.LLRData"><code class="docutils literal notranslate"><span class="pre">LLRData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.PairedFeatureData"><code class="docutils literal notranslate"><span class="pre">PairedFeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.Transformer"><code class="docutils literal notranslate"><span class="pre">Transformer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../lir.html">lir</a></li>
+      <li class="breadcrumb-item active">lir.config.data</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lir.config.data</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir</span><span class="w"> </span><span class="kn">import</span> <span class="n">registry</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.base</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">GenericConfigParser</span><span class="p">,</span>
+    <span class="n">YamlParseError</span><span class="p">,</span>
+    <span class="n">check_is_empty</span><span class="p">,</span>
+    <span class="n">pop_field</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.substitution</span><span class="w"> </span><span class="kn">import</span> <span class="n">ContextAwareDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.data.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataProvider</span><span class="p">,</span> <span class="n">DataStrategy</span>
+
+
+<div class="viewcode-block" id="parse_data_object">
+<a class="viewcode-back" href="../../../api/lir.config.data.html#lir.config.data.parse_data_object">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_data_object</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DataProvider</span><span class="p">,</span> <span class="n">DataStrategy</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse data provider and data strategy from configuration.</span>
+
+<span class="sd">    The `provider` and `splits` fields are parsed, which are expected to refer</span>
+<span class="sd">    to specific implementations of `DataProvider` and `DataStrategy`, respectively.</span>
+<span class="sd">    See `parse_data_provider` and `parse_data_strategy` for more information.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cfg : ContextAwareDict</span>
+<span class="sd">        Configuration section containing provider and split strategy.</span>
+<span class="sd">    output_path : Path</span>
+<span class="sd">        Output path for created objects.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple[DataProvider, DataStrategy]</span>
+<span class="sd">        Parsed data provider and strategy.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">provider</span><span class="p">,</span> <span class="n">strategy</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">parse_data_provider</span><span class="p">(</span><span class="n">pop_field</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="s1">&#39;provider&#39;</span><span class="p">),</span> <span class="n">output_path</span><span class="p">),</span>
+        <span class="n">parse_data_strategy</span><span class="p">(</span><span class="n">pop_field</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="s1">&#39;splits&#39;</span><span class="p">),</span> <span class="n">output_path</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">check_is_empty</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">provider</span><span class="p">,</span> <span class="n">strategy</span></div>
+
+
+
+<div class="viewcode-block" id="parse_data_strategy">
+<a class="viewcode-back" href="../../../api/lir.config.data.html#lir.config.data.parse_data_strategy">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_data_strategy</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataStrategy</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Instantiate specific implementation of `DataStrategy` as configured.</span>
+
+<span class="sd">    The `strategy` field is parsed, which is expected to refer to a name in</span>
+<span class="sd">    the registry. See for example `lir.data_setup.binary_cross_validation`</span>
+<span class="sd">    or `lir.data_setup.binary_train_test_split`.</span>
+
+<span class="sd">    Data setup configuration is provided under the `data_setup` key.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cfg : ContextAwareDict</span>
+<span class="sd">        Data strategy configuration.</span>
+<span class="sd">    output_path : Path</span>
+<span class="sd">        Output path for created objects.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    DataStrategy</span>
+<span class="sd">        Parsed data strategy instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">strategy</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="s1">&#39;strategy&#39;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="n">strategy</span><span class="p">,</span>
+            <span class="n">search_path</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;data_strategies&#39;</span><span class="p">],</span>
+            <span class="n">default_config_parser</span><span class="o">=</span><span class="n">GenericConfigParser</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">YamlParseError</span><span class="p">(</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">context</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">&#39;no parser available for data strategy `</span><span class="si">{</span><span class="n">strategy</span><span class="si">}</span><span class="s1">`; the error was: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="parse_data_provider">
+<a class="viewcode-back" href="../../../api/lir.config.data.html#lir.config.data.parse_data_provider">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_data_provider</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataProvider</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Instantiate specific implementation of `DataProvider` as configured.</span>
+
+<span class="sd">    The `method` field is parsed, which is expected to refer to a name in</span>
+<span class="sd">    the registry. See for example `lir.config.data_sources.synthesized_normal_binary`</span>
+<span class="sd">    or `lir.config.data_sources.synthesized_normal_multiclass`.</span>
+
+<span class="sd">    Data sources are provided under the `data_sources` key.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cfg : ContextAwareDict</span>
+<span class="sd">        Data provider configuration.</span>
+<span class="sd">    output_path : Path</span>
+<span class="sd">        Output path for created objects.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    DataProvider</span>
+<span class="sd">        Parsed data provider instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">provider</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="s1">&#39;method&#39;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="n">provider</span><span class="p">,</span>
+            <span class="n">search_path</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;data_providers&#39;</span><span class="p">],</span>
+            <span class="n">default_config_parser</span><span class="o">=</span><span class="n">GenericConfigParser</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">YamlParseError</span><span class="p">(</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">context</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">&#39;no parser available for data provider `</span><span class="si">{</span><span class="n">provider</span><span class="si">}</span><span class="s1">`; the error was: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+lir.algorithms.invariance\_bounds module
+========================================
+
+.. automodule:: lir.algorithms.invariance_bounds
+   :members:
+   :show-inheritance:
+   :undoc-members:

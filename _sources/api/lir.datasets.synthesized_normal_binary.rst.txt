@@ -1,0 +1,7 @@
+lir.datasets.synthesized\_normal\_binary module
+===============================================
+
+.. automodule:: lir.datasets.synthesized_normal_binary
+   :members:
+   :show-inheritance:
+   :undoc-members:

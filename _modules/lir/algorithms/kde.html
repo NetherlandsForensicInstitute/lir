@@ -1,0 +1,454 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.algorithms.kde &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#appearance-plots-and-metrics">Appearance plots and metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/lir.html">lir package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.DataProvider"><code class="docutils literal notranslate"><span class="pre">DataProvider</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.DataStrategy"><code class="docutils literal notranslate"><span class="pre">DataStrategy</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.FeatureData"><code class="docutils literal notranslate"><span class="pre">FeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.InstanceData"><code class="docutils literal notranslate"><span class="pre">InstanceData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.LLRData"><code class="docutils literal notranslate"><span class="pre">LLRData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.PairedFeatureData"><code class="docutils literal notranslate"><span class="pre">PairedFeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.Transformer"><code class="docutils literal notranslate"><span class="pre">Transformer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../lir.html">lir</a></li>
+      <li class="breadcrumb-item active">lir.algorithms.kde</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lir.algorithms.kde</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">functools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Self</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.neighbors</span><span class="w"> </span><span class="kn">import</span> <span class="n">KernelDensity</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir</span><span class="w"> </span><span class="kn">import</span> <span class="n">Transformer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.data.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeatureData</span><span class="p">,</span> <span class="n">InstanceData</span><span class="p">,</span> <span class="n">LLRData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">Xy_to_Xn</span><span class="p">,</span> <span class="n">check_type</span><span class="p">,</span> <span class="n">ln_to_log10</span>
+
+
+<span class="n">LOG</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="compensate_and_remove_neginf_inf">
+<a class="viewcode-back" href="../../../api/lir.algorithms.kde.html#lir.algorithms.kde.compensate_and_remove_neginf_inf">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compensate_and_remove_neginf_inf</span><span class="p">(</span>
+    <span class="n">log_odds</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Remove infinite log-odds values and compute compensation factors.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    log_odds : np.ndarray</span>
+<span class="sd">        Array of log-odds.</span>
+<span class="sd">    y : np.ndarray</span>
+<span class="sd">        Array of labels.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple[np.ndarray, np.ndarray, float, float]</span>
+<span class="sd">        Finite log-odds, corresponding labels, numerator compensator, and denominator compensator.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">X_finite</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">log_odds</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+    <span class="n">el_H1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">X_finite</span><span class="p">,</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">el_H2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">X_finite</span><span class="p">,</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">n_H1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">numerator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">el_H1</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_H1</span>
+    <span class="n">denominator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">el_H2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="n">n_H1</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">X_finite</span><span class="p">]</span>
+    <span class="n">log_odds</span> <span class="o">=</span> <span class="n">log_odds</span><span class="p">[</span><span class="n">X_finite</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">log_odds</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">numerator</span><span class="p">,</span> <span class="n">denominator</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_fixed_bandwidth</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">bandwidth_0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">bandwidth_1</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a fixed bandwidth pair.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : Any</span>
+<span class="sd">        Unused input data placeholder.</span>
+<span class="sd">    y : Any</span>
+<span class="sd">        Unused input labels placeholder.</span>
+<span class="sd">    bandwidth_0 : float</span>
+<span class="sd">        Bandwidth for class 0.</span>
+<span class="sd">    bandwidth_1 : float</span>
+<span class="sd">        Bandwidth for class 1.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple[float, float]</span>
+<span class="sd">        Fixed bandwidths for class 0 and class 1.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">bandwidth_0</span><span class="p">,</span> <span class="n">bandwidth_1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="parse_bandwidth">
+<a class="viewcode-back" href="../../../api/lir.algorithms.kde.html#lir.algorithms.kde.parse_bandwidth">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_bandwidth</span><span class="p">(</span>
+    <span class="n">bandwidth</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse and return the corresponding bandwidth strategy based on input type.</span>
+
+<span class="sd">    Returns bandwidth as a tuple of two (optional) floats.</span>
+<span class="sd">    Extrapolates a single bandwidth.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bandwidth : Callable | str | float | tuple[float, float] | None</span>
+<span class="sd">        Bandwidth specification.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Callable[[Any, Any], tuple[float, float]]</span>
+<span class="sd">        Callable that computes bandwidths for class 0 and class 1.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">match</span> <span class="n">bandwidth</span><span class="p">:</span>
+        <span class="k">case</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Missing `bandwidth` argument for KDE&#39;</span><span class="p">)</span>
+
+        <span class="k">case</span> <span class="n">Callable</span><span class="p">():</span>  <span class="c1">#  type: ignore[misc]</span>
+            <span class="k">return</span> <span class="n">bandwidth</span>
+
+        <span class="c1"># string of specific supported bandwidth function</span>
+        <span class="k">case</span> <span class="nb">str</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">bandwidth</span> <span class="o">==</span> <span class="s1">&#39;silverman&#39;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">KDECalibrator</span><span class="o">.</span><span class="n">bandwidth_silverman</span>
+
+            <span class="c1"># The given bandwidth method is not supported</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Invalid input for bandwidth: </span><span class="si">{</span><span class="n">bandwidth</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># tuple or list</span>
+        <span class="k">case</span> <span class="p">[</span><span class="nb">int</span><span class="p">()</span> <span class="o">|</span> <span class="nb">float</span><span class="p">()</span> <span class="k">as</span> <span class="n">bandwidth_0</span><span class="p">,</span> <span class="nb">int</span><span class="p">()</span> <span class="o">|</span> <span class="nb">float</span><span class="p">()</span> <span class="k">as</span> <span class="n">bandwidth_1</span><span class="p">]:</span>
+            <span class="c1"># Use functools.partial (picklable) instead of a lambda closure</span>
+            <span class="k">return</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">_fixed_bandwidth</span><span class="p">,</span> <span class="n">bandwidth_0</span><span class="o">=</span><span class="n">bandwidth_0</span><span class="p">,</span> <span class="n">bandwidth_1</span><span class="o">=</span><span class="n">bandwidth_1</span><span class="p">)</span>
+
+        <span class="k">case</span> <span class="nb">float</span><span class="p">()</span> <span class="o">|</span> <span class="nb">int</span><span class="p">():</span>
+            <span class="c1"># Use functools.partial (picklable) instead of a lambda closure</span>
+            <span class="k">return</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">_fixed_bandwidth</span><span class="p">,</span> <span class="n">bandwidth_0</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">bandwidth</span><span class="p">),</span> <span class="n">bandwidth_1</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">bandwidth</span><span class="p">))</span>
+
+        <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Invalid `bandwidth` type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">bandwidth</span><span class="p">)</span><span class="si">}</span><span class="s1"> (value=</span><span class="si">{</span><span class="n">bandwidth</span><span class="si">!r}</span><span class="s1">)&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="KDECalibrator">
+<a class="viewcode-back" href="../../../api/lir.algorithms.kde.html#lir.algorithms.kde.KDECalibrator">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">KDECalibrator</span><span class="p">(</span><span class="n">Transformer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate LR from a score, belonging to one of two distributions using KDE.</span>
+
+<span class="sd">    Calculates a likelihood ratio of a score value, provided it is from one of</span>
+<span class="sd">    two distributions. Uses kernel density estimation (KDE) for interpolation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bandwidth : Callable | str | float | tuple[float, float] | None, optional</span>
+<span class="sd">        Bandwidth specification for KDE.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bandwidth</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bandwidth</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">parse_bandwidth</span><span class="p">(</span><span class="n">bandwidth</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_kde0</span><span class="p">:</span> <span class="n">KernelDensity</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_kde1</span><span class="p">:</span> <span class="n">KernelDensity</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numerator</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">denominator</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="KDECalibrator.bandwidth_silverman">
+<a class="viewcode-back" href="../../../api/lir.algorithms.kde.html#lir.algorithms.kde.KDECalibrator.bandwidth_silverman">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bandwidth_silverman</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Estimate bandwidths using Silverman&#39;s rule of thumb.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : np.ndarray</span>
+<span class="sd">            Score array.</span>
+<span class="sd">        y : np.ndarray</span>
+<span class="sd">            Label array.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[float, float]</span>
+<span class="sd">            Bandwidth for class 0 and class 1.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;X and y must not be empty&#39;</span><span class="p">)</span>
+
+        <span class="n">bandwidth</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="n">label</span><span class="p">]</span>
+            <span class="n">std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">std</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># can happen eg if std(values) = 0</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s1">&#39;silverman bandwidth cannot be calculated if standard deviation is 0&#39;</span><span class="p">,</span>
+                    <span class="ne">RuntimeWarning</span><span class="p">,</span>
+                    <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">LOG</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;found a silverman bandwidth of 0 (using dummy value)&#39;</span><span class="p">)</span>
+                <span class="n">std</span> <span class="o">=</span> <span class="mi">1</span>
+
+            <span class="n">v</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">std</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">*</span> <span class="mf">4.0</span> <span class="o">/</span> <span class="mi">3</span>
+            <span class="n">bandwidth</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bandwidth</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;expected 2 classes; found: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">bandwidth</span><span class="p">)</span><span class="si">}</span><span class="s1"> classes: </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">bandwidth</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bandwidth</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="KDECalibrator.fit">
+<a class="viewcode-back" href="../../../api/lir.algorithms.kde.html#lir.algorithms.kde.KDECalibrator.fit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fit the KDE model on the data.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceData</span>
+<span class="sd">            Training instances.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Self</span>
+<span class="sd">            Fitted calibrator.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="n">check_type</span><span class="p">(</span><span class="n">FeatureData</span><span class="p">,</span> <span class="n">instances</span><span class="p">)</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="n">instances</span><span class="o">.</span><span class="n">replace_as</span><span class="p">(</span><span class="n">LLRData</span><span class="p">)</span>
+
+        <span class="c1"># KDE needs finite scale. Inf and negInf are treated as point masses at the extremes.</span>
+        <span class="c1"># Remove them from data for KDE and calculate fraction data that is left.</span>
+        <span class="c1"># LRs in finite range will be corrected for fractions in the apply function</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">numerator</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">denominator</span> <span class="o">=</span> <span class="n">compensate_and_remove_neginf_inf</span><span class="p">(</span>
+            <span class="n">instances</span><span class="o">.</span><span class="n">llrs</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">instances</span><span class="o">.</span><span class="n">require_labels</span>
+        <span class="p">)</span>
+        <span class="n">X0</span><span class="p">,</span> <span class="n">X1</span> <span class="o">=</span> <span class="n">Xy_to_Xn</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="n">bandwidth0</span><span class="p">,</span> <span class="n">bandwidth1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bandwidth</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_kde0</span> <span class="o">=</span> <span class="n">KernelDensity</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;gaussian&#39;</span><span class="p">,</span> <span class="n">bandwidth</span><span class="o">=</span><span class="n">bandwidth0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_kde1</span> <span class="o">=</span> <span class="n">KernelDensity</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;gaussian&#39;</span><span class="p">,</span> <span class="n">bandwidth</span><span class="o">=</span><span class="n">bandwidth1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="KDECalibrator.apply">
+<a class="viewcode-back" href="../../../api/lir.algorithms.kde.html#lir.algorithms.kde.KDECalibrator.apply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LLRData</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provide calibrated LLRs as output.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceData</span>
+<span class="sd">            Instances to calibrate.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        LLRData</span>
+<span class="sd">            Calibrated log-likelihood-ratio data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kde0</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kde1</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">numerator</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">denominator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;KDECalibrator.apply() called before fit&#39;</span><span class="p">)</span>
+
+        <span class="n">instances</span> <span class="o">=</span> <span class="n">check_type</span><span class="p">(</span><span class="n">FeatureData</span><span class="p">,</span> <span class="n">instances</span><span class="p">)</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="n">instances</span><span class="o">.</span><span class="n">replace_as</span><span class="p">(</span><span class="n">LLRData</span><span class="p">)</span>
+
+        <span class="c1"># initiate LRs_output</span>
+        <span class="n">llrs_output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">instances</span><span class="o">.</span><span class="n">llrs</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">p0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">instances</span><span class="o">.</span><span class="n">llrs</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">p1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">instances</span><span class="o">.</span><span class="n">llrs</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="c1"># get inf and neginf</span>
+        <span class="n">wh_inf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isposinf</span><span class="p">(</span><span class="n">instances</span><span class="o">.</span><span class="n">llrs</span><span class="p">)</span>
+        <span class="n">wh_neginf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isneginf</span><span class="p">(</span><span class="n">instances</span><span class="o">.</span><span class="n">llrs</span><span class="p">)</span>
+
+        <span class="c1"># assign hard values for extremes</span>
+        <span class="n">llrs_output</span><span class="p">[</span><span class="n">wh_inf</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="n">llrs_output</span><span class="p">[</span><span class="n">wh_neginf</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="n">p0</span><span class="p">[</span><span class="n">wh_inf</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">p1</span><span class="p">[</span><span class="n">wh_inf</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">p0</span><span class="p">[</span><span class="n">wh_neginf</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">p1</span><span class="p">[</span><span class="n">wh_neginf</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># get elements that are not inf or neginf</span>
+        <span class="n">finite_llrs_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">instances</span><span class="o">.</span><span class="n">llrs</span><span class="p">)</span>
+        <span class="n">finite_llrs</span> <span class="o">=</span> <span class="n">instances</span><span class="o">.</span><span class="n">llrs</span><span class="p">[</span><span class="n">finite_llrs_index</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># perform KDE as usual</span>
+        <span class="n">ln_H1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kde1</span><span class="o">.</span><span class="n">score_samples</span><span class="p">(</span><span class="n">finite_llrs</span><span class="p">)</span>
+        <span class="n">ln_H2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kde0</span><span class="o">.</span><span class="n">score_samples</span><span class="p">(</span><span class="n">finite_llrs</span><span class="p">)</span>
+        <span class="n">ln_dif</span> <span class="o">=</span> <span class="n">ln_H1</span> <span class="o">-</span> <span class="n">ln_H2</span>
+        <span class="n">log10_dif</span> <span class="o">=</span> <span class="n">ln_to_log10</span><span class="p">(</span><span class="n">ln_dif</span><span class="p">)</span>
+
+        <span class="c1"># calculate p0 and p1&#39;s (redundant?)</span>
+        <span class="n">p0</span><span class="p">[</span><span class="n">finite_llrs_index</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">denominator</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">ln_H2</span><span class="p">)</span>
+        <span class="n">p1</span><span class="p">[</span><span class="n">finite_llrs_index</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">numerator</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">ln_H1</span><span class="p">)</span>
+
+        <span class="c1"># apply correction for fraction of negInf and Inf data</span>
+        <span class="n">log10_compensator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numerator</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">denominator</span><span class="p">)</span>
+        <span class="n">llrs_output</span><span class="p">[</span><span class="n">finite_llrs_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">log10_compensator</span> <span class="o">+</span> <span class="n">log10_dif</span>
+
+        <span class="n">probabilities</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">p0</span><span class="p">,</span> <span class="n">p1</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">instances</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="n">llrs_output</span><span class="p">,</span> <span class="n">probabilities</span><span class="o">=</span><span class="n">probabilities</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

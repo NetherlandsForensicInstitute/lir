@@ -1,0 +1,566 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.data_strategies &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lrsystem-assessment.html#appearance-plots-and-metrics">Appearance plots and metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/lir.html">lir package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/lir.html#lir.DataProvider"><code class="docutils literal notranslate"><span class="pre">DataProvider</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/lir.html#lir.DataStrategy"><code class="docutils literal notranslate"><span class="pre">DataStrategy</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/lir.html#lir.FeatureData"><code class="docutils literal notranslate"><span class="pre">FeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/lir.html#lir.InstanceData"><code class="docutils literal notranslate"><span class="pre">InstanceData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/lir.html#lir.LLRData"><code class="docutils literal notranslate"><span class="pre">LLRData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/lir.html#lir.PairedFeatureData"><code class="docutils literal notranslate"><span class="pre">PairedFeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/lir.html#lir.Transformer"><code class="docutils literal notranslate"><span class="pre">Transformer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/lir.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../lir.html">lir</a></li>
+      <li class="breadcrumb-item active">lir.data_strategies</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lir.data_strategies</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">GroupKFold</span><span class="p">,</span> <span class="n">GroupShuffleSplit</span><span class="p">,</span> <span class="n">KFold</span><span class="p">,</span> <span class="n">train_test_split</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataStrategy</span><span class="p">,</span> <span class="n">InstanceData</span>
+
+
+<div class="viewcode-block" id="TrainTestSplit">
+<a class="viewcode-back" href="../../api/lir.data_strategies.html#lir.data_strategies.TrainTestSplit">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TrainTestSplit</span><span class="p">(</span><span class="n">DataStrategy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Split the data into a training set and a test set.</span>
+
+<span class="sd">    This splitter distributes the instances randomly over a training set and test set. Each instance is assigned to</span>
+<span class="sd">    either the training set or the test set, but no sources will have instances that appear in both. The hypothesis</span>
+<span class="sd">    labels are used to distribute the instances of each hypothesis proportionally to both sets.</span>
+
+<span class="sd">    This splitter is suitable for most specific-source setups. If you have a common-source setup, take a look at</span>
+<span class="sd">    ``SourcesTrainTestSplit``. Alternatively, use the ``CrossValidation`` strategy for cross-validation.</span>
+
+<span class="sd">    The input data should have hypothesis labels. This split assigns instances of both classes to the training set and</span>
+<span class="sd">    the test set.</span>
+
+<span class="sd">    In an experiment setup file, the split strategy can be referenced as:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">        splits:</span>
+<span class="sd">          strategy: train_test</span>
+<span class="sd">          test_size: 0.2  # the (hold-out) test set  is 20% of the data</span>
+<span class="sd">          seed: 42  # optional</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    test_size : float | int</span>
+<span class="sd">        Size of the test set. If float, should be between 0.0 and 1.0 and represent the proportion of the dataset to</span>
+<span class="sd">        include in the test split. If int, represents the absolute number of test samples.</span>
+<span class="sd">    seed : int | None</span>
+<span class="sd">        Random seed controlling stochastic behaviour for reproducible results.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_size</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_size</span> <span class="o">=</span> <span class="n">test_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
+
+<div class="viewcode-block" id="TrainTestSplit.apply">
+<a class="viewcode-back" href="../../api/lir.data_strategies.html#lir.data_strategies.TrainTestSplit.apply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">[</span><span class="n">DataType</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">DataType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">DataType</span><span class="p">,</span> <span class="n">DataType</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Split the data into a training set and a test set.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : DataType</span>
+<span class="sd">            Instances to split.</span>
+
+<span class="sd">        Yields</span>
+<span class="sd">        ------</span>
+<span class="sd">        tuple[DataType, DataType]</span>
+<span class="sd">            An iterator over a single item, which is a tuple of the training set and the test set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">indexes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">instances</span><span class="p">))</span>
+        <span class="n">indexes_train</span><span class="p">,</span> <span class="n">indexes_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+            <span class="n">indexes</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">instances</span><span class="o">.</span><span class="n">require_labels</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span>
+        <span class="p">)</span>
+
+        <span class="k">yield</span> <span class="n">instances</span><span class="p">[</span><span class="n">indexes_train</span><span class="p">],</span> <span class="n">instances</span><span class="p">[</span><span class="n">indexes_test</span><span class="p">]</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="CrossValidation">
+<a class="viewcode-back" href="../../api/lir.data_strategies.html#lir.data_strategies.CrossValidation">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CrossValidation</span><span class="p">(</span><span class="n">DataStrategy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    K-fold cross-validation iterator over successive train/test splits.</span>
+
+<span class="sd">    The input data must contain hypothesis labels. Each fold is constructed so that instances from both hypotheses are</span>
+<span class="sd">    present in every split.</span>
+
+<span class="sd">    This strategy may be registered in a YAML registry as follows:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">        splits:</span>
+<span class="sd">          strategy: cross_validation</span>
+<span class="sd">          folds: 5  # the number k in k-fold cross-validation</span>
+<span class="sd">          seed: 42  # optional</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    folds : int</span>
+<span class="sd">        Number of cross-validation folds to generate.</span>
+<span class="sd">    seed : int | None</span>
+<span class="sd">        Random seed controlling stochastic behaviour for reproducible results.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folds</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">folds</span> <span class="o">=</span> <span class="n">folds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shuffle</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">False</span>  <span class="c1"># noqa: SIM210</span>
+
+<div class="viewcode-block" id="CrossValidation.apply">
+<a class="viewcode-back" href="../../api/lir.data_strategies.html#lir.data_strategies.CrossValidation.apply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">[</span><span class="n">DataType</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">DataType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">DataType</span><span class="p">,</span> <span class="n">DataType</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return an iterator over *k* train/test splits.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceDataType</span>
+<span class="sd">            Input instances to be processed by this method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">kf</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">folds</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span> <span class="ow">in</span> <span class="n">kf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">instances</span><span class="p">)),</span> <span class="n">y</span><span class="o">=</span><span class="n">instances</span><span class="o">.</span><span class="n">labels</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">instances</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">instances</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="SourcesTrainTestSplit">
+<a class="viewcode-back" href="../../api/lir.data_strategies.html#lir.data_strategies.SourcesTrainTestSplit">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SourcesTrainTestSplit</span><span class="p">(</span><span class="n">DataStrategy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Split the data into a training set and a test set by their source ids.</span>
+
+<span class="sd">    This splitter uses the ``source_ids`` attribute and distributes the sources over the training and test set. Each</span>
+<span class="sd">    source is assigned to either the training set or the test set, but no sources will have instances that appear in</span>
+<span class="sd">    both.</span>
+
+<span class="sd">    This splitter is suitable for most common-source setups. Alternatively, use the ``SourcesCrossValidation`` strategy</span>
+<span class="sd">    for cross-validation.</span>
+
+<span class="sd">    In an experiment setup file, the split strategy can be referenced as:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">        splits:</span>
+<span class="sd">          strategy: train_test_sources</span>
+<span class="sd">          test_size: 0.5  # the proportion of sources in the test set</span>
+<span class="sd">          seed: 42        # optional</span>
+
+<span class="sd">    This class internally uses ``sklearn.model_selection.GroupShuffleSplit``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    test_size : float | int</span>
+<span class="sd">        Fraction or absolute number of items assigned to the test split. If float, should be between 0.0 and 1.0 and</span>
+<span class="sd">        represent the proportion of sources to include inthe test split (rounded up). If int, represents the absolute</span>
+<span class="sd">        number of test sources.</span>
+<span class="sd">    seed : int | None</span>
+<span class="sd">        Random seed controlling stochastic behaviour for reproducible results.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_size</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_size</span> <span class="o">=</span> <span class="n">test_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
+
+<div class="viewcode-block" id="SourcesTrainTestSplit.apply">
+<a class="viewcode-back" href="../../api/lir.data_strategies.html#lir.data_strategies.SourcesTrainTestSplit.apply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">[</span><span class="n">DataType</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">DataType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">DataType</span><span class="p">,</span> <span class="n">DataType</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Split the data into a training set and a test set.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceDataType</span>
+<span class="sd">            Input instances to be processed by this method.</span>
+
+<span class="sd">        Yields</span>
+<span class="sd">        ------</span>
+<span class="sd">        tuple[DataType, DataType]</span>
+<span class="sd">            An iterator over a single item, which is a tuple of the training set and the test set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">splitter</span> <span class="o">=</span> <span class="n">GroupShuffleSplit</span><span class="p">(</span><span class="n">test_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_size</span><span class="p">,</span> <span class="n">n_splits</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+        <span class="p">((</span><span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span><span class="p">),)</span> <span class="o">=</span> <span class="n">splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">instances</span><span class="p">)),</span> <span class="n">groups</span><span class="o">=</span><span class="n">instances</span><span class="o">.</span><span class="n">source_ids_1d</span><span class="p">)</span>
+
+        <span class="k">yield</span> <span class="n">instances</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">instances</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="SourcesCrossValidation">
+<a class="viewcode-back" href="../../api/lir.data_strategies.html#lir.data_strategies.SourcesCrossValidation">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SourcesCrossValidation</span><span class="p">(</span><span class="n">DataStrategy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    K-fold cross-validation by source id.</span>
+
+<span class="sd">    This data strategy uses the ``source_ids`` attribute and distributes the sources over *k* different subsets.</span>
+<span class="sd">    Each of the subsets will be offered once as the test set, using the others as the training set. Each source is</span>
+<span class="sd">    assigned to exactly one of the subsets, and no sources will have instances that appear in more than one.</span>
+
+<span class="sd">    In an experiment setup file, the data strategy can be referenced as:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">        splits:</span>
+<span class="sd">          strategy: cross_validation_sources</span>
+<span class="sd">          folds: 5</span>
+
+<span class="sd">    This class internally uses ``sklearn.model_selection.GroupKFold``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    folds : int</span>
+<span class="sd">        Number of cross-validation folds to generate.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folds</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">folds</span> <span class="o">=</span> <span class="n">folds</span>
+
+<div class="viewcode-block" id="SourcesCrossValidation.apply">
+<a class="viewcode-back" href="../../api/lir.data_strategies.html#lir.data_strategies.SourcesCrossValidation.apply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">[</span><span class="n">DataType</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">DataType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">DataType</span><span class="p">,</span> <span class="n">DataType</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform *k*-fold cross-validation.</span>
+
+<span class="sd">        Return an iterator over *k* train/test splits.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceDataType</span>
+<span class="sd">            Input instances to be processed by this method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">kf</span> <span class="o">=</span> <span class="n">GroupKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">folds</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span> <span class="ow">in</span> <span class="n">kf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">instances</span><span class="p">)),</span> <span class="n">groups</span><span class="o">=</span><span class="n">instances</span><span class="o">.</span><span class="n">source_ids_1d</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">instances</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">instances</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="PairsTrainTestSplit">
+<a class="viewcode-back" href="../../api/lir.data_strategies.html#lir.data_strategies.PairsTrainTestSplit">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PairsTrainTestSplit</span><span class="p">(</span><span class="n">DataStrategy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A train/test split policy for paired instances.</span>
+
+<span class="sd">    The input data should have ``source_ids`` with two columns. This split assigns all sources to either the training</span>
+<span class="sd">    set or the test set. The pairs are assigned to training or testing if both of their sources have that role. Pairs</span>
+<span class="sd">    with mixed roles are omitted.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    test_size : float | int</span>
+<span class="sd">        Fraction or absolute number of items assigned to the test split.</span>
+<span class="sd">    seed : int | None</span>
+<span class="sd">        Random seed controlling stochastic behaviour for reproducible results.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_size</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_size</span> <span class="o">=</span> <span class="n">test_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
+
+<div class="viewcode-block" id="PairsTrainTestSplit.apply">
+<a class="viewcode-back" href="../../api/lir.data_strategies.html#lir.data_strategies.PairsTrainTestSplit.apply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">[</span><span class="n">DataType</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">DataType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">DataType</span><span class="p">,</span> <span class="n">DataType</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Split the data into a training set and a test set.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceDataType</span>
+<span class="sd">            Input instances to be processed by this method.</span>
+
+<span class="sd">        Yields</span>
+<span class="sd">        ------</span>
+<span class="sd">        tuple[DataType, DataType]</span>
+<span class="sd">            An iterator over a single item, which is a tuple of the training set and the test set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">source_ids</span> <span class="o">=</span> <span class="n">instances</span><span class="o">.</span><span class="n">source_ids</span>
+        <span class="k">if</span> <span class="n">source_ids</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">source_ids</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">source_ids</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;expected two-column source_ids; shape found: </span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="n">source_ids</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;shape&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">sources_train</span><span class="p">,</span> <span class="n">sources_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">source_ids</span><span class="p">),</span> <span class="n">test_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span>
+        <span class="p">)</span>
+
+        <span class="n">sources_train</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">sources_train</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">use_in_training</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">sources_train</span>
+
+        <span class="n">training_source_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="n">use_in_training</span><span class="p">)(</span><span class="n">instances</span><span class="o">.</span><span class="n">source_ids</span><span class="p">)</span>
+        <span class="n">training_instances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">training_source_ids</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">test_instances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="o">~</span><span class="n">training_source_ids</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">yield</span> <span class="n">instances</span><span class="p">[</span><span class="n">training_instances</span><span class="p">],</span> <span class="n">instances</span><span class="p">[</span><span class="n">test_instances</span><span class="p">]</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="RoleAssignment">
+<a class="viewcode-back" href="../../api/lir.data_strategies.html#lir.data_strategies.RoleAssignment">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RoleAssignment</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Indicate whether the data is part of the train or the test split.&quot;&quot;&quot;</span>
+
+    <span class="n">TRAIN</span> <span class="o">=</span> <span class="s1">&#39;train&#39;</span>
+    <span class="n">TEST</span> <span class="o">=</span> <span class="s1">&#39;test&#39;</span></div>
+
+
+
+<div class="viewcode-block" id="PredefinedTrainTestSplit">
+<a class="viewcode-back" href="../../api/lir.data_strategies.html#lir.data_strategies.PredefinedTrainTestSplit">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PredefinedTrainTestSplit</span><span class="p">(</span><span class="n">DataStrategy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Split data into a training set and a test set based on predefined assignments.</span>
+
+<span class="sd">    This strategy expects a ``role_assignments`` field in the data, where each</span>
+<span class="sd">    instance is labelled either ``&quot;train&quot;`` (included in the training set) or</span>
+<span class="sd">    ``&quot;test&quot;`` (included in the test set).</span>
+
+<span class="sd">    In the experiment setup file, this split strategy can be referenced as follows:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">        train_test_splits:</span>
+<span class="sd">            strategy: predefined_train_test</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PredefinedTrainTestSplit.apply">
+<a class="viewcode-back" href="../../api/lir.data_strategies.html#lir.data_strategies.PredefinedTrainTestSplit.apply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">[</span><span class="n">DataType</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">DataType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">DataType</span><span class="p">,</span> <span class="n">DataType</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Split the data into a training set and a test set.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceDataType</span>
+<span class="sd">            Input instances to be processed by this method.</span>
+
+<span class="sd">        Yields</span>
+<span class="sd">        ------</span>
+<span class="sd">        tuple[DataType, DataType]</span>
+<span class="sd">            An iterator over a single item, which is a tuple of the training set and the test set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;role_assignments&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">instances</span><span class="o">.</span><span class="n">all_fields</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;`role_assignments` field is missing&#39;</span><span class="p">)</span>
+
+        <span class="n">training_set</span> <span class="o">=</span> <span class="n">instances</span><span class="p">[</span><span class="n">instances</span><span class="o">.</span><span class="n">role_assignments</span> <span class="o">==</span> <span class="n">RoleAssignment</span><span class="o">.</span><span class="n">TRAIN</span><span class="o">.</span><span class="n">value</span><span class="p">]</span>  <span class="c1"># type: ignore</span>
+        <span class="n">test_set</span> <span class="o">=</span> <span class="n">instances</span><span class="p">[</span><span class="n">instances</span><span class="o">.</span><span class="n">role_assignments</span> <span class="o">==</span> <span class="n">RoleAssignment</span><span class="o">.</span><span class="n">TEST</span><span class="o">.</span><span class="n">value</span><span class="p">]</span>  <span class="c1"># type: ignore</span>
+        <span class="k">yield</span> <span class="n">training_set</span><span class="p">,</span> <span class="n">test_set</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="PredefinedCrossValidation">
+<a class="viewcode-back" href="../../api/lir.data_strategies.html#lir.data_strategies.PredefinedCrossValidation">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PredefinedCrossValidation</span><span class="p">(</span><span class="n">DataStrategy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Split data into cross validation folds based on predefined assignments.</span>
+
+<span class="sd">    This strategy expects a ``fold_assignments`` field in the data. For example, the</span>
+<span class="sd">    ``parse_features_from_csv_file`` with the ``fold_assignment_column`` specifeid will create this field.</span>
+
+<span class="sd">    Each instance should be labelled according in which test set (fold) the instance should be. This means that care</span>
+<span class="sd">    should be taken to use the correct number of folds (= number of unique labels) and wether the folds are based on</span>
+<span class="sd">    sources or on instances.</span>
+
+<span class="sd">    In the experiment setup file, this split strategy can be referenced as follows:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">        cross_validation_splits:</span>
+<span class="sd">            strategy: predefined_cross_validation</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PredefinedCrossValidation.apply">
+<a class="viewcode-back" href="../../api/lir.data_strategies.html#lir.data_strategies.PredefinedCrossValidation.apply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">[</span><span class="n">DataType</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">DataType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">DataType</span><span class="p">,</span> <span class="n">DataType</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform cross-validation based on predefined fold assignments.</span>
+
+<span class="sd">        This strategy expects a ``fold_assignments`` field in the data, where each instance is labelled with a fold</span>
+<span class="sd">        identifier. The strategy will return one train/test split for each unique fold identifier, using the instances</span>
+<span class="sd">        with that identifier as the test set and the others as the training set.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceDataType</span>
+<span class="sd">            Input instances to be processed by this method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;fold_assignments&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">instances</span><span class="o">.</span><span class="n">all_fields</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;`fold_assignments` field is missing&#39;</span><span class="p">)</span>
+
+        <span class="n">fold_assignments</span> <span class="o">=</span> <span class="n">instances</span><span class="o">.</span><span class="n">fold_assignments</span>  <span class="c1"># type: ignore</span>
+        <span class="n">unique_folds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">fold_assignments</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">fold</span> <span class="ow">in</span> <span class="n">unique_folds</span><span class="p">:</span>
+            <span class="n">training_set</span> <span class="o">=</span> <span class="n">instances</span><span class="p">[</span><span class="n">fold_assignments</span> <span class="o">!=</span> <span class="n">fold</span><span class="p">]</span>  <span class="c1"># type: ignore</span>
+            <span class="n">test_set</span> <span class="o">=</span> <span class="n">instances</span><span class="p">[</span><span class="n">fold_assignments</span> <span class="o">==</span> <span class="n">fold</span><span class="p">]</span>  <span class="c1"># type: ignore</span>
+            <span class="k">yield</span> <span class="n">training_set</span><span class="p">,</span> <span class="n">test_set</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

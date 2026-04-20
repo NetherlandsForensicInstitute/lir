@@ -1,0 +1,635 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.datasets.feature_data_csv &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#appearance-plots-and-metrics">Appearance plots and metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/lir.html">lir package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.DataProvider"><code class="docutils literal notranslate"><span class="pre">DataProvider</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.DataStrategy"><code class="docutils literal notranslate"><span class="pre">DataStrategy</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.FeatureData"><code class="docutils literal notranslate"><span class="pre">FeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.InstanceData"><code class="docutils literal notranslate"><span class="pre">InstanceData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.LLRData"><code class="docutils literal notranslate"><span class="pre">LLRData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.PairedFeatureData"><code class="docutils literal notranslate"><span class="pre">PairedFeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.Transformer"><code class="docutils literal notranslate"><span class="pre">Transformer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../lir.html">lir</a></li>
+      <li class="breadcrumb-item active">lir.datasets.feature_data_csv</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lir.datasets.feature_data_csv</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">csv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">chain</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="kn">import</span> <span class="n">PathLike</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">IO</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">NamedTuple</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">requests_cache</span><span class="w"> </span><span class="kn">import</span> <span class="n">CachedSession</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">check_is_empty</span><span class="p">,</span> <span class="n">config_parser</span><span class="p">,</span> <span class="n">pop_field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.data.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">search_path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.data.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataProvider</span><span class="p">,</span> <span class="n">FeatureData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.data_strategies</span><span class="w"> </span><span class="kn">import</span> <span class="n">RoleAssignment</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_type</span>
+
+
+<span class="n">LOG</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ExtraField">
+<a class="viewcode-back" href="../../../api/lir.datasets.feature_data_csv.html#lir.datasets.feature_data_csv.ExtraField">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ExtraField</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extra field for CSV parsing.&quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">column_names</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">validate_cell</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Any</span><span class="p">]</span>
+
+<div class="viewcode-block" id="ExtraField.parse_row">
+<a class="viewcode-back" href="../../../api/lir.datasets.feature_data_csv.html#lir.datasets.feature_data_csv.ExtraField.parse_row">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_row</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Take the appropriate values from a dictionary and return them as a list.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        row : dict[str, str]</span>
+<span class="sd">            CSV row dictionary to parse.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list[Any]</span>
+<span class="sd">            Parsed values extracted from the input row.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">colname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">column_names</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validate_cell</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">colname</span><span class="p">]))</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;parsing value of column `</span><span class="si">{</span><span class="n">colname</span><span class="si">}</span><span class="s1">` failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">values</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="FeatureDataCsvParser">
+<a class="viewcode-back" href="../../../api/lir.datasets.feature_data_csv.html#lir.datasets.feature_data_csv.FeatureDataCsvParser">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FeatureDataCsvParser</span><span class="p">(</span><span class="n">DataProvider</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse a CSV file into a ``FeatureData`` object.</span>
+
+<span class="sd">    This is an abstract base class with concrete implementations for different</span>
+<span class="sd">    data sources:</span>
+
+<span class="sd">    - :class:`FeatureDataCsvFileParser` for reading from a local file;</span>
+<span class="sd">    - :class:`FeatureDataCsvHttpParser` for reading from a URL;</span>
+<span class="sd">    - :class:`FeatureDataCsvStreamParser` for reading from a stream.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    source_id_column : str | list[str] | None</span>
+<span class="sd">        Column name(s) containing source identifiers.</span>
+<span class="sd">    label_column : str | None</span>
+<span class="sd">        Column name containing class labels.</span>
+<span class="sd">    instance_id_column : str | None</span>
+<span class="sd">        Column name containing instance identifiers.</span>
+<span class="sd">    role_assignment_column : str | None</span>
+<span class="sd">        Column name containing predefined train/test roles.</span>
+<span class="sd">    fold_assignment_column : str | None</span>
+<span class="sd">        Column name containing predefined fold assignments.</span>
+<span class="sd">    extra_fields : list[ExtraField] | None</span>
+<span class="sd">        Optional extra fields to parse from each row.</span>
+<span class="sd">    ignore_columns : list[str] | None</span>
+<span class="sd">        Column names ignored when extracting features.</span>
+<span class="sd">    head : int | None</span>
+<span class="sd">        Maximum number of rows to read from the source.</span>
+<span class="sd">    message_prefix : str</span>
+<span class="sd">        Prefix added to parser log and error messages.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Assume a CSV file containing two features and source identifiers:</span>
+
+<span class="sd">    .. code-block:: text</span>
+
+<span class="sd">        source_id,feature1,feature2,feature3,name_of_an_irrelevant_column</span>
+<span class="sd">        0,1,10,1,sherlock</span>
+<span class="sd">        0,1,11,1,holmes</span>
+<span class="sd">        1,20,30,1,irene</span>
+<span class="sd">        1,18,32,3,adler</span>
+<span class="sd">        2,5,10,8,professor</span>
+<span class="sd">        2,1,11,8,moriarty</span>
+
+<span class="sd">    This file can be parsed using the following YAML configuration:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">        data:</span>
+<span class="sd">          provider: parse_features_from_csv_file</span>
+<span class="sd">            path: path/to/file.csv</span>
+<span class="sd">            source_id_column: source_id</span>
+<span class="sd">            ignore_columns:</span>
+<span class="sd">              - name_of_an_irrelevant_column</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">        data:</span>
+<span class="sd">          provider: parse_features_from_csv_url</span>
+<span class="sd">            url: https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/refs/heads/main/training.csv</span>
+<span class="sd">            source_id_column: Item</span>
+<span class="sd">            ignore_columns:</span>
+<span class="sd">              - id</span>
+<span class="sd">              - Piece</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">source_id_column</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">label_column</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">instance_id_column</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">role_assignment_column</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">fold_assignment_column</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">extra_fields</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ExtraField</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">ignore_columns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">head</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">message_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source_id_columns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">[</span><span class="n">source_id_column</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source_id_column</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">source_id_column</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">source_id_columns</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;the number of source id columns can be at most 2; found: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">source_id_columns</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">label_column</span> <span class="o">=</span> <span class="n">label_column</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instance_id_column</span> <span class="o">=</span> <span class="n">instance_id_column</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">role_assignment_column</span> <span class="o">=</span> <span class="n">role_assignment_column</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fold_assignment_column</span> <span class="o">=</span> <span class="n">fold_assignment_column</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extra_fields</span> <span class="o">=</span> <span class="n">extra_fields</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ignore_columns</span> <span class="o">=</span> <span class="n">ignore_columns</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_head</span> <span class="o">=</span> <span class="n">head</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_message_prefix</span> <span class="o">=</span> <span class="n">message_prefix</span>
+
+        <span class="c1"># the &quot;extra field&quot; argument allows for including arbitrary fields</span>
+        <span class="c1"># check that they do not conflict with fields that are facilitated otherwise</span>
+        <span class="n">empty_data</span> <span class="o">=</span> <span class="n">FeatureData</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">extra_fields</span> <span class="ow">or</span> <span class="p">[]:</span>
+            <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">empty_data</span><span class="o">.</span><span class="n">all_fields</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;field </span><span class="si">{</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> should not be read as an *extra* field; &#39;</span>
+                    <span class="s1">&#39;use the appropriate config parameters instead&#39;</span>
+                <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_parse_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line_num</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">parse_fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">parse_fn</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_message_prefix</span><span class="si">}</span><span class="s1">failed to parse </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1"> at row </span><span class="si">{</span><span class="n">line_num</span><span class="si">}</span><span class="s1">, column </span><span class="si">{</span><span class="n">column_name</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_parse_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fp</span><span class="p">:</span> <span class="n">IO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FeatureData</span><span class="p">:</span>
+        <span class="c1"># initialize the reader</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictReader</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">reader</span><span class="o">.</span><span class="n">fieldnames</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_message_prefix</span><span class="si">}</span><span class="s1">empty file&#39;</span><span class="p">)</span>
+
+        <span class="c1"># identify the non feature columns</span>
+        <span class="n">non_feature_columns</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">(</span><span class="s1">&#39;label_column&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_column</span><span class="p">),</span>
+                <span class="p">(</span><span class="s1">&#39;instance_id_column&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_id_column</span><span class="p">),</span>
+                <span class="p">(</span><span class="s1">&#39;role_assignment_column&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">role_assignment_column</span><span class="p">),</span>
+                <span class="p">(</span><span class="s1">&#39;fold_assignment_column&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fold_assignment_column</span><span class="p">),</span>
+            <span class="p">]</span>
+            <span class="o">+</span> <span class="p">[(</span><span class="s1">&#39;source_id_column&#39;</span><span class="p">,</span> <span class="n">column_name</span><span class="p">)</span> <span class="k">for</span> <span class="n">column_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_id_columns</span><span class="p">]</span>
+            <span class="o">+</span> <span class="p">[</span>
+                <span class="p">(</span><span class="s1">&#39;extra_fields&#39;</span><span class="p">,</span> <span class="n">column_name</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">column_name</span> <span class="ow">in</span> <span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">([</span><span class="n">field</span><span class="o">.</span><span class="n">column_names</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_fields</span><span class="p">])</span>
+            <span class="p">]</span>
+            <span class="o">+</span> <span class="p">[(</span><span class="s1">&#39;ignore_columns&#39;</span><span class="p">,</span> <span class="n">column_name</span><span class="p">)</span> <span class="k">for</span> <span class="n">column_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_columns</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="c1"># check if all required columns exist in the csv file</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">non_feature_columns</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">reader</span><span class="o">.</span><span class="n">fieldnames</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_message_prefix</span><span class="si">}{</span><span class="n">name</span><span class="si">}</span><span class="s1"> specified as `</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">`, but it is not present in the csv file&#39;</span>
+                <span class="p">)</span>
+
+        <span class="c1"># identify the feature columns</span>
+        <span class="n">non_feature_column_names</span> <span class="o">=</span> <span class="p">{</span><span class="n">column_name</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">column_name</span> <span class="ow">in</span> <span class="n">non_feature_columns</span><span class="p">}</span>
+        <span class="n">feature_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">fieldname</span> <span class="k">for</span> <span class="n">fieldname</span> <span class="ow">in</span> <span class="n">reader</span><span class="o">.</span><span class="n">fieldnames</span> <span class="k">if</span> <span class="n">fieldname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">non_feature_column_names</span><span class="p">]</span>
+
+        <span class="c1"># initialize the result values</span>
+        <span class="n">source_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_id_columns</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">instance_ids</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">role_assignments</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">fold_assignment_column</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">extra_values</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+
+        <span class="c1"># read the file, row by row</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">islice</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_head</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">source_ids</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">source_ids</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="n">column_name</span><span class="p">]</span> <span class="k">for</span> <span class="n">column_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_id_columns</span><span class="p">])</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_column</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parse_value</span><span class="p">(</span><span class="n">reader</span><span class="o">.</span><span class="n">line_num</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_column</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">label_column</span><span class="p">],</span> <span class="nb">int</span><span class="p">))</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_id_column</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">instance_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">instance_id_column</span><span class="p">])</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">role_assignment_column</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">role_assignments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_parse_value</span><span class="p">(</span>
+                        <span class="n">reader</span><span class="o">.</span><span class="n">line_num</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">role_assignment_column</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">role_assignment_column</span><span class="p">],</span> <span class="n">RoleAssignment</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">value</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fold_assignment_column</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">fold_assignment_column</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">fold_assignment_column</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_fields</span><span class="p">:</span>
+                <span class="n">extra_values</span><span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">parse_row</span><span class="p">(</span><span class="n">row</span><span class="p">))</span>
+            <span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_parse_value</span><span class="p">(</span><span class="n">reader</span><span class="o">.</span><span class="n">line_num</span><span class="p">,</span> <span class="n">fieldname</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="n">fieldname</span><span class="p">],</span> <span class="nb">float</span><span class="p">)</span> <span class="k">for</span> <span class="n">fieldname</span> <span class="ow">in</span> <span class="n">feature_columns</span><span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_head</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_head</span><span class="p">:</span>
+            <span class="n">LOG</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;input file has too few rows; expected: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_head</span><span class="si">}</span><span class="s1">; found: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># finalize the data</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;source_ids&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">source_ids</span><span class="p">)</span> <span class="k">if</span> <span class="n">source_ids</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;labels&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_column</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;features&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">features</span><span class="p">),</span>
+        <span class="p">}</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">extra_values</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_id_column</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;instance_ids&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">instance_ids</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">role_assignment_column</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;role_assignments&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">role_assignments</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fold_assignment_column</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">fold_assignment_column</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_message_prefix</span><span class="si">}</span><span class="s1">fold assignment column `</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">fold_assignment_column</span><span class="si">}</span><span class="s1">` should contain at &#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;least two different values; found: </span><span class="si">{</span><span class="nb">set</span><span class="p">(</span><span class="n">fold_assignment_column</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="p">)</span>
+
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;fold_assignments&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">fold_assignment_column</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">FeatureData</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span>  <span class="c1"># type: ignore</span></div>
+
+
+
+<div class="viewcode-block" id="FeatureDataCsvFileParser">
+<a class="viewcode-back" href="../../../api/lir.datasets.feature_data_csv.html#lir.datasets.feature_data_csv.FeatureDataCsvFileParser">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FeatureDataCsvFileParser</span><span class="p">(</span><span class="n">FeatureDataCsvParser</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read CSV data from file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    file : PathLike</span>
+<span class="sd">        Path to the input file.</span>
+<span class="sd">    **kwargs : Any</span>
+<span class="sd">        Additional keyword arguments forwarded to the underlying FeatureDataCsvParser call.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="n">PathLike</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">message_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s1">: &#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FeatureDataCsvFileParser.get_instances">
+<a class="viewcode-back" href="../../../api/lir.datasets.feature_data_csv.html#lir.datasets.feature_data_csv.FeatureDataCsvFileParser.get_instances">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FeatureData</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve FeatureData instances.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        FeatureData</span>
+<span class="sd">            FeatureData object parsed from the source.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">search_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;parsing CSV file: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1"> as </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_file</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="FeatureDataCsvStreamParser">
+<a class="viewcode-back" href="../../../api/lir.datasets.feature_data_csv.html#lir.datasets.feature_data_csv.FeatureDataCsvStreamParser">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FeatureDataCsvStreamParser</span><span class="p">(</span><span class="n">FeatureDataCsvParser</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read data from a streamed CSV.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fp : IO</span>
+<span class="sd">        Open file-like object to read from.</span>
+<span class="sd">    **kwargs : Any</span>
+<span class="sd">        Additional keyword arguments forwarded to the underlying call.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fp</span><span class="p">:</span> <span class="n">IO</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fp</span> <span class="o">=</span> <span class="n">fp</span>
+
+<div class="viewcode-block" id="FeatureDataCsvStreamParser.get_instances">
+<a class="viewcode-back" href="../../../api/lir.datasets.feature_data_csv.html#lir.datasets.feature_data_csv.FeatureDataCsvStreamParser.get_instances">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FeatureData</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve FeatureData instances from CSV stream.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        FeatureData</span>
+<span class="sd">            FeatureData object parsed from the source.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;parsing CSV stream&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fp</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="FeatureDataCsvHttpParser">
+<a class="viewcode-back" href="../../../api/lir.datasets.feature_data_csv.html#lir.datasets.feature_data_csv.FeatureDataCsvHttpParser">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FeatureDataCsvHttpParser</span><span class="p">(</span><span class="n">FeatureDataCsvParser</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read CSV data from a URL.</span>
+
+<span class="sd">    By default, this class uses `requests-cache` to cache retrieved data. The cache is persistent and located in</span>
+<span class="sd">    the user cache folder, which is written to the log file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    url : str</span>
+<span class="sd">        URL of the remote resource to read.</span>
+<span class="sd">    session : requests.Session</span>
+<span class="sd">        Value passed via ``session``.</span>
+<span class="sd">    **kwargs : Any</span>
+<span class="sd">        Additional keyword arguments forwarded to the underlying call.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">message_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s1">: &#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">session</span>
+
+<div class="viewcode-block" id="FeatureDataCsvHttpParser.get_instances">
+<a class="viewcode-back" href="../../../api/lir.datasets.feature_data_csv.html#lir.datasets.feature_data_csv.FeatureDataCsvHttpParser.get_instances">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FeatureData</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve FeatureData from the remote resource.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        FeatureData</span>
+<span class="sd">            FeatureData object parsed from the source.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;parsing CSV from URL: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">fp</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_file</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_cell_type</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;int&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="s1">&#39;float&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+            <span class="s1">&#39;str&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="p">}[</span><span class="n">value</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;unknown cell type: </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_extra_field</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExtraField</span><span class="p">:</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">)</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;columns&#39;</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">check_type</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span>
+    <span class="n">cell_type</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;cell_type&#39;</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">_parse_cell_type</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">check_is_empty</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ExtraField</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">cell_type</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_feature_data_csv</span><span class="p">[</span><span class="n">ParserType</span><span class="p">:</span> <span class="n">FeatureDataCsvParser</span><span class="p">](</span>
+    <span class="n">parser_class</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">ParserType</span><span class="p">],</span> <span class="n">config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ParserType</span><span class="p">:</span>
+    <span class="n">extra_fields_config</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;extra_fields&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[],</span> <span class="n">validate</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">check_type</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span>
+    <span class="n">extra_fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">_parse_extra_field</span><span class="p">(</span><span class="n">field_config</span><span class="p">)</span> <span class="k">for</span> <span class="n">field_config</span> <span class="ow">in</span> <span class="n">extra_fields_config</span><span class="p">]</span>
+
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">parser_class</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="p">,</span> <span class="n">extra_fields</span><span class="o">=</span><span class="n">extra_fields</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parser</span>
+
+
+<span class="nd">@config_parser</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">feature_data_csv_http_parser</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FeatureDataCsvHttpParser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialize the CSV parser that reads data from a stream.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        - use_cache: boolean indicating whether to cache retrieved data</span>
+
+<span class="sd">    Other arguments are passed directly to `FeatureDataCsvParser`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : ContextAwareDict</span>
+<span class="sd">        Configuration mapping used to construct this component.</span>
+<span class="sd">    output_dir : Path</span>
+<span class="sd">        Directory where generated outputs are written.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    FeatureDataCsvHttpParser</span>
+<span class="sd">        FeatureData object parsed from the source.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">use_cache</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;use_cache&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">check_type</span><span class="p">,</span> <span class="nb">bool</span><span class="p">))</span>
+
+    <span class="n">session</span><span class="p">:</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span>
+    <span class="k">if</span> <span class="n">use_cache</span><span class="p">:</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">CachedSession</span><span class="p">(</span><span class="s1">&#39;lir&#39;</span><span class="p">,</span> <span class="n">use_cache_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;using cache location: </span><span class="si">{</span><span class="n">session</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">db_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">_parse_feature_data_csv</span><span class="p">(</span><span class="n">FeatureDataCsvHttpParser</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">)</span>
+
+
+<span class="nd">@config_parser</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">feature_data_csv_file_parser</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FeatureDataCsvFileParser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialize the CSV parser that reads data from a stream.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : ContextAwareDict</span>
+<span class="sd">        Configuration mapping used to construct this component.</span>
+<span class="sd">    output_dir : Path</span>
+<span class="sd">        Directory where generated outputs are written.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    FeatureDataCsvFileParser</span>
+<span class="sd">        FeatureData object parsed from the source.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_parse_feature_data_csv</span><span class="p">(</span><span class="n">FeatureDataCsvFileParser</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+lir.data\_strategies module
+===========================
+
+.. automodule:: lir.data_strategies
+   :members:
+   :show-inheritance:
+   :undoc-members:

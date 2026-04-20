@@ -1,0 +1,7 @@
+lir.aggregation module
+======================
+
+.. automodule:: lir.aggregation
+   :members:
+   :show-inheritance:
+   :undoc-members:

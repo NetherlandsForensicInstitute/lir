@@ -1,0 +1,603 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Setting up an experiment &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="_static/thebelab.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Registry reference" href="reference.html" />
+    <link rel="prev" title="Assessing LR system performance" href="lrsystem-assessment.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Getting started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="guides.html">Guides</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#appearance-plots-and-metrics">Appearance plots and metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/lir.html">lir package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.DataProvider"><code class="docutils literal notranslate"><span class="pre">DataProvider</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.DataStrategy"><code class="docutils literal notranslate"><span class="pre">DataStrategy</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.FeatureData"><code class="docutils literal notranslate"><span class="pre">FeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.InstanceData"><code class="docutils literal notranslate"><span class="pre">InstanceData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.LLRData"><code class="docutils literal notranslate"><span class="pre">LLRData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.PairedFeatureData"><code class="docutils literal notranslate"><span class="pre">PairedFeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.Transformer"><code class="docutils literal notranslate"><span class="pre">Transformer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="guides.html">Guides</a></li>
+      <li class="breadcrumb-item active">Setting up an experiment</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/experiment-setup.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="setting-up-an-experiment">
+<h1>Setting up an experiment<a class="headerlink" href="#setting-up-an-experiment" title="Link to this heading"></a></h1>
+<p>This page shows how to write an experiment setup using LiR.</p>
+<p>Before you begin, make sure you have a working <a class="reference external" href="index.html">lir command</a></p>
+<p>Experiments are defined in an experiment setup file. For a quick start, use one of the <a class="reference external" href="lrsystem_yaml.html">examples</a>.</p>
+<p>An experiment setup file is a YAML file with at least the <code class="docutils literal notranslate"><span class="pre">experiments</span></code> property that lists the experiments, and the
+<code class="docutils literal notranslate"><span class="pre">output_path</span></code> property:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">output_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./output</span><span class="w">  </span><span class="c1"># this is where generated output is saved</span>
+<span class="nt">experiments</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">... definition of experiment 1 ...</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">... definition of experiment 2 ...</span>
+</pre></div>
+</div>
+<p>LiR uses the <code class="docutils literal notranslate"><span class="pre">confidence</span></code> package for parsing YAML files. Refer to its <a class="reference external" href="https://github.com/NetherlandsForensicInstitute/confidence">documentation</a> to make the most of it! In
+particular, you may use the <code class="docutils literal notranslate"><span class="pre">timestamp</span></code> variable to substitute the current date and time in the YAML configuration,
+for example:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">output_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./${timestamp}_output</span><span class="w">  </span><span class="c1"># this is where generated output is saved</span>
+<span class="nt">experiments</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">... definition of experiment 1 ...</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">... definition of experiment 2 ...</span>
+</pre></div>
+</div>
+<section id="experiment-definition">
+<h2>Experiment definition<a class="headerlink" href="#experiment-definition" title="Link to this heading"></a></h2>
+<p>An experiment definition has all the configuration required to run an experiment. There are several ways to set up an
+experiment, but the most simple strategy is to use a single LR system and run it. This is the <code class="docutils literal notranslate"><span class="pre">single_run</span></code> strategy.
+Below is a fully working example:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">output_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./output/${timestamp}_single_run_example</span><span class="w">  </span><span class="c1"># This is where generated output is saved.</span>
+<span class="nt">experiments</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my_experiment</span><span class="w">               </span><span class="c1"># Choose a descriptive name for the experiment.</span>
+<span class="w">    </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">single_run</span><span class="w">              </span><span class="c1"># single_run is the most basic strategy.</span>
+
+<span class="w">    </span><span class="c1"># The data section: which data to use and how to use it.</span>
+<span class="w">    </span><span class="nt">data</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">provider</span><span class="p">:</span><span class="w">                       </span><span class="c1"># The data provider specifies which data to use.</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">parse_features_from_csv_url</span><span class="w">  </span><span class="c1"># We use the generic CSV parser to get glass data.</span>
+<span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/refs/heads/main/training.csv</span>
+<span class="w">        </span><span class="nt">source_id_column</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Item</span><span class="w">        </span><span class="c1"># This column identifies the source.</span>
+<span class="w">        </span><span class="nt">ignore_columns</span><span class="p">:</span><span class="w">               </span><span class="c1"># We don&#39;t need these columns at the moment, so we can safely ignore them.</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">id</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Piece</span>
+
+<span class="w">      </span><span class="nt">splits</span><span class="p">:</span><span class="w">                         </span><span class="c1"># The data splitter specifies how to split the data into training and test sets.</span>
+<span class="w">        </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">train_test_sources</span><span class="w">  </span><span class="c1"># Use a single train/test split, and split on the source IDs.</span>
+<span class="w">        </span><span class="nt">test_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span><span class="w">                </span><span class="c1"># Split the data 50/50.</span>
+
+<span class="w">    </span><span class="c1"># The LR system section: this is where the action is.</span>
+<span class="w">    </span><span class="nt">lr_system</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">architecture</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">score_based</span>
+<span class="w">      </span><span class="nt">preprocessing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">standard_scaler</span><span class="w">  </span><span class="c1"># The preprocessing is applied on the single measurements, before pairing.</span>
+<span class="w">      </span><span class="nt">pairing</span><span class="p">:</span><span class="w">                        </span><span class="c1"># The pairing method governs the way the measurements are paired.</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_pairs</span><span class="w">          </span><span class="c1"># The source_pairing method generates one pair for each combination of sources.</span>
+<span class="w">        </span><span class="nt">ratio_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">                </span><span class="c1"># Subsample different-source pairs until their number is the same as the number of</span>
+<span class="w">                                      </span><span class="c1"># same-source pairs.</span>
+<span class="w">      </span><span class="nt">comparing</span><span class="p">:</span><span class="w">                      </span><span class="c1"># The comparing module is applied on pairs.</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pipeline</span><span class="w">              </span><span class="c1"># We need two modules, so we combine them in a pipeline.</span>
+<span class="w">        </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">score</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manhattan_distance</span><span class="w">   </span><span class="c1"># First, we use the manhattan distance to calculate a &quot;score&quot;.</span>
+<span class="w">          </span><span class="nt">to_llr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logistic_calibrator</span><span class="w"> </span><span class="c1"># Next, we turn the scores into LLRs.</span>
+
+<span class="w">    </span><span class="c1"># The output section: where results are aggregated.</span>
+<span class="w">    </span><span class="nt">output</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metrics</span>
+<span class="w">        </span><span class="nt">columns</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cllr</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cllr_min</span>
+</pre></div>
+</div>
+<p>Every experiment configuration has a <code class="docutils literal notranslate"><span class="pre">strategy</span></code> property, which defines the type of experiment, and also which
+configuration settings are required. Our <code class="docutils literal notranslate"><span class="pre">single_run</span></code> setup has three main sections:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code>, which defines the dataset (<code class="docutils literal notranslate"><span class="pre">provider</span></code>) and how it is split into training and test data (<code class="docutils literal notranslate"><span class="pre">splits</span></code>);</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lr_system</span></code>, which defines the LR system; and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">output</span></code>, which specifies the required output.</p></li>
+</ul>
+<p>More advanced <a class="reference external" href="reference.html#experiment-strategies">strategies</a>, such as the <code class="docutils literal notranslate"><span class="pre">grid</span></code> strategy and the <code class="docutils literal notranslate"><span class="pre">optuna</span></code> strategy, are extensions of this. They
+can evaluate a range of LR systems for model selection, sensitivity analyses, or hyperparameter optimization.</p>
+<p>For now, we’ll stick with the <code class="docutils literal notranslate"><span class="pre">single_run</span></code> strategy. Save this setup to a file named <code class="docutils literal notranslate"><span class="pre">minimal-single-run.yaml</span></code> and
+run it as:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>lir<span class="w"> </span>minimal-single-run.yaml
+</pre></div>
+</div>
+<p>This will:</p>
+<ul class="simple">
+<li><p>load data from a CSV file;</p></li>
+<li><p>split the data randomly into a training set and a test set;</p></li>
+<li><p>train the LR system on the training set;</p></li>
+<li><p>apply the LR system on the test set;</p></li>
+<li><p>calculate the CLLR and the CLLR_min on the test set.</p></li>
+</ul>
+<p>Results are written to the directory in <code class="docutils literal notranslate"><span class="pre">output_path</span></code>.</p>
+<p>By default, a detailed log file is written to <code class="docutils literal notranslate"><span class="pre">output_path/log.txt</span></code>.</p>
+<p>Within <code class="docutils literal notranslate"><span class="pre">output_path</span></code>, a directory is created with the same name as the experiment. In the above example,
+the experiment only has a single run, but other experiment strategies may have multiple. In that case, a separate
+directory is created for each run, with the following files:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data.yaml</span></code>: the data organization that was used for the run;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lrsystem.yaml</span></code>: the LR system setup that was used for the run.</p></li>
+</ul>
+<p>Additionally, we expect to find the output specified in the <code class="docutils literal notranslate"><span class="pre">output</span></code> section. After running the example, the full
+directory listing is as follows.</p>
+<div class="jupyter_cell docutils container">
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>my_experiment/
+my_experiment/data.yaml
+my_experiment/lrsystem.yaml
+my_experiment/metrics.csv
+log.txt
+config.yaml
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="data-organization">
+<h2>Data organization<a class="headerlink" href="#data-organization" title="Link to this heading"></a></h2>
+<p>The <a class="reference external" href="reference.html#data-providers">data provider</a> delivers the dataset. It has at least the <code class="docutils literal notranslate"><span class="pre">method</span></code> property, and any other property is passed
+as a parameter of the data provision method.</p>
+<p>In evaluative settings, the data provider delivers <strong>labeled data</strong>. In the setup above, that means that the instances
+include <strong>source ids</strong>. We don’t have hypothesis labels yet, because we evaluate the instances only after pairing them.</p>
+<p>We could substitute the glass data for another data provider. Let’s try synthesized data:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">provider</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">synthesized_normal_multiclass</span><span class="w">  </span><span class="c1"># for a comparative evaluation, we use the multiclass variant</span>
+<span class="w">  </span><span class="nt">seed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w">                    </span><span class="c1"># the random seed</span>
+<span class="w">  </span><span class="nt">population</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span><span class="w">                </span><span class="c1"># the number of sources</span>
+<span class="w">    </span><span class="nt">instances_per_source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w">  </span><span class="c1"># the number of instances that are drawn for each source</span>
+<span class="w">  </span><span class="nt">dimensions</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">mean</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w">                </span><span class="c1"># the average true value of all sources</span>
+<span class="w">      </span><span class="nt">std</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">                 </span><span class="c1"># the standard deviation of the true value of all sources</span>
+<span class="w">      </span><span class="nt">error_std</span><span class="p">:</span><span class="w">             </span><span class="c1"># the standard deviation of the measurement error</span>
+</pre></div>
+</div>
+<p>In the <code class="docutils literal notranslate"><span class="pre">single_run</span></code> example above, we used a train test split (<code class="docutils literal notranslate"><span class="pre">train_test_sources</span></code>) to split the data into a
+training set and a test set. This is fine if you have plenty of data, but other <a class="reference external" href="reference.html#data-strategies">splitting strategies</a> use the data more
+efficiently. We could instead use <a class="reference external" href="https://en.wikipedia.org/wiki/Cross-validation_(statistics)">cross validation</a>:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">splits</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cross_validation_sources</span>
+<span class="w">  </span><span class="nt">folds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+</pre></div>
+</div>
+<p>Now, if we run the experiment again, the system will be trained and applied five times, on different subsets. The five
+test sets are merged and we can calculate the metrics on the full dataset!</p>
+<p>In some cases, we want full control over which instances are used for training and which ones end up in the test set.
+In that case, the train/test roles are assigned by the data provider, and we can use the predefined splitting strategies
+<code class="docutils literal notranslate"><span class="pre">predefined_train_test</span></code> or <code class="docutils literal notranslate"><span class="pre">predefined_cross_validation</span></code>.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">data</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">provider</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">glass</span>
+<span class="w">    </span><span class="nt">cache_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.glass-data</span>
+<span class="w">  </span><span class="nt">splits</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">predefined_train_test</span>
+</pre></div>
+</div>
+<p>So far, we assumed that the instances are paired by the LR system. The data provider delivers source ids, but not
+hypothesis labels. If the instances are not paired, and the data provider delivers hypothesis labels, we also need to
+choose our splitting strategy differently. Applicable data strategies are <code class="docutils literal notranslate"><span class="pre">train_test</span></code> and <code class="docutils literal notranslate"><span class="pre">cross_validation</span></code>. See
+the setup file <code class="docutils literal notranslate"><span class="pre">specific_source_evaluation.yaml</span></code> in the <code class="docutils literal notranslate"><span class="pre">examples</span></code> folder for a fully working example.</p>
+</section>
+<section id="lr-systems">
+<h2>LR systems<a class="headerlink" href="#lr-systems" title="Link to this heading"></a></h2>
+<p>The LR system section defines the LR system. There are various <a class="reference external" href="reference.html#lr-system-architecture">architectures</a>, and the architecture as well as the
+processing modules should support the input data.</p>
+<p>In the experiment setup example above, we used the <code class="docutils literal notranslate"><span class="pre">score_based</span></code> architecture. That means that we can specify a
+preprocessing method, a pairing method, and a comparing method.</p>
+<p>Preprocessing is done on the individual instances. The <a class="reference external" href="reference.html#pairing-methods">pairing method</a> governs how instances are combined into pairs.
+Comparing is done after pairing and should involve calculating LLRs.</p>
+<p>Both the preprocessing and the comparing methods are <a class="reference external" href="reference.html#lr-system-modules">modules</a> that transform the data, but <em>never</em> change the number
+of instances or the order of the instances. The <code class="docutils literal notranslate"><span class="pre">pipeline</span></code> module can be used to arrange a sequence of modules.</p>
+<p>Above, our preprocessing was done by the scaler. The <strong>shortest</strong> way to write this in the setup is as follows.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">lr_system</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">architecture</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">score_based</span>
+<span class="w">  </span><span class="nt">preprocessing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">standard_scaler</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+</pre></div>
+</div>
+<p>However, if we need to pass additional <strong>parameters</strong> to the scaler, we use the standard form.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">lr_system</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">architecture</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">score_based</span>
+<span class="w">  </span><span class="nt">preprocessing</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">standard_scaler</span>
+<span class="w">    </span><span class="nt">with_mean</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">    </span><span class="nt">with_std</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+</pre></div>
+</div>
+<p>In this form, the <code class="docutils literal notranslate"><span class="pre">method</span></code> specifies the module, and any other fields are passed as parameters to the module on
+initialization.</p>
+<p>Still, we may not be satisfied, because we want to use more than one module for preprocessing. So, we create a pipeline.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">lr_system</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">architecture</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">score_based</span>
+<span class="w">  </span><span class="nt">preprocessing</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pipeline</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">imputer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sklearn.impute.SimpleImputer</span>
+<span class="w">      </span><span class="nt">scaler</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">standard_scaler</span>
+<span class="w">        </span><span class="nt">with_mean</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">        </span><span class="nt">with_std</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+</pre></div>
+</div>
+</section>
+<section id="output">
+<h2>Output<a class="headerlink" href="#output" title="Link to this heading"></a></h2>
+<p>The output section declares how to aggregate the results from the test set.</p>
+</section>
+<section id="hyperparameters-and-data-parameters">
+<h2>Hyperparameters and data parameters<a class="headerlink" href="#hyperparameters-and-data-parameters" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="reference.html#experiment-strategies">Experiments</a> that involve multiple runs have a <code class="docutils literal notranslate"><span class="pre">hyperparameters</span></code> or a <code class="docutils literal notranslate"><span class="pre">dataparameters</span></code> section.</p>
+<p>For example, the <code class="docutils literal notranslate"><span class="pre">grid</span></code> strategy runs the LR system for each combination of hyperparameter values.
+The <code class="docutils literal notranslate"><span class="pre">optuna</span></code> strategy runs the LR system a fixed number of times, while trying to optimize parameter values.</p>
+<section id="model-selection">
+<h3>Model selection<a class="headerlink" href="#model-selection" title="Link to this heading"></a></h3>
+<p>In the <code class="docutils literal notranslate"><span class="pre">single_run</span></code> example, we have a fully working LR system that uses logistic regression to calculate LRs. Let’s
+say we want to try other LR calculation methods as well, and compare the results. To make this work, we use the same
+“baseline LR system”, but make two modifications to the experiment:</p>
+<ul class="simple">
+<li><p>replace the <code class="docutils literal notranslate"><span class="pre">single_run</span></code> strategy by the <code class="docutils literal notranslate"><span class="pre">grid</span></code> strategy; and</p></li>
+<li><p>define a hyperparameter for the LR calculation method.</p></li>
+</ul>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">output_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./output/${timestamp}_single_run_example</span><span class="w">  </span><span class="c1"># This is where generated output is saved.</span>
+<span class="nt">experiments</span><span class="p">:</span>
+<span class="hll"><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my_model_selection_exp</span><span class="w">      </span><span class="c1"># Choose a descriptive name for the experiment.</span>
+</span><span class="hll"><span class="w">    </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grid</span><span class="w">                    </span><span class="c1"># grid is more suitable for model selection.</span>
+</span>
+<span class="w">    </span><span class="c1"># The data section: which data to use and how to use it.</span>
+<span class="w">    </span><span class="nt">data</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">provider</span><span class="p">:</span><span class="w">                       </span><span class="c1"># The data provider specifies which data to use.</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">parse_features_from_csv_url</span><span class="w">  </span><span class="c1"># We use the generic CSV parser to get glass data.</span>
+<span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/refs/heads/main/training.csv</span>
+<span class="w">        </span><span class="nt">source_id_column</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Item</span><span class="w">        </span><span class="c1"># This column identifies the source.</span>
+<span class="w">        </span><span class="nt">ignore_columns</span><span class="p">:</span><span class="w">               </span><span class="c1"># We don&#39;t need these columns at the moment, so we can safely ignore them.</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">id</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Piece</span>
+
+<span class="w">      </span><span class="nt">splits</span><span class="p">:</span><span class="w">                         </span><span class="c1"># The data splitter specifies how to split the data into training and test sets.</span>
+<span class="w">        </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">train_test_sources</span><span class="w">  </span><span class="c1"># Use a single train/test split, and split on the source IDs.</span>
+<span class="w">        </span><span class="nt">test_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span><span class="w">                </span><span class="c1"># Split the data 50/50.</span>
+
+<span class="w">    </span><span class="c1"># The LR system section: this is where the action is.</span>
+<span class="w">    </span><span class="nt">lr_system</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">architecture</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">score_based</span>
+<span class="w">      </span><span class="nt">preprocessing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">standard_scaler</span><span class="w">  </span><span class="c1"># The preprocessing is applied on the single measurements, before pairing.</span>
+<span class="w">      </span><span class="nt">pairing</span><span class="p">:</span><span class="w">                        </span><span class="c1"># The pairing method governs the way the measurements are paired.</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_pairs</span><span class="w">          </span><span class="c1"># The source_pairing method generates one pair for each combination of sources.</span>
+<span class="w">        </span><span class="nt">ratio_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">                </span><span class="c1"># Subsample different-source pairs until their number is the same as the number of</span>
+<span class="w">                                      </span><span class="c1"># same-source pairs.</span>
+<span class="w">      </span><span class="nt">comparing</span><span class="p">:</span><span class="w">                      </span><span class="c1"># The comparing module is applied on pairs.</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pipeline</span><span class="w">              </span><span class="c1"># We need two modules, so we combine them in a pipeline.</span>
+<span class="w">        </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">score</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manhattan_distance</span><span class="w">   </span><span class="c1"># First, we use the manhattan distance to calculate a &quot;score&quot;.</span>
+<span class="w">          </span><span class="nt">to_llr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logistic_calibrator</span><span class="w"> </span><span class="c1"># Next, we turn the scores into LLRs.</span>
+
+<span class="w">    </span><span class="c1"># The output section: where results are aggregated.</span>
+<span class="w">    </span><span class="nt">output</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metrics</span>
+<span class="w">        </span><span class="nt">columns</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cllr</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cllr_min</span>
+
+<span class="hll"><span class="w">    </span><span class="nt">hyperparameters</span><span class="p">:</span>
+</span><span class="hll"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">comparing.steps.to_llr</span>
+</span><span class="hll"><span class="w">        </span><span class="nt">options</span><span class="p">:</span>
+</span><span class="hll"><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logistic_calibrator</span>
+</span><span class="hll"><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kde</span>
+</span><span class="hll"><span class="w">            </span><span class="nt">bandwidth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">silverman</span>
+</span><span class="hll"><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">isotonic_calibrator</span>
+</span></pre></div>
+</div>
+<p>This will run the LR system three times, once for each LR calculation method. All metrics are collected in
+<code class="docutils literal notranslate"><span class="pre">metrics.csv</span></code> and its contents is the following.</p>
+<div class="jupyter_cell docutils container">
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>lrsystem.comparing.steps.to_llr,cllr,cllr_min
+logistic_calibrator,0.07586374164928242,0.05793874427643422
+option1,0.09127504042608985,0.05812976309696413
+isotonic_calibrator,1.0,1.0
+
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="sensitivity-analysis">
+<h3>Sensitivity analysis<a class="headerlink" href="#sensitivity-analysis" title="Link to this heading"></a></h3>
+<p>We may also want to know how well the LR system is able to cope with few data points.</p>
+<p>Therefore, the CSV reader has the argument <code class="docutils literal notranslate"><span class="pre">head</span></code> to read only the first <code class="docutils literal notranslate"><span class="pre">n</span></code> instances. We are going to use that
+argument to vary the amount of input data. This is similar to the model selection setup, but since
+we vary the input data, we use <code class="docutils literal notranslate"><span class="pre">dataparameters</span></code> instead of <code class="docutils literal notranslate"><span class="pre">hyperparameters</span></code>, like so:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">output_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./output/${timestamp}_single_run_example</span><span class="w">  </span><span class="c1"># This is where generated output is saved.</span>
+<span class="nt">experiments</span><span class="p">:</span>
+<span class="hll"><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my_sensitivity_exp</span><span class="w">          </span><span class="c1"># Choose a descriptive name for the experiment.</span>
+</span><span class="w">    </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grid</span><span class="w">                    </span><span class="c1"># grid is more suitable for model selection.</span>
+
+<span class="w">    </span><span class="c1"># The data section: which data to use and how to use it.</span>
+<span class="w">    </span><span class="nt">data</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">provider</span><span class="p">:</span><span class="w">                       </span><span class="c1"># The data provider specifies which data to use.</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">parse_features_from_csv_url</span><span class="w">  </span><span class="c1"># We use the generic CSV parser to get glass data.</span>
+<span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/refs/heads/main/training.csv</span>
+<span class="w">        </span><span class="nt">source_id_column</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Item</span><span class="w">        </span><span class="c1"># This column identifies the source.</span>
+<span class="w">        </span><span class="nt">ignore_columns</span><span class="p">:</span><span class="w">               </span><span class="c1"># We don&#39;t need these columns at the moment, so we can safely ignore them.</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">id</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Piece</span>
+<span class="w">        </span><span class="nt">head</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="hll">
+</span><span class="w">      </span><span class="nt">splits</span><span class="p">:</span><span class="w">                         </span><span class="c1"># The data splitter specifies how to split the data into training and test sets.</span>
+<span class="w">        </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">train_test_sources</span><span class="w">  </span><span class="c1"># Use a single train/test split, and split on the source IDs.</span>
+<span class="w">        </span><span class="nt">test_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span><span class="w">                </span><span class="c1"># Split the data 50/50.</span>
+
+<span class="w">    </span><span class="c1"># The LR system section: this is where the action is.</span>
+<span class="w">    </span><span class="nt">lr_system</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">architecture</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">score_based</span>
+<span class="w">      </span><span class="nt">preprocessing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">standard_scaler</span><span class="w">  </span><span class="c1"># The preprocessing is applied on the single measurements, before pairing.</span>
+<span class="w">      </span><span class="nt">pairing</span><span class="p">:</span><span class="w">                        </span><span class="c1"># The pairing method governs the way the measurements are paired.</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_pairs</span><span class="w">          </span><span class="c1"># The source_pairing method generates one pair for each combination of sources.</span>
+<span class="w">        </span><span class="nt">ratio_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">                </span><span class="c1"># Subsample different-source pairs until their number is the same as the number of</span>
+<span class="w">                                      </span><span class="c1"># same-source pairs.</span>
+<span class="w">      </span><span class="nt">comparing</span><span class="p">:</span><span class="w">                      </span><span class="c1"># The comparing module is applied on pairs.</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pipeline</span><span class="w">              </span><span class="c1"># We need two modules, so we combine them in a pipeline.</span>
+<span class="w">        </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">score</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manhattan_distance</span><span class="w">   </span><span class="c1"># First, we use the manhattan distance to calculate a &quot;score&quot;.</span>
+<span class="w">          </span><span class="nt">to_llr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logistic_calibrator</span><span class="w"> </span><span class="c1"># Next, we turn the scores into LLRs.</span>
+
+<span class="w">    </span><span class="c1"># The output section: where results are aggregated.</span>
+<span class="w">    </span><span class="nt">output</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metrics</span>
+<span class="w">        </span><span class="nt">columns</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cllr</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cllr_min</span>
+
+<span class="hll"><span class="w">    </span><span class="nt">dataparameters</span><span class="p">:</span>
+</span><span class="hll"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">provider.head</span>
+</span><span class="hll"><span class="w">        </span><span class="nt">options</span><span class="p">:</span>
+</span><span class="hll"><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+</span><span class="hll"><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span>
+</span><span class="hll"><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span>
+</span><span class="hll"><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">400</span>
+</span><span class="hll"><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500</span>
+</span><span class="hll"><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">600</span>
+</span></pre></div>
+</div>
+<p>Again, this generates the results for the different data sizes, and metrics are collected in <code class="docutils literal notranslate"><span class="pre">metrics.csv</span></code>.</p>
+<div class="jupyter_cell docutils container">
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>data.provider.head,cllr,cllr_min
+100,0.20025372901102417,0.11764705882352941
+200,0.148348199714643,0.047722242615243105
+300,0.03845272393706155,0.0
+400,0.18575193986756555,0.09698987541479631
+500,0.06684501728986182,0.02148595520498102
+600,0.07633189933322226,0.04020921989983209
+
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="advanced-use-of-parameters">
+<h3>Advanced use of parameters<a class="headerlink" href="#advanced-use-of-parameters" title="Link to this heading"></a></h3>
+<p>So far, we only used categorical parameters. There are <a class="reference external" href="reference.html#hyperparameters">other types of parameters</a>, such as numerical parameters,
+cluster parameters or constants.</p>
+<p>In the sensitivity analysis, the data size (<code class="docutils literal notranslate"><span class="pre">provider.head</span></code>) is implicitly understood to be a categorical parameter.
+We may instead use a numerical variable, which yields the exact same results:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">output_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./output/${timestamp}_single_run_example</span><span class="w">  </span><span class="c1"># This is where generated output is saved.</span>
+<span class="nt">experiments</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my_sensitivity_exp</span><span class="w">          </span><span class="c1"># Choose a descriptive name for the experiment.</span>
+<span class="w">    </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grid</span><span class="w">                    </span><span class="c1"># grid is more suitable for model selection.</span>
+
+<span class="w">    </span><span class="c1"># The data section: which data to use and how to use it.</span>
+<span class="w">    </span><span class="nt">data</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">provider</span><span class="p">:</span><span class="w">                       </span><span class="c1"># The data provider specifies which data to use.</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">parse_features_from_csv_url</span><span class="w">  </span><span class="c1"># We use the generic CSV parser to get glass data.</span>
+<span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/refs/heads/main/training.csv</span>
+<span class="w">        </span><span class="nt">source_id_column</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Item</span><span class="w">        </span><span class="c1"># This column identifies the source.</span>
+<span class="w">        </span><span class="nt">ignore_columns</span><span class="p">:</span><span class="w">               </span><span class="c1"># We don&#39;t need these columns at the moment, so we can safely ignore them.</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">id</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Piece</span>
+<span class="w">        </span><span class="nt">head</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+
+<span class="w">      </span><span class="nt">splits</span><span class="p">:</span><span class="w">                         </span><span class="c1"># The data splitter specifies how to split the data into training and test sets.</span>
+<span class="w">        </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">train_test_sources</span><span class="w">  </span><span class="c1"># Use a single train/test split, and split on the source IDs.</span>
+<span class="w">        </span><span class="nt">test_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span><span class="w">                </span><span class="c1"># Split the data 50/50.</span>
+
+<span class="w">    </span><span class="c1"># The LR system section: this is where the action is.</span>
+<span class="w">    </span><span class="nt">lr_system</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">architecture</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">score_based</span>
+<span class="w">      </span><span class="nt">preprocessing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">standard_scaler</span><span class="w">  </span><span class="c1"># The preprocessing is applied on the single measurements, before pairing.</span>
+<span class="w">      </span><span class="nt">pairing</span><span class="p">:</span><span class="w">                        </span><span class="c1"># The pairing method governs the way the measurements are paired.</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_pairs</span><span class="w">          </span><span class="c1"># The source_pairing method generates one pair for each combination of sources.</span>
+<span class="w">        </span><span class="nt">ratio_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">                </span><span class="c1"># Subsample different-source pairs until their number is the same as the number of</span>
+<span class="w">                                      </span><span class="c1"># same-source pairs.</span>
+<span class="w">      </span><span class="nt">comparing</span><span class="p">:</span><span class="w">                      </span><span class="c1"># The comparing module is applied on pairs.</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pipeline</span><span class="w">              </span><span class="c1"># We need two modules, so we combine them in a pipeline.</span>
+<span class="w">        </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">score</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manhattan_distance</span><span class="w">   </span><span class="c1"># First, we use the manhattan distance to calculate a &quot;score&quot;.</span>
+<span class="w">          </span><span class="nt">to_llr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logistic_calibrator</span><span class="w"> </span><span class="c1"># Next, we turn the scores into LLRs.</span>
+
+<span class="w">    </span><span class="c1"># The output section: where results are aggregated.</span>
+<span class="w">    </span><span class="nt">output</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metrics</span>
+<span class="w">        </span><span class="nt">columns</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cllr</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cllr_min</span>
+
+<span class="w">    </span><span class="nt">dataparameters</span><span class="p">:</span>
+<span class="hll"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">provider.head</span>
+</span><span class="hll"><span class="w">        </span><span class="nt">low</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+</span><span class="hll"><span class="w">        </span><span class="nt">high</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">600</span>
+</span><span class="hll"><span class="w">        </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+</span></pre></div>
+</div>
+<p>In the examples above, the parameters are automatically recognized to be categorical or numerical. However, we can also
+explicitly specify the parameter type. The following is equivalent to the above.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">hyperparameters</span><span class="p">:</span>
+<span class="hll"><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">comparing.steps.to_llr</span>
+</span><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">categorical</span>
+<span class="w">    </span><span class="nt">options</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logistic_calibrator</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kde</span>
+<span class="w">        </span><span class="nt">bandwidth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">silverman</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">isotonic_calibrator</span>
+</pre></div>
+</div>
+<p>In most cases, the <code class="docutils literal notranslate"><span class="pre">type</span></code> property can be omitted, but it may be necessary when using custom parameter types.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lrsystem-assessment.html" class="btn btn-neutral float-left" title="Assessing LR system performance" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="reference.html" class="btn btn-neutral float-right" title="Registry reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

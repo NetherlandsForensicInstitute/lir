@@ -1,0 +1,7 @@
+lir.config.substitution module
+==============================
+
+.. automodule:: lir.config.substitution
+   :members:
+   :show-inheritance:
+   :undoc-members:

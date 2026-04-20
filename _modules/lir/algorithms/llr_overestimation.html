@@ -1,0 +1,439 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.algorithms.llr_overestimation &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#appearance-plots-and-metrics">Appearance plots and metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/lir.html">lir package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.DataProvider"><code class="docutils literal notranslate"><span class="pre">DataProvider</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.DataStrategy"><code class="docutils literal notranslate"><span class="pre">DataStrategy</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.FeatureData"><code class="docutils literal notranslate"><span class="pre">FeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.InstanceData"><code class="docutils literal notranslate"><span class="pre">InstanceData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.LLRData"><code class="docutils literal notranslate"><span class="pre">LLRData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.PairedFeatureData"><code class="docutils literal notranslate"><span class="pre">PairedFeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.Transformer"><code class="docutils literal notranslate"><span class="pre">Transformer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../lir.html">lir</a></li>
+      <li class="breadcrumb-item active">lir.algorithms.llr_overestimation</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lir.algorithms.llr_overestimation</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">KDEpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">NaiveKDE</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w"> </span><span class="kn">import</span> <span class="n">interp1d</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.signal</span><span class="w"> </span><span class="kn">import</span> <span class="n">savgol_filter</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.data.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLRData</span>
+
+
+<div class="viewcode-block" id="plot_llr_overestimation">
+<a class="viewcode-back" href="../../../api/lir.algorithms.llr_overestimation.html#lir.algorithms.llr_overestimation.plot_llr_overestimation">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_llr_overestimation</span><span class="p">(</span>
+    <span class="n">llrdata</span><span class="p">:</span> <span class="n">LLRData</span><span class="p">,</span>
+    <span class="n">num_fids</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="n">ax</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span> <span class="o">=</span> <span class="n">plt</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot LLR-overestimation as a function of the system LLR.</span>
+
+<span class="sd">    The LLR-overestimation is defined as the log-10 of the ratio between</span>
+<span class="sd">        (1) the system LRs; the outputs of the LR-system, and</span>
+<span class="sd">        (2) the empirical LRs; the ratio&#39;s between the relative frequencies of the H1-LLRs and H2-LLRs.</span>
+
+<span class="sd">    See documentation on :func:`calc_llr_overestimation` for more details on the LLR-overestimation.</span>
+
+<span class="sd">    An interval around the LLR-overestimation can be calculated using fiducial distributions. The average absolute</span>
+<span class="sd">    LLR-overestimation can be used as single metric.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    llrdata : LLRData</span>
+<span class="sd">        LLR data containing LLRs and ground-truth labels.</span>
+<span class="sd">    num_fids : int, optional</span>
+<span class="sd">        Number of fiducial distributions to base the interval on; use 0 for no interval.</span>
+<span class="sd">    ax : plt.Axes, optional</span>
+<span class="sd">        Matplotlib axes to plot into.</span>
+<span class="sd">    **kwargs : Any</span>
+<span class="sd">        Additional arguments passed to `calc_llr_overestimation` and/or `calc_fiducial_density_functions`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">llrs</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">llrdata</span><span class="o">.</span><span class="n">llrs</span><span class="p">,</span> <span class="n">llrdata</span><span class="o">.</span><span class="n">labels</span>
+    <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;LLR-overestimation cannot be calculated: no labels available in the LLRData.&#39;</span><span class="p">)</span>
+
+    <span class="n">llr_grid</span><span class="p">,</span> <span class="n">llr_overestimation</span><span class="p">,</span> <span class="n">llr_overestimation_interval</span> <span class="o">=</span> <span class="n">calc_llr_overestimation</span><span class="p">(</span><span class="n">llrs</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">num_fids</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">llr_grid</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">llr_overestimation</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">llr_overestimation_interval</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;LLR-overestimation could not be calculated: no overlap between H1- and H2-distributions.&#39;</span><span class="p">)</span>
+    <span class="n">llr_misestimation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">llr_overestimation</span><span class="p">))</span>
+
+    <span class="c1"># Make the LLR-overestimation plot</span>
+    <span class="n">label_text</span> <span class="o">=</span> <span class="s1">&#39;mean(abs) = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">llr_misestimation</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">llr_grid</span><span class="p">,</span> <span class="n">llr_overestimation</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label_text</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">num_fids</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">llr_grid</span><span class="p">,</span>
+            <span class="n">llr_overestimation_interval</span><span class="p">[:,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)],</span>
+            <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_color</span><span class="p">(),</span>
+        <span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;dotted&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;log$_</span><span class="si">{10}</span><span class="s1">$(system LR)&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;LLR-overestimation&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper center&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="calc_llr_overestimation">
+<a class="viewcode-back" href="../../../api/lir.algorithms.llr_overestimation.html#lir.algorithms.llr_overestimation.calc_llr_overestimation">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">calc_llr_overestimation</span><span class="p">(</span>
+    <span class="n">llrs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">num_fids</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="n">bw</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;silverman&#39;</span><span class="p">,</span> <span class="s1">&#39;silverman&#39;</span><span class="p">),</span>
+    <span class="n">num_grid_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate LLR-overestimation as a function of the system LLR.</span>
+
+<span class="sd">     The LLR-overestimation is defined as the log-10 of the ratio between</span>
+<span class="sd">        (1) the system LRs; the outputs of the LR-system, and</span>
+<span class="sd">        (2) the empirical LRs; the ratio&#39;s between the relative frequencies of the H1-LLRs and H2-LLRs.</span>
+
+<span class="sd">     - It quantifies the deviation from the requirement that &#39;the LR of the LR is the LR&#39;: the &#39;LR-consistency&#39;.</span>
+<span class="sd">     - For a perfect LR-system, the LLR-overestimation is 0: the system and empirical LRs are the same.</span>
+<span class="sd">     - A positive LLR-overestimation indicates that the system LRs are too high, compared to the empirical LRs.</span>
+<span class="sd">     - An LLR-overestimation of +1 indicates that the system LRs are too high by a factor of 10.</span>
+<span class="sd">     - An LLR-overestimation of -1 indicates that the system LRs are too low by a factor of 10.</span>
+<span class="sd">     - The relative frequencies are estimated with KDE using Silverman&#39;s rule-of-thumb for the bandwidths.</span>
+<span class="sd">     - An interval around the LLR-overestimation can be calculated using fiducial distributions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    llrs : np.ndarray</span>
+<span class="sd">        Log10 likelihood ratios as calculated by the LR system.</span>
+<span class="sd">    y : np.ndarray</span>
+<span class="sd">        Corresponding labels (0 for H2/Hd, 1 for H1/Hp).</span>
+<span class="sd">    num_fids : int, optional</span>
+<span class="sd">        Number of fiducial distributions used for intervals.</span>
+<span class="sd">    bw : tuple[str | float, str | float], optional</span>
+<span class="sd">        Bandwidth specifications for KDEs of H1 and H2.</span>
+<span class="sd">    num_grid_points : int, optional</span>
+<span class="sd">        Number of grid points used for calculating overestimation.</span>
+<span class="sd">    alpha : float, optional</span>
+<span class="sd">        Confidence level used for the interval.</span>
+<span class="sd">    **kwargs : Any</span>
+<span class="sd">        Additional arguments passed to `calc_fiducial_density_functions`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple[np.ndarray | None, np.ndarray | None, np.ndarray | None]</span>
+<span class="sd">        Tuple of LLR grid, overestimation best estimate, and overestimation interval.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Convert the LRs to log10 values (LLRs)</span>
+    <span class="n">llr_h1</span> <span class="o">=</span> <span class="n">llrs</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">llr_h2</span> <span class="o">=</span> <span class="n">llrs</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># Determine x-limits to be used in the plot: based on lowest H1-LLRs and highest H2-LLRs</span>
+    <span class="c1"># In case of very many LLRs do not take the very extreme values, due to instabilities in areas with little data</span>
+    <span class="n">llr_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span>
+        <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">llr_h1</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;hazen&#39;</span><span class="p">),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">llr_h2</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;hazen&#39;</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">llr_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span>
+        <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">llr_h1</span><span class="p">,</span> <span class="mf">0.999</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;hazen&#39;</span><span class="p">),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">llr_h2</span><span class="p">,</span> <span class="mf">0.999</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;hazen&#39;</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">llr_min</span> <span class="o">&gt;=</span> <span class="n">llr_max</span><span class="p">:</span>
+        <span class="c1"># There is no overlap between the H1- and H2-distributions: LLR-overestimation cannot be determined.</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="n">llr_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">llr_min</span><span class="p">,</span> <span class="n">llr_max</span><span class="p">,</span> <span class="n">num_grid_points</span><span class="p">)</span>
+    <span class="c1"># Get the pdf&#39;s of the empirical distributions for the two LLR-sets</span>
+    <span class="c1"># If a method is specified to determine the bandwidth, then do this based on the data within the relevant range only</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bw</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">llr_inrange</span> <span class="o">=</span> <span class="p">(</span><span class="n">llr_h1</span> <span class="o">&gt;=</span> <span class="n">llr_min</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">llr_h1</span> <span class="o">&lt;=</span> <span class="n">llr_max</span><span class="p">)</span>
+        <span class="n">kde_h</span> <span class="o">=</span> <span class="n">NaiveKDE</span><span class="p">(</span><span class="n">bw</span><span class="o">=</span><span class="n">bw</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">llr_h1</span><span class="p">[</span><span class="n">llr_inrange</span><span class="p">])</span>
+        <span class="n">bw_h1</span> <span class="o">=</span> <span class="n">kde_h</span><span class="o">.</span><span class="n">bw</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">bw_h1</span> <span class="o">=</span> <span class="n">bw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bw</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">llr_inrange</span> <span class="o">=</span> <span class="p">(</span><span class="n">llr_h2</span> <span class="o">&gt;=</span> <span class="n">llr_min</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">llr_h2</span> <span class="o">&lt;=</span> <span class="n">llr_max</span><span class="p">)</span>
+        <span class="n">kde_h</span> <span class="o">=</span> <span class="n">NaiveKDE</span><span class="p">(</span><span class="n">bw</span><span class="o">=</span><span class="n">bw</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">llr_h2</span><span class="p">[</span><span class="n">llr_inrange</span><span class="p">])</span>
+        <span class="n">bw_h2</span> <span class="o">=</span> <span class="n">kde_h</span><span class="o">.</span><span class="n">bw</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">bw_h2</span> <span class="o">=</span> <span class="n">bw</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># Apply the bandwidth to the full dataset when calculating the probability densities.</span>
+    <span class="n">pdf_empirical_h1</span> <span class="o">=</span> <span class="n">NaiveKDE</span><span class="p">(</span><span class="n">bw</span><span class="o">=</span><span class="n">bw_h1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">llr_h1</span><span class="p">)</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">llr_grid</span><span class="p">)</span>
+    <span class="n">pdf_empirical_h2</span> <span class="o">=</span> <span class="n">NaiveKDE</span><span class="p">(</span><span class="n">bw</span><span class="o">=</span><span class="n">bw_h2</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">llr_h2</span><span class="p">)</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">llr_grid</span><span class="p">)</span>
+    <span class="c1"># Calculate the empirical LRs</span>
+    <span class="n">lrs_empirical</span> <span class="o">=</span> <span class="n">pdf_empirical_h1</span> <span class="o">/</span> <span class="n">pdf_empirical_h2</span>
+    <span class="c1"># Use them to calculate the LLR-overestimation</span>
+    <span class="n">lrs_system</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="n">llr_grid</span>
+    <span class="n">llr_overestimation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">lrs_system</span> <span class="o">/</span> <span class="n">lrs_empirical</span><span class="p">)</span>
+    <span class="c1"># Also calculate an interval around the LLR-overestimation</span>
+    <span class="k">if</span> <span class="n">num_fids</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># Calculate pdf&#39;s of fiducial distributions of the two LLR-sets, and calculate distributions of observed LRs</span>
+        <span class="n">pdfs_empirical_fid_h1</span> <span class="o">=</span> <span class="n">calc_fiducial_density_functions</span><span class="p">(</span><span class="n">llr_h1</span><span class="p">,</span> <span class="n">llr_grid</span><span class="p">,</span> <span class="s1">&#39;pdf&#39;</span><span class="p">,</span> <span class="n">num_fids</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">pdfs_empirical_fid_h2</span> <span class="o">=</span> <span class="n">calc_fiducial_density_functions</span><span class="p">(</span><span class="n">llr_h2</span><span class="p">,</span> <span class="n">llr_grid</span><span class="p">,</span> <span class="s1">&#39;pdf&#39;</span><span class="p">,</span> <span class="n">num_fids</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">pdfs_empirical_fid_h1</span><span class="p">[</span><span class="n">pdfs_empirical_fid_h1</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="n">pdfs_empirical_fid_h2</span><span class="p">[</span><span class="n">pdfs_empirical_fid_h2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="n">lrs_empirical_fid</span> <span class="o">=</span> <span class="n">pdfs_empirical_fid_h1</span> <span class="o">/</span> <span class="n">pdfs_empirical_fid_h2</span>
+        <span class="c1"># Calculate percentiles of these distributions; allowing some nans, but not too many</span>
+        <span class="n">percentages</span> <span class="o">=</span> <span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">alpha</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">lrs_empirical_interval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">lrs_empirical_fid</span><span class="p">,</span> <span class="n">percentages</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;hazen&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+        <span class="n">too_many_nans</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">lrs_empirical_fid</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mf">0.05</span> <span class="o">*</span> <span class="n">num_fids</span><span class="p">)</span>
+        <span class="n">lrs_empirical_interval</span><span class="p">[</span><span class="n">too_many_nans</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="c1"># Do the conversion to the LLR-overestimation</span>
+        <span class="n">lrs_system_2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">lrs_system</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">percentages</span><span class="p">)))</span>
+        <span class="n">llr_overestimation_interval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">lrs_system_2d</span> <span class="o">/</span> <span class="n">lrs_empirical_interval</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">llr_overestimation_interval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">llr_grid</span><span class="p">),</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="n">llr_overestimation_interval</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">llr_grid</span><span class="p">,</span> <span class="n">llr_overestimation</span><span class="p">,</span> <span class="n">llr_overestimation_interval</span></div>
+
+
+
+<div class="viewcode-block" id="calc_fiducial_density_functions">
+<a class="viewcode-back" href="../../../api/lir.algorithms.llr_overestimation.html#lir.algorithms.llr_overestimation.calc_fiducial_density_functions">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">calc_fiducial_density_functions</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">df_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;pdf&#39;</span><span class="p">,</span>
+    <span class="n">num_fids</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="n">smoothing_grid_fraction</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="n">smoothing_sample_size_correction</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">seed</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate smoothed density functions of fiducial distributions for a dataset.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : np.ndarray</span>
+<span class="sd">        One-dimensional array of data points.</span>
+<span class="sd">    grid : np.ndarray</span>
+<span class="sd">        One-dimensional array of equally spaced grid points.</span>
+<span class="sd">    df_type : str, optional</span>
+<span class="sd">        Density function type: `&#39;pdf&#39;` or `&#39;cdf&#39;`.</span>
+<span class="sd">    num_fids : int, optional</span>
+<span class="sd">        Number of fiducial distributions to generate.</span>
+<span class="sd">    smoothing_grid_fraction : float, optional</span>
+<span class="sd">        Fraction of grid points used as half window for smoothing.</span>
+<span class="sd">    smoothing_sample_size_correction : float, optional</span>
+<span class="sd">        Sample-size correction factor for smoothing window size.</span>
+<span class="sd">    seed : int | None, optional</span>
+<span class="sd">        Random seed for fiducial sampling.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        Density-function values evaluated on `grid`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Generate cdfs of the fiducial distributions: sorted random draws from a uniform distribution</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">cdfs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">num_fids</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># Savitzky-Golay filtering will be used later on during this calculation. To try and limit edge-effects near the</span>
+    <span class="c1"># grid edges, an extended grid will be used. Half of the filter window will be added at each side of the grid.</span>
+    <span class="c1"># The size (number of grid points) of the filter window depends on the grid size and on the sample size. The</span>
+    <span class="c1"># fraction of the grid to use as half window is specified by the &#39;smoothing_grid_fraction&#39; parameter; the sample</span>
+    <span class="c1"># size correction (if any) by the &#39;smoothing_sample_size_correction&#39; parameter. For a sample size around 100, it is</span>
+    <span class="c1"># optimal to use about 10% of the number of grid points as half window; this is used as basis for the correction.</span>
+    <span class="c1"># For a sample size of 10 the percentage increases to 20%, and for a sample size of 1000 it decreases to about 5%.</span>
+    <span class="n">samples_in_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">data</span> <span class="o">&gt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">grid</span><span class="p">))</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">data</span> <span class="o">&lt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">grid</span><span class="p">)))</span>
+    <span class="n">sample_size_correction</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">100</span> <span class="o">/</span> <span class="n">samples_in_grid</span><span class="p">)</span> <span class="o">*</span> <span class="n">smoothing_sample_size_correction</span><span class="p">)</span>
+    <span class="n">half_window</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span> <span class="o">*</span> <span class="n">smoothing_grid_fraction</span> <span class="o">*</span> <span class="n">sample_size_correction</span><span class="p">)</span>
+    <span class="n">grid_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">grid</span><span class="p">[:</span><span class="mi">2</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">extended_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+        <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">half_window</span> <span class="o">*</span> <span class="n">grid_diff</span><span class="p">,</span> <span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">grid_diff</span><span class="p">,</span> <span class="n">half_window</span><span class="p">),</span>
+            <span class="n">grid</span><span class="p">,</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">grid_diff</span><span class="p">,</span> <span class="n">grid</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">half_window</span> <span class="o">*</span> <span class="n">grid_diff</span><span class="p">,</span> <span class="n">half_window</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="c1"># Do interpolation on this grid; make sure extrapolation is allowed (typically near probabilities of 0 and 1)</span>
+    <span class="n">f_interp</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">cdfs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s1">&#39;extrapolate&#39;</span><span class="p">)</span>
+    <span class="n">cdfs_extended_grid</span> <span class="o">=</span> <span class="n">f_interp</span><span class="p">(</span><span class="n">extended_grid</span><span class="p">)</span>
+    <span class="c1"># Ensure no probabilities below 0 or above 1 in the cdfs</span>
+    <span class="n">cdfs_extended_grid</span><span class="p">[</span><span class="n">cdfs_extended_grid</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">cdfs_extended_grid</span><span class="p">[</span><span class="n">cdfs_extended_grid</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="c1"># Calculate pdfs (1st derivative) or cdfs (no derivative) , while also performing smoothing/noise-reduction;</span>
+    <span class="c1"># This uses a low-order Savitzky-Golay filter, which requires an equally spaced grid.</span>
+    <span class="n">window_length</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">half_window</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">df_type</span> <span class="o">==</span> <span class="s1">&#39;pdf&#39;</span><span class="p">:</span>
+        <span class="n">derivative_order</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">df_type</span> <span class="o">==</span> <span class="s1">&#39;cdf&#39;</span><span class="p">:</span>
+        <span class="n">derivative_order</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unsupported type of density function specified: only cdf and pdf are supported.&#39;</span><span class="p">)</span>
+    <span class="n">dfs_extended_grid</span> <span class="o">=</span> <span class="n">savgol_filter</span><span class="p">(</span>
+        <span class="n">cdfs_extended_grid</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+        <span class="n">window_length</span><span class="p">,</span>
+        <span class="n">polyorder</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">deriv</span><span class="o">=</span><span class="n">derivative_order</span><span class="p">,</span>
+        <span class="n">delta</span><span class="o">=</span><span class="n">grid_diff</span><span class="p">,</span>
+        <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="c1"># Ensure no probabilities below 0 are present</span>
+    <span class="n">dfs_extended_grid</span><span class="p">[</span><span class="n">dfs_extended_grid</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">dfs_grid</span> <span class="o">=</span> <span class="n">dfs_extended_grid</span><span class="p">[</span><span class="n">half_window</span><span class="p">:</span><span class="o">-</span><span class="n">half_window</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">dfs_grid</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

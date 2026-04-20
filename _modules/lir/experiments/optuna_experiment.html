@@ -1,0 +1,291 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.experiments.optuna_experiment &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#appearance-plots-and-metrics">Appearance plots and metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/lir.html">lir package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.DataProvider"><code class="docutils literal notranslate"><span class="pre">DataProvider</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.DataStrategy"><code class="docutils literal notranslate"><span class="pre">DataStrategy</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.FeatureData"><code class="docutils literal notranslate"><span class="pre">FeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.InstanceData"><code class="docutils literal notranslate"><span class="pre">InstanceData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.LLRData"><code class="docutils literal notranslate"><span class="pre">LLRData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.PairedFeatureData"><code class="docutils literal notranslate"><span class="pre">PairedFeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.Transformer"><code class="docutils literal notranslate"><span class="pre">Transformer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../lir.html">lir</a></li>
+      <li class="breadcrumb-item active">lir.experiments.optuna_experiment</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lir.experiments.optuna_experiment</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">optuna</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.aggregation</span><span class="w"> </span><span class="kn">import</span> <span class="n">Aggregation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_data_object</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.lrsystem_architectures</span><span class="w"> </span><span class="kn">import</span> <span class="n">augment_config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.substitution</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ContextAwareDict</span><span class="p">,</span>
+    <span class="n">FloatHyperparameter</span><span class="p">,</span>
+    <span class="n">Hyperparameter</span><span class="p">,</span>
+    <span class="n">HyperparameterOption</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.data.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLRData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.experiments</span><span class="w"> </span><span class="kn">import</span> <span class="n">Experiment</span>
+
+
+<div class="viewcode-block" id="OptunaExperiment">
+<a class="viewcode-back" href="../../../api/lir.experiments.optuna_experiment.html#lir.experiments.OptunaExperiment">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">OptunaExperiment</span><span class="p">(</span><span class="n">Experiment</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Representation of an experiment run for each provided LR system.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Name used to identify this object in outputs and logs.</span>
+<span class="sd">    data_config : ContextAwareDict</span>
+<span class="sd">        Data configuration used to construct datasets for runs.</span>
+<span class="sd">    outputs : Sequence[Aggregation]</span>
+<span class="sd">        Output aggregation definitions executed after each run.</span>
+<span class="sd">    output_path : Path</span>
+<span class="sd">        Path where generated outputs are written.</span>
+<span class="sd">    baseline_config : ContextAwareDict</span>
+<span class="sd">        Baseline configuration to be tuned during optimisation.</span>
+<span class="sd">    hyperparameters : list[Hyperparameter]</span>
+<span class="sd">        Hyperparameters varied during optimisation.</span>
+<span class="sd">    n_trials : int</span>
+<span class="sd">        Number of optimisation trials to execute.</span>
+<span class="sd">    metric_function : Callable[[LLRData], float]</span>
+<span class="sd">        Value passed via ``metric_function``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">data_config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span>
+        <span class="n">outputs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Aggregation</span><span class="p">],</span>
+        <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">baseline_config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span>
+        <span class="n">hyperparameters</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Hyperparameter</span><span class="p">],</span>
+        <span class="n">n_trials</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">metric_function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">LLRData</span><span class="p">],</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_config</span> <span class="o">=</span> <span class="n">data_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_provider</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">splitter</span> <span class="o">=</span> <span class="n">parse_data_object</span><span class="p">(</span><span class="n">data_config</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">baseline_config</span> <span class="o">=</span> <span class="n">baseline_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hyperparameters</span> <span class="o">=</span> <span class="n">hyperparameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_trials</span> <span class="o">=</span> <span class="n">n_trials</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metric_function</span> <span class="o">=</span> <span class="n">metric_function</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_parameter_value</span><span class="p">(</span><span class="n">trial</span><span class="p">:</span> <span class="n">optuna</span><span class="o">.</span><span class="n">Trial</span><span class="p">,</span> <span class="n">param</span><span class="p">:</span> <span class="n">Hyperparameter</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HyperparameterOption</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">FloatHyperparameter</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span>
+                <span class="n">param</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
+                <span class="n">low</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">low</span><span class="p">,</span>
+                <span class="n">high</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">high</span><span class="p">,</span>
+                <span class="n">step</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">step</span><span class="p">,</span>
+                <span class="n">log</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">log</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">HyperparameterOption</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="p">{</span><span class="n">param</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">value</span><span class="p">})</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="n">option</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">option</span> <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">param</span><span class="o">.</span><span class="n">options</span><span class="p">()}</span>
+            <span class="n">selected_option_name</span> <span class="o">=</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_categorical</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+            <span class="k">return</span> <span class="n">options</span><span class="p">[</span><span class="n">selected_option_name</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_hyperparameter_substitutions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial</span><span class="p">:</span> <span class="n">optuna</span><span class="o">.</span><span class="n">Trial</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">HyperparameterOption</span><span class="p">]:</span>
+        <span class="n">assignments</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hyperparameters</span><span class="p">:</span>
+            <span class="n">assignments</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_parameter_value</span><span class="p">(</span><span class="n">trial</span><span class="p">,</span> <span class="n">param</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">assignments</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_objective</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial</span><span class="p">:</span> <span class="n">optuna</span><span class="o">.</span><span class="n">Trial</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">assignments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_hyperparameter_substitutions</span><span class="p">(</span><span class="n">trial</span><span class="p">)</span>
+        <span class="n">lr_system</span> <span class="o">=</span> <span class="n">augment_config</span><span class="p">(</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">baseline_config</span><span class="p">),</span> <span class="n">assignments</span><span class="p">)</span>
+
+        <span class="c1"># add optuna values as system parameters</span>
+        <span class="n">hyperparameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">assignments</span>
+        <span class="n">hyperparameters</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="c1"># trial.number is a sequence number, starting at 0</span>
+                <span class="s1">&#39;trial&#39;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">number</span><span class="p">,</span>
+                <span class="c1"># the best trial is known only at the second run, since the first trial results are not available yet</span>
+                <span class="s1">&#39;best_trial&#39;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">study</span><span class="o">.</span><span class="n">best_trial</span><span class="o">.</span><span class="n">number</span> <span class="k">if</span> <span class="n">trial</span><span class="o">.</span><span class="n">number</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="n">experiment_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;trial</span><span class="si">{</span><span class="n">trial</span><span class="o">.</span><span class="n">number</span><span class="si">:</span><span class="s1">03d</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="n">split_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">splitter</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_provider</span><span class="o">.</span><span class="n">get_instances</span><span class="p">())</span>
+        <span class="n">llr_data</span><span class="p">:</span> <span class="n">LLRData</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_lrsystem</span><span class="p">(</span>
+            <span class="n">lr_system</span><span class="p">,</span>
+            <span class="n">split_data</span><span class="p">,</span>
+            <span class="n">hyperparameters</span><span class="p">,</span>
+            <span class="n">experiment_name</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_config</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric_function</span><span class="p">(</span><span class="n">llr_data</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_and_run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">study</span> <span class="o">=</span> <span class="n">optuna</span><span class="o">.</span><span class="n">create_study</span><span class="p">()</span>  <span class="c1"># Create a new study.</span>
+        <span class="n">study</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_objective</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_trials</span><span class="p">)</span>  <span class="c1"># Invoke optimization of the objective function.</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

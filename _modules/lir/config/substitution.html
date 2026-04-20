@@ -1,0 +1,805 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.config.substitution &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#appearance-plots-and-metrics">Appearance plots and metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/lir.html">lir package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.DataProvider"><code class="docutils literal notranslate"><span class="pre">DataProvider</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.DataStrategy"><code class="docutils literal notranslate"><span class="pre">DataStrategy</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.FeatureData"><code class="docutils literal notranslate"><span class="pre">FeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.InstanceData"><code class="docutils literal notranslate"><span class="pre">InstanceData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.LLRData"><code class="docutils literal notranslate"><span class="pre">LLRData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.PairedFeatureData"><code class="docutils literal notranslate"><span class="pre">PairedFeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.Transformer"><code class="docutils literal notranslate"><span class="pre">Transformer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../lir.html">lir</a></li>
+      <li class="breadcrumb-item active">lir.config.substitution</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lir.config.substitution</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Substitution module.</span>
+
+<span class="sd">This module provides utility functions for replacing or modifying components of</span>
+<span class="sd">an LR Benchmark pipeline at runtime. Typical use cases include comparing</span>
+<span class="sd">different modelling approaches (e.g. logistic regression versus support vector</span>
+<span class="sd">machines) or optimising system hyperparameters.</span>
+
+<span class="sd">For example, the ``parameters`` section of the ``model_selection_run`` benchmark</span>
+<span class="sd">can define a path (``comparing.clf``) to be modified using the options listed in</span>
+<span class="sd">the ``values`` field. Each option updates the ``comparing`` component in the LR</span>
+<span class="sd">system configuration used by the pipeline.</span>
+
+<span class="sd">.. code-block:: yaml</span>
+
+<span class="sd">    experiments:</span>
+<span class="sd">      - name: model_selection_run</span>
+<span class="sd">        lr_system: ...</span>
+<span class="sd">        ...</span>
+<span class="sd">        hyperparameters:</span>
+<span class="sd">          - path: comparing.clf</span>
+<span class="sd">            options:</span>
+<span class="sd">              - name: logit</span>
+<span class="sd">                method: logistic_regression</span>
+<span class="sd">                C: 1</span>
+<span class="sd">              - name: svm</span>
+<span class="sd">                method: svm</span>
+<span class="sd">                probability: True</span>
+<span class="sd">&quot;&quot;&quot;</span>  <span class="c1"># noqa: D214, D405, D406, D407, D411</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapping</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">NamedTuple</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir</span><span class="w"> </span><span class="kn">import</span> <span class="n">registry</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.base</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ContextAwareDict</span><span class="p">,</span>
+    <span class="n">ContextAwareList</span><span class="p">,</span>
+    <span class="n">YamlParseError</span><span class="p">,</span>
+    <span class="n">_expand</span><span class="p">,</span>
+    <span class="n">check_is_empty</span><span class="p">,</span>
+    <span class="n">config_parser</span><span class="p">,</span>
+    <span class="n">pop_field</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.data.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">search_path</span>
+
+
+<span class="n">LOG</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="HyperparameterOption">
+<a class="viewcode-back" href="../../../api/lir.config.substitution.html#lir.config.substitution.HyperparameterOption">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">HyperparameterOption</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An option for a value of a hyperparameter.</span>
+
+<span class="sd">    A `HyperparameterOption` is a named tuple with two fields:</span>
+<span class="sd">    - name: a descriptive name of this option</span>
+<span class="sd">    - substitutions: a mapping of configuration paths to values</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">substitutions</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span></div>
+
+
+
+<div class="viewcode-block" id="Hyperparameter">
+<a class="viewcode-back" href="../../../api/lir.config.substitution.html#lir.config.substitution.Hyperparameter">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Hyperparameter</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for all hyperparameters.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Hyperparameter name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+<div class="viewcode-block" id="Hyperparameter.options">
+<a class="viewcode-back" href="../../../api/lir.config.substitution.html#lir.config.substitution.Hyperparameter.options">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">options</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">HyperparameterOption</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a list of values that a hyperparameter can take in the context of a particular experiment.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list[HyperparameterOption]</span>
+<span class="sd">            List of options for this hyperparameter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="CategoricalHyperparameter">
+<a class="viewcode-back" href="../../../api/lir.config.substitution.html#lir.config.substitution.CategoricalHyperparameter">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CategoricalHyperparameter</span><span class="p">(</span><span class="n">Hyperparameter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A categorical hyperparameter.</span>
+
+<span class="sd">    A categorical hyperparameter has the following fields in a YAML configuration:</span>
+<span class="sd">    - path: the path of this hyperparameter in the LR system configuration</span>
+<span class="sd">    - options: a list of options</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Hyperparameter name.</span>
+<span class="sd">    options : list[HyperparameterOption]</span>
+<span class="sd">        Available options.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">options</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">HyperparameterOption</span><span class="p">]):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_options</span> <span class="o">=</span> <span class="n">options</span>
+
+<div class="viewcode-block" id="CategoricalHyperparameter.options">
+<a class="viewcode-back" href="../../../api/lir.config.substitution.html#lir.config.substitution.CategoricalHyperparameter.options">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">options</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">HyperparameterOption</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provide API access to the options for the hyperparameter.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list[HyperparameterOption]</span>
+<span class="sd">            Configured categorical options.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options</span></div>
+</div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_categorical_option</span><span class="p">(</span><span class="n">spec</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">option_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HyperparameterOption</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse one categorical option specification.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    spec : Any</span>
+<span class="sd">        Option specification.</span>
+<span class="sd">    path : str</span>
+<span class="sd">        Target substitution path.</span>
+<span class="sd">    option_index : int | None</span>
+<span class="sd">        Position of this option in the list.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    HyperparameterOption</span>
+<span class="sd">        Parsed option.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
+        <span class="c1"># use the explicitly declared name, if any</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">&#39;option_name&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># use the explicitly declared value, or default to the full subtree</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;value&#39;</span> <span class="ow">in</span> <span class="n">spec</span> <span class="k">else</span> <span class="n">spec</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="n">Mapping</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;option</span><span class="si">{</span><span class="n">option_index</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">HyperparameterOption</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">{</span><span class="n">path</span><span class="p">:</span> <span class="n">value</span><span class="p">})</span>
+
+
+<span class="nd">@config_parser</span><span class="p">(</span><span class="n">reference</span><span class="o">=</span><span class="s1">&#39;lir.config.substitution.parse_categorical&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_categorical</span><span class="p">(</span><span class="n">spec</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;CategoricalHyperparameter&#39;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse a categorical hyperparameter from configuration.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    spec : ContextAwareDict</span>
+<span class="sd">        Hyperparameter specification.</span>
+<span class="sd">    output_path : Path</span>
+<span class="sd">        Unused output path required by parser API.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    CategoricalHyperparameter</span>
+<span class="sd">        Parsed categorical hyperparameter.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">&#39;path&#39;</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">path</span> <span class="ow">or</span> <span class="s1">&#39;lrsystem&#39;</span><span class="p">)</span>
+
+    <span class="c1"># get the option definitions</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">&#39;options&#39;</span><span class="p">)</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="n">_parse_categorical_option</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">spec</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">options</span><span class="p">)]</span>
+
+    <span class="n">check_is_empty</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_substitution</span><span class="p">(</span><span class="n">spec</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse one substitution specification.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    spec : ContextAwareDict</span>
+<span class="sd">        Substitution specification with ``path`` and ``value`` fields.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple[str, Any]</span>
+<span class="sd">        Path and value pair.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">&#39;path&#39;</span><span class="p">)</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">)</span>
+    <span class="n">check_is_empty</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">path</span><span class="p">,</span> <span class="n">value</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_clustered_option</span><span class="p">(</span><span class="n">spec</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HyperparameterOption</span><span class="p">:</span>
+    <span class="n">option_name</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">&#39;option_name&#39;</span><span class="p">)</span>
+    <span class="n">substitutions</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">&#39;substitutions&#39;</span><span class="p">)</span>
+    <span class="n">substitutions</span> <span class="o">=</span> <span class="p">[</span><span class="n">_parse_substitution</span><span class="p">(</span><span class="n">subst</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">subst</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">substitutions</span><span class="p">)]</span>
+    <span class="n">substitutions</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">substitutions</span><span class="p">)</span>
+    <span class="n">check_is_empty</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">HyperparameterOption</span><span class="p">(</span><span class="n">option_name</span><span class="p">,</span> <span class="n">substitutions</span><span class="p">)</span>
+
+
+<span class="nd">@config_parser</span><span class="p">(</span><span class="n">reference</span><span class="o">=</span><span class="s1">&#39;lir.config.substitution.parse_clustered&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_clustered</span><span class="p">(</span><span class="n">spec</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CategoricalHyperparameter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse the configuration section of a clustered hyperparameter.</span>
+
+<span class="sd">    A cluster is a set of hyperparameters that are changed at the same time.</span>
+
+<span class="sd">    A clustered hyperparameter has the following fields in a YAML configuration:</span>
+<span class="sd">    - name (optional): a descriptive name for this hyperparameter</span>
+<span class="sd">    - options: a list of options</span>
+
+<span class="sd">    Each option has the following options:</span>
+<span class="sd">    - name: a descriptive name for this option</span>
+<span class="sd">    - substitutions: a list of substitutions, with a `path` and `value` field each</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    spec : ContextAwareDict</span>
+<span class="sd">        Hyperparameter specification.</span>
+<span class="sd">    output_path : Path</span>
+<span class="sd">        Unused output path required by parser API.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    CategoricalHyperparameter</span>
+<span class="sd">        Parsed clustered hyperparameter.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parameter_name</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">)</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">&#39;options&#39;</span><span class="p">)</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="n">_parse_clustered_option</span><span class="p">(</span><span class="n">option</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">option</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">options</span><span class="p">)]</span>
+    <span class="n">check_is_empty</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="n">parameter_name</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+
+
+<span class="nd">@config_parser</span><span class="p">(</span><span class="n">reference</span><span class="o">=</span><span class="s1">&#39;lir.config.substitution.parse_constant&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_constant</span><span class="p">(</span><span class="n">spec</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CategoricalHyperparameter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse the configuration section of a constant.</span>
+
+<span class="sd">    A constant is functionally identical to a categorical hyperparameter with a single option and has the following</span>
+<span class="sd">    fields in a YAML configuration:</span>
+
+<span class="sd">    - path: the path of this hyperparameter in the LR system configuration</span>
+<span class="sd">    - value: the substitution value</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    spec : ContextAwareDict</span>
+<span class="sd">        Hyperparameter specification.</span>
+<span class="sd">    output_path : Path</span>
+<span class="sd">        Unused output path required by parser API.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    CategoricalHyperparameter</span>
+<span class="sd">        Parsed constant as a single-option categorical hyperparameter.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">&#39;path&#39;</span><span class="p">)</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">)</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">_parse_categorical_option</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">check_is_empty</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="p">[</span><span class="n">value</span><span class="p">])</span>
+
+
+<div class="viewcode-block" id="FloatHyperparameter">
+<a class="viewcode-back" href="../../../api/lir.config.substitution.html#lir.config.substitution.FloatHyperparameter">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FloatHyperparameter</span><span class="p">(</span><span class="n">Hyperparameter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Floating-point hyperparameter.</span>
+
+<span class="sd">    In a YAML configuration, this hyperparameter supports the following fields:</span>
+
+<span class="sd">    - ``path``: Path to the hyperparameter in the LR system configuration.</span>
+<span class="sd">    - ``low``: Lower bound of the search range.</span>
+<span class="sd">    - ``high``: Upper bound of the search range.</span>
+<span class="sd">    - ``step`` (optional): Step size for a linear grid search.</span>
+<span class="sd">    - ``log`` (optional): If ``True``, search in logarithmic space instead of</span>
+<span class="sd">      linear space. Cannot be combined with ``step``. Defaults to ``False``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path : str</span>
+<span class="sd">        Configuration path to substitute.</span>
+<span class="sd">    low : float</span>
+<span class="sd">        Lower bound.</span>
+<span class="sd">    high : float</span>
+<span class="sd">        Upper bound.</span>
+<span class="sd">    step : float | None</span>
+<span class="sd">        Optional step size for grid options.</span>
+<span class="sd">    log : bool</span>
+<span class="sd">        Whether to sample in log space.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">low</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">high</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">log</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="n">low</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="n">high</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="n">step</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">log</span>
+
+<div class="viewcode-block" id="FloatHyperparameter.options">
+<a class="viewcode-back" href="../../../api/lir.config.substitution.html#lir.config.substitution.FloatHyperparameter.options">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">options</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">HyperparameterOption</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provide API access to the options for the hyperparameter.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list[HyperparameterOption]</span>
+<span class="sd">            Enumerated hyperparameter options.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;unable to generate options for floating point hyperparameter </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">: no step size defined&#39;</span>
+            <span class="p">)</span>
+
+        <span class="n">n_steps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">+</span> <span class="n">value</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_steps</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">HyperparameterOption</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">value</span><span class="p">})</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span></div>
+</div>
+
+
+
+<span class="nd">@config_parser</span><span class="p">(</span><span class="n">reference</span><span class="o">=</span><span class="s1">&#39;lir.config.substitution.parse_float&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_float</span><span class="p">(</span><span class="n">spec</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;FloatHyperparameter&#39;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse a floating-point hyperparameter from configuration.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    spec : ContextAwareDict</span>
+<span class="sd">        Hyperparameter specification.</span>
+<span class="sd">    output_path : Path</span>
+<span class="sd">        Unused output path required by parser API.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    FloatHyperparameter</span>
+<span class="sd">        Parsed floating-point hyperparameter.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">&#39;path&#39;</span><span class="p">)</span>
+    <span class="n">low</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">&#39;low&#39;</span><span class="p">)</span>
+    <span class="n">high</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">&#39;high&#39;</span><span class="p">)</span>
+    <span class="n">log</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">&#39;step&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">log</span> <span class="ow">and</span> <span class="n">step</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">YamlParseError</span><span class="p">(</span>
+            <span class="n">spec</span><span class="o">.</span><span class="n">context</span><span class="p">,</span>
+            <span class="s1">&#39;configuration field `log` and `step` cannot be combined&#39;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="n">check_is_empty</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">FloatHyperparameter</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">log</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="FolderHyperparameter">
+<a class="viewcode-back" href="../../../api/lir.config.substitution.html#lir.config.substitution.FolderHyperparameter">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FolderHyperparameter</span><span class="p">(</span><span class="n">Hyperparameter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Hyperparameter that enumerates all files in a given folder as options.</span>
+
+<span class="sd">    This hyperparameter reads the contents of a specified folder and generates one</span>
+<span class="sd">    option per file. Each option uses the file’s full path as both its name and its</span>
+<span class="sd">    value.</span>
+
+<span class="sd">    In a YAML configuration, a folder hyperparameter supports the following fields:</span>
+
+<span class="sd">    - ``folder``: Path to the folder containing the candidate files.</span>
+<span class="sd">    - ``ignore_files``: Optional list of file patterns to ignore.</span>
+
+<span class="sd">    Example configuration:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">        hyperparameters:</span>
+<span class="sd">        - path: data.provider.path</span>
+<span class="sd">          type: folder</span>
+<span class="sd">          folder: project_files/my_dataset/</span>
+<span class="sd">          ignore_files:  # Optional list of file patterns to ignore.</span>
+<span class="sd">           - &#39;*.tmp&#39;</span>
+<span class="sd">           - &#39;ignore_this_file.csv&#39;</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path : str</span>
+<span class="sd">        Configuration path to substitute.</span>
+<span class="sd">    folder : str</span>
+<span class="sd">        Folder containing candidate files.</span>
+<span class="sd">    ignore_files : list[str] | None, optional</span>
+<span class="sd">        Filename patterns to exclude.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the specified folder does not exist (during initialisation).</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If no valid files are found in the folder after applying the ignore</span>
+<span class="sd">        patterns (when calling :meth:`options`).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">folder</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ignore_files</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="c1"># Search for the folder in the python PATH. Results in an absolute path.</span>
+        <span class="n">folder_path</span> <span class="o">=</span> <span class="n">search_path</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">folder</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">folder_path</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;folder hyperparameter </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1"> points to non-existing folder: </span><span class="si">{</span><span class="n">folder</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">folder_path</span> <span class="o">=</span> <span class="n">folder_path</span>
+
+        <span class="c1"># Setting ignore files as an empty list if None is given helps avoid checks later on.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ignore_files</span> <span class="o">=</span> <span class="n">ignore_files</span> <span class="k">if</span> <span class="n">ignore_files</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="FolderHyperparameter.options">
+<a class="viewcode-back" href="../../../api/lir.config.substitution.html#lir.config.substitution.FolderHyperparameter.options">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">options</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">HyperparameterOption</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate options by walking over the folder.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list[HyperparameterOption]</span>
+<span class="sd">            File-based options discovered in the folder.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">filenames</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">folder_path</span><span class="o">.</span><span class="n">walk</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
+                <span class="n">file</span> <span class="o">=</span> <span class="n">dirpath</span> <span class="o">/</span> <span class="n">filename</span>
+
+                <span class="c1"># Check the ignore list patterns</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span> <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_files</span><span class="p">):</span>
+                    <span class="n">options</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">HyperparameterOption</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">file</span><span class="p">)}))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">options</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No (valid) files found in folder hyperparameter at path: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">folder_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">options</span></div>
+</div>
+
+
+
+<span class="nd">@config_parser</span><span class="p">(</span><span class="n">reference</span><span class="o">=</span><span class="s1">&#39;lir.config.substitution.parse_folder&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_folder</span><span class="p">(</span><span class="n">spec</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;FolderHyperparameter&#39;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse a folder hyperparameter from configuration.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    spec : ContextAwareDict</span>
+<span class="sd">        Hyperparameter specification.</span>
+<span class="sd">    output_path : Path</span>
+<span class="sd">        Unused output path required by parser API.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    FolderHyperparameter</span>
+<span class="sd">        Parsed folder hyperparameter.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">folder</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">&#39;folder&#39;</span><span class="p">)</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">&#39;path&#39;</span><span class="p">)</span>
+    <span class="n">ignore_files</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">&#39;ignore_files&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">check_is_empty</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">FolderHyperparameter</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">ignore_files</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="parse_parameter">
+<a class="viewcode-back" href="../../../api/lir.config.substitution.html#lir.config.substitution.parse_parameter">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_parameter</span><span class="p">(</span>
+    <span class="n">spec</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span>
+    <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Hyperparameter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse one parameter specification into a hyperparameter object.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    spec : ContextAwareDict</span>
+<span class="sd">        Parameter specification.</span>
+<span class="sd">    output_dir : Path</span>
+<span class="sd">        Output directory used by nested parser calls.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Hyperparameter</span>
+<span class="sd">        Parsed hyperparameter object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s1">&#39;type&#39;</span> <span class="ow">in</span> <span class="n">spec</span><span class="p">:</span>
+        <span class="n">parameter_type</span> <span class="o">=</span> <span class="n">pop_field</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">)</span>  <span class="c1"># read from specified configuration</span>
+
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">parameter_type</span><span class="p">,</span> <span class="n">search_path</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;hyperparameter_types&#39;</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="s1">&#39;value&#39;</span> <span class="ow">in</span> <span class="n">spec</span><span class="p">:</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">parse_constant</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="s1">&#39;options&#39;</span> <span class="ow">in</span> <span class="n">spec</span> <span class="ow">and</span> <span class="s1">&#39;path&#39;</span> <span class="ow">in</span> <span class="n">spec</span><span class="p">:</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">parse_categorical</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="s1">&#39;options&#39;</span> <span class="ow">in</span> <span class="n">spec</span> <span class="ow">and</span> <span class="s1">&#39;name&#39;</span> <span class="ow">in</span> <span class="n">spec</span><span class="p">:</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">parse_clustered</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="s1">&#39;high&#39;</span> <span class="ow">in</span> <span class="n">spec</span><span class="p">:</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">parse_float</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">YamlParseError</span><span class="p">(</span>
+            <span class="n">spec</span><span class="o">.</span><span class="n">context</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">&#39;unrecognized hyperparameter type with fields: </span><span class="si">{</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">spec</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_assign</span><span class="p">(</span><span class="n">struct</span><span class="p">:</span> <span class="n">ContextAwareDict</span> <span class="o">|</span> <span class="n">ContextAwareList</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Assign a new value to a path within an hierarchical `dict` structure.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    struct : ContextAwareDict | ContextAwareList</span>
+<span class="sd">        Structure that is modified in-place.</span>
+<span class="sd">    path : list[str]</span>
+<span class="sd">        Path within the structure.</span>
+<span class="sd">    value : Any</span>
+<span class="sd">        Value to assign.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        This function mutates ``struct`` in-place.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">struct</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">struct</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">YamlParseError</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;trying to substitute invalid index: </span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">struct</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">_expand</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">context</span> <span class="o">+</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">)],</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_assign</span><span class="p">(</span><span class="n">struct</span><span class="p">[</span><span class="n">index</span><span class="p">],</span> <span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">value</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">struct</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">YamlParseError</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;trying to substitute non-existent field: </span><span class="si">{</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">struct</span><span class="p">[</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_expand</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">context</span> <span class="o">+</span> <span class="p">[</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_assign</span><span class="p">(</span><span class="n">struct</span><span class="p">[</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">value</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_path_exists</span><span class="p">(</span><span class="n">struct</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="nb">list</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">struct</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">index</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">struct</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">struct</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>  <span class="c1"># noqa: SIM108</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;0..</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">struct</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;no such key: </span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s1">; found: </span><span class="si">{</span><span class="n">options</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">struct</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">struct</span> <span class="ow">and</span> <span class="n">_path_exists</span><span class="p">(</span><span class="n">struct</span><span class="p">[</span><span class="n">index</span><span class="p">],</span> <span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>  <span class="c1"># type: ignore</span>
+
+
+<div class="viewcode-block" id="substitute_parameters">
+<a class="viewcode-back" href="../../../api/lir.config.substitution.html#lir.config.substitution.substitute_parameters">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">substitute_parameters</span><span class="p">(</span>
+    <span class="n">base_config</span><span class="p">:</span> <span class="n">ContextAwareDict</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">context</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ContextAwareDict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Substitute parameters in an LR system configuration and return the updated configuration.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    base_config : ContextAwareDict</span>
+<span class="sd">        Original LR system configuration.</span>
+<span class="sd">    hyperparameters : Mapping[str, Any]</span>
+<span class="sd">        Hyperparameters and their replacement values.</span>
+<span class="sd">    context : list[str]</span>
+<span class="sd">        Context path of the augmented configuration.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ContextAwareDict</span>
+<span class="sd">        Augmented LR system configuration.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s1">&#39;&#39;</span> <span class="ow">in</span> <span class="n">hyperparameters</span><span class="p">:</span>
+        <span class="c1"># if the root is assigned, don&#39;t bother substituting and return the assigned value immediately</span>
+        <span class="n">augmented_config</span> <span class="o">=</span> <span class="n">_expand</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;base system: </span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">base_config</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">augmented_config</span> <span class="o">=</span> <span class="n">base_config</span><span class="o">.</span><span class="n">clone</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">hyperparameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">_assign</span><span class="p">(</span><span class="n">augmented_config</span><span class="p">,</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">),</span> <span class="n">value</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;error while trying to substitute </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1"> in </span><span class="si">{</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_config</span><span class="o">.</span><span class="n">context</span><span class="p">)</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;augmented system: </span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">augmented_config</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">augmented_config</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

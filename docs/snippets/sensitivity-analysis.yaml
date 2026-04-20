@@ -39,7 +39,7 @@ experiments:
           - cllr
           - cllr_min
 
-    dataparameters:
+    data_parameters:
       - path: provider.head
         options:
           - 100

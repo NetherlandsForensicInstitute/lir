@@ -103,10 +103,10 @@ experiments:
   #
   # - `lr_system` -- the base LR system
   # - `data` -- the data to be used for evaluation
-  # - `hyperparameters` -- the hyperparameters that are varied
+  # - `lr_system_parameters` -- the hyperparameters of the LR system that are varied
   # - `output` -- the metrics and visualization functions (in the registry) to be applied
   #
-  # The hyperparameter block has a list of hyperparameters. Each hyperparameter has a list of *options*, and their
+  # The lr_system_parameters block has a list of hyperparameters. Each hyperparameter has a list of *options*, and their
   # values are substituted in the base configuration of the LR system. Where exactly the values are substituted is
   # defined by the *path* in the base configuration.
   #
@@ -114,7 +114,7 @@ experiments:
   # can be defined as a categorical hyperparameter as follows.
   #
   # ```
-  # hyperparameters:
+  # lr_system_parameters:
   #   - name: scaling method  # optional, defaults to `path`
   #     path: preprocessing.steps.scaler
   #     options:
@@ -127,7 +127,7 @@ experiments:
   # declare *substitutions* for each option, like so.
   #
   # ```
-  # hyperparameters:
+  # lr_system_parameters:
   #   - name: clf
   #     options:
   #       - option_name: svm_and_kde
@@ -151,7 +151,7 @@ experiments:
   # The hyperparameter value may also be numerical, as follows.
   #
   # ```
-  # hyperparameters:
+  # lr_system_parameters:
   #   - name: kde_bandwidth
   #     path: comparing.steps.calibration.bandwidth
   #     low: .1
@@ -167,7 +167,7 @@ experiments:
     lr_system: *score_based_lr_system  # refer to the previously defined `score_based_lr_system`
     data: *data  # refer to the previously defined data
 
-    hyperparameters:
+    lr_system_parameters:
       - name: clf
         options:
           - option_name: svm_and_kde
@@ -199,7 +199,7 @@ experiments:
     strategy: grid
     lr_system:  # do not specify any base LR system at this point; it will be substituted anyway
     data: *data
-    hyperparameters:
+    lr_system_parameters:
       # to vary the architecture, we substitute the entire LR system, whose path is referred to by the empty string ""
       - name: architecture
         options:

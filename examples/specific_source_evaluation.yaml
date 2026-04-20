@@ -37,7 +37,7 @@ experiments:
     strategy: grid
     lr_system: *lr_system
     data: *data
-    hyperparameters:
+    lr_system_parameters:
       - path: modules.steps.clf
         options:
           - option_name: logit
@@ -46,7 +46,7 @@ experiments:
           - option_name: svm
             method: svm
             probability: True
-    dataparameters:
+    data_parameters:
       - path: provider.h1.std
         type: float
         low: 0.5

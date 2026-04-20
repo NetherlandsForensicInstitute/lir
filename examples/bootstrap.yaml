@@ -33,7 +33,7 @@ lr_system:
 experiments:
   - name: model_selection
     strategy: grid
-    hyperparameters:
+    lr_system_parameters:
       - path: modules.steps.bounding
         options:
           - identity

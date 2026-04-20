@@ -347,19 +347,19 @@
         },
         "lr_system": {
           "oneOf": [
-            {"type": "null", "description": "No LR system specified (will be substituted via hyperparameters)."},
+            {"type": "null", "description": "No LR system specified (will be substituted via lr_system_parameters)."},
             {"$ref": "#/definitions/lrSystemConfiguration", "description": "LR system configuration for this experiment."}
           ],
           "description": "LR system configuration for this experiment (references are resolved before validation)."
         },
-        "hyperparameters": {
+        "lr_system_parameters": {
           "type": "array",
-          "description": "List of hyperparameters to vary (for grid and optuna strategies).",
+          "description": "List of lr_system_parameters to vary (for grid and optuna strategies).",
           "items": {
             "$ref": "#/definitions/hyperparameter"
           }
         },
-        "dataparameters": {
+        "data_parameters": {
           "type": "array",
           "description": "List of data parameters to vary (for grid strategy).",
           "items": {
@@ -400,8 +400,8 @@
           },
           "then": {
             "anyOf": [
-              {"required": ["hyperparameters"]},
-              {"required": ["dataparameters"]}
+              {"required": ["lr_system_parameters"]},
+              {"required": ["data_parameters"]}
             ]
           }
         },
@@ -410,7 +410,7 @@
             "properties": {"strategy": {"const": "optuna"}}
           },
           "then": {
-            "required": ["data", "lr_system", "hyperparameters", "primary_metric", "n_trials"]
+            "required": ["data", "lr_system", "lr_system_parameters", "primary_metric", "n_trials"]
           }
         }
       ],

@@ -236,7 +236,7 @@ The output section declares how to aggregate the results from the test set.
 Hyperparameters and data parameters
 -----------------------------------
 
-`Experiments`_ that involve multiple runs have a ``hyperparameters`` or a ``dataparameters`` section.
+`Experiments`_ that involve multiple runs have a ``lr_system_parameters`` or a ``data_parameters`` section.
 
 .. _Experiments: reference.html#experiment-strategies
 
@@ -278,7 +278,7 @@ We may also want to know how well the LR system is able to cope with few data po
 
 Therefore, the CSV reader has the argument ``head`` to read only the first ``n`` instances. We are going to use that
 argument to vary the amount of input data. This is similar to the model selection setup, but since
-we vary the input data, we use ``dataparameters`` instead of ``hyperparameters``, like so:
+we vary the input data, we use ``data_parameters`` instead of ``lr_system_parameters``, like so:
 
 .. literalinclude:: snippets/sensitivity-analysis.yaml
     :language: yaml
@@ -314,7 +314,7 @@ explicitly specify the parameter type. The following is equivalent to the above.
 .. code-block:: yaml
     :emphasize-lines: 2
 
-    hyperparameters:
+    lr_system_parameters:
       - path: comparing.steps.to_llr
         type: categorical
         options:
@@ -325,4 +325,4 @@ explicitly specify the parameter type. The following is equivalent to the above.
 
 In most cases, the ``type`` property can be omitted, but it may be necessary when using custom parameter types.
 
-.. _other types of parameters: reference.html#hyperparameters
+.. _other types of parameters: reference.html#lr_system_parameters

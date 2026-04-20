@@ -34,8 +34,8 @@ class OptunaExperiment(Experiment):
         Path where generated outputs are written.
     baseline_config : ContextAwareDict
         Baseline configuration to be tuned during optimisation.
-    hyperparameters : list[Hyperparameter]
-        Hyperparameters varied during optimisation.
+    lr_system_parameters : list[Hyperparameter]
+        LR system parameters varied during optimisation.
     n_trials : int
         Number of optimisation trials to execute.
     metric_function : Callable[[LLRData], float]
@@ -49,7 +49,7 @@ class OptunaExperiment(Experiment):
         outputs: Sequence[Aggregation],
         output_path: Path,
         baseline_config: ContextAwareDict,
-        hyperparameters: list[Hyperparameter],
+        lr_system_parameters: list[Hyperparameter],
         n_trials: int,
         metric_function: Callable[[LLRData], float],
     ):
@@ -59,7 +59,7 @@ class OptunaExperiment(Experiment):
         self.data_provider, self.splitter = parse_data_object(data_config, output_path)
 
         self.baseline_config = baseline_config
-        self.hyperparameters = hyperparameters
+        self.lr_system_parameters = lr_system_parameters
         self.n_trials = n_trials
         self.metric_function = metric_function
 
@@ -81,7 +81,7 @@ class OptunaExperiment(Experiment):
 
     def _get_hyperparameter_substitutions(self, trial: optuna.Trial) -> dict[str, HyperparameterOption]:
         assignments = {}
-        for param in self.hyperparameters:
+        for param in self.lr_system_parameters:
             assignments[param.name] = self._get_parameter_value(trial, param)
 
         return assignments
@@ -91,8 +91,8 @@ class OptunaExperiment(Experiment):
         lr_system = augment_config(deepcopy(self.baseline_config), assignments)
 
         # add optuna values as system parameters
-        hyperparameters: dict[str, Any] = assignments
-        hyperparameters.update(
+        lr_system_parameters: dict[str, Any] = assignments
+        lr_system_parameters.update(
             {
                 # trial.number is a sequence number, starting at 0
                 'trial': trial.number,
@@ -106,7 +106,7 @@ class OptunaExperiment(Experiment):
         llr_data: LLRData = self._run_lrsystem(
             lr_system,
             split_data,
-            hyperparameters,
+            lr_system_parameters,
             experiment_name,
             self.data_config,
         )

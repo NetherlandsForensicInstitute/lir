@@ -18,7 +18,7 @@ experiments:
         test_size: 0.5                # Split the data 50/50.
 
     # The LR system section: this is where the action is.
-    lr_system:
+    lrsystem:
       architecture: score_based
       preprocessing: standard_scaler  # The preprocessing is applied on the single measurements, before pairing.
       pairing:                        # The pairing method governs the way the measurements are paired.

@@ -29,7 +29,7 @@ class PredefinedExperiment(Experiment):
           - strategy: single_run
             name: my experiment
             data: *my_data_setup
-            lr_system: *my_lrsystem
+            lrsystem: *my_lrsystem
             output: *my_aggregations
 
     Multiple runs can be defined using the ``grid`` strategy, with additional configuration options:
@@ -111,7 +111,7 @@ def parse_single_run(config: ContextAwareDict, output_dir: Path) -> PredefinedEx
         [DataConfig(pop_field(config, 'data'), {}, output_dir)],
         aggregations,
         output_dir / name,
-        [LRSystemConfig(pop_field(config, 'lr_system'), {}, output_dir)],
+        [LRSystemConfig(pop_field(config, 'lrsystem'), {}, output_dir)],
     )
     check_is_empty(config)
     return exp
@@ -141,11 +141,11 @@ def parse_grid_experiment(config: ContextAwareDict, output_dir: Path) -> Predefi
 
     lrsystem_configs = [
         LRSystemConfig(*cfg, output_dir)
-        for cfg in _create_configs_from_hyperparameters(config, output_dir, 'lr_system', 'hyperparameters')
+        for cfg in _create_configs_from_hyperparameters(config, output_dir, 'lrsystem', 'lrsystem_parameters')
     ]
     data_configs = [
         DataConfig(*cfg, output_dir)
-        for cfg in _create_configs_from_hyperparameters(config, output_dir, 'data', 'dataparameters')
+        for cfg in _create_configs_from_hyperparameters(config, output_dir, 'data', 'data_parameters')
     ]
     enable_parallelization = pop_field(config, 'enable_parallelization', validate=bool, default=False)
     check_is_empty(config)

@@ -13,7 +13,7 @@ data:
   splits:
     test_size: 0.5
 
-lr_system:
+lrsystem:
   modules:
     steps:
       calibration:

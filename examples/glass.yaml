@@ -28,7 +28,7 @@ data: &data
 
 # This defines a score-based LR system. We may later experiment with different parameter values by augmenting this
 # system.
-score_based_lr_system: &score_based_lr_system
+score_based_lrsystem: &score_based_lrsystem
   # The `score_based` architecture takes three arguments:
   # - `preprocessing`: a pipeline of modules that takes instance features as input and may do some preprocessing;
   # - `pairing`: a pairing method that takes instances as input and produces same-source and different-source pairs;
@@ -72,7 +72,7 @@ score_based_lr_system: &score_based_lr_system
         bandwidth: silverman
       bounding: elub_bounder  # prevent excessive extrapolation by applying an LLR bounder
 
-two_level_lr_system: &two_level_lr_system
+two_level_lrsystem: &two_level_lrsystem
   # The `two_level` architecture takes three arguments:
   # - `preprocessing`: a pipeline that takes instance features as input and may do some preprocessing;
   # - `pairing`: a pairing method that takes instances as input and produces same-source and different-source pairs;
@@ -101,20 +101,20 @@ experiments:
   # Each experiment has a required argument `strategy`. All other values are parameters of the strategy. The grid search
   # strategy `grid` takes the following arguments:
   #
-  # - `lr_system` -- the base LR system
+  # - `lrsystem` -- the base LR system
   # - `data` -- the data to be used for evaluation
-  # - `hyperparameters` -- the hyperparameters that are varied
+  # - `lrsystem_parameters` -- the hyperparameters of the LR system that are varied
   # - `output` -- the metrics and visualization functions (in the registry) to be applied
   #
-  # The hyperparameter block has a list of hyperparameters. Each hyperparameter has a list of *options*, and their
+  # The lrsystem_parameters block has a list of hyperparameters. Each hyperparameter has a list of *options*, and their
   # values are substituted in the base configuration of the LR system. Where exactly the values are substituted is
   # defined by the *path* in the base configuration.
   #
-  # For example, the path to the `standard_scaler` in the `score_based_lr_system` is "preprocessing.steps.scaler". The scaler
+  # For example, the path to the `standard_scaler` in the `score_based_lrsystem` is "preprocessing.steps.scaler". The scaler
   # can be defined as a categorical hyperparameter as follows.
   #
   # ```
-  # hyperparameters:
+  # lrsystem_parameters:
   #   - name: scaling method  # optional, defaults to `path`
   #     path: preprocessing.steps.scaler
   #     options:
@@ -127,7 +127,7 @@ experiments:
   # declare *substitutions* for each option, like so.
   #
   # ```
-  # hyperparameters:
+  # lrsystem_parameters:
   #   - name: clf
   #     options:
   #       - option_name: svm_and_kde
@@ -151,7 +151,7 @@ experiments:
   # The hyperparameter value may also be numerical, as follows.
   #
   # ```
-  # hyperparameters:
+  # lrsystem_parameters:
   #   - name: kde_bandwidth
   #     path: comparing.steps.calibration.bandwidth
   #     low: .1
@@ -165,10 +165,10 @@ experiments:
   - name: model_selection
     strategy: grid  # use a grid search
     enable_parallelization: True  # enable executing multiple runs in parallel
-    lr_system: *score_based_lr_system  # refer to the previously defined `score_based_lr_system`
+    lrsystem: *score_based_lrsystem  # refer to the previously defined `score_based_lrsystem`
     data: *data  # refer to the previously defined data
 
-    hyperparameters:
+    lrsystem_parameters:
       - name: clf
         options:
           - option_name: svm_and_kde
@@ -198,20 +198,20 @@ experiments:
 
   - name: architecture_evaluation
     strategy: grid
-    lr_system:  # do not specify any base LR system at this point; it will be substituted anyway
+    lrsystem:  # do not specify any base LR system at this point; it will be substituted anyway
     data: *data
-    hyperparameters:
+    lrsystem_parameters:
       # to vary the architecture, we substitute the entire LR system, whose path is referred to by the empty string ""
       - name: architecture
         options:
           - option_name: score_based
             substitutions:
               - path: ""
-                value: *score_based_lr_system
+                value: *score_based_lrsystem
           - option_name: tlm
             substitutions:
               - path: ""
-                value: *two_level_lr_system
+                value: *two_level_lrsystem
     output:
       - method: metrics
         columns:
@@ -225,7 +225,7 @@ experiments:
 
   - name: validation
     strategy: single_run
-    lr_system: *score_based_lr_system
+    lrsystem: *score_based_lrsystem
     data: *data
     output:
       - metrics

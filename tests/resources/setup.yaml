@@ -17,7 +17,7 @@ data: &data
     strategy: train_test_instances
     test_size: 0.5
 
-lr_system: &lr_system
+lrsystem: &lrsystem
   architecture: specific_source
   modules:
     steps:
@@ -27,9 +27,9 @@ lr_system: &lr_system
 experiments:
   - name: exp1
     strategy: grid
-    lr_system: *lr_system
+    lrsystem: *lrsystem
     data: *data
-    hyperparameters:
+    lrsystem_parameters:
       - path: modules.steps.clf
         options:
           - option_name: logit
@@ -44,7 +44,7 @@ experiments:
 
   - name: exp2
     strategy: single_run
-    lr_system: *lr_system
+    lrsystem: *lrsystem
     data: *data
     output:
       - method: metrics

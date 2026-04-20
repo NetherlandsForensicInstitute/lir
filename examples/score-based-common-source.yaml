@@ -86,7 +86,7 @@ my_data_splits: &my_data_splits             # <-- adapt this name to your own pr
 # 4. LR SYSTEM DESIGN
 # Next, the score-based common source LR system will be defined.
 
-my_score_based_lr_system: &my_score_based_lr_system         # <-- this is a custom name of your LR system that you can adapt. You will refer to it later when setting up your experiment
+my_score_based_lrsystem: &my_score_based_lrsystem         # <-- this is a custom name of your LR system that you can adapt. You will refer to it later when setting up your experiment
   #intermediate_output: True      # <-- if you want csv output for every step in your LR system, use 'True'. Otherwise, use 'False'. TODO: implement this
   architecture: score_based      # Since this is the yaml for a score based system, we specify the architecture to be 'score_based'.
   
@@ -154,12 +154,12 @@ my_score_based_lr_system: &my_score_based_lr_system         # <-- this is a cust
 # 5. THE VALIDATION EXPERIMENT
 
 # This defines one single experiment. There will be one subfolder in the output folder with the name of the experiment.
-# It is possible to define multiple experiments, e.g. by employing multiple data sets or lr_systems, if you defined them above.
+# It is possible to define multiple experiments, e.g. by employing multiple data sets or lrsystems, if you defined them above.
 
 experiments:                             
   - name: my_validation_run                 # This is the name of the experiment, use your own preferred value.
     strategy: single_run                    # For a single validation experiment, use 'single_run'.
-    lr_system: *my_score_based_lr_system    # This refers to the lr system defined above, make sure to use the name you used above.
+    lrsystem: *my_score_based_lrsystem    # This refers to the lr system defined above, make sure to use the name you used above.
     data:
       provider: *my_data_provider           # This refers to the data provider defined above, make sure to use the name you used above.
       splits: *my_data_splits               # This refers to the data splits defined above, make sure to use the name you used above.

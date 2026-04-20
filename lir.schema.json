@@ -13,7 +13,7 @@
       "description": "Data configuration that defines both the data provider (source) and splits (train/test strategy).",
       "$ref": "#/definitions/dataConfiguration"
     },
-    "lr_system": {
+    "lrsystem": {
       "description": "LR system configuration that defines the architecture and modules for likelihood ratio calculation.",
       "$ref": "#/definitions/lrSystemConfiguration"
     },
@@ -347,21 +347,21 @@
           "$ref": "#/definitions/dataConfiguration",
           "description": "Data configuration for this experiment (references are resolved before validation)."
         },
-        "lr_system": {
+        "lrsystem": {
           "oneOf": [
-            {"type": "null", "description": "No LR system specified (will be substituted via hyperparameters)."},
+            {"type": "null", "description": "No LR system specified (will be substituted via lrsystem_parameters)."},
             {"$ref": "#/definitions/lrSystemConfiguration", "description": "LR system configuration for this experiment."}
           ],
           "description": "LR system configuration for this experiment (references are resolved before validation)."
         },
-        "hyperparameters": {
+        "lrsystem_parameters": {
           "type": "array",
-          "description": "List of hyperparameters to vary (for grid and optuna strategies).",
+          "description": "List of lrsystem_parameters to vary (for grid and optuna strategies).",
           "items": {
             "$ref": "#/definitions/hyperparameter"
           }
         },
-        "dataparameters": {
+        "data_parameters": {
           "type": "array",
           "description": "List of data parameters to vary (for grid strategy).",
           "items": {
@@ -397,7 +397,7 @@
             "properties": {"strategy": {"const": "single_run"}}
           },
           "then": {
-            "required": ["data", "lr_system"]
+            "required": ["data", "lrsystem"]
           }
         },
         {
@@ -406,8 +406,8 @@
           },
           "then": {
             "anyOf": [
-              {"required": ["hyperparameters"]},
-              {"required": ["dataparameters"]}
+              {"required": ["lrsystem_parameters"]},
+              {"required": ["data_parameters"]}
             ]
           }
         },
@@ -416,7 +416,7 @@
             "properties": {"strategy": {"const": "optuna"}}
           },
           "then": {
-            "required": ["data", "lr_system", "hyperparameters", "primary_metric", "n_trials"]
+            "required": ["data", "lrsystem", "lrsystem_parameters", "primary_metric", "n_trials"]
           }
         }
       ],

@@ -18,7 +18,7 @@ data: &data
     folds: 5
     seed: 42
 
-lr_system: &lr_system
+lrsystem: &lrsystem
   architecture: specific_source
   modules:
     method: logging_pipeline
@@ -35,9 +35,9 @@ lr_system: &lr_system
 experiments:
   - name: model_selection
     strategy: grid
-    lr_system: *lr_system
+    lrsystem: *lrsystem
     data: *data
-    hyperparameters:
+    lrsystem_parameters:
       - path: modules.steps.clf
         options:
           - option_name: logit
@@ -46,7 +46,7 @@ experiments:
           - option_name: svm
             method: svm
             probability: True
-    dataparameters:
+    data_parameters:
       - path: provider.h1.std
         type: float
         low: 0.5
@@ -68,7 +68,7 @@ experiments:
 
   - name: validation
     strategy: single_run
-    lr_system: *lr_system
+    lrsystem: *lrsystem
     data: *data
     output:
       - metrics

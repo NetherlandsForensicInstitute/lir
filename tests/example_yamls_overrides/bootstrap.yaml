@@ -2,4 +2,4 @@
 
 output_path: tests/yaml_output
 
-lr_system.modules.n_bootstraps: 2
+lrsystem.modules.n_bootstraps: 2

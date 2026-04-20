@@ -20,7 +20,7 @@ data:
     test_size: 0.3
     seed: 42
 
-lr_system:
+lrsystem:
   architecture: specific_source
   modules:
     method: logging_pipeline
@@ -57,7 +57,7 @@ lr_system:
 experiments:
   - name: mcmc_demo
     strategy: single_run
-    lr_system: ${lr_system}
+    lrsystem: ${lrsystem}
     data: ${data}
     output:
       - llr_interval

@@ -18,7 +18,7 @@ data: &data
     test_size: .5
     seed: 42
 
-lr_system:
+lrsystem:
   architecture: specific_source
   modules:
     method: bootstrap
@@ -33,12 +33,12 @@ lr_system:
 experiments:
   - name: model_selection
     strategy: grid
-    hyperparameters:
+    lrsystem_parameters:
       - path: modules.steps.bounding
         options:
           - identity
           - iv_bounder
-    lr_system: ${lr_system}
+    lrsystem: ${lrsystem}
     data: *data
     output:
       - method: metrics

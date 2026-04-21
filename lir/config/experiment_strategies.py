@@ -255,6 +255,7 @@ class GridStrategy(ExperimentStrategyConfigParser):
         """
         lrsystem_configs = create_configs_from_hyperparameters(*self.lrsystem_config())
         data_configs = create_configs_from_hyperparameters(*self.data_config())
+        enable_parallelization = pop_field(self._config, 'enable_parallelization', validate=bool, default=False)
 
         return PredefinedExperiment(
             name,
@@ -262,6 +263,7 @@ class GridStrategy(ExperimentStrategyConfigParser):
             self.output_list(),
             self._output_dir,
             lrsystem_configs,
+            enable_parallelization=enable_parallelization,
         )
 
 

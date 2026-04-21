@@ -1,7 +1,11 @@
 import itertools
 import logging
-from collections.abc import Iterable
+import math
+import multiprocessing
+import os
+from collections.abc import Callable, Iterable
 from copy import deepcopy
+from functools import partial
 from pathlib import Path
 from typing import Any, NamedTuple
 
@@ -21,7 +25,28 @@ LOG = logging.getLogger(__name__)
 
 
 class BaseConfig(NamedTuple):
-    """Base class for LR system and data configurations."""
+    """
+    Base class for LR system and data configurations.
+
+    A configuration of an LR system or data setup is a dictionary: the ``spec`` attribute. Additionally, there can be
+    hyperparameters that are already incorporated in the configuration and can be used to describe the configuration in
+    how it is different from other configurations.
+
+    The configuration is extended by the subclass to lazily materialize the configuration on demand.
+
+    Objects of this class are pickleable. When pickled, the materialization is dropped and will have to be recreated
+    when needed.
+
+    Attributes
+    ----------
+    spec : ContextAwareDict
+        The configuration of an LR system or data setup for a run.
+    params : dict[str, Any]
+        The parameters that describe the configuration.
+    output_dir : Path
+        Path to the directory where results may be written. As this directory is shared among all runs of an experiment,
+        a dedicated subdirectory may be created for the run.
+    """
 
     spec: ContextAwareDict
     params: dict[str, Any]
@@ -38,6 +63,9 @@ class BaseConfig(NamedTuple):
             A description of this configuration.
         """
         return '__'.join([f'{key}={value}' for key, value in self.params.items()])
+
+    def __reduce__(self) -> tuple[Callable, tuple]:
+        return self.__class__, (self.spec, self.params, self.output_dir)
 
 
 class DataConfig(BaseConfig):
@@ -226,6 +254,8 @@ def run_multiple(
     """
     Run LR systems sequentially.
 
+    Consider using :meth:`parallellize_runs` to speed up processing by doing runs in parallel.
+
     Parameters
     ----------
     output_base_dir : Path
@@ -243,3 +273,91 @@ def run_multiple(
     LOG.debug(f'doing {len(lrsystem_configs) * len(data_configs)} runs sequentially')
     for lrsystem_config, data_config in itertools.product(lrsystem_configs, data_configs):
         yield run_lrsystem(output_base_dir, lrsystem_config, data_config)
+
+
+def run_multiple_lrsystems(
+    output_base_dir: Path, lrsystem_configs: list[LRSystemConfig], data_config: DataConfig
+) -> list[AggregationData]:
+    """
+    Run multiple LR systems for a single data configuration.
+
+    Parameters
+    ----------
+    output_base_dir : Path
+        The base directory where the results may be written.
+    lrsystem_configs : list[LRSystemConfig]
+        A list of LR system configuraitons.
+    data_config : DataConfig
+        Data configuration used to construct the dataset.
+
+    Returns
+    -------
+    list[AggregationData]
+        A list of results for all runs.
+    """
+    LOG.debug(f'process {multiprocessing.current_process()} about to do {len(lrsystem_configs)} runs')
+    try:
+        return [
+            run_lrsystem(output_base_dir, lrsystem_config, data_config, skip_full_lrsystem=True)
+            for lrsystem_config in lrsystem_configs
+        ]
+    finally:
+        LOG.debug(f'process {multiprocessing.current_process()} finished {len(lrsystem_configs)} runs')
+
+
+def parallellize_runs(
+    output_base_dir: Path, lrsystem_configs: list[LRSystemConfig], data_configs: list[DataConfig]
+) -> Iterable[AggregationData]:
+    """
+    Run LR systems in parallel.
+
+    This method has exactly the same effect as :meth:`run_multiple`, but uses ``multiprocessing`` to do runs in
+    parallel. It selects a parallelization strategy to distribute the runs over workers.
+
+    Issues:
+
+    - this may lead to repetitive loading of data, which may take additional (costly) I/O operations
+    - in some cases (notably, when bootstrapping) the `multiprocessing.imap_unsorted` operation may produce a "leaked
+      semaphore" warning
+    - logging in workers is disabled
+
+    Parameters
+    ----------
+    output_base_dir : Path
+        The base directory where the results may be written.
+    lrsystem_configs : list[LRSystemConfig]
+        A list of LR system configuraitons.
+    data_configs : list[DataConfig]
+        A list of dataset configurations.
+
+    Returns
+    -------
+    list[AggregationData]
+        A list of results for all runs.
+    """
+    n_runs = len(lrsystem_configs) * len(data_configs)
+    n_processes = os.process_cpu_count()
+
+    if n_runs == 1 or n_processes == 1:
+        # don't bother parallellizing if there is only a single configuration or a single CPU
+        yield from run_multiple(output_base_dir, lrsystem_configs, data_configs)
+
+    with multiprocessing.Pool(processes=n_processes) as pool:
+        if len(data_configs) > 1:
+            # there are multiple data setups --> iterate over data setups first recycles data loading
+
+            LOG.debug(f'spawning {len(data_configs)} tasks to do a total of {n_runs} runs ')
+            for results in pool.imap(partial(run_multiple_lrsystems, output_base_dir, lrsystem_configs), data_configs):
+                yield from results
+        else:
+            # there is a single data setup and multiple lrsystems --> iterate over lrsystems
+
+            # we need no more chunks that the number of processes
+            chunksize = math.ceil(len(lrsystem_configs) / n_processes)
+
+            LOG.debug(f'spawning {len(lrsystem_configs)} tasks to do a total of {n_runs} runs in chunks of {chunksize}')
+            yield from pool.imap_unordered(
+                partial(run_lrsystem, output_base_dir, data_config=data_configs[0], skip_full_lrsystem=True),
+                lrsystem_configs,
+                chunksize=chunksize,
+            )

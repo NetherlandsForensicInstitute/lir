@@ -164,6 +164,7 @@ experiments:
   # a `type` field with the corresponding value `categorical`, `cluster`, or `float`.
   - name: model_selection
     strategy: grid  # use a grid search
+    enable_parallelization: True  # enable executing multiple runs in parallel
     lr_system: *score_based_lr_system  # refer to the previously defined `score_based_lr_system`
     data: *data  # refer to the previously defined data
 

@@ -107,6 +107,9 @@ class OptunaExperiment(Experiment):
             run_name=f'trial{trial.number:03d}',
         )
 
+        for output in self.outputs:
+            output.report(result)
+
         return self.metric_function(result.llrdata)
 
     def _generate_and_run(self) -> None:

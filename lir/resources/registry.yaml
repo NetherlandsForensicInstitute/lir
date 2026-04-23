@@ -27,15 +27,9 @@ modules:
   bootstrap: lir.algorithms.bootstraps.bootstrap
 
   # transformations
-  standard_scaler:
-    class: sklearn.preprocessing.StandardScaler
-    wrapper: lir.config.numpy_wrapper
-  probabilities_to_odds:
-    class: lir.util.probability_to_odds
-    wrapper: lir.config.numpy_wrapper
-  probabilities_to_logodds:
-    class: lir.util.probability_to_logodds
-    wrapper: lir.config.numpy_wrapper
+  standard_scaler: sklearn.preprocessing.StandardScaler
+  probabilities_to_odds: lir.util.probability_to_odds
+  probabilities_to_logodds: lir.util.probability_to_logodds
 
   # comparisons
   element_wise_difference: lir.transform.distance.ElementWiseDifference
@@ -50,34 +44,20 @@ modules:
   identity: lir.transform.Identity
 
   # classifiers
-  logistic_regression:
-    class: sklearn.linear_model.LogisticRegression
-    wrapper: lir.config.numpy_wrapper
-  svm:
-    class: sklearn.svm.SVC
-    wrapper: lir.config.numpy_wrapper
+  logistic_regression: sklearn.linear_model.LogisticRegression
+  svm: sklearn.svm.SVC
 
   # calibrators
   kde: lir.algorithms.kde.KDECalibrator
-  isotonic_calibrator:
-    class: lir.algorithms.isotonic_regression.IsotonicCalibrator
-    wrapper: lir.config.numpy_wrapper
+  isotonic_calibrator: lir.algorithms.isotonic_regression.IsotonicCalibrator
   logistic_calibrator: lir.algorithms.logistic_regression.LogitCalibrator
   mcmc: lir.config.algorithms.mcmc
 
   # bounders
-  static_bounder:
-    class: lir.bounding.StaticBounder
-    wrapper: lir.config.numpy_wrapper
-  elub_bounder:
-    class: lir.algorithms.bayeserror.ELUBBounder
-    wrapper: lir.config.numpy_wrapper
-  iv_bounder: 
-    class: lir.algorithms.invariance_bounds.IVBounder
-    wrapper: lir.config.numpy_wrapper
-  n_source_bounder:
-    class: lir.bounding.NSourceBounder
-    wrapper: lir.config.numpy_wrapper
+  static_bounder: lir.bounding.StaticBounder
+  elub_bounder: lir.algorithms.bayeserror.ELUBBounder
+  iv_bounder: lir.algorithms.invariance_bounds.IVBounder
+  n_source_bounder: lir.bounding.NSourceBounder
 metric:
   cllr: lir.metrics.cllr
   cllr_min: lir.metrics.cllr_min
@@ -87,7 +67,11 @@ metric:
   devpav: lir.algorithms.devpav.devpav
 output:
   metrics: lir.aggregation.metrics_csv
-  pav: lir.aggregation.plot_pav
+  pav:
+    class: lir.config.aggregation.parse_aggregate_plot
+    args:
+      method: pav
+
   ece: lir.aggregation.plot_ece
   lr_histogram: lir.aggregation.plot_lr_histogram
   llr_interval: lir.aggregation.plot_llr_interval

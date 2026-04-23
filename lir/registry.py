@@ -7,7 +7,7 @@ from typing import Any
 
 import confidence
 
-from lir.config.base import ConfigParser, GenericConfigParser
+from lir.config.base import ConfigParser, GenericConfigParser, _expand
 
 from . import resources as package_resources
 
@@ -77,12 +77,15 @@ class ConfigParserLoader(ABC, Iterable):
 
     @staticmethod
     def _get_config_parser(
-        result_type: Any, default_config_parser: Callable[[Any], ConfigParser] | None
+        result_type: Any,
+        default_config_parser: Callable[[Any], ConfigParser] | None,
+        args: dict[str, Any] | None = None,
     ) -> ConfigParser:
+        args = args or {}
         if inspect.isclass(result_type) and issubclass(result_type, ConfigParser):
-            return result_type()
+            return result_type(**args)
         elif default_config_parser is not None:
-            return default_config_parser(result_type)
+            return default_config_parser(result_type, **args)
         else:
             raise InvalidRegistryEntryError(
                 f'unable to instantiate {result_type}: '
@@ -314,19 +317,8 @@ class YamlRegistry(ConfigParserLoader):
         except Exception as e:
             raise ValueError(f'registry key `{key}` resolved to `{spec.get("class")}` but failed to materialize: {e}')
 
-        parser = ConfigParserLoader._get_config_parser(cls, default_config_parser)
-
-        if 'wrapper' in spec:
-            try:
-                wrapper = _get_attribute_by_name(spec.get('wrapper'))  # type: ignore[arg-type]
-            except Exception as e:
-                raise InvalidRegistryEntryError(
-                    f'unable to instantiate class {spec["class"]}: '
-                    f'error while instantiating wrapper class: {spec["wrapper"]}: {e}'
-                )
-            parser = wrapper(parser)
-
-        return parser
+        parser_init_args = spec.get('args', {})
+        return ConfigParserLoader._get_config_parser(cls, default_config_parser, args=parser_init_args)
 
     def _find(self, key: str, search_path: list[str] | None) -> Any:
         """

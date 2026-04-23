@@ -5,9 +5,6 @@ from functools import partial
 from pathlib import Path
 from typing import Any, TypeVar
 
-from lir import registry
-from lir.transform.pairing import PairingMethod
-
 
 class YamlParseError(ValueError):
     """
@@ -384,48 +381,6 @@ def config_parser(
             return get_full_name(func)
 
     return ConfigParserFunction
-
-
-def parse_pairing_config(
-    module_config: ContextAwareDict | str,
-    output_dir: Path,
-    context: list[str],
-) -> PairingMethod:
-    """
-    Parse and delegate pairing to the corresponding function for the defined pairing method.
-
-    The argument `module_config` defines the pairing method. If its value is a `str`, the registry is queried and the
-    corresponding pairing method is returned. If its value is a `dict`, the pairing method is defined
-    by the value `module_config["method"]`, and the registry is queried for the config parser of
-    the corresponding pairing method. The remaining values in `module_config` are passed as arguments to the
-    configuration parser of the pairing method.
-
-    If the registry cannot resolve the pairing method, an exception is raised.
-
-    Parameters
-    ----------
-    module_config : ContextAwareDict | str
-        Pairing method configuration.
-    output_dir : Path
-        Output directory for parser calls.
-    context : list[str]
-        Context used when ``module_config`` is a string.
-
-    Returns
-    -------
-    PairingMethod
-        Parsed pairing method.
-    """
-    if isinstance(module_config, str):
-        class_name = module_config
-        args = ContextAwareDict(context)
-    else:
-        class_name = pop_field(module_config, 'method')
-        args = module_config
-
-    return registry.get(class_name, search_path=['pairing'], default_config_parser=GenericConfigParser).parse(
-        args, output_dir
-    )
 
 
 AnyType = TypeVar('AnyType')

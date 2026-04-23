@@ -5,20 +5,20 @@ from lir import registry
 from lir.config.base import (
     ConfigParser,
     ContextAwareDict,
+    GenericConfigParser,
     YamlParseError,
     check_not_none,
     config_parser,
     pop_field,
 )
 from lir.transform import (
-    BinaryClassifierTransformer,
     CsvWriter,
     FunctionTransformer,
     Identity,
-    NumpyTransformer,
     Transformer,
     as_transformer,
 )
+from lir.transform.pairing import PairingMethod
 
 
 class GenericTransformerConfigParser(ConfigParser):
@@ -73,19 +73,6 @@ class GenericTransformerConfigParser(ConfigParser):
                     f'failed to instantiate module {self.component_class.__name__}: {e}',
                 )
 
-            if isinstance(instance, Transformer):
-                # The component already supports all necessary methods,
-                # through the `Transformer` interface.
-                return instance
-            if hasattr(instance, 'transform'):
-                # The component implements a `transform()` method, which means it
-                # is a transformer and can be used in the scikit-learn pipeline.
-                return instance
-            if hasattr(instance, 'predict_proba'):
-                # The component has a `predict_proba` method, which should be used as
-                # `transform()` step in the pipeline, which the wrapper class provides.
-                return BinaryClassifierTransformer(instance)
-
         elif callable(self.component_class):
             # When none of the above conditions apply, the component class might be a function
             # or a callable class, which should be used as a `transform()` step in the pipeline,
@@ -93,54 +80,6 @@ class GenericTransformerConfigParser(ConfigParser):
             return FunctionTransformer(self.component_class)
 
         raise YamlParseError(config.context, f'unrecognized module type: `{self.component_class}`')
-
-
-class NumpyWrappingConfigParser(ConfigParser):
-    """
-    Wrap a Transformer to add a header to FeatureData.
-
-    Parameters
-    ----------
-    module_parser : ConfigParser
-        Parser used to create the wrapped transformer.
-    """
-
-    def __init__(self, module_parser: ConfigParser):
-        super().__init__()
-        self.module_parser = module_parser
-
-    def parse(self, config: ContextAwareDict, output_dir: Path) -> Transformer:
-        """
-        Parse the provided header configuration.
-
-        Parameters
-        ----------
-        config : ContextAwareDict
-            Configuration possibly containing ``header`` and module fields.
-        output_dir : Path
-            Output directory passed to the wrapped parser.
-
-        Returns
-        -------
-        Transformer
-            Wrapped transformer that preserves numpy headers.
-        """
-        header = config.pop('header') if 'header' in config else None
-        return NumpyTransformer(
-            self.module_parser.parse(config, output_dir),
-            header=header,
-        )
-
-    def reference(self) -> str:
-        """
-        Return the full name of the ``module_parser`` class argument.
-
-        Returns
-        -------
-        str
-            Reference string for the wrapped parser.
-        """
-        return self.module_parser.reference()
 
 
 def parse_module(
@@ -220,3 +159,45 @@ def csv_writer(config: ContextAwareDict, output_dir: Path) -> CsvWriter:
     if 'path' not in config:
         config |= {'path': output_dir / f'{config.context[-1]}.csv'}
     return CsvWriter(**config)
+
+
+def parse_pairing_config(
+    module_config: ContextAwareDict | str,
+    output_dir: Path,
+    context: list[str],
+) -> PairingMethod:
+    """
+    Parse and delegate pairing to the corresponding function for the defined pairing method.
+
+    The argument `module_config` defines the pairing method. If its value is a `str`, the registry is queried and the
+    corresponding pairing method is returned. If its value is a `dict`, the pairing method is defined
+    by the value `module_config["method"]`, and the registry is queried for the config parser of
+    the corresponding pairing method. The remaining values in `module_config` are passed as arguments to the
+    configuration parser of the pairing method.
+
+    If the registry cannot resolve the pairing method, an exception is raised.
+
+    Parameters
+    ----------
+    module_config : ContextAwareDict | str
+        Pairing method configuration.
+    output_dir : Path
+        Output directory for parser calls.
+    context : list[str]
+        Context used when ``module_config`` is a string.
+
+    Returns
+    -------
+    PairingMethod
+        Parsed pairing method.
+    """
+    if isinstance(module_config, str):
+        class_name = module_config
+        args = ContextAwareDict(context)
+    else:
+        class_name = pop_field(module_config, 'method')
+        args = module_config
+
+    return registry.get(class_name, search_path=['pairing'], default_config_parser=GenericConfigParser).parse(
+        args, output_dir
+    )

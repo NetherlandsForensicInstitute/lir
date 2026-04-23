@@ -6,7 +6,7 @@ from typing import Any
 import optuna
 
 from lir.aggregation import Aggregation
-from lir.config.data import parse_data_object
+from lir.config.execution import DataConfig, LRSystemConfig, run_lrsystem
 from lir.config.lrsystem_architectures import augment_config
 from lir.config.substitution import (
     ContextAwareDict,
@@ -55,8 +55,7 @@ class OptunaExperiment(Experiment):
     ):
         super().__init__(name, outputs, output_path)
 
-        self.data_config = data_config
-        self.data_provider, self.splitter = parse_data_object(data_config, output_path)
+        self._data_config = DataConfig(spec=data_config, params={}, output_dir=output_path)
 
         self.baseline_config = baseline_config
         self.hyperparameters = hyperparameters
@@ -100,18 +99,18 @@ class OptunaExperiment(Experiment):
                 'best_trial': trial.study.best_trial.number if trial.number > 0 else '',
             }
         )
-        experiment_name = f'trial{trial.number:03d}'
 
-        split_data = self.splitter.apply(self.data_provider.get_instances())
-        llr_data: LLRData = self._run_lrsystem(
-            lr_system,
-            split_data,
-            hyperparameters,
-            experiment_name,
-            self.data_config,
+        result = run_lrsystem(
+            self.output_path,
+            LRSystemConfig(spec=lr_system, params=hyperparameters, output_dir=self.output_path),
+            self._data_config,
+            run_name=f'trial{trial.number:03d}',
         )
 
-        return self.metric_function(llr_data)
+        for output in self.outputs:
+            output.report(result)
+
+        return self.metric_function(result.llrdata)
 
     def _generate_and_run(self) -> None:
         study = optuna.create_study()  # Create a new study.

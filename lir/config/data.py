@@ -17,11 +17,15 @@ class DataSetup:
     """
     Data setup.
 
-    A data setup has the following ingredients:
-    - provider: the :class:`~lir.data.models.DataProvider` that retrieves the data from some data source, such as
-      a CSV file or a database;
-    - filter: an optional filter (:class:`~lir.Transformer`) to apply to the raw data before doing anything else;
-    - strategy: the :class:`~lir.data.models.DataStrategy` that determines how the data are used.
+    Parameters
+    ----------
+    provider : DataProvider
+        The :class:`~lir.data.models.DataProvider` that retrieves the data from some data source, such as
+          a CSV file or a database.
+    data_filter : Transformer
+        An optional filter (:class:`~lir.Transformer`) to apply to the raw data before doing anything else.
+    strategy : DataStrategy
+        The :class:`~lir.data.models.DataStrategy` that determines how the data are used.
     """
 
     def __init__(self, provider: DataProvider, data_filter: Transformer, strategy: DataStrategy):
@@ -29,11 +33,14 @@ class DataSetup:
         self.filter = data_filter
         self.strategy = strategy
 
-    def get_splits[DataType: InstanceData](self) -> Iterable[tuple[DataType, DataType]]:
+    def get_splits(self) -> Iterable[tuple[InstanceData, InstanceData]]:
         """
         Return the data in the form of one or more train/test splits.
 
-        :return: an iterator over tuples of train/test splits.
+        Returns
+        -------
+        Iterable[tuple[InstanceData, InstanceData]]
+            An iterator over tuples of train/test splits.
         """
         return self.strategy.apply(self.filter.fit_apply(self.provider.get_instances()))
 

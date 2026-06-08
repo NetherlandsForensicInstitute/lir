@@ -110,7 +110,24 @@ directory listing is as follows.
 Data organization
 -----------------
 
-The `data provider`_ delivers the dataset. It has at least the ``method`` property, and any other property is passed
+The `data provider`_ delivers the dataset. The organization depends somewhat on whether the LR system is
+**common source** or **specific source**. Generally, the attributes are:
+
+- **labels:** The hypothesis labels of the instances, as a 1-dimensional array with one value per instance, can be
+    either 0 or 1. This attribute may be provided by the data provider, or derived at a later stage, particularly if the
+    data are individual instances that are paired later to be used in a common source system.
+- **source_ids:** The identifiers of all sources that contributed to the instances. Each instance is from a single
+    source, except if it is a pair, in which case it has two sources. This attribute is not used once labels are
+    available.
+- **features:** Numerical values that characterize the instances, used to calculate an LR. This attribute may be derived
+    at a later stage, for example from media such as text in case of authorship analysis.
+- **instance_ids:** Optional attribute, used to identify instances. This attribute is mostly useful for debugging.
+- **role_assignments:** Optional attribute, used to prescribe which instances should be used for training/testing. To be
+    used with a predefined train/test split (e.g. :class:`~lir.data_strategies.PredefinedTrainTestSplit`).
+- **fold_assignment_column:** Optional attribute, used to prescribe how cross-validation should be applied. To be used
+    with predefined cross-validation (e.g. :class:`~lir.data_strategies.PredefinedCrossValidation`).
+
+In a YAML setup, the data provider has at least the ``method`` property, and any other property is passed
 as a parameter of the data provision method.
 
 In evaluative settings, the data provider delivers **labeled data**. In the setup above, that means that the instances

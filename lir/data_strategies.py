@@ -70,8 +70,10 @@ class CrossValidation(DataStrategy):
     """
     K-fold cross-validation iterator over successive train/test splits.
 
-    The input data must contain hypothesis labels. Each fold is constructed so that instances from both hypotheses are
-    present in every split.
+    The input data must contain **hypothesis labels**. If the data has ``source_ids`` but not hypothesis labels, use
+    :class:`~lir.data_strategies.SourcesCrossValidation` instead.
+
+    Each fold is constructed so that instances from both hypotheses are present in every split.
 
     This strategy may be registered in a YAML registry as follows:
 
@@ -169,7 +171,9 @@ class SourcesCrossValidation(DataStrategy):
     """
     K-fold cross-validation by source id.
 
-    This data strategy uses the ``source_ids`` attribute and distributes the sources over *k* different subsets.
+    This data strategy uses the ``source_ids`` attribute and distributes the sources over *k* different subsets. If the
+    data have hypothesis labels, use :class:`~lir.data_strategies.CrossValidation` instead.
+
     Each of the subsets will be offered once as the test set, using the others as the training set. Each source is
     assigned to exactly one of the subsets, and no sources will have instances that appear in more than one.
 

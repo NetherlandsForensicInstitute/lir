@@ -6,7 +6,7 @@ from typing import Any
 import optuna
 
 from lir.aggregation import Aggregation
-from lir.config.data import parse_data_object
+from lir.config.data import parse_data_setup
 from lir.config.lrsystem_architectures import augment_config
 from lir.config.substitution import (
     ContextAwareDict,
@@ -56,7 +56,7 @@ class OptunaExperiment(Experiment):
         super().__init__(name, outputs, output_path)
 
         self.data_config = data_config
-        self.data_provider, self.splitter = parse_data_object(data_config, output_path)
+        self.data_setup = parse_data_setup(data_config, output_path)
 
         self.baseline_config = baseline_config
         self.hyperparameters = hyperparameters

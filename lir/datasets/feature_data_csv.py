@@ -69,15 +69,15 @@ class FeatureDataCsvParser(DataProvider, ABC):
     Parameters
     ----------
     source_id_column : str | list[str] | None
-        Column name(s) containing source identifiers.
+        Column name(s) containing source identifiers (each source has a unique string identifier).
     label_column : str | None
-        Column name containing class labels.
+        Column name containing hypothesis labels (value 0 for H2 or 1 for H2).
     instance_id_column : str | None
         Column name containing instance identifiers.
     role_assignment_column : str | None
-        Column name containing predefined train/test roles.
+        Column name containing predefined roles (value 'train' for training or 'test' for test).
     fold_assignment_column : str | None
-        Column name containing predefined fold assignments.
+        Column name containing predefined fold assignments (each fold has a unique string identifier).
     extra_fields : list[ExtraField] | None
         Optional extra fields to parse from each row.
     ignore_columns : list[str] | None

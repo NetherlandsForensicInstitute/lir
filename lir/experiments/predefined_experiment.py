@@ -8,7 +8,7 @@ from tqdm import tqdm
 import lir
 from lir.aggregation import Aggregation
 from lir.config.base import ContextAwareDict
-from lir.config.data import parse_data_object
+from lir.config.data import parse_data_setup
 from lir.experiments import Experiment
 
 
@@ -51,8 +51,8 @@ class PredefinedExperiment(Experiment):
             # Parse the data configuration. This is done here to ensure that data
             # parsing is only done once per data configuration, even when multiple
             # LR systems are being evaluated on the same data setup.
-            provider, splitter = parse_data_object(deepcopy(data_config), self.output_path)
-            split_data = list(splitter.apply(provider.get_instances()))
+            data_setup = parse_data_setup(deepcopy(data_config), self.output_path)
+            split_data = list(data_setup.get_splits())
 
             # Only display the LR system configuration progress bar when running interactively, and
             # the data_tqdm is not disabled, and there are multiple LR systems to evaluate.

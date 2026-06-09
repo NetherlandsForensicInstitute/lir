@@ -26,6 +26,9 @@ modules:
   logging_pipeline: lir.transform.pipeline.logging_pipeline
   bootstrap: lir.algorithms.bootstraps.bootstrap
 
+  # preprocessing
+  select_instances: lir.transform.select_instances.parse_select_instances
+
   # transformations
   standard_scaler:
     class: sklearn.preprocessing.StandardScaler

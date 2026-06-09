@@ -1,0 +1,455 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.algorithms.mcmc &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#appearance-plots-and-metrics">Appearance plots and metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/lir.html">lir package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.DataProvider"><code class="docutils literal notranslate"><span class="pre">DataProvider</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.DataStrategy"><code class="docutils literal notranslate"><span class="pre">DataStrategy</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.FeatureData"><code class="docutils literal notranslate"><span class="pre">FeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.InstanceData"><code class="docutils literal notranslate"><span class="pre">InstanceData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.LLRData"><code class="docutils literal notranslate"><span class="pre">LLRData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.PairedFeatureData"><code class="docutils literal notranslate"><span class="pre">PairedFeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.Transformer"><code class="docutils literal notranslate"><span class="pre">Transformer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../lir.html">lir</a></li>
+      <li class="breadcrumb-item active">lir.algorithms.mcmc</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lir.algorithms.mcmc</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Self</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">betabinom</span><span class="p">,</span> <span class="n">binom</span><span class="p">,</span> <span class="n">norm</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.algorithms.bayeserror</span><span class="w"> </span><span class="kn">import</span> <span class="n">ELUBBounder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.bounding</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLRBounder</span><span class="p">,</span> <span class="n">check_type</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.data.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeatureData</span><span class="p">,</span> <span class="n">InstanceData</span><span class="p">,</span> <span class="n">LLRData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.transform</span><span class="w"> </span><span class="kn">import</span> <span class="n">Transformer</span>
+
+
+<span class="n">elub_bounder_factory</span> <span class="o">=</span> <span class="n">ELUBBounder</span>
+
+
+<div class="viewcode-block" id="McmcLLRModel">
+<a class="viewcode-back" href="../../../api/lir.algorithms.mcmc.html#lir.algorithms.mcmc.McmcLLRModel">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">McmcLLRModel</span><span class="p">(</span><span class="n">Transformer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Use Markov Chain Monte Carlo simulations to fit a statistical distribution for each of the two hypotheses.</span>
+
+<span class="sd">    Using samples from the posterior distributions of the model parameters, a posterior distribution of the LR is</span>
+<span class="sd">    obtained. The median of this distribution is used as best estimate for the LR; a credible interval is also</span>
+<span class="sd">    determined.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    distribution_h1 : str</span>
+<span class="sd">        Statistical distribution used to model H1.</span>
+<span class="sd">    parameters_h1 : dict[str, dict[str, float | int | str]] | None</span>
+<span class="sd">        Parameter definitions and priors for the H1 distribution.</span>
+<span class="sd">    distribution_h2 : str</span>
+<span class="sd">        Statistical distribution used to model H2.</span>
+<span class="sd">    parameters_h2 : dict[str, dict[str, float | int | str]] | None</span>
+<span class="sd">        Parameter definitions and priors for the H2 distribution.</span>
+<span class="sd">    bounding : Callable[[], LLRBounder] | None, optional</span>
+<span class="sd">        Bounding method factory to prevent over-extrapolation.</span>
+<span class="sd">    interval : tuple[float, float], optional</span>
+<span class="sd">        Lower and upper bounds of the credible interval in range ``[0, 1]``.</span>
+<span class="sd">    **mcmc_kwargs : Any</span>
+<span class="sd">        Additional MCMC simulation settings passed to `McmcModel`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">distribution_h1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">parameters_h1</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">distribution_h2</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">parameters_h2</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">bounding</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">LLRBounder</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">elub_bounder_factory</span><span class="p">,</span>
+        <span class="n">interval</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">),</span>
+        <span class="o">**</span><span class="n">mcmc_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_h1</span> <span class="o">=</span> <span class="n">McmcModel</span><span class="p">(</span><span class="n">distribution_h1</span><span class="p">,</span> <span class="n">parameters_h1</span><span class="p">,</span> <span class="o">**</span><span class="n">mcmc_kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_h2</span> <span class="o">=</span> <span class="n">McmcModel</span><span class="p">(</span><span class="n">distribution_h2</span><span class="p">,</span> <span class="n">parameters_h2</span><span class="p">,</span> <span class="o">**</span><span class="n">mcmc_kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bounder_factory</span> <span class="o">=</span> <span class="n">bounding</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bounders</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">LLRBounder</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interval</span> <span class="o">=</span> <span class="n">interval</span>
+
+<div class="viewcode-block" id="McmcLLRModel.fit">
+<a class="viewcode-back" href="../../../api/lir.algorithms.mcmc.html#lir.algorithms.mcmc.McmcLLRModel.fit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fit the defined model to the supplied instances.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceData</span>
+<span class="sd">            Training instances.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Self</span>
+<span class="sd">            Fitted model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="n">check_type</span><span class="p">(</span><span class="n">FeatureData</span><span class="p">,</span> <span class="n">instances</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_h1</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">instances</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="n">instances</span><span class="o">.</span><span class="n">require_labels</span> <span class="o">==</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_h2</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">instances</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="n">instances</span><span class="o">.</span><span class="n">require_labels</span> <span class="o">==</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounder_factory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># determine the bounds based on the LLRs of the training data, each sample results into an LR-system</span>
+            <span class="n">logp_h1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_h1</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">instances</span><span class="o">.</span><span class="n">features</span><span class="p">)</span>
+            <span class="n">logp_h2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_h2</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">instances</span><span class="o">.</span><span class="n">features</span><span class="p">)</span>
+            <span class="n">llrs</span> <span class="o">=</span> <span class="n">logp_h1</span> <span class="o">-</span> <span class="n">logp_h2</span>
+
+            <span class="c1"># determine the bounds for each LR-system individually</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bounders</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">bounder_factory</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">llrs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+            <span class="k">for</span> <span class="n">i_system</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">llrs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="n">llr_data</span> <span class="o">=</span> <span class="n">LLRData</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="n">llrs</span><span class="p">[:,</span> <span class="n">i_system</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="n">instances</span><span class="o">.</span><span class="n">require_labels</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bounders</span><span class="p">[</span><span class="n">i_system</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounders</span><span class="p">[</span><span class="n">i_system</span><span class="p">]</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">llr_data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="McmcLLRModel.apply">
+<a class="viewcode-back" href="../../../api/lir.algorithms.mcmc.html#lir.algorithms.mcmc.McmcLLRModel.apply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LLRData</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply the fitted model to the supplied instances.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : InstanceData</span>
+<span class="sd">            Instances to transform.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        LLRData</span>
+<span class="sd">            LLR estimates with median and credible interval columns.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="n">check_type</span><span class="p">(</span><span class="n">FeatureData</span><span class="p">,</span> <span class="n">instances</span><span class="p">)</span>
+        <span class="n">logp_h1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_h1</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">instances</span><span class="o">.</span><span class="n">features</span><span class="p">)</span>
+        <span class="n">logp_h2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_h2</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">instances</span><span class="o">.</span><span class="n">features</span><span class="p">)</span>
+        <span class="n">llrs</span> <span class="o">=</span> <span class="n">logp_h1</span> <span class="o">-</span> <span class="n">logp_h2</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bounder_factory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bounders</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="c1"># apply the bounders one by one</span>
+            <span class="k">for</span> <span class="n">i_system</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">llrs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="n">llr_data</span> <span class="o">=</span> <span class="n">LLRData</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="n">llrs</span><span class="p">[:,</span> <span class="n">i_system</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="n">instances</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span>
+                <span class="n">bound_llr_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounders</span><span class="p">[</span><span class="n">i_system</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">llr_data</span><span class="p">)</span>
+                <span class="n">llrs</span><span class="p">[:,</span> <span class="n">i_system</span><span class="p">]</span> <span class="o">=</span> <span class="n">bound_llr_data</span><span class="o">.</span><span class="n">llrs</span>
+        <span class="n">quantiles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">llrs</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interval</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;midpoint&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">instances</span><span class="o">.</span><span class="n">replace_as</span><span class="p">(</span><span class="n">LLRData</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="n">quantiles</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="McmcModel">
+<a class="viewcode-back" href="../../../api/lir.algorithms.mcmc.html#lir.algorithms.mcmc.McmcModel">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">McmcModel</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Use Markov Chain Monte Carlo simulations to fit a statistical distribution.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    distribution : str</span>
+<span class="sd">        Statistical distribution used, for example `&#39;normal&#39;` or `&#39;binomial&#39;`.</span>
+<span class="sd">    parameters : dict[str, dict[str, float | int | str]] | None</span>
+<span class="sd">        Definitions of distribution parameters and their prior distributions.</span>
+<span class="sd">    chain_count : int, optional</span>
+<span class="sd">        Number of parallel MCMC chains.</span>
+<span class="sd">    tune_count : int, optional</span>
+<span class="sd">        Number of tune/warm-up/burn-in samples per chain.</span>
+<span class="sd">    draw_count : int, optional</span>
+<span class="sd">        Number of posterior draws per chain.</span>
+<span class="sd">    random_seed : int | None, optional</span>
+<span class="sd">        Random seed.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Supported distributions are `betabinomial`, `binomial`, and `normal`.</span>
+<span class="sd">    Parameter names follow the PyMC naming conventions. The `parameters` dictionary maps</span>
+<span class="sd">    each model parameter to a prior specification containing a `prior` key and the</span>
+<span class="sd">    corresponding prior parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">distribution</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">chain_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="n">tune_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="n">draw_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="n">random_seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distribution</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chain_count</span> <span class="o">=</span> <span class="n">chain_count</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tune_count</span> <span class="o">=</span> <span class="n">tune_count</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_count</span> <span class="o">=</span> <span class="n">draw_count</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_seed</span> <span class="o">=</span> <span class="n">random_seed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameter_samples</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="McmcModel.fit">
+<a class="viewcode-back" href="../../../api/lir.algorithms.mcmc.html#lir.algorithms.mcmc.McmcModel.fit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">features</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw samples from the posterior distributions of the parameters of a specified statistical distribution.</span>
+
+<span class="sd">        The posteriors are based on the specified prior distributions of these parameters and observed feature values.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        features : np.ndarray</span>
+<span class="sd">            Observed feature values used to update parameter priors.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Self</span>
+<span class="sd">            Fitted model with posterior samples.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">pymc</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pm</span>
+        <span class="k">except</span> <span class="ne">ModuleNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ModuleNotFoundError</span><span class="p">(</span><span class="s1">&#39;pymc is required to use McmcModel.fit(). Install lir with pymc support.&#39;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Distribution parameters not specified.&#39;</span><span class="p">)</span>
+        <span class="c1"># It looks like all pymc stuff needs to be in a single model block</span>
+        <span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">():</span>
+            <span class="c1"># Define the prior distributions of the model parameters based on their definitions</span>
+            <span class="n">priors</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">parameter</span><span class="p">,</span> <span class="n">parameter_input</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">match</span> <span class="n">parameter_input</span><span class="p">[</span><span class="s1">&#39;prior&#39;</span><span class="p">]:</span>
+                    <span class="k">case</span> <span class="s1">&#39;beta&#39;</span><span class="p">:</span>
+                        <span class="n">prior</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Beta</span><span class="p">(</span><span class="n">parameter</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">parameter_input</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">],</span> <span class="n">beta</span><span class="o">=</span><span class="n">parameter_input</span><span class="p">[</span><span class="s1">&#39;beta&#39;</span><span class="p">])</span>
+                    <span class="k">case</span> <span class="s1">&#39;normal&#39;</span><span class="p">:</span>
+                        <span class="n">prior</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">parameter</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">parameter_input</span><span class="p">[</span><span class="s1">&#39;mu&#39;</span><span class="p">],</span> <span class="n">sigma</span><span class="o">=</span><span class="n">parameter_input</span><span class="p">[</span><span class="s1">&#39;sigma&#39;</span><span class="p">])</span>
+                    <span class="k">case</span> <span class="s1">&#39;uniform&#39;</span><span class="p">:</span>
+                        <span class="n">prior</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="n">parameter</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="n">parameter_input</span><span class="p">[</span><span class="s1">&#39;lower&#39;</span><span class="p">],</span> <span class="n">upper</span><span class="o">=</span><span class="n">parameter_input</span><span class="p">[</span><span class="s1">&#39;upper&#39;</span><span class="p">])</span>
+                    <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unrecognized prior&#39;</span><span class="p">)</span>
+                <span class="n">priors</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">parameter</span><span class="p">:</span> <span class="n">prior</span><span class="p">})</span>
+            <span class="c1"># Define the model: priors and the observed data</span>
+            <span class="k">match</span> <span class="bp">self</span><span class="o">.</span><span class="n">distribution</span><span class="p">:</span>
+                <span class="k">case</span> <span class="s1">&#39;betabinomial&#39;</span><span class="p">:</span>
+                    <span class="n">pm</span><span class="o">.</span><span class="n">BetaBinomial</span><span class="p">(</span>
+                        <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">priors</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">],</span> <span class="n">beta</span><span class="o">=</span><span class="n">priors</span><span class="p">[</span><span class="s1">&#39;beta&#39;</span><span class="p">],</span> <span class="n">n</span><span class="o">=</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">observed</span><span class="o">=</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+                    <span class="p">)</span>
+                <span class="k">case</span> <span class="s1">&#39;binomial&#39;</span><span class="p">:</span>
+                    <span class="n">pm</span><span class="o">.</span><span class="n">Binomial</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">priors</span><span class="p">[</span><span class="s1">&#39;p&#39;</span><span class="p">],</span> <span class="n">n</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">observed</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]))</span>
+                <span class="k">case</span> <span class="s1">&#39;normal&#39;</span><span class="p">:</span>
+                    <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">priors</span><span class="p">[</span><span class="s1">&#39;mu&#39;</span><span class="p">],</span> <span class="n">sigma</span><span class="o">=</span><span class="n">priors</span><span class="p">[</span><span class="s1">&#39;sigma&#39;</span><span class="p">],</span> <span class="n">observed</span><span class="o">=</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+                <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unrecognized distribution&#39;</span><span class="p">)</span>
+            <span class="c1"># Do simulations and sample from the posterior distributions</span>
+            <span class="n">trace</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+                <span class="n">draws</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">draw_count</span><span class="p">,</span>
+                <span class="n">chains</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">chain_count</span><span class="p">,</span>
+                <span class="n">tune</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tune_count</span><span class="p">,</span>
+                <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">random_seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_seed</span><span class="p">,</span>
+                <span class="n">progressbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="c1"># Get the posterior samples of the model parameters and convergence statistics</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameter_samples</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="c1"># Combine the samples from all chains</span>
+            <span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">trace</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="n">parameter</span><span class="p">]))</span>  <span class="c1"># type: ignore [unresolved-attribute]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parameter_samples</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">parameter</span><span class="p">:</span> <span class="n">samples</span><span class="p">})</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="McmcModel.transform">
+<a class="viewcode-back" href="../../../api/lir.algorithms.mcmc.html#lir.algorithms.mcmc.McmcModel.transform">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">features</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get samples of the posterior distribution of the (log10) probability.</span>
+
+<span class="sd">        Use the samples of the posterior distributions of the parameters, in combination with the selected statistical</span>
+<span class="sd">        distribution, to get samples of the posterior distribution of the (log10) probability, evaluated for specified</span>
+<span class="sd">        feature values.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        features : np.ndarray</span>
+<span class="sd">            Feature values for which probabilities are calculated.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            Samples of log10 probabilities.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Prepare features and parameters for 2d-evaluations (number of samples * number of requested feature values)</span>
+        <span class="n">sample_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameter_samples</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameter_samples</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]])</span>
+        <span class="n">features_2d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">feature_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="n">feature_2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">features</span><span class="p">[:,</span> <span class="n">feature_id</span><span class="p">],</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">sample_count</span><span class="p">))</span>
+            <span class="n">features_2d</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">feature_id</span><span class="p">:</span> <span class="n">feature_2d</span><span class="p">})</span>
+        <span class="n">parameters_2d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameter_samples</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">parameter_2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameter_samples</span><span class="p">[</span><span class="n">parameter</span><span class="p">],</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="n">parameters_2d</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">parameter</span><span class="p">:</span> <span class="n">parameter_2d</span><span class="p">})</span>
+        <span class="c1"># Calculate e-base log probabilities at specified feature values</span>
+        <span class="k">match</span> <span class="bp">self</span><span class="o">.</span><span class="n">distribution</span><span class="p">:</span>
+            <span class="k">case</span> <span class="s1">&#39;betabinomial&#39;</span><span class="p">:</span>
+                <span class="n">logp</span> <span class="o">=</span> <span class="n">betabinom</span><span class="o">.</span><span class="n">logpmf</span><span class="p">(</span><span class="n">features_2d</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">features_2d</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">parameters_2d</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">],</span> <span class="n">parameters_2d</span><span class="p">[</span><span class="s1">&#39;beta&#39;</span><span class="p">])</span>
+            <span class="k">case</span> <span class="s1">&#39;binomial&#39;</span><span class="p">:</span>
+                <span class="n">logp</span> <span class="o">=</span> <span class="n">binom</span><span class="o">.</span><span class="n">logpmf</span><span class="p">(</span><span class="n">features_2d</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">features_2d</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">parameters_2d</span><span class="p">[</span><span class="s1">&#39;p&#39;</span><span class="p">])</span>
+            <span class="k">case</span> <span class="s1">&#39;normal&#39;</span> <span class="o">|</span> <span class="s1">&#39;norm&#39;</span><span class="p">:</span>
+                <span class="n">logp</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">logpdf</span><span class="p">(</span><span class="n">features_2d</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">parameters_2d</span><span class="p">[</span><span class="s1">&#39;mu&#39;</span><span class="p">],</span> <span class="n">parameters_2d</span><span class="p">[</span><span class="s1">&#39;sigma&#39;</span><span class="p">])</span>
+            <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unrecognized distribution&#39;</span><span class="p">)</span>
+        <span class="c1"># Return 10-base log probabilities</span>
+        <span class="k">return</span> <span class="n">logp</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

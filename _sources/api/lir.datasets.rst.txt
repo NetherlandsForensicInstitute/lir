@@ -1,0 +1,19 @@
+lir.datasets package
+====================
+
+.. automodule:: lir.datasets
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   lir.datasets.alcohol_breath_analyser
+   lir.datasets.feature_data_csv
+   lir.datasets.glass
+   lir.datasets.synthesized_normal_binary
+   lir.datasets.synthesized_normal_multiclass

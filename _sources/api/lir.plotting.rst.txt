@@ -1,0 +1,15 @@
+lir.plotting package
+====================
+
+.. automodule:: lir.plotting
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   lir.plotting.expected_calibration_error

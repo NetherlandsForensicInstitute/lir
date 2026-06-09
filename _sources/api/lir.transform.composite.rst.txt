@@ -1,0 +1,7 @@
+lir.transform.composite module
+==============================
+
+.. automodule:: lir.transform.composite
+   :members:
+   :show-inheritance:
+   :undoc-members:

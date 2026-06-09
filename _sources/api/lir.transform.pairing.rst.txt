@@ -1,0 +1,7 @@
+lir.transform.pairing module
+============================
+
+.. automodule:: lir.transform.pairing
+   :members:
+   :show-inheritance:
+   :undoc-members:

@@ -1,0 +1,7 @@
+lir.algorithms.isotonic\_regression module
+==========================================
+
+.. automodule:: lir.algorithms.isotonic_regression
+   :members:
+   :show-inheritance:
+   :undoc-members:

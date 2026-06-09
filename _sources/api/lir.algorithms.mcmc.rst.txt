@@ -1,0 +1,7 @@
+lir.algorithms.mcmc module
+==========================
+
+.. automodule:: lir.algorithms.mcmc
+   :members:
+   :show-inheritance:
+   :undoc-members:

@@ -1,0 +1,220 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Overview: module code &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api-overview.html">Overview of the Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api-overview.html#data-classes">Data classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api-overview.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api-overview.html#lr-systems">LR systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem-assessment.html#appearance-plots-and-metrics">Appearance plots and metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/lir.html">lir package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/lir.html#lir.DataProvider"><code class="docutils literal notranslate"><span class="pre">DataProvider</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/lir.html#lir.DataStrategy"><code class="docutils literal notranslate"><span class="pre">DataStrategy</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/lir.html#lir.FeatureData"><code class="docutils literal notranslate"><span class="pre">FeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/lir.html#lir.InstanceData"><code class="docutils literal notranslate"><span class="pre">InstanceData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/lir.html#lir.LLRData"><code class="docutils literal notranslate"><span class="pre">LLRData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/lir.html#lir.PairedFeatureData"><code class="docutils literal notranslate"><span class="pre">PairedFeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/lir.html#lir.Transformer"><code class="docutils literal notranslate"><span class="pre">Transformer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/lir.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Overview: module code</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>All modules for which code is available</h1>
+<ul><li><a href="lir.html">lir</a></li>
+<ul><li><a href="lir/aggregation.html">lir.aggregation</a></li>
+<li><a href="lir/algorithms/bayeserror.html">lir.algorithms.bayeserror</a></li>
+<li><a href="lir/algorithms/bootstraps.html">lir.algorithms.bootstraps</a></li>
+<li><a href="lir/algorithms/devpav.html">lir.algorithms.devpav</a></li>
+<li><a href="lir/algorithms/invariance_bounds.html">lir.algorithms.invariance_bounds</a></li>
+<li><a href="lir/algorithms/isotonic_regression.html">lir.algorithms.isotonic_regression</a></li>
+<li><a href="lir/algorithms/kde.html">lir.algorithms.kde</a></li>
+<li><a href="lir/algorithms/llr_overestimation.html">lir.algorithms.llr_overestimation</a></li>
+<li><a href="lir/algorithms/logistic_regression.html">lir.algorithms.logistic_regression</a></li>
+<li><a href="lir/algorithms/mcmc.html">lir.algorithms.mcmc</a></li>
+<li><a href="lir/algorithms/percentile_rank.html">lir.algorithms.percentile_rank</a></li>
+<li><a href="lir/bounding.html">lir.bounding</a></li>
+<li><a href="lir/config/aggregation.html">lir.config.aggregation</a></li>
+<li><a href="lir/config/base.html">lir.config.base</a></li>
+<li><a href="lir/config/data.html">lir.config.data</a></li>
+<li><a href="lir/config/experiment_strategies.html">lir.config.experiment_strategies</a></li>
+<li><a href="lir/config/lrsystem_architectures.html">lir.config.lrsystem_architectures</a></li>
+<li><a href="lir/config/metrics.html">lir.config.metrics</a></li>
+<li><a href="lir/config/substitution.html">lir.config.substitution</a></li>
+<li><a href="lir/config/transform.html">lir.config.transform</a></li>
+<li><a href="lir/config/util.html">lir.config.util</a></li>
+<li><a href="lir/data/io.html">lir.data.io</a></li>
+<li><a href="lir/data/models.html">lir.data.models</a></li>
+<li><a href="lir/data_strategies.html">lir.data_strategies</a></li>
+<li><a href="lir/datasets/alcohol_breath_analyser.html">lir.datasets.alcohol_breath_analyser</a></li>
+<li><a href="lir/datasets/feature_data_csv.html">lir.datasets.feature_data_csv</a></li>
+<li><a href="lir/datasets/glass.html">lir.datasets.glass</a></li>
+<li><a href="lir/datasets/synthesized_normal_binary.html">lir.datasets.synthesized_normal_binary</a></li>
+<li><a href="lir/datasets/synthesized_normal_multiclass.html">lir.datasets.synthesized_normal_multiclass</a></li>
+<li><a href="lir/experiments/base_experiment.html">lir.experiments.base_experiment</a></li>
+<li><a href="lir/experiments/optuna_experiment.html">lir.experiments.optuna_experiment</a></li>
+<li><a href="lir/experiments/predefined_experiment.html">lir.experiments.predefined_experiment</a></li>
+<li><a href="lir/lrsystems/binary_lrsystem.html">lir.lrsystems.binary_lrsystem</a></li>
+<li><a href="lir/lrsystems/lrsystems.html">lir.lrsystems.lrsystems</a></li>
+<li><a href="lir/lrsystems/score_based.html">lir.lrsystems.score_based</a></li>
+<li><a href="lir/lrsystems/two_level.html">lir.lrsystems.two_level</a></li>
+<li><a href="lir/main.html">lir.main</a></li>
+<li><a href="lir/metrics.html">lir.metrics</a></li>
+<ul><li><a href="lir/metrics/overestimation.html">lir.metrics.overestimation</a></li>
+</ul><li><a href="lir/persistence.html">lir.persistence</a></li>
+<li><a href="lir/plotting.html">lir.plotting</a></li>
+<ul><li><a href="lir/plotting/expected_calibration_error.html">lir.plotting.expected_calibration_error</a></li>
+</ul><li><a href="lir/registry.html">lir.registry</a></li>
+<li><a href="lir/transform.html">lir.transform</a></li>
+<ul><li><a href="lir/transform/composite.html">lir.transform.composite</a></li>
+<li><a href="lir/transform/data_validator.html">lir.transform.data_validator</a></li>
+<li><a href="lir/transform/distance.html">lir.transform.distance</a></li>
+<li><a href="lir/transform/pairing.html">lir.transform.pairing</a></li>
+<li><a href="lir/transform/pipeline.html">lir.transform.pipeline</a></li>
+<li><a href="lir/transform/save_features.html">lir.transform.save_features</a></li>
+</ul><li><a href="lir/util.html">lir.util</a></li>
+</ul></ul>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

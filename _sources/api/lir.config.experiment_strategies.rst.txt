@@ -1,0 +1,7 @@
+lir.config.experiment\_strategies module
+========================================
+
+.. automodule:: lir.config.experiment_strategies
+   :members:
+   :show-inheritance:
+   :undoc-members:

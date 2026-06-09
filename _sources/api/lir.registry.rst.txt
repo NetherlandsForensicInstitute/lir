@@ -1,0 +1,7 @@
+lir.registry module
+===================
+
+.. automodule:: lir.registry
+   :members:
+   :show-inheritance:
+   :undoc-members:

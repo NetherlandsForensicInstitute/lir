@@ -1,0 +1,7 @@
+lir.experiments.base\_experiment module
+=======================================
+
+.. automodule:: lir.experiments.base_experiment
+   :members:
+   :show-inheritance:
+   :undoc-members:

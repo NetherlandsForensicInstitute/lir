@@ -1,0 +1,20 @@
+lir.transform package
+=====================
+
+.. automodule:: lir.transform
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   lir.transform.composite
+   lir.transform.data_validator
+   lir.transform.distance
+   lir.transform.pairing
+   lir.transform.pipeline
+   lir.transform.save_features

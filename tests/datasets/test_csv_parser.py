@@ -109,6 +109,12 @@ from lir.datasets.feature_data_csv import (
             '1 row, 2 features, 2 ignored',
         ),
         (
+            'feature1,feature2,feature3,feature4\n1,2,3,4\n',
+            {'feature_columns': ['feature2', 'feature3']},
+            FeatureData(features=np.array([[2, 3]])),
+            '1 row, 2 explicit features',
+        ),
+        (
             'feature1,feature2,feature3,duration1\n1,2,3,99\n',
             {'extra_fields': [{'name': 'duration', 'columns': ['duration1'], 'cell_type': 'int'}]},
             FeatureData(features=np.array([[1, 2, 3]]), duration=np.array([[99]])),

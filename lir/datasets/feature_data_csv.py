@@ -72,6 +72,9 @@ class FeatureDataCsvParser(DataProvider, ABC):
         Column name(s) containing source identifiers (each source has a unique string identifier).
     label_column : str | None
         Column name containing hypothesis labels (value 0 for H2 or 1 for H2).
+    feature_columns : str | list[str] | None
+        Column names containing numerical feature values. If not specified, all columns not otherwise designated are
+        interpreted as feature columns.
     instance_id_column : str | None
         Column name containing instance identifiers.
     role_assignment_column : str | None
@@ -81,7 +84,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
     extra_fields : list[ExtraField] | None
         Optional extra fields to parse from each row.
     ignore_columns : list[str] | None
-        Column names ignored when extracting features.
+        Column names ignored when extracting features. This attribute is ignored if `feature_columns` is available.
     head : int | None
         Maximum number of rows to read from the source.
     message_prefix : str
@@ -127,6 +130,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
         self,
         source_id_column: str | list[str] | None = None,
         label_column: str | None = None,
+        feature_columns: str | list[str] | None = None,
         instance_id_column: str | None = None,
         role_assignment_column: str | None = None,
         fold_assignment_column: str | None = None,
@@ -143,10 +147,11 @@ class FeatureDataCsvParser(DataProvider, ABC):
 
         self.label_column = label_column
         self.instance_id_column = instance_id_column
+        self.feature_columns = feature_columns
         self.role_assignment_column = role_assignment_column
         self.fold_assignment_column = fold_assignment_column
-        self.extra_fields = extra_fields or []
-        self.ignore_columns = ignore_columns or []
+        self.extra_fields: list[ExtraField] = extra_fields or []
+        self.ignore_columns: list[str] = ignore_columns or []
         self._head = head
         self._message_prefix = message_prefix
 
@@ -175,7 +180,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
             raise ValueError(f'{self._message_prefix}empty file')
 
         # identify the non feature columns
-        non_feature_columns = (
+        columns_with_explicit_role = (
             [
                 ('label_column', self.label_column),
                 ('instance_id_column', self.instance_id_column),
@@ -190,16 +195,22 @@ class FeatureDataCsvParser(DataProvider, ABC):
             + [('ignore_columns', column_name) for column_name in self.ignore_columns]
         )
 
+        if self.feature_columns:
+            columns_with_explicit_role.extend(('feature_columns', column_name) for column_name in self.feature_columns)
+            feature_columns = self.feature_columns
+        else:
+            # identify the feature columns
+            explicit_role_column_names = {column_name for _, column_name in columns_with_explicit_role}
+            feature_columns = [
+                fieldname for fieldname in reader.fieldnames if fieldname not in explicit_role_column_names
+            ]
+
         # check if all required columns exist in the csv file
-        for name, value in non_feature_columns:
+        for name, value in columns_with_explicit_role:
             if value is not None and value not in reader.fieldnames:
                 raise ValueError(
                     f'{self._message_prefix}{name} specified as `{value}`, but it is not present in the csv file'
                 )
-
-        # identify the feature columns
-        non_feature_column_names = {column_name for _, column_name in non_feature_columns}
-        feature_columns = [fieldname for fieldname in reader.fieldnames if fieldname not in non_feature_column_names]
 
         # initialize the result values
         source_ids: list[list[Any]] | None = [] if self.source_id_columns else None

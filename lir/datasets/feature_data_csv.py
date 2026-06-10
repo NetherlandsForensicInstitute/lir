@@ -3,7 +3,6 @@ import io
 import itertools
 import logging
 from abc import ABC
-from collections import defaultdict
 from collections.abc import Callable
 from functools import partial
 from itertools import chain
@@ -19,10 +18,18 @@ from lir.config.base import ContextAwareDict, check_is_empty, config_parser, pop
 from lir.data.io import search_path
 from lir.data.models import DataProvider, FeatureData
 from lir.data_strategies import RoleAssignment
-from lir.util import check_type
+from lir.util import check_type, parse_float
 
 
 LOG = logging.getLogger(__name__)
+
+
+class ParseError(ValueError):
+    """
+    Exception to be raised on parse errors.
+
+    This happens when an input file is malformatted or contains invalid input.
+    """
 
 
 class ExtraField(NamedTuple):
@@ -51,7 +58,7 @@ class ExtraField(NamedTuple):
             try:
                 values.append(self.validate_cell(row[colname]))
             except Exception as e:
-                raise ValueError(f'parsing value of column `{colname}` failed: {e}')
+                raise ParseError(f'parsing value of column `{colname}` failed: {e}')
         return values
 
 
@@ -89,6 +96,8 @@ class FeatureDataCsvParser(DataProvider, ABC):
         Maximum number of rows to read from the source.
     message_prefix : str
         Prefix added to parser log and error messages.
+    continue_on_error : bool
+        If True, a row will be dropped if a parse error occurs. Otherwise, parsing will be aborted.
 
     Examples
     --------
@@ -138,6 +147,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
         ignore_columns: list[str] | None = None,
         head: int | None = None,
         message_prefix: str = '',
+        continue_on_error: bool = False,
     ):
         self.source_id_columns: list[str] = (
             [source_id_column] if isinstance(source_id_column, str) else source_id_column or []
@@ -147,13 +157,16 @@ class FeatureDataCsvParser(DataProvider, ABC):
 
         self.label_column = label_column
         self.instance_id_column = instance_id_column
-        self.feature_columns = feature_columns
+        self.feature_columns: list[str] | None = (
+            [feature_columns] if isinstance(feature_columns, str) else feature_columns
+        )
         self.role_assignment_column = role_assignment_column
         self.fold_assignment_column = fold_assignment_column
         self.extra_fields: list[ExtraField] = extra_fields or []
         self.ignore_columns: list[str] = ignore_columns or []
         self._head = head
         self._message_prefix = message_prefix
+        self.continue_on_error = continue_on_error
 
         # the "extra field" argument allows for including arbitrary fields
         # check that they do not conflict with fields that are facilitated otherwise
@@ -165,19 +178,42 @@ class FeatureDataCsvParser(DataProvider, ABC):
                     'use the appropriate config parameters instead'
                 )
 
-    def _parse_value(self, line_num: int, column_name: str, value: str, parse_fn: Callable[[str], Any]) -> Any:
+    @staticmethod
+    def _parse_value(line_num: int, column_name: str, value: str, parse_fn: Callable[[str], Any]) -> Any:
         try:
             return parse_fn(value)
         except (ValueError, TypeError) as e:
-            raise ValueError(
-                f'{self._message_prefix}failed to parse {value} at row {line_num}, column {column_name}: {e}'
-            ) from e
+            raise ParseError(f'failed to parse {value} at row {line_num}, column {column_name}: {e}') from e
+
+    def _parse_row(
+        self, row: dict[str, str], reader: csv.DictReader, feature_columns: list[str]
+    ) -> dict[str, str | list[str] | int | float | list[float]]:
+        fields: dict[str, str | list[str] | int | float | list[float]] = {}
+        if self.source_id_columns:
+            fields['source_ids'] = [row[column_name] for column_name in self.source_id_columns]
+        if self.label_column is not None:
+            fields['labels'] = self._parse_value(reader.line_num, self.label_column, row[self.label_column], int)
+        if self.instance_id_column is not None:
+            fields['instance_ids'] = row[self.instance_id_column]
+        if self.role_assignment_column is not None:
+            fields['role_assignments'] = self._parse_value(
+                reader.line_num, self.role_assignment_column, row[self.role_assignment_column], RoleAssignment
+            ).value
+        if self.fold_assignment_column is not None:
+            fields['fold_assignment_column'] = row[self.fold_assignment_column]
+        for field in self.extra_fields:
+            fields[field.name] = field.parse_row(row)
+        fields['features'] = [
+            self._parse_value(reader.line_num, fieldname, row[fieldname], partial(parse_float, none_for_empty=True))
+            for fieldname in feature_columns
+        ]
+        return fields
 
     def _parse_file(self, fp: IO) -> FeatureData:
         # initialize the reader
         reader = csv.DictReader(fp)
         if reader.fieldnames is None:
-            raise ValueError(f'{self._message_prefix}empty file')
+            raise ParseError(f'{self._message_prefix}empty file')
 
         # identify the non feature columns
         columns_with_explicit_role = (
@@ -208,65 +244,46 @@ class FeatureDataCsvParser(DataProvider, ABC):
         # check if all required columns exist in the csv file
         for name, value in columns_with_explicit_role:
             if value is not None and value not in reader.fieldnames:
-                raise ValueError(
+                raise ParseError(
                     f'{self._message_prefix}{name} specified as `{value}`, but it is not present in the csv file'
                 )
 
         # initialize the result values
-        source_ids: list[list[Any]] | None = [] if self.source_id_columns else None
-        labels = []
-        instance_ids = []
-        role_assignments = []
-        fold_assignment_column = []
-        features = []
-        extra_values = defaultdict(list)
+        all_instances: dict[str, list[Any]] = {}
 
         # read the file, row by row
+        n_instances = 0
         for row in itertools.islice(reader, self._head):
-            if source_ids is not None:
-                source_ids.append([row[column_name] for column_name in self.source_id_columns])
-            if self.label_column is not None:
-                labels.append(self._parse_value(reader.line_num, self.label_column, row[self.label_column], int))
-            if self.instance_id_column is not None:
-                instance_ids.append(row[self.instance_id_column])
-            if self.role_assignment_column is not None:
-                role_assignments.append(
-                    self._parse_value(
-                        reader.line_num, self.role_assignment_column, row[self.role_assignment_column], RoleAssignment
-                    ).value
-                )
-            if self.fold_assignment_column is not None:
-                fold_assignment_column.append(row[self.fold_assignment_column])
-            for field in self.extra_fields:
-                extra_values[field.name].append(field.parse_row(row))
-            features.append(
-                [self._parse_value(reader.line_num, fieldname, row[fieldname], float) for fieldname in feature_columns]
-            )
+            try:
+                fields = self._parse_row(row, reader, feature_columns)
+                if not all_instances:
+                    for key in fields:
+                        all_instances[key] = []
+                for k, v in fields.items():
+                    all_instances[k].append(v)
 
-        if self._head is not None and len(features) < self._head:
-            LOG.warning(f'input file has too few rows; expected: {self._head}; found: {len(features)}')
+                n_instances += 1
+            except ParseError as e:
+                if self.continue_on_error:
+                    LOG.info(f'{self._message_prefix}parsing failed: {e}', e)
+                else:
+                    raise e
+
+        if not all_instances:
+            return FeatureData(features=np.zeros((0, 1)))
+
+        if self._head is not None and n_instances < self._head:
+            LOG.warning(f'input file has too few rows; expected: {self._head}; found: {n_instances}')
 
         # finalize the data
-        data = {
-            'source_ids': np.array(source_ids) if source_ids else None,
-            'labels': np.array(labels) if self.label_column is not None else None,
-            'features': np.array(features),
-        }
-        data.update({k: np.array(v) for k, v in extra_values.items()})
-        if self.instance_id_column is not None:
-            data['instance_ids'] = np.array(instance_ids)
-        if self.role_assignment_column is not None:
-            data['role_assignments'] = np.array(role_assignments)
-        if self.fold_assignment_column is not None:
-            if len(set(fold_assignment_column)) < 2:
-                raise ValueError(
-                    f'{self._message_prefix}fold assignment column `{self.fold_assignment_column}` should contain at '
-                    f'least two different values; found: {set(fold_assignment_column)}'
-                )
+        all_instances = {k: np.array(v) for k, v in all_instances.items()}
+        if self.fold_assignment_column and len(set(all_instances['fold_assignments'])) < 2:
+            raise ParseError(
+                f'{self._message_prefix}fold assignment column `{self.fold_assignment_column}` should contain at '
+                f'least two different values; found: {set(all_instances["fold_assignments"])}'
+            )
 
-            data['fold_assignments'] = np.array(fold_assignment_column)
-
-        return FeatureData(**data)  # type: ignore
+        return FeatureData(**all_instances)  # type: ignore
 
 
 class FeatureDataCsvFileParser(FeatureDataCsvParser):

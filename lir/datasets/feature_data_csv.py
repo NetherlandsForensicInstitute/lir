@@ -72,9 +72,6 @@ class FeatureDataCsvParser(DataProvider, ABC):
         Column name(s) containing source identifiers (each source has a unique string identifier).
     label_column : str | None
         Column name containing hypothesis labels (value 0 for H2 or 1 for H2).
-    feature_columns : str | list[str] | None
-        Column names containing numerical feature values. If not specified, all columns not otherwise designated are
-        interpreted as feature columns.
     instance_id_column : str | None
         Column name containing instance identifiers.
     role_assignment_column : str | None
@@ -83,8 +80,13 @@ class FeatureDataCsvParser(DataProvider, ABC):
         Column name containing predefined fold assignments (each fold has a unique string identifier).
     extra_fields : list[ExtraField] | None
         Optional extra fields to parse from each row.
+    feature_columns : str | list[str] | None
+        Column names containing numerical feature values. If not specified, all columns not otherwise designated are
+        interpreted as feature columns.
     ignore_columns : list[str] | None
-        Column names ignored when extracting features. This attribute is ignored if `feature_columns` is available.
+        Column names ignored when extracting features. This attribute is used to determine the feature columns if the
+        attribute `feature_columns` is not available. It is an error to specify both this attribute and
+        `feature_columns`.
     head : int | None
         Maximum number of rows to read from the source.
     message_prefix : str
@@ -155,6 +157,9 @@ class FeatureDataCsvParser(DataProvider, ABC):
         self._head = head
         self._message_prefix = message_prefix
 
+        if self.ignore_columns and feature_columns:
+            raise ValueError('ignore_columns and feature_columns cannot both be specified')
+
         # the "extra field" argument allows for including arbitrary fields
         # check that they do not conflict with fields that are facilitated otherwise
         empty_data = FeatureData(features=np.ones((0, 1)))
@@ -206,10 +211,11 @@ class FeatureDataCsvParser(DataProvider, ABC):
             ]
 
         # check if all required columns exist in the csv file
-        for name, value in columns_with_explicit_role:
-            if value is not None and value not in reader.fieldnames:
+        for role_name, column_name in columns_with_explicit_role:
+            if column_name is not None and column_name not in reader.fieldnames:
                 raise ValueError(
-                    f'{self._message_prefix}{name} specified as `{value}`, but it is not present in the csv file'
+                    f'{self._message_prefix}{role_name} specified as `{column_name}`, '
+                    + 'but it is not present in the csv file'
                 )
 
         # initialize the result values

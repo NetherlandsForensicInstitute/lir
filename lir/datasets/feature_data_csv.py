@@ -18,7 +18,7 @@ from lir.config.base import ContextAwareDict, check_is_empty, config_parser, pop
 from lir.data.io import search_path
 from lir.data.models import DataProvider, FeatureData
 from lir.data_strategies import RoleAssignment
-from lir.util import check_type, parse_float
+from lir.util import check_type
 
 
 LOG = logging.getLogger(__name__)
@@ -204,8 +204,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
         for field in self.extra_fields:
             fields[field.name] = field.parse_row(row)
         fields['features'] = [
-            self._parse_value(reader.line_num, fieldname, row[fieldname], partial(parse_float, none_for_empty=True))
-            for fieldname in feature_columns
+            self._parse_value(reader.line_num, fieldname, row[fieldname], float) for fieldname in feature_columns
         ]
         return fields
 
@@ -265,7 +264,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
                 n_instances += 1
             except ParseError as e:
                 if self.continue_on_error:
-                    LOG.info(f'{self._message_prefix}parsing failed: {e}', e)
+                    LOG.info(f'{self._message_prefix}parsing failed: {e}')
                 else:
                     raise e
 

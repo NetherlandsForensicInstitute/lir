@@ -1,3 +1,4 @@
+import functools
 import inspect
 from pathlib import Path
 
@@ -75,7 +76,8 @@ class GenericTransformerConfigParser(ConfigParser):
             # When none of the above conditions apply, the component class might be a function
             # or a callable class, which should be used as a `transform()` step in the pipeline,
             # which the wrapper provides.
-            return FunctionTransformer(self.component_class)
+            func = functools.partial(self.component_class, **config) if config else self.component_class
+            return FunctionTransformer(func)
 
         raise YamlParseError(config.context, f'unrecognized module type: `{self.component_class}`')
 

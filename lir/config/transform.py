@@ -9,14 +9,16 @@ from lir.config.base import (
     GenericConfigParser,
     YamlParseError,
     check_not_none,
-    pop_field,
+    pop_field, GenericConfigParser,
 )
 from lir.transform import (
+    BinaryClassifierTransformer,
     FunctionTransformer,
     Identity,
     Transformer,
     as_transformer,
 )
+from lir.transform.pairing import PairingMethod
 from lir.transform.pairing import PairingMethod
 
 

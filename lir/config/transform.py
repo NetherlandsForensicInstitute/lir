@@ -12,7 +12,6 @@ from lir.config.base import (
     pop_field, GenericConfigParser,
 )
 from lir.transform import (
-    BinaryClassifierTransformer,
     FunctionTransformer,
     Identity,
     Transformer,

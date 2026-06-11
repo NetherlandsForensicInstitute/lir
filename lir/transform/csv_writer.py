@@ -13,7 +13,7 @@ LOG = logging.getLogger(__name__)
 
 class CsvWriter(Transformer):
     """
-    Implementation of a transformation step in a scikit-learn Pipeline that writes to CSV.
+    Implementation of a transformation step in a :class:`~lir.transform.pipeline.Pipeline` that writes to CSV.
 
     This might be used to obtain temporary or intermediate results for logging or debugging
     purposes.

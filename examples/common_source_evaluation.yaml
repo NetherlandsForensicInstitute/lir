@@ -20,7 +20,7 @@ lr_system: &lr_system
   architecture: score_based
   preprocessing:
     method: csv_writer
-    include_labels: True
+    path: input_data.csv
   pairing:
     method: instance_pairs
     ratio_limit: 1

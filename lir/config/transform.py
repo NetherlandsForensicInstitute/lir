@@ -8,11 +8,9 @@ from lir.config.base import (
     GenericConfigParser,
     YamlParseError,
     check_not_none,
-    config_parser,
     pop_field,
 )
 from lir.transform import (
-    CsvWriter,
     FunctionTransformer,
     Identity,
     Transformer,
@@ -137,28 +135,6 @@ def parse_module(
         class_name = pop_field(args, 'method', default=default_method, validate=check_not_none)
 
     return registry.get(class_name, GenericTransformerConfigParser, search_path=['modules']).parse(args, output_dir)
-
-
-@config_parser
-def csv_writer(config: ContextAwareDict, output_dir: Path) -> CsvWriter:
-    """
-    Set up a CSV writer from configuration.
-
-    Parameters
-    ----------
-    config : ContextAwareDict
-        CSV writer configuration.
-    output_dir : Path
-        Output directory used to derive default CSV path.
-
-    Returns
-    -------
-    CsvWriter
-        Configured CSV writer.
-    """
-    if 'path' not in config:
-        config |= {'path': output_dir / f'{config.context[-1]}.csv'}
-    return CsvWriter(**config)
 
 
 def parse_pairing_config(

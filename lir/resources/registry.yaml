@@ -49,7 +49,7 @@ modules:
 
   # utility modules
   tee: lir.config.util.TeeParser
-  csv_writer: lir.config.transform.csv_writer
+  csv_writer: lir.transform.csv_writer.csv_writer
   save_features: lir.transform.save_features.SaveFeatureTransformer
   validate_feature_data_type: lir.transform.data_validator.ValidateFeatureDataType
   identity: lir.transform.Identity

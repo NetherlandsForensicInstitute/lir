@@ -145,7 +145,7 @@ experiments:
   #           - path: comparing.steps.clf
   #             value: logistic_regression
   #           - path: comparing.steps.calibration
-  #             value: csv_writer
+  #             value: identity
   # ```
   #
   # The hyperparameter value may also be numerical, as follows.
@@ -185,7 +185,7 @@ experiments:
               - path: comparing.steps.clf
                 value: logistic_regression
               - path: comparing.steps.calibration
-                value: csv_writer
+                value: identity
     output:
       - method: metrics
         columns:

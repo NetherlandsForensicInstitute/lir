@@ -1,7 +1,7 @@
 from lir.data_strategies.labels import CrossValidation, TrainTestSplit
 from lir.data_strategies.pairs import PairsTrainTestSplit
 from lir.data_strategies.predefined import PredefinedCrossValidation, PredefinedTrainTestSplit, RoleAssignment
-from lir.data_strategies.sources import SourcesCrossValidation, SourcesTrainTestSplit
+from lir.data_strategies.sources import LeaveOneSourceOut, SourcesCrossValidation, SourcesTrainTestSplit
 
 
 __all__ = [
@@ -13,4 +13,5 @@ __all__ = [
     'PredefinedCrossValidation',
     'SourcesTrainTestSplit',
     'SourcesCrossValidation',
+    'LeaveOneSourceOut',
 ]

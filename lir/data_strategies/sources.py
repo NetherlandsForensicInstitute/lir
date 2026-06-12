@@ -115,3 +115,43 @@ class SourcesCrossValidation(DataStrategy):
         """
         for train_index, test_index in self._kf.split(np.arange(len(instances)), groups=instances.source_ids_1d):
             yield instances[train_index], instances[test_index]
+
+
+class LeaveOneSourceOut(DataStrategy):
+    """
+    Leave-one-out by source id.
+
+    This data strategy uses the ``source_ids`` attribute and assigns a single source at a time to the test set, and the
+    others to the training set. There will be as many splits as there are sources, so that each source will be in the
+    test set once.
+
+    In an experiment setup file, the data strategy can be referenced as:
+
+    .. code-block:: yaml
+
+        splits:
+          strategy: leave_one_source_out
+    """
+
+    def apply[DataType: InstanceData](self, instances: DataType) -> Iterator[tuple[DataType, DataType]]:
+        """
+        Perform leave-one-source-out.
+
+        Parameters
+        ----------
+        instances : InstanceDataType
+            Input instances with a `source_ids` attribute.
+
+        Returns
+        -------
+        Iterator[tuple[DataType, DataType]]
+            An iterator over train/test splits.
+        """
+        if instances.source_ids is None:
+            raise ValueError('unable to perform leave-one-source-out without a `source_ids` attribute')
+        if len(instances.source_ids.shape) != 1:
+            raise ValueError('leave-one-source-out: attribute `source_ids` should be one-dimensional')
+
+        sources = np.unique(instances.source_ids)
+        for source in sources:
+            yield instances[instances.source_ids != source], instances[instances.source_ids == source]

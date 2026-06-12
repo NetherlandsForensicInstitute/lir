@@ -9,7 +9,7 @@ from lir.config.base import (
     GenericConfigParser,
     YamlParseError,
     check_not_none,
-    pop_field, GenericConfigParser,
+    pop_field,
 )
 from lir.transform import (
     FunctionTransformer,
@@ -17,7 +17,6 @@ from lir.transform import (
     Transformer,
     as_transformer,
 )
-from lir.transform.pairing import PairingMethod
 from lir.transform.pairing import PairingMethod
 
 

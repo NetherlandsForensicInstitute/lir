@@ -4,6 +4,20 @@ import numpy as np
 from sklearn.model_selection import GroupKFold, GroupShuffleSplit
 
 from lir import DataStrategy, InstanceData
+from lir.util import check_type
+
+
+def is_valid_input(instances: InstanceData) -> bool:  # numpydoc ignore=PR01,RT01
+    """Return True iff source id based strategies can be applied."""
+    return instances.source_ids is not None and len(instances.source_ids.shape) == 1
+
+
+def _check_input(instances: InstanceData) -> None:  # numpydoc ignore=PR01
+    """Raise an error unless source id based strategies can be applied."""
+    if instances.source_ids is None:
+        raise ValueError('unable to perform leave-one-source-out without a `source_ids` attribute')
+    if len(instances.source_ids.shape) != 1:
+        raise ValueError('leave-one-source-out: attribute `source_ids` should be one-dimensional')
 
 
 class SourcesTrainTestSplit(DataStrategy):
@@ -56,6 +70,8 @@ class SourcesTrainTestSplit(DataStrategy):
         tuple[DataType, DataType]
             An iterator over a single item, which is a tuple of the training set and the test set.
         """
+        _check_input(instances)
+
         splitter = GroupShuffleSplit(test_size=self.test_size, n_splits=1, random_state=self.seed)
         ((train_index, test_index),) = splitter.split(np.arange(len(instances)), groups=instances.source_ids_1d)
 
@@ -113,6 +129,8 @@ class SourcesCrossValidation(DataStrategy):
         instances : InstanceDataType
             Input instances to be processed by this method.
         """
+        _check_input(instances)
+
         for train_index, test_index in self._kf.split(np.arange(len(instances)), groups=instances.source_ids_1d):
             yield instances[train_index], instances[test_index]
 
@@ -147,11 +165,8 @@ class LeaveOneSourceOut(DataStrategy):
         Iterator[tuple[DataType, DataType]]
             An iterator over train/test splits.
         """
-        if instances.source_ids is None:
-            raise ValueError('unable to perform leave-one-source-out without a `source_ids` attribute')
-        if len(instances.source_ids.shape) != 1:
-            raise ValueError('leave-one-source-out: attribute `source_ids` should be one-dimensional')
+        _check_input(instances)
 
-        sources = np.unique(instances.source_ids)
+        sources = np.unique(check_type(np.ndarray, instances.source_ids))
         for source in sources:
             yield instances[instances.source_ids != source], instances[instances.source_ids == source]

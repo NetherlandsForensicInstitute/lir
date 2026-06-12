@@ -13,6 +13,17 @@ class RoleAssignment(Enum):
     TEST = 'test'
 
 
+def is_valid_input(instances: InstanceData) -> bool:  # numpydoc ignore=PR01,RT01
+    """Return True iff predefined strategies can be applied."""
+    return 'role_assignments' in instances.all_fields
+
+
+def _check_input(instances: InstanceData) -> None:  # numpydoc ignore=PR01
+    """Raise an error unless predefined strategies can be applied."""
+    if 'role_assignments' not in instances.all_fields:
+        raise ValueError('`role_assignments` field is missing')
+
+
 class PredefinedTrainTestSplit(DataStrategy):
     """
     Split data into a training set and a test set based on predefined assignments.
@@ -43,8 +54,7 @@ class PredefinedTrainTestSplit(DataStrategy):
         tuple[DataType, DataType]
             An iterator over a single item, which is a tuple of the training set and the test set.
         """
-        if 'role_assignments' not in instances.all_fields:
-            raise ValueError('`role_assignments` field is missing')
+        _check_input(instances)
 
         training_set = instances[instances.role_assignments == RoleAssignment.TRAIN.value]  # type: ignore
         test_set = instances[instances.role_assignments == RoleAssignment.TEST.value]  # type: ignore
@@ -83,8 +93,7 @@ class PredefinedCrossValidation(DataStrategy):
         instances : InstanceDataType
             Input instances to be processed by this method.
         """
-        if 'fold_assignments' not in instances.all_fields:
-            raise ValueError('`fold_assignments` field is missing')
+        _check_input(instances)
 
         fold_assignments = instances.fold_assignments  # type: ignore
         unique_folds = np.unique(fold_assignments)

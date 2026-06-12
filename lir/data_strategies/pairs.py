@@ -5,6 +5,20 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 
 from lir import DataStrategy, InstanceData
+from lir.util import check_type
+
+
+def is_valid_input(instances: InstanceData) -> bool:  # numpydoc ignore=PR01,RT01
+    """Return True iff pair-based strategies can be applied."""
+    return (
+        instances.source_ids is not None and len(instances.source_ids.shape) == 2 and instances.source_ids.shape[1] != 2
+    )
+
+
+def _check_input(instances: InstanceData) -> None:  # numpydoc ignore=PR01
+    """Raise an error unless pair-based strategies can be applied."""
+    if instances.source_ids is None or len(instances.source_ids.shape) != 2 or instances.source_ids.shape[1] != 2:
+        raise ValueError(f'expected two-column source_ids; shape found: {getattr(instances.source_ids, "shape", None)}')
 
 
 class PairsTrainTestSplit(DataStrategy):
@@ -41,11 +55,13 @@ class PairsTrainTestSplit(DataStrategy):
         tuple[DataType, DataType]
             An iterator over a single item, which is a tuple of the training set and the test set.
         """
+        _check_input(instances)
         source_ids = instances.source_ids
-        if source_ids is None or len(source_ids.shape) != 2 or source_ids.shape[1] != 2:
-            raise ValueError(f'expected two-column source_ids; shape found: {getattr(source_ids, "shape", None)}')
         sources_train, sources_test = train_test_split(
-            np.unique(source_ids), test_size=self.test_size, shuffle=True, random_state=self.seed
+            np.unique(check_type(np.ndarray, source_ids)),
+            test_size=self.test_size,
+            shuffle=True,
+            random_state=self.seed,
         )
 
         sources_train = set(sources_train)

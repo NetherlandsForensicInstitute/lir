@@ -144,11 +144,13 @@
           "type": "string",
           "description": "Name of the data splitting strategy.",
           "enum": [
-            "train_test",
-            "cross_validation",
+            "train_test_instances",
+            "cross_validation_instances",
             "train_test_sources",
             "cross_validation_sources",
+            "leave_one_source_out",
             "predefined_train_test",
+            "predefined_cross_validation",
             "train_test_pairs"
           ]
         },

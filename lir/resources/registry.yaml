@@ -13,14 +13,16 @@ experiment_strategies:
   optuna: lir.config.experiment_strategies.OptunaStrategy
 
 data_strategies:
-  train_test: lir.data_strategies.TrainTestSplit
-  cross_validation: lir.data_strategies.CrossValidation
+  train_test_instances: lir.data_strategies.TrainTestSplit
+  cross_validation_instances: lir.data_strategies.CrossValidation
   train_test_sources: lir.data_strategies.SourcesTrainTestSplit
   cross_validation_sources: lir.data_strategies.SourcesCrossValidation
   leave_one_source_out: lir.data_strategies.LeaveOneSourceOut
   predefined_train_test: lir.data_strategies.PredefinedTrainTestSplit
   predefined_cross_validation: lir.data_strategies.PredefinedCrossValidation
   train_test_pairs: lir.data_strategies.PairsTrainTestSplit
+  auto_train_test: lir.data_strategies.AutoTrainTestSplit
+  auto_cross_validation: lir.data_strategies.AutoCrossValidation
 
 data_providers:
   synthesized_normal_binary: lir.datasets.synthesized_normal_binary.synthesized_normal_binary

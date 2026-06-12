@@ -14,7 +14,7 @@ data: &data
       size: 60
 
   splits:
-    strategy: train_test
+    strategy: train_test_instances
     test_size: .5
     seed: 42
 

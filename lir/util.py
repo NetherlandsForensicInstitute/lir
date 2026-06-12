@@ -16,7 +16,28 @@ from jsonschema import validate
 LR = collections.namedtuple('LR', ['lr', 'p0', 'p1'])
 
 
-AnyType = TypeVar('AnyType', bound=Any)
+def check_not_none[AnyType: Any](v: AnyType, message: str | None = None) -> AnyType:
+    """
+    Check if a given input is not `None`. If so, return the input value. Otherwise, raise a `ValueError`.
+
+    Parameters
+    ----------
+    v : Any
+        The input value to be checked.
+    message : str, optional
+        An optional message to be included in the error if the check fails. If not provided, a default message will be
+        used.
+
+    Returns
+    -------
+    AnyType
+        The input value `v` if it is not `None`.
+    """
+    if v is not None:
+        return v
+    else:
+        message = message or 'value should not be `None`'
+        raise ValueError(message)
 
 
 def check_type[AnyType: Any](type_class: type[AnyType], v: Any, message: str | None = None) -> AnyType:

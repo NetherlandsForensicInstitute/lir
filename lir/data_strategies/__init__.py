@@ -1,3 +1,4 @@
+from lir.data_strategies.auto import AutoCrossValidation, AutoTrainTestSplit
 from lir.data_strategies.labels import CrossValidation, TrainTestSplit
 from lir.data_strategies.pairs import PairsTrainTestSplit
 from lir.data_strategies.predefined import PredefinedCrossValidation, PredefinedTrainTestSplit, RoleAssignment
@@ -14,4 +15,6 @@ __all__ = [
     'SourcesTrainTestSplit',
     'SourcesCrossValidation',
     'LeaveOneSourceOut',
+    'AutoTrainTestSplit',
+    'AutoCrossValidation',
 ]

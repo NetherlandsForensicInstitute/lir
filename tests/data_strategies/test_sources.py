@@ -1,6 +1,8 @@
 import numpy as np
+import pytest
 
-from lir.data_strategies import SourcesTrainTestSplit
+from lir import DataStrategy
+from lir.data_strategies import SourcesCrossValidation, SourcesTrainTestSplit
 from lir.datasets.synthesized_normal_multiclass import (
     SynthesizedDimension,
     SynthesizedNormalMulticlassData,
@@ -43,3 +45,21 @@ def test_multiclass_train_test_split_seed():
     for data_train, data_test in strategy.apply(data):
         assert data_train != ref_train
         assert data_test != ref_test
+
+
+@pytest.mark.parametrize(
+    'strategy',
+    [
+        SourcesTrainTestSplit(test_size=0.5, seed=0),
+        SourcesCrossValidation(folds=20),  # no shuffle
+        SourcesCrossValidation(folds=20, random_state=0),
+    ],
+)
+def test_random(strategy: DataStrategy):
+    dimensions = [SynthesizedDimension(0, 1, 0.2), SynthesizedDimension(0, 1, 0.2)]
+    data = SynthesizedNormalMulticlassData(population_size=100, sources_size=3, seed=0, dimensions=dimensions)
+    instances = data.get_instances()
+    splits1 = list(strategy.apply(instances))
+    splits2 = list(strategy.apply(instances))
+    for i in range(len(splits1)):
+        assert np.all(splits1[i][0].features == splits2[i][0].features)

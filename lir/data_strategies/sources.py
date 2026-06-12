@@ -79,17 +79,28 @@ class SourcesCrossValidation(DataStrategy):
         splits:
           strategy: cross_validation_sources
           folds: 5
+          random_state: 0
 
-    This class internally uses ``sklearn.model_selection.GroupKFold``.
+    This class internally uses :class:`~sklearn.model_selection.GroupKFold`.
 
     Parameters
     ----------
     folds : int
         Number of cross-validation folds to generate.
+    shuffle : bool | None
+        Whether to shuffle the groups before splitting into batches. Note that the samples within each split will not be
+        shuffled. If `None`, the data will be shuffled if `random_state` is not `None`.
+    random_state : int | None
+        When shuffle is True, random_state affects the ordering of the indices, which controls the randomness of each
+        fold. Otherwise, this parameter has no effect. Pass an int for reproducible output across multiple function
+        calls.
     """
 
-    def __init__(self, folds: int):
-        self.folds = folds
+    def __init__(self, folds: int, shuffle: bool | None = None, random_state: int | None = None):
+        if shuffle is None:
+            shuffle = random_state is not None
+        random_state = random_state
+        self._kf = GroupKFold(n_splits=folds, shuffle=shuffle, random_state=random_state)
 
     def apply[DataType: InstanceData](self, instances: DataType) -> Iterator[tuple[DataType, DataType]]:
         """
@@ -102,7 +113,5 @@ class SourcesCrossValidation(DataStrategy):
         instances : InstanceDataType
             Input instances to be processed by this method.
         """
-        kf = GroupKFold(n_splits=self.folds)
-
-        for train_index, test_index in kf.split(np.arange(len(instances)), groups=instances.source_ids_1d):
+        for train_index, test_index in self._kf.split(np.arange(len(instances)), groups=instances.source_ids_1d):
             yield instances[train_index], instances[test_index]

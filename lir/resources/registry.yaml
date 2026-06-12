@@ -17,6 +17,7 @@ data_strategies:
   cross_validation: lir.data_strategies.CrossValidation
   train_test_sources: lir.data_strategies.SourcesTrainTestSplit
   cross_validation_sources: lir.data_strategies.SourcesCrossValidation
+  leave_one_source_out: lir.data_strategies.LeaveOneSourceOut
   predefined_train_test: lir.data_strategies.PredefinedTrainTestSplit
   predefined_cross_validation: lir.data_strategies.PredefinedCrossValidation
   train_test_pairs: lir.data_strategies.PairsTrainTestSplit

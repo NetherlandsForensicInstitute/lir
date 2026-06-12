@@ -3,6 +3,7 @@ import pytest
 
 from lir import DataStrategy
 from lir.data_strategies import SourcesCrossValidation, SourcesTrainTestSplit
+from lir.data_strategies.sources import LeaveOneSourceOut
 from lir.datasets.synthesized_normal_multiclass import (
     SynthesizedDimension,
     SynthesizedNormalMulticlassData,
@@ -53,9 +54,10 @@ def test_multiclass_train_test_split_seed():
         SourcesTrainTestSplit(test_size=0.5, seed=0),
         SourcesCrossValidation(folds=20),  # no shuffle
         SourcesCrossValidation(folds=20, random_state=0),
+        LeaveOneSourceOut(),
     ],
 )
-def test_random(strategy: DataStrategy):
+def test_reproducibility(strategy: DataStrategy):
     dimensions = [SynthesizedDimension(0, 1, 0.2), SynthesizedDimension(0, 1, 0.2)]
     data = SynthesizedNormalMulticlassData(population_size=100, sources_size=3, seed=0, dimensions=dimensions)
     instances = data.get_instances()
@@ -63,3 +65,11 @@ def test_random(strategy: DataStrategy):
     splits2 = list(strategy.apply(instances))
     for i in range(len(splits1)):
         assert np.all(splits1[i][0].features == splits2[i][0].features)
+
+
+def test_leave_one_out():
+    dimensions = [SynthesizedDimension(0, 1, 0.2), SynthesizedDimension(0, 1, 0.2)]
+    data = SynthesizedNormalMulticlassData(population_size=100, sources_size=3, seed=0, dimensions=dimensions)
+    instances = data.get_instances()
+    strategy = LeaveOneSourceOut()
+    assert len(list(strategy.apply(instances))) == 100

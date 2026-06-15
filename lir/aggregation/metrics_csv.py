@@ -61,7 +61,7 @@ class WriteMetricsToCsv(Aggregation):
             else:
                 metrics.append((name, str(value)))
 
-        results = OrderedDict(list(data.parameters.items()) + metrics)
+        results = OrderedDict([(k, str(v)) for k, v in data.parameters.items()] + metrics)
 
         # Record column header names only once to the CSV
         if self._writer is None:

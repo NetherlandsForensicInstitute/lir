@@ -6,14 +6,18 @@ from typing import Any
 from matplotlib import pyplot as plt
 
 from lir.aggregation import Aggregation, AggregationData
+from lir.config.base import ConfigParser, ContextAwareDict, pop_field
+from lir.registry import _get_attribute_by_name
 
 
 LOG = logging.getLogger(__name__)
 
 
-class AggregatePlot(Aggregation):
+class PlotEach(Aggregation):
     """
-    Aggregation that generates plots by repeatedly calling a plotting function.
+    Aggregation that generates a plot for each call to ``report()``.
+
+    Repeated calls to ``report()`` will result in separate plots.
 
     Parameters
     ----------
@@ -76,3 +80,51 @@ class AggregatePlot(Aggregation):
             fig.savefig(file_name)
 
         plt.close(fig)
+
+
+class PlotEachConfigParser(ConfigParser):
+    """
+    Configuration parser for aggregate plots.
+
+    Parameters
+    ----------
+    method : str
+        The Python name of the plot function.
+    default_plot_name : str | None
+        The plot name. If `None`, the value of `method` is used.
+    """
+
+    def __init__(self, method: str, default_plot_name: str | None = None):
+        self.ref_name = method
+        self.plot_fn = _get_attribute_by_name(method)
+        self.default_plot_name = default_plot_name or method
+
+    def parse(self, config: ContextAwareDict, output_dir: Path) -> PlotEach:
+        """
+        Parse a configuration section for an aggregate plot.
+
+        Parameters
+        ----------
+        config : ContextAwareDict
+            Configuration section.
+        output_dir : Path
+            Output directory.
+
+        Returns
+        -------
+        PlotEach
+            Parsed aggregate plot.
+        """
+        plot_name = pop_field(config, 'plot_name', default=self.default_plot_name)
+        return PlotEach(self.plot_fn, plot_name, output_dir, **config)
+
+    def reference(self) -> str:
+        """
+        Return the `method` argument of the constructor as the reference object.
+
+        Returns
+        -------
+        str
+            The `method` argument of the constructor.
+        """
+        return self.ref_name

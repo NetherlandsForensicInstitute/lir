@@ -1,7 +1,7 @@
 from lir.aggregation.base import Aggregation, AggregationData
 from lir.aggregation.case_llr_csv import CaseLLRToCsv
 from lir.aggregation.metrics_csv import WriteMetricsToCsv
-from lir.aggregation.plot import AggregatePlot
+from lir.aggregation.plot_each import PlotEach
 from lir.aggregation.subset import SubsetAggregation
 
 
@@ -14,7 +14,7 @@ __all__ = [
     # metrics_csv
     'WriteMetricsToCsv',
     # plot
-    'AggregatePlot',
+    'PlotEach',
     # subset
     'SubsetAggregation',
 ]

@@ -84,61 +84,61 @@ metric:
 output:
   metrics: lir.aggregation.metrics_csv.parse
   pav:
-    class: lir.config.aggregation.AggregationPlotConfigParser
+    class: lir.aggregation.plot_each.PlotEachConfigParser
     args:
       method: lir.plotting.pav
       default_plot_name: 'PAV'
 
   ece:
-    class: lir.config.aggregation.AggregationPlotConfigParser
+    class: lir.aggregation.plot_each.PlotEachConfigParser
     args:
       method: lir.plotting.expected_calibration_error.plot_ece
       default_plot_name: 'ECE'
 
   lr_histogram:
-    class: lir.config.aggregation.AggregationPlotConfigParser
+    class: lir.aggregation.plot_each.PlotEachConfigParser
     args:
       method: lir.plotting.lr_histogram
       default_plot_name: 'LR_Histogram'
 
   llr_interval:
-    class: lir.config.aggregation.AggregationPlotConfigParser
+    class: lir.aggregation.plot_each.PlotEachConfigParser
     args:
       method: lir.plotting.llr_interval
       default_plot_name: 'LLR_Interval'
 
   llr_overestimation:
-    class: lir.config.aggregation.AggregationPlotConfigParser
+    class: lir.aggregation.plot_each.PlotEachConfigParser
     args:
       method: lir.algorithms.llr_overestimation.plot_llr_overestimation
       default_plot_name: 'LLR_Overestimation'
 
   nbe:
-    class: lir.config.aggregation.AggregationPlotConfigParser
+    class: lir.aggregation.plot_each.PlotEachConfigParser
     args:
       method: lir.plotting.nbe
       default_plot_name: 'NBE'
 
   invariance_delta_function:
-    class: lir.config.aggregation.AggregationPlotConfigParser
+    class: lir.aggregation.plot_each.PlotEachConfigParser
     args:
       method: lir.algorithms.invariance_bounds.plot_invariance_delta_functions
       default_plot_name: 'Invariance_Delta_Functions'
 
   tippett:
-    class: lir.config.aggregation.AggregationPlotConfigParser
+    class: lir.aggregation.plot_each.PlotEachConfigParser
     args:
       method: lir.plotting.tippett
       default_plot_name: 'Tippett'
 
   score_to_llr:
-    class: lir.config.aggregation.AggregationPlotConfigParser
+    class: lir.aggregation.plot_each.PlotEachConfigParser
     args:
       method: lir.plotting.score_to_llr
       default_plot_name: 'Score_LLR'
 
   score_distribution:
-    class: lir.config.aggregation.AggregationPlotConfigParser
+    class: lir.aggregation.plot_each.PlotEachConfigParser
     args:
       method: lir.plotting.score_distribution
       default_plot_name: 'Score_Distribution'

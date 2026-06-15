@@ -2,7 +2,7 @@ from functools import partial
 from pathlib import Path
 
 from lir import registry
-from lir.aggregation import AggregatePlot, Aggregation, SubsetAggregation
+from lir.aggregation import Aggregation, SubsetAggregation
 from lir.config.base import (
     ConfigParser,
     ContextAwareDict,
@@ -13,7 +13,6 @@ from lir.config.base import (
     config_parser,
     pop_field,
 )
-from lir.registry import _get_attribute_by_name
 
 
 def parse_aggregation(
@@ -118,51 +117,3 @@ def subset_aggregation(config: ContextAwareDict, output_dir: Path) -> SubsetAggr
         aggregation_methods = [parse_aggregation(aggregation_config, subset_output_dir)]
 
     return SubsetAggregation(aggregation_methods, category_field)
-
-
-class AggregationPlotConfigParser(ConfigParser):
-    """
-    Configuration parser for aggregate plots.
-
-    Parameters
-    ----------
-    method : str
-        The Python name of the plot function.
-    default_plot_name : str | None
-        The plot name. If `None`, the value of `method` is used.
-    """
-
-    def __init__(self, method: str, default_plot_name: str | None = None):
-        self.ref_name = method
-        self.plot_fn = _get_attribute_by_name(method)
-        self.default_plot_name = default_plot_name or method
-
-    def parse(self, config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
-        """
-        Parse a configuration section for an aggregate plot.
-
-        Parameters
-        ----------
-        config : ContextAwareDict
-            Configuration section.
-        output_dir : Path
-            Output directory.
-
-        Returns
-        -------
-        AggregatePlot
-            Parsed aggregate plot.
-        """
-        plot_name = pop_field(config, 'plot_name', default=self.default_plot_name)
-        return AggregatePlot(self.plot_fn, plot_name, output_dir, **config)
-
-    def reference(self) -> str:
-        """
-        Return the `method` argument of the constructor as the reference object.
-
-        Returns
-        -------
-        str
-            The `method` argument of the constructor.
-        """
-        return self.ref_name

@@ -89,7 +89,7 @@ class Experiment(ABC):
 
         # Check that simplify_data_structure returned a dict for type checking.
         if not isinstance(lrsystem_config_dict, dict) or not isinstance(data_config_dict, dict):
-            raise ValueError('hyperparameters are not the expected type (dict)')
+            raise ValueError('lr_system_parameters are not the expected type (dict)')
 
         confidence.dumpf(confidence.Configuration(lrsystem_config_dict), run_output_dir / 'lrsystem.yaml')
         confidence.dumpf(confidence.Configuration(data_config_dict), run_output_dir / 'data.yaml')

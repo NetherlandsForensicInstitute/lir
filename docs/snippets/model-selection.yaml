@@ -38,7 +38,7 @@ experiments:
           - cllr
           - cllr_min
 
-    hyperparameters:
+    lr_system_parameters:
       - path: comparing.steps.to_llr
         options:
           - logistic_calibrator

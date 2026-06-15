@@ -103,7 +103,7 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         Returns
         -------
         tuple[ContextAwareDict, list[Hyperparameter]]
-            Baseline configuration and parsed hyperparameters.
+            Baseline configuration and parsed lr_system_parameters.
         """
         baseline_config = pop_field(self._config, config_field)
         if baseline_config is None:
@@ -125,23 +125,23 @@ class ExperimentStrategyConfigParser(ConfigParser, ABC):
         Returns
         -------
         tuple[ContextAwareDict, list[Hyperparameter]]
-            Data configuration and associated hyperparameters.
+            Data configuration and associated lr_system_parameters.
         """
-        return self._parse_config_with_parameters('data', 'dataparameters')
+        return self._parse_config_with_parameters('data', 'data_parameters')
 
     def lrsystem_config(self) -> tuple[ContextAwareDict, list[Hyperparameter]]:
         """
-        Parse the LR system section including hyperparameters.
+        Parse the LR system section including lr_system_parameters.
 
         The baseline configuration is provided along with the specified parameters to vary (the
-        defined hyperparameters).
+        defined lr_system_parameters).
 
         Returns
         -------
         tuple[ContextAwareDict, list[Hyperparameter]]
-            LR system configuration and associated hyperparameters.
+            LR system configuration and associated lr_system_parameters.
         """
-        return self._parse_config_with_parameters('lr_system', 'hyperparameters')
+        return self._parse_config_with_parameters('lr_system', 'lr_system_parameters')
 
     def parse(
         self,
@@ -200,7 +200,7 @@ class SingleRunStrategy(ExperimentStrategyConfigParser):
         )
 
 
-def create_configs_from_hyperparameters(
+def create_configs_from_lr_system_parameters(
     baseline_config: ContextAwareDict,
     parameters: list[Hyperparameter],
 ) -> list[tuple[ContextAwareDict, dict[str, Any]]]:
@@ -210,14 +210,14 @@ def create_configs_from_hyperparameters(
     Generates a Cartesian product of all hyperparameter options and creates a configuration
     for each combination by substituting the values into the baseline configuration.
 
-    This is used for both dataparameters and lrsystem hyperparameters in grid search.
+    This is used for both data_parameters and lrsystem lr_system_parameters in grid search.
 
     Parameters
     ----------
     baseline_config : ContextAwareDict
         Baseline configuration to augment.
     parameters : list[Hyperparameter]
-        Hyperparameters to vary.
+        LR system parameters to vary.
 
     Returns
     -------
@@ -253,8 +253,8 @@ class GridStrategy(ExperimentStrategyConfigParser):
         Experiment
             Predefined experiment with all parameter combinations.
         """
-        lrsystem_configs = create_configs_from_hyperparameters(*self.lrsystem_config())
-        data_configs = create_configs_from_hyperparameters(*self.data_config())
+        lrsystem_configs = create_configs_from_lr_system_parameters(*self.lrsystem_config())
+        data_configs = create_configs_from_lr_system_parameters(*self.data_config())
 
         return PredefinedExperiment(
             name,
@@ -291,7 +291,7 @@ class OptunaStrategy(ExperimentStrategyConfigParser):
             outputs=self.output_list(),
             output_path=self._output_dir,
             baseline_config=baseline_config,
-            hyperparameters=parameters,
+            lr_system_parameters=parameters,
             n_trials=n_trials,
             metric_function=self.primary_metric(),
         )

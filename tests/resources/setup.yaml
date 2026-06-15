@@ -29,7 +29,7 @@ experiments:
     strategy: grid
     lr_system: *lr_system
     data: *data
-    hyperparameters:
+    lr_system_parameters:
       - path: modules.steps.clf
         options:
           - option_name: logit

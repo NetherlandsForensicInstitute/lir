@@ -4,7 +4,7 @@ Substitution module.
 This module provides utility functions for replacing or modifying components of
 an LR Benchmark pipeline at runtime. Typical use cases include comparing
 different modelling approaches (e.g. logistic regression versus support vector
-machines) or optimising system hyperparameters.
+machines) or optimising system lr_system_parameters.
 
 For example, the ``parameters`` section of the ``model_selection_run`` benchmark
 can define a path (``comparing.clf``) to be modified using the options listed in
@@ -17,7 +17,7 @@ system configuration used by the pipeline.
       - name: model_selection_run
         lr_system: ...
         ...
-        hyperparameters:
+        lr_system_parameters:
           - path: comparing.clf
             options:
               - name: logit
@@ -69,7 +69,7 @@ class HyperparameterOption(NamedTuple):
 
 class Hyperparameter(ABC):
     """
-    Base class for all hyperparameters.
+    Base class for all lr_system_parameters.
 
     Parameters
     ----------
@@ -224,7 +224,7 @@ def parse_clustered(spec: ContextAwareDict, output_path: Path) -> CategoricalHyp
     """
     Parse the configuration section of a clustered hyperparameter.
 
-    A cluster is a set of hyperparameters that are changed at the same time.
+    A cluster is a set of lr_system_parameters that are changed at the same time.
 
     A clustered hyperparameter has the following fields in a YAML configuration:
     - name (optional): a descriptive name for this hyperparameter
@@ -387,7 +387,7 @@ class FolderHyperparameter(Hyperparameter):
 
     .. code-block:: yaml
 
-        hyperparameters:
+        lr_system_parameters:
         - path: data.provider.path
           type: folder
           folder: project_files/my_dataset/
@@ -567,7 +567,7 @@ def _path_exists(struct: dict | list, path: list[str]) -> bool:
 
 
 def substitute_parameters(
-    base_config: ContextAwareDict, hyperparameters: Mapping[str, Any], context: list[str]
+    base_config: ContextAwareDict, lr_system_parameters: Mapping[str, Any], context: list[str]
 ) -> ContextAwareDict:
     """
     Substitute parameters in an LR system configuration and return the updated configuration.
@@ -576,8 +576,8 @@ def substitute_parameters(
     ----------
     base_config : ContextAwareDict
         Original LR system configuration.
-    hyperparameters : Mapping[str, Any]
-        Hyperparameters and their replacement values.
+    lr_system_parameters : Mapping[str, Any]
+        LR system parameters to vary and their replacement values.
     context : list[str]
         Context path of the augmented configuration.
 
@@ -586,13 +586,13 @@ def substitute_parameters(
     ContextAwareDict
         Augmented LR system configuration.
     """
-    if '' in hyperparameters:
+    if '' in lr_system_parameters:
         # if the root is assigned, don't bother substituting and return the assigned value immediately
-        augmented_config = _expand(context, hyperparameters[''])
+        augmented_config = _expand(context, lr_system_parameters[''])
     else:
         LOG.debug(f'base system: {json.dumps(base_config)}')
         augmented_config = base_config.clone(context)
-        for key, value in hyperparameters.items():
+        for key, value in lr_system_parameters.items():
             try:
                 _assign(augmented_config, key.split('.'), value)
             except Exception as e:

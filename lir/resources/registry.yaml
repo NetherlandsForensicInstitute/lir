@@ -83,6 +83,9 @@ metric:
 
 output:
   metrics: lir.aggregation.metrics_csv.parse
+  metrics_csv: lir.aggregation.metrics_csv.parse
+  metrics_bars: lir.aggregation.metrics_bars.parse
+
   pav:
     class: lir.aggregation.plot_each.PlotEachConfigParser
     args:

@@ -129,6 +129,58 @@ def _parse_categorical_option(spec: Any, path: str, option_index: int | None) ->
     """
     Parse one categorical option specification.
 
+    An option generally has a name and a value. The name is a human-readable string. This is how it is referred to is
+    user output. The value is a number or a string, this is usually a sensible way to refer to the option, and there is
+    no need to define a name explicitly. If the value is more complex, like a dictionary, a more friendly name can be
+    defined.
+
+    The option can have one of several formats.
+
+    The simplest way is to give just the values. This is a good choice if the values are strings or numbers:
+
+    .. code-block:: yaml
+
+        options:
+          - some_value
+          - some_other_value
+
+    The same notation is also valid for more complex values, in which case the options are referred to as `option0`,
+    `option1`, etc., instead of the full tree:
+
+    .. code-block:: yaml
+
+        options:
+          - method: logistic_regression
+            C: 1
+          - method: svm
+            probability: True
+
+    To avoid non-informative names, the option's name can be declared explicitly, like so:
+
+    .. code-block:: yaml
+
+        options:
+          - option_name: logit
+            method: logistic_regression
+            C: 1
+          - option_name: svm
+            method: svm
+            probability: True
+
+    The value can also be declared explicitly. The following snippet is equivalent to the previous one:
+
+    .. code-block:: yaml
+
+        options:
+          - option_name: logit
+            value:
+              method: logistic_regression
+              C: 1
+          - option_name: svm
+            value:
+              method: svm
+              probability: True
+
     Parameters
     ----------
     spec : Any
@@ -143,20 +195,29 @@ def _parse_categorical_option(spec: Any, path: str, option_index: int | None) ->
     HyperparameterOption
         Parsed option.
     """
-    name = None
-    if isinstance(spec, Mapping):
-        # use the explicitly declared name, if any
+    # check if the option specification is a dictionary
+    if isinstance(spec, ContextAwareDict):
+        # use the explicitly declared name and value
         name = pop_field(spec, 'option_name', required=False)
-
-    # use the explicitly declared value, or default to the full subtree
-    value = pop_field(spec, 'value') if isinstance(spec, Mapping) and 'value' in spec else spec
+        if 'value' in spec:
+            value = pop_field(spec, 'value')
+            check_is_empty(spec)
+        else:
+            value = spec
+    else:
+        # default to the full subtree for `value` and worry about `name` later
+        name = None
+        value = spec
 
     if not name:
         if isinstance(value, str):
+            # the value is a str, which is usually a good default description
             name = value
         elif isinstance(value, (Mapping, list)):
+            # the value is a complex data structure -> default to a generic name with an index number
             name = f'option{option_index}'
         else:
+            # something else -> try to convert it to a string
             name = str(value)
 
     return HyperparameterOption(name, {path: value})

@@ -52,6 +52,10 @@ experiments:
       - method: metrics
         columns:
         - cllr
+      - method: metrics_bars
+        metrics:
+        - cllr
+        - cllr_min
       - pav
       - ece
 

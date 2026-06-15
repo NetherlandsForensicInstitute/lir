@@ -514,6 +514,8 @@
           "description": "Shorthand output specification using just the method name (e.g., 'metrics', 'pav', 'ece').",
           "enum": [
             "metrics",
+            "metrics_csv",
+            "metrics_bars",
             "pav",
             "ece",
             "lr_histogram",
@@ -536,6 +538,8 @@
               "description": "Output method name.",
               "enum": [
                 "metrics",
+                "metrics_csv",
+                "metrics_bars",
                 "pav",
                 "ece",
                 "lr_histogram",

@@ -82,7 +82,7 @@ metric:
   devpav: lir.algorithms.devpav.devpav
 
 output:
-  metrics: lir.aggregation.metrics_csv
+  metrics: lir.aggregation.metrics_csv.parse
   pav:
     class: lir.config.aggregation.AggregationPlotConfigParser
     args:
@@ -144,7 +144,7 @@ output:
       default_plot_name: 'Score_Distribution'
 
   save_model: lir.persistence.parse_save_model
-  case_llr: lir.aggregation.case_llr_csv
+  case_llr: lir.aggregation.case_llr_csv.parse
   by_category: lir.config.aggregation.subset_aggregation
   
 pairing:

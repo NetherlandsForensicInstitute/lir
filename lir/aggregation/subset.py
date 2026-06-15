@@ -43,7 +43,7 @@ class SubsetAggregation(Aggregation):
             category_data = AggregationData(
                 llrdata=subset,
                 lrsystem=data.lrsystem,
-                parameters=data.parameters | {self.category_field: category},
+                parameters=data.parameters | {self.category_field: str(category)},
                 run_name=run_name,
                 get_full_fit_lrsystem=data.get_full_fit_lrsystem,
             )

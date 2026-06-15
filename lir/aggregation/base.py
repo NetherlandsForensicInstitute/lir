@@ -2,8 +2,9 @@ import logging
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from pathlib import Path
-from typing import Any, NamedTuple
+from typing import NamedTuple
 
+from lir.config.substitution import HyperparameterOption
 from lir.data.models import LLRData
 from lir.lrsystems.lrsystems import LRSystem
 
@@ -31,7 +32,7 @@ class AggregationData(NamedTuple):
 
     llrdata: LLRData
     lrsystem: LRSystem
-    parameters: dict[str, Any]
+    parameters: dict[str, HyperparameterOption | str]
     run_name: str
     get_full_fit_lrsystem: Callable[[], LRSystem] | None = None
 

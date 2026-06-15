@@ -11,9 +11,11 @@ from lir.aggregation import Aggregation, AggregationData
 LOG = logging.getLogger(__name__)
 
 
-class AggregatePlot(Aggregation):
+class PlotEach(Aggregation):
     """
-    Aggregation that generates plots by repeatedly calling a plotting function.
+    Aggregation that generates a plot for each call to ``report()``.
+
+    Repeated calls to ``report()`` will result in separate plots.
 
     Parameters
     ----------

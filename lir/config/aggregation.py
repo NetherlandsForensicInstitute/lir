@@ -2,7 +2,7 @@ from functools import partial
 from pathlib import Path
 
 from lir import registry
-from lir.aggregation import AggregatePlot, Aggregation, SubsetAggregation
+from lir.aggregation import Aggregation, PlotEach, SubsetAggregation
 from lir.config.base import (
     ConfigParser,
     ContextAwareDict,
@@ -137,7 +137,7 @@ class AggregationPlotConfigParser(ConfigParser):
         self.plot_fn = _get_attribute_by_name(method)
         self.default_plot_name = default_plot_name or method
 
-    def parse(self, config: ContextAwareDict, output_dir: Path) -> AggregatePlot:
+    def parse(self, config: ContextAwareDict, output_dir: Path) -> PlotEach:
         """
         Parse a configuration section for an aggregate plot.
 
@@ -150,11 +150,11 @@ class AggregationPlotConfigParser(ConfigParser):
 
         Returns
         -------
-        AggregatePlot
+        PlotEach
             Parsed aggregate plot.
         """
         plot_name = pop_field(config, 'plot_name', default=self.default_plot_name)
-        return AggregatePlot(self.plot_fn, plot_name, output_dir, **config)
+        return PlotEach(self.plot_fn, plot_name, output_dir, **config)
 
     def reference(self) -> str:
         """

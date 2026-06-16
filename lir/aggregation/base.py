@@ -12,11 +12,11 @@ from lir.lrsystems.lrsystems import LRSystem
 LOG = logging.getLogger(__name__)
 
 
-class AggregationData(NamedTuple):
+class AggregationData(NamedTuple):  # numpydoc ignore=PR02
     """
     Representation of aggregated data.
 
-    Attributes
+    Parameters
     ----------
     llrdata : LLRData
         The LLR data containing LLRs and labels.

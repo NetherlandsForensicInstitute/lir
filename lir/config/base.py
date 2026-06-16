@@ -342,6 +342,8 @@ def config_parser(
     annotation has a `reference` argument, that value will be used instead. The `reference` value may be a `str` or a
     Python object. Example of use:
 
+    .. code-block:: python
+
         @config_parser(reference=Bar)
         def foo(config, config_context_path, output_dir):
             if "some_argument" not in config or "another_argument" not in config:

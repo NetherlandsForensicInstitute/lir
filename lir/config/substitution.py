@@ -210,15 +210,16 @@ def _parse_categorical_option(spec: Any, path: str, option_index: int | None) ->
         value = spec
 
     if not name:
-        if isinstance(value, str):
-            # the value is a str, which is usually a good default description
-            name = value
-        elif isinstance(value, (Mapping, list)):
-            # the value is a complex data structure -> default to a generic name with an index number
-            name = f'option{option_index}'
-        else:
-            # something else -> try to convert it to a string
-            name = str(value)
+        match value:
+            case str():
+                # the value is a str, which is usually a good default description
+                name = value
+            case Mapping() | list():
+                # the value is a complex data structure -> default to a generic name with an index number
+                name = f'option{option_index}'
+            case _:
+                # something else -> try to convert it to a string
+                name = str(value)
 
     return HyperparameterOption(name, {path: value})
 

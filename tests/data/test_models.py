@@ -51,6 +51,12 @@ def test_instance_data():
         instances = BareData(labels=np.array([0, 1]))
         instances.labels = np.array([1, 1])
 
+    # size mismatch
+    with pytest.raises(ValidationError):
+        BareData(labels=np.array([0, 1]), source_ids=np.arange(3))
+    with pytest.raises(ValidationError):
+        BareData(labels=np.array([0, 1]), other_field=np.arange(3))
+
 
 def test_feature_data():
     FeatureData(features=np.ones((10, 2)), labels=None)

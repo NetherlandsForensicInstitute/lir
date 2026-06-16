@@ -118,20 +118,27 @@ class InstanceData(BaseModel, ABC):
         return self.labels
 
     @model_validator(mode='after')
-    def check_sourceids_labels_match(self) -> Self:
+    def check_shape_match(self) -> Self:
         """
-        Validate the source_ids and labels have matching shapes.
+        Check that the numpy arrays have matching shapes.
+
+        All numpy arrays are assumed to describe instances, and must therefore have the same number of rows.
 
         Returns
         -------
         Self
             This instance data object after post-init validation.
         """
-        if self.labels is not None and self.source_ids is not None and self.labels.shape[0] != self.source_ids.shape[0]:
-            raise ValueError(
-                f'dimensions of labels and source_ids do not match; "'
-                f'{self.labels.shape[0]} != {self.source_ids.shape[0]}'
-            )
+        n_instances = None
+        for field_name in self.all_fields:
+            value = getattr(self, field_name)
+            if isinstance(value, np.ndarray):
+                if n_instances is None:
+                    n_instances = value.shape[0]
+                elif value.shape[0] != n_instances:
+                    raise ValueError(
+                        f'number of rows in `{field_name} expected: {n_instances}; found: {value.shape[0]}'
+                    )
 
         return self
 
@@ -668,6 +675,16 @@ class PairedFeatureData(FeatureData):
             raise ValueError(f'source_ids should be 2-dimensional with 2 columns; found shape {self.source_ids.shape}')
         return self
 
+    @property
+    def trace_instances(self) -> FeatureData:  # numpydoc ignore=RT01
+        """Return the trace instances of all pairs."""
+        return FeatureData(features=self.features_trace, source_ids=self.source_ids_trace)
+
+    @property
+    def ref_instances(self) -> FeatureData:  # numpydoc ignore=RT01
+        """Return the reference instances of all pairs."""
+        return FeatureData(features=self.features_ref, source_ids=self.source_ids_ref)
+
     @model_validator(mode='after')
     def check_features_dimensions(self) -> Self:
         """
@@ -911,6 +928,34 @@ def concatenate_instances(first: InstanceDataType, *others: InstanceDataType) ->
         Instance data object produced by this operation.
     """
     return first.concatenate(*others)
+
+
+def pair_instances[DataType: InstanceData](
+    trace: DataType, reference: DataType, labels: np.ndarray | None = None
+) -> InstanceData:
+    """
+    Combine InstanceData objects into pairs of two or more instsances.
+
+    Parameters
+    ----------
+    trace : DataType
+        Value passed via ``first``.
+    reference : DataType
+        Value passed via ``others``.
+    labels : DataType
+        Hypothesis labels.
+
+    Returns
+    -------
+    InstanceData
+        Instance data object produced by this operation.
+    """
+    if labels is None and trace.source_ids is not None and reference.source_ids is not None:
+        labels = trace.source_ids == reference.source_ids
+    pairs = trace.combine(reference, np.stack, axis=1)
+    pairs = pairs.replace(labels=labels)
+
+    return pairs
 
 
 class DataProvider(ABC):

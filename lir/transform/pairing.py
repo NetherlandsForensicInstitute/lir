@@ -3,7 +3,7 @@ from typing import Any
 
 import numpy as np
 
-from lir.data.models import FeatureData, InstanceData, PairedFeatureData, concatenate_instances
+from lir.data.models import FeatureData, InstanceData, PairedFeatureData, concatenate_instances, pair_instances
 from lir.util import check_type
 
 
@@ -352,10 +352,10 @@ class InstancePairing(PairingMethod):
         pairing = np.concatenate([pairing[rows_same, :], pairing[rows_diff, :]])
         pair_labels = np.concatenate([np.ones_like(rows_same), np.zeros_like(rows_diff)])
 
-        # combine features by adding an extra dimension
-        paired_data = instances[pairing[:, 0]].combine(instances[pairing[:, 1]], np.stack, axis=1)
+        # combine instances into pairs
+        paired_data = pair_instances(instances[pairing[:, 0]], instances[pairing[:, 1]], labels=pair_labels)
 
         # apply the new labels: 1=same_source versus 0=different_source
         return paired_data.replace_as(
-            PairedFeatureData, labels=pair_labels, instance_indices=pairing, n_trace_instances=1, n_ref_instances=1
+            PairedFeatureData, instance_indices=pairing, n_trace_instances=1, n_ref_instances=1
         )

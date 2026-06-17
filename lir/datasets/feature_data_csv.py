@@ -14,7 +14,7 @@ import numpy as np
 import requests
 from requests_cache import CachedSession
 
-from lir.config.base import ContextAwareDict, check_is_empty, config_parser, pop_field
+from lir.config.base import ContextAwareDict, config_parser, pop_field
 from lir.data.io import search_path
 from lir.data.models import DataProvider, FeatureData
 from lir.data_strategies import RoleAssignment
@@ -36,7 +36,7 @@ class ExtraField(NamedTuple):
     """Extra field for CSV parsing."""
 
     name: str
-    column_names: list[str]
+    column_name: str
     validate_cell: Callable[[str], Any]
 
     def parse_row(self, row: dict[str, str]) -> list[Any]:
@@ -54,7 +54,7 @@ class ExtraField(NamedTuple):
             Parsed values extracted from the input row.
         """
         values = []
-        for colname in self.column_names:
+        for colname in self.column_name:
             try:
                 values.append(self.validate_cell(row[colname]))
             except Exception as e:
@@ -225,7 +225,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
             + [('source_id_column', column_name) for column_name in self.source_id_columns]
             + [
                 ('extra_fields', column_name)
-                for column_name in chain.from_iterable([field.column_names for field in self.extra_fields])
+                for column_name in chain.from_iterable([field.column_name for field in self.extra_fields])
             ]
             + [('ignore_columns', column_name) for column_name in self.ignore_columns]
         )
@@ -393,18 +393,27 @@ def _parse_cell_type(value: str) -> Callable[[str], Any]:
         raise ValueError(f'unknown cell type: {value}')
 
 
-def _parse_extra_field(config: ContextAwareDict) -> ExtraField:
-    name = pop_field(config, 'name')
-    columns = pop_field(config, 'columns', validate=partial(check_type, list))
-    cell_type = pop_field(config, 'cell_type', validate=_parse_cell_type, default=str)
-    check_is_empty(config)
-    return ExtraField(name, columns, cell_type)
+def _parse_extra_field(config: ContextAwareDict | str) -> ExtraField:
+    if isinstance(config, str):
+        return ExtraField(config, config, str)
+
+    if isinstance(config, ContextAwareDict):
+        # It should only be a key/value pair
+        if len(config.keys()) != 1:
+            raise ValueError
+
+        name = list(config.keys())[0]
+        column_name = config[name]
+
+        return ExtraField(name, column_name, str)
+
+    raise ValueError(f'Extra field expected str or dict, but got {type(config)} ')
 
 
 def _parse_feature_data_csv[ParserType: FeatureDataCsvParser](
     parser_class: type[ParserType], config: ContextAwareDict, **kwargs: Any
 ) -> ParserType:
-    extra_fields_config = pop_field(config, 'extra_fields', default=[], validate=partial(check_type, list))
+    extra_fields_config = pop_field(config, 'extra_fields', default=[])
     extra_fields = [_parse_extra_field(field_config) for field_config in extra_fields_config]
 
     parser = parser_class(**config, extra_fields=extra_fields, **kwargs)

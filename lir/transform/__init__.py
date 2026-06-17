@@ -156,7 +156,7 @@ class BinaryClassifierTransformer(Transformer):
         self.estimator.fit(instances.features, instances.labels)
         return self
 
-    def apply(self, instances: InstanceData) -> InstanceData:
+    def apply(self, instances: InstanceData) -> FeatureData:
         """
         Convert instances by applying the fitted model.
 
@@ -167,7 +167,7 @@ class BinaryClassifierTransformer(Transformer):
 
         Returns
         -------
-        InstanceData
+        FeatureData
             Instance data object produced by this operation.
         """
         instances = check_type(FeatureData, instances)

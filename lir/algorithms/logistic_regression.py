@@ -9,6 +9,7 @@ from scipy.optimize import minimize
 
 from lir import Transformer
 from lir.data.models import FeatureData, InstanceData, LLRData
+from lir.transform import BinaryClassifierTransformer
 from lir.util import (
     Bind,
     check_type,
@@ -18,6 +19,39 @@ from lir.util import (
 
 
 LOG = logging.getLogger(__name__)
+
+
+class LogisticRegression(BinaryClassifierTransformer):
+    """
+    Apply :class:`~sklearn.linear_model.LogisticRegression` and output coefficients.
+
+    When not using the optional init parameters, the effect is equivalent to directly applying
+    :class:`~sklearn.linear_model.LogisticRegression`.
+
+    The input should be :class:`~lir.FeatureData`. The input for the model will be the features and the hypothesis
+    labels. The output of ``apply()`` is a ``FeatureData`` object whose features are the probabilities of H1.
+
+    Parameters
+    ----------
+    output_model_parameters : bool, optional
+        Store the attributes ``logit_intercept`` and ``logit_coef`` in the output of ``apply()``, and also send the
+        values to the log.
+    **kwargs : dict
+        Keyword arguments forwarded to :class:`~sklearn.linear_model.LogisticRegression`.
+    """
+
+    def __init__(self, output_model_parameters: bool = False, **kwargs: dict):
+        super().__init__(sklearn.linear_model.LogisticRegression(**kwargs))
+        self.output_model_parameters = output_model_parameters
+
+    def apply(self, instances: InstanceData) -> FeatureData:  # numpydoc ignore=PR01,RT01
+        """Apply the fitted model on the data."""
+        instances = super().apply(instances)
+        if self.output_model_parameters:
+            estimator: sklearn.linear_model.LogisticRegression = self.estimator
+            LOG.info(f'intercept={estimator.intercept_[0]}; coef={", ".join(map(str, estimator.coef_[0]))}')
+            instances = instances.replace(logit_intercept=estimator.intercept_[0], logit_coef=estimator.coef_[0])
+        return instances
 
 
 class LogitCalibrator(Transformer):

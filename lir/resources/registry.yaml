@@ -58,7 +58,7 @@ modules:
   identity: lir.transform.Identity
 
   # classifiers
-  logistic_regression: sklearn.linear_model.LogisticRegression
+  logistic_regression: lir.algorithms.logistic_regression.LogisticRegression
   svm: sklearn.svm.SVC
 
   # calibrators

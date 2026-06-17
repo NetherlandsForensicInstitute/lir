@@ -78,14 +78,17 @@ def test_concatenate():
     data = FeatureData(features=np.ones((10, 2)), extra1=[1, 2])
     assert concatenate_instances(data, data) == FeatureData(features=np.ones((20, 2)), extra1=[1, 2])
 
-    with pytest.raises(ValueError):
-        concatenate_instances(
-            FeatureData(features=np.ones((10, 2)), extra1=3), FeatureData(features=np.ones((10, 2)), extra1=4)
-        )
+    assert concatenate_instances(
+        FeatureData(features=np.ones((10, 2)), extra1=3), FeatureData(features=np.ones((10, 2)), extra1=4)
+    ) == FeatureData(features=np.ones((20, 2)), extra1=None)
+
+    assert concatenate_instances(
+        FeatureData(features=np.ones((10, 2)), extra1=[1, 2]), FeatureData(features=np.ones((10, 2)), extra1=[2, 1])
+    ) == FeatureData(features=np.ones((20, 2)), extra1=None)
 
     with pytest.raises(ValueError):
         concatenate_instances(
-            FeatureData(features=np.ones((10, 2)), extra1=[1, 2]), FeatureData(features=np.ones((10, 2)), extra1=[2, 1])
+            FeatureData(features=np.ones((10, 2)), extra1=[1, 2]), FeatureData(features=np.ones((10, 2)))
         )
 
 

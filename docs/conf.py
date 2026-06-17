@@ -32,6 +32,7 @@ pygments_style = 'sphinx'  # enable syntax highlighting
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
+    'sphinx.ext.intersphinx',
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
     'myst_parser',
@@ -39,6 +40,11 @@ extensions = [
     'sphinx_jinja',
     'jupyter_sphinx',
 ]
+
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3', None),
+    'sklearn': ('http://scikit-learn.org/stable', None),
+}
 
 templates_path = ['_templates']
 exclude_patterns = []

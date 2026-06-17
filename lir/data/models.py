@@ -225,22 +225,30 @@ class InstanceData(BaseModel, ABC):
         # we have a non-numpy array field -> check if they have the same value
         all_equal = all(values[0] == other for other in values[1:])
         if not all_equal:
-            raise ValueError(
-                f'unable to combine field `{field}` because it is not a numpy array and not all values are equal'
+            LOG.info(
+                f'dropped field `{field}`: '
+                + 'unable to concatenate because it is not a numpy array and not all values are equal'
             )
+            return None
 
         # return the value, which is the same for all objects
         return values[0]
 
     def concatenate(self, *others: 'InstanceData') -> Self:
         """
-        Concatenate instances from InstanceData objects.
+        Concatenate instances from different datasets in :class:`~lir.InstanceData` objects.
 
         All concatenated objects must have the same types and fields. How fields are concatenated may depend on the
-        subclass. By default, they must have the same values for all non-numpy array fields, or an error is raised.
-        Numpy fields are concatenated using `np.concatenate`. Other fields are copied as-is.
+        subclass. By default, the behavior is as follows, in order of priority (the first takes priority):
 
-        Returns a new object with the concatenated instances.
+        - if a field has different types, an error is raised;
+        - if a field is a numpy array, it is assumed to describe instances, and they are concatenated along the first
+          axis;
+        - if a field has the same value for all ``InstanceData`` objects, the field also gets that value in
+          the concatenated output;
+        - if a field has the same type but different values, the field is dropped in the concatenated output.
+
+        Returns a new :class:`~lir.InstanceData` object with the dataset concatenated.
 
         Parameters
         ----------

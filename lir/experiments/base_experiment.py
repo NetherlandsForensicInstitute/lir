@@ -7,7 +7,7 @@ from lir.aggregation import Aggregation
 
 class Experiment(ABC):
     """
-    Representation of an experiment pipeline run for each provided LR system.
+    Representation of an experiment to evaluate LR systems.
 
     Parameters
     ----------

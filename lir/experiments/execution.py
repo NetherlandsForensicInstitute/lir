@@ -3,7 +3,7 @@ import logging
 import math
 import multiprocessing
 import os
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Iterable, Iterator
 from copy import deepcopy
 from functools import partial
 from pathlib import Path
@@ -11,10 +11,10 @@ from typing import Any, NamedTuple
 
 import confidence
 
-from lir import InstanceData, LLRData
+from lir import InstanceData, LLRData, Transformer
 from lir.aggregation import AggregationData
 from lir.config.base import ContextAwareDict
-from lir.config.data import parse_data_setup, DataSetup
+from lir.config.data import DataSetup, parse_data_setup
 from lir.config.lrsystem_architectures import parse_lrsystem
 from lir.config.util import simplify_data_structure
 from lir.data.models import DataProvider, DataStrategy, concatenate_instances
@@ -24,13 +24,13 @@ from lir.lrsystems import LRSystem
 LOG = logging.getLogger(__name__)
 
 
-class BaseConfig(NamedTuple):
+class ParameterizedConfig(NamedTuple):
     """
-    Base class for LR system and data configurations.
+    Base class for LR system or data configurations.
 
-    A configuration of an LR system or data setup is a dictionary: the ``spec`` attribute. Additionally, there can be
-    hyperparameters that are already incorporated in the configuration and can be used to describe the configuration in
-    how it is different from other configurations.
+    A configuration of an LR system or data setup is a dictionary, stored in the ``spec`` attribute. Additionally, there
+    can be hyperparameters that are already incorporated in the configuration. The hyperparameters describe how this
+    configuration is different from other configurations.
 
     The configuration is extended by the subclass to lazily materialize the configuration on demand.
 
@@ -68,13 +68,14 @@ class BaseConfig(NamedTuple):
         return self.__class__, (self.spec, self.params, self.output_dir)
 
 
-class DataConfig(BaseConfig):
+class DataConfig(ParameterizedConfig):
     """Data configuration object."""
 
-    _data_setup = None
-    _splits = None
+    _data_setup: DataSetup | None = None
+    _splits: list[tuple[InstanceData, InstanceData]] | None = None
 
-    def _parse_data_setup(self) -> DataSetup:
+    @property
+    def data_setup(self) -> DataSetup:
         """
         Parse the data configuration.
 
@@ -101,7 +102,19 @@ class DataConfig(BaseConfig):
         DataProvider
             A data provider object.
         """
-        return self._parse_data_setup().provider
+        return self.data_setup.provider
+
+    @property
+    def filter(self) -> Transformer:
+        """
+        Return a data filter.
+
+        Returns
+        -------
+        Transformer
+            A data transformer object.
+        """
+        return self.data_setup.filter
 
     @property
     def splitter(self) -> DataStrategy:
@@ -113,8 +126,9 @@ class DataConfig(BaseConfig):
         DataStrategy
             A data splitter object.
         """
-        return self._parse_data_setup().strategy
+        return self.data_setup.strategy
 
+    @property
     def splits(self) -> Iterable[tuple[InstanceData, InstanceData]]:
         """
         Convert the split_data iterable to a list to allow multiple iterations over the splits.
@@ -131,7 +145,7 @@ class DataConfig(BaseConfig):
         return self._splits
 
 
-class LRSystemConfig(BaseConfig):
+class LRSystemConfig(ParameterizedConfig):
     """LR system configuration object."""
 
     _lrsystem = None
@@ -190,7 +204,7 @@ def run_lrsystem(
     LLRData
         Likelihood-ratio data produced by applying the LR system.
     """
-    # ombine the data parameter with the LR system parameters to create a unique name for this run.
+    # Combine the data parameter with the LR system parameters to create a unique name for this run.
     run_name: str = (
         run_name
         or f'{data_config.desc}{"__" if lrsystem_config.desc and data_config.desc else ""}{lrsystem_config.desc}'
@@ -220,7 +234,7 @@ def run_lrsystem(
     # Placeholders for numpy arrays of LLRs and labels obtained from each train/test split
     llrs: list[LLRData] = []
 
-    for training_data, test_data in data_config.splits():
+    for training_data, test_data in data_config.splits:
         lrsystem_config.lrsystem.fit(training_data)
         llrs.append(lrsystem_config.lrsystem.apply(test_data))
 
@@ -233,7 +247,7 @@ def run_lrsystem(
     def get_full_fit_lrsystem() -> LRSystem:
         nonlocal _cached_full_fit_lrsystem
         if _cached_full_fit_lrsystem is None:
-            full_training_data = concatenate_instances(*next(iter(data_config.splits())))
+            full_training_data = concatenate_instances(*next(iter(data_config.splits)))
             _cached_full_fit_lrsystem = parse_lrsystem(deepcopy(lrsystem_config.spec), output_dir)
             _cached_full_fit_lrsystem.fit(full_training_data)
         return _cached_full_fit_lrsystem
@@ -250,7 +264,7 @@ def run_lrsystem(
 
 def run_multiple(
     output_base_dir: Path, lrsystem_configs: list[LRSystemConfig], data_configs: list[DataConfig]
-) -> Iterable[AggregationData]:
+) -> Iterator[AggregationData]:
     """
     Run LR systems sequentially.
 
@@ -267,7 +281,7 @@ def run_multiple(
 
     Returns
     -------
-    list[AggregationData]
+    Iterator[AggregationData]
         A list of results for all runs.
     """
     LOG.debug(f'doing {len(lrsystem_configs) * len(data_configs)} runs sequentially')
@@ -336,10 +350,11 @@ def parallellize_runs(
         A list of results for all runs.
     """
     n_runs = len(lrsystem_configs) * len(data_configs)
-    n_processes = os.process_cpu_count()
+    n_processes = os.process_cpu_count() if hasattr(os, 'process_cpu_count') else 1
 
     if n_runs == 1 or n_processes == 1:
-        # don't bother parallellizing if there is only a single configuration or a single CPU
+        # don't bother parallelizing if there is only a single configuration or a single CPU
+        LOG.debug('only a single run to be issued: parallelization disabled')
         yield from run_multiple(output_base_dir, lrsystem_configs, data_configs)
 
     with multiprocessing.Pool(processes=n_processes) as pool:
@@ -352,7 +367,7 @@ def parallellize_runs(
         else:
             # there is a single data setup and multiple lrsystems --> iterate over lrsystems
 
-            # we need no more chunks that the number of processes
+            # we need no more chunks that the number of processes (the default chunk size is 1)
             chunksize = math.ceil(len(lrsystem_configs) / n_processes)
 
             LOG.debug(f'spawning {len(lrsystem_configs)} tasks to do a total of {n_runs} runs in chunks of {chunksize}')

@@ -384,6 +384,10 @@
           "items": {
             "$ref": "#/definitions/outputSpecification"
           }
+        },
+        "enable_parallelization": {
+          "type": "boolean",
+          "description": "Whether to run experiments in parallel."
         }
       },
       "required": ["name", "strategy", "output"],

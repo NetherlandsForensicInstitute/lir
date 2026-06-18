@@ -6,9 +6,7 @@ from lir.config.base import ContextAwareDict, GenericFunctionConfigParser, YamlP
 from lir.registry import ComponentNotFoundError
 
 
-def parse_individual_metric(
-    name: str, output_path: Path, context: list[str]
-) -> Callable[[LLRData], float | list[float]]:
+def parse_individual_metric(name: str, output_path: Path, context: list[str]) -> Callable[[LLRData], float]:
     """
     Parse one metric from the registry.
 

@@ -576,6 +576,43 @@ def parse_parameter(
     return parser.parse(spec, output_dir)
 
 
+def parse_config_with_parameters(
+    config: ContextAwareDict,
+    output_dir: Path,
+    config_field: str,
+    parameters_field: str,
+) -> tuple[ContextAwareDict, list[Hyperparameter]]:
+    """
+    Extract a configuration section and its associated parameters.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        The configuration.
+    output_dir : Path
+        The output directory.
+    config_field : str
+        Field containing the baseline configuration.
+    parameters_field : str
+        Field containing parameters to vary.
+
+    Returns
+    -------
+    tuple[ContextAwareDict, list[Hyperparameter]]
+        Baseline configuration and parsed hyperparameters.
+    """
+    baseline_config = pop_field(config, config_field)
+    if baseline_config is None:
+        baseline_config = ContextAwareDict(config.context + [config_field])
+
+    parameters = []
+    if parameters_field in config:
+        parameters = config.pop(parameters_field)
+        parameters = [parse_parameter(variable, output_dir) for variable in parameters]
+
+    return baseline_config, parameters
+
+
 def _assign(struct: ContextAwareDict | ContextAwareList, path: list[str], value: Any) -> None:
     """
     Assign a new value to a path within an hierarchical `dict` structure.

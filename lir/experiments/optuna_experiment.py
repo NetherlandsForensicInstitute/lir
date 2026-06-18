@@ -6,21 +6,30 @@ from typing import Any
 import optuna
 
 from lir.aggregation import Aggregation
-from lir.config.execution import DataConfig, run_lrsystem, LRSystemConfig
+from lir.config.aggregation import parse_aggregations
+from lir.config.base import check_is_empty, config_parser, pop_field
 from lir.config.lrsystem_architectures import augment_config
+from lir.config.metrics import parse_individual_metric
 from lir.config.substitution import (
     ContextAwareDict,
     FloatHyperparameter,
     Hyperparameter,
     HyperparameterOption,
+    parse_config_with_parameters,
 )
 from lir.data.models import LLRData
 from lir.experiments import Experiment
+from lir.experiments.config import pop_experiment_name
+from lir.experiments.execution import DataConfig, LRSystemConfig, run_lrsystem
 
 
 class OptunaExperiment(Experiment):
     """
-    Representation of an experiment run for each provided LR system.
+    An optimization strategy that uses Optuna for choosing parameter values.
+
+    This strategy sequentially runs slight variations of an LR system by changing its hyperparameters. After each run,
+    the output is evaluated using a ``metric_function``, and the next set of hyperparameter values is chosen. The
+    experiment stops after ``n_trials`` runs are executed.
 
     Parameters
     ----------
@@ -115,3 +124,47 @@ class OptunaExperiment(Experiment):
     def _generate_and_run(self) -> None:
         study = optuna.create_study()  # Create a new study.
         study.optimize(self._objective, n_trials=self.n_trials)  # Invoke optimization of the objective function.
+
+
+@config_parser
+def parse_optuna_experiment(config: ContextAwareDict, output_dir: Path) -> OptunaExperiment:
+    """
+    Get experiment for an Optuna optimisation strategy.
+
+    Parameters
+    ----------
+    config : ContextAwareDict
+        Experiment configuration section.
+    output_dir : Path
+        Output directory for the experiment.
+
+    Returns
+    -------
+    OptunaExperiment
+        Optuna-backed experiment.
+    """
+    name = pop_experiment_name(config)
+
+    baseline_config, parameters = parse_config_with_parameters(config, output_dir, 'lr_system', 'hyperparameters')
+    n_trials = pop_field(config, 'n_trials', validate=int)
+
+    metric_name = pop_field(config, 'primary_metric')
+    primary_metric = parse_individual_metric(metric_name, output_dir, config.context)
+
+    data_config = pop_field(config, 'data')
+
+    output_config = pop_field(config, 'output', required=False)
+    aggregations = parse_aggregations(output_config, output_dir) if output_config else []
+
+    check_is_empty(config)
+
+    return OptunaExperiment(
+        name=name,
+        data_config=data_config,
+        outputs=aggregations,
+        output_path=output_dir,
+        baseline_config=baseline_config,
+        hyperparameters=parameters,
+        n_trials=n_trials,
+        metric_function=primary_metric,
+    )

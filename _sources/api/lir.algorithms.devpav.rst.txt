@@ -1,0 +1,7 @@
+lir.algorithms.devpav module
+============================
+
+.. automodule:: lir.algorithms.devpav
+   :members:
+   :show-inheritance:
+   :undoc-members:

@@ -1,0 +1,7 @@
+lir.aggregation.metrics\_bars module
+====================================
+
+.. automodule:: lir.aggregation.metrics_bars
+   :members:
+   :show-inheritance:
+   :undoc-members:

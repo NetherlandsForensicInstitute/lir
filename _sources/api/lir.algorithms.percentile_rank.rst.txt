@@ -1,0 +1,7 @@
+lir.algorithms.percentile\_rank module
+======================================
+
+.. automodule:: lir.algorithms.percentile_rank
+   :members:
+   :show-inheritance:
+   :undoc-members:

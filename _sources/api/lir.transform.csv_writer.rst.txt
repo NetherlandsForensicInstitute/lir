@@ -1,0 +1,7 @@
+lir.transform.csv\_writer module
+================================
+
+.. automodule:: lir.transform.csv_writer
+   :members:
+   :show-inheritance:
+   :undoc-members:

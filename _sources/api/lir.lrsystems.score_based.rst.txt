@@ -1,0 +1,7 @@
+lir.lrsystems.score\_based module
+=================================
+
+.. automodule:: lir.lrsystems.score_based
+   :members:
+   :show-inheritance:
+   :undoc-members:

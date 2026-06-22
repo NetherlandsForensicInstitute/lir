@@ -1,0 +1,7 @@
+lir.transform.pipeline module
+=============================
+
+.. automodule:: lir.transform.pipeline
+   :members:
+   :show-inheritance:
+   :undoc-members:

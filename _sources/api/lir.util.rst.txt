@@ -1,0 +1,7 @@
+lir.util module
+===============
+
+.. automodule:: lir.util
+   :members:
+   :show-inheritance:
+   :undoc-members:

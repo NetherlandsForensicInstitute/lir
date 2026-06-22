@@ -1,0 +1,19 @@
+lir.data\_strategies package
+============================
+
+.. automodule:: lir.data_strategies
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   lir.data_strategies.auto
+   lir.data_strategies.labels
+   lir.data_strategies.pairs
+   lir.data_strategies.predefined
+   lir.data_strategies.sources

@@ -1,0 +1,7 @@
+lir.bounding module
+===================
+
+.. automodule:: lir.bounding
+   :members:
+   :show-inheritance:
+   :undoc-members:

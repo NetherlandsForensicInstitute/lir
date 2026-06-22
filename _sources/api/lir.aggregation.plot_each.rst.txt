@@ -1,0 +1,7 @@
+lir.aggregation.plot\_each module
+=================================
+
+.. automodule:: lir.aggregation.plot_each
+   :members:
+   :show-inheritance:
+   :undoc-members:

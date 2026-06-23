@@ -77,12 +77,14 @@ class ConfigParserLoader(ABC, Iterable):
 
     @staticmethod
     def _get_config_parser(
-        result_type: Any,
+        result_type: ConfigParser | type[ConfigParser] | Any,
         default_config_parser: Callable[[Any], ConfigParser] | None,
         args: Mapping[str, Any] | None = None,
     ) -> ConfigParser:
         args: Mapping[str, Any] = args or {}
-        if inspect.isclass(result_type) and issubclass(result_type, ConfigParser):
+        if isinstance(result_type, ConfigParser):
+            return result_type
+        elif inspect.isclass(result_type) and issubclass(result_type, ConfigParser):
             return result_type(**args)
         elif default_config_parser is not None:
             return default_config_parser(result_type, **args)

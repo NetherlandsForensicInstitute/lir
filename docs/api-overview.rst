@@ -1,12 +1,58 @@
-Overview of the Python API
-==========================
+Python API: Overview
+====================
 
 This is an introduction to the Python API. You will learn the basic concepts of data handling and LR calculation in LiR.
 
-Data classes
-------------
+Organize your data
+------------------
 
-In LiR, a dataset is represented as an :class:`~lir.InstanceData` object, be it numeric features, scores, LLRs, or something else.
+Data representation
+^^^^^^^^^^^^^^^^^^^
+
+It all starts with the data. LiR heavily relies on `numpy`_ for data handling but there are data classes where it all
+comes together. A simple dataset can be instantiated in Python:
+
+.. _numpy: https://numpy.org/
+
+.. jupyter-execute::
+
+    import numpy as np
+    from lir import FeatureData
+
+    my_data = FeatureData(features=np.array([[1, 2], [3, 4], [5, 6], [7, 8]]))
+
+    print(f'This dataset contains {len(my_data)} instances.')
+
+In this example, the instances in the :class:`~lir.FeatureData` dataset have features but no ground truth, so it cannot
+be used for training models. If we have the hypothesis labels, we may add them as well:
+
+.. jupyter-execute::
+
+    my_data = FeatureData(
+            features=np.array([[1, 2], [3, 4], [5, 6], [7, 8]]),
+            labels=np.array([0, 0, 1, 1])
+    )
+
+    print(f'This dataset contains {len(my_data)} instances.')
+    print(f'Its hypothesis labels are: {my_data.labels}')
+
+If we use the **common-source** model, we typically have no hypothesis labels, but we do have source labels. In that
+case we use the ``source_ids`` attribute instead of ``labels``. For now, we work with hypothesis labels. The dataset
+supports slicing.
+
+.. jupyter-execute::
+
+    print(f'The dataset contains {len(my_data[my_data.labels==1])} instances of H1.')
+    print(f'The dataset contains {len(my_data[my_data.labels==0])} instances of H2.')
+
+    my_slice = my_data[0:3]
+
+    print(f'The slice [0:3] of the dataset contains {len(my_slice)} instances.')
+    print(f'Its features are: {my_slice.features}')
+    print(f'Its hypothesis labels are: {my_slice.labels}')
+
+This example uses :class:`~lir.FeatureData`. There can be other types of datasets, be it numeric features, scores, LLRs,
+or something else, but the base class for all datasets is :class:`~lir.InstanceData`.
 
 Specialized sub classes are:
 
@@ -15,24 +61,29 @@ Specialized sub classes are:
   of :class:`~lir.FeatureData`);
 - :class:`~lir.LLRData`, for LLRs, with or without intervals (sub class of :class:`~lir.FeatureData`).
 
-These objects can be instantiated manually, but in an experimental setup, they are generally provided by a
-:class:`~lir.DataProvider`. A :class:`~lir.DataProvider` is a class that is specialized in generating, parsing or
-fetching a particular type of data.
 
-A data provider subclass implements the :meth:`~lir.DataProvider.get_instances()` method.
+Loading data
+^^^^^^^^^^^^
 
-Example for glass data:
+One of the datasets that are readily available is the `glass dataset`_. It can be downloaded as a CSV file and
+transformed into a :class:`~lir.FeatureData` object.
+
+.. _glass dataset: https://github.com/NetherlandsForensicInstitute/elemental_composition_glass
 
 .. jupyter-execute::
 
+    from lir.datasets.feature_data_csv import FeatureDataCsvHttpParser
+    import requests
     import numpy as np
-    from lir.datasets.glass import GlassData
-    from lir.transform.distance import ManhattanDistance
-    from lir.algorithms.logistic_regression import LogitCalibrator
 
     # retrieve the data
-    data_provider = GlassData(cache_dir='cache')
-    glass_data = data_provider.get_instances()
+    parser = FeatureDataCsvHttpParser('https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/main/duplo.csv',
+            source_id_column='Item',
+            instance_id_column='id',
+            ignore_columns=['Piece'],
+            session=requests.Session())
+
+    glass_data = parser.get_instances()
 
     print(f'The glass dataset has numeric features, so it is of type {type(glass_data)}.')
     print(f'It has {len(glass_data)} instances, each of which is a measurement on a range of chemical elements.')
@@ -44,15 +95,21 @@ Example for glass data:
     # get the number of sources with this many instances
     instance_counts, source_counts = np.unique(instance_count_by_source_id, return_counts=True)
     for instance_count, source_count in zip(instance_counts, source_counts):
-        print(f'There are {source_count} sources with {instance_count} instances.')
+        print(f'There are {source_count} sources with {instance_count} instances each.')
+
+The dataset is obtained using :class:`~lir.datasets.feature_data_csv.FeatureDataCsvHttpParser`. Like other
+:class:`~lir.DataProvider`s, it implements the method :meth:`~lir.DataProvider.get_instances()` to obtain the dataset.
 
 
-Most LR systems compare two instances, one from the trace source, and one from a reference source, and make an inference
-about source identity.
-We already acquired measurements on single glass fragments.
-So we `pair`_ the instances to get some pairs to compare.
+Creating pairs from single measurements
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. _pair: reference.html#pairing-methods
+We now have data on glass fragments, with two measurements (instances) from each glass fragment (source). In casework,
+we may want to compare two measurements, one from the trace source, and one from a reference source, and make an
+inference about source identity. That makes it a **common-source** LR system, requiring `pairs`_ of measurements, rather
+than individual measurements.
+
+.. _pairs: reference.html#pairing-methods
 
 .. jupyter-execute::
 
@@ -64,40 +121,26 @@ So we `pair`_ the instances to get some pairs to compare.
 
     print(f'We have combined the {len(glass_data)} instances into {len(pairs)} pairs.')
     print(f'The paired data has features of all instances in the pairs, so it has type {type(pairs)}.')
-    print(f'Of {len(pairs[pairs.labels==1])} pairs, both instances are from the same source.')
-    print(f'Of {len(pairs[pairs.labels==0])} pairs, both instances are from different sources.')
+    print(f'There are {len(pairs[pairs.labels==1])} pairs with both instances from the same source.')
+    print(f'There are {len(pairs[pairs.labels==0])} pairs from different sources.')
 
 
 We have created a same-source pair for each source that has at least two instances. The number of different-source pairs
 is potentially much larger, but the number of pairs created is limited to the number of same-source pairs by the
 ``ratio_limit`` argument.
 
-Some LR systems may be able to work with multiple trace and reference instances in each pair. This is relevant if there
-are repetitive measurements of the same source.
-The code below creates pairs of 2 trace instances and 3 reference instances, so we need sources with at least 5
-instances for each same-source pair.
 
-.. jupyter-execute::
+Calculate LLRs
+--------------
 
-    from lir.transform.pairing import SourcePairing
-
-    # combine the instances into pairs
-    pairing_method = SourcePairing(ratio_limit=1)
-    pairs_3x2 = pairing_method.pair(glass_data, n_trace_instances=2, n_ref_instances=3)
-
-    print(f'We have combined the {len(glass_data)} instances into {len(pairs_3x2)} pairs.')
-    print(f'The paired data has features of all instances in the pairs, so it has type {type(pairs_3x2)}.')
-    print(f'Of {len(pairs_3x2[pairs_3x2.labels==1])} pairs, all instances are from the same source.')
-    print(f'Of {len(pairs_3x2[pairs_3x2.labels==0])} pairs, the instances are from two different sources.')
-
-
-The actual comparison can take many forms, including a distance or similarity function such as the
+To compare the measurements within a pair, we use the `distance function`_
 :class:`~lir.transform.distance.ManhattanDistance`.
+
+.. _distance function: reference.html#lr-system-modules
 
 .. jupyter-execute::
 
     from lir.transform.distance import ManhattanDistance
-    from lir.algorithms.logistic_regression import LogitCalibrator
 
     # reduce the pairs to a single value by calculating the Manhattan distance
     distances = ManhattanDistance().apply(pairs)
@@ -110,6 +153,8 @@ Now it is time to calculate LLRs...
 
 .. jupyter-execute::
 
+    from lir.algorithms.logistic_regression import LogitCalibrator
+
     # calculate LLRs
     llrs = LogitCalibrator().fit_apply(distances)
     different_source_llrs = llrs[llrs.labels==0]
@@ -120,8 +165,8 @@ Now it is time to calculate LLRs...
     print(f'The median LLR for same-source pairs is {np.median(same_source_llrs.llrs)}.')
 
 
-Data strategies
----------------
+Split the data into a training set and a test set
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Above, we training the system and calculated LLRs using the same pairs, which is **not** a sound experimental setup!
 In an experiment we work with :mod:`lir.data_strategies`. This can be a simple train/test split, or a more
@@ -143,8 +188,8 @@ Example:
     print(f'We have {len(test_data)} instances available as test data.')
 
 
-LR systems
-----------
+Define an LR system
+^^^^^^^^^^^^^^^^^^^
 
 There can be many different `LR system architectures`_. Refer to the `selection guide`_ if unsure which one to use.
 
@@ -201,7 +246,11 @@ We can use these components in a score-based LR system:
     from lir.lrsystems.score_based import ScoreBasedSystem
 
     # initialize the score-based LR system with the components we created before
-    lrsystem = ScoreBasedSystem(preprocessing_pipeline=preprocessing_pipeline, pairing_function=pairing_method, evaluation_pipeline=comparing_pipeline)
+    lrsystem = ScoreBasedSystem(
+            preprocessing_pipeline=preprocessing_pipeline,
+            pairing_function=pairing_method,
+            evaluation_pipeline=comparing_pipeline,
+    )
 
     # use the training data to fit the LR system
     lrsystem.fit(training_data)
@@ -219,6 +268,9 @@ We can use these components in a score-based LR system:
         ax.set_xlim(-8, 3)
         ax.lr_histogram(llrs, bins=100)
 
+
+Optional: use cross-validation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Above, we used a simple train/test split. Alternatives such as **cross-validation** use the data more efficiently, but
 we have to deal with multiple train/test splits.

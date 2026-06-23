@@ -5,7 +5,6 @@ import logging
 from abc import ABC
 from collections.abc import Callable
 from functools import partial
-from itertools import chain
 from os import PathLike
 from pathlib import Path
 from typing import IO, Any, NamedTuple
@@ -35,7 +34,7 @@ class ParseError(ValueError):
 class ExtraField(NamedTuple):
     """Extra field for CSV parsing."""
 
-    name: str
+    field_name: str
     column_name: str
     validate_cell: Callable[[str], Any]
 
@@ -172,9 +171,9 @@ class FeatureDataCsvParser(DataProvider, ABC):
         # check that they do not conflict with fields that are facilitated otherwise
         empty_data = FeatureData(features=np.ones((0, 1)))
         for field in extra_fields or []:
-            if field.name in empty_data.all_fields:
+            if field.field_name in empty_data.all_fields:
                 raise ValueError(
-                    f'field {field.name} should not be read as an *extra* field; '
+                    f'field {field.field_name} should not be read as an *extra* field; '
                     'use the appropriate config parameters instead'
                 )
 
@@ -202,7 +201,9 @@ class FeatureDataCsvParser(DataProvider, ABC):
         if self.fold_assignment_column is not None:
             fields['fold_assignment_column'] = row[self.fold_assignment_column]
         for field in self.extra_fields:
-            fields[field.name] = field.parse_row(row)
+            fields[field.field_name] = self._parse_value(
+                reader.line_num, field.column_name, row[field.column_name], field.validate_cell
+            )
         fields['features'] = [
             self._parse_value(reader.line_num, fieldname, row[fieldname], float) for fieldname in feature_columns
         ]
@@ -223,10 +224,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
                 ('fold_assignment_column', self.fold_assignment_column),
             ]
             + [('source_id_column', column_name) for column_name in self.source_id_columns]
-            + [
-                ('extra_fields', column_name)
-                for column_name in chain.from_iterable([field.column_name for field in self.extra_fields])
-            ]
+            + [('extra_fields', field.column_name) for field in self.extra_fields]
             + [('ignore_columns', column_name) for column_name in self.ignore_columns]
         )
 
@@ -394,18 +392,38 @@ def _parse_cell_type(value: str) -> Callable[[str], Any]:
 
 
 def _parse_extra_field(config: ContextAwareDict | str) -> ExtraField:
+    """
+    Parse an extra field configuration into an ExtraField object.
+
+    The configuration can be:
+     - a string: the column name and field name are assumed to be the same, and the cell type defaults to str.
+     - a dictionary: it must contain the key 'column' and may optionally contain 'name' and 'cell_type'.
+
+    Parameters
+    ----------
+    config : ContextAwareDict | str
+        Configuration for the extra field.
+
+    Returns
+    -------
+    ExtraField
+        Parsed ExtraField object.
+    """
     if isinstance(config, str):
+        # If config is a string, we assume that the column name and the field name are the same (namely 'config').
         return ExtraField(config, config, str)
 
     if isinstance(config, ContextAwareDict):
-        # It should only be a key/value pair
-        if len(config.keys()) != 1:
-            raise ValueError
+        # If config is a dictionary, we expect it to contain the keys 'column'.
+        column_name = pop_field(config, 'column', required=True)
 
-        name = list(config.keys())[0]
-        column_name = config[name]
+        # The field_name is optional; if not provided, we use the column name as the field name.
+        field_name = pop_field(config, 'name', default=column_name)
 
-        return ExtraField(name, column_name, str)
+        # The cell_type is also optional; if not provided, we default to str.
+        cell_type = pop_field(config, 'cell_type', validate=_parse_cell_type, default=str)
+
+        return ExtraField(field_name, column_name, cell_type)
 
     raise ValueError(f'Extra field expected str or dict, but got {type(config)} ')
 

@@ -502,6 +502,17 @@ class InstanceData(BaseModel, ABC):
         return datatype(**args)
 
 
+class NoData(InstanceData):
+    """
+    Class to represent an empty dataset.
+
+    The number of instances is zero.
+    """
+
+    def __len__(self) -> int:
+        return 0
+
+
 def _validate_features(features: np.ndarray) -> np.ndarray:
     """
     Check if labels have the correct shape.

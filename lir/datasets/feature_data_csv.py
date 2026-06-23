@@ -2,9 +2,8 @@ import csv
 import io
 import itertools
 import logging
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from functools import partial
-from itertools import chain
 from pathlib import Path
 from typing import IO, Any, NamedTuple
 
@@ -14,7 +13,7 @@ from requests_cache import CachedSession
 
 from lir.config.base import ContextAwareDict, config_parser, pop_field
 from lir.data.io import search_path
-from lir.data.models import DataProvider, FeatureData
+from lir.data.models import DataProvider, FeatureData, InstanceData, NoData
 from lir.data_strategies import RoleAssignment
 from lir.util import check_type
 
@@ -60,7 +59,7 @@ class ExtraField(NamedTuple):
         return values
 
 
-class FeatureDataCsvParser(DataProvider):
+class CsvParser(DataProvider):
     """
     Parse a CSV file into an :class:`~lir.InstanceData` object.
 
@@ -74,9 +73,6 @@ class FeatureDataCsvParser(DataProvider):
         Column name(s) containing source identifiers (each source has a unique string identifier).
     label_column : str | None
         Column name containing hypothesis labels (value 0 for H2 or 1 for H2).
-    feature_columns : str | list[str] | None
-        Column names containing numerical feature values. If not specified, all columns not otherwise designated are
-        interpreted as feature columns.
     instance_id_column : str | None
         Column name containing instance identifiers.
     role_assignment_column : str | None
@@ -135,7 +131,6 @@ class FeatureDataCsvParser(DataProvider):
         open_file_fn: Callable[[], IO],
         source_id_column: str | list[str] | None = None,
         label_column: str | None = None,
-        feature_columns: str | list[str] | None = None,
         instance_id_column: str | None = None,
         role_assignment_column: str | None = None,
         fold_assignment_column: str | None = None,
@@ -154,9 +149,6 @@ class FeatureDataCsvParser(DataProvider):
 
         self.label_column = label_column
         self.instance_id_column = instance_id_column
-        self.feature_columns: list[str] | None = (
-            [feature_columns] if isinstance(feature_columns, str) else feature_columns
-        )
         self.role_assignment_column = role_assignment_column
         self.fold_assignment_column = fold_assignment_column
         self.extra_fields: list[ExtraField] = extra_fields or []
@@ -175,6 +167,19 @@ class FeatureDataCsvParser(DataProvider):
                     'use the appropriate config parameters instead'
                 )
 
+    def _initialize_reader(self, reader: csv.DictReader) -> None:
+        """
+        Initialize the CSV reader.
+
+        This method is called immediately after a CSV reader has opened a file, and the field names have been read. The
+        default behavior is to do nothing. It may be overridden by subclasses.
+
+        Parameters
+        ----------
+        reader : csv.DictReader
+            The CSV reader.
+        """
+
     @staticmethod
     def _parse_value(line_num: int, column_name: str, value: str, parse_fn: Callable[[str], Any]) -> Any:
         try:
@@ -183,7 +188,7 @@ class FeatureDataCsvParser(DataProvider):
             raise ParseError(f'failed to parse {value} at row {line_num}, column {column_name}: {e}') from e
 
     def _parse_row(
-        self, row: dict[str, str], reader: csv.DictReader, feature_columns: list[str]
+        self, row: dict[str, str], reader: csv.DictReader
     ) -> dict[str, str | list[str] | int | float | list[float]]:
         fields: dict[str, str | list[str] | int | float | list[float]] = {}
         if self.source_id_columns:
@@ -202,42 +207,48 @@ class FeatureDataCsvParser(DataProvider):
             fields[field.field_name] = self._parse_value(
                 reader.line_num, field.column_name, row[field.column_name], field.validate_cell
             )
-        fields['features'] = [
-            self._parse_value(reader.line_num, fieldname, row[fieldname], float) for fieldname in feature_columns
-        ]
         return fields
 
-    def _parse_file(self, fp: IO) -> FeatureData:
-        # initialize the reader
-        reader = csv.DictReader(fp)
-        if reader.fieldnames is None:
-            raise ParseError(f'{self._message_prefix}empty file')
+    def _assigned_columns(self, all_columns: Sequence[str]) -> list[tuple[str, str]]:
+        """
+        Obtain a list of columns that are explicitly assigned to an attribute.
 
-        # identify the non feature columns
-        columns_with_explicit_role = (
-            [
+        Parameters
+        ----------
+        all_columns : Sequence[str]
+            A list of all available columns in the CSV file.
+
+        Returns
+        -------
+        list[tuple[str, str]]
+            A list of columns, with for each column a tuple (ROLE, COLUMN_NAME).
+        """
+        assigned_cols = [
+            (role, column_name)
+            for role, column_name in [
                 ('label_column', self.label_column),
                 ('instance_id_column', self.instance_id_column),
                 ('role_assignment_column', self.role_assignment_column),
                 ('fold_assignment_column', self.fold_assignment_column),
             ]
-            + [('source_id_column', column_name) for column_name in self.source_id_columns]
-            + [('extra_fields', field.column_name) for field in self.extra_fields]
-            + [('ignore_columns', column_name) for column_name in self.ignore_columns]
-        )
+            if column_name is not None
+        ]
 
-        if self.feature_columns:
-            columns_with_explicit_role.extend(('feature_columns', column_name) for column_name in self.feature_columns)
-            feature_columns = self.feature_columns
-        else:
-            # identify the feature columns
-            explicit_role_column_names = {column_name for _, column_name in columns_with_explicit_role}
-            feature_columns = [
-                fieldname for fieldname in reader.fieldnames if fieldname not in explicit_role_column_names
-            ]
+        assigned_cols.extend(('source_id_column', column_name) for column_name in self.source_id_columns)
+        assigned_cols.extend(('extra_fields', field.column_name) for field in self.extra_fields)
+        assigned_cols.extend(('ignore_columns', column_name) for column_name in self.ignore_columns)
+        return assigned_cols
+
+    def _parse_file(self, fp: IO) -> InstanceData:
+        # initialize the reader
+        reader = csv.DictReader(fp)
+        if reader.fieldnames is None:
+            raise ParseError(f'{self._message_prefix}empty file')
+
+        self._initialize_reader(reader)
 
         # check if all required columns exist in the csv file
-        for name, value in columns_with_explicit_role:
+        for name, value in self._assigned_columns(reader.fieldnames):
             if value is not None and value not in reader.fieldnames:
                 raise ParseError(
                     f'{self._message_prefix}{name} specified as `{value}`, but it is not present in the csv file'
@@ -250,7 +261,7 @@ class FeatureDataCsvParser(DataProvider):
         n_instances = 0
         for row in itertools.islice(reader, self._head):
             try:
-                fields = self._parse_row(row, reader, feature_columns)
+                fields = self._parse_row(row, reader)
                 if not all_instances:
                     for key in fields:
                         all_instances[key] = []
@@ -265,7 +276,7 @@ class FeatureDataCsvParser(DataProvider):
                     raise e
 
         if not all_instances:
-            return FeatureData(features=np.zeros((0, 1)))
+            return NoData()
 
         if self._head is not None and n_instances < self._head:
             LOG.warning(f'input file has too few rows; expected: {self._head}; found: {n_instances}')
@@ -278,9 +289,9 @@ class FeatureDataCsvParser(DataProvider):
                 f'least two different values; found: {set(all_instances["fold_assignments"])}'
             )
 
-        return FeatureData(**all_instances)  # type: ignore
+        return NoData(**all_instances)  # type: ignore
 
-    def get_instances(self) -> FeatureData:
+    def get_instances(self) -> InstanceData:
         """
         Retrieve FeatureData instances.
 
@@ -292,6 +303,102 @@ class FeatureDataCsvParser(DataProvider):
         LOG.debug(f'{self._message_prefix}parsing CSV file')
         with self._open_file_fn() as f:
             return self._parse_file(f)
+
+
+class FeatureDataCsvParser(CsvParser):
+    """
+    Parse a CSV file into an :class:`~lir.InstanceData` object.
+
+    The CSV file contents are provided by the ``open_file_fn`` argument.
+
+    Parameters
+    ----------
+    open_file_fn : Callable[[], IO]
+        Function that returns a data stream from which the CSV file contents can be read.
+    feature_columns : str | list[str] | None
+        Column names containing numerical feature values. If not specified, all columns not otherwise designated are
+        interpreted as feature columns.
+    **kwargs : dict
+        Other arguments are passed to the super class constructor.
+
+    Examples
+    --------
+    Assume a CSV file containing two features and source identifiers:
+
+    .. code-block:: text
+
+        source_id,feature1,feature2,feature3,name_of_an_irrelevant_column
+        0,1,10,1,sherlock
+        0,1,11,1,holmes
+        1,20,30,1,irene
+        1,18,32,3,adler
+        2,5,10,8,professor
+        2,1,11,8,moriarty
+
+    This file can be parsed using the following YAML configuration:
+
+    .. code-block:: yaml
+
+        data:
+          provider: parse_features_from_csv_file
+            path: path/to/file.csv
+            source_id_column: source_id
+            ignore_columns:
+              - name_of_an_irrelevant_column
+
+    .. code-block:: yaml
+
+        data:
+          provider: parse_features_from_csv_url
+            url: https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/refs/heads/main/training.csv
+            source_id_column: Item
+            ignore_columns:
+              - id
+              - Piece
+    """
+
+    def __init__(
+        self,
+        open_file_fn: Callable[[], IO],
+        feature_columns: str | list[str] | None = None,
+        **kwargs: dict,
+    ):
+        super().__init__(open_file_fn, **kwargs)  # type: ignore
+        self.feature_columns: list[str] | None = (
+            [feature_columns] if isinstance(feature_columns, str) else feature_columns
+        )
+        self._real_feature_columns: list[str] | None = None
+
+    def _assigned_columns(self, all_columns: Sequence[str]) -> list[tuple[str, str]]:
+        cols = super()._assigned_columns(all_columns)
+        if self.feature_columns:
+            cols.extend(('feature_columns', column_name) for column_name in self.feature_columns)
+
+        return cols
+
+    def _parse_row(
+        self, row: dict[str, str], reader: csv.DictReader
+    ) -> dict[str, str | list[str] | int | float | list[float]]:
+        if self._real_feature_columns is None:
+            if self.feature_columns:
+                self._real_feature_columns = self.feature_columns
+            else:
+                # identify the feature columns
+                fieldnames: list[str] = reader.fieldnames  # type: ignore
+                explicit_role_column_names = {column_name for _, column_name in self._assigned_columns(fieldnames)}
+                self._real_feature_columns = [
+                    fieldname for fieldname in fieldnames if fieldname not in explicit_role_column_names
+                ]
+
+        fields = super()._parse_row(row, reader)
+        fields['features'] = [
+            self._parse_value(reader.line_num, fieldname, row[fieldname], float)
+            for fieldname in self._real_feature_columns
+        ]
+        return fields
+
+    def _parse_file(self, fp: IO) -> FeatureData:
+        return super()._parse_file(fp).replace_as(FeatureData)
 
 
 def _parse_cell_type(value: str) -> Callable[[str], Any]:
@@ -346,7 +453,7 @@ def _parse_feature_data_csv(config: ContextAwareDict, **kwargs: Any) -> FeatureD
     extra_fields_config = pop_field(config, 'extra_fields', default=[], validate=partial(check_type, list))
     extra_fields = [_parse_extra_field(field_config) for field_config in extra_fields_config]
 
-    parser = FeatureDataCsvParser(**config, extra_fields=extra_fields, **kwargs)
+    parser = FeatureDataCsvParser(**config, extra_fields=extra_fields, **kwargs)  # type: ignore
     return parser
 
 

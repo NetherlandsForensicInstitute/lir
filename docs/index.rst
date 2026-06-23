@@ -16,8 +16,9 @@ Toolkit for developing, optimising and evaluating Likelihood Ratio (LR) systems.
 on different datasets, investigating impact of different sampling schemes or techniques, and doing case-based validation
 and computation of case LRs.
 
-LIR was first released in 2020 and redesigned from scratch in 2025, replacing the `previous repository`_.
+LiR was first released in 2020 and `redesigned from scratch`_ in 2025, replacing the `previous repository`_.
 
+.. _redesigned from scratch: https://github.com/NetherlandsForensicInstitute/lir
 .. _previous repository: https://github.com/NetherlandsForensicInstitute/lir-deprecated
 
 

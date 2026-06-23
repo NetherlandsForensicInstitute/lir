@@ -1,4 +1,5 @@
-from collections.abc import Iterable
+import functools
+from collections.abc import Callable, Iterable
 from pathlib import Path
 
 from lir import Transformer, registry
@@ -120,6 +121,67 @@ def parse_data_strategy(cfg: ContextAwareDict, output_path: Path) -> DataStrateg
     return parser.parse(cfg, output_path)
 
 
+class _FunctionDataProvider(DataProvider):
+    def __init__(self, fn: Callable[[], InstanceData]):
+        self.fn = fn
+
+    def get_instances(self) -> InstanceData:
+        return self.fn()
+
+
+class GenericDataProviderConfigParser(GenericConfigParser):
+    """
+    Generic parser class to parse a data provider configuration into a  :class:`~lir.DataProvider` object.
+
+    Parameters
+    ----------
+    component_class : type
+        DataProvider class or callable to prepare data.
+    """
+
+    def __init__(self, component_class: type):
+        super().__init__(component_class)
+
+    def parse(
+        self,
+        config: ContextAwareDict,
+        output_dir: Path,
+    ) -> DataProvider:
+        """
+        Prepare a data provider function.
+
+        Parameters
+        ----------
+        config : ContextAwareDict
+            Constructor arguments for the component class.
+        output_dir : Path
+            Unused output directory argument required by parser API.
+
+        Returns
+        -------
+        DataProvider
+            Function that prepares and returns the data.
+        """
+        if issubclass(self.component_class, DataProvider):
+            # if the component class is a subclass of DataProvider, instantiate it and return its `get_instances` method
+            try:
+                return self.component_class(**config)
+            except Exception as e:
+                raise YamlParseError(
+                    config.context,
+                    f'failed to instantiate module {self.component_class.__name__}: {e}',
+                )
+
+        elif callable(self.component_class):
+            # if the component class is a callable, return it with the configuration attributes
+            return _FunctionDataProvider(
+                functools.partial(self.component_class, **config) if config else self.component_class
+            )
+
+        # don't know how to turn this into data
+        raise YamlParseError(config.context, f'unrecognized data provider type: `{self.component_class}`')
+
+
 def parse_data_provider(cfg: ContextAwareDict, output_path: Path) -> DataProvider:
     """
     Instantiate specific implementation of `DataProvider` as configured.
@@ -148,7 +210,7 @@ def parse_data_provider(cfg: ContextAwareDict, output_path: Path) -> DataProvide
         parser = registry.get(
             provider,
             search_path=['data_providers'],
-            default_config_parser=GenericConfigParser,
+            default_config_parser=GenericDataProviderConfigParser,
         )
     except Exception as e:
         raise YamlParseError(

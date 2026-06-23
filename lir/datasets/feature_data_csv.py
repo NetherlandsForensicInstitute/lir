@@ -4,6 +4,7 @@ import itertools
 import logging
 from collections.abc import Callable
 from functools import partial
+from itertools import chain
 from pathlib import Path
 from typing import IO, Any, NamedTuple
 

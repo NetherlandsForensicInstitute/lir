@@ -2,10 +2,8 @@ import csv
 import io
 import itertools
 import logging
-from abc import ABC
 from collections.abc import Callable
 from functools import partial
-from os import PathLike
 from pathlib import Path
 from typing import IO, Any, NamedTuple
 
@@ -61,19 +59,16 @@ class ExtraField(NamedTuple):
         return values
 
 
-class FeatureDataCsvParser(DataProvider, ABC):
+class FeatureDataCsvParser(DataProvider):
     """
-    Parse a CSV file into a ``FeatureData`` object.
+    Parse a CSV file into an :class:`~lir.InstanceData` object.
 
-    This is an abstract base class with concrete implementations for different
-    data sources:
-
-    - :class:`FeatureDataCsvFileParser` for reading from a local file;
-    - :class:`FeatureDataCsvHttpParser` for reading from a URL;
-    - :class:`FeatureDataCsvStreamParser` for reading from a stream.
+    The CSV file contents are provided by the ``open_file_fn`` argument.
 
     Parameters
     ----------
+    open_file_fn : Callable[[], IO]
+        Function that returns a data stream from which the CSV file contents can be read.
     source_id_column : str | list[str] | None
         Column name(s) containing source identifiers (each source has a unique string identifier).
     label_column : str | None
@@ -136,6 +131,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
 
     def __init__(
         self,
+        open_file_fn: Callable[[], IO],
         source_id_column: str | list[str] | None = None,
         label_column: str | None = None,
         feature_columns: str | list[str] | None = None,
@@ -148,6 +144,7 @@ class FeatureDataCsvParser(DataProvider, ABC):
         message_prefix: str = '',
         continue_on_error: bool = False,
     ):
+        self._open_file_fn = open_file_fn
         self.source_id_columns: list[str] = (
             [source_id_column] if isinstance(source_id_column, str) else source_id_column or []
         )
@@ -282,23 +279,6 @@ class FeatureDataCsvParser(DataProvider, ABC):
 
         return FeatureData(**all_instances)  # type: ignore
 
-
-class FeatureDataCsvFileParser(FeatureDataCsvParser):
-    """
-    Read CSV data from file.
-
-    Parameters
-    ----------
-    file : PathLike
-        Path to the input file.
-    **kwargs : Any
-        Additional keyword arguments forwarded to the underlying FeatureDataCsvParser call.
-    """
-
-    def __init__(self, file: PathLike, **kwargs: Any):
-        super().__init__(**kwargs, message_prefix=f'{file}: ')
-        self.path = Path(file)
-
     def get_instances(self) -> FeatureData:
         """
         Retrieve FeatureData instances.
@@ -308,76 +288,9 @@ class FeatureDataCsvFileParser(FeatureDataCsvParser):
         FeatureData
             FeatureData object parsed from the source.
         """
-        path = search_path(self.path)
-        LOG.debug(f'parsing CSV file: {self.path} as {path}')
-        with open(path) as f:
+        LOG.debug(f'{self._message_prefix}parsing CSV file')
+        with self._open_file_fn() as f:
             return self._parse_file(f)
-
-
-class FeatureDataCsvStreamParser(FeatureDataCsvParser):
-    """
-    Read data from a streamed CSV.
-
-    Parameters
-    ----------
-    fp : IO
-        Open file-like object to read from.
-    **kwargs : Any
-        Additional keyword arguments forwarded to the underlying call.
-    """
-
-    def __init__(self, fp: IO, **kwargs: Any):
-        super().__init__(**kwargs)
-        self.fp = fp
-
-    def get_instances(self) -> FeatureData:
-        """
-        Retrieve FeatureData instances from CSV stream.
-
-        Returns
-        -------
-        FeatureData
-            FeatureData object parsed from the source.
-        """
-        LOG.debug('parsing CSV stream')
-        return self._parse_file(self.fp)
-
-
-class FeatureDataCsvHttpParser(FeatureDataCsvParser):
-    """
-    Read CSV data from a URL.
-
-    By default, this class uses `requests-cache` to cache retrieved data. The cache is persistent and located in
-    the user cache folder, which is written to the log file.
-
-    Parameters
-    ----------
-    url : str
-        URL of the remote resource to read.
-    session : requests.Session
-        Value passed via ``session``.
-    **kwargs : Any
-        Additional keyword arguments forwarded to the underlying call.
-    """
-
-    def __init__(self, url: str, session: requests.Session, **kwargs: Any):
-        super().__init__(**kwargs, message_prefix=f'{url}: ')
-        self.url = url
-        self.session = session
-
-    def get_instances(self) -> FeatureData:
-        """
-        Retrieve FeatureData from the remote resource.
-
-        Returns
-        -------
-        FeatureData
-            FeatureData object parsed from the source.
-        """
-        LOG.debug(f'parsing CSV from URL: {self.url}')
-        response = self.session.get(self.url, stream=True)
-        fp = io.StringIO(response.text)
-        return self._parse_file(fp)
 
 
 def _parse_cell_type(value: str) -> Callable[[str], Any]:
@@ -428,18 +341,16 @@ def _parse_extra_field(config: ContextAwareDict | str) -> ExtraField:
     raise ValueError(f'Extra field expected str or dict, but got {type(config)} ')
 
 
-def _parse_feature_data_csv[ParserType: FeatureDataCsvParser](
-    parser_class: type[ParserType], config: ContextAwareDict, **kwargs: Any
-) -> ParserType:
-    extra_fields_config = pop_field(config, 'extra_fields', default=[])
+def _parse_feature_data_csv(config: ContextAwareDict, **kwargs: Any) -> FeatureDataCsvParser:
+    extra_fields_config = pop_field(config, 'extra_fields', default=[], validate=partial(check_type, list))
     extra_fields = [_parse_extra_field(field_config) for field_config in extra_fields_config]
 
-    parser = parser_class(**config, extra_fields=extra_fields, **kwargs)
+    parser = FeatureDataCsvParser(**config, extra_fields=extra_fields, **kwargs)
     return parser
 
 
 @config_parser
-def feature_data_csv_http_parser(config: ContextAwareDict, output_dir: Path) -> FeatureDataCsvHttpParser:
+def feature_data_csv_http_parser(config: ContextAwareDict, output_dir: Path) -> FeatureDataCsvParser:
     """
     Initialize the CSV parser that reads data from a stream.
 
@@ -469,11 +380,18 @@ def feature_data_csv_http_parser(config: ContextAwareDict, output_dir: Path) -> 
     else:
         session = requests.Session()
 
-    return _parse_feature_data_csv(FeatureDataCsvHttpParser, config, session=session)
+    url = pop_field(config, 'url')
+
+    def open_url() -> IO:
+        response = session.get(url, stream=True)
+        fp = io.StringIO(response.text)
+        return fp
+
+    return _parse_feature_data_csv(config, message_prefix=f'{url}: ', open_file_fn=open_url)
 
 
 @config_parser
-def feature_data_csv_file_parser(config: ContextAwareDict, output_dir: Path) -> FeatureDataCsvFileParser:
+def feature_data_csv_file_parser(config: ContextAwareDict, output_dir: Path) -> FeatureDataCsvParser:
     """
     Initialize the CSV parser that reads data from a stream.
 
@@ -489,4 +407,7 @@ def feature_data_csv_file_parser(config: ContextAwareDict, output_dir: Path) -> 
     FeatureDataCsvFileParser
         FeatureData object parsed from the source.
     """
-    return _parse_feature_data_csv(FeatureDataCsvFileParser, config)
+    file = Path(pop_field(config, 'file'))
+    file = search_path(file)
+    open_file_fn = partial(open, file, 'r')
+    return _parse_feature_data_csv(config, message_prefix=f'{file}: ', open_file_fn=open_file_fn)

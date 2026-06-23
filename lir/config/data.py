@@ -1,11 +1,15 @@
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
+from functools import partial
 from pathlib import Path
+from typing import Any
 
 from lir import Transformer, registry
 from lir.config.base import (
+    ConfigParser,
     GenericConfigParser,
     YamlParseError,
     check_is_empty,
+    get_full_name,
     pop_field,
 )
 from lir.config.substitution import ContextAwareDict
@@ -118,6 +122,62 @@ def parse_data_strategy(cfg: ContextAwareDict, output_path: Path) -> DataStrateg
         )
 
     return parser.parse(cfg, output_path)
+
+
+class _DataProviderFunction(DataProvider):
+    def __init__(self, fn: Callable[[], InstanceData]):
+        self.fn = fn
+
+    def get_instances(self) -> InstanceData:
+        return self.fn()
+
+
+def data_provider[ReturnType: InstanceData](func: Callable[[ContextAwareDict, Path], ReturnType]) -> Callable:
+    """
+    Wrap a parsing function in a ``ConfigParser`` object using a decorator.
+
+    The :meth:`parse` method of the resulting :class:`~lir.config.base.ConfigParser` instance returns a
+    :class:`~lir.DataProvider` object that is invoked when needed.
+
+    This decorator can be used as follows:
+
+    .. code-block:: python
+
+        @data_provider
+        def foo(path: str, some_argument: int) -> InstanceData:
+            with open(path) as f:
+                ...
+                return FeatureData(...)
+
+    Parameters
+    ----------
+    func : Callable[[ContextAwareDict, Path], Any]
+        Function to wrap as a config parser.
+
+    Returns
+    -------
+    Callable
+        Decorator result or wrapped ``ConfigParser`` implementation.
+    """
+
+    class ConfigParserFunction(ConfigParser):
+        __doc__ = func.__doc__
+
+        def parse(
+            self,
+            config: ContextAwareDict,
+            output_dir: Path,
+        ) -> DataProvider:
+            return _DataProviderFunction(partial(func, **config))
+
+        def reference(self) -> str:
+            return get_full_name(func)
+
+        def __call__(self, *args: Any, **kwargs: Any) -> ReturnType:  # numpydoc ignore=RT01,PR01
+            """Call the decorated function directly, as if it was not decorated."""
+            return func(*args, **kwargs)
+
+    return ConfigParserFunction()
 
 
 def parse_data_provider(cfg: ContextAwareDict, output_path: Path) -> DataProvider:

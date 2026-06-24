@@ -13,7 +13,7 @@ import numpy as np
 import requests
 from requests_cache import CachedSession
 
-from lir.config.base import ContextAwareDict, config_parser, pop_field
+from lir.config.base import ContextAwareDict, check_is_empty, config_parser, pop_field
 from lir.data.io import search_path
 from lir.data.models import DataProvider, FeatureData
 from lir.data_strategies import RoleAssignment
@@ -37,28 +37,6 @@ class ExtraField(NamedTuple):
     field_name: str
     column_name: str
     validate_cell: Callable[[str], Any]
-
-    def parse_row(self, row: dict[str, str]) -> list[Any]:
-        """
-        Take the appropriate values from a dictionary and return them as a list.
-
-        Parameters
-        ----------
-        row : dict[str, str]
-            CSV row dictionary to parse.
-
-        Returns
-        -------
-        list[Any]
-            Parsed values extracted from the input row.
-        """
-        values = []
-        for colname in self.column_name:
-            try:
-                values.append(self.validate_cell(row[colname]))
-            except Exception as e:
-                raise ParseError(f'parsing value of column `{colname}` failed: {e}')
-        return values
 
 
 class FeatureDataCsvParser(DataProvider, ABC):
@@ -423,6 +401,8 @@ def _parse_extra_field(config: ContextAwareDict | str) -> ExtraField:
         # The cell_type is also optional; if not provided, we default to str.
         cell_type = pop_field(config, 'cell_type', validate=_parse_cell_type, default=str)
 
+        check_is_empty(config)
+
         return ExtraField(field_name, column_name, cell_type)
 
     raise ValueError(f'Extra field expected str or dict, but got {type(config)} ')
@@ -431,7 +411,7 @@ def _parse_extra_field(config: ContextAwareDict | str) -> ExtraField:
 def _parse_feature_data_csv[ParserType: FeatureDataCsvParser](
     parser_class: type[ParserType], config: ContextAwareDict, **kwargs: Any
 ) -> ParserType:
-    extra_fields_config = pop_field(config, 'extra_fields', default=[])
+    extra_fields_config = pop_field(config, 'extra_fields', default=[], validate=partial(check_type, list))
     extra_fields = [_parse_extra_field(field_config) for field_config in extra_fields_config]
 
     parser = parser_class(**config, extra_fields=extra_fields, **kwargs)
@@ -444,7 +424,7 @@ def feature_data_csv_http_parser(config: ContextAwareDict, output_dir: Path) -> 
     Initialize the CSV parser that reads data from a stream.
 
     Arguments:
-        - use_cache: boolean indicating whether to cache retrieved data
+        check_is_empty(config)
 
     Other arguments are passed directly to `FeatureDataCsvParser`.
 

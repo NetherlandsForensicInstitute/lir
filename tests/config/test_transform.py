@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 
 from lir import FeatureData
-from lir.config.base import ContextAwareDict
+from lir.config.base import ConfigValue
 from lir.config.transform import GenericTransformerConfigParser
 from lir.util import check_type
 
@@ -29,7 +29,8 @@ from lir.util import check_type
 def test_generic_transformer_config_parser(
     obj: object, kwargs: dict[str, str], features: np.ndarray, expected_result: np.ndarray
 ):
-    transformer = GenericTransformerConfigParser(obj).parse(ContextAwareDict([], kwargs), Path())
+    config = ConfigValue.wrap([], kwargs)
+    transformer = GenericTransformerConfigParser(obj).parse(config, Path())
     data = transformer.fit_apply(FeatureData(features=features))
     data = check_type(FeatureData, data)
     assert np.all(data.features.reshape(-1) == expected_result)

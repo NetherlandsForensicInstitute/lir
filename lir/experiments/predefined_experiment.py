@@ -139,6 +139,9 @@ def parse_grid_experiment(config: ContextAwareDict, output_dir: Path) -> Predefi
     output_config = pop_field(config, 'output', required=False)
     aggregations = parse_aggregations(output_config, output_dir) if output_config else []
 
+    if 'lr_system' in config:
+        raise ValueError("The attribute 'lr_system' has been replaced by 'lrsystem' as of lir v1.7. ")
+
     lrsystem_configs = [
         LRSystemConfig(*cfg, output_dir)
         for cfg in _create_configs_from_hyperparameters(config, output_dir, 'lrsystem', 'lrsystem_parameters')

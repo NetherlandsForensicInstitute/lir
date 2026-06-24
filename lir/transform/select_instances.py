@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 
 from lir import Transformer
-from lir.config.base import ContextAwareDict, config_parser, pop_field
+from lir.config.base import ConfigValue, config_parser, pop_field
 from lir.data.models import InstanceData
 from lir.util import check_type
 
@@ -142,7 +142,7 @@ class _MatchIntPattern:
 
 
 @config_parser
-def parse_select_instances(config: ContextAwareDict, _: Path) -> SelectInstances:  # numpydoc ignore=PR01,RT01
+def parse_select_instances(config: ConfigValue, _: Path) -> SelectInstances:  # numpydoc ignore=PR01,RT01
     """Parse SelectInstances configuration."""
     select_rows_cfg = pop_field(config, 'indices', validate=partial(check_type, list))
     return SelectInstances(_MatchIntPattern.parse(select_rows_cfg))

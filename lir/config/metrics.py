@@ -2,7 +2,7 @@ from collections.abc import Callable
 from pathlib import Path
 
 from lir import LLRData, registry
-from lir.config.base import ContextAwareDict, GenericFunctionConfigParser, YamlParseError
+from lir.config.base import ConfigValue, GenericFunctionConfigParser, YamlParseError
 from lir.registry import ComponentNotFoundError
 
 
@@ -30,6 +30,6 @@ def parse_individual_metric(name: str, output_path: Path, context: list[str]) ->
             default_config_parser=GenericFunctionConfigParser,
             search_path=['metric'],
         )
-        return parser.parse(ContextAwareDict(context), output_path)
+        return parser.parse(ConfigValue(context, None), output_path)
     except ComponentNotFoundError as e:
         raise YamlParseError(context, str(e))

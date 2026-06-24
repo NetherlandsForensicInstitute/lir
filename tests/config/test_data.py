@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 
 from lir import FeatureData, registry
-from lir.config.base import ConfigParser, ContextAwareDict
+from lir.config.base import ConfigParser, ConfigValue
 from lir.config.data import data_provider
 
 
@@ -27,11 +27,11 @@ def test_registry():
     'expected_result,dataset',
     [
         (np.arange(4), load_data()),
-        (np.arange(4), load_data.parse(ContextAwareDict([]), Path('/')).get_instances()),
+        (np.arange(4), load_data.parse(ConfigValue.wrap([], {}), Path('/')).get_instances()),
         (np.array([1, 2]), load_data_with_args(first=1, second=2)),
         (
             np.array([1, 2]),
-            load_data_with_args.parse(ContextAwareDict([], {'first': 1, 'second': 2}), Path('/')).get_instances(),
+            load_data_with_args.parse(ConfigValue.wrap([], {'first': 1, 'second': 2}), Path('/')).get_instances(),
         ),
     ],
 )

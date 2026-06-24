@@ -5,13 +5,13 @@ from typing import Self
 
 from lir import registry
 from lir.config.base import (
+    ConfigValue,
     YamlParseError,
     check_is_empty,
     config_parser,
     pop_field,
 )
 from lir.config.substitution import (
-    ContextAwareDict,
     HyperparameterOption,
     substitute_parameters,
 )
@@ -35,11 +35,11 @@ class ParsedLRSystem(LRSystem):
     ----------
     lrsystem : LRSystem
         Underlying LR system implementation.
-    config : ContextAwareDict
+    config : ConfigValue
         Original LR system configuration.
     """
 
-    def __init__(self, lrsystem: LRSystem, config: ContextAwareDict):
+    def __init__(self, lrsystem: LRSystem, config: ConfigValue):
         self.lrsystem = lrsystem
         self.config = config
 
@@ -78,7 +78,7 @@ class ParsedLRSystem(LRSystem):
 
 
 @config_parser
-def specific_source(config: ContextAwareDict, output_dir: Path) -> BinaryLRSystem:
+def specific_source(config: ConfigValue, output_dir: Path) -> BinaryLRSystem:
     """
     Construct a specific-source LR system based on the provided configuration.
 
@@ -93,7 +93,7 @@ def specific_source(config: ContextAwareDict, output_dir: Path) -> BinaryLRSyste
 
     Parameters
     ----------
-    config : ContextAwareDict
+    config : ConfigValue
         Specific-source architecture configuration.
     output_dir : Path
         Output directory passed to nested module parsers.
@@ -103,15 +103,13 @@ def specific_source(config: ContextAwareDict, output_dir: Path) -> BinaryLRSyste
     BinaryLRSystem
         Configured specific-source LR system.
     """
-    pipeline = parse_module(
-        pop_field(config, 'modules'), output_dir, config.context, default_method=parse_default_pipeline(config)
-    )
+    pipeline = parse_module(pop_field(config, 'modules'), output_dir, default_method=parse_default_pipeline(config))
     check_is_empty(config)
     return BinaryLRSystem(pipeline)
 
 
 @config_parser
-def score_based(config: ContextAwareDict, output_dir: Path) -> ScoreBasedSystem:
+def score_based(config: ConfigValue, output_dir: Path) -> ScoreBasedSystem:
     """
     Construct a score-based LR system based on the provided configuration.
 
@@ -128,7 +126,7 @@ def score_based(config: ContextAwareDict, output_dir: Path) -> ScoreBasedSystem:
 
     Parameters
     ----------
-    config : ContextAwareDict
+    config : ConfigValue
         Score-based architecture configuration.
     output_dir : Path
         Output directory passed to nested module parsers.
@@ -140,20 +138,16 @@ def score_based(config: ContextAwareDict, output_dir: Path) -> ScoreBasedSystem:
     """
     default_pipeline = parse_default_pipeline(config)
 
-    preprocessing = parse_module(
-        pop_field(config, 'preprocessing'), output_dir, config.context, default_method=default_pipeline
-    )
-    pairing_function = parse_pairing_config(pop_field(config, 'pairing'), output_dir, config.context)
-    evaluation = parse_module(
-        pop_field(config, 'comparing'), output_dir, config.context, default_method=default_pipeline
-    )
+    preprocessing = parse_module(pop_field(config, 'preprocessing'), output_dir, default_method=default_pipeline)
+    pairing_function = parse_pairing_config(pop_field(config, 'pairing'), output_dir)
+    evaluation = parse_module(pop_field(config, 'comparing'), output_dir, default_method=default_pipeline)
 
     check_is_empty(config)
     return ScoreBasedSystem(preprocessing, pairing_function, evaluation)
 
 
 @config_parser
-def two_level(config: ContextAwareDict, output_dir: Path) -> TwoLevelSystem:
+def two_level(config: ConfigValue, output_dir: Path) -> TwoLevelSystem:
     """
     Construct a two-level LR system based on the provided configuration.
 
@@ -172,7 +166,7 @@ def two_level(config: ContextAwareDict, output_dir: Path) -> TwoLevelSystem:
 
     Parameters
     ----------
-    config : ContextAwareDict
+    config : ConfigValue
         Two-level architecture configuration.
     output_dir : Path
         Output directory passed to nested module parsers.
@@ -184,13 +178,9 @@ def two_level(config: ContextAwareDict, output_dir: Path) -> TwoLevelSystem:
     """
     default_pipeline = parse_default_pipeline(config)
 
-    preprocessing = parse_module(
-        pop_field(config, 'preprocessing'), output_dir, config.context, default_method=default_pipeline
-    )
-    pairing_function = parse_pairing_config(pop_field(config, 'pairing'), output_dir, config.context)
-    postprocessing = parse_module(
-        pop_field(config, 'postprocessing'), output_dir, config.context, default_method=default_pipeline
-    )
+    preprocessing = parse_module(pop_field(config, 'preprocessing'), output_dir, default_method=default_pipeline)
+    pairing_function = parse_pairing_config(pop_field(config, 'pairing'), output_dir)
+    postprocessing = parse_module(pop_field(config, 'postprocessing'), output_dir, default_method=default_pipeline)
     n_trace_instances = pop_field(config, 'n_trace_instances', validate=int)
     n_ref_instances = pop_field(config, 'n_ref_instances', validate=int)
 
@@ -204,7 +194,7 @@ def two_level(config: ContextAwareDict, output_dir: Path) -> TwoLevelSystem:
     )
 
 
-def parse_lrsystem(config: ContextAwareDict, output_dir: Path) -> ParsedLRSystem:
+def parse_lrsystem(config: ConfigValue, output_dir: Path) -> ParsedLRSystem:
     """
     Determine and initialise corresponding LR system from configuration values.
 
@@ -212,7 +202,7 @@ def parse_lrsystem(config: ContextAwareDict, output_dir: Path) -> ParsedLRSystem
 
     Parameters
     ----------
-    config : ContextAwareDict
+    config : ConfigValue
         LR system configuration.
     output_dir : Path
         Output directory for nested parser calls.
@@ -224,7 +214,7 @@ def parse_lrsystem(config: ContextAwareDict, output_dir: Path) -> ParsedLRSystem
     """
     lrsystem_config = config.clone()  # save for later
 
-    architecture = pop_field(config, 'architecture')
+    architecture = pop_field(config, 'architecture', validate_type=str)
 
     try:
         parser = registry.get(architecture, search_path=['lrsystem_architectures'])
@@ -235,9 +225,7 @@ def parse_lrsystem(config: ContextAwareDict, output_dir: Path) -> ParsedLRSystem
     return ParsedLRSystem(lrsystem, lrsystem_config)
 
 
-def augment_config(
-    baseline_config: ContextAwareDict, hyperparameters: dict[str, HyperparameterOption]
-) -> ContextAwareDict:
+def augment_config(baseline_config: ConfigValue, hyperparameters: dict[str, HyperparameterOption]) -> ConfigValue:
     """
     Parse an augmented LR system.
 
@@ -247,14 +235,14 @@ def augment_config(
 
     Parameters
     ----------
-    baseline_config : ContextAwareDict
+    baseline_config : ConfigValue
         Base LR system configuration.
     hyperparameters : dict[str, HyperparameterOption]
         Hyperparameter substitutions overriding parts of the base configuration.
 
     Returns
     -------
-    ContextAwareDict
+    ConfigValue
         Augmented LR system configuration.
     """
     substitutions = dict(itertools.chain(*[opt.substitutions.items() for opt in hyperparameters.values()]))
@@ -271,13 +259,13 @@ def augment_config(
     return augmented_config
 
 
-def parse_default_pipeline(config: ContextAwareDict) -> str:
+def parse_default_pipeline(config: ConfigValue) -> str:
     """
     Parse the intermediate output flag to determine the default pipeline method.
 
     Parameters
     ----------
-    config : ContextAwareDict
+    config : ConfigValue
         Configuration dictionary.
 
     Returns

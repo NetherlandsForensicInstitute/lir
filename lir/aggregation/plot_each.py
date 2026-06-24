@@ -6,7 +6,7 @@ from typing import Any
 from matplotlib import pyplot as plt
 
 from lir.aggregation import Aggregation, AggregationData
-from lir.config.base import ConfigParser, ContextAwareDict, pop_field
+from lir.config.base import ConfigParser, ConfigValue, pop_field
 from lir.registry import _get_attribute_by_name
 
 
@@ -89,13 +89,13 @@ class PlotEachConfigParser(ConfigParser):
         self.plot_fn = _get_attribute_by_name(method)
         self.default_plot_name = default_plot_name or method
 
-    def parse(self, config: ContextAwareDict, output_dir: Path) -> PlotEach:
+    def parse(self, config: ConfigValue, output_dir: Path) -> PlotEach:
         """
         Parse a configuration section for an aggregate plot.
 
         Parameters
         ----------
-        config : ContextAwareDict
+        config : ConfigValue
             Configuration section.
         output_dir : Path
             Output directory.
@@ -106,7 +106,7 @@ class PlotEachConfigParser(ConfigParser):
             Parsed aggregate plot.
         """
         plot_name = pop_field(config, 'plot_name', default=self.default_plot_name)
-        return PlotEach(self.plot_fn, plot_name, **config)
+        return PlotEach(self.plot_fn, plot_name, **config.as_dict())
 
     def reference(self) -> str:
         """

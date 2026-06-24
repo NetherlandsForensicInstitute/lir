@@ -13,10 +13,9 @@ import confidence
 
 from lir import InstanceData, LLRData, Transformer
 from lir.aggregation import AggregationData
-from lir.config.base import ContextAwareDict
+from lir.config.base import ConfigValue
 from lir.config.data import DataSetup, parse_data_setup
 from lir.config.lrsystem_architectures import parse_lrsystem
-from lir.config.util import simplify_data_structure
 from lir.data.models import DataProvider, DataStrategy, concatenate_instances
 from lir.lrsystems import LRSystem
 
@@ -38,7 +37,7 @@ class ParameterizedConfig(NamedTuple):
     when needed.
     """
 
-    spec: ContextAwareDict
+    spec: ConfigValue
     """
     The configuration of an LR system or data setup for a run.
     """
@@ -233,8 +232,8 @@ def run_lrsystem(
     }
 
     # Turn the configurations into dictionaries for writing to YAML files.
-    lrsystem_config_dict = simplify_data_structure(lrsystem_config.spec)
-    data_config_dict = simplify_data_structure(data_config.spec)
+    lrsystem_config_dict = lrsystem_config.spec.as_dict()
+    data_config_dict = data_config.spec.as_dict()
 
     # Check that simplify_data_structure returned a dict for type checking.
     if not isinstance(lrsystem_config_dict, dict) or not isinstance(data_config_dict, dict):

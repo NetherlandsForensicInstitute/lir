@@ -4,7 +4,7 @@ from typing import Any, NamedTuple
 import numpy as np
 
 from lir.config.base import config_parser, pop_field
-from lir.config.substitution import ContextAwareDict
+from lir.config.substitution import ConfigValue
 from lir.data.models import DataProvider, FeatureData
 
 
@@ -79,13 +79,13 @@ class SynthesizedNormalMulticlassData(DataProvider):
 
 
 @config_parser
-def synthesized_normal_multiclass(config: ContextAwareDict, _: Path) -> SynthesizedNormalMulticlassData:
+def synthesized_normal_multiclass(config: ConfigValue, _: Path) -> SynthesizedNormalMulticlassData:
     """
     Set up (multiple class) data source class to obtain normally distributed data from configuration.
 
     Parameters
     ----------
-    config : ContextAwareDict
+    config : ConfigValue
         Configuration mapping used to construct this component.
     _ : Path
         Unused argument required by the parser interface.

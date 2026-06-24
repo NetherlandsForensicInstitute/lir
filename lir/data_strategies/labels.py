@@ -8,12 +8,12 @@ from lir import DataStrategy, InstanceData
 
 def is_valid_input(instances: InstanceData) -> bool:  # numpydoc ignore=PR01,RT01
     """Return True iff label-based strategies can be applied."""
-    return instances.labels is not None
+    return instances.hypothesis is not None
 
 
 def _check_input(instances: InstanceData) -> None:  # numpydoc ignore=PR01
     """Raise an error unless label-based strategies can be applied."""
-    if instances.labels is None:
+    if instances.hypothesis is None:
         raise ValueError('unable to perform train/test split by hypothesis labels without labels')
 
 
@@ -118,5 +118,5 @@ class CrossValidation(DataStrategy):
             Input instances to be processed by this method.
         """
         kf = KFold(n_splits=self.folds, shuffle=self.shuffle, random_state=self.seed)
-        for train_index, test_index in kf.split(np.arange(len(instances)), y=instances.labels):
+        for train_index, test_index in kf.split(np.arange(len(instances)), y=instances.hypothesis):
             yield instances[train_index], instances[test_index]

@@ -82,7 +82,7 @@ class McmcLLRModel(Transformer):
             # determine the bounds for each LR-system individually
             self.bounders = [self.bounder_factory() for _ in range(llrs.shape[1])]
             for i_system in range(llrs.shape[1]):
-                llr_data = LLRData(features=llrs[:, i_system], labels=instances.require_labels)
+                llr_data = LLRData(features=llrs[:, i_system], hypothesis_labels=instances.require_labels)
                 self.bounders[i_system] = self.bounders[i_system].fit(llr_data)
         return self
 
@@ -107,7 +107,7 @@ class McmcLLRModel(Transformer):
         if (self.bounder_factory is not None) and (self.bounders is not None):
             # apply the bounders one by one
             for i_system in range(llrs.shape[1]):
-                llr_data = LLRData(features=llrs[:, i_system], labels=instances.labels)
+                llr_data = LLRData(features=llrs[:, i_system], hypothesis_labels=instances.hypothesis_labels)
                 bound_llr_data = self.bounders[i_system].apply(llr_data)
                 llrs[:, i_system] = bound_llr_data.llrs
         quantiles = np.quantile(llrs, [0.5] + list(self.interval), axis=1, method='midpoint')

@@ -35,7 +35,7 @@ def plot_invariance_delta_functions(
     ax : plt.Axes | None, optional
         Matplotlib axes to plot into.
     """
-    llrs, y = llrdata.llrs, llrdata.labels
+    llrs, y = llrdata.llrs, llrdata.hypothesis_labels
     if y is None:
         raise ValueError('Ground-truth labels are required to plot invariance delta functions.')
 
@@ -96,7 +96,7 @@ def calculate_invariance_bounds(
     tuple[float, float, np.ndarray, np.ndarray]
         Lower bound, upper bound, lower delta function values, and upper delta function values.
     """
-    llrs, y = llrdata.llrs, llrdata.labels
+    llrs, y = llrdata.llrs, llrdata.hypothesis_labels
 
     # remove LLRs that are too extreme by clipping them to the substitute extremes
     sanitized_llrs = llrs.copy()
@@ -108,7 +108,7 @@ def calculate_invariance_bounds(
         llr_threshold = np.arange(*llr_threshold_range, step_size)
 
     # calculate the two delta functions
-    sanitized_llrdata = LLRData(features=sanitized_llrs, labels=y)
+    sanitized_llrdata = LLRData(features=sanitized_llrs, hypothesis_labels=y)
     delta_low, delta_high = calculate_invariance_delta_functions(sanitized_llrdata, llr_threshold)
 
     # find the LLRs closest to LLR=0 where the functions become negative & convert them to LRs
@@ -151,7 +151,7 @@ def calculate_invariance_delta_functions(llrdata: LLRData, llr_threshold: np.nda
     tuple[np.ndarray, np.ndarray]
         Lower and upper delta values evaluated for all thresholds.
     """
-    llrs, y = llrdata.llrs, llrdata.labels
+    llrs, y = llrdata.llrs, llrdata.hypothesis_labels
     # fix the value used for the beta distributions at 1/2 (Jeffreys prior)
     beta_parameter = 1 / 2
 

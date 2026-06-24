@@ -46,7 +46,7 @@ class MetricsBarPlot(Aggregation):
                 run_name='1',
                 llrdata=LLRData(
                     features=np.array([9., 9, 9, .5, .5, -9, -9, -9]).reshape(-1, 1),
-                    labels=np.array([1, 1, 1, 1, 0, 0, 0, 0])
+                    hypothesis_labels=np.array([1, 1, 1, 1, 0, 0, 0, 0])
                 ),
                 parameters={'model': 'model1'},
                 lrsystem=None,
@@ -55,7 +55,7 @@ class MetricsBarPlot(Aggregation):
                 run_name='1',
                 llrdata=LLRData(
                     features=np.array([9., 9, 9, 9, 9, .5, .5, -9, -9, -9, -9, -9]).reshape(-1, 1),
-                    labels=np.array([1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0])
+                    hypothesis_labels=np.array([1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0])
                 ),
                 parameters={'model': 'model2'},
                 lrsystem=None,

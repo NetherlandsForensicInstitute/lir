@@ -7,7 +7,7 @@ class ExampleExternalData(DataStrategy, DataProvider):
     """An example DataStrategy and DataProvider class defined in an external module."""
 
     def get_instances(self) -> LLRData:
-        return LLRData(features=np.zeros((3, 1)), labels=np.zeros(3))
+        return LLRData(features=np.zeros((3, 1)), hypothesis_labels=np.zeros(3))
 
     def __iter__(self):
         return None

@@ -16,7 +16,7 @@ class TestPlotting(unittest.TestCase):
         lrs = np.array([0.5, 0.5, 0.5, 1, 1, 2, 2, 2])
         llrs = odds_to_logodds(lrs)
         y = np.array([0, 0, 1, 0, 1, 0, 1, 1])
-        llr_data = LLRData(features=llrs.reshape(-1, 1), labels=y)
+        llr_data = LLRData(features=llrs.reshape(-1, 1), hypothesis_labels=y)
 
         # inside context
         with plotting.axes() as ax:
@@ -47,7 +47,7 @@ class TestPlotting(unittest.TestCase):
         finite_index = (lrs > 0) & (lrs < np.inf)
 
         # The reshape(-1, 1) is to simulate single-feature data with one sample per row
-        llr_data = LLRData(features=llrs.reshape(-1, 1), labels=y)
+        llr_data = LLRData(features=llrs.reshape(-1, 1), hypothesis_labels=y)
 
         llr_data_with_scores = llr_data.replace(score=llr_data.features)
         llr_data_finite = llr_data[finite_index]

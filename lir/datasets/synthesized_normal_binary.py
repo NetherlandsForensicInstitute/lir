@@ -80,7 +80,7 @@ class SynthesizedNormalBinaryData(DataProvider):
         rng = np.random.default_rng(seed=self.seed)
         features = np.concatenate([data_class.get(rng) for data_class in self.data_parameters])
         labels = np.concatenate([np.ones(self.data_parameters[0].size[0]), np.zeros(self.data_parameters[1].size[0])])
-        return FeatureData(features=features, labels=labels)
+        return FeatureData(features=features, hypothesis_labels=labels)
 
 
 @config_parser

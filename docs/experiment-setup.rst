@@ -47,7 +47,7 @@ Every experiment configuration has a ``strategy`` property, which defines the ty
 configuration settings are required. Our ``single_run`` setup has three main sections:
 
 - ``data``, which defines the dataset (``provider``) and how it is split into training and test data (``splits``);
-- ``lr_system``, which defines the LR system; and
+- ``lrsystem``, which defines the LR system; and
 - ``output``, which specifies the required output.
 
 More advanced `strategies`_, such as the ``grid`` strategy and the ``optuna`` strategy, are extensions of this. They
@@ -208,7 +208,7 @@ Above, our preprocessing was done by the scaler. The **shortest** way to write t
 
 .. code-block:: yaml
 
-    lr_system:
+    lrsystem:
       architecture: score_based
       preprocessing: standard_scaler
       ...
@@ -217,7 +217,7 @@ However, if we need to pass additional **parameters** to the scaler, we use the 
 
 .. code-block:: yaml
 
-    lr_system:
+    lrsystem:
       architecture: score_based
       preprocessing:
         method: standard_scaler
@@ -232,7 +232,7 @@ Still, we may not be satisfied, because we want to use more than one module for 
 
 .. code-block:: yaml
 
-    lr_system:
+    lrsystem:
       architecture: score_based
       preprocessing:
         method: pipeline
@@ -253,7 +253,7 @@ The output section declares how to aggregate the results from the test set.
 Hyperparameters and data parameters
 -----------------------------------
 
-`Experiments`_ that involve multiple runs have a ``hyperparameters`` or a ``dataparameters`` section.
+`Experiments`_ that involve multiple runs have a ``lrsystem_parameters`` or a ``data_parameters`` section.
 
 .. _Experiments: reference.html#experiment-strategies
 
@@ -295,7 +295,7 @@ We may also want to know how well the LR system is able to cope with few data po
 
 Therefore, the CSV reader has the argument ``head`` to read only the first ``n`` instances. We are going to use that
 argument to vary the amount of input data. This is similar to the model selection setup, but since
-we vary the input data, we use ``dataparameters`` instead of ``hyperparameters``, like so:
+we vary the input data, we use ``data_parameters`` instead of ``lrsystem_parameters``, like so:
 
 .. literalinclude:: snippets/sensitivity-analysis.yaml
     :language: yaml
@@ -331,7 +331,7 @@ explicitly specify the parameter type. The following is equivalent to the above.
 .. code-block:: yaml
     :emphasize-lines: 2
 
-    hyperparameters:
+    lrsystem_parameters:
       - path: comparing.steps.to_llr
         type: categorical
         options:
@@ -342,4 +342,4 @@ explicitly specify the parameter type. The following is equivalent to the above.
 
 In most cases, the ``type`` property can be omitted, but it may be necessary when using custom parameter types.
 
-.. _other types of parameters: reference.html#hyperparameters
+.. _other types of parameters: reference.html#lrsystem_parameters

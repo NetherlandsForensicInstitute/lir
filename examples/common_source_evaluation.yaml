@@ -16,7 +16,7 @@ data: &data
     strategy: cross_validation_sources
     folds: 5
 
-lr_system: &lr_system
+lrsystem: &lrsystem
   architecture: score_based
   preprocessing:
     method: csv_writer
@@ -37,9 +37,9 @@ lr_system: &lr_system
 experiments:
   - name: model_selection
     strategy: grid
-    lr_system: *lr_system
+    lrsystem: *lrsystem
     data: *data
-    hyperparameters:
+    lrsystem_parameters:
       - path: comparing.steps.clf
         options:
           - option_name: logit
@@ -61,7 +61,7 @@ experiments:
 
   - name: validation
     strategy: single_run
-    lr_system: *lr_system
+    lrsystem: *lrsystem
     data: *data
     output:
       - method: metrics

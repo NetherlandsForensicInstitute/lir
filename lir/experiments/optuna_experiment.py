@@ -43,8 +43,8 @@ class OptunaExperiment(Experiment):
         Path where generated outputs are written.
     baseline_config : ContextAwareDict
         Baseline configuration to be tuned during optimisation.
-    hyperparameters : list[Hyperparameter]
-        Hyperparameters varied during optimisation.
+    lrsystem_parameters : list[Hyperparameter]
+        LR system parameters varied during optimisation.
     n_trials : int
         Number of optimisation trials to execute.
     metric_function : Callable[[LLRData], float]
@@ -58,7 +58,7 @@ class OptunaExperiment(Experiment):
         outputs: Sequence[Aggregation],
         output_path: Path,
         baseline_config: ContextAwareDict,
-        hyperparameters: list[Hyperparameter],
+        lrsystem_parameters: list[Hyperparameter],
         n_trials: int,
         metric_function: Callable[[LLRData], float],
     ):
@@ -67,7 +67,7 @@ class OptunaExperiment(Experiment):
         self._data_config = DataConfig(spec=data_config, params={}, output_dir=output_path)
 
         self.baseline_config = baseline_config
-        self.hyperparameters = hyperparameters
+        self.lrsystem_parameters = lrsystem_parameters
         self.n_trials = n_trials
         self.metric_function = metric_function
 
@@ -89,18 +89,18 @@ class OptunaExperiment(Experiment):
 
     def _get_hyperparameter_substitutions(self, trial: optuna.Trial) -> dict[str, HyperparameterOption]:
         assignments = {}
-        for param in self.hyperparameters:
+        for param in self.lrsystem_parameters:
             assignments[param.name] = self._get_parameter_value(trial, param)
 
         return assignments
 
     def _objective(self, trial: optuna.Trial) -> float:
         assignments = self._get_hyperparameter_substitutions(trial)
-        lr_system = augment_config(deepcopy(self.baseline_config), assignments)
+        lrsystem = augment_config(deepcopy(self.baseline_config), assignments)
 
         # add optuna values as system parameters
-        hyperparameters: dict[str, Any] = assignments
-        hyperparameters.update(
+        lrsystem_parameters: dict[str, Any] = assignments
+        lrsystem_parameters.update(
             {
                 # trial.number is a sequence number, starting at 0
                 'trial': trial.number,
@@ -111,7 +111,7 @@ class OptunaExperiment(Experiment):
 
         result = run_lrsystem(
             self.output_path,
-            LRSystemConfig(spec=lr_system, params=hyperparameters, output_dir=self.output_path),
+            LRSystemConfig(spec=lrsystem, params=lrsystem_parameters, output_dir=self.output_path),
             self._data_config,
             run_name=f'trial{trial.number:03d}',
         )
@@ -145,7 +145,7 @@ def parse_optuna_experiment(config: ContextAwareDict, output_dir: Path) -> Optun
     """
     name = pop_experiment_name(config)
 
-    baseline_config, parameters = parse_config_with_parameters(config, output_dir, 'lr_system', 'hyperparameters')
+    baseline_config, parameters = parse_config_with_parameters(config, output_dir, 'lrsystem', 'lrsystem_parameters')
     n_trials = pop_field(config, 'n_trials', validate=int)
 
     metric_name = pop_field(config, 'primary_metric')
@@ -164,7 +164,7 @@ def parse_optuna_experiment(config: ContextAwareDict, output_dir: Path) -> Optun
         outputs=aggregations,
         output_path=output_dir,
         baseline_config=baseline_config,
-        hyperparameters=parameters,
+        lrsystem_parameters=parameters,
         n_trials=n_trials,
         metric_function=primary_metric,
     )

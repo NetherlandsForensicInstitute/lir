@@ -9,5 +9,5 @@ experiments:
     strategy: optuna
     primary_metric: cllr
     n_trials: 1
-    lr_system: ${lr_system}
+    lrsystem: ${lrsystem}
     data: ${data}

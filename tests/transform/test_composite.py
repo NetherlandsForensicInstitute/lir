@@ -12,7 +12,7 @@ def test_composite():
     features = np.concatenate([np.random.default_rng(42).normal(loc=i, scale=1, size=(100, 1)) for i in range(6)])
     labels = np.repeat([0, 1, 0, 1, 0, 1], 100)
     categories = np.repeat([0, 1, 2], 200)
-    instances = FeatureData(features=features, labels=labels, categories=categories)
+    instances = FeatureData(features=features, hypothesis_labels=labels, categories=categories)
     simple_llrs = LogitCalibrator().fit(instances).apply(instances)
 
     lrsystem = CategoricalCompositeTransformer(factory=LogitCalibrator, category_field='categories')

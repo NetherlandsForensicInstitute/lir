@@ -48,7 +48,7 @@ from lir.datasets.feature_data_csv import (
         (
             'label,feature1,feature2\n1,1,1\n',
             {'label_column': 'label'},
-            FeatureData(labels=np.array([1]), features=np.ones((1, 2))),
+            FeatureData(hypothesis_labels=np.array([1]), features=np.ones((1, 2))),
             '1 row, 2 features, with label',
         ),
         (
@@ -60,7 +60,7 @@ from lir.datasets.feature_data_csv import (
         (
             'label,source_id,feature1,feature2\n0,10,1,1\n',
             {'label_column': 'label', 'source_id_column': 'source_id'},
-            FeatureData(source_ids=np.array(['10']), labels=np.array([0]), features=np.ones((1, 2))),
+            FeatureData(source_ids=np.array(['10']), hypothesis_labels=np.array([0]), features=np.ones((1, 2))),
             '1 row, 2 features, with label, source_id',
         ),
         (

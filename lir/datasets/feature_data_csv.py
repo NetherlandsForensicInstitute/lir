@@ -166,7 +166,9 @@ class FeatureDataCsvParser(DataProvider):
         if self.source_id_columns:
             fields['source_ids'] = [row[column_name] for column_name in self.source_id_columns]
         if self.label_column is not None:
-            fields['labels'] = self._parse_value(reader.line_num, self.label_column, row[self.label_column], int)
+            fields['hypothesis_labels'] = self._parse_value(
+                reader.line_num, self.label_column, row[self.label_column], int
+            )
         if self.instance_id_column is not None:
             fields['instance_ids'] = row[self.instance_id_column]
         if self.role_assignment_column is not None:

@@ -74,7 +74,7 @@ class LLRBounder(Transformer, ABC):
         """
         instances = self._validate(instances)
 
-        if instances.labels is None:
+        if instances.hypothesis_labels is None:
             raise ValueError(f'{type(self)}.fit() requires labeled data')
 
         # calculate the bounds

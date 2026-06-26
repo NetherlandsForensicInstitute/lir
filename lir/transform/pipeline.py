@@ -254,8 +254,8 @@ class LoggingPipeline(Pipeline):
             csv_builder.add_column(np.full((len(instances), 1), self.n_batches), 'batch')
 
         # add column: label
-        if self.include_labels and instances.labels is not None:
-            csv_builder.add_column(instances.labels, 'label')
+        if self.include_labels and instances.hypothesis_labels is not None:
+            csv_builder.add_column(instances.hypothesis_labels, 'label')
 
         # add columns: features
         if self.include_input:

@@ -153,7 +153,7 @@ class BinaryClassifierTransformer(Transformer):
             This transformer instance after fitting.
         """
         instances = check_type(FeatureData, instances)
-        self.estimator.fit(instances.features, instances.labels)
+        self.estimator.fit(instances.features, instances.hypothesis_labels)
         return self
 
     def apply(self, instances: InstanceData) -> FeatureData:
@@ -206,7 +206,7 @@ class SklearnTransformer(Transformer):
             This transformer instance after fitting.
         """
         instances = check_type(FeatureData, instances)
-        self.transformer.fit(instances.features, instances.labels)
+        self.transformer.fit(instances.features, instances.hypothesis_labels)
         return self
 
     def apply(self, instances: InstanceData) -> InstanceData:
@@ -242,7 +242,7 @@ class SklearnTransformer(Transformer):
         """
         instances = check_type(FeatureData, instances)
         return instances.replace_as(
-            FeatureData, features=self.transformer.fit_transform(instances.features, instances.labels)
+            FeatureData, features=self.transformer.fit_transform(instances.features, instances.hypothesis_labels)
         )
 
 

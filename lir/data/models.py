@@ -12,13 +12,13 @@ from lir.util import check_type
 LOG = logging.getLogger(__name__)
 
 
-def _validate_labels(labels: np.ndarray | None) -> np.ndarray | None:
+def _validate_labels(hypothesis_labels: np.ndarray | None) -> np.ndarray | None:
     """
     Check if labels have the correct shape.
 
     Parameters
     ----------
-    labels : np.ndarray | None
+    hypothesis_labels : np.ndarray | None
         Value passed via ``labels``.
 
     Returns
@@ -26,16 +26,16 @@ def _validate_labels(labels: np.ndarray | None) -> np.ndarray | None:
     np.ndarray | None
         Validated label array, or ``None`` when labels are absent.
     """
-    if labels is None:
-        return labels
+    if hypothesis_labels is None:
+        return hypothesis_labels
 
-    if len(labels.shape) != 1:
-        raise ValueError(f'labels must be 1-dimensional; shape: {labels.shape}')
+    if len(hypothesis_labels.shape) != 1:
+        raise ValueError(f'labels must be 1-dimensional; shape: {hypothesis_labels.shape}')
 
-    if np.any((labels != 0) & (labels != 1)):
-        raise ValueError(f'labels allowed: 0, 1; found: {np.unique(labels)}')
+    if np.any((hypothesis_labels != 0) & (hypothesis_labels != 1)):
+        raise ValueError(f'labels allowed: 0, 1; found: {np.unique(hypothesis_labels)}')
 
-    return labels
+    return hypothesis_labels
 
 
 def _validate_source_ids(source_ids: np.ndarray | None) -> np.ndarray | None:
@@ -100,7 +100,7 @@ class InstanceData(BaseModel, ABC):
 
     model_config = ConfigDict(frozen=True, extra='allow', arbitrary_types_allowed=True)
 
-    labels: Annotated[np.ndarray | None, AfterValidator(_validate_labels)] = None
+    hypothesis_labels: Annotated[np.ndarray | None, AfterValidator(_validate_labels)] = None
     source_ids: Annotated[np.ndarray | None, AfterValidator(_validate_source_ids)] = None
 
     @property
@@ -113,9 +113,9 @@ class InstanceData(BaseModel, ABC):
         np.ndarray
             Label array guaranteed to contain values for both hypotheses.
         """
-        if self.labels is None:
+        if self.hypothesis_labels is None:
             raise ValueError('labels not set')
-        return self.labels
+        return self.hypothesis_labels
 
     @model_validator(mode='after')
     def check_sourceids_labels_match(self) -> Self:
@@ -127,10 +127,14 @@ class InstanceData(BaseModel, ABC):
         Self
             This instance data object after post-init validation.
         """
-        if self.labels is not None and self.source_ids is not None and self.labels.shape[0] != self.source_ids.shape[0]:
+        if (
+            self.hypothesis_labels is not None
+            and self.source_ids is not None
+            and self.hypothesis_labels.shape[0] != self.source_ids.shape[0]
+        ):
             raise ValueError(
                 f'dimensions of labels and source_ids do not match; "'
-                f'{self.labels.shape[0]} != {self.source_ids.shape[0]}'
+                f'{self.hypothesis_labels.shape[0]} != {self.source_ids.shape[0]}'
             )
 
         return self
@@ -207,11 +211,11 @@ class InstanceData(BaseModel, ABC):
         np.ndarray
             Label array containing both classes 0 and 1.
         """
-        if self.labels is None:
+        if self.hypothesis_labels is None:
             raise ValueError('labels not set')
-        if not np.all(np.unique(self.labels) == np.arange(2)):
-            raise ValueError(f'not all classes are represented; labels found: {np.unique(self.labels)}')
-        return self.labels
+        if not np.all(np.unique(self.hypothesis_labels) == np.arange(2)):
+            raise ValueError(f'not all classes are represented; labels found: {np.unique(self.hypothesis_labels)}')
+        return self.hypothesis_labels
 
     @classmethod
     def _concatenate_field(cls, field: str, values: list[Any]) -> Any:
@@ -349,7 +353,7 @@ class InstanceData(BaseModel, ABC):
                 # apply the function
                 values = fn(values, *args, **kwargs)
 
-                if field == 'labels' and len(values.shape) != 1:
+                if field == 'hypothesis_labels' and len(values.shape) != 1:
                     # drop labels if they are in bad shape
                     data[field] = None
                 else:
@@ -395,7 +399,7 @@ class InstanceData(BaseModel, ABC):
             if isinstance(values, np.ndarray):
                 # we have a numpy array field -> update required
 
-                if field == 'labels' and len(values.shape) != 1:
+                if field == 'hypothesis_labels' and len(values.shape) != 1:
                     # drop labels if they are in bad shape
                     data[field] = None
                 else:
@@ -463,7 +467,7 @@ class InstanceData(BaseModel, ABC):
         bool
             ``True`` when label information is present.
         """
-        return self.labels is not None
+        return self.hypothesis_labels is not None
 
     def replace(self, **kwargs: Any) -> Self:
         """
@@ -555,9 +559,10 @@ class FeatureData(InstanceData):
         Self
             This feature-data object after shape consistency checks.
         """
-        if self.labels is not None and self.labels.shape[0] != self.features.shape[0]:
+        if self.hypothesis_labels is not None and self.hypothesis_labels.shape[0] != self.features.shape[0]:
             raise ValueError(
-                f'dimensions of labels and features do not match; {self.labels.shape[0]} != {self.features.shape[0]}'
+                f'dimensions of labels and features do not match; \
+                 {self.hypothesis_labels.shape[0]} != {self.features.shape[0]}'
             )
         if self.source_ids is not None and self.source_ids.shape[0] != self.features.shape[0]:
             raise ValueError(
@@ -883,16 +888,16 @@ class LLRData(FeatureData):
 
     def check_misleading_finite(self) -> None:
         """Check whether all values are either finite or not misleading."""
-        values, labels = self.llrs, self.require_labels
+        values, hypothesis_labels = self.llrs, self.require_labels
 
         # give error message if H1's contain zeros and H2's contain ones
-        if np.any(np.isneginf(values[labels == 1])) and np.any(np.isposinf(values[labels == 0])):
+        if np.any(np.isneginf(values[hypothesis_labels == 1])) and np.any(np.isposinf(values[hypothesis_labels == 0])):
             raise ValueError('invalid input: -inf found for H1 and inf found for H2')
         # give error message if H1's contain zeros
-        if np.any(np.isneginf(values[labels == 1])):
+        if np.any(np.isneginf(values[hypothesis_labels == 1])):
             raise ValueError('invalid input: -inf found for H1')
         # give error message if H2's contain ones
-        if np.any(np.isposinf(values[labels == 0])):
+        if np.any(np.isposinf(values[hypothesis_labels == 0])):
             raise ValueError('invalid input: inf found for H2')
 
 

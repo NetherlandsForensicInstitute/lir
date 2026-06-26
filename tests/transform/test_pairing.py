@@ -29,7 +29,7 @@ def test_source_pairing_ratio(ratio_limit: int | float):
     data = SynthesizedNormalMulticlassData(dimensions, population_size=100, sources_size=2, seed=0)
 
     pairs = SourcePairing(ratio_limit=ratio_limit).pair(data.get_instances())
-    assert np.sum(pairs.labels == 0) / np.sum(pairs.labels == 1) == pytest.approx(ratio_limit)
+    assert np.sum(pairs.hypothesis_labels == 0) / np.sum(pairs.hypothesis_labels == 1) == pytest.approx(ratio_limit)
 
 
 @pytest.mark.parametrize(
@@ -192,9 +192,9 @@ class TestPairing(unittest.TestCase):
         pairing = InstancePairing()
         pairs = pairing.pair(self.instances)
 
-        self.assertEqual(np.sum(pairs.labels == 1), 5, 'number of same source pairs')
+        self.assertEqual(np.sum(pairs.hypothesis_labels == 1), 5, 'number of same source pairs')
         self.assertEqual(
-            np.sum(pairs.labels == 0),
+            np.sum(pairs.hypothesis_labels == 0),
             2 * (8 + 6 + 4 + 2),
             'number of different source pairs',
         )
@@ -203,8 +203,8 @@ class TestPairing(unittest.TestCase):
         pairing = InstancePairing(ratio_limit=1)
         pairs = pairing.pair(self.instances)
 
-        self.assertEqual(np.sum(pairs.labels == 1), 5, 'number of same source pairs')
-        self.assertEqual(np.sum(pairs.labels == 0), 5, 'number of different source pairs')
+        self.assertEqual(np.sum(pairs.hypothesis_labels == 1), 5, 'number of same source pairs')
+        self.assertEqual(np.sum(pairs.hypothesis_labels == 0), 5, 'number of different source pairs')
 
         assert np.all(pairs.instance_indices[:, 0] != pairs.instance_indices[:, 1]), 'identity in pairs'
 
@@ -212,7 +212,7 @@ class TestPairing(unittest.TestCase):
         # test ratio
         pairing_ratio = InstancePairing(ratio_limit=ratio_limit)
         pairs = pairing_ratio.pair(self.instances)
-        ratio = np.sum(pairs.labels == 0) / np.sum(pairs.labels == 1)
+        ratio = np.sum(pairs.hypothesis_labels == 0) / np.sum(pairs.hypothesis_labels == 1)
         self.assertEqual(ratio, ratio_limit, 'ratio ss ds pairs not correct')
 
     def test_pairing_ratio1(self):
@@ -224,14 +224,14 @@ class TestPairing(unittest.TestCase):
         ratio_limit = 1_000
         pairing_ratio_max = InstancePairing(ratio_limit=ratio_limit)
         pairs = pairing_ratio_max.pair(self.instances)
-        ratio = np.sum(pairs.labels == 0) / np.sum(pairs.labels == 1)
+        ratio = np.sum(pairs.hypothesis_labels == 0) / np.sum(pairs.hypothesis_labels == 1)
         self.assertLess(
             ratio,
             ratio_limit,
             'realised ratio should be less than or equal to ratio_limit',
         )
         self.assertEqual(
-            np.sum(pairs.labels == 0),
+            np.sum(pairs.hypothesis_labels == 0),
             2 * (8 + 6 + 4 + 2),
             'all different source pairs should be selected',
         )
@@ -242,9 +242,9 @@ class TestPairing(unittest.TestCase):
         same_source_limit = 3
         pairing_ratio_ss_lim = InstancePairing(ratio_limit=ratio_limit, same_source_limit=same_source_limit)
         pairs = pairing_ratio_ss_lim.pair(self.instances)
-        ratio = np.sum(pairs.labels == 0) / np.sum(pairs.labels == 1)
+        ratio = np.sum(pairs.hypothesis_labels == 0) / np.sum(pairs.hypothesis_labels == 1)
         self.assertEqual(ratio, ratio_limit, 'ratio ss ds pairs not correct')
-        self.assertEqual(same_source_limit, np.sum(pairs.labels == 1), 'ss pairs limit')
+        self.assertEqual(same_source_limit, np.sum(pairs.hypothesis_labels == 1), 'ss pairs limit')
 
     def test_pairing_ratio4(self):
         # test ratio with different_source_limit
@@ -252,9 +252,9 @@ class TestPairing(unittest.TestCase):
         different_source_limit = 20
         pairing_ratio_ds_lim = InstancePairing(ratio_limit=ratio_limit, different_source_limit=different_source_limit)
         pairs = pairing_ratio_ds_lim.pair(self.instances)
-        ratio = np.sum(pairs.labels == 0) / np.sum(pairs.labels == 1)
+        ratio = np.sum(pairs.hypothesis_labels == 0) / np.sum(pairs.hypothesis_labels == 1)
         self.assertLessEqual(ratio, ratio_limit, 'ratio ss ds pairs not correct')
-        self.assertLessEqual(np.sum(pairs.labels == 0), different_source_limit, 'ds pairs limit')
+        self.assertLessEqual(np.sum(pairs.hypothesis_labels == 0), different_source_limit, 'ds pairs limit')
 
     def test_pairing_ratio5(self):
         # test ratio with same_source_limit and different_source_limit
@@ -267,10 +267,10 @@ class TestPairing(unittest.TestCase):
             different_source_limit=different_source_limit,
         )
         pairs = pairing_ratio_ds_lim.pair(self.instances)
-        ratio = np.sum(pairs.labels == 0) / np.sum(pairs.labels == 1)
+        ratio = np.sum(pairs.hypothesis_labels == 0) / np.sum(pairs.hypothesis_labels == 1)
         self.assertLessEqual(ratio, ratio_limit, 'ratio_limit ss and ds pairs exceeded')
-        self.assertLessEqual(np.sum(pairs.labels == 1), same_source_limit, 'ss pairs limit')
-        self.assertLessEqual(np.sum(pairs.labels == 0), different_source_limit, 'ds pairs limit')
+        self.assertLessEqual(np.sum(pairs.hypothesis_labels == 1), same_source_limit, 'ss pairs limit')
+        self.assertLessEqual(np.sum(pairs.hypothesis_labels == 0), different_source_limit, 'ds pairs limit')
 
     def test_pairing_seed(self):
         pairing_seed_1 = InstancePairing(ratio_limit=1, seed=123)

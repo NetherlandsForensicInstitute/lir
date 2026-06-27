@@ -3,9 +3,10 @@ import io
 import itertools
 import logging
 from collections.abc import Callable
+from dataclasses import dataclass
 from functools import partial
 from pathlib import Path
-from typing import IO, Any, NamedTuple
+from typing import IO, Any
 
 import numpy as np
 import requests
@@ -15,7 +16,7 @@ from lir.config.base import ContextAwareDict, check_is_empty, config_parser, pop
 from lir.data.io import search_path
 from lir.data.models import DataProvider, FeatureData
 from lir.data_strategies import RoleAssignment
-from lir.util import check_type
+from lir.util import check_is_enum_option, check_type
 
 
 LOG = logging.getLogger(__name__)
@@ -29,12 +30,93 @@ class ParseError(ValueError):
     """
 
 
-class ExtraField(NamedTuple):
-    """Extra field for CSV parsing."""
+@dataclass
+class DataField:
+    """
+    A data field for parsing a CSV file into an :class:`~lir.InstanceData` object.
+
+    Attributes
+    ----------
+    field_name : str
+        The attribute name in the ``InstanceData`` object.
+    column_names : list[str]
+        The associated column names in the CSV file.
+    validate_cell : Callable[[str], Any]
+        A validation function for parsing column values.
+    """
 
     field_name: str
-    column_name: str
-    validate_cell: Callable[[str], Any]
+    column_names: list[str]
+    validate_cell: Callable[[str], Any] = str
+
+    def _get_validated_value(self, row: dict[str, str], column_name: str) -> Any:
+        value = row.pop(column_name)
+        try:
+            return self.validate_cell(value)
+        except (ValueError, TypeError) as e:
+            raise ParseError(f'failed to parse {value} for column {column_name}: {e}') from e
+
+    def parse_from_row(self, row: dict[str, str]) -> Any:
+        """
+        Parse a row into a field value.
+
+        Parameters
+        ----------
+        row : dict[str, str]
+            A row from the CSV file.
+
+        Returns
+        -------
+        Any
+            The parsed value, either a single value (int, float, str), or a list of values.
+        """
+        if len(self.column_names) == 1:
+            return self._get_validated_value(row, self.column_names[0])
+        else:
+            return [self._get_validated_value(row, column_name) for column_name in self.column_names]
+
+
+class ImplicitFeaturesField(DataField):
+    """
+    A features field for parsing a CSV file into an :class:`~lir.InstanceData` object.
+
+    This field does not require feature columns to be specified explicitly, but assumes all columns not otherwise
+    assigned to hold feature values.
+    """
+
+    def __init__(self) -> None:
+        super().__init__('features', [], float)
+
+    def parse_from_row(self, row: dict[str, str]) -> list[float]:
+        """
+        Parse a row into feature values.
+
+        Parameters
+        ----------
+        row : dict[str, str]
+            A row from the CSV file.
+
+        Returns
+        -------
+        list[float]
+            The feature values.
+        """
+        if not self.column_names:
+            self.column_names = list(row.keys())
+
+        return super().parse_from_row(row)
+
+
+class ExtraField(DataField):  # numpydoc ignore=PR01
+    """Extra field for CSV parsing."""
+
+    def __init__(self, field_name: str, column_name: str, validate_cell: Callable[[str], Any]) -> None:
+        super().__init__(field_name, [column_name], validate_cell)
+
+    @property
+    def column_name(self) -> str:  # numpydoc ignore=RT01
+        """Return column name."""
+        return self.column_names[0]
 
 
 class FeatureDataCsvParser(DataProvider):
@@ -123,65 +205,47 @@ class FeatureDataCsvParser(DataProvider):
         continue_on_error: bool = False,
     ):
         self._open_file_fn = open_file_fn
-        self.source_id_columns: list[str] = (
-            [source_id_column] if isinstance(source_id_column, str) else source_id_column or []
-        )
-        if len(self.source_id_columns) > 2:
-            raise ValueError(f'the number of source id columns can be at most 2; found: {len(self.source_id_columns)}')
+        self.data_fields: list[DataField] = []
 
-        self.label_column = label_column
-        self.instance_id_column = instance_id_column
-        self.feature_columns: list[str] | None = (
-            [feature_columns] if isinstance(feature_columns, str) else feature_columns
-        )
-        self.role_assignment_column = role_assignment_column
-        self.fold_assignment_column = fold_assignment_column
-        self.extra_fields: list[ExtraField] = extra_fields or []
+        if isinstance(source_id_column, str):
+            self.data_fields.append(DataField('source_ids', [source_id_column]))
+        elif isinstance(source_id_column, list):
+            if len(source_id_column) > 2:
+                raise ValueError(f'the number of source id columns can be at most 2; found: {len(source_id_column)}')
+            self.data_fields.append(DataField('source_ids', source_id_column))
+        elif source_id_column is not None:
+            raise ValueError(f'the source id column should be a string or a list; found: {type(source_id_column)}')
+
+        if label_column:
+            self.data_fields.append(DataField('labels', [label_column], int))
+        if instance_id_column:
+            self.data_fields.append(DataField('instance_ids', [instance_id_column]))
+        if role_assignment_column:
+            self.data_fields.append(
+                DataField('role_assignments', [role_assignment_column], partial(check_is_enum_option, RoleAssignment))
+            )
+        if fold_assignment_column:
+            self.data_fields.append(DataField('fold_assignments', [fold_assignment_column]))
+        self.data_fields.extend(extra_fields or [])
         self.ignore_columns: list[str] = ignore_columns or []
         self._head = head
         self._message_prefix = message_prefix
         self.continue_on_error = continue_on_error
 
-        # the "extra field" argument allows for including arbitrary fields
-        # check that they do not conflict with fields that are facilitated otherwise
-        empty_data = FeatureData(features=np.ones((0, 1)))
-        for field in extra_fields or []:
-            if field.field_name in empty_data.all_fields:
-                raise ValueError(
-                    f'field {field.field_name} should not be read as an *extra* field; '
-                    'use the appropriate config parameters instead'
-                )
-
-    @staticmethod
-    def _parse_value(line_num: int, column_name: str, value: str, parse_fn: Callable[[str], Any]) -> Any:
-        try:
-            return parse_fn(value)
-        except (ValueError, TypeError) as e:
-            raise ParseError(f'failed to parse {value} at row {line_num}, column {column_name}: {e}') from e
+        if isinstance(feature_columns, list):
+            self.data_fields.append(DataField('features', feature_columns, float))
+        else:
+            self.data_fields.append(ImplicitFeaturesField())
 
     def _parse_row(
-        self, row: dict[str, str], reader: csv.DictReader, feature_columns: list[str]
+        self, row: dict[str, str], reader: csv.DictReader
     ) -> dict[str, str | list[str] | int | float | list[float]]:
         fields: dict[str, str | list[str] | int | float | list[float]] = {}
-        if self.source_id_columns:
-            fields['source_ids'] = [row[column_name] for column_name in self.source_id_columns]
-        if self.label_column is not None:
-            fields['labels'] = self._parse_value(reader.line_num, self.label_column, row[self.label_column], int)
-        if self.instance_id_column is not None:
-            fields['instance_ids'] = row[self.instance_id_column]
-        if self.role_assignment_column is not None:
-            fields['role_assignments'] = self._parse_value(
-                reader.line_num, self.role_assignment_column, row[self.role_assignment_column], RoleAssignment
-            ).value
-        if self.fold_assignment_column is not None:
-            fields['fold_assignment_column'] = row[self.fold_assignment_column]
-        for field in self.extra_fields:
-            fields[field.field_name] = self._parse_value(
-                reader.line_num, field.column_name, row[field.column_name], field.validate_cell
-            )
-        fields['features'] = [
-            self._parse_value(reader.line_num, fieldname, row[fieldname], float) for fieldname in feature_columns
-        ]
+
+        for column_name in self.ignore_columns:
+            row.pop(column_name)
+        for field in self.data_fields:
+            fields[field.field_name] = field.parse_from_row(row)
         return fields
 
     def _parse_file(self, fp: IO) -> FeatureData:
@@ -191,27 +255,9 @@ class FeatureDataCsvParser(DataProvider):
             raise ParseError(f'{self._message_prefix}empty file')
 
         # identify the non feature columns
-        columns_with_explicit_role = (
-            [
-                ('label_column', self.label_column),
-                ('instance_id_column', self.instance_id_column),
-                ('role_assignment_column', self.role_assignment_column),
-                ('fold_assignment_column', self.fold_assignment_column),
-            ]
-            + [('source_id_column', column_name) for column_name in self.source_id_columns]
-            + [('extra_fields', field.column_name) for field in self.extra_fields]
-            + [('ignore_columns', column_name) for column_name in self.ignore_columns]
-        )
-
-        if self.feature_columns:
-            columns_with_explicit_role.extend(('feature_columns', column_name) for column_name in self.feature_columns)
-            feature_columns = self.feature_columns
-        else:
-            # identify the feature columns
-            explicit_role_column_names = {column_name for _, column_name in columns_with_explicit_role}
-            feature_columns = [
-                fieldname for fieldname in reader.fieldnames if fieldname not in explicit_role_column_names
-            ]
+        columns_with_explicit_role = [
+            (field.field_name, column) for field in self.data_fields for column in field.column_names
+        ] + [('ignore_columns', column_name) for column_name in self.ignore_columns]
 
         # check if all required columns exist in the csv file
         for name, value in columns_with_explicit_role:
@@ -227,7 +273,7 @@ class FeatureDataCsvParser(DataProvider):
         n_instances = 0
         for row in itertools.islice(reader, self._head):
             try:
-                fields = self._parse_row(row, reader, feature_columns)
+                fields = self._parse_row(row, reader)
                 if not all_instances:
                     for key in fields:
                         all_instances[key] = []
@@ -237,9 +283,9 @@ class FeatureDataCsvParser(DataProvider):
                 n_instances += 1
             except ParseError as e:
                 if self.continue_on_error:
-                    LOG.info(f'{self._message_prefix}parsing failed: {e}')
+                    LOG.info(f'{self._message_prefix}line {reader.line_num}: parsing failed: {e}')
                 else:
-                    raise e
+                    raise ParseError(f'{self._message_prefix}line {reader.line_num}: parsing failed: {e}')
 
         if not all_instances:
             return FeatureData(features=np.zeros((0, 1)))
@@ -249,12 +295,6 @@ class FeatureDataCsvParser(DataProvider):
 
         # finalize the data
         all_instances = {k: np.array(v) for k, v in all_instances.items()}
-        if self.fold_assignment_column and len(set(all_instances['fold_assignments'])) < 2:
-            raise ParseError(
-                f'{self._message_prefix}fold assignment column `{self.fold_assignment_column}` should contain at '
-                f'least two different values; found: {set(all_instances["fold_assignments"])}'
-            )
-
         return FeatureData(**all_instances)  # type: ignore
 
     def get_instances(self) -> FeatureData:

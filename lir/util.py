@@ -3,6 +3,7 @@ import datetime
 import inspect
 import json
 import warnings
+from enum import Enum
 from functools import partial
 from pathlib import Path
 from typing import Any, TypeVar
@@ -64,6 +65,27 @@ def check_type[AnyType: Any](type_class: type[AnyType], v: Any, message: str | N
     else:
         message = message or f'expected type: {type_class}'
         raise ValueError(f'{message}; found: {type(v)}')
+
+
+def check_is_enum_option[ValueType: Any](enum_type: type[Enum], value: ValueType) -> ValueType:
+    """
+    Check if an input value is one of the options of an ``Enum`` type.
+
+    Otherwise, a ValueError is raised.
+
+    Parameters
+    ----------
+    enum_type : Enum
+        The expected type of the input value.
+    value : ValueType
+        The value to validate.
+
+    Returns
+    -------
+    ValueType
+        The input value if it is of the expected type.
+    """
+    return enum_type(value).value
 
 
 def get_classes_from_Xy(X: np.ndarray, y: np.ndarray, classes: list[Any] | None = None) -> np.ndarray:

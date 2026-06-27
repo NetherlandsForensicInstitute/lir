@@ -5,7 +5,7 @@ from typing import Any, Self
 
 import numpy as np
 
-from lir.config.base import ContextAwareDict, YamlParseError, check_is_empty, config_parser, pop_field
+from lir.config.base import ConfigAttribute, ContextAwareDict, YamlParseError, check_is_empty, config_parser, pop_field
 from lir.config.transform import parse_module
 from lir.data.io import DataFileBuilderCsv
 from lir.data.models import FeatureData, InstanceData
@@ -153,7 +153,13 @@ def parse_steps(config: ContextAwareDict | None, output_dir: Path) -> list[tuple
     ]
 
 
-@config_parser
+@config_parser(
+    attributes=[
+        ConfigAttribute(
+            name='steps', type=list[Transformer], required=True, description='Sequence of operations in the pipeline.'
+        ),
+    ]
+)
 def pipeline(config: ContextAwareDict, output_dir: Path) -> Pipeline:
     """
     Construct a scikit-learn Pipeline based on the provided configuration.

@@ -18,9 +18,9 @@ output_path: output/${timestamp}_glass_example
 # The data consist of a pre-defined training/test set combination. The training data has three instances per source; the
 # test data has five instances per source, from which to draw two-to-three pairs for LR calculations.
 #
-data:
+data: &data
   provider:
-    method: data_providers.glass
+    method: glass
     cache_dir: .cache/http
 
   splits:

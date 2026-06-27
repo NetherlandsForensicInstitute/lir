@@ -8,9 +8,10 @@ from tqdm import tqdm
 import lir
 from lir.aggregation import Aggregation
 from lir.config.aggregation import parse_aggregations
+from lir.config.base import ConfigAttribute, check_is_empty, config_parser, pop_field
 from lir.config.base import ConfigValue, check_is_empty, config_parser, pop_field
 from lir.config.lrsystem_architectures import augment_config
-from lir.config.substitution import parse_config_with_parameters
+from lir.config.substitution import Hyperparameter, parse_config_with_parameters
 from lir.experiments import Experiment
 
 from .execution import DataConfig, LRSystemConfig, parallellize_runs, run_multiple
@@ -93,7 +94,12 @@ class PredefinedExperiment(Experiment):
                 output.close()
 
 
-@config_parser
+@config_parser(
+    attributes=[
+        ConfigAttribute('data', DataConfig, required=True),
+        ConfigAttribute('lrsystem', LRSystemConfig, required=True),
+    ]
+)
 def parse_single_run(config: ConfigValue, output_dir: Path) -> PredefinedExperiment:
     """
     Get an experiment for a single run.
@@ -123,7 +129,14 @@ def parse_single_run(config: ConfigValue, output_dir: Path) -> PredefinedExperim
     return exp
 
 
-@config_parser
+@config_parser(
+    attributes=[
+        ConfigAttribute('data', DataConfig, required=True),
+        ConfigAttribute('data_parameters', list[Hyperparameter], required=False),
+        ConfigAttribute('lrsystem', LRSystemConfig | None, required=True),
+        ConfigAttribute('lrsystem_parameters', list[Hyperparameter], required=False),
+    ]
+)
 def parse_grid_experiment(config: ConfigValue, output_dir: Path) -> PredefinedExperiment:
     """
     Get experiment for a grid search strategy.

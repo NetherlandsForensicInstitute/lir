@@ -2,17 +2,14 @@ import collections
 import datetime
 import importlib
 import inspect
-import json
 import warnings
 from enum import Enum
 from functools import partial
-from pathlib import Path
 from typing import Any, TypeVar
 
 import numpy as np
-from confidence import Configuration, loadf
+from confidence import Configuration
 from confidence.models import ConfigurationSequence
-from jsonschema import validate
 
 from . import resources as resources_module
 

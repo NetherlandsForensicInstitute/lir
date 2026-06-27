@@ -1,16 +1,12 @@
 import collections
-import datetime
 import inspect
-import json
 import warnings
 from functools import partial
-from pathlib import Path
 from typing import Any, TypeVar
 
 import numpy as np
-from confidence import Configuration, loadf
+from confidence import Configuration
 from confidence.models import ConfigurationSequence
-from jsonschema import validate
 
 
 LR = collections.namedtuple('LR', ['lr', 'p0', 'p1'])
@@ -328,44 +324,6 @@ def to_native_dict(cfg: Any) -> Any:
             return [to_native_dict(item) for item in cfg]
         case _:
             return cfg
-
-
-def validate_yaml(yaml_path: Path) -> None:
-    """
-    Validate a YAML file against the schema.
-
-    Parameters
-    ----------
-    yaml_path : Path
-        The path to the YAML file to be validated.
-
-    Raises
-    ------
-    FileNotFoundError
-        If the YAML file or the schema file does not exist.
-    yaml.YAMLError
-        If the YAML file is not valid YAML.
-    ValidationError
-        If the YAML file does not conform to the schema.
-    """
-    schema_path = Path(__file__).parent.parent / 'lir.schema.json'
-
-    if not schema_path.exists():
-        raise FileNotFoundError(f'Schema file not found: {schema_path}')
-
-    if not yaml_path.exists():
-        raise FileNotFoundError(f'YAML file not found: {yaml_path}')
-
-    with open(schema_path) as f:
-        schema = json.load(f)
-
-    # Resolve ${...} references before validation
-    context = {'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')}  # noqa: DTZ005
-    cfg = Configuration(loadf(yaml_path), context)
-    data = to_native_dict(cfg)
-
-    # Validate data against schema
-    validate(instance=data, schema=schema)
 
 
 class Bind(partial):

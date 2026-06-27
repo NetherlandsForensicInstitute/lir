@@ -3,8 +3,9 @@ import logging
 from pathlib import Path
 from typing import Self
 
-from lir import registry
+from lir import Transformer, registry
 from lir.config.base import (
+    ConfigAttribute,
     YamlParseError,
     check_is_empty,
     config_parser,
@@ -22,6 +23,7 @@ from lir.lrsystems.lrsystems import LRSystem
 from lir.lrsystems.score_based import ScoreBasedSystem
 from lir.lrsystems.two_level import TwoLevelSystem
 from lir.registry import ComponentNotFoundError
+from lir.transform.pairing import PairingMethod
 
 
 LOG = logging.getLogger(__name__)
@@ -110,7 +112,13 @@ def specific_source(config: ContextAwareDict, output_dir: Path) -> BinaryLRSyste
     return BinaryLRSystem(pipeline)
 
 
-@config_parser
+@config_parser(
+    attributes=[
+        ConfigAttribute(name='preprocessing', type=Transformer, required=True),
+        ConfigAttribute(name='pairing', type=PairingMethod, required=True),
+        ConfigAttribute(name='comparing', type=Transformer, required=True),
+    ]
+)
 def score_based(config: ContextAwareDict, output_dir: Path) -> ScoreBasedSystem:
     """
     Construct a score-based LR system based on the provided configuration.

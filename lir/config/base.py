@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Callable, Mapping, Sequence
 from functools import partial
 from pathlib import Path
-from typing import Any, TypeVar
+from typing import Any, TypeVar, NamedTuple
 
 
 class YamlParseError(ValueError):
@@ -118,6 +118,12 @@ def _expand(context: list[str], cfg: Any) -> Any:
     return cfg
 
 
+class ConfigAttribute(NamedTuple):
+    name: str
+    desc: str
+    value_type: ConfigParser | type
+
+
 class ConfigParser(ABC):
     """
     Abstract base configuration parser class.
@@ -151,9 +157,9 @@ class ConfigParser(ABC):
         raise NotImplementedError
 
     @staticmethod
-    def get_type_name(obj: Any) -> str:
+    def _get_type_name(obj: Any) -> str:
         """
-        Return the fully qualified type name.
+        Return the fully qualified type name of the ``obj`` type.
 
         Parameters
         ----------
@@ -170,7 +176,7 @@ class ConfigParser(ABC):
 
     def reference(self) -> str:
         """
-        Return the full class name that was used to initialize this parser.
+        Return the full class name that has the relevant docstring.
 
         By default, return the name of this class. In a subclass that was initialized with another class or function
         that does the actual work, the name of that class is returned.
@@ -180,7 +186,10 @@ class ConfigParser(ABC):
         str
             Fully qualified class name for this parser instance.
         """
-        return self.get_type_name(self.__class__)
+        return self._get_type_name(self.__class__)
+
+    def attributes(self) -> None | dict[str, ConfigParser | type]:
+        return None
 
 
 class GenericFunctionConfigParser(ConfigParser):
@@ -231,7 +240,7 @@ class GenericFunctionConfigParser(ConfigParser):
         str
             Fully qualified callable name.
         """
-        return self.get_type_name(self.component_class)
+        return self._get_type_name(self.component_class)
 
 
 class GenericConfigParser(ConfigParser):
@@ -285,7 +294,7 @@ class GenericConfigParser(ConfigParser):
         str
             Fully qualified class name.
         """
-        return self.get_type_name(self.component_class)
+        return self._get_type_name(self.component_class)
 
 
 def get_full_name(obj: Any) -> str:

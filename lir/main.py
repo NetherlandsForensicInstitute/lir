@@ -1,5 +1,6 @@
 import argparse
 import datetime
+import json
 import logging
 import shutil
 import sys
@@ -175,6 +176,8 @@ def main(input_args: list[str] | None = None) -> None:
         default=0,
     )
 
+    parser.add_argument('--generate-schema', help='Generate a JSON schema that describes the experiment setup')
+
     parser.add_argument('-v', help='increases verbosity', action='count', default=0)
     parser.add_argument('-q', help='decreases verbosity', action='count', default=0)
     args = parser.parse_args(input_args)
@@ -185,6 +188,9 @@ def main(input_args: list[str] | None = None) -> None:
         for name in registry.registry():
             print(name)
         return
+
+    if args.generate_schema:
+        print(json.dumps(generate_schema()))
 
     ### an experiment setup is required beyond this point ###
 

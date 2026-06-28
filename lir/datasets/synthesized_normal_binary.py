@@ -3,7 +3,7 @@ from pathlib import Path
 import numpy as np
 import numpy.random
 
-from lir.config.base import ContextAwareDict, config_parser, pop_field
+from lir.config.base import ConfigValue, config_parser, pop_field
 from lir.data.models import DataProvider, FeatureData
 
 
@@ -84,13 +84,13 @@ class SynthesizedNormalBinaryData(DataProvider):
 
 
 @config_parser
-def synthesized_normal_binary(config: ContextAwareDict, _: Path) -> SynthesizedNormalBinaryData:
+def synthesized_normal_binary(config: ConfigValue, _: Path) -> SynthesizedNormalBinaryData:
     """
     Set up (binary class) data source class to obtain normally distributed data from configuration.
 
     Parameters
     ----------
-    config : ContextAwareDict
+    config : ConfigValue
         Configuration mapping used to construct this component.
     _ : Path
         Unused argument required by the parser interface.
@@ -100,7 +100,7 @@ def synthesized_normal_binary(config: ContextAwareDict, _: Path) -> SynthesizedN
     SynthesizedNormalBinaryData
         Configured binary synthesized data provider.
     """
-    seed = pop_field(config, 'seed', required=False)
-    h1 = pop_field(config, 'h1')
-    h2 = pop_field(config, 'h2')
+    seed = pop_field(config, 'seed', required=False, validate_type=int)
+    h1 = pop_field(config, 'h1', validate_type=dict)
+    h2 = pop_field(config, 'h2', validate_type=dict)
     return SynthesizedNormalBinaryData(SynthesizedNormalData(**h2), SynthesizedNormalData(**h1), seed=seed)

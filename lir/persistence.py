@@ -3,7 +3,7 @@ from os import PathLike
 from pathlib import Path
 
 from lir.aggregation import Aggregation, AggregationData
-from lir.config.base import ContextAwareDict, check_is_empty, config_parser, pop_field
+from lir.config.base import ConfigValue, check_is_empty, config_parser, pop_field
 from lir.lrsystems.lrsystems import LRSystem
 
 
@@ -101,13 +101,13 @@ class SaveModel(Aggregation):
 
 
 @config_parser
-def parse_save_model(config: ContextAwareDict, output_dir: Path) -> SaveModel:
+def parse_save_model(config: ConfigValue, output_dir: Path) -> SaveModel:
     """
     Parse a configuration section that describes how a `SaveModel` instance should be instantiated.
 
     Parameters
     ----------
-    config : ContextAwareDict
+    config : ConfigValue
         The configuration section.
     output_dir : Path
         Directory where the instantiated object may write its output.

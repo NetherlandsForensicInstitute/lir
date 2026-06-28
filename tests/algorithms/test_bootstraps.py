@@ -7,7 +7,7 @@ from sklearn.linear_model import LogisticRegression
 from lir.algorithms.bayeserror import ELUBBounder
 from lir.algorithms.bootstraps import BootstrapAtData, BootstrapEquidistant, bootstrap
 from lir.algorithms.kde import KDECalibrator
-from lir.config.base import _expand
+from lir.config.base import ConfigValue
 from lir.data.models import FeatureData, LLRData
 from lir.datasets.synthesized_normal_binary import SynthesizedNormalBinaryData, SynthesizedNormalData
 
@@ -124,5 +124,5 @@ def test_interval_extrapolation(sample_steps_and_data):
     ],
 )
 def test_bootstrap_config(config):
-    config = _expand([], config)
+    config = ConfigValue.wrap([], config)
     bootstrap().parse(config, Path('/'))

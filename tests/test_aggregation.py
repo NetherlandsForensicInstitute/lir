@@ -4,7 +4,7 @@ from _pytest.tmpdir import TempPathFactory
 
 from lir import registry
 from lir.aggregation import Aggregation, AggregationData, SubsetAggregation
-from lir.config.base import GenericConfigParser, _expand
+from lir.config.base import ConfigValue, GenericConfigParser
 from lir.data.models import LLRData
 from lir.lrsystems.binary_lrsystem import BinaryLRSystem
 from lir.transform import Identity
@@ -37,7 +37,7 @@ def test_registry_items_available(synthesized_llrs_with_interval: LLRData, tmp_p
         if name.startswith('output.'):
             # create the object
             parser = registry.get(name, default_config_parser=GenericConfigParser)
-            args = _expand([], args_by_method.get(name, {}))
+            args = ConfigValue.wrap([], args_by_method.get(name, {}))
             obj = parser.parse(args, tmp_path_factory.mktemp('output'))
             assert isinstance(obj, Aggregation), (
                 f'registry item is not an instance of `Aggregation`: {name}; found: {type(obj)}'

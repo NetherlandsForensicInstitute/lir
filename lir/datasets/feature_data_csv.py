@@ -11,11 +11,10 @@ import numpy as np
 import requests
 from requests_cache import CachedSession
 
-from lir.config.base import ContextAwareDict, check_is_empty, config_parser, pop_field
+from lir.config.base import ConfigValue, check_is_empty, config_parser, pop_field
 from lir.data.io import search_path
 from lir.data.models import DataProvider, FeatureData
 from lir.data_strategies import RoleAssignment
-from lir.util import check_type
 
 
 LOG = logging.getLogger(__name__)
@@ -282,7 +281,7 @@ def _parse_cell_type(value: str) -> Callable[[str], Any]:
         raise ValueError(f'unknown cell type: {value}')
 
 
-def _parse_extra_field(config: ContextAwareDict | str) -> ExtraField:
+def _parse_extra_field(config: ConfigValue) -> ExtraField:
     """
     Parse an extra field configuration into an ExtraField object.
 
@@ -292,7 +291,7 @@ def _parse_extra_field(config: ContextAwareDict | str) -> ExtraField:
 
     Parameters
     ----------
-    config : ContextAwareDict | str
+    config : ConfigValue
         Configuration for the extra field.
 
     Returns
@@ -300,13 +299,13 @@ def _parse_extra_field(config: ContextAwareDict | str) -> ExtraField:
     ExtraField
         Parsed ExtraField object.
     """
-    if isinstance(config, str):
+    if isinstance(config.value, str):
         # If config is a string, we assume that the column name and the field name are the same (namely 'config').
-        return ExtraField(config, config, str)
+        return ExtraField(config.value, config.value, str)
 
-    if isinstance(config, ContextAwareDict):
+    if isinstance(config.value, dict):
         # If config is a dictionary, we expect it to contain the keys 'column'.
-        column_name = pop_field(config, 'column', required=True)
+        column_name = pop_field(config, 'column', required=True, validate=str)
 
         # The field_name is optional; if not provided, we use the column name as the field name.
         field_name = pop_field(config, 'name', default=column_name)
@@ -318,19 +317,20 @@ def _parse_extra_field(config: ContextAwareDict | str) -> ExtraField:
 
         return ExtraField(field_name, column_name, cell_type)
 
-    raise ValueError(f'Extra field expected str or dict, but got {type(config)} ')
+    raise ValueError(f'Extra field expected str or dict, but got {type(config.value)} ')
 
 
-def _parse_feature_data_csv(config: ContextAwareDict, **kwargs: Any) -> FeatureDataCsvParser:
-    extra_fields_config = pop_field(config, 'extra_fields', default=[], validate=partial(check_type, list))
+def _parse_feature_data_csv(config: ConfigValue, **kwargs: Any) -> FeatureDataCsvParser:
+    extra_fields_config = pop_field(config, 'extra_fields', default=ConfigValue(config.context + ['extra_fields'], []))
+    extra_fields_config.check_type(list)
     extra_fields = [_parse_extra_field(field_config) for field_config in extra_fields_config]
 
-    parser = FeatureDataCsvParser(**config, extra_fields=extra_fields, **kwargs)
+    parser = FeatureDataCsvParser(**config.check_type(dict), extra_fields=extra_fields, **kwargs)
     return parser
 
 
 @config_parser
-def feature_data_csv_http_parser(config: ContextAwareDict, output_dir: Path) -> FeatureDataCsvParser:
+def feature_data_csv_http_parser(config: ConfigValue, output_dir: Path) -> FeatureDataCsvParser:
     """
     Initialize the CSV parser that reads data from a stream.
 
@@ -341,7 +341,7 @@ def feature_data_csv_http_parser(config: ContextAwareDict, output_dir: Path) -> 
 
     Parameters
     ----------
-    config : ContextAwareDict
+    config : ConfigValue
         Configuration mapping used to construct this component.
     output_dir : Path
         Directory where generated outputs are written.
@@ -351,7 +351,7 @@ def feature_data_csv_http_parser(config: ContextAwareDict, output_dir: Path) -> 
     FeatureDataCsvHttpParser
         FeatureData object parsed from the source.
     """
-    use_cache = pop_field(config, 'use_cache', default=True, validate=partial(check_type, bool))
+    use_cache = pop_field(config, 'use_cache', default=True, validate_type=bool)
 
     session: requests.Session
     if use_cache:
@@ -360,7 +360,7 @@ def feature_data_csv_http_parser(config: ContextAwareDict, output_dir: Path) -> 
     else:
         session = requests.Session()
 
-    url = pop_field(config, 'url')
+    url = pop_field(config, 'url', validate_type=str)
 
     def open_url() -> IO:
         response = session.get(url, stream=True)
@@ -371,13 +371,13 @@ def feature_data_csv_http_parser(config: ContextAwareDict, output_dir: Path) -> 
 
 
 @config_parser
-def feature_data_csv_file_parser(config: ContextAwareDict, output_dir: Path) -> FeatureDataCsvParser:
+def feature_data_csv_file_parser(config: ConfigValue, output_dir: Path) -> FeatureDataCsvParser:
     """
     Initialize the CSV parser that reads data from a stream.
 
     Parameters
     ----------
-    config : ContextAwareDict
+    config : ConfigValue
         Configuration mapping used to construct this component.
     output_dir : Path
         Directory where generated outputs are written.
@@ -387,7 +387,7 @@ def feature_data_csv_file_parser(config: ContextAwareDict, output_dir: Path) -> 
     FeatureDataCsvFileParser
         FeatureData object parsed from the source.
     """
-    file = Path(pop_field(config, 'file'))
+    file = pop_field(config, 'file', validate=Path)
     file = search_path(file)
     open_file_fn = partial(open, file, 'r')
     return _parse_feature_data_csv(config, message_prefix=f'{file}: ', open_file_fn=open_file_fn)

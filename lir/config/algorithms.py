@@ -2,19 +2,19 @@ from pathlib import Path
 from typing import Any
 
 from lir.algorithms.mcmc import McmcLLRModel
-from lir.config.base import ContextAwareDict, config_parser, pop_field
+from lir.config.base import ConfigValue, config_parser, pop_field
 from lir.config.transform import parse_module
 from lir.util import partial
 
 
 @config_parser
-def mcmc(config: ContextAwareDict, output_dir: Path) -> McmcLLRModel:
+def mcmc(config: ConfigValue, output_dir: Path) -> McmcLLRModel:
     """
     Parse MCMC module configuration.
 
     Parameters
     ----------
-    config : ContextAwareDict
+    config : ConfigValue
         Configuration for the MCMC model.
     output_dir : Path
         Output directory used by nested parser calls.
@@ -24,14 +24,10 @@ def mcmc(config: ContextAwareDict, output_dir: Path) -> McmcLLRModel:
     McmcLLRModel
         Configured MCMC model instance.
     """
-    if 'bounding' in config:
+    bounding = None
+    if 'bounding' in config and config['bounding'] is not None:
         bounding_config = pop_field(config, 'bounding')
-        if bounding_config is None:
-            config['bounding'] = None
-        else:
-            context = config.context + ['bounding'] if isinstance(bounding_config, str) else bounding_config.context
-            bounding = partial(parse_module, bounding_config, output_dir, context)
-            config['bounding'] = bounding
+        bounding = partial(parse_module, bounding_config, output_dir)
 
     mcmc_class: Any = McmcLLRModel
-    return mcmc_class(**config)
+    return mcmc_class(**config.check_type(dict), bounding=bounding)

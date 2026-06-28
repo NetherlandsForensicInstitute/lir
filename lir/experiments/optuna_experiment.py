@@ -7,11 +7,10 @@ import optuna
 
 from lir.aggregation import Aggregation
 from lir.config.aggregation import parse_aggregations
-from lir.config.base import check_is_empty, config_parser, pop_field
+from lir.config.base import ConfigValue, check_is_empty, config_parser, pop_field
 from lir.config.lrsystem_architectures import augment_config
 from lir.config.metrics import parse_individual_metric
 from lir.config.substitution import (
-    ContextAwareDict,
     FloatHyperparameter,
     Hyperparameter,
     HyperparameterOption,
@@ -35,13 +34,13 @@ class OptunaExperiment(Experiment):
     ----------
     name : str
         Name used to identify this object in outputs and logs.
-    data_config : ContextAwareDict
+    data_config : ConfigValue
         Data configuration used to construct datasets for runs.
     outputs : Sequence[Aggregation]
         Output aggregation definitions executed after each run.
     output_path : Path
         Path where generated outputs are written.
-    baseline_config : ContextAwareDict
+    baseline_config : ConfigValue
         Baseline configuration to be tuned during optimisation.
     lrsystem_parameters : list[Hyperparameter]
         LR system parameters varied during optimisation.
@@ -54,10 +53,10 @@ class OptunaExperiment(Experiment):
     def __init__(
         self,
         name: str,
-        data_config: ContextAwareDict,
+        data_config: ConfigValue,
         outputs: Sequence[Aggregation],
         output_path: Path,
-        baseline_config: ContextAwareDict,
+        baseline_config: ConfigValue,
         lrsystem_parameters: list[Hyperparameter],
         n_trials: int,
         metric_function: Callable[[LLRData], float],
@@ -127,13 +126,13 @@ class OptunaExperiment(Experiment):
 
 
 @config_parser
-def parse_optuna_experiment(config: ContextAwareDict, output_dir: Path) -> OptunaExperiment:
+def parse_optuna_experiment(config: ConfigValue, output_dir: Path) -> OptunaExperiment:
     """
     Get experiment for an Optuna optimisation strategy.
 
     Parameters
     ----------
-    config : ContextAwareDict
+    config : ConfigValue
         Experiment configuration section.
     output_dir : Path
         Output directory for the experiment.
@@ -148,7 +147,7 @@ def parse_optuna_experiment(config: ContextAwareDict, output_dir: Path) -> Optun
     baseline_config, parameters = parse_config_with_parameters(config, output_dir, 'lrsystem', 'lrsystem_parameters')
     n_trials = pop_field(config, 'n_trials', validate=int)
 
-    metric_name = pop_field(config, 'primary_metric')
+    metric_name = pop_field(config, 'primary_metric', validate_type=str)
     primary_metric = parse_individual_metric(metric_name, output_dir, config.context)
 
     data_config = pop_field(config, 'data')

@@ -13,12 +13,9 @@ EXAMPLE_DIR = Path(__file__).parent.parent / 'examples'
 EXAMPLE_FILES = list(EXAMPLE_DIR.rglob('*.yaml'))
 
 
-def test_parse_examples():
-    for yaml_file in EXAMPLE_FILES:
-        try:
-            initialize_experiments(confidence.loadf(yaml_file))
-        except Exception as e:
-            raise ValueError(f'{yaml_file}: {e}')
+@pytest.mark.parametrize('yaml_file', EXAMPLE_FILES)
+def test_parse_examples(yaml_file: Path):
+    initialize_experiments(confidence.loadf(yaml_file))
 
 
 def _check_directory_listing(yaml_file: Path, output_dir: Path):

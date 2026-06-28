@@ -3,7 +3,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from lir.config.base import _expand
+from lir.config.base import ConfigValue
 from lir.data.models import FeatureData
 from lir.data_strategies import RoleAssignment
 from lir.datasets.feature_data_csv import (
@@ -154,7 +154,7 @@ def test_csv_parser(
         f.write(file_contents)
 
     parser_args['file'] = str(csv_file)
-    parser_args = _expand([], parser_args)
+    parser_args = ConfigValue.wrap([], parser_args)
     try:
         parser = feature_data_csv_file_parser().parse(parser_args, tmp_path)
         actual_result = parser.get_instances()

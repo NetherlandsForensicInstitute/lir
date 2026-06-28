@@ -3,12 +3,12 @@ from pathlib import Path
 
 from lir import Transformer, registry
 from lir.config.base import (
+    ConfigValue,
     GenericConfigParser,
     YamlParseError,
     check_is_empty,
     pop_field,
 )
-from lir.config.substitution import ContextAwareDict
 from lir.config.transform import parse_module
 from lir.data.models import DataProvider, DataStrategy, InstanceData
 from lir.transform import Identity
@@ -54,7 +54,7 @@ class DataSetup:
         return self.strategy.apply(self.filter.apply(self.provider.get_instances()))
 
 
-def parse_data_setup(cfg: ContextAwareDict, output_path: Path) -> DataSetup:
+def parse_data_setup(cfg: ConfigValue, output_path: Path) -> DataSetup:
     """
     Parse data provider and data strategy from configuration.
 
@@ -64,7 +64,7 @@ def parse_data_setup(cfg: ContextAwareDict, output_path: Path) -> DataSetup:
 
     Parameters
     ----------
-    cfg : ContextAwareDict
+    cfg : ConfigValue
         Configuration section containing provider and split strategy.
     output_path : Path
         Output path for created objects.
@@ -75,13 +75,13 @@ def parse_data_setup(cfg: ContextAwareDict, output_path: Path) -> DataSetup:
         Parsed data provider, filter and strategy.
     """
     provider = parse_data_provider(pop_field(cfg, 'provider'), output_path)
-    data_filter = parse_module(pop_field(cfg, 'filter', required=False), output_path, cfg.context + ['filter'])
+    data_filter = parse_module(pop_field(cfg, 'filter', required=False), output_path)
     strategy = parse_data_strategy(pop_field(cfg, 'splits'), output_path)
     check_is_empty(cfg)
     return DataSetup(provider, strategy, data_filter)
 
 
-def parse_data_strategy(cfg: ContextAwareDict, output_path: Path) -> DataStrategy:
+def parse_data_strategy(cfg: ConfigValue, output_path: Path) -> DataStrategy:
     """
     Instantiate specific implementation of `DataStrategy` as configured.
 
@@ -93,7 +93,7 @@ def parse_data_strategy(cfg: ContextAwareDict, output_path: Path) -> DataStrateg
 
     Parameters
     ----------
-    cfg : ContextAwareDict
+    cfg : ConfigValue
         Data strategy configuration.
     output_path : Path
         Output path for created objects.
@@ -103,7 +103,7 @@ def parse_data_strategy(cfg: ContextAwareDict, output_path: Path) -> DataStrateg
     DataStrategy
         Parsed data strategy instance.
     """
-    strategy = pop_field(cfg, 'strategy')
+    strategy = pop_field(cfg, 'strategy', validate_type=str)
 
     try:
         parser = registry.get(
@@ -120,7 +120,7 @@ def parse_data_strategy(cfg: ContextAwareDict, output_path: Path) -> DataStrateg
     return parser.parse(cfg, output_path)
 
 
-def parse_data_provider(cfg: ContextAwareDict, output_path: Path) -> DataProvider:
+def parse_data_provider(cfg: ConfigValue, output_path: Path) -> DataProvider:
     """
     Instantiate specific implementation of `DataProvider` as configured.
 
@@ -132,7 +132,7 @@ def parse_data_provider(cfg: ContextAwareDict, output_path: Path) -> DataProvide
 
     Parameters
     ----------
-    cfg : ContextAwareDict
+    cfg : ConfigValue
         Data provider configuration.
     output_path : Path
         Output path for created objects.
@@ -142,7 +142,7 @@ def parse_data_provider(cfg: ContextAwareDict, output_path: Path) -> DataProvide
     DataProvider
         Parsed data provider instance.
     """
-    provider = pop_field(cfg, 'method')
+    provider = pop_field(cfg, 'method', validate_type=str)
 
     try:
         parser = registry.get(

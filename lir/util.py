@@ -40,7 +40,7 @@ def check_not_none[AnyType: Any](v: AnyType, message: str | None = None) -> AnyT
         raise ValueError(message)
 
 
-def check_type[AnyType: Any](type_class: type[AnyType], v: Any, message: str | None = None) -> AnyType:
+def check_type[AnyType: Any](type_class: type[AnyType] | tuple, v: Any, message: str | None = None) -> AnyType:
     """
     Check if a given input is of the expected, specified type. If so, return the input value.
 
@@ -303,8 +303,8 @@ def to_native_dict(cfg: Any) -> Any:
     Accesses each value through cfg[key] to trigger reference resolution. The confidence library doesn't have a built-in
     method for this, so we manually traverse and resolve.
 
-    Similar to lir.config.base._expand, but this method returns native dicts/lists instead of
-    ContextAwareDict/ContextAwareList.
+    Similar to :meth:`~lir.config.base._expand~, but this method returns native dicts/lists instead of
+    :class:`~lir.config.base.ConfigValue`.
 
     Parameters
     ----------

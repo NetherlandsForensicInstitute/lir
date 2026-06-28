@@ -5,7 +5,7 @@ from typing import Any, Self
 
 import numpy as np
 
-from lir.config.base import ContextAwareDict, YamlParseError, check_is_empty, config_parser, pop_field
+from lir.config.base import ConfigValue, check_is_empty, config_parser, pop_field
 from lir.config.transform import parse_module
 from lir.data.io import DataFileBuilderCsv
 from lir.data.models import FeatureData, InstanceData
@@ -119,13 +119,13 @@ class Pipeline(Transformer):
         return instances
 
 
-def parse_steps(config: ContextAwareDict | None, output_dir: Path) -> list[tuple[str, Transformer]]:
+def parse_steps(config: ConfigValue, output_dir: Path) -> list[tuple[str, Transformer]]:
     """
     Parse the defined pipeline steps in the configuration and return the initialized modules as a list.
 
     Parameters
     ----------
-    config : ContextAwareDict | None
+    config : ConfigValue
         Configuration mapping used to construct this component.
     output_dir : Path
         Directory where generated outputs are written.
@@ -135,32 +135,28 @@ def parse_steps(config: ContextAwareDict | None, output_dir: Path) -> list[tuple
     list[tuple[str, Transformer]]
         List of (name, module) tuples for the pipeline steps.
     """
-    if config is None:
+    if config.value is None:
         return []
-    if not isinstance(config, ContextAwareDict):
-        raise YamlParseError(config.context, f'invalid value for "steps": expected `dict`; found: {type(config)}')
-    module_names = list(config.keys())
+    module_names = list(
+        config.check_type(dict, message=f'invalid value for "steps": expected `dict`; found: {type(config)}').keys()
+    )
     return [
         (
             module_name,
-            parse_module(
-                pop_field(config, module_name),
-                output_dir,
-                config.context + [module_name],
-            ),
+            parse_module(pop_field(config, module_name), output_dir),
         )
         for module_name in module_names
     ]
 
 
 @config_parser
-def pipeline(config: ContextAwareDict, output_dir: Path) -> Pipeline:
+def pipeline(config: ConfigValue, output_dir: Path) -> Pipeline:
     """
     Construct a scikit-learn Pipeline based on the provided configuration.
 
     Parameters
     ----------
-    config : ContextAwareDict
+    config : ConfigValue
         Configuration mapping used to construct this component.
     output_dir : Path
         Directory where generated outputs are written.
@@ -170,7 +166,7 @@ def pipeline(config: ContextAwareDict, output_dir: Path) -> Pipeline:
     Pipeline
         The constructed pipeline instance.
     """
-    if config is None:
+    if config.value is None:
         return Pipeline([])
 
     steps = parse_steps(pop_field(config, 'steps'), output_dir)
@@ -290,13 +286,13 @@ class LoggingPipeline(Pipeline):
 
 
 @config_parser(reference=LoggingPipeline)
-def logging_pipeline(config: ContextAwareDict, output_dir: Path) -> Pipeline:
+def logging_pipeline(config: ConfigValue, output_dir: Path) -> Pipeline:
     """
     Construct a scikit-learn Pipeline based on the provided configuration.
 
     Parameters
     ----------
-    config : ContextAwareDict
+    config : ConfigValue
         Configuration mapping used to construct this component.
     output_dir : Path
         Directory where generated outputs are written.
@@ -306,10 +302,10 @@ def logging_pipeline(config: ContextAwareDict, output_dir: Path) -> Pipeline:
     Pipeline
         Logging pipeline configured from the provided YAML section.
     """
-    if config is None:
+    if config.value is None:
         return Pipeline([])
 
     steps = parse_steps(pop_field(config, 'steps'), output_dir)
     output_file = output_dir / pop_field(config, 'output_file', default=f'{config.context[-1]}.csv')
 
-    return LoggingPipeline(steps, output_file, **config)
+    return LoggingPipeline(steps, output_file, **config.check_type(dict))

@@ -1,7 +1,7 @@
-from lir.config.base import ContextAwareDict, pop_field
+from lir.config.base import ConfigValue, pop_field
 
 
-def pop_experiment_name(config: ContextAwareDict) -> str:
+def pop_experiment_name(config: ConfigValue) -> str:
     """
     Extract and remove experiment name from configuration.
 
@@ -10,7 +10,7 @@ def pop_experiment_name(config: ContextAwareDict) -> str:
 
     Parameters
     ----------
-    config : ContextAwareDict
+    config : ConfigValue
         Configuration section describing the experiment.
 
     Returns
@@ -18,7 +18,7 @@ def pop_experiment_name(config: ContextAwareDict) -> str:
     str
         Experiment name.
     """
-    if 'name' in config:
-        return pop_field(config, 'name')
+    if 'name' in config.check_type(dict):
+        return pop_field(config, 'name', validate=str)
     else:
         return f'unnamed_experiment{config.context[-1] if len(config.context) > 0 else ""}'

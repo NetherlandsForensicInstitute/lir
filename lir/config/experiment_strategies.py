@@ -1,20 +1,16 @@
 from collections import OrderedDict
 from collections.abc import Mapping
-from functools import partial
 from pathlib import Path
 
 from lir import registry
 from lir.config.base import (
-    check_type,
+    ConfigValue,
     pop_field,
-)
-from lir.config.substitution import (
-    ContextAwareDict,
 )
 from lir.experiments.base_experiment import Experiment
 
 
-def parse_experiment_strategy(config: ContextAwareDict, output_path: Path) -> Experiment:
+def parse_experiment_strategy(config: ConfigValue, output_path: Path) -> Experiment:
     """
     Instantiate the corresponding experiment strategy class, e.g. for a single or grid run.
 
@@ -22,7 +18,7 @@ def parse_experiment_strategy(config: ContextAwareDict, output_path: Path) -> Ex
 
     Parameters
     ----------
-    config : ContextAwareDict
+    config : ConfigValue
         Experiment strategy configuration.
     output_path : Path
         Output path for experiment artefacts.
@@ -32,18 +28,18 @@ def parse_experiment_strategy(config: ContextAwareDict, output_path: Path) -> Ex
     Experiment
         Parsed experiment strategy instance.
     """
-    strategy_name = pop_field(config, 'strategy')
+    strategy_name = pop_field(config, 'strategy', validate_type=str)
     strategy_parser = registry.get(strategy_name, search_path=['experiment_strategies'])
     return strategy_parser.parse(config, output_path)
 
 
-def parse_experiments(cfg: ContextAwareDict, output_path: Path) -> Mapping[str, Experiment]:
+def parse_experiments(cfg: ConfigValue, output_path: Path) -> Mapping[str, Experiment]:
     """
     Extract which Experiment to run as dictated in the configuration.
 
     Parameters
     ----------
-    cfg : ContextAwareDict
+    cfg : ConfigValue
         Configuration section describing experiments.
     output_path : Path
         Filesystem path to the results directory.
@@ -53,7 +49,7 @@ def parse_experiments(cfg: ContextAwareDict, output_path: Path) -> Mapping[str, 
     Mapping[str, Experiment]
         Mapping from experiment name to parsed experiment.
     """
-    experiments_config_section = pop_field(cfg, 'experiments', validate=partial(check_type, list))
+    experiments_config_section = pop_field(cfg, 'experiments', validate_type=list, unwrap=False)
 
     experiments: OrderedDict[str, Experiment] = OrderedDict()
     for exp_config in experiments_config_section:

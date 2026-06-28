@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 
 from lir import InstanceData, Transformer
-from lir.config.base import ContextAwareDict, config_parser, pop_field
+from lir.config.base import ConfigValue, config_parser, pop_field
 from lir.data.io import DataFileBuilderCsv
 
 
@@ -115,13 +115,13 @@ class CsvWriter(Transformer):
 
 
 @config_parser
-def csv_writer(config: ContextAwareDict, output_dir: Path) -> CsvWriter:
+def csv_writer(config: ConfigValue, output_dir: Path) -> CsvWriter:
     """
     Set up a CSV writer from configuration.
 
     Parameters
     ----------
-    config : ContextAwareDict
+    config : ConfigValue
         CSV writer configuration.
     output_dir : Path
         Output directory used to derive default CSV path.
@@ -131,5 +131,5 @@ def csv_writer(config: ContextAwareDict, output_dir: Path) -> CsvWriter:
     CsvWriter
         Configured CSV writer.
     """
-    path = output_dir / pop_field(config, 'path')
-    return CsvWriter(path=path, **config)
+    path = output_dir / pop_field(config, 'path', validate_type=str)
+    return CsvWriter(path=path, **config.check_type(dict))

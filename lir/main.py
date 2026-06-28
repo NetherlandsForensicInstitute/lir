@@ -10,7 +10,7 @@ import confidence
 from joblib import Parallel, delayed
 
 from lir import registry
-from lir.config.base import YamlParseError, _expand, pop_field
+from lir.config.base import ConfigValue, YamlParseError, pop_field
 from lir.config.experiment_strategies import parse_experiments
 from lir.experiments import Experiment
 from lir.util import validate_yaml
@@ -96,7 +96,7 @@ def initialize_experiments(
     """
     cfg = confidence.Configuration(cfg, {'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')})  # noqa: DTZ005
 
-    cfg = _expand([], cfg)
+    cfg = ConfigValue.wrap([], cfg)
 
     output_dir = pop_field(cfg, 'output_path', validate=Path)
     initialize_logfile(output_dir)

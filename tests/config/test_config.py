@@ -4,14 +4,14 @@ from typing import Any
 
 import pytest
 
-from lir.config.base import ContextAwareDict, ContextAwareList, YamlValueType, check_type
+from lir.config.base import ConfigValue
 
 
 @pytest.mark.parametrize(
     'value_type,value',
     [
-        (dict, ContextAwareDict([])),
-        (list, ContextAwareList([])),
+        (dict, {}),
+        (list, []),
         (int, 1),
         (float, 1.1),
         (Number, 1),
@@ -20,8 +20,9 @@ from lir.config.base import ContextAwareDict, ContextAwareList, YamlValueType, c
         (NoneType, None),
     ],
 )
-def test_check_type_good(value_type: type[Any], value: YamlValueType):
-    check_type(value_type, value)
+def test_check_type_good(value_type: type[Any], value: Any):
+    config = ConfigValue.wrap([], value)
+    config.check_type(value_type)
 
 
 @pytest.mark.parametrize(
@@ -36,7 +37,8 @@ def test_check_type_good(value_type: type[Any], value: YamlValueType):
         (NoneType, 1),
     ],
 )
-def test_check_type_bad(value_type: type[Any], value: YamlValueType):
+def test_check_type_bad(value_type: type[Any], value: Any):
+    config = ConfigValue.wrap([], value)
     with pytest.raises(ValueError):
-        check_type(value_type, value)
+        config.check_type(value_type)
         pytest.fail(f'{value} of type {type(value)} should be rejected because it is not an instance of {value_type}')

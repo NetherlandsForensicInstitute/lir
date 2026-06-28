@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import IO, Any
 
 from lir.aggregation.base import Aggregation, AggregationData
-from lir.config.base import ContextAwareDict, YamlParseError, check_is_empty, config_parser, pop_field
+from lir.config.base import ConfigValue, YamlParseError, check_is_empty, config_parser, pop_field
 from lir.config.metrics import parse_individual_metric
 
 
@@ -79,13 +79,13 @@ class WriteMetricsToCsv(Aggregation):
 
 
 @config_parser
-def parse(config: ContextAwareDict, output_dir: Path) -> WriteMetricsToCsv:
+def parse(config: ConfigValue, output_dir: Path) -> WriteMetricsToCsv:
     """
     Corresponding registry function to leverage CSV Writer class to write results to disk.
 
     Parameters
     ----------
-    config : ContextAwareDict
+    config : ConfigValue
         The configuration dictionary for the metrics CSV.
     output_dir : Path
         The directory where the metrics CSV will be saved.

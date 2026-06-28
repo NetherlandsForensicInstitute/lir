@@ -2,7 +2,7 @@ import logging
 from pathlib import Path
 
 from lir.aggregation.base import Aggregation, AggregationData
-from lir.config.base import ContextAwareDict, check_is_empty, config_parser, pop_field
+from lir.config.base import ConfigValue, check_is_empty, config_parser, pop_field
 from lir.config.data import parse_data_provider
 from lir.data.io import DataFileBuilderCsv
 from lir.data.models import DataProvider, FeatureData, check_type
@@ -82,13 +82,13 @@ class CaseLLRToCsv(Aggregation):
 
 
 @config_parser
-def parse(config: ContextAwareDict, output_dir: Path) -> CaseLLRToCsv:
+def parse(config: ConfigValue, output_dir: Path) -> CaseLLRToCsv:
     """
     Parse output configuration for case LLR generation and CSV export.
 
     Parameters
     ----------
-    config : ContextAwareDict
+    config : ConfigValue
         Configuration dictionary containing case LLR output settings.
     output_dir : Path
         Directory where the CSV file will be written.
@@ -99,7 +99,6 @@ def parse(config: ContextAwareDict, output_dir: Path) -> CaseLLRToCsv:
         Configured CaseLLRToCsv aggregation instance.
     """
     case_data_provider = parse_data_provider(pop_field(config, 'case_llr_data'), output_dir)
-    filename = pop_field(config, 'filename', default='case_llr.csv', validate=str)
-    filename = check_type(str, filename)
+    filename = pop_field(config, 'filename', default='case_llr.csv', validate_type=str)
     check_is_empty(config)
     return CaseLLRToCsv(output_dir, case_data_provider, filename)

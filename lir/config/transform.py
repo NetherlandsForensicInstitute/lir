@@ -5,10 +5,9 @@ from pathlib import Path
 from lir import registry
 from lir.config.base import (
     ConfigParser,
-    ContextAwareDict,
+    ConfigValue,
     GenericConfigParser,
     YamlParseError,
-    check_not_none,
     pop_field,
 )
 from lir.transform import (
@@ -42,7 +41,7 @@ class GenericTransformerConfigParser(ConfigParser):
 
     def parse(
         self,
-        config: ContextAwareDict,
+        config: ConfigValue,
         output_dir: Path,
     ) -> Transformer:
         """
@@ -50,7 +49,7 @@ class GenericTransformerConfigParser(ConfigParser):
 
         Parameters
         ----------
-        config : ContextAwareDict
+        config : ConfigValue
             Constructor arguments for the component class.
         output_dir : Path
             Unused output directory argument required by parser API.
@@ -62,7 +61,7 @@ class GenericTransformerConfigParser(ConfigParser):
         """
         if inspect.isclass(self.component_class):
             try:
-                instance = self.component_class(**config)
+                instance = self.component_class(**config.check_type(dict))
 
                 # make sure we have an object of type `Transformer`
                 return as_transformer(instance)
@@ -76,16 +75,17 @@ class GenericTransformerConfigParser(ConfigParser):
             # When none of the above conditions apply, the component class might be a function
             # or a callable class, which should be used as a `transform()` step in the pipeline,
             # which the wrapper provides.
-            func = functools.partial(self.component_class, **config) if config else self.component_class
+            func = (
+                functools.partial(self.component_class, **config.check_type(dict)) if config else self.component_class
+            )
             return FunctionTransformer(func)
 
         raise YamlParseError(config.context, f'unrecognized module type: `{self.component_class}`')
 
 
 def parse_module(
-    module_config: ContextAwareDict | str | None,
+    module_config: ConfigValue | None,
     output_dir: Path,
-    config_context_path: list[str],
     default_method: str | None = None,
 ) -> Transformer:
     """
@@ -113,12 +113,10 @@ def parse_module(
 
     Parameters
     ----------
-    module_config : ContextAwareDict | str | None
+    module_config : ConfigValue
         Specification of the module.
     output_dir : Path
         Directory where any output produced by the module is written.
-    config_context_path : list[str]
-        Context path of this configuration, used for error reporting.
     default_method : str | None, optional
         Default value for the ``method`` field if it is not provided.
 
@@ -127,22 +125,21 @@ def parse_module(
     Transformer
         The constructed transformer instance.
     """
-    if module_config is None:
+    if module_config is None or module_config.value is None:
         return Identity()
-    elif isinstance(module_config, str):
-        class_name = module_config
-        args = ContextAwareDict(config_context_path)
+    elif isinstance(module_config.value, str):
+        class_name = module_config.value
+        args = ConfigValue(module_config.context, {})
     else:
         args = module_config
-        class_name = pop_field(args, 'method', default=default_method, validate=check_not_none)
+        class_name = pop_field(args, 'method', default=default_method, validate_type=str)
 
     return registry.get(class_name, GenericTransformerConfigParser, search_path=['modules']).parse(args, output_dir)
 
 
 def parse_pairing_config(
-    module_config: ContextAwareDict | str,
+    module_config: ConfigValue,
     output_dir: Path,
-    context: list[str],
 ) -> PairingMethod:
     """
     Parse and delegate pairing to the corresponding function for the defined pairing method.
@@ -157,23 +154,21 @@ def parse_pairing_config(
 
     Parameters
     ----------
-    module_config : ContextAwareDict | str
+    module_config : ConfigValue
         Pairing method configuration.
     output_dir : Path
         Output directory for parser calls.
-    context : list[str]
-        Context used when ``module_config`` is a string.
 
     Returns
     -------
     PairingMethod
         Parsed pairing method.
     """
-    if isinstance(module_config, str):
-        class_name = module_config
-        args = ContextAwareDict(context)
+    if isinstance(module_config.value, str):
+        class_name = module_config.value
+        args = ConfigValue(module_config.context, {})
     else:
-        class_name = pop_field(module_config, 'method')
+        class_name = pop_field(module_config, 'method', validate_type=str)
         args = module_config
 
     return registry.get(class_name, search_path=['pairing'], default_config_parser=GenericConfigParser).parse(

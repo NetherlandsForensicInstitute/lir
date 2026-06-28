@@ -8,7 +8,7 @@ from scipy.interpolate import interp1d
 from tqdm import tqdm
 
 import lir
-from lir.config.base import ContextAwareDict, check_not_none, config_parser, pop_field
+from lir.config.base import ConfigValue, check_not_none, config_parser, pop_field
 from lir.data.models import FeatureData, InstanceData, LLRData
 from lir.transform.pipeline import Pipeline, parse_steps
 from lir.util import check_type
@@ -266,7 +266,7 @@ class BootstrapEquidistant(Bootstrap):
 
 
 @config_parser
-def bootstrap(modules_config: ContextAwareDict, output_dir: Path) -> Bootstrap:
+def bootstrap(modules_config: ConfigValue, output_dir: Path) -> Bootstrap:
     """
     Transitional function to parse a bootstrapping pipeline.
 
@@ -280,7 +280,7 @@ def bootstrap(modules_config: ContextAwareDict, output_dir: Path) -> Bootstrap:
 
     Parameters
     ----------
-    modules_config : ContextAwareDict
+    modules_config : ConfigValue
         Bootstrap module configuration.
     output_dir : Path
         Output directory used for parsing nested pipeline steps.
@@ -296,5 +296,5 @@ def bootstrap(modules_config: ContextAwareDict, output_dir: Path) -> Bootstrap:
     }
 
     bootstrap_method = pop_field(modules_config, 'points', validate=bootstrap_methods.get)
-    steps = parse_steps(pop_field(modules_config, 'steps', validate=check_not_none), output_dir)
-    return bootstrap_method(steps, **modules_config)
+    steps = parse_steps(pop_field(modules_config, 'steps', validate=check_not_none, unwrap=False), output_dir)
+    return bootstrap_method(steps, **modules_config.check_type(dict, unwrap=True))

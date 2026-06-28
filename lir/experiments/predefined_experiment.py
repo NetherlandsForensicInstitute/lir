@@ -8,7 +8,7 @@ from tqdm import tqdm
 import lir
 from lir.aggregation import Aggregation
 from lir.config.aggregation import parse_aggregations
-from lir.config.base import ContextAwareDict, check_is_empty, config_parser, pop_field
+from lir.config.base import ConfigValue, check_is_empty, config_parser, pop_field
 from lir.config.lrsystem_architectures import augment_config
 from lir.config.substitution import parse_config_with_parameters
 from lir.experiments import Experiment
@@ -44,13 +44,13 @@ class PredefinedExperiment(Experiment):
     ----------
     name : str
         Name used to identify this object in outputs and logs.
-    data_configs : list[tuple[ContextAwareDict, dict[str, Any]]]
+    data_configs : list[DataConfig]
         Data configurations evaluated by this experiment.
     outputs : Sequence[Aggregation]
         Output aggregation definitions executed after each run.
     output_path : Path
         Path where generated outputs are written.
-    lrsystem_configs : list[tuple[ContextAwareDict, dict[str, Any]]]
+    lrsystem_configs : list[LRSystemConfig]
         LR-system configurations evaluated by this experiment.
     enable_parallelization : bool
         Whether to run the LR systems in parallel.
@@ -85,13 +85,13 @@ class PredefinedExperiment(Experiment):
 
 
 @config_parser
-def parse_single_run(config: ContextAwareDict, output_dir: Path) -> PredefinedExperiment:
+def parse_single_run(config: ConfigValue, output_dir: Path) -> PredefinedExperiment:
     """
     Get an experiment for a single run.
 
     Parameters
     ----------
-    config : ContextAwareDict
+    config : ConfigValue
         Experiment strategy configuration.
     output_dir : Path
         Base output directory for this experiment.
@@ -118,13 +118,13 @@ def parse_single_run(config: ContextAwareDict, output_dir: Path) -> PredefinedEx
 
 
 @config_parser
-def parse_grid_experiment(config: ContextAwareDict, output_dir: Path) -> PredefinedExperiment:
+def parse_grid_experiment(config: ConfigValue, output_dir: Path) -> PredefinedExperiment:
     """
     Get experiment for a grid search strategy.
 
     Parameters
     ----------
-    config : ContextAwareDict
+    config : ConfigValue
         Experiment strategy configuration.
     output_dir : Path
         Base output directory for this experiment.
@@ -164,11 +164,11 @@ def parse_grid_experiment(config: ContextAwareDict, output_dir: Path) -> Predefi
 
 
 def _create_configs_from_hyperparameters(
-    config: ContextAwareDict,
+    config: ConfigValue,
     output_dir: Path,
     baseline_field: str,
     parameters_field: str,
-) -> Iterator[tuple[ContextAwareDict, dict[str, Any]]]:
+) -> Iterator[tuple[ConfigValue, dict[str, Any]]]:
     """
     Create configurations for all combinations of hyperparameter options.
 
@@ -179,7 +179,7 @@ def _create_configs_from_hyperparameters(
 
     Parameters
     ----------
-    config : ContextAwareDict
+    config : ConfigValue
         The data configuration section.
     output_dir : Path
         Output directory path.
@@ -190,7 +190,7 @@ def _create_configs_from_hyperparameters(
 
     Returns
     -------
-    list[tuple[ContextAwareDict, dict[str, Any]]]
+    list[tuple[ConfigValue, dict[str, Any]]]
         Augmented configurations and applied substitutions.
     """
     baseline_config, parameters = parse_config_with_parameters(config, output_dir, baseline_field, parameters_field)

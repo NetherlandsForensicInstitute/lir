@@ -103,7 +103,9 @@ class CsvWriter(Transformer):
             self._add_fields(csv_builder, instances, self.include_fields)
         else:
             # add all columns, except excluded columns
-            include_fields = [field for field in instances.all_fields if getattr(instances, field) is not None]
+            include_fields = [
+                field for field in instances.all_fields if isinstance(getattr(instances, field), np.ndarray)
+            ]
             self._add_fields(csv_builder, instances, include_fields)
 
         # write all data that we accumulated

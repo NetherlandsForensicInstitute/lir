@@ -151,7 +151,7 @@ class IsotonicCalibrator(Transformer):
         Self
             Fitted calibrator.
         """
-        y = instances.check_both_labels()
+        y = instances.check_both_hypothesis()
         instances = check_type(FeatureData, instances).replace_as(LLRData)
 
         # prevent extreme LRs

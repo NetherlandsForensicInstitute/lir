@@ -2,6 +2,11 @@ import csv
 import io
 import itertools
 import logging
+<<<<<<< HEAD
+=======
+import warnings
+from abc import ABC
+>>>>>>> 6f04a7e ( add deprecation warnings)
 from collections.abc import Callable
 from dataclasses import dataclass
 from functools import partial
@@ -131,8 +136,10 @@ class FeatureDataCsvParser(DataProvider):
         Function that returns a data stream from which the CSV file contents can be read.
     source_id_column : str | list[str] | None
         Column name(s) containing source identifiers (each source has a unique string identifier).
-    label_column : str | None
+    hypothesis_column : str | None
         Column name containing hypothesis labels (value 0 for H2 or 1 for H2).
+    label_column : str | None
+        Deprecated alias for `hypothesis_column`.
     feature_columns : str | list[str] | None
         Column names containing numerical feature values. If not specified, all columns not otherwise designated are
         interpreted as feature columns.
@@ -193,6 +200,7 @@ class FeatureDataCsvParser(DataProvider):
         self,
         open_file_fn: Callable[[], IO],
         source_id_column: str | list[str] | None = None,
+        hypothesis_column: str | None = None,
         label_column: str | None = None,
         feature_columns: str | list[str] | None = None,
         instance_id_column: str | None = None,

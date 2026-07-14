@@ -41,25 +41,25 @@ from lir.datasets.feature_data_csv import (
         ),
         (
             'feature1,feature2\n1,1\n',
-            {'label_column': 'label'},
+            {'hypothesis_column': 'label'},
             None,
-            'label_column refers to non-existent column',
+            'hypothesis_column refers to non-existent column',
         ),
         (
             'label,feature1,feature2\n1,1,1\n',
-            {'label_column': 'label'},
+            {'hypothesis_column': 'label'},
             FeatureData(hypothesis=np.array([1]), features=np.ones((1, 2))),
             '1 row, 2 features, with label',
         ),
         (
             'label,feature1,feature2\n2,1,1\n',
-            {'label_column': 'label'},
+            {'hypothesis_column': 'label'},
             None,
             '1 row, 2 features, bad label',
         ),
         (
             'label,source_id,feature1,feature2\n0,10,1,1\n',
-            {'label_column': 'label', 'source_id_column': 'source_id'},
+            {'hypothesis_column': 'label', 'source_id_column': 'source_id'},
             FeatureData(source_ids=np.array(['10']), hypothesis=np.array([0]), features=np.ones((1, 2))),
             '1 row, 2 features, with label, source_id',
         ),
@@ -165,3 +165,15 @@ def test_csv_parser(
     except Exception as e:
         if expected_result is not None:
             pytest.fail(f"while parsing '{description}': {e}", e)
+
+
+def test_csv_parser_label_column_alias_warns(tmp_path: Path):
+    csv_file = tmp_path / 'data.csv'
+    csv_file.write_text('label,feature1,feature2\n1,1,1\n')
+
+    parser_args = _expand([], {'label_column': 'label', 'file': str(csv_file)})
+    with pytest.warns(UserWarning, match='label_column'):
+        parser = feature_data_csv_file_parser().parse(parser_args, tmp_path)
+    actual_result = parser.get_instances()
+
+    assert actual_result == FeatureData(hypothesis=np.array([1]), features=np.ones((1, 2)))

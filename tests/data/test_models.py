@@ -52,6 +52,13 @@ def test_instance_data():
         instances.hypothesis = np.array([1, 1])
 
 
+def test_instance_data_labels_alias_warns():
+    with pytest.warns(UserWarning, match='labels'):
+        data = BareData(labels=np.array([0, 1]))
+
+    assert np.all(data.hypothesis == np.array([0, 1]))
+
+
 def test_feature_data():
     FeatureData(features=np.ones((10, 2)), hypothesis=None)
     FeatureData(features=np.ones((10, 2)), hypothesis=np.ones((10,)))

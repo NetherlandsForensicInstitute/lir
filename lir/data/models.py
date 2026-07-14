@@ -1,4 +1,5 @@
 import logging
+import warnings
 from abc import ABC, abstractmethod
 from collections.abc import Callable, Iterable, Iterator
 from typing import Annotated, Any, Self, TypeVar
@@ -103,6 +104,28 @@ class InstanceData(BaseModel, ABC):
     hypothesis: Annotated[np.ndarray | None, AfterValidator(_validate_hypothesis)] = None
     source_ids: Annotated[np.ndarray | None, AfterValidator(_validate_source_ids)] = None
 
+    @model_validator(mode='before')
+    @classmethod
+    def _alias_labels_to_hypothesis(cls, data: Any) -> Any:
+        if isinstance(data, dict) and 'labels' in data and 'hypothesis' not in data:
+            warnings.warn('`labels` is deprecated; use `hypothesis` instead', stacklevel=2)
+            data = dict(data)
+            data['hypothesis'] = data.pop('labels')
+        return data
+
+    @property
+    def labels(self) -> np.ndarray | None:
+        """
+        Legacy way to access `hypothesis`. Also warns that `labels` is deprecated and will be removed in the future.
+
+        Returns
+        -------
+        np.ndarray
+            Label array guaranteed to contain values for both hypotheses.
+        """
+        LOG.warning('`labels` is deprecated and will be removed in a future version; use `hypothesis` instead')
+        return self.hypothesis
+
     @property
     def require_labels(self) -> np.ndarray:
         """
@@ -200,21 +223,21 @@ class InstanceData(BaseModel, ABC):
     def __add__(self, other: 'InstanceData') -> Self:
         return self.concatenate(other)
 
-    def check_both_labels(self) -> np.ndarray:
+    def check_both_hypothesis(self) -> np.ndarray:
         """
-        Return labels or raise an error if they are missing or if they do not represent both hypotheses.
+        Return hypothesis labels or raise an error if they are missing or if they do not represent both hypotheses.
 
         :raise: ValueError if hypothesis labels are missing or either label is not represented.
 
         Returns
         -------
         np.ndarray
-            Label array containing both classes 0 and 1.
+            Hypothesis array containing both classes 0 and 1.
         """
         if self.hypothesis is None:
-            raise ValueError('labels not set')
+            raise ValueError('hypothesis not set')
         if not np.all(np.unique(self.hypothesis) == np.arange(2)):
-            raise ValueError(f'not all classes are represented; labels found: {np.unique(self.hypothesis)}')
+            raise ValueError(f'not all classes are represented; hypothesis found: {np.unique(self.hypothesis)}')
         return self.hypothesis
 
     @classmethod

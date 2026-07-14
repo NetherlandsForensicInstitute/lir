@@ -235,7 +235,8 @@ def run_lrsystem(
     llrs: list[LLRData] = []
 
     for training_data, test_data in data_config.splits:
-        lrsystem_config.lrsystem.fit(training_data)
+        if len(training_data) > 0:
+            lrsystem_config.lrsystem.fit(training_data)
         llrs.append(lrsystem_config.lrsystem.apply(test_data))
 
     # Combine collected numpy arrays after iteration over the train/test split(s)

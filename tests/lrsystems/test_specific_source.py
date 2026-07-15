@@ -31,10 +31,9 @@ def test_specific_source_pipeline(synthesized_normal_data: FeatureData):
 
     golden_master_path = Path('tests/golden_master/test_specific_source_pipeline')
     if not Path(f'{golden_master_path}.npz').exists():
-        np.savez(golden_master_path, scores=scores, hypothesis=hypothesis, hypothesis_labels=hypothesis)
+        np.savez(golden_master_path, scores=scores, hypothesis=hypothesis)
         pytest.skip(f'Written {golden_master_path}, skipped test for this run.')
     else:
         expected = np.load(f'{golden_master_path}.npz')
         assert np.all(scores == expected['scores'])
-        expected_hypothesis = expected['hypothesis'] if 'hypothesis' in expected else expected['hypothesis_labels']
-        assert np.all(hypothesis == expected_hypothesis)
+        assert np.all(hypothesis == expected['hypothesis'])

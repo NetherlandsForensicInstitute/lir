@@ -123,7 +123,9 @@ class InstanceData(BaseModel, ABC):
         np.ndarray
             Label array guaranteed to contain values for both hypotheses.
         """
-        LOG.warning('`labels` is deprecated and will be removed in a future version; use `hypothesis` instead')
+        warnings.warn(
+            '`labels` is deprecated and will be removed in a future version; use `hypothesis` instead', stacklevel=2
+        )
         return self.hypothesis
 
     @property

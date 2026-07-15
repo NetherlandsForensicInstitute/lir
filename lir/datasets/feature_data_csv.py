@@ -2,11 +2,7 @@ import csv
 import io
 import itertools
 import logging
-<<<<<<< HEAD
-=======
 import warnings
-from abc import ABC
->>>>>>> 6f04a7e ( add deprecation warnings)
 from collections.abc import Callable
 from dataclasses import dataclass
 from functools import partial
@@ -225,7 +221,16 @@ class FeatureDataCsvParser(DataProvider):
             raise ValueError(f'the source id column should be a string or a list; found: {type(source_id_column)}')
 
         if label_column:
-            self.data_fields.append(DataField('labels', [label_column], int))
+            warnings.warn(
+                '`label_column` is deprecated and will be removed in the future; use `hypothesis_column` instead',
+                stacklevel=2,
+            )
+            if hypothesis_column:
+                raise ValueError('`label_column` and `hypothesis_column` are used; please use only `hypothesis_column`')
+            hypothesis_column = label_column
+
+        if hypothesis_column:
+            self.data_fields.append(DataField('hypothesis', [hypothesis_column], int))
         if instance_id_column:
             self.data_fields.append(DataField('instance_ids', [instance_id_column]))
         if role_assignment_column:

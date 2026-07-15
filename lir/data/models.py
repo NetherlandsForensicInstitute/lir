@@ -223,7 +223,7 @@ class InstanceData(BaseModel, ABC):
     def __add__(self, other: 'InstanceData') -> Self:
         return self.concatenate(other)
 
-    def check_both_hypothesis(self) -> np.ndarray:
+    def check_both_hypotheses(self) -> np.ndarray:
         """
         Return hypothesis labels or raise an error if they are missing or if they do not represent both hypotheses.
 

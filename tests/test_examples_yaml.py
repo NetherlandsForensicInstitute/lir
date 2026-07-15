@@ -1,7 +1,10 @@
+import os
 import shutil
+from collections.abc import Iterable
 from pathlib import Path
 
 import confidence
+import pytest
 
 from lir.main import initialize_experiments
 
@@ -18,7 +21,33 @@ def test_parse_examples():
             raise ValueError(f'{yaml_file}: {e}')
 
 
-def test_run_examples():
+def _check_directory_listing(yaml_file: Path, output_dir: Path):
+    actual_listing = sorted(_get_directory_listing(output_dir))
+
+    listing_file = Path(__file__).parent / 'example_yamls_overrides' / f'{yaml_file.name.removesuffix(".yaml")}.lst'
+
+    # write listing if not yet available
+    if not listing_file.exists():
+        with open(listing_file, 'w') as f:
+            f.write('\n'.join(actual_listing))
+
+    # read listing
+    with open(listing_file) as f:
+        expected_listing = [line.strip() for line in f.readlines()]
+
+    # check listing
+    assert actual_listing == expected_listing
+
+
+def _get_directory_listing(path: Path) -> Iterable[str]:
+    for root, _, files in os.walk(path):
+        for file in files:
+            file = (Path(root) / file).relative_to(path)
+            yield str(file)
+
+
+@pytest.mark.parametrize('yaml_file', EXAMPLE_FILES)
+def test_run_examples(yaml_file: Path):
     output_path = Path('tests/yaml_output')
     example_overrides_path = Path('tests/example_yamls_overrides')
 
@@ -28,16 +57,17 @@ def test_run_examples():
 
     output_path.mkdir(parents=True)
 
-    for yaml_file in EXAMPLE_FILES:
-        configuration = confidence.Configuration(
-            confidence.loadf(yaml_file),  # example YAML
-            confidence.loadf(example_overrides_path / yaml_file.name),  # override values
-        )
+    configuration = confidence.Configuration(
+        confidence.loadf(yaml_file),  # example YAML
+        confidence.loadf(example_overrides_path / yaml_file.name),  # override values
+    )
 
-        experiments, _ = initialize_experiments(configuration)
+    experiments, _ = initialize_experiments(configuration)
 
-        for name, experiment_definition in experiments.items():
-            try:
-                experiment_definition.run()
-            except Exception as e:
-                raise RuntimeError(f"Experiment '{name}' in '{yaml_file}' failed to run: {e}")
+    for name, experiment_definition in experiments.items():
+        try:
+            experiment_definition.run()
+        except Exception as e:
+            raise RuntimeError(f"Experiment '{name}' in '{yaml_file}' failed to run: {e}")
+
+    _check_directory_listing(yaml_file, configuration.output_path)

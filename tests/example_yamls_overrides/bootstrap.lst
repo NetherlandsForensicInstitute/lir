@@ -1,0 +1,12 @@
+log.txt
+model_selection/metrics.csv
+model_selection/modules.steps.bounding=identity/LLR_Interval.png
+model_selection/modules.steps.bounding=identity/LR_Histogram.png
+model_selection/modules.steps.bounding=identity/PAV.png
+model_selection/modules.steps.bounding=identity/data.yaml
+model_selection/modules.steps.bounding=identity/lrsystem.yaml
+model_selection/modules.steps.bounding=iv_bounder/LLR_Interval.png
+model_selection/modules.steps.bounding=iv_bounder/LR_Histogram.png
+model_selection/modules.steps.bounding=iv_bounder/PAV.png
+model_selection/modules.steps.bounding=iv_bounder/data.yaml
+model_selection/modules.steps.bounding=iv_bounder/lrsystem.yaml

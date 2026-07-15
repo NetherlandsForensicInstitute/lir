@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:0485ebe55f09dedebbb007a9a196141cdb007b2c03db632bcbeced4e207f077e"
+content_hash = "sha256:34c5538e4cc334e7c02950dcaaa15da99d22c221d273f4f7f04f31848ad3ce3b"
 
 [[metadata.targets]]
 requires_python = ">=3.12,<3.15"
@@ -393,7 +393,7 @@ files = [
 
 [[package]]
 name = "confidence"
-version = "0.17.2"
+version = "0.18"
 requires_python = ">=3.10"
 summary = "Simple module to load and use configuration in a clean, 'pythonic' way."
 groups = ["default"]
@@ -402,7 +402,7 @@ dependencies = [
     "tomlkit>=0.13.3",
 ]
 files = [
-    {file = "confidence-0.17.2-py3-none-any.whl", hash = "sha256:0018ea58e42d7aee790e17bb3716717efa3142404f205184b7d7b6674cac57a4"},
+    {file = "confidence-0.18-py3-none-any.whl", hash = "sha256:b475838497d430edd1bf1bed99b63affa4a7a5f86e5eaf23f894bcaa52d10d1d"},
 ]
 
 [[package]]

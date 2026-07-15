@@ -64,7 +64,7 @@ class OptunaExperiment(Experiment):
     ):
         super().__init__(name, outputs, output_path)
 
-        self._data_config = DataConfig(spec=data_config, params={}, output_dir=output_path)
+        self._data_config = DataConfig(spec=data_config, params={}, experiment_output_dir=output_path)
 
         self.baseline_config = baseline_config
         self.lrsystem_parameters = lrsystem_parameters
@@ -111,7 +111,7 @@ class OptunaExperiment(Experiment):
 
         result = run_lrsystem(
             self.output_path,
-            LRSystemConfig(spec=lrsystem, params=lrsystem_parameters, output_dir=self.output_path),
+            LRSystemConfig(spec=lrsystem, params=lrsystem_parameters, experiment_output_dir=self.output_path),
             self._data_config,
             run_name=f'trial{trial.number:03d}',
         )
@@ -144,17 +144,20 @@ def parse_optuna_experiment(config: ContextAwareDict, output_dir: Path) -> Optun
         Optuna-backed experiment.
     """
     name = pop_experiment_name(config)
+    experiment_output_dir = output_dir / name
 
-    baseline_config, parameters = parse_config_with_parameters(config, output_dir, 'lrsystem', 'lrsystem_parameters')
+    baseline_config, parameters = parse_config_with_parameters(
+        config, experiment_output_dir, 'lrsystem', 'lrsystem_parameters'
+    )
     n_trials = pop_field(config, 'n_trials', validate=int)
 
     metric_name = pop_field(config, 'primary_metric')
-    primary_metric = parse_individual_metric(metric_name, output_dir, config.context)
+    primary_metric = parse_individual_metric(metric_name, experiment_output_dir, config.context)
 
     data_config = pop_field(config, 'data')
 
     output_config = pop_field(config, 'output', required=False)
-    aggregations = parse_aggregations(output_config, output_dir) if output_config else []
+    aggregations = parse_aggregations(output_config, experiment_output_dir) if output_config else []
 
     check_is_empty(config)
 
@@ -162,7 +165,7 @@ def parse_optuna_experiment(config: ContextAwareDict, output_dir: Path) -> Optun
         name=name,
         data_config=data_config,
         outputs=aggregations,
-        output_path=output_dir,
+        output_path=experiment_output_dir,
         baseline_config=baseline_config,
         lrsystem_parameters=parameters,
         n_trials=n_trials,

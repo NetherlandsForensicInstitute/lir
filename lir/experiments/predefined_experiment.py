@@ -102,16 +102,17 @@ def parse_single_run(config: ContextAwareDict, output_dir: Path) -> PredefinedEx
         Predefined single-run experiment.
     """
     name = pop_experiment_name(config)
+    experiment_output_dir = output_dir / name
 
     output_config = pop_field(config, 'output', required=False)
     aggregations = parse_aggregations(output_config, output_dir) if output_config else []
 
     exp = PredefinedExperiment(
         name,
-        [DataConfig(pop_field(config, 'data'), {}, output_dir)],
+        [DataConfig(pop_field(config, 'data'), {}, experiment_output_dir)],
         aggregations,
-        output_dir / name,
-        [LRSystemConfig(pop_field(config, 'lrsystem'), {}, output_dir)],
+        experiment_output_dir,
+        [LRSystemConfig(pop_field(config, 'lrsystem'), {}, experiment_output_dir)],
     )
     check_is_empty(config)
     return exp
@@ -135,20 +136,23 @@ def parse_grid_experiment(config: ContextAwareDict, output_dir: Path) -> Predefi
         Predefined experiment with all parameter combinations.
     """
     name = pop_experiment_name(config)
+    experiment_output_dir = output_dir / name
 
     output_config = pop_field(config, 'output', required=False)
-    aggregations = parse_aggregations(output_config, output_dir) if output_config else []
+    aggregations = parse_aggregations(output_config, experiment_output_dir) if output_config else []
 
     if 'lr_system' in config:
         raise ValueError("The attribute 'lr_system' has been replaced by 'lrsystem' as of lir v1.7. ")
 
     lrsystem_configs = [
-        LRSystemConfig(*cfg, output_dir)
-        for cfg in _create_configs_from_hyperparameters(config, output_dir, 'lrsystem', 'lrsystem_parameters')
+        LRSystemConfig(*cfg, experiment_output_dir)
+        for cfg in _create_configs_from_hyperparameters(
+            config, experiment_output_dir, 'lrsystem', 'lrsystem_parameters'
+        )
     ]
     data_configs = [
-        DataConfig(*cfg, output_dir)
-        for cfg in _create_configs_from_hyperparameters(config, output_dir, 'data', 'data_parameters')
+        DataConfig(*cfg, experiment_output_dir)
+        for cfg in _create_configs_from_hyperparameters(config, experiment_output_dir, 'data', 'data_parameters')
     ]
     enable_parallelization = pop_field(config, 'enable_parallelization', validate=bool, default=False)
     check_is_empty(config)
@@ -157,7 +161,7 @@ def parse_grid_experiment(config: ContextAwareDict, output_dir: Path) -> Predefi
         name,
         data_configs,
         aggregations,
-        output_dir / name,
+        experiment_output_dir,
         lrsystem_configs,
         enable_parallelization=enable_parallelization,
     )

@@ -1,3 +1,6 @@
+import tempfile
+from pathlib import Path
+
 import numpy as np
 import pytest
 from _pytest.tmpdir import TempPathFactory
@@ -46,11 +49,16 @@ def test_registry_items_available(synthesized_llrs_with_interval: LLRData, tmp_p
             # generate output
             try:
                 lrsystem = BinaryLRSystem(pipeline=Identity())
-                obj.report(
-                    AggregationData(
-                        llrdata=synthesized_llrs_with_interval, lrsystem=lrsystem, parameters={}, run_name=''
+                with tempfile.TemporaryDirectory() as experiment_output_dir:
+                    obj.report(
+                        AggregationData(
+                            llrdata=synthesized_llrs_with_interval,
+                            lrsystem=lrsystem,
+                            parameters={},
+                            run_name='',
+                            experiment_output_dir=Path(experiment_output_dir),
+                        )
                     )
-                )
             except Exception as _:
                 pytest.fail(f'generating output failed for registry item `{name}`')
 
@@ -65,6 +73,13 @@ def test_subset_aggregation():
 
     llrs = LLRData(features=np.arange(2).repeat(10).reshape((20, 1)), category=np.arange(2).repeat(10))
     aggregation = SubsetAggregation(aggregation_methods=[MyAggregation()], category_field='category')
-    aggregation.report(
-        AggregationData(run_name='testrun', llrdata=llrs, lrsystem=BinaryLRSystem(pipeline=Identity()), parameters={})
-    )
+    with tempfile.TemporaryDirectory() as experiment_output_dir:
+        aggregation.report(
+            AggregationData(
+                run_name='testrun',
+                llrdata=llrs,
+                lrsystem=BinaryLRSystem(pipeline=Identity()),
+                parameters={},
+                experiment_output_dir=Path(experiment_output_dir),
+            )
+        )

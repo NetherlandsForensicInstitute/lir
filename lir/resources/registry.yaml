@@ -146,7 +146,7 @@ output:
       method: lir.plotting.score_distribution
       default_plot_name: 'Score_Distribution'
 
-  save_model: lir.persistence.parse_save_model
+  save_model: lir.persistence.SaveModel
   case_llr: lir.aggregation.case_llr_csv.parse
   by_category: lir.config.aggregation.subset_aggregation
   

@@ -3,7 +3,6 @@ from os import PathLike
 from pathlib import Path
 
 from lir.aggregation import Aggregation, AggregationData
-from lir.config.base import ContextAwareDict, check_is_empty, config_parser, pop_field
 from lir.lrsystems.lrsystems import LRSystem
 
 
@@ -77,14 +76,11 @@ class SaveModel(Aggregation):
 
     Parameters
     ----------
-    output_dir : Path
-        The directory where the model should be written.
     filename : PathLike | str
         The filename to be created for the model.
     """
 
-    def __init__(self, output_dir: Path, filename: PathLike | str = 'model.pkl') -> None:
-        self.output_dir = output_dir
+    def __init__(self, filename: PathLike | str = 'model.pkl') -> None:
         self.filename = Path(filename)
 
     def report(self, data: AggregationData) -> None:
@@ -96,27 +92,5 @@ class SaveModel(Aggregation):
         data : AggregationData
             The data to be aggregated, containing the trained LR system model and the run name.
         """
-        path = self._resolve_output_path(self.output_dir, self.filename, data.run_name)
+        path = data.resolve_path_for_run(self.filename)
         save_model(path, data.lrsystem)
-
-
-@config_parser
-def parse_save_model(config: ContextAwareDict, output_dir: Path) -> SaveModel:
-    """
-    Parse a configuration section that describes how a `SaveModel` instance should be instantiated.
-
-    Parameters
-    ----------
-    config : ContextAwareDict
-        The configuration section.
-    output_dir : Path
-        Directory where the instantiated object may write its output.
-
-    Returns
-    -------
-    SaveModel
-        The instantiated object.
-    """
-    filename = pop_field(config, 'filename', default='model.pkl', validate=str)
-    check_is_empty(config)
-    return SaveModel(output_dir, filename)

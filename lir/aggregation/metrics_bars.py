@@ -69,7 +69,7 @@ class MetricsBarPlot(Aggregation):
 
     Parameters
     ----------
-    path : Path
+    path : Path | None
         The path to where the plot file is written.
     metrics : Mapping[str, Callable]
         A mapping of metric names to functions that compute the values for the metrics.
@@ -77,6 +77,7 @@ class MetricsBarPlot(Aggregation):
 
     def __init__(self, path: Path | None, metrics: Mapping[str, Callable[[LLRData], float | list[float]]]):
         self.path = path
+        self.full_path: Path | None = None
         self._file: IO[Any] | None = None
         self.metric_functions = OrderedDict(metrics.items())
         self.calculated_values: list[list[float | None]] = []
@@ -111,6 +112,9 @@ class MetricsBarPlot(Aggregation):
 
         self.run_names.append(', '.join(str(opt) for opt in data.parameters.values()))
 
+        if self.path is not None:
+            self.full_path = data.resolve_path_for_experiment(self.path)
+
     def close(self) -> None:
         """Ensure the CSV file is properly closed after writing."""
         fig, ax = plt.subplots()
@@ -129,8 +133,8 @@ class MetricsBarPlot(Aggregation):
 
         fig.legend()
         fig.tight_layout()
-        if self.path:
-            fig.savefig(self.path)
+        if self.full_path:
+            fig.savefig(self.full_path)
         else:
             plt.show(block=True)
         plt.close(fig)

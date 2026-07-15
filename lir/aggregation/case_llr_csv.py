@@ -17,16 +17,13 @@ class CaseLLRToCsv(Aggregation):
 
     Parameters
     ----------
-    output_dir : Path
-        Directory where the CSV file will be written.
     case_data_provider : DataProvider
         Provider for the case data to apply the LR system to.
     filename : str, optional
         Name of the output CSV file, by default 'case_llr.csv'.
     """
 
-    def __init__(self, output_dir: Path, case_data_provider: DataProvider, filename: str = 'case_llr.csv') -> None:
-        self.output_dir = output_dir
+    def __init__(self, case_data_provider: DataProvider, filename: str = 'case_llr.csv') -> None:
         self.case_data_provider = case_data_provider
         self.filename = Path(filename)
 
@@ -53,7 +50,7 @@ class CaseLLRToCsv(Aggregation):
         case_instances = check_type(FeatureData, case_instances)
         case_llrs = lrsystem.apply(case_instances)
 
-        path = self._resolve_output_path(self.output_dir, self.filename, data.run_name)
+        path = data.resolve_path_for_run(self.filename)
 
         if len(case_instances) != len(case_llrs):
             raise ValueError(
@@ -102,4 +99,4 @@ def parse(config: ContextAwareDict, output_dir: Path) -> CaseLLRToCsv:
     filename = pop_field(config, 'filename', default='case_llr.csv', validate=str)
     filename = check_type(str, filename)
     check_is_empty(config)
-    return CaseLLRToCsv(output_dir, case_data_provider, filename)
+    return CaseLLRToCsv(case_data_provider, filename)

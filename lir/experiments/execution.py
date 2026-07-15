@@ -259,6 +259,7 @@ def run_lrsystem(
         lrsystem=lrsystem_config.lrsystem,
         parameters=parameters,
         run_name=run_name,
+        experiment_output_dir=output_base_dir,
         get_full_fit_lrsystem=None if skip_full_lrsystem else get_full_fit_lrsystem,
     )
 

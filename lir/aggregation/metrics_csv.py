@@ -26,8 +26,8 @@ class WriteMetricsToCsv(Aggregation):
         A mapping of column names to metric functions that compute the values for those columns.
     """
 
-    def __init__(self, path: Path, columns: Mapping[str, Callable]):
-        self.path = path
+    def __init__(self, path: Path | str, columns: Mapping[str, Callable]):
+        self.path = Path(path)
         self._file: IO[Any] | None = None
         self._writer: csv.DictWriter | None = None
         self.columns = columns
@@ -66,7 +66,7 @@ class WriteMetricsToCsv(Aggregation):
         # Record column header names only once to the CSV
         if self._writer is None:
             self.path.parent.mkdir(parents=True, exist_ok=True)
-            self._file = open(self.path, 'w', newline='')  # noqa: SIM115
+            self._file = open(data.resolve_path_for_experiment(self.path), 'w', newline='')  # noqa: SIM115
             self._writer = csv.DictWriter(self._file, fieldnames=results.keys())
             self._writer.writeheader()
         self._writer.writerow(results)
@@ -105,4 +105,4 @@ def parse(config: ContextAwareDict, output_dir: Path) -> WriteMetricsToCsv:
     columns = {name: parse_individual_metric(name, output_dir, config.context) for name in columns}
 
     check_is_empty(config)
-    return WriteMetricsToCsv(output_dir / 'metrics.csv', columns)
+    return WriteMetricsToCsv('metrics.csv', columns)

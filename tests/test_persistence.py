@@ -8,11 +8,11 @@ from _pytest.tmpdir import TempPathFactory
 from sklearn.preprocessing import StandardScaler
 
 from lir.algorithms.kde import KDECalibrator
-from lir.config.base import _expand
+from lir.config.base import GenericConfigParser, _expand
 from lir.data.models import FeatureData
 from lir.lrsystems.binary_lrsystem import BinaryLRSystem
 from lir.lrsystems.lrsystems import LRSystem
-from lir.persistence import load_model, parse_save_model, save_model
+from lir.persistence import SaveModel, load_model, save_model
 from lir.transform import as_transformer
 from lir.transform.pipeline import Pipeline
 
@@ -83,4 +83,4 @@ def test_deserialize_from_invalid_pickle_file(trained_lrsystem: LRSystem, model_
 @pytest.mark.parametrize('yaml', ['', 'filename: yolo.pkl'])
 def test_config_parser(yaml: str):
     config = _expand([], confidence.loads(yaml))
-    parse_save_model().parse(config, output_dir=Path('/'))
+    GenericConfigParser(SaveModel).parse(config, output_dir=Path('/'))

@@ -2,6 +2,7 @@ import csv
 import io
 import itertools
 import logging
+import warnings
 from collections.abc import Callable
 from dataclasses import dataclass
 from functools import partial
@@ -131,8 +132,10 @@ class FeatureDataCsvParser(DataProvider):
         Function that returns a data stream from which the CSV file contents can be read.
     source_id_column : str | list[str] | None
         Column name(s) containing source identifiers (each source has a unique string identifier).
-    label_column : str | None
+    hypothesis_column : str | None
         Column name containing hypothesis labels (value 0 for H2 or 1 for H2).
+    label_column : str | None
+        Deprecated alias for `hypothesis_column`.
     feature_columns : str | list[str] | None
         Column names containing numerical feature values. If not specified, all columns not otherwise designated are
         interpreted as feature columns.
@@ -193,6 +196,7 @@ class FeatureDataCsvParser(DataProvider):
         self,
         open_file_fn: Callable[[], IO],
         source_id_column: str | list[str] | None = None,
+        hypothesis_column: str | None = None,
         label_column: str | None = None,
         feature_columns: str | list[str] | None = None,
         instance_id_column: str | None = None,
@@ -217,7 +221,16 @@ class FeatureDataCsvParser(DataProvider):
             raise ValueError(f'the source id column should be a string or a list; found: {type(source_id_column)}')
 
         if label_column:
-            self.data_fields.append(DataField('labels', [label_column], int))
+            warnings.warn(
+                '`label_column` is deprecated and will be removed in the future; use `hypothesis_column` instead',
+                stacklevel=2,
+            )
+            if hypothesis_column:
+                raise ValueError('`label_column` and `hypothesis_column` are used; please use only `hypothesis_column`')
+            hypothesis_column = label_column
+
+        if hypothesis_column:
+            self.data_fields.append(DataField('hypothesis', [hypothesis_column], int))
         if instance_id_column:
             self.data_fields.append(DataField('instance_ids', [instance_id_column]))
         if role_assignment_column:

@@ -160,7 +160,7 @@ def devpav(llrs: LLRData) -> float:
     float
         DevPAV score.
     """
-    labels = llrs.check_both_labels()
+    hypothesis = llrs.check_both_hypotheses()
     cal = IsotonicCalibrator()
     pavllrs = cal.fit_apply(llrs)
-    return _devpavcalculator(logodds_to_odds(llrs.llrs), logodds_to_odds(pavllrs.llrs), labels)
+    return _devpavcalculator(logodds_to_odds(llrs.llrs), logodds_to_odds(pavllrs.llrs), hypothesis)

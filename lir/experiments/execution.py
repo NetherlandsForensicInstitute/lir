@@ -351,7 +351,7 @@ def parallellize_runs(
         A list of results for all runs.
     """
     n_runs = len(lrsystem_configs) * len(data_configs)
-    n_processes = os.process_cpu_count() if hasattr(os, 'process_cpu_count') else 1
+    n_processes = (os.process_cpu_count() or 1) if hasattr(os, 'process_cpu_count') else 1
 
     if n_runs == 1 or n_processes == 1:
         # don't bother parallelizing if there is only a single configuration or a single CPU

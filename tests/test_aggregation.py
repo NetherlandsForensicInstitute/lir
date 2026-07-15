@@ -57,6 +57,7 @@ def test_registry_items_available(synthesized_llrs_with_interval: LLRData, tmp_p
                             parameters={},
                             run_name='',
                             experiment_output_dir=Path(experiment_output_dir),
+                            run_output_dir=Path(experiment_output_dir),
                         )
                     )
             except Exception as _:
@@ -81,5 +82,6 @@ def test_subset_aggregation():
                 lrsystem=BinaryLRSystem(pipeline=Identity()),
                 parameters={},
                 experiment_output_dir=Path(experiment_output_dir),
+                run_output_dir=Path(experiment_output_dir),
             )
         )

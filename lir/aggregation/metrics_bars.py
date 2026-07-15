@@ -165,9 +165,6 @@ def parse(config: ContextAwareDict, output_dir: Path) -> MetricsBarPlot:
         )
 
     path: Path = pop_field(config, 'path', default=Path('metrics.png'), validate=Path)
-    if not path.is_absolute():
-        path = output_dir / path
-
     metrics = {name: parse_individual_metric(name, output_dir, config.context) for name in metric_names}
 
     check_is_empty(config)

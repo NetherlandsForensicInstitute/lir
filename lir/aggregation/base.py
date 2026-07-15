@@ -38,6 +38,8 @@ class AggregationData(NamedTuple):  # numpydoc ignore=PR02
     run_name : str
         String representation of the run that produced the results.
     experiment_output_dir : Path
+        The directory where the results should be stored for this experiment.
+    run_output_dir : Path
         The directory where the results should be stored for this run.
     get_full_fit_lrsystem : Callable[[], LRSystem] | None
         Optional callable that lazily provides a model fitted on full data (ignoring splits).
@@ -48,6 +50,7 @@ class AggregationData(NamedTuple):  # numpydoc ignore=PR02
     parameters: dict[str, HyperparameterOption | str]
     run_name: str
     experiment_output_dir: Path
+    run_output_dir: Path
     get_full_fit_lrsystem: Callable[[], LRSystem] | None = None
 
     def resolve_path_for_experiment(self, filename: Path | PathLike | str) -> Path:
@@ -90,7 +93,7 @@ class AggregationData(NamedTuple):  # numpydoc ignore=PR02
         Path
             A path relative to the output directory for the experiment.
         """
-        return _resolve_path(self.experiment_output_dir / self.run_name, filename)
+        return _resolve_path(self.run_output_dir, filename)
 
 
 class Aggregation(ABC):

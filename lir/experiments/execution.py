@@ -43,14 +43,18 @@ class ParameterizedConfig(NamedTuple):
         The configuration of an LR system or data setup for a run.
     params : dict[str, Any]
         The parameters that describe the configuration.
-    output_dir : Path
-        Path to the directory where results may be written. As this directory is shared among all runs of an experiment,
-        a dedicated subdirectory may be created for the run.
+    experiment_output_dir : Path
+        Path to the directory where results of the experiment may be written. This directory is shared among all runs
+        of an experiment.
+    run_output_dir : Path | None
+        Path to the directory where results of the run may be written, this is a subdirectory of
+        ``experiment_output_dir``. May be ``None`` if the configuration is not yet assigned to a run.
     """
 
     spec: ContextAwareDict
     params: dict[str, Any]
-    output_dir: Path
+    experiment_output_dir: Path
+    run_output_dir: Path | None = None
 
     @property
     def desc(self) -> str:
@@ -65,7 +69,7 @@ class ParameterizedConfig(NamedTuple):
         return '__'.join([f'{key}={value}' for key, value in self.params.items()])
 
     def __reduce__(self) -> tuple[Callable, tuple]:
-        return self.__class__, (self.spec, self.params, self.output_dir)
+        return self.__class__, (self.spec, self.params, self.experiment_output_dir)
 
 
 class DataConfig(ParameterizedConfig):
@@ -89,7 +93,7 @@ class DataConfig(ParameterizedConfig):
             A tuple of a data provider and a data strategy.
         """
         if self._data_setup is None:
-            self._data_setup = parse_data_setup(deepcopy(self.spec), self.output_dir)
+            self._data_setup = parse_data_setup(deepcopy(self.spec), self.run_output_dir or self.experiment_output_dir)
         return self._data_setup
 
     @property
@@ -161,12 +165,12 @@ class LRSystemConfig(ParameterizedConfig):
             An LR system object.
         """
         if self._lrsystem is None:
-            self._lrsystem = parse_lrsystem(deepcopy(self.spec), self.output_dir)
+            self._lrsystem = parse_lrsystem(deepcopy(self.spec), self.run_output_dir or self.experiment_output_dir)
         return self._lrsystem
 
 
 def run_lrsystem(
-    output_base_dir: Path,
+    experiment_output_dir: Path,
     lrsystem_config: LRSystemConfig,
     data_config: DataConfig,
     skip_full_lrsystem: bool = False,
@@ -188,7 +192,7 @@ def run_lrsystem(
 
     Parameters
     ----------
-    output_base_dir : Path
+    experiment_output_dir : Path
         The base directory of the path where results may be written.
     lrsystem_config : LRSystemConfig
         LR-system configuration for a single run.
@@ -210,8 +214,12 @@ def run_lrsystem(
         or f'{data_config.desc}{"__" if lrsystem_config.desc and data_config.desc else ""}{lrsystem_config.desc}'
     )
 
-    output_dir = output_base_dir / run_name if run_name else output_base_dir
-    output_dir.mkdir(exist_ok=True, parents=True)
+    run_output_dir = experiment_output_dir / run_name if run_name else experiment_output_dir
+    run_output_dir.mkdir(exist_ok=True, parents=True)
+
+    # add run output dir to configuration objects
+    lrsystem_config = LRSystemConfig(**(lrsystem_config._asdict() | {'run_output_dir': run_output_dir}))
+    data_config = DataConfig(**(data_config._asdict() | {'run_output_dir': run_output_dir}))
 
     # This dictionary contains all parameters for this experiment run, prefixed
     # by either 'data.' or 'lrsystem.' to avoid naming conflicts. This is used
@@ -228,8 +236,8 @@ def run_lrsystem(
     if not isinstance(lrsystem_config_dict, dict) or not isinstance(data_config_dict, dict):
         raise ValueError('hyperparameters are not the expected type (dict)')
 
-    confidence.dumpf(confidence.Configuration(lrsystem_config_dict), output_dir / 'lrsystem.yaml')
-    confidence.dumpf(confidence.Configuration(data_config_dict), output_dir / 'data.yaml')
+    confidence.dumpf(confidence.Configuration(lrsystem_config_dict), run_output_dir / 'lrsystem.yaml')
+    confidence.dumpf(confidence.Configuration(data_config_dict), run_output_dir / 'data.yaml')
 
     # Placeholders for numpy arrays of LLRs and labels obtained from each train/test split
     llrs: list[LLRData] = []
@@ -249,7 +257,7 @@ def run_lrsystem(
         nonlocal _cached_full_fit_lrsystem
         if _cached_full_fit_lrsystem is None:
             full_training_data = concatenate_instances(*next(iter(data_config.splits)))
-            _cached_full_fit_lrsystem = parse_lrsystem(deepcopy(lrsystem_config.spec), output_dir)
+            _cached_full_fit_lrsystem = parse_lrsystem(deepcopy(lrsystem_config.spec), run_output_dir)
             _cached_full_fit_lrsystem.fit(full_training_data)
         return _cached_full_fit_lrsystem
 
@@ -259,7 +267,8 @@ def run_lrsystem(
         lrsystem=lrsystem_config.lrsystem,
         parameters=parameters,
         run_name=run_name,
-        experiment_output_dir=output_base_dir,
+        experiment_output_dir=experiment_output_dir,
+        run_output_dir=run_output_dir,
         get_full_fit_lrsystem=None if skip_full_lrsystem else get_full_fit_lrsystem,
     )
 

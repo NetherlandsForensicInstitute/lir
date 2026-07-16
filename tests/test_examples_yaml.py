@@ -24,7 +24,7 @@ def test_parse_examples():
 def _check_directory_listing(yaml_file: Path, output_dir: Path):
     actual_listing = sorted(_get_directory_listing(output_dir))
 
-    listing_file = Path(__file__).parent / 'example_yamls_overrides' / f'{yaml_file.name.removesuffix(".yaml")}.lst'
+    listing_file = Path(__file__).parent / 'examples_yaml_resources' / f'{yaml_file.name.removesuffix(".yaml")}.lst'
 
     # write listing if not yet available
     if not listing_file.exists():
@@ -49,7 +49,7 @@ def _get_directory_listing(path: Path) -> Iterable[str]:
 @pytest.mark.parametrize('yaml_file', EXAMPLE_FILES)
 def test_run_examples(yaml_file: Path):
     output_path = Path('tests/yaml_output')
-    example_overrides_path = Path('tests/example_yamls_overrides')
+    example_resources_path = Path('tests/examples_yaml_resources')
 
     # Clean potential left-over output from running previous test
     if output_path.exists():
@@ -57,9 +57,10 @@ def test_run_examples(yaml_file: Path):
 
     output_path.mkdir(parents=True)
 
+    yaml_override_file = example_resources_path / yaml_file.name
     configuration = confidence.Configuration(
         confidence.loadf(yaml_file),  # example YAML
-        confidence.loadf(example_overrides_path / yaml_file.name),  # override values
+        confidence.loadf(yaml_override_file),  # override values
     )
 
     experiments, _ = initialize_experiments(configuration)

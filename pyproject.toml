@@ -49,6 +49,8 @@ dev = [
     "jupyter-sphinx>=0.5.3",
     "types-requests>=2.32.4.20250913",
     "numpydoc>=1.10.0",
+    "pytest-benchmark>=5.2.3",
+    "tabulate>=0.10.0",
 ]
 
 [tool.pdm]

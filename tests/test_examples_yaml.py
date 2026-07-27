@@ -7,6 +7,7 @@ import confidence
 import pytest
 
 from lir.main import initialize_experiments
+from lir.util import validate_yaml
 
 
 EXAMPLE_DIR = Path(__file__).parent.parent / 'examples'
@@ -16,6 +17,11 @@ EXAMPLE_FILES = list(EXAMPLE_DIR.rglob('*.yaml'))
 @pytest.mark.parametrize('yaml_file', EXAMPLE_FILES)
 def test_parse_examples(yaml_file: Path):
     initialize_experiments(confidence.loadf(yaml_file))
+
+
+@pytest.mark.parametrize('yaml_file', EXAMPLE_FILES)
+def test_validate_examples(yaml_file: Path):
+    validate_yaml(yaml_file)
 
 
 def _check_directory_listing(yaml_file: Path, output_dir: Path):

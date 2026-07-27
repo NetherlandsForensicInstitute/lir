@@ -246,7 +246,9 @@ class SchemaGenerator:
             The schema as a dict.
         """
         hyperparameter_schema_options = [
-            self._generate_alternatives_schema('hyperparameter_types', 'Select the parameter type', 'type', 'category')
+            self._generate_alternatives_schema(
+                'hyperparameter_types', 'Select the parameter type', 'type', 'categorical'
+            )
         ]
         if self.extended:
             hyperparameter_schema_options.append(
@@ -388,7 +390,7 @@ class SchemaGenerator:
                     'strategy',
                 ),
                 'lrSystemConfiguration': self._generate_alternatives_schema(
-                    'lrsystem_architectures', 'TODO', 'architecture', 'TODO'
+                    'lrsystem_architectures', 'Choose an LR system architecture.', 'architecture'
                 ),
                 'module': self._generate_alternatives_schema(
                     'modules',
@@ -429,14 +431,18 @@ def generate_schema(extended: bool = False) -> dict[str, Any]:
     return SchemaGenerator(extended).generate()
 
 
-def validate_yaml(yaml_path: Path) -> None:
+def validate_yaml(yaml_path: Path, strict: bool = False) -> None:
     """
     Validate a YAML file against the schema.
+
+    In strict mode, only the canonical form is allowed. This is generally recommended if the use of a GUI is intended.
 
     Parameters
     ----------
     yaml_path : Path
         The path to the YAML file to be validated.
+    strict : bool, optional
+        Strict mode.
 
     Raises
     ------
@@ -447,7 +453,7 @@ def validate_yaml(yaml_path: Path) -> None:
     ValidationError
         If the YAML file does not conform to the schema.
     """
-    schema = generate_schema()
+    schema = generate_schema(extended=not strict)
 
     # Resolve ${...} references before validation
     context = {'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')}  # noqa: DTZ005

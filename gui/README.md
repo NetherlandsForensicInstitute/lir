@@ -1,5 +1,6 @@
 # Setup LiR GUI
 
+pdm lir --generate-schema >gui/lir.schema.json
 npm config set cafile /etc/ssl/certs/ca-certificates.crt
 npm install --verbose
 npm run dev

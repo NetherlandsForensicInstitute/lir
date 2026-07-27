@@ -1,5 +1,6 @@
 import collections
 import datetime
+import importlib
 import inspect
 import json
 import warnings
@@ -12,6 +13,8 @@ import numpy as np
 from confidence import Configuration, loadf
 from confidence.models import ConfigurationSequence
 from jsonschema import validate
+
+from . import resources as resources_module
 
 
 LR = collections.namedtuple('LR', ['lr', 'p0', 'p1'])
@@ -370,15 +373,11 @@ def validate_yaml(yaml_path: Path) -> None:
     ValidationError
         If the YAML file does not conform to the schema.
     """
-    schema_path = Path(__file__).parent.parent / 'lir.schema.json'
-
-    if not schema_path.exists():
-        raise FileNotFoundError(f'Schema file not found: {schema_path}')
-
     if not yaml_path.exists():
         raise FileNotFoundError(f'YAML file not found: {yaml_path}')
 
-    with open(schema_path) as f:
+    schema_file = importlib.resources.files(resources_module) / 'config-schema.json'
+    with schema_file.open('r') as f:
         schema = json.load(f)
 
     # Resolve ${...} references before validation

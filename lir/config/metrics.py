@@ -1,12 +1,12 @@
-from collections.abc import Callable
 from pathlib import Path
 
-from lir import LLRData, registry
+from lir import registry
 from lir.config.base import ContextAwareDict, GenericFunctionConfigParser, YamlParseError
+from lir.metrics.base import MetricFunction
 from lir.registry import ComponentNotFoundError
 
 
-def parse_individual_metric(name: str, output_path: Path, context: list[str]) -> Callable[[LLRData], float]:
+def parse_individual_metric(name: str, output_path: Path, context: list[str]) -> MetricFunction:
     """
     Parse one metric from the registry.
 
@@ -21,8 +21,8 @@ def parse_individual_metric(name: str, output_path: Path, context: list[str]) ->
 
     Returns
     -------
-    Callable
-        Metric callable.
+    MetricFunction
+        A metric function object.
     """
     try:
         parser = registry.get(

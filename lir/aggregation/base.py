@@ -37,6 +37,8 @@ class AggregationData(NamedTuple):  # numpydoc ignore=PR02
         Parameters that identify the system producing the results.
     run_name : str
         String representation of the run that produced the results.
+    runtime_secs : float
+        Runtime in seconds.
     experiment_output_dir : Path
         The directory where the results should be stored for this experiment.
     run_output_dir : Path
@@ -49,6 +51,7 @@ class AggregationData(NamedTuple):  # numpydoc ignore=PR02
     lrsystem: LRSystem
     parameters: dict[str, HyperparameterOption | str]
     run_name: str
+    runtime_secs: float
     experiment_output_dir: Path
     run_output_dir: Path
     get_full_fit_lrsystem: Callable[[], LRSystem] | None = None

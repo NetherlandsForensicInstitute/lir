@@ -1,14 +1,14 @@
 import csv
 import logging
 from collections import OrderedDict
-from collections.abc import Callable, Mapping, Sequence
-from functools import partial
+from collections.abc import Iterator, Mapping, Sequence
 from pathlib import Path
 from typing import IO, Any
 
 from lir.aggregation.base import Aggregation, AggregationData
 from lir.config.base import ContextAwareDict, YamlParseError, check_is_empty, config_parser, pop_field
 from lir.config.metrics import parse_individual_metric
+from lir.metrics.base import MetricFunction
 
 
 LOG = logging.getLogger(__name__)
@@ -22,23 +22,23 @@ class WriteMetricsToCsv(Aggregation):
     ----------
     path : Path
         The path to the CSV file where the metrics will be written.
-    columns : Mapping[str, Callable]
-        A mapping of column names to metric functions that compute the values for those columns.
+    columns : Mapping[str, MetricFunction]
+        A sequence of metric functions that compute the values for those columns.
     """
 
-    def __init__(self, path: Path | str, columns: Mapping[str, Callable]):
+    def __init__(self, path: Path | str, columns: Mapping[str, MetricFunction]):
         self.path = Path(path)
         self._file: IO[Any] | None = None
         self._writer: csv.DictWriter | None = None
         self.columns = columns
 
-    @staticmethod
-    def _safe_call(fn: Callable, message: str) -> Any:
-        try:
-            return fn()
-        except Exception as e:
-            LOG.warning(f'{message}: {e}')
-            return ''
+    def _get_column_values(self, data: AggregationData) -> Iterator[tuple[str, str]]:
+        # return the parameters
+        yield from [(key, str(value)) for key, value in data.parameters.items()]
+
+        # return the metrics
+        for name, metric in self.columns.items():
+            yield from metric.get_values(name, data)
 
     def report(self, data: AggregationData) -> None:
         """
@@ -49,19 +49,7 @@ class WriteMetricsToCsv(Aggregation):
         data : AggregationData
             The aggregated data for which to compute and write the metrics.
         """
-        columns = [
-            (key, self._safe_call(partial(metric, data.llrdata), f'calculating metric {key} failed'))
-            for key, metric in self.columns.items()
-        ]
-        metrics = []
-        for name, value in columns:
-            if isinstance(value, (list, tuple)):
-                for index, metric_value in enumerate(value):
-                    metrics.append((f'{name}_{index}', str(metric_value)))
-            else:
-                metrics.append((name, str(value)))
-
-        results = OrderedDict([(k, str(v)) for k, v in data.parameters.items()] + metrics)
+        results = OrderedDict(self._get_column_values(data))
 
         # Record column header names only once to the CSV
         if self._writer is None:

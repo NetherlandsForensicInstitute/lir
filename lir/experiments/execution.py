@@ -3,6 +3,7 @@ import logging
 import math
 import multiprocessing
 import os
+import time
 from collections.abc import Callable, Iterable, Iterator
 from copy import deepcopy
 from functools import partial
@@ -242,6 +243,8 @@ def run_lrsystem(
     # Placeholders for numpy arrays of LLRs and labels obtained from each train/test split
     llrs: list[LLRData] = []
 
+    time_before = time.time()
+
     for training_data, test_data in data_config.splits:
         if len(training_data) > 0:
             lrsystem_config.lrsystem.fit(training_data)
@@ -249,6 +252,8 @@ def run_lrsystem(
 
     # Combine collected numpy arrays after iteration over the train/test split(s)
     llrs: LLRData = concatenate_instances(*llrs)
+
+    time_after = time.time()
 
     # Create a lazy factory for full-data-fitted model with memoization
     _cached_full_fit_lrsystem = None
@@ -267,6 +272,7 @@ def run_lrsystem(
         lrsystem=lrsystem_config.lrsystem,
         parameters=parameters,
         run_name=run_name,
+        runtime_secs=time_after - time_before,
         experiment_output_dir=experiment_output_dir,
         run_output_dir=run_output_dir,
         get_full_fit_lrsystem=None if skip_full_lrsystem else get_full_fit_lrsystem,

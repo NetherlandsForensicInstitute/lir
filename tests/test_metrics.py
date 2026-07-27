@@ -1,6 +1,10 @@
+from collections.abc import Callable
+
 import numpy as np
 import pytest
+from numpy import allclose
 
+import lir.metrics
 from lir import metrics
 from lir.data.models import LLRData
 from lir.util import Xn_to_Xy, odds_to_logodds
@@ -79,3 +83,19 @@ def test_illegal_cllr(h1_llrs, h2_llrs):
 
     if np.all(np.isfinite(llrs)):  # this condition should be removed ?! --> see issue #301
         assert np.isnan(metrics.cllr_min(llr_data))
+
+
+@pytest.mark.parametrize(
+    'metric,expected_value,llrdata',
+    [
+        (lir.metrics.time_elapsed, 1, LLRData(features=np.zeros((10, 1)), time_elapsed=1)),
+        (lir.metrics.time_elapsed, None, LLRData(features=np.zeros((10, 1)))),
+        (lir.metrics.data_size, 10, LLRData(features=np.zeros((10, 1)))),
+    ],
+)
+def test_metric_values(metric: Callable, expected_value: float | int, llrdata: LLRData):
+    actual_value = metric(llrdata)
+    assert (actual_value is None) == (expected_value is None)
+    if actual_value is not None:
+        assert np.isfinite(actual_value) == np.isfinite(expected_value)
+        assert allclose(actual_value, expected_value)

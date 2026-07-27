@@ -3,6 +3,7 @@ import logging
 import math
 import multiprocessing
 import os
+import time
 from collections.abc import Callable, Iterable, Iterator
 from copy import deepcopy
 from functools import partial
@@ -239,6 +240,8 @@ def run_lrsystem(
     confidence.dumpf(confidence.Configuration(lrsystem_config_dict), run_output_dir / 'lrsystem.yaml')
     confidence.dumpf(confidence.Configuration(data_config_dict), run_output_dir / 'data.yaml')
 
+    time_before = time.time()
+
     # Placeholders for numpy arrays of LLRs and labels obtained from each train/test split
     llrs: list[LLRData] = []
 
@@ -249,6 +252,8 @@ def run_lrsystem(
 
     # Combine collected numpy arrays after iteration over the train/test split(s)
     llrs: LLRData = concatenate_instances(*llrs)
+
+    llrs.replace(time_elapsed=time.time() - time_before)
 
     # Create a lazy factory for full-data-fitted model with memoization
     _cached_full_fit_lrsystem = None

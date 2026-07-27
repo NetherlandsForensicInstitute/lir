@@ -124,3 +124,39 @@ def llr_lower_bound(llrs: LLRData) -> float | None:
         The LLR lower bound, or `None`.
     """
     return llrs.llr_lower_bound
+
+
+def time_elapsed(llrs: LLRData) -> float | None:
+    """
+    Get the number of seconds elapsed time during the run, including both fit and apply.
+
+    The value is obtained from the ``time_elapsed`` attribute of the LLRData object.
+
+    Parameters
+    ----------
+    llrs : LLRData
+        LLRs and their metadata, wrapped in an ``LLRData`` object.
+
+    Returns
+    -------
+    float | None
+        The number of seconds, or ``None`` if not available.
+    """
+    return getattr(llrs, 'time_elapsed', None)
+
+
+def data_size(llrs: LLRData) -> int:
+    """
+    Get the number of items evaluated.
+
+    Parameters
+    ----------
+    llrs : LLRData
+        LLRs and their metadata, wrapped in an ``LLRData`` object.
+
+    Returns
+    -------
+    int
+        The number of items in the ``llrs`` object.
+    """
+    return len(llrs.llrs)

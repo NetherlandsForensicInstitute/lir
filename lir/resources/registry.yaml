@@ -79,6 +79,8 @@ metric:
   cllr_cal: lir.metrics.cllr_cal
   llr_lower_bound: lir.metrics.llr_lower_bound
   llr_upper_bound: lir.metrics.llr_upper_bound
+  time_elapsed: lir.metrics.time_elapsed
+  data_size: lir.metrics.data_size
   devpav: lir.algorithms.devpav.devpav
 
 output:

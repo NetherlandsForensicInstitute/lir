@@ -3,7 +3,7 @@ from pathlib import Path
 import numpy as np
 import numpy.random
 
-from lir.config.base import ContextAwareDict, config_parser, pop_field
+from lir.config.base import ConfigAttribute, ContextAwareDict, config_parser, pop_field
 from lir.data.models import DataProvider, FeatureData
 
 
@@ -83,7 +83,13 @@ class SynthesizedNormalBinaryData(DataProvider):
         return FeatureData(features=features, hypothesis=labels)
 
 
-@config_parser
+@config_parser(
+    attributes=[
+        ConfigAttribute(name='seed', type=int, required=False),
+        ConfigAttribute(name='h1', type=SynthesizedNormalData, required=True),
+        ConfigAttribute(name='h2', type=SynthesizedNormalData, required=True),
+    ]
+)
 def synthesized_normal_binary(config: ContextAwareDict, _: Path) -> SynthesizedNormalBinaryData:
     """
     Set up (binary class) data source class to obtain normally distributed data from configuration.

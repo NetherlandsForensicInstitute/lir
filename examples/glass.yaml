@@ -20,7 +20,7 @@ output_path: output/${timestamp}_glass_example
 #
 data: &data
   provider:
-    method: data_providers.glass
+    method: glass
     cache_dir: cache/glass
 
   splits:

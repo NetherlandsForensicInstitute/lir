@@ -1,5 +1,6 @@
 import argparse
 import datetime
+import json
 import logging
 import shutil
 import sys
@@ -12,8 +13,8 @@ from joblib import Parallel, delayed
 from lir import registry
 from lir.config.base import YamlParseError, _expand, pop_field
 from lir.config.experiment_strategies import parse_experiments
+from lir.config.schema import generate_schema, validate_yaml
 from lir.experiments import Experiment
-from lir.util import validate_yaml
 
 
 LOG = logging.getLogger(__name__)
@@ -175,6 +176,10 @@ def main(input_args: list[str] | None = None) -> None:
         default=0,
     )
 
+    parser.add_argument(
+        '--generate-schema', help='Generate a JSON schema that describes the experiment setup', action='store_true'
+    )
+
     parser.add_argument('-v', help='increases verbosity', action='count', default=0)
     parser.add_argument('-q', help='decreases verbosity', action='count', default=0)
     args = parser.parse_args(input_args)
@@ -184,6 +189,10 @@ def main(input_args: list[str] | None = None) -> None:
     if args.list_registry:
         for name in registry.registry():
             print(name)
+        return
+
+    if args.generate_schema:
+        print(json.dumps(generate_schema(), indent=2))
         return
 
     ### an experiment setup is required beyond this point ###

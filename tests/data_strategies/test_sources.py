@@ -2,8 +2,9 @@ import numpy as np
 import pytest
 
 from lir import DataStrategy
+from lir.data.models import get_instances_by_category
 from lir.data_strategies import SourcesCrossValidation, SourcesTrainTestSplit
-from lir.data_strategies.sources import LeaveOneSourceOut
+from lir.data_strategies.sources import LeaveOneSourceOut, LeaveTwoSourceOut
 from lir.datasets.synthesized_normal_multiclass import (
     SynthesizedDimension,
     SynthesizedNormalMulticlassData,
@@ -73,3 +74,13 @@ def test_leave_one_out():
     instances = data.get_instances()
     strategy = LeaveOneSourceOut()
     assert len(list(strategy.apply(instances))) == 100
+
+
+def test_leave_two_source_out():
+    dimensions = [SynthesizedDimension(0, 1, 0.2), SynthesizedDimension(0, 1, 0.2)]
+    data = SynthesizedNormalMulticlassData(num_source_ids=10, num_sources_per_source_id=4, seed=0, dimensions=dimensions)
+    instances = data.get_instances()
+    assert len(list(get_instances_by_category(instances, 'source_ids'))) == 10
+
+    strategy = LeaveTwoSourceOut()
+    assert len(list(strategy.apply(instances))) == 45

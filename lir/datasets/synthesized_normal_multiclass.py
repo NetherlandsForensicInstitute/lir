@@ -24,9 +24,9 @@ class SynthesizedNormalMulticlassData(DataProvider):
     ----------
     dimensions : list[SynthesizedDimension]
         Number of feature dimensions to include in the header.
-    population_size : int
+    num_source_ids : int
         Number of sources to sample in the synthetic population.
-    sources_size : int
+    num_sources_per_source_id : int
         Number of source groups represented in the dataset.
     seed : int | None
         Random seed controlling stochastic behaviour for reproducible results.
@@ -35,27 +35,27 @@ class SynthesizedNormalMulticlassData(DataProvider):
     def __init__(
         self,
         dimensions: list[SynthesizedDimension],
-        population_size: int,
-        sources_size: int,
+        num_source_ids: int,
+        num_sources_per_source_id: int,
         seed: int | None,
     ):
         self.dimensions = dimensions
-        self.population_size = population_size
-        self.sources_size = sources_size
+        self.num_source_ids = num_source_ids
+        self.num_sources_per_source_id = num_sources_per_source_id
         self.seed = seed
 
     def _generate_dimension(self, rng: Any, dimension: SynthesizedDimension) -> np.ndarray:
         population = rng.normal(
             loc=dimension.population_mean,
             scale=dimension.population_std,
-            size=self.population_size,
+            size=self.num_source_ids,
         )
         measurement_error = rng.normal(
             loc=0,
             scale=dimension.sources_std,
-            size=self.population_size * self.sources_size,
+            size=self.num_source_ids * self.num_sources_per_source_id,
         )
-        measurements = np.concatenate([population] * self.sources_size) + measurement_error
+        measurements = np.concatenate([population] * self.num_sources_per_source_id) + measurement_error
         return measurements
 
     def get_instances(self) -> FeatureData:
@@ -73,7 +73,7 @@ class SynthesizedNormalMulticlassData(DataProvider):
 
         measurements = [self._generate_dimension(rng, dim) for dim in self.dimensions]
         measurements = np.stack(measurements, axis=1)
-        source_ids = np.concatenate([np.arange(self.population_size)] * self.sources_size)
+        source_ids = np.concatenate([np.arange(self.num_source_ids)] * self.num_sources_per_source_id)
 
         return FeatureData(features=measurements, source_ids=source_ids)
 
@@ -98,7 +98,7 @@ def synthesized_normal_multiclass(config: ContextAwareDict, _: Path) -> Synthesi
     seed = pop_field(config, 'seed', validate=int, required=False)
 
     population = pop_field(config, 'population')
-    population_size = pop_field(population, 'size', validate=int)
+    num_source_ids = pop_field(population, 'size', validate=int)
     instances_per_source = pop_field(
         population,
         'instances_per_source',
@@ -115,7 +115,7 @@ def synthesized_normal_multiclass(config: ContextAwareDict, _: Path) -> Synthesi
 
     return SynthesizedNormalMulticlassData(
         dimensions,
-        population_size,
+        num_source_ids,
         instances_per_source,
         seed,
     )

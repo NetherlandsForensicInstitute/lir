@@ -10,7 +10,7 @@ from lir.transform.pairing import InstancePairing, SourcePairing
 
 def test_instance_pairing_seed():
     dimensions = [SynthesizedDimension(population_mean=0, population_std=5, sources_std=1)]
-    data = SynthesizedNormalMulticlassData(dimensions, population_size=100, sources_size=2, seed=0)
+    data = SynthesizedNormalMulticlassData(dimensions, num_source_ids=100, num_sources_per_source_id=2, seed=0)
 
     pairing0 = InstancePairing(seed=1)
     pairing1 = InstancePairing(seed=1)
@@ -26,7 +26,7 @@ def test_instance_pairing_seed():
 @pytest.mark.parametrize('ratio_limit', [1, 7, 1.0, 7.0, 0.5])
 def test_source_pairing_ratio(ratio_limit: int | float):
     dimensions = [SynthesizedDimension(population_mean=0, population_std=5, sources_std=1)]
-    data = SynthesizedNormalMulticlassData(dimensions, population_size=100, sources_size=2, seed=0)
+    data = SynthesizedNormalMulticlassData(dimensions, num_source_ids=100, num_sources_per_source_id=2, seed=0)
 
     pairs = SourcePairing(ratio_limit=ratio_limit).pair(data.get_instances())
     assert np.sum(pairs.hypothesis == 0) / np.sum(pairs.hypothesis == 1) == pytest.approx(ratio_limit)

@@ -72,16 +72,15 @@ transformed into a :class:`~lir.FeatureData` object.
 
 .. jupyter-execute::
 
-    from lir.datasets.feature_data_csv import FeatureDataCsvHttpParser
+    from lir.datasets.feature_data_csv import FeatureDataCsvParser
     import requests
     import numpy as np
 
     # retrieve the data
-    parser = FeatureDataCsvHttpParser('https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/main/duplo.csv',
+    parser = FeatureDataCsvParser('https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/main/duplo.csv',
             source_id_column='Item',
             instance_id_column='id',
-            ignore_columns=['Piece'],
-            session=requests.Session())
+            feature_columns=['K39', 'Ti49', 'Mn55', 'Rb85', 'Sr88', 'Zr90', 'Ba137', 'La139', 'Ce140', 'Pb208'])
 
     glass_data = parser.get_instances()
 

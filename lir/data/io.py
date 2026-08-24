@@ -191,7 +191,7 @@ class DataFileBuilderCsv:
                 writer.writerow(chain(*row))
 
 
-def search_path(path: Path) -> Path:
+def search_path(path: Path | str) -> Path:
     """
     Search the python path for a file.
 
@@ -204,7 +204,7 @@ def search_path(path: Path) -> Path:
 
     Parameters
     ----------
-    path : Path
+    path : Path | str
         Filesystem path used by this operation.
 
     Returns
@@ -212,6 +212,9 @@ def search_path(path: Path) -> Path:
     Path
         Absolute path to the resolved file location.
     """
+    if isinstance(path, str):
+        path = Path(path)
+
     if path.is_absolute():
         return path.resolve()
 

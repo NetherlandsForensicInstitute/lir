@@ -30,26 +30,26 @@ be used for training models. If we have the hypothesis labels, we may add them a
 
     my_data = FeatureData(
             features=np.array([[1, 2], [3, 4], [5, 6], [7, 8]]),
-            labels=np.array([0, 0, 1, 1])
+            hypothesis=np.array([0, 0, 1, 1])
     )
 
     print(f'This dataset contains {len(my_data)} instances.')
-    print(f'Its hypothesis labels are: {my_data.labels}')
+    print(f'Its hypothesis labels are: {my_data.hypothesis}')
 
 If we use the **common-source** model, we typically have no hypothesis labels, but we do have source labels. In that
-case we use the ``source_ids`` attribute instead of ``labels``. For now, we work with hypothesis labels. The dataset
+case we use the ``source_ids`` attribute instead of ``hypothesis``. For now, we work with hypothesis labels. The dataset
 supports slicing.
 
 .. jupyter-execute::
 
-    print(f'The dataset contains {len(my_data[my_data.labels==1])} instances of H1.')
-    print(f'The dataset contains {len(my_data[my_data.labels==0])} instances of H2.')
+    print(f'The dataset contains {len(my_data[my_data.hypothesis==1])} instances of H1.')
+    print(f'The dataset contains {len(my_data[my_data.hypothesis==0])} instances of H2.')
 
     my_slice = my_data[0:3]
 
     print(f'The slice [0:3] of the dataset contains {len(my_slice)} instances.')
     print(f'Its features are: {my_slice.features}')
-    print(f'Its hypothesis labels are: {my_slice.labels}')
+    print(f'Its hypothesis labels are: {my_slice.hypothesis}')
 
 This example uses :class:`~lir.FeatureData`. There can be other types of datasets, be it numeric features, scores, LLRs,
 or something else, but the base class for all datasets is :class:`~lir.InstanceData`.
@@ -120,8 +120,8 @@ than individual measurements.
 
     print(f'We have combined the {len(glass_data)} instances into {len(pairs)} pairs.')
     print(f'The paired data has features of all instances in the pairs, so it has type {type(pairs)}.')
-    print(f'There are {len(pairs[pairs.labels==1])} pairs with both instances from the same source.')
-    print(f'There are {len(pairs[pairs.labels==0])} pairs from different sources.')
+    print(f'There are {len(pairs[pairs.hypothesis==1])} pairs with both instances from the same source.')
+    print(f'There are {len(pairs[pairs.hypothesis==0])} pairs from different sources.')
 
 
 We have created a same-source pair for each source that has at least two instances. The number of different-source pairs
@@ -156,8 +156,8 @@ Now it is time to calculate LLRs...
 
     # calculate LLRs
     llrs = LogitCalibrator().fit_apply(distances)
-    different_source_llrs = llrs[llrs.labels==0]
-    same_source_llrs = llrs[llrs.labels==1]
+    different_source_llrs = llrs[llrs.hypothesis==0]
+    same_source_llrs = llrs[llrs.hypothesis==1]
 
     print(f'The set of LLRs has type {type(llrs)}.')
     print(f'The median LLR for different-source pairs is {np.median(different_source_llrs.llrs)}.')

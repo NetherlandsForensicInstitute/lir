@@ -6,6 +6,7 @@ from lir.config.base import ContextAwareDict, check_is_empty, config_parser, pop
 from lir.config.data import parse_data_provider
 from lir.data.io import DataFileBuilderCsv
 from lir.data.models import DataProvider, FeatureData, check_type
+from lir.util import check_not_none
 
 
 LOG = logging.getLogger(__name__)
@@ -43,7 +44,7 @@ class CaseLLRToCsv(Aggregation):
                 f'No full-data-fitted model factory available for run `{data.run_name}`; '
                 f'using split-trained model instead.'
             )
-            lrsystem = data.lrsystem
+            lrsystem = check_not_none(data.lrsystem)
 
         # Ensure the case data does not contain labels by setting them to None.
         case_instances = self.case_data_provider.get_instances().replace(hypothesis=None)

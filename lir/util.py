@@ -17,7 +17,7 @@ from jsonschema import validate
 LR = collections.namedtuple('LR', ['lr', 'p0', 'p1'])
 
 
-def check_not_none[AnyType: Any](v: AnyType, message: str | None = None) -> AnyType:
+def check_not_none[AnyType: Any](v: AnyType | None, message: str | None = None) -> AnyType:
     """
     Check if a given input is not `None`. If so, return the input value. Otherwise, raise a `ValueError`.
 

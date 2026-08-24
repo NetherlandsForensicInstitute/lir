@@ -46,11 +46,11 @@ class AggregationData(NamedTuple):  # numpydoc ignore=PR02
     """
 
     llrdata: LLRData
-    lrsystem: LRSystem
+    lrsystem: LRSystem | None
     parameters: dict[str, HyperparameterOption | str]
     run_name: str
     experiment_output_dir: Path
-    run_output_dir: Path
+    run_output_dir: Path | None = None
     get_full_fit_lrsystem: Callable[[], LRSystem] | None = None
 
     def resolve_path_for_experiment(self, filename: Path | PathLike | str) -> Path:
@@ -93,7 +93,8 @@ class AggregationData(NamedTuple):  # numpydoc ignore=PR02
         Path
             A path relative to the output directory for the experiment.
         """
-        return _resolve_path(self.run_output_dir, filename)
+        output_dir = self.run_output_dir or f'{self.experiment_output_dir}/{self.run_name}'
+        return _resolve_path(Path(output_dir), filename)
 
 
 class Aggregation(ABC):

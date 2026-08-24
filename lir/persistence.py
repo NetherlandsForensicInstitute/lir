@@ -4,6 +4,7 @@ from pathlib import Path
 
 from lir.aggregation import Aggregation, AggregationData
 from lir.lrsystems.lrsystems import LRSystem
+from lir.util import check_not_none
 
 
 def load_model(path: Path) -> LRSystem:
@@ -93,4 +94,4 @@ class SaveModel(Aggregation):
             The data to be aggregated, containing the trained LR system model and the run name.
         """
         path = data.resolve_path_for_run(self.filename)
-        save_model(path, data.lrsystem)
+        save_model(path, check_not_none(data.lrsystem))

@@ -120,16 +120,26 @@ class ExtraField(DataField):  # numpydoc ignore=PR01
         return self.column_names[0]
 
 
+def _open_file(url: str | Path) -> IO:
+    if isinstance(url, str) and ':' in url:
+        response = requests.Session().get(url, stream=True)
+        fp = io.StringIO(response.text)
+        return fp
+    else:
+        full_path = search_path(url)
+        return open(full_path, 'r')
+
+
 class FeatureDataCsvParser(DataProvider):
     """
     Parse a CSV file into an :class:`~lir.InstanceData` object.
 
-    The CSV file contents are provided by the ``open_file_fn`` argument.
+    The CSV contents can be a URL, a file path, or a function with no arguments that returns a data stream.
 
     Parameters
     ----------
-    open_file_fn : Callable[[], IO]
-        Function that returns a data stream from which the CSV file contents can be read.
+    file : Callable[[], IO] | str | Path
+        Reference to the contents of a CSV file.
     source_id_column : str | list[str] | None
         Column name(s) containing source identifiers (each source has a unique string identifier).
     hypothesis_column : str | None
@@ -151,7 +161,7 @@ class FeatureDataCsvParser(DataProvider):
         Column names ignored when extracting features. This attribute is ignored if `feature_columns` is available.
     head : int | None
         Maximum number of rows to read from the source.
-    message_prefix : str
+    message_prefix : str | None
         Prefix added to parser log and error messages.
     continue_on_error : bool
         If True, a row will be dropped if a parse error occurs. Otherwise, parsing will be aborted.
@@ -194,7 +204,9 @@ class FeatureDataCsvParser(DataProvider):
 
     def __init__(
         self,
-        open_file_fn: Callable[[], IO],
+        file: Callable[[], IO] | str | Path,
+        /,
+        *,
         source_id_column: str | list[str] | None = None,
         hypothesis_column: str | None = None,
         label_column: str | None = None,
@@ -205,10 +217,16 @@ class FeatureDataCsvParser(DataProvider):
         extra_fields: list[ExtraField] | None = None,
         ignore_columns: list[str] | None = None,
         head: int | None = None,
-        message_prefix: str = '',
+        message_prefix: str | None = None,
         continue_on_error: bool = False,
     ):
-        self._open_file_fn = open_file_fn
+        if callable(file):
+            self._open_file_fn = file
+            self._message_prefix = message_prefix or ''
+        else:
+            self._open_file_fn = partial(_open_file, file)
+            self._message_prefix = message_prefix if message_prefix is not None else f'{file}: '
+
         self.data_fields: list[DataField] = []
 
         if isinstance(source_id_column, str):
@@ -242,7 +260,6 @@ class FeatureDataCsvParser(DataProvider):
         self.data_fields.extend(extra_fields or [])
         self.ignore_columns: list[str] = ignore_columns or []
         self._head = head
-        self._message_prefix = message_prefix
         self.continue_on_error = continue_on_error
 
         if isinstance(feature_columns, list):
@@ -374,12 +391,9 @@ def _parse_extra_field(config: ContextAwareDict | str) -> ExtraField:
     raise ValueError(f'Extra field expected str or dict, but got {type(config)} ')
 
 
-def _parse_feature_data_csv(config: ContextAwareDict, **kwargs: Any) -> FeatureDataCsvParser:
+def _parse_extra_fields(config: ContextAwareDict) -> list[ExtraField]:
     extra_fields_config = pop_field(config, 'extra_fields', default=[], validate=partial(check_type, list))
-    extra_fields = [_parse_extra_field(field_config) for field_config in extra_fields_config]
-
-    parser = FeatureDataCsvParser(**config, extra_fields=extra_fields, **kwargs)
-    return parser
+    return [_parse_extra_field(field_config) for field_config in extra_fields_config]
 
 
 @config_parser
@@ -420,7 +434,8 @@ def feature_data_csv_http_parser(config: ContextAwareDict, output_dir: Path) -> 
         fp = io.StringIO(response.text)
         return fp
 
-    return _parse_feature_data_csv(config, message_prefix=f'{url}: ', open_file_fn=open_url)
+    extra_fields = _parse_extra_fields(config)
+    return FeatureDataCsvParser(open_url, **config, extra_fields=extra_fields, message_prefix=f'{url}: ')
 
 
 @config_parser
@@ -441,6 +456,5 @@ def feature_data_csv_file_parser(config: ContextAwareDict, output_dir: Path) -> 
         FeatureData object parsed from the source.
     """
     file = Path(pop_field(config, 'file'))
-    file = search_path(file)
-    open_file_fn = partial(open, file, 'r')
-    return _parse_feature_data_csv(config, message_prefix=f'{file}: ', open_file_fn=open_file_fn)
+    extra_fields = _parse_extra_fields(config)
+    return FeatureDataCsvParser(file, **config, extra_fields=extra_fields)

@@ -3,7 +3,7 @@ from os import PathLike
 from pathlib import Path
 
 from lir.aggregation import Aggregation, AggregationData
-from lir.lrsystems.lrsystems import LRSystem
+from lir.lrsystems.base import LRSystem
 from lir.util import check_not_none
 
 

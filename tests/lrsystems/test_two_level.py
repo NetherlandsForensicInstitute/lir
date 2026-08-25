@@ -6,7 +6,7 @@ from lir.datasets.synthesized_normal_multiclass import (
     SynthesizedDimension,
     SynthesizedNormalMulticlassData,
 )
-from lir.lrsystems.lrsystems import LLRData
+from lir.lrsystems.base import LLRData
 from lir.lrsystems.two_level import TwoLevelSystem
 from lir.transform.pairing import SourcePairing
 

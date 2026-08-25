@@ -17,8 +17,8 @@ from lir.config.substitution import (
 )
 from lir.config.transform import parse_module, parse_pairing_config
 from lir.data.models import InstanceData, LLRData
+from lir.lrsystems.base import LRSystem
 from lir.lrsystems.binary_lrsystem import BinaryLRSystem
-from lir.lrsystems.lrsystems import LRSystem
 from lir.lrsystems.score_based import ScoreBasedSystem
 from lir.lrsystems.two_level import TwoLevelSystem
 from lir.registry import ComponentNotFoundError

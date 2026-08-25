@@ -10,8 +10,8 @@ from sklearn.preprocessing import StandardScaler
 from lir.algorithms.kde import KDECalibrator
 from lir.config.base import GenericConfigParser, _expand
 from lir.data.models import FeatureData
+from lir.lrsystems.base import LRSystem
 from lir.lrsystems.binary_lrsystem import BinaryLRSystem
-from lir.lrsystems.lrsystems import LRSystem
 from lir.persistence import SaveModel, load_model, save_model
 from lir.transform import as_transformer
 from lir.transform.pipeline import Pipeline

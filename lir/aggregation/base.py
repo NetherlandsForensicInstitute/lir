@@ -7,7 +7,7 @@ from typing import NamedTuple
 
 from lir.config.substitution import HyperparameterOption
 from lir.data.models import LLRData
-from lir.lrsystems.lrsystems import LRSystem
+from lir.lrsystems.base import LRSystem
 
 
 LOG = logging.getLogger(__name__)

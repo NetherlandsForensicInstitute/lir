@@ -18,7 +18,6 @@ __pycache__
 
 /.coverage
 dist/
-/tests/yaml_output
 
 # PDM specific
 /.pdm-build

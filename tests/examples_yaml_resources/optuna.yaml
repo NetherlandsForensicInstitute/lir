@@ -2,7 +2,7 @@
 
 output_path: tests/yaml_output
 
-data.provider.cache_dir: tests/example_yamls_overrides/cache/glass
+data.provider.cache_dir: ${output_path}/../.cache/glass
 
 experiments:
   - name: optimize_kde_bandwidth

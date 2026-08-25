@@ -36,25 +36,30 @@ class ParameterizedConfig(NamedTuple):
 
     Objects of this class are pickleable. When pickled, the materialization is dropped and will have to be recreated
     when needed.
-
-    Attributes
-    ----------
-    spec : ContextAwareDict
-        The configuration of an LR system or data setup for a run.
-    params : dict[str, Any]
-        The parameters that describe the configuration.
-    experiment_output_dir : Path
-        Path to the directory where results of the experiment may be written. This directory is shared among all runs
-        of an experiment.
-    run_output_dir : Path | None
-        Path to the directory where results of the run may be written, this is a subdirectory of
-        ``experiment_output_dir``. May be ``None`` if the configuration is not yet assigned to a run.
     """
 
     spec: ContextAwareDict
+    """
+    The configuration of an LR system or data setup for a run.
+    """
+
     params: dict[str, Any]
+    """
+    The parameters that describe the configuration.
+    """
+
     experiment_output_dir: Path
+    """
+    Path to the directory where results of the experiment may be written. This directory is shared among all runs
+    of an experiment.
+    """
+
     run_output_dir: Path | None = None
+    """
+    Path to the directory where results of the run may be written, this is a subdirectory of
+    ``experiment_output_dir``. May be ``None`` if the configuration is not yet assigned to a run.
+    """
+
 
     @property
     def desc(self) -> str:

@@ -35,20 +35,16 @@ class ParseError(ValueError):
 class DataField:
     """
     A data field for parsing a CSV file into an :class:`~lir.InstanceData` object.
-
-    Attributes
-    ----------
-    field_name : str
-        The attribute name in the ``InstanceData`` object.
-    column_names : list[str]
-        The associated column names in the CSV file.
-    validate_cell : Callable[[str], Any]
-        A validation function for parsing column values.
     """
 
     field_name: str
+    """The attribute name in the ``InstanceData`` object."""
+
     column_names: list[str]
+    """The associated column names in the CSV file."""
+
     validate_cell: Callable[[str], Any] = str
+    """A validation function for parsing column values."""
 
     def _get_validated_value(self, row: dict[str, str], column_name: str) -> Any:
         value = row.pop(column_name)

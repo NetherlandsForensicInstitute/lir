@@ -36,7 +36,9 @@ experiments:
       comparing:                      # The comparing module is applied on pairs.
         method: pipeline              # We need two modules, so we combine them in a pipeline.
         steps:
-          score: manhattan_distance   # First, we use the manhattan distance to calculate a "score".
+          score:
+            method: cosine_similarity.parse_cosine_similarity_config
+            square: True
           to_llr: logistic_calibrator # Next, we turn the scores into LLRs.
 
     # The output section: where results are aggregated.

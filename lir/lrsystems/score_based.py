@@ -2,7 +2,7 @@ from typing import Self
 
 from lir import Transformer
 from lir.data.models import InstanceData
-from lir.lrsystems.lrsystems import LLRData, LRSystem
+from lir.lrsystems.base import LLRData, LRSystem
 from lir.transform.pairing import PairingMethod
 from lir.transform.pipeline import Pipeline
 

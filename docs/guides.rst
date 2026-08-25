@@ -8,4 +8,5 @@ Guides
    api-overview
    lrsystem-assessment
    experiment-setup
+   extending-lir
    

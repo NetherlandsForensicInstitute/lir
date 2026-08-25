@@ -6,6 +6,7 @@ import inspect
 import re
 from pathlib import Path
 
+from docs import get_apidocs_uri, get_docstr_short, get_registry_link
 from lir import registry
 from lir.config.base import ConfigParser, GenericConfigParser
 from lir.registry import _get_attribute_by_name
@@ -30,29 +31,46 @@ pygments_style = 'sphinx'  # enable syntax highlighting
 # modindex_common_prefix = ['lir.']
 
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.autosummary',
-    'sphinx.ext.intersphinx',
-    'sphinx.ext.napoleon',
-    'sphinx.ext.viewcode',
+    'sphinx.ext.apidoc',  # generate RST files for API documentation
+    #'sphinx.ext.autodoc',
+    #'sphinx.ext.autosummary',
+    'sphinx.ext.intersphinx',  # include references to third party libraries
+    'sphinx.ext.napoleon',  # parse NumPy and Google style docstrings
+    'sphinx.ext.viewcode',  # include links to source code
     'myst_parser',
     'sphinx_rtd_theme',
-    'sphinx_jinja',
-    'jupyter_sphinx',
+    'sphinx_jinja',  # render Jinja templates in RST files
+    'jupyter_sphinx',  # include Jupyter notebooks in the documentation
 ]
 
+# configuration for apidoc
+# see: https://www.sphinx-doc.org/en/master/usage/extensions/apidoc.html
+apidoc_modules = [
+    {
+        'path': '../lir',
+        'destination': 'api',
+        'exclude_patterns': [
+            '../lir/data/models.py',
+            '**/base.py',
+        ],
+        'module_first': True,
+        'separate_modules': False,
+    },
+]
+
+# configuration for autosummary
+# see: https://www.sphinx-doc.org/en/master/usage/extensions/autosummary.html
+autosummary_generate = True
+
+# configuration for intersphinx
+# see: https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None),
     'sklearn': ('http://scikit-learn.org/stable', None),
 }
 
-templates_path = ['_templates']
-exclude_patterns = []
-
-# Automatically generate stub pages for autosummary entries.
-autosummary_generate = True
-
-# Napoleon settings
+# configuration for napoleon
+# see: https://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html
 napoleon_numpy_docstring = True
 napoleon_include_init_with_doc = False
 napoleon_include_private_with_doc = False
@@ -66,6 +84,8 @@ napoleon_use_rtype = True
 napoleon_use_keyword = True
 napoleon_custom_sections = None
 
+templates_path = ['_templates']
+exclude_patterns = []
 
 # -- Options for HTML output -------------------------------------------------
 html_theme = 'sphinx_rtd_theme'

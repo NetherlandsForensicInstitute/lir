@@ -61,6 +61,10 @@ How to read a PAV plot? The example below shows how to interpret the different s
 .. jupyter-execute::
     :hide-code:
 
+    # suppress warning: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+    import warnings
+    warnings.filterwarnings('ignore')
+
     from matplotlib.patches import Polygon
     from sklearn.preprocessing import StandardScaler
 

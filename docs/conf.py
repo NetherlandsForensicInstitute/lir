@@ -32,7 +32,6 @@ extensions = [
     'sphinx.ext.intersphinx',  # include references to third party libraries
     'sphinx.ext.napoleon',  # parse NumPy and Google style docstrings
     'sphinx.ext.viewcode',  # include links to source code
-    'myst_parser',
     'sphinx_rtd_theme',
     'sphinx_jinja',  # render Jinja templates in RST files
     'jupyter_sphinx',  # include Jupyter notebooks in the documentation

@@ -70,7 +70,7 @@ quicktest = {composite = ["test --testmon"]}
 test-coverage = "coverage report"
 lir = "python -m lir"
 lint-docs = {shell = 'numpydoc lint lir/*.py lir/*/*.py'}
-generate-docs = "sphinx-build -M html docs build"
+generate-docs = "sphinx-build -M html docs build --fail-on-warning"
 serve-docs = {composite = ["generate-docs", "python -m http.server -d build/html"]}
 
 [tool.ruff]

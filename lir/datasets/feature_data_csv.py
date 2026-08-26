@@ -33,9 +33,7 @@ class ParseError(ValueError):
 
 @dataclass
 class DataField:
-    """
-    A data field for parsing a CSV file into an :class:`~lir.InstanceData` object.
-    """
+    """A data field for parsing a CSV file into an :class:`~lir.InstanceData` object."""
 
     field_name: str
     """The attribute name in the ``InstanceData`` object."""

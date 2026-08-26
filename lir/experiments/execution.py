@@ -60,7 +60,6 @@ class ParameterizedConfig(NamedTuple):
     ``experiment_output_dir``. May be ``None`` if the configuration is not yet assigned to a run.
     """
 
-
     @property
     def desc(self) -> str:
         """

@@ -1,4 +1,4 @@
-from lir.experiments.base_experiment import Experiment
+from lir.experiments.base import Experiment
 from lir.experiments.optuna_experiment import OptunaExperiment
 from lir.experiments.predefined_experiment import PredefinedExperiment
 

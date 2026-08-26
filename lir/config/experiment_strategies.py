@@ -11,7 +11,7 @@ from lir.config.base import (
 from lir.config.substitution import (
     ContextAwareDict,
 )
-from lir.experiments.base_experiment import Experiment
+from lir.experiments import Experiment
 
 
 def parse_experiment_strategy(config: ContextAwareDict, output_path: Path) -> Experiment:

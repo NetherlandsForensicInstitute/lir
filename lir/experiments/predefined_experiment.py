@@ -38,7 +38,7 @@ class PredefinedExperiment(Experiment):
     - use the ``dataparameters`` field to configure which dataparameters can be varied;
     - set the ``enable_parallelization`` field to ``True`` to enable parallelization.
 
-    For more guidance and working examples, see: :ref:`experiment-setup`.
+    For more guidance and working examples, see: :doc:`/experiment-setup`.
 
     Parameters
     ----------

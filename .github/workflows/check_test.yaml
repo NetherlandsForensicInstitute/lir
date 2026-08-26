@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   check:
-    name: Linting, formatting, static analysis
+    name: Formatting, linting, documentation generation
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -26,6 +26,8 @@ jobs:
         run: pdm sync --group dev
       - name: Run checks
         run: pdm run check
+      - name: Run documentation
+        run: pdm generate-docs
   test:
     name: Unit tests
     runs-on: ubuntu-latest

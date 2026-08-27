@@ -1,0 +1,7 @@
+lir.data.models module
+======================
+
+.. automodule:: lir.data.models
+   :members:
+   :show-inheritance:
+   :undoc-members:

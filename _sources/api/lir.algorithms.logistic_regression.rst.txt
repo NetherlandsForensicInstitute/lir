@@ -1,0 +1,7 @@
+lir.algorithms.logistic\_regression module
+==========================================
+
+.. automodule:: lir.algorithms.logistic_regression
+   :members:
+   :show-inheritance:
+   :undoc-members:

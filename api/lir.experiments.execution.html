@@ -1,0 +1,482 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.experiments.execution module &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lir.experiments.optuna_experiment module" href="lir.experiments.optuna_experiment.html" />
+    <link rel="prev" title="lir.experiments.config module" href="lir.experiments.config.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api-overview.html">Python API: Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api-overview.html#organize-your-data">Organize your data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api-overview.html#calculate-llrs">Calculate LLRs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lrsystem-assessment.html#appearance-plots-and-metrics">Appearance plots and metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="lir.html">lir package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.DataProvider"><code class="docutils literal notranslate"><span class="pre">DataProvider</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.DataStrategy"><code class="docutils literal notranslate"><span class="pre">DataStrategy</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.FeatureData"><code class="docutils literal notranslate"><span class="pre">FeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.InstanceData"><code class="docutils literal notranslate"><span class="pre">InstanceData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.LLRData"><code class="docutils literal notranslate"><span class="pre">LLRData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.PairedFeatureData"><code class="docutils literal notranslate"><span class="pre">PairedFeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.Transformer"><code class="docutils literal notranslate"><span class="pre">Transformer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lir.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">lir</a></li>
+          <li class="breadcrumb-item"><a href="lir.html">lir package</a></li>
+          <li class="breadcrumb-item"><a href="lir.experiments.html">lir.experiments package</a></li>
+      <li class="breadcrumb-item active">lir.experiments.execution module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/lir.experiments.execution.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-lir.experiments.execution">
+<span id="lir-experiments-execution-module"></span><h1>lir.experiments.execution module<a class="headerlink" href="#module-lir.experiments.execution" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.experiments.execution.DataConfig">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.experiments.execution.</span></span><span class="sig-name descname"><span class="pre">DataConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lir/experiments/execution.html#DataConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.experiments.execution.DataConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.experiments.execution.ParameterizedConfig" title="lir.experiments.execution.ParameterizedConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">ParameterizedConfig</span></code></a></p>
+<p>Data configuration object.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="lir.experiments.execution.DataConfig.data_setup">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">data_setup</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="lir.config.data.html#lir.config.data.DataSetup" title="lir.config.data.DataSetup"><span class="pre">DataSetup</span></a></span><a class="headerlink" href="#lir.experiments.execution.DataConfig.data_setup" title="Link to this definition"></a></dt>
+<dd><p>Parse the data configuration.</p>
+<p>This is done here to ensure that data
+parsing is only done once per data configuration, even when multiple
+LR systems are being evaluated on the same data setup.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A tuple of a data provider and a data strategy.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a>[<a class="reference internal" href="lir.html#lir.DataProvider" title="lir.DataProvider">DataProvider</a>, <a class="reference internal" href="lir.html#lir.DataStrategy" title="lir.DataStrategy">DataStrategy</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="lir.experiments.execution.DataConfig.filter">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">filter</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="lir.transform.html#lir.transform.Transformer" title="lir.transform.Transformer"><span class="pre">Transformer</span></a></span><a class="headerlink" href="#lir.experiments.execution.DataConfig.filter" title="Link to this definition"></a></dt>
+<dd><p>Return a data filter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A data transformer object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="lir.html#lir.Transformer" title="lir.Transformer">Transformer</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="lir.experiments.execution.DataConfig.provider">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">provider</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="lir.data.models.html#lir.data.models.DataProvider" title="lir.data.models.DataProvider"><span class="pre">DataProvider</span></a></span><a class="headerlink" href="#lir.experiments.execution.DataConfig.provider" title="Link to this definition"></a></dt>
+<dd><p>Return a data provider.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A data provider object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="lir.html#lir.DataProvider" title="lir.DataProvider">DataProvider</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="lir.experiments.execution.DataConfig.splits">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">splits</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable" title="(in Python v3.14)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">InstanceData</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="lir.data.models.html#lir.data.models.InstanceData" title="lir.data.models.InstanceData"><span class="pre">InstanceData</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#lir.experiments.execution.DataConfig.splits" title="Link to this definition"></a></dt>
+<dd><p>Convert the split_data iterable to a list to allow multiple iterations over the splits.</p>
+<p>E.g. one iteration for validation and one for case LLR generation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>An iterable of training/test set pairs.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Iterable[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a>[<a class="reference internal" href="lir.html#lir.InstanceData" title="lir.InstanceData">InstanceData</a>, <a class="reference internal" href="lir.html#lir.InstanceData" title="lir.InstanceData">InstanceData</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="lir.experiments.execution.DataConfig.splitter">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">splitter</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="lir.data.models.html#lir.data.models.DataStrategy" title="lir.data.models.DataStrategy"><span class="pre">DataStrategy</span></a></span><a class="headerlink" href="#lir.experiments.execution.DataConfig.splitter" title="Link to this definition"></a></dt>
+<dd><p>Return a data splitter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A data splitter object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="lir.html#lir.DataStrategy" title="lir.DataStrategy">DataStrategy</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.experiments.execution.LRSystemConfig">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.experiments.execution.</span></span><span class="sig-name descname"><span class="pre">LRSystemConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lir/experiments/execution.html#LRSystemConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.experiments.execution.LRSystemConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lir.experiments.execution.ParameterizedConfig" title="lir.experiments.execution.ParameterizedConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">ParameterizedConfig</span></code></a></p>
+<p>LR system configuration object.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="lir.experiments.execution.LRSystemConfig.lrsystem">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">lrsystem</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="lir.lrsystems.lrsystems.html#lir.lrsystems.lrsystems.LRSystem" title="lir.lrsystems.lrsystems.LRSystem"><span class="pre">LRSystem</span></a></span><a class="headerlink" href="#lir.experiments.execution.LRSystemConfig.lrsystem" title="Link to this definition"></a></dt>
+<dd><p>Return the materialized LR system as defined in configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>An LR system object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="lir.lrsystems.html#lir.lrsystems.LRSystem" title="lir.lrsystems.LRSystem">LRSystem</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lir.experiments.execution.ParameterizedConfig">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lir.experiments.execution.</span></span><span class="sig-name descname"><span class="pre">ParameterizedConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">ContextAwareDict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lir/experiments/execution.html#ParameterizedConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.experiments.execution.ParameterizedConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NamedTuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">NamedTuple</span></code></a></p>
+<p>Base class for LR system or data configurations.</p>
+<p>A configuration of an LR system or data setup is a dictionary, stored in the <code class="docutils literal notranslate"><span class="pre">spec</span></code> attribute. Additionally, there
+can be hyperparameters that are already incorporated in the configuration. The hyperparameters describe how this
+configuration is different from other configurations.</p>
+<p>The configuration is extended by the subclass to lazily materialize the configuration on demand.</p>
+<p>Objects of this class are pickleable. When pickled, the materialization is dropped and will have to be recreated
+when needed.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.experiments.execution.ParameterizedConfig.spec">
+<span class="sig-name descname"><span class="pre">spec</span></span><a class="headerlink" href="#lir.experiments.execution.ParameterizedConfig.spec" title="Link to this definition"></a></dt>
+<dd><p>The configuration of an LR system or data setup for a run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict">ContextAwareDict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.experiments.execution.ParameterizedConfig.params">
+<span class="sig-name descname"><span class="pre">params</span></span><a class="headerlink" href="#lir.experiments.execution.ParameterizedConfig.params" title="Link to this definition"></a></dt>
+<dd><p>The parameters that describe the configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.experiments.execution.ParameterizedConfig.experiment_output_dir">
+<span class="sig-name descname"><span class="pre">experiment_output_dir</span></span><a class="headerlink" href="#lir.experiments.execution.ParameterizedConfig.experiment_output_dir" title="Link to this definition"></a></dt>
+<dd><p>Path to the directory where results of the experiment may be written. This directory is shared among all runs
+of an experiment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lir.experiments.execution.ParameterizedConfig.run_output_dir">
+<span class="sig-name descname"><span class="pre">run_output_dir</span></span><a class="headerlink" href="#lir.experiments.execution.ParameterizedConfig.run_output_dir" title="Link to this definition"></a></dt>
+<dd><p>Path to the directory where results of the run may be written, this is a subdirectory of
+<code class="docutils literal notranslate"><span class="pre">experiment_output_dir</span></code>. May be <code class="docutils literal notranslate"><span class="pre">None</span></code> if the configuration is not yet assigned to a run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="lir.experiments.execution.ParameterizedConfig.desc">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">desc</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><a class="headerlink" href="#lir.experiments.execution.ParameterizedConfig.desc" title="Link to this definition"></a></dt>
+<dd><p>Generate a description of this configuration from the parameter values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A description of this configuration.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">experiment_output_dir</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></span><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">params</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id1" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">run_output_dir</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><a class="headerlink" href="#id2" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 3</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">spec</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="lir.config.base.html#lir.config.base.ContextAwareDict" title="lir.config.base.ContextAwareDict"><span class="pre">ContextAwareDict</span></a></span><a class="headerlink" href="#id3" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.experiments.execution.parallellize_runs">
+<span class="sig-prename descclassname"><span class="pre">lir.experiments.execution.</span></span><span class="sig-name descname"><span class="pre">parallellize_runs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_base_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">lrsystem_configs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lir.experiments.execution.LRSystemConfig" title="lir.experiments.execution.LRSystemConfig"><span class="pre">LRSystemConfig</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_configs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lir.experiments.execution.DataConfig" title="lir.experiments.execution.DataConfig"><span class="pre">DataConfig</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable" title="(in Python v3.14)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lir.aggregation.base.html#lir.aggregation.base.AggregationData" title="lir.aggregation.base.AggregationData"><span class="pre">AggregationData</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lir/experiments/execution.html#parallellize_runs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.experiments.execution.parallellize_runs" title="Link to this definition"></a></dt>
+<dd><p>Run LR systems in parallel.</p>
+<p>This method has exactly the same effect as <a class="reference internal" href="#lir.experiments.execution.run_multiple" title="lir.experiments.execution.run_multiple"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run_multiple()</span></code></a>, but uses <code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code> to do runs in
+parallel. It selects a parallelization strategy to distribute the runs over workers.</p>
+<p>Issues:</p>
+<ul class="simple">
+<li><p>this may lead to repetitive loading of data, which may take additional (costly) I/O operations</p></li>
+<li><p>in some cases (notably, when bootstrapping) the <cite>multiprocessing.imap_unsorted</cite> operation may produce a “leaked
+semaphore” warning</p></li>
+<li><p>logging in workers is disabled</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_base_dir</strong> (<em>Path</em>) – The base directory where the results may be written.</p></li>
+<li><p><strong>lrsystem_configs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference internal" href="#lir.experiments.execution.LRSystemConfig" title="lir.experiments.execution.LRSystemConfig"><em>LRSystemConfig</em></a><em>]</em>) – A list of LR system configuraitons.</p></li>
+<li><p><strong>data_configs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference internal" href="#lir.experiments.execution.DataConfig" title="lir.experiments.execution.DataConfig"><em>DataConfig</em></a><em>]</em>) – A list of dataset configurations.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of results for all runs.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>[<a class="reference internal" href="lir.aggregation.html#lir.aggregation.AggregationData" title="lir.aggregation.AggregationData">AggregationData</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.experiments.execution.run_lrsystem">
+<span class="sig-prename descclassname"><span class="pre">lir.experiments.execution.</span></span><span class="sig-name descname"><span class="pre">run_lrsystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">experiment_output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">lrsystem_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lir.experiments.execution.LRSystemConfig" title="lir.experiments.execution.LRSystemConfig"><span class="pre">LRSystemConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lir.experiments.execution.DataConfig" title="lir.experiments.execution.DataConfig"><span class="pre">DataConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_full_lrsystem</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lir.aggregation.base.html#lir.aggregation.base.AggregationData" title="lir.aggregation.base.AggregationData"><span class="pre">AggregationData</span></a></span></span><a class="reference internal" href="../_modules/lir/experiments/execution.html#run_lrsystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.experiments.execution.run_lrsystem" title="Link to this definition"></a></dt>
+<dd><p>Run experiment on a single LR system configuration using the provided data.</p>
+<p>The LR system is fitted using the training subset data and
+subsequently used to determine LLRs for the test subset data. The results are stored in
+a temporary list which contains the determined data of each test / train split.</p>
+<p>The collected results are combined and passed to the configured <cite>outputs</cite> aggregations,
+which may write metrics and visualizations to the <cite>output_path</cite> directory. The combined
+LLR data is returned.</p>
+<p>Next to this, the configuration of both the data and LR system are stored in the output
+directory for future reference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>experiment_output_dir</strong> (<em>Path</em>) – The base directory of the path where results may be written.</p></li>
+<li><p><strong>lrsystem_config</strong> (<a class="reference internal" href="#lir.experiments.execution.LRSystemConfig" title="lir.experiments.execution.LRSystemConfig"><em>LRSystemConfig</em></a>) – LR-system configuration for a single run.</p></li>
+<li><p><strong>data_config</strong> (<a class="reference internal" href="#lir.experiments.execution.DataConfig" title="lir.experiments.execution.DataConfig"><em>DataConfig</em></a>) – Data configuration used to construct datasets for runs.</p></li>
+<li><p><strong>skip_full_lrsystem</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, the full LR system will not be trained.</p></li>
+<li><p><strong>run_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><em>None</em>) – The name of the run (optional). If None, the name will be derived from parameter values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Likelihood-ratio data produced by applying the LR system.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="lir.html#lir.LLRData" title="lir.LLRData">LLRData</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.experiments.execution.run_multiple">
+<span class="sig-prename descclassname"><span class="pre">lir.experiments.execution.</span></span><span class="sig-name descname"><span class="pre">run_multiple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_base_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">lrsystem_configs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lir.experiments.execution.LRSystemConfig" title="lir.experiments.execution.LRSystemConfig"><span class="pre">LRSystemConfig</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_configs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lir.experiments.execution.DataConfig" title="lir.experiments.execution.DataConfig"><span class="pre">DataConfig</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterator" title="(in Python v3.14)"><span class="pre">Iterator</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lir.aggregation.base.html#lir.aggregation.base.AggregationData" title="lir.aggregation.base.AggregationData"><span class="pre">AggregationData</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lir/experiments/execution.html#run_multiple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.experiments.execution.run_multiple" title="Link to this definition"></a></dt>
+<dd><p>Run LR systems sequentially.</p>
+<p>Consider using <a class="reference internal" href="#lir.experiments.execution.parallellize_runs" title="lir.experiments.execution.parallellize_runs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">parallellize_runs()</span></code></a> to speed up processing by doing runs in parallel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_base_dir</strong> (<em>Path</em>) – The base directory where the results may be written.</p></li>
+<li><p><strong>lrsystem_configs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference internal" href="#lir.experiments.execution.LRSystemConfig" title="lir.experiments.execution.LRSystemConfig"><em>LRSystemConfig</em></a><em>]</em>) – A list of LR system configuraitons.</p></li>
+<li><p><strong>data_configs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference internal" href="#lir.experiments.execution.DataConfig" title="lir.experiments.execution.DataConfig"><em>DataConfig</em></a><em>]</em>) – A list of dataset configurations.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of results for all runs.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Iterator[<a class="reference internal" href="lir.aggregation.html#lir.aggregation.AggregationData" title="lir.aggregation.AggregationData">AggregationData</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lir.experiments.execution.run_multiple_lrsystems">
+<span class="sig-prename descclassname"><span class="pre">lir.experiments.execution.</span></span><span class="sig-name descname"><span class="pre">run_multiple_lrsystems</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_base_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">lrsystem_configs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lir.experiments.execution.LRSystemConfig" title="lir.experiments.execution.LRSystemConfig"><span class="pre">LRSystemConfig</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lir.experiments.execution.DataConfig" title="lir.experiments.execution.DataConfig"><span class="pre">DataConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lir.aggregation.base.html#lir.aggregation.base.AggregationData" title="lir.aggregation.base.AggregationData"><span class="pre">AggregationData</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lir/experiments/execution.html#run_multiple_lrsystems"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lir.experiments.execution.run_multiple_lrsystems" title="Link to this definition"></a></dt>
+<dd><p>Run multiple LR systems for a single data configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_base_dir</strong> (<em>Path</em>) – The base directory where the results may be written.</p></li>
+<li><p><strong>lrsystem_configs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference internal" href="#lir.experiments.execution.LRSystemConfig" title="lir.experiments.execution.LRSystemConfig"><em>LRSystemConfig</em></a><em>]</em>) – A list of LR system configuraitons.</p></li>
+<li><p><strong>data_config</strong> (<a class="reference internal" href="#lir.experiments.execution.DataConfig" title="lir.experiments.execution.DataConfig"><em>DataConfig</em></a>) – Data configuration used to construct the dataset.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of results for all runs.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>[<a class="reference internal" href="lir.aggregation.html#lir.aggregation.AggregationData" title="lir.aggregation.AggregationData">AggregationData</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lir.experiments.config.html" class="btn btn-neutral float-left" title="lir.experiments.config module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lir.experiments.optuna_experiment.html" class="btn btn-neutral float-right" title="lir.experiments.optuna_experiment module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

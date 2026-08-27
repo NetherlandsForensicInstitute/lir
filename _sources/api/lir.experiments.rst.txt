@@ -1,0 +1,19 @@
+lir.experiments package
+=======================
+
+.. automodule:: lir.experiments
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   lir.experiments.base_experiment
+   lir.experiments.config
+   lir.experiments.execution
+   lir.experiments.optuna_experiment
+   lir.experiments.predefined_experiment

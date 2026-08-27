@@ -1,0 +1,7 @@
+lir.config.lrsystem\_architectures module
+=========================================
+
+.. automodule:: lir.config.lrsystem_architectures
+   :members:
+   :show-inheritance:
+   :undoc-members:

@@ -1,0 +1,7 @@
+lir.config.base module
+======================
+
+.. automodule:: lir.config.base
+   :members:
+   :show-inheritance:
+   :undoc-members:

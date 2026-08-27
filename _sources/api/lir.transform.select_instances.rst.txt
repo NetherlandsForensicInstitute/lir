@@ -1,0 +1,7 @@
+lir.transform.select\_instances module
+======================================
+
+.. automodule:: lir.transform.select_instances
+   :members:
+   :show-inheritance:
+   :undoc-members:

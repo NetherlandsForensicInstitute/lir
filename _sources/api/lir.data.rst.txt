@@ -1,0 +1,16 @@
+lir.data package
+================
+
+.. automodule:: lir.data
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   lir.data.io
+   lir.data.models

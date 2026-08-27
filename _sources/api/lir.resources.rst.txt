@@ -1,0 +1,7 @@
+lir.resources package
+=====================
+
+.. automodule:: lir.resources
+   :members:
+   :show-inheritance:
+   :undoc-members:

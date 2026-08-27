@@ -1,0 +1,7 @@
+lir.config.metrics module
+=========================
+
+.. automodule:: lir.config.metrics
+   :members:
+   :show-inheritance:
+   :undoc-members:

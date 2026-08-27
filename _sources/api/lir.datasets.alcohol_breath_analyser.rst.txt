@@ -1,0 +1,7 @@
+lir.datasets.alcohol\_breath\_analyser module
+=============================================
+
+.. automodule:: lir.datasets.alcohol_breath_analyser
+   :members:
+   :show-inheritance:
+   :undoc-members:

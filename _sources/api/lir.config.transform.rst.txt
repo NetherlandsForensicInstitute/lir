@@ -1,0 +1,7 @@
+lir.config.transform module
+===========================
+
+.. automodule:: lir.config.transform
+   :members:
+   :show-inheritance:
+   :undoc-members:

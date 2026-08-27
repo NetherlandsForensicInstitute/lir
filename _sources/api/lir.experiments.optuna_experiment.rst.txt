@@ -1,0 +1,7 @@
+lir.experiments.optuna\_experiment module
+=========================================
+
+.. automodule:: lir.experiments.optuna_experiment
+   :members:
+   :show-inheritance:
+   :undoc-members:

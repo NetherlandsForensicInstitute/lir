@@ -1,0 +1,579 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.experiments.execution &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api-overview.html">Python API: Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#organize-your-data">Organize your data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#calculate-llrs">Calculate LLRs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#appearance-plots-and-metrics">Appearance plots and metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/lir.html">lir package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.DataProvider"><code class="docutils literal notranslate"><span class="pre">DataProvider</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.DataStrategy"><code class="docutils literal notranslate"><span class="pre">DataStrategy</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.FeatureData"><code class="docutils literal notranslate"><span class="pre">FeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.InstanceData"><code class="docutils literal notranslate"><span class="pre">InstanceData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.LLRData"><code class="docutils literal notranslate"><span class="pre">LLRData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.PairedFeatureData"><code class="docutils literal notranslate"><span class="pre">PairedFeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.Transformer"><code class="docutils literal notranslate"><span class="pre">Transformer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../lir.html">lir</a></li>
+      <li class="breadcrumb-item active">lir.experiments.execution</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lir.experiments.execution</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">multiprocessing</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Iterator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">NamedTuple</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">confidence</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir</span><span class="w"> </span><span class="kn">import</span> <span class="n">InstanceData</span><span class="p">,</span> <span class="n">LLRData</span><span class="p">,</span> <span class="n">Transformer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.aggregation</span><span class="w"> </span><span class="kn">import</span> <span class="n">AggregationData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ContextAwareDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataSetup</span><span class="p">,</span> <span class="n">parse_data_setup</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.lrsystem_architectures</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_lrsystem</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">simplify_data_structure</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.data.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataProvider</span><span class="p">,</span> <span class="n">DataStrategy</span><span class="p">,</span> <span class="n">concatenate_instances</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.lrsystems</span><span class="w"> </span><span class="kn">import</span> <span class="n">LRSystem</span>
+
+
+<span class="n">LOG</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ParameterizedConfig">
+<a class="viewcode-back" href="../../../api/lir.experiments.execution.html#lir.experiments.execution.ParameterizedConfig">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ParameterizedConfig</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for LR system or data configurations.</span>
+
+<span class="sd">    A configuration of an LR system or data setup is a dictionary, stored in the ``spec`` attribute. Additionally, there</span>
+<span class="sd">    can be hyperparameters that are already incorporated in the configuration. The hyperparameters describe how this</span>
+<span class="sd">    configuration is different from other configurations.</span>
+
+<span class="sd">    The configuration is extended by the subclass to lazily materialize the configuration on demand.</span>
+
+<span class="sd">    Objects of this class are pickleable. When pickled, the materialization is dropped and will have to be recreated</span>
+<span class="sd">    when needed.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    spec : ContextAwareDict</span>
+<span class="sd">        The configuration of an LR system or data setup for a run.</span>
+<span class="sd">    params : dict[str, Any]</span>
+<span class="sd">        The parameters that describe the configuration.</span>
+<span class="sd">    experiment_output_dir : Path</span>
+<span class="sd">        Path to the directory where results of the experiment may be written. This directory is shared among all runs</span>
+<span class="sd">        of an experiment.</span>
+<span class="sd">    run_output_dir : Path | None</span>
+<span class="sd">        Path to the directory where results of the run may be written, this is a subdirectory of</span>
+<span class="sd">        ``experiment_output_dir``. May be ``None`` if the configuration is not yet assigned to a run.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">spec</span><span class="p">:</span> <span class="n">ContextAwareDict</span>
+    <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="n">experiment_output_dir</span><span class="p">:</span> <span class="n">Path</span>
+    <span class="n">run_output_dir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">desc</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate a description of this configuration from the parameter values.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            A description of this configuration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;__&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">=</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__reduce__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Callable</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_output_dir</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="DataConfig">
+<a class="viewcode-back" href="../../../api/lir.experiments.execution.html#lir.experiments.execution.DataConfig">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DataConfig</span><span class="p">(</span><span class="n">ParameterizedConfig</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Data configuration object.&quot;&quot;&quot;</span>
+
+    <span class="n">_data_setup</span><span class="p">:</span> <span class="n">DataSetup</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_splits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">InstanceData</span><span class="p">,</span> <span class="n">InstanceData</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">data_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataSetup</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parse the data configuration.</span>
+
+<span class="sd">        This is done here to ensure that data</span>
+<span class="sd">        parsing is only done once per data configuration, even when multiple</span>
+<span class="sd">        LR systems are being evaluated on the same data setup.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[DataProvider, DataStrategy]</span>
+<span class="sd">            A tuple of a data provider and a data strategy.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_setup</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data_setup</span> <span class="o">=</span> <span class="n">parse_data_setup</span><span class="p">(</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_output_dir</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_output_dir</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_setup</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">provider</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataProvider</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a data provider.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        DataProvider</span>
+<span class="sd">            A data provider object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_setup</span><span class="o">.</span><span class="n">provider</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transformer</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a data filter.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Transformer</span>
+<span class="sd">            A data transformer object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_setup</span><span class="o">.</span><span class="n">filter</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">splitter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataStrategy</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a data splitter.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        DataStrategy</span>
+<span class="sd">            A data splitter object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_setup</span><span class="o">.</span><span class="n">strategy</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">splits</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">InstanceData</span><span class="p">,</span> <span class="n">InstanceData</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert the split_data iterable to a list to allow multiple iterations over the splits.</span>
+
+<span class="sd">        E.g. one iteration for validation and one for case LLR generation.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Iterable[tuple[InstanceData, InstanceData]]</span>
+<span class="sd">            An iterable of training/test set pairs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_splits</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_splits</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">splitter</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">get_instances</span><span class="p">()))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_splits</span></div>
+
+
+
+<div class="viewcode-block" id="LRSystemConfig">
+<a class="viewcode-back" href="../../../api/lir.experiments.execution.html#lir.experiments.execution.LRSystemConfig">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LRSystemConfig</span><span class="p">(</span><span class="n">ParameterizedConfig</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;LR system configuration object.&quot;&quot;&quot;</span>
+
+    <span class="n">_lrsystem</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">lrsystem</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LRSystem</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the materialized LR system as defined in configuration.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        LRSystem</span>
+<span class="sd">            An LR system object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lrsystem</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_lrsystem</span> <span class="o">=</span> <span class="n">parse_lrsystem</span><span class="p">(</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_output_dir</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_output_dir</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lrsystem</span></div>
+
+
+
+<div class="viewcode-block" id="run_lrsystem">
+<a class="viewcode-back" href="../../../api/lir.experiments.execution.html#lir.experiments.execution.run_lrsystem">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">run_lrsystem</span><span class="p">(</span>
+    <span class="n">experiment_output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">lrsystem_config</span><span class="p">:</span> <span class="n">LRSystemConfig</span><span class="p">,</span>
+    <span class="n">data_config</span><span class="p">:</span> <span class="n">DataConfig</span><span class="p">,</span>
+    <span class="n">skip_full_lrsystem</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">run_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AggregationData</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run experiment on a single LR system configuration using the provided data.</span>
+
+<span class="sd">    The LR system is fitted using the training subset data and</span>
+<span class="sd">    subsequently used to determine LLRs for the test subset data. The results are stored in</span>
+<span class="sd">    a temporary list which contains the determined data of each test / train split.</span>
+
+<span class="sd">    The collected results are combined and passed to the configured `outputs` aggregations,</span>
+<span class="sd">    which may write metrics and visualizations to the `output_path` directory. The combined</span>
+<span class="sd">    LLR data is returned.</span>
+
+<span class="sd">    Next to this, the configuration of both the data and LR system are stored in the output</span>
+<span class="sd">    directory for future reference.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    experiment_output_dir : Path</span>
+<span class="sd">        The base directory of the path where results may be written.</span>
+<span class="sd">    lrsystem_config : LRSystemConfig</span>
+<span class="sd">        LR-system configuration for a single run.</span>
+<span class="sd">    data_config : DataConfig</span>
+<span class="sd">        Data configuration used to construct datasets for runs.</span>
+<span class="sd">    skip_full_lrsystem : bool</span>
+<span class="sd">        If True, the full LR system will not be trained.</span>
+<span class="sd">    run_name : str | None</span>
+<span class="sd">        The name of the run (optional). If None, the name will be derived from parameter values.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    LLRData</span>
+<span class="sd">        Likelihood-ratio data produced by applying the LR system.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Combine the data parameter with the LR system parameters to create a unique name for this run.</span>
+    <span class="n">run_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">run_name</span>
+        <span class="ow">or</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">data_config</span><span class="o">.</span><span class="n">desc</span><span class="si">}{</span><span class="s2">&quot;__&quot;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">lrsystem_config</span><span class="o">.</span><span class="n">desc</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">data_config</span><span class="o">.</span><span class="n">desc</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="si">}{</span><span class="n">lrsystem_config</span><span class="o">.</span><span class="n">desc</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="p">)</span>
+
+    <span class="n">run_output_dir</span> <span class="o">=</span> <span class="n">experiment_output_dir</span> <span class="o">/</span> <span class="n">run_name</span> <span class="k">if</span> <span class="n">run_name</span> <span class="k">else</span> <span class="n">experiment_output_dir</span>
+    <span class="n">run_output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># add run output dir to configuration objects</span>
+    <span class="n">lrsystem_config</span> <span class="o">=</span> <span class="n">LRSystemConfig</span><span class="p">(</span><span class="o">**</span><span class="p">(</span><span class="n">lrsystem_config</span><span class="o">.</span><span class="n">_asdict</span><span class="p">()</span> <span class="o">|</span> <span class="p">{</span><span class="s1">&#39;run_output_dir&#39;</span><span class="p">:</span> <span class="n">run_output_dir</span><span class="p">}))</span>
+    <span class="n">data_config</span> <span class="o">=</span> <span class="n">DataConfig</span><span class="p">(</span><span class="o">**</span><span class="p">(</span><span class="n">data_config</span><span class="o">.</span><span class="n">_asdict</span><span class="p">()</span> <span class="o">|</span> <span class="p">{</span><span class="s1">&#39;run_output_dir&#39;</span><span class="p">:</span> <span class="n">run_output_dir</span><span class="p">}))</span>
+
+    <span class="c1"># This dictionary contains all parameters for this experiment run, prefixed</span>
+    <span class="c1"># by either &#39;data.&#39; or &#39;lrsystem.&#39; to avoid naming conflicts. This is used</span>
+    <span class="c1"># for reporting purposes in the aggregations.</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="sa">f</span><span class="s1">&#39;data.</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">data_config</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span> <span class="o">|</span> <span class="p">{</span>
+        <span class="sa">f</span><span class="s1">&#39;lrsystem.</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">lrsystem_config</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Turn the configurations into dictionaries for writing to YAML files.</span>
+    <span class="n">lrsystem_config_dict</span> <span class="o">=</span> <span class="n">simplify_data_structure</span><span class="p">(</span><span class="n">lrsystem_config</span><span class="o">.</span><span class="n">spec</span><span class="p">)</span>
+    <span class="n">data_config_dict</span> <span class="o">=</span> <span class="n">simplify_data_structure</span><span class="p">(</span><span class="n">data_config</span><span class="o">.</span><span class="n">spec</span><span class="p">)</span>
+
+    <span class="c1"># Check that simplify_data_structure returned a dict for type checking.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lrsystem_config_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data_config_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;hyperparameters are not the expected type (dict)&#39;</span><span class="p">)</span>
+
+    <span class="n">confidence</span><span class="o">.</span><span class="n">dumpf</span><span class="p">(</span><span class="n">confidence</span><span class="o">.</span><span class="n">Configuration</span><span class="p">(</span><span class="n">lrsystem_config_dict</span><span class="p">),</span> <span class="n">run_output_dir</span> <span class="o">/</span> <span class="s1">&#39;lrsystem.yaml&#39;</span><span class="p">)</span>
+    <span class="n">confidence</span><span class="o">.</span><span class="n">dumpf</span><span class="p">(</span><span class="n">confidence</span><span class="o">.</span><span class="n">Configuration</span><span class="p">(</span><span class="n">data_config_dict</span><span class="p">),</span> <span class="n">run_output_dir</span> <span class="o">/</span> <span class="s1">&#39;data.yaml&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Placeholders for numpy arrays of LLRs and labels obtained from each train/test split</span>
+    <span class="n">llrs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">LLRData</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">training_data</span><span class="p">,</span> <span class="n">test_data</span> <span class="ow">in</span> <span class="n">data_config</span><span class="o">.</span><span class="n">splits</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">training_data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">lrsystem_config</span><span class="o">.</span><span class="n">lrsystem</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">training_data</span><span class="p">)</span>
+        <span class="n">llrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lrsystem_config</span><span class="o">.</span><span class="n">lrsystem</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">test_data</span><span class="p">))</span>
+
+    <span class="c1"># Combine collected numpy arrays after iteration over the train/test split(s)</span>
+    <span class="n">llrs</span><span class="p">:</span> <span class="n">LLRData</span> <span class="o">=</span> <span class="n">concatenate_instances</span><span class="p">(</span><span class="o">*</span><span class="n">llrs</span><span class="p">)</span>
+
+    <span class="c1"># Create a lazy factory for full-data-fitted model with memoization</span>
+    <span class="n">_cached_full_fit_lrsystem</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_full_fit_lrsystem</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">LRSystem</span><span class="p">:</span>
+        <span class="k">nonlocal</span> <span class="n">_cached_full_fit_lrsystem</span>
+        <span class="k">if</span> <span class="n">_cached_full_fit_lrsystem</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">full_training_data</span> <span class="o">=</span> <span class="n">concatenate_instances</span><span class="p">(</span><span class="o">*</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">data_config</span><span class="o">.</span><span class="n">splits</span><span class="p">)))</span>
+            <span class="n">_cached_full_fit_lrsystem</span> <span class="o">=</span> <span class="n">parse_lrsystem</span><span class="p">(</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">lrsystem_config</span><span class="o">.</span><span class="n">spec</span><span class="p">),</span> <span class="n">run_output_dir</span><span class="p">)</span>
+            <span class="n">_cached_full_fit_lrsystem</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">full_training_data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_cached_full_fit_lrsystem</span>
+
+    <span class="c1"># Collect and report results as configured by `outputs`</span>
+    <span class="k">return</span> <span class="n">AggregationData</span><span class="p">(</span>
+        <span class="n">llrdata</span><span class="o">=</span><span class="n">llrs</span><span class="p">,</span>
+        <span class="n">lrsystem</span><span class="o">=</span><span class="n">lrsystem_config</span><span class="o">.</span><span class="n">lrsystem</span><span class="p">,</span>
+        <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span>
+        <span class="n">run_name</span><span class="o">=</span><span class="n">run_name</span><span class="p">,</span>
+        <span class="n">experiment_output_dir</span><span class="o">=</span><span class="n">experiment_output_dir</span><span class="p">,</span>
+        <span class="n">run_output_dir</span><span class="o">=</span><span class="n">run_output_dir</span><span class="p">,</span>
+        <span class="n">get_full_fit_lrsystem</span><span class="o">=</span><span class="kc">None</span> <span class="k">if</span> <span class="n">skip_full_lrsystem</span> <span class="k">else</span> <span class="n">get_full_fit_lrsystem</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="run_multiple">
+<a class="viewcode-back" href="../../../api/lir.experiments.execution.html#lir.experiments.execution.run_multiple">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">run_multiple</span><span class="p">(</span>
+    <span class="n">output_base_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">lrsystem_configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">LRSystemConfig</span><span class="p">],</span> <span class="n">data_configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">DataConfig</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">AggregationData</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run LR systems sequentially.</span>
+
+<span class="sd">    Consider using :meth:`parallellize_runs` to speed up processing by doing runs in parallel.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    output_base_dir : Path</span>
+<span class="sd">        The base directory where the results may be written.</span>
+<span class="sd">    lrsystem_configs : list[LRSystemConfig]</span>
+<span class="sd">        A list of LR system configuraitons.</span>
+<span class="sd">    data_configs : list[DataConfig]</span>
+<span class="sd">        A list of dataset configurations.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Iterator[AggregationData]</span>
+<span class="sd">        A list of results for all runs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;doing </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">lrsystem_configs</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">data_configs</span><span class="p">)</span><span class="si">}</span><span class="s1"> runs sequentially&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">lrsystem_config</span><span class="p">,</span> <span class="n">data_config</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">lrsystem_configs</span><span class="p">,</span> <span class="n">data_configs</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">run_lrsystem</span><span class="p">(</span><span class="n">output_base_dir</span><span class="p">,</span> <span class="n">lrsystem_config</span><span class="p">,</span> <span class="n">data_config</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="run_multiple_lrsystems">
+<a class="viewcode-back" href="../../../api/lir.experiments.execution.html#lir.experiments.execution.run_multiple_lrsystems">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">run_multiple_lrsystems</span><span class="p">(</span>
+    <span class="n">output_base_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">lrsystem_configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">LRSystemConfig</span><span class="p">],</span> <span class="n">data_config</span><span class="p">:</span> <span class="n">DataConfig</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">AggregationData</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run multiple LR systems for a single data configuration.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    output_base_dir : Path</span>
+<span class="sd">        The base directory where the results may be written.</span>
+<span class="sd">    lrsystem_configs : list[LRSystemConfig]</span>
+<span class="sd">        A list of LR system configuraitons.</span>
+<span class="sd">    data_config : DataConfig</span>
+<span class="sd">        Data configuration used to construct the dataset.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[AggregationData]</span>
+<span class="sd">        A list of results for all runs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;process </span><span class="si">{</span><span class="n">multiprocessing</span><span class="o">.</span><span class="n">current_process</span><span class="p">()</span><span class="si">}</span><span class="s1"> about to do </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">lrsystem_configs</span><span class="p">)</span><span class="si">}</span><span class="s1"> runs&#39;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">run_lrsystem</span><span class="p">(</span><span class="n">output_base_dir</span><span class="p">,</span> <span class="n">lrsystem_config</span><span class="p">,</span> <span class="n">data_config</span><span class="p">,</span> <span class="n">skip_full_lrsystem</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">lrsystem_config</span> <span class="ow">in</span> <span class="n">lrsystem_configs</span>
+        <span class="p">]</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;process </span><span class="si">{</span><span class="n">multiprocessing</span><span class="o">.</span><span class="n">current_process</span><span class="p">()</span><span class="si">}</span><span class="s1"> finished </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">lrsystem_configs</span><span class="p">)</span><span class="si">}</span><span class="s1"> runs&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="parallellize_runs">
+<a class="viewcode-back" href="../../../api/lir.experiments.execution.html#lir.experiments.execution.parallellize_runs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parallellize_runs</span><span class="p">(</span>
+    <span class="n">output_base_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">lrsystem_configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">LRSystemConfig</span><span class="p">],</span> <span class="n">data_configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">DataConfig</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">AggregationData</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run LR systems in parallel.</span>
+
+<span class="sd">    This method has exactly the same effect as :meth:`run_multiple`, but uses ``multiprocessing`` to do runs in</span>
+<span class="sd">    parallel. It selects a parallelization strategy to distribute the runs over workers.</span>
+
+<span class="sd">    Issues:</span>
+
+<span class="sd">    - this may lead to repetitive loading of data, which may take additional (costly) I/O operations</span>
+<span class="sd">    - in some cases (notably, when bootstrapping) the `multiprocessing.imap_unsorted` operation may produce a &quot;leaked</span>
+<span class="sd">      semaphore&quot; warning</span>
+<span class="sd">    - logging in workers is disabled</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    output_base_dir : Path</span>
+<span class="sd">        The base directory where the results may be written.</span>
+<span class="sd">    lrsystem_configs : list[LRSystemConfig]</span>
+<span class="sd">        A list of LR system configuraitons.</span>
+<span class="sd">    data_configs : list[DataConfig]</span>
+<span class="sd">        A list of dataset configurations.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[AggregationData]</span>
+<span class="sd">        A list of results for all runs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_runs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lrsystem_configs</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_configs</span><span class="p">)</span>
+    <span class="n">n_processes</span> <span class="o">=</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">process_cpu_count</span><span class="p">()</span> <span class="ow">or</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">os</span><span class="p">,</span> <span class="s1">&#39;process_cpu_count&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">n_runs</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">n_processes</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># don&#39;t bother parallelizing if there is only a single configuration or a single CPU</span>
+        <span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;only a single run to be issued: parallelization disabled&#39;</span><span class="p">)</span>
+        <span class="k">yield from</span> <span class="n">run_multiple</span><span class="p">(</span><span class="n">output_base_dir</span><span class="p">,</span> <span class="n">lrsystem_configs</span><span class="p">,</span> <span class="n">data_configs</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="n">n_processes</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_configs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># there are multiple data setups --&gt; iterate over data setups first recycles data loading</span>
+
+            <span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;spawning </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">data_configs</span><span class="p">)</span><span class="si">}</span><span class="s1"> tasks to do a total of </span><span class="si">{</span><span class="n">n_runs</span><span class="si">}</span><span class="s1"> runs &#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">results</span> <span class="ow">in</span> <span class="n">pool</span><span class="o">.</span><span class="n">imap</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">run_multiple_lrsystems</span><span class="p">,</span> <span class="n">output_base_dir</span><span class="p">,</span> <span class="n">lrsystem_configs</span><span class="p">),</span> <span class="n">data_configs</span><span class="p">):</span>
+                <span class="k">yield from</span> <span class="n">results</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># there is a single data setup and multiple lrsystems --&gt; iterate over lrsystems</span>
+
+            <span class="c1"># we need no more chunks that the number of processes (the default chunk size is 1)</span>
+            <span class="n">chunksize</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lrsystem_configs</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_processes</span><span class="p">)</span>
+
+            <span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;spawning </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">lrsystem_configs</span><span class="p">)</span><span class="si">}</span><span class="s1"> tasks to do a total of </span><span class="si">{</span><span class="n">n_runs</span><span class="si">}</span><span class="s1"> runs in chunks of </span><span class="si">{</span><span class="n">chunksize</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">yield from</span> <span class="n">pool</span><span class="o">.</span><span class="n">imap_unordered</span><span class="p">(</span>
+                <span class="n">partial</span><span class="p">(</span><span class="n">run_lrsystem</span><span class="p">,</span> <span class="n">output_base_dir</span><span class="p">,</span> <span class="n">data_config</span><span class="o">=</span><span class="n">data_configs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">skip_full_lrsystem</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                <span class="n">lrsystem_configs</span><span class="p">,</span>
+                <span class="n">chunksize</span><span class="o">=</span><span class="n">chunksize</span><span class="p">,</span>
+            <span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

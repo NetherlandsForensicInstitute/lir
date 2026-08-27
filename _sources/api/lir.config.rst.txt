@@ -1,0 +1,24 @@
+lir.config package
+==================
+
+.. automodule:: lir.config
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   lir.config.aggregation
+   lir.config.algorithms
+   lir.config.base
+   lir.config.data
+   lir.config.experiment_strategies
+   lir.config.lrsystem_architectures
+   lir.config.metrics
+   lir.config.substitution
+   lir.config.transform
+   lir.config.util

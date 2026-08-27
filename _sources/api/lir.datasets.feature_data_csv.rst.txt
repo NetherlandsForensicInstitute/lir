@@ -1,0 +1,7 @@
+lir.datasets.feature\_data\_csv module
+======================================
+
+.. automodule:: lir.datasets.feature_data_csv
+   :members:
+   :show-inheritance:
+   :undoc-members:

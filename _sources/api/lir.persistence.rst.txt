@@ -1,0 +1,7 @@
+lir.persistence module
+======================
+
+.. automodule:: lir.persistence
+   :members:
+   :show-inheritance:
+   :undoc-members:

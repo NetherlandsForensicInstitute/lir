@@ -1,0 +1,7 @@
+lir.aggregation.subset module
+=============================
+
+.. automodule:: lir.aggregation.subset
+   :members:
+   :show-inheritance:
+   :undoc-members:

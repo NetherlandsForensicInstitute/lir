@@ -1,0 +1,7 @@
+lir.aggregation.metrics\_csv module
+===================================
+
+.. automodule:: lir.aggregation.metrics_csv
+   :members:
+   :show-inheritance:
+   :undoc-members:

@@ -1,0 +1,7 @@
+lir.experiments.config module
+=============================
+
+.. automodule:: lir.experiments.config
+   :members:
+   :show-inheritance:
+   :undoc-members:

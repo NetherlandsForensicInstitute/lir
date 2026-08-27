@@ -1,0 +1,7 @@
+lir.datasets.synthesized\_normal\_multiclass module
+===================================================
+
+.. automodule:: lir.datasets.synthesized_normal_multiclass
+   :members:
+   :show-inheritance:
+   :undoc-members:

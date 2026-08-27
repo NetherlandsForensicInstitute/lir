@@ -1,0 +1,20 @@
+lir.aggregation package
+=======================
+
+.. automodule:: lir.aggregation
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   lir.aggregation.base
+   lir.aggregation.case_llr_csv
+   lir.aggregation.metrics_bars
+   lir.aggregation.metrics_csv
+   lir.aggregation.plot_each
+   lir.aggregation.subset

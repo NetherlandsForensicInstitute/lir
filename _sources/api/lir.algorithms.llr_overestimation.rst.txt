@@ -1,0 +1,7 @@
+lir.algorithms.llr\_overestimation module
+=========================================
+
+.. automodule:: lir.algorithms.llr_overestimation
+   :members:
+   :show-inheritance:
+   :undoc-members:

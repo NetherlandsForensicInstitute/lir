@@ -1,3 +1,4 @@
+import sys
 from collections.abc import Callable
 from typing import Any, Self
 
@@ -208,12 +209,20 @@ class McmcModel:
                     pm.Normal('x', mu=priors['mu'], sigma=priors['sigma'], observed=features[:, 0])
                 case _:
                     raise ValueError('Unrecognized distribution')
+
+            is_windows_os = any(platform in sys.platform for platform in ['win32', 'cygwin', 'msys'])
+
+            # Windows' multiprocessing does not support forking, which is required by pymc.
+            # Therefore, we limit the number of cores to 1 on Windows.
+            # None will use min(4, cpu_count) on other platforms, which is the default behavior of pymc.
+            n_cores = 1 if is_windows_os else None
+
             # Do simulations and sample from the posterior distributions
             trace = pm.sample(
                 draws=self.draw_count,
                 chains=self.chain_count,
                 tune=self.tune_count,
-                cores=1,
+                cores=n_cores,
                 random_seed=self.random_seed,
                 progressbar=False,
             )

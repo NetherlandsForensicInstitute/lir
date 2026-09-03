@@ -1,3 +1,5 @@
+from typing import Any
+
 import numpy as np
 import pytest
 from pydantic import ValidationError
@@ -192,3 +194,52 @@ def test_indexing():
     assert len(features[:2]) == 2
     assert len(features[1]) == 1
     assert len(features[-1]) == 1
+
+
+def test_concatenate_field_with_numpy_arrays():
+    # Concatenate fields should work for numpy arrays
+    class TestData(InstanceData):
+        field: np.ndarray
+
+        def __len__(self) -> int:
+            return 1
+
+    data1 = TestData(field=np.array([1, 2]))
+    data2 = TestData(field=np.array([1, 2]))
+    data3 = TestData(field=np.array([3, 4]))
+
+    assert np.array_equal(TestData._concatenate_field('field', [data1.field, data2.field]), np.array([1, 2, 1, 2]))
+    assert np.array_equal(
+        TestData._concatenate_field('field', [data1.field, data2.field, data3.field]), np.array([1, 2, 1, 2, 3, 4])
+    )
+
+
+def test_concatenate_field():
+    # Concatenate fields should work for dict, list, and numpy array types
+    class TestData(InstanceData):
+        field0: int
+        field1: list[int]
+        field2: dict[str, int]
+        field3: Any
+
+        def __len__(self) -> int:
+            return 1
+
+    data1 = TestData(field0=1, field1=[1, 2], field2={'a': 1, 'b': 2}, field3={'a1': np.array([1, 2])})
+    data2 = TestData(field0=1, field1=[1, 2], field2={'b': 2, 'a': 1}, field3={'a1': np.array([1, 2])})
+    data3 = TestData(field0=2, field1=[1, 3], field2={'b': 2, 'c': 3}, field3={'a1': {'b': 1}})
+
+    assert TestData._concatenate_field('field0', [data1.field0, data2.field0]) == 1
+    assert TestData._concatenate_field('field0', [data1.field0, data2.field0, data3.field0]) is None
+
+    assert TestData._concatenate_field('field1', [data1.field1, data2.field1]) == [1, 2]
+    assert TestData._concatenate_field('field1', [data1.field1, data2.field1, data3.field1]) is None
+
+    assert TestData._concatenate_field('field2', [data1.field2, data2.field2]) == {'a': 1, 'b': 2}
+    assert TestData._concatenate_field('field2', [data1.field2, data2.field2, data3.field2]) is None
+
+    # When comapring numpy arrays, == does not work. Thus None is returned.
+    # Note that numpy arrays are only compared if they are inside some other data structure (like a dict or list).
+    # If the field itself is a numpy array, then the concatenation works (see test_concatenate_field_with_numpy_arrays).
+    assert TestData._concatenate_field('field3', [data1.field3, data2.field3]) is None
+    assert TestData._concatenate_field('field3', [data1.field3, data2.field3, data3.field3]) is None

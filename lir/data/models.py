@@ -252,11 +252,16 @@ class InstanceData(BaseModel, ABC):
             return np.concatenate(values)
 
         # we have a non-numpy array field -> check if they have the same value
-        all_equal = all(values[0] == other for other in values[1:])
+        try:
+            all_equal = all(values[0] == other for other in values[1:])
+        except Exception:
+            all_equal = False
+
         if not all_equal:
             LOG.info(
                 f'dropped field `{field}`: '
-                + 'unable to concatenate because it is not a numpy array and not all values are equal'
+                + 'unable to concatenate because it is not a numpy array and not all values are equal '
+                + 'or the values cannot be compared for equality'
             )
             return None
 

@@ -10,6 +10,7 @@ __pycache__
 /venv
 /.venv
 /build
+.DS_Store
 
 # Documentation
 # The API documentation is generated on-demand to

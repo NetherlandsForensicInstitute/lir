@@ -44,17 +44,13 @@ class ConfigValue:
 
     This YAML is parsed into a dictionary and the path ``root.value1`` leads to the value ``{ "a": 1, "b": 2 }``. In a
     ``ConfigValue`` object, this is represented as context path ``["root", "value1"]`` and value ``{ "a": 1, "b": 2 }``.
-
-    Attributes
-    ----------
-    context : list[str]
-        YAML path used for contextual error messages.
-    value : list[ConfigValue] | dict[str, ConfigValue] | int | float | bool | str | None
-        The actual configuration value.
     """
 
     context: list[str]
+    """YAML path used for contextual error messages."""
+
     value: 'list[ConfigValue] | dict[str, ConfigValue] | int | float | bool | str | None'
+    """The actual configuration value."""
 
     def __iter__(self) -> 'Iterator[str | ConfigValue]':
         return iter(check_type((dict, list), self.value))

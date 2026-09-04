@@ -12,7 +12,6 @@ from matplotlib.axes import Axes
 
 from lir import util
 from lir.algorithms.bayeserror import plot_nbe as nbe
-from lir.config.base import check_not_none
 from lir.data.models import LLRData
 
 from ..algorithms.isotonic_regression import IsotonicCalibrator
@@ -295,7 +294,7 @@ def pav(
         h2_llrs = np.where(mask_not_y, llrs, np.nan)
         h2_pav = np.where(mask_not_y, pav_llrs, np.nan)
 
-        y = check_not_none(y)
+        y = util.check_not_none(y)
         n_h1 = np.count_nonzero(y)
         n_h2 = len(y) - n_h1
 

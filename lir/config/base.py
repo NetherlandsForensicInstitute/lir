@@ -4,7 +4,7 @@ from collections.abc import Callable, Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from functools import partial
 from pathlib import Path
-from typing import Any, TypeVar
+from typing import Any
 
 from lir.util import check_type
 
@@ -323,7 +323,7 @@ class GenericConfigParser(ConfigParser):
         return self.get_type_name(self.component_class)
 
 
-def get_full_name(obj: Any) -> str:
+def get_full_name(obj: type[Any] | Callable) -> str:
     """
     Return the full name of an importable object.
 
@@ -331,7 +331,9 @@ def get_full_name(obj: Any) -> str:
 
         from lir import FeatureData
         print(get_full_name(FeatureData))
-        'lir.FeatureData'
+        'lir.data.models.FeatureData'
+
+    This function does not yet handle type aliases.
 
     Parameters
     ----------
@@ -343,11 +345,14 @@ def get_full_name(obj: Any) -> str:
     str
         Fully qualified object name.
     """
+    if not hasattr(obj, '__name__'):
+        raise ValueError(f'type object {obj} has no __name__ attribute; do you mean to call `type()` first?')
+
     return f'{obj.__module__}.{obj.__name__}'
 
 
 def config_parser(
-    func: Callable[[ConfigValue, Path], Any] | None = None, /, reference: str | Any | None = None
+    func: Callable[[ConfigValue, Path], Any] | None = None, /, reference: str | type[Any] | None = None
 ) -> Callable:
     """
     Wrap a parsing function in a ``ConfigParser`` object using a decorator.
@@ -431,30 +436,6 @@ def config_parser(
             return get_full_name(func)
 
     return ConfigParserFunction
-
-
-AnyType = TypeVar('AnyType')
-
-
-def check_not_none[AnyType](v: AnyType | None, message: str | None = None) -> AnyType:
-    """
-    Validate a value is not ``None``.
-
-    Parameters
-    ----------
-    v : AnyType | None
-        Value to validate.
-    message : str | None, optional
-        Error message used when ``v`` is ``None``.
-
-    Returns
-    -------
-    AnyType
-        Original non-``None`` value.
-    """
-    if v is None:
-        raise ValueError(message or 'value None is not allowed here')
-    return v
 
 
 def pop_field(

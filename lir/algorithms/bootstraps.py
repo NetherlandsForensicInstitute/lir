@@ -8,10 +8,10 @@ from scipy.interpolate import interp1d
 from tqdm import tqdm
 
 import lir
-from lir.config.base import ConfigValue, check_not_none, config_parser, pop_field
+from lir.config.base import ConfigValue, config_parser, pop_field
 from lir.data.models import FeatureData, InstanceData, LLRData
 from lir.transform.pipeline import Pipeline, parse_steps
-from lir.util import check_type
+from lir.util import check_not_none, check_type
 
 
 class Bootstrap(Pipeline, ABC):

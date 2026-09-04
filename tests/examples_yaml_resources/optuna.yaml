@@ -1,8 +1,6 @@
 # Override specific values from the example YAML for testing convenience
 
-output_path: tests/yaml_output
-
-data.provider.cache_dir: ${output_path}/../examples_yaml_resources/cache
+data.provider.cache_dir: tests/examples_yaml_resources/cache
 
 experiments:
   - name: optimize_kde_bandwidth

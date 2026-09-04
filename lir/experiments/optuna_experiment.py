@@ -120,9 +120,18 @@ class OptunaExperiment(Experiment):
 
         return self.metric_function(result.llrdata)
 
-    def _generate_and_run(self) -> None:
-        study = optuna.create_study()  # Create a new study.
-        study.optimize(self._objective, n_trials=self.n_trials)  # Invoke optimization of the objective function.
+    def run(self) -> None:
+        """
+        Execute the experiment.
+
+        This method ensures that all outputs are properly closed after the experiment run.
+        """
+        try:
+            study = optuna.create_study()  # Create a new study.
+            study.optimize(self._objective, n_trials=self.n_trials)  # Invoke optimization of the objective function.
+        finally:
+            for output in self.outputs:
+                output.close()
 
 
 @config_parser

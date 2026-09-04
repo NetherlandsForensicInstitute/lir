@@ -83,6 +83,18 @@ class PredefinedExperiment(Experiment):
             progress.update(1)
         progress.close()
 
+    def run(self) -> None:
+        """
+        Execute the experiment.
+
+        This method ensures that all outputs are properly closed after the experiment run.
+        """
+        try:
+            self._generate_and_run()
+        finally:
+            for output in self.outputs:
+                output.close()
+
 
 @config_parser
 def parse_single_run(config: ConfigValue, output_dir: Path) -> PredefinedExperiment:

@@ -30,17 +30,6 @@ class Experiment(ABC):
         self.output_path = output_path
 
     @abstractmethod
-    def _generate_and_run(self) -> None:
-        raise NotImplementedError
-
     def run(self) -> None:
-        """
-        Run experiment the configured experiment(s).
-
-        This method ensures that all outputs are properly closed after the experiment run.
-        """
-        try:
-            self._generate_and_run()
-        finally:
-            for output in self.outputs:
-                output.close()
+        """Execute the experiment."""
+        raise NotImplementedError

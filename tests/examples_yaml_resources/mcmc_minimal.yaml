@@ -2,8 +2,6 @@
 # This provides sensible defaults for automated testing
 # (minimal data, fast MCMC settings, local output path)
 
-output_path: tests/yaml_output/mcmc_minimal
-
 data:
   provider:
     h1:

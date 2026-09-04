@@ -53,14 +53,21 @@ def parse_experiments(cfg: ConfigValue, output_path: Path) -> Mapping[str, Exper
 
     experiments: OrderedDict[str, Experiment] = OrderedDict()
     for exp_config in experiments_config_section:
-        experiment = parse_experiment_strategy(
+        experiment_name = pop_field(
             exp_config,
-            output_path,
+            'name',
+            validate_type=str,
+            default=f'unnamed_experiment{exp_config.context[-1] if len(exp_config.context) > 0 else ""}',
         )
 
-        if experiment.name in experiments:
-            raise ValueError(f'experiment {experiment.name} already exists')
+        experiment = parse_experiment_strategy(
+            exp_config,
+            output_path / experiment_name,
+        )
 
-        experiments[experiment.name] = experiment
+        if experiment_name in experiments:
+            raise ValueError(f'duplicate experiment name: {experiment_name}')
+
+        experiments[experiment_name] = experiment
 
     return experiments

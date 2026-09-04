@@ -13,7 +13,6 @@ from lir.config.lrsystem_architectures import augment_config
 from lir.config.substitution import parse_config_with_parameters
 from lir.experiments import Experiment
 
-from .config import pop_experiment_name
 from .execution import DataConfig, LRSystemConfig, parallellize_runs, run_multiple
 
 
@@ -42,8 +41,6 @@ class PredefinedExperiment(Experiment):
 
     Parameters
     ----------
-    name : str
-        Name used to identify this object in outputs and logs.
     data_configs : list[DataConfig]
         Data configurations evaluated by this experiment.
     outputs : Sequence[Aggregation]
@@ -58,16 +55,16 @@ class PredefinedExperiment(Experiment):
 
     def __init__(
         self,
-        name: str,
         data_configs: list[DataConfig],
         outputs: Sequence[Aggregation],
         output_path: Path,
         lrsystem_configs: list[LRSystemConfig],
         enable_parallelization: bool = False,
     ):
-        super().__init__(name, outputs, output_path)
+        super().__init__(output_path)
         self._lrsystem_configs = lrsystem_configs
         self._data_configs = data_configs
+        self.outputs = outputs
         self._enable_parallelization = enable_parallelization
 
     def _generate_and_run(self) -> None:
@@ -75,13 +72,25 @@ class PredefinedExperiment(Experiment):
         number_of_runs = len(self._lrsystem_configs) * len(self._data_configs)
         disable_tqdm = not lir.is_interactive() or number_of_runs == 1
 
-        progress = tqdm(desc=self.name, total=number_of_runs, disable=disable_tqdm)
+        progress = tqdm(desc=self.output_path.name, total=number_of_runs, disable=disable_tqdm)
         run_func = parallellize_runs if self._enable_parallelization else run_multiple
         for result in run_func(self.output_path, self._lrsystem_configs, self._data_configs):
             for output in self.outputs:
                 output.report(result)
             progress.update(1)
         progress.close()
+
+    def run(self) -> None:
+        """
+        Execute the experiment.
+
+        This method ensures that all outputs are properly closed after the experiment run.
+        """
+        try:
+            self._generate_and_run()
+        finally:
+            for output in self.outputs:
+                output.close()
 
 
 @config_parser
@@ -101,18 +110,14 @@ def parse_single_run(config: ConfigValue, output_dir: Path) -> PredefinedExperim
     PredefinedExperiment
         Predefined single-run experiment.
     """
-    name = pop_experiment_name(config)
-    experiment_output_dir = output_dir / name
-
     output_config = pop_field(config, 'output', required=False)
     aggregations = parse_aggregations(output_config, output_dir) if output_config else []
 
     exp = PredefinedExperiment(
-        name,
-        [DataConfig(pop_field(config, 'data'), {}, experiment_output_dir)],
+        [DataConfig(pop_field(config, 'data'), {}, output_dir)],
         aggregations,
-        experiment_output_dir,
-        [LRSystemConfig(pop_field(config, 'lrsystem'), {}, experiment_output_dir)],
+        output_dir,
+        [LRSystemConfig(pop_field(config, 'lrsystem'), {}, output_dir)],
     )
     check_is_empty(config)
     return exp
@@ -135,33 +140,27 @@ def parse_grid_experiment(config: ConfigValue, output_dir: Path) -> PredefinedEx
     PredefinedExperiment
         Predefined experiment with all parameter combinations.
     """
-    name = pop_experiment_name(config)
-    experiment_output_dir = output_dir / name
-
     output_config = pop_field(config, 'output', required=False)
-    aggregations = parse_aggregations(output_config, experiment_output_dir) if output_config else []
+    aggregations = parse_aggregations(output_config, output_dir) if output_config else []
 
     if 'lr_system' in config:
         raise ValueError("The attribute 'lr_system' has been replaced by 'lrsystem' as of lir v1.7. ")
 
     lrsystem_configs = [
-        LRSystemConfig(*cfg, experiment_output_dir)
-        for cfg in _create_configs_from_hyperparameters(
-            config, experiment_output_dir, 'lrsystem', 'lrsystem_parameters'
-        )
+        LRSystemConfig(*cfg, output_dir)
+        for cfg in _create_configs_from_hyperparameters(config, output_dir, 'lrsystem', 'lrsystem_parameters')
     ]
     data_configs = [
-        DataConfig(*cfg, experiment_output_dir)
-        for cfg in _create_configs_from_hyperparameters(config, experiment_output_dir, 'data', 'data_parameters')
+        DataConfig(*cfg, output_dir)
+        for cfg in _create_configs_from_hyperparameters(config, output_dir, 'data', 'data_parameters')
     ]
     enable_parallelization = pop_field(config, 'enable_parallelization', validate=bool, default=False)
     check_is_empty(config)
 
     return PredefinedExperiment(
-        name,
         data_configs,
         aggregations,
-        experiment_output_dir,
+        output_dir,
         lrsystem_configs,
         enable_parallelization=enable_parallelization,
     )

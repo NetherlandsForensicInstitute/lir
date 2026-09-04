@@ -4,11 +4,11 @@ import numpy as np
 from scipy.special import logsumexp
 
 from lir import Transformer
-from lir.config.base import check_not_none
 from lir.data.models import FeatureData, InstanceData, check_type
 from lir.lrsystems.base import LLRData, LRSystem
 from lir.transform.pairing import PairingMethod
 from lir.transform.pipeline import Pipeline
+from lir.util import check_not_none
 
 
 class TwoLevelModelNormalKDE:

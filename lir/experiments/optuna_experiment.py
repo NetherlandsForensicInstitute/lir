@@ -18,7 +18,6 @@ from lir.config.substitution import (
 )
 from lir.data.models import LLRData
 from lir.experiments import Experiment
-from lir.experiments.config import pop_experiment_name
 from lir.experiments.execution import DataConfig, LRSystemConfig, run_lrsystem
 
 
@@ -32,8 +31,6 @@ class OptunaExperiment(Experiment):
 
     Parameters
     ----------
-    name : str
-        Name used to identify this object in outputs and logs.
     data_config : ConfigValue
         Data configuration used to construct datasets for runs.
     outputs : Sequence[Aggregation]
@@ -52,7 +49,6 @@ class OptunaExperiment(Experiment):
 
     def __init__(
         self,
-        name: str,
         data_config: ConfigValue,
         outputs: Sequence[Aggregation],
         output_path: Path,
@@ -61,7 +57,7 @@ class OptunaExperiment(Experiment):
         n_trials: int,
         metric_function: Callable[[LLRData], float],
     ):
-        super().__init__(name, output_path)
+        super().__init__(output_path)
 
         self._data_config = DataConfig(spec=data_config, params={}, experiment_output_dir=output_path)
 
@@ -152,29 +148,23 @@ def parse_optuna_experiment(config: ConfigValue, output_dir: Path) -> OptunaExpe
     OptunaExperiment
         Optuna-backed experiment.
     """
-    name = pop_experiment_name(config)
-    experiment_output_dir = output_dir / name
-
-    baseline_config, parameters = parse_config_with_parameters(
-        config, experiment_output_dir, 'lrsystem', 'lrsystem_parameters'
-    )
+    baseline_config, parameters = parse_config_with_parameters(config, output_dir, 'lrsystem', 'lrsystem_parameters')
     n_trials = pop_field(config, 'n_trials', validate=int)
 
     metric_name = pop_field(config, 'primary_metric', validate_type=str)
-    primary_metric = parse_individual_metric(metric_name, experiment_output_dir, config.context)
+    primary_metric = parse_individual_metric(metric_name, output_dir, config.context)
 
     data_config = pop_field(config, 'data')
 
     output_config = pop_field(config, 'output', required=False)
-    aggregations = parse_aggregations(output_config, experiment_output_dir) if output_config else []
+    aggregations = parse_aggregations(output_config, output_dir) if output_config else []
 
     check_is_empty(config)
 
     return OptunaExperiment(
-        name=name,
         data_config=data_config,
         outputs=aggregations,
-        output_path=experiment_output_dir,
+        output_path=output_dir,
         baseline_config=baseline_config,
         lrsystem_parameters=parameters,
         n_trials=n_trials,

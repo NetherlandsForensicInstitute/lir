@@ -61,10 +61,11 @@ class OptunaExperiment(Experiment):
         n_trials: int,
         metric_function: Callable[[LLRData], float],
     ):
-        super().__init__(name, outputs, output_path)
+        super().__init__(name, output_path)
 
         self._data_config = DataConfig(spec=data_config, params={}, experiment_output_dir=output_path)
 
+        self.outputs = outputs
         self.baseline_config = baseline_config
         self.lrsystem_parameters = lrsystem_parameters
         self.n_trials = n_trials

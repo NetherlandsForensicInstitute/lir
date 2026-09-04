@@ -1,8 +1,5 @@
 from abc import ABC, abstractmethod
-from collections.abc import Sequence
 from pathlib import Path
-
-from lir.aggregation import Aggregation
 
 
 class Experiment(ABC):
@@ -13,8 +10,6 @@ class Experiment(ABC):
     ----------
     name : str
         Name used to identify this object in outputs and logs.
-    outputs : Sequence[Aggregation]
-        Output aggregation definitions executed after each run.
     output_path : Path
         Path where generated outputs are written.
     """
@@ -22,11 +17,9 @@ class Experiment(ABC):
     def __init__(
         self,
         name: str,
-        outputs: Sequence[Aggregation],
         output_path: Path,
     ):
         self.name = name
-        self.outputs = outputs
         self.output_path = output_path
 
     @abstractmethod

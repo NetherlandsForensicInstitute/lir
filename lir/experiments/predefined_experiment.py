@@ -65,9 +65,10 @@ class PredefinedExperiment(Experiment):
         lrsystem_configs: list[LRSystemConfig],
         enable_parallelization: bool = False,
     ):
-        super().__init__(name, outputs, output_path)
+        super().__init__(name, output_path)
         self._lrsystem_configs = lrsystem_configs
         self._data_configs = data_configs
+        self.outputs = outputs
         self._enable_parallelization = enable_parallelization
 
     def _generate_and_run(self) -> None:

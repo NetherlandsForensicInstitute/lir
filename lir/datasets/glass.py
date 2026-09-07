@@ -1,12 +1,19 @@
 import csv
-from os import PathLike
+import logging
+from codecs import iterdecode
 from pathlib import Path
 
 import numpy as np
+import requests
+from requests_cache import CachedSession
 
-from lir.data.io import RemoteResource
 from lir.data.models import DataProvider, FeatureData
 from lir.data_strategies import RoleAssignment
+
+
+LOG = logging.getLogger(__name__)
+
+GLASS_DATA_URL = 'https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/main'
 
 
 class GlassData(DataProvider):
@@ -16,26 +23,35 @@ class GlassData(DataProvider):
     The measurements are from reference glass from casework, collected in the past 10 years or so.
     For more info on the DataProvider, see: https://github.com/NetherlandsForensicInstitute/elemental_composition_glass
 
-    This data provider has a pre-defined train/test split, with a training set of three instances per source, and a test
-    set of five instances per source.
+    This data provider has a pre-defined train/test split, with a training set of three instances per source, and a
+    test set of five instances per source.
 
-    Data are retrieved from the web as needed and stored locally for later use.
+    If ``cache_dir`` is not None, data are retrieved from the web as needed and stored
+    locally for later use. The class :class:`requests_cache.CachedSesson` from the requests library handles caching.
 
     Parameters
     ----------
-    cache_dir : PathLike
+    cache_dir : Path | str | None
         Cache directory used for storing downloaded dataset files.
     """
 
-    def __init__(self, cache_dir: PathLike):
-        self.resources = RemoteResource(
-            'https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/main',
-            Path(cache_dir),
-        )
+    def __init__(self, cache_dir: Path | str | None = None):
+        self._session: requests.Session
+        if cache_dir is not None:
+            self._session = CachedSession(Path(cache_dir), backend='filesystem')
+            LOG.debug(f'using cache location: {cache_dir}')  # type: ignore
+        else:
+            self._session = requests.Session()
 
     def _load_data(self, file: str, role: RoleAssignment) -> FeatureData:
         """
         Return a tuple of features, source_ids and instance_ids.
+
+        The data columns are:
+        - id: measurement id, unique within the file
+        - Item: glass fragment id, unique within the file
+        - Piece: sample or measurement id, unique per the item
+        - K39 Ti49 Mn55 Rb85 Sr88 Zr90 Ba137 La139 Ce140 Pb208: measured element concentrations
 
         Parameters
         ----------
@@ -52,15 +68,29 @@ class GlassData(DataProvider):
         source_ids = []
         instance_ids = []
         values = []
-        with self.resources.open(file, 'r') as f:
-            reader = csv.DictReader(f)
+
+        with self._session.get(f'{GLASS_DATA_URL}/{file}', stream=True) as response:
+            reader = csv.reader(iterdecode(response.iter_lines(), encoding='utf-8'))
+
+            # read the header
+            header = next(reader, None)
+            if not header or len(header) != 13:
+                raise ValueError(f'{file}: missing or bad header row')
+
             for i, row in enumerate(reader):
                 # the first measurement is at row 2, since row 1 is the header
                 row_number = i + 2
 
-                source_ids.append(f'{role.value}{row["Item"]}')
-                instance_ids.append(f'{file}:{row_number}')
-                values.append(np.array(list(map(float, row.values()))[3:]))
+                if len(row) != 13:
+                    raise ValueError(f'{file}:{row_number}: expected 13 columns; found: {len(row)}')
+
+                try:
+                    source_ids.append(f'{role.value}{row[1]}')
+                    instance_ids.append(f'{file}:{row_number}')
+                    measurement_values = [float(v) for v in row[3:]]
+                    values.append(np.array(measurement_values))
+                except Exception as e:
+                    raise ValueError(f'{file}:{row_number}: parse error: {e}')
 
         return FeatureData(
             features=np.array(values),

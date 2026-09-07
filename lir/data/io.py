@@ -1,59 +1,13 @@
 import csv
 import logging
 import sys
-import urllib.request
 from itertools import chain
 from pathlib import Path
-from typing import IO, Any
 
 import numpy as np
 
 
 LOG = logging.getLogger(__name__)
-
-
-class RemoteResource:
-    """
-    Provide method to open files from remote source.
-
-    This can be handy if any resource is located on e.g. a GitHub repository.
-
-    Parameters
-    ----------
-    url : str
-        URL of the remote resource to read.
-    local_directory : Path
-        Local cache directory used for downloaded data.
-    """
-
-    def __init__(self, url: str, local_directory: Path):
-        self.url = url
-        self.local_directory = local_directory
-
-    def open(self, filename: str, mode: str = 'r') -> IO[Any]:
-        """
-        Return an open file stream for a remote resource.
-
-        Parameters
-        ----------
-        filename : str
-            Filename to open from disk.
-        mode : str
-            Value passed via ``mode``.
-
-        Returns
-        -------
-        IO[Any]
-            Open file handle for the requested resource.
-        """
-        local_path = self.local_directory / filename
-        if not local_path.exists():
-            url = f'{self.url}/{filename}'
-            local_path.parent.mkdir(exist_ok=True, parents=True)
-            urllib.request.urlretrieve(url, local_path)  # noqa: S310
-
-        LOG.debug(f'open file: {local_path}')
-        return open(local_path, mode)
 
 
 class DataFileBuilderCsv:

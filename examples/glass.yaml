@@ -18,7 +18,7 @@ output_path: output/${timestamp}_glass_example
 # The data consist of a pre-defined training/test set combination. The training data has three instances per source; the
 # test data has five instances per source, from which to draw two-to-three pairs for LR calculations.
 #
-data: &data
+data:
   provider:
     method: data_providers.glass
     cache_dir: cache/glass
@@ -164,9 +164,9 @@ experiments:
   # a `type` field with the corresponding value `categorical`, `cluster`, or `float`.
   - name: model_selection
     strategy: grid  # use a grid search
-    enable_parallelization: True  # enable executing multiple runs in parallel
-    lrsystem: *score_based_lrsystem  # refer to the previously defined `score_based_lrsystem`
-    data: *data  # refer to the previously defined data
+    enable_parallelization: False  # enable executing multiple runs in parallel
+    lrsystem: ${score_based_lrsystem}  # refer to the previously defined `score_based_lrsystem`
+    data: ${data}  # refer to the previously defined data
 
     lrsystem_parameters:
       - name: clf
@@ -199,7 +199,7 @@ experiments:
   - name: architecture_evaluation
     strategy: grid
     lrsystem:  # do not specify any base LR system at this point; it will be substituted anyway
-    data: *data
+    data: ${data}
     lrsystem_parameters:
       # to vary the architecture, we substitute the entire LR system, whose path is referred to by the empty string ""
       - name: architecture
@@ -207,11 +207,11 @@ experiments:
           - option_name: score_based
             substitutions:
               - path: ""
-                value: *score_based_lrsystem
+                value: ${score_based_lrsystem}
           - option_name: tlm
             substitutions:
               - path: ""
-                value: *two_level_lrsystem
+                value: ${two_level_lrsystem}
     output:
       - method: metrics
         columns:
@@ -225,8 +225,8 @@ experiments:
 
   - name: validation
     strategy: single_run
-    lrsystem: *score_based_lrsystem
-    data: *data
+    lrsystem: ${score_based_lrsystem}
+    data: ${data}
     output:
       - metrics
       # A shorthand notation is used here. This is equivalent to:

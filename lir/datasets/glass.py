@@ -1,12 +1,19 @@
 import csv
-from os import PathLike
+import logging
+from codecs import iterdecode
 from pathlib import Path
 
 import numpy as np
+import requests
+from requests_cache import CachedSession
 
-from lir.data.io import RemoteResource
 from lir.data.models import DataProvider, FeatureData
 from lir.data_strategies import RoleAssignment
+
+
+LOG = logging.getLogger(__name__)
+
+GLASS_DATA_URL = 'https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/main'
 
 
 class GlassData(DataProvider):
@@ -19,19 +26,22 @@ class GlassData(DataProvider):
     This data provider has a pre-defined train/test split, with a training set of three instances per source, and a test
     set of five instances per source.
 
-    Data are retrieved from the web as needed and stored locally for later use.
+    If ``cache_dir`` is not None, data are retrieved from the web as needed and stored
+    locally for later use. The class :class:`requests_cache.CachedSesson` from the requests library handles caching.
 
     Parameters
     ----------
-    cache_dir : PathLike
+    cache_dir : Path | str | None
         Cache directory used for storing downloaded dataset files.
     """
 
-    def __init__(self, cache_dir: PathLike):
-        self.resources = RemoteResource(
-            'https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/main',
-            Path(cache_dir),
-        )
+    def __init__(self, cache_dir: Path | str | None = None):
+        self._session: requests.Session
+        if cache_dir is not None:
+            self._session = CachedSession(Path(cache_dir), backend='filesystem')
+            LOG.debug(f'using cache location: {cache_dir}')  # type: ignore
+        else:
+            self._session = requests.Session()
 
     def _load_data(self, file: str, role: RoleAssignment) -> FeatureData:
         """
@@ -58,8 +68,9 @@ class GlassData(DataProvider):
         source_ids = []
         instance_ids = []
         values = []
-        with self.resources.open(file, 'r') as f:
-            reader = csv.reader(f)
+
+        with self._session.get(f'{GLASS_DATA_URL}/{file}', stream=True) as response:
+            reader = csv.reader(iterdecode(response.iter_lines(), encoding='utf-8'))
 
             # read the header
             header = next(reader, None)

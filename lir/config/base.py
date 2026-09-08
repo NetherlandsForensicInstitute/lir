@@ -4,7 +4,8 @@ from collections.abc import Callable, Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from functools import partial
 from pathlib import Path
-from typing import Any
+from types import TracebackType
+from typing import Any, Self
 
 from lir.util import check_type
 
@@ -31,19 +32,107 @@ class ConfigValue:
     """
     A wrapper for a configuration value and its context path.
 
+    A ``ConfigValue`` has two attributes: ``context`` contains the path in the original configuration that points to the
+    current value, and ``value`` contains the actual configuration value. The value attribute may be one of the types
+    allowed in YAML: ``dict``, ``list``, ``int``, ``float``, ``bool``, ``str``, or ``None``.
+
     This configuration value may be part of a bigger configuration tree. For example, consider:
 
     .. code-block:: yaml
 
-        root:
+        level1:
           value1:
             a: 1
             b: 2
           value2:
             c: 3
+            d: path/to/file
+            e: message text
 
-    This YAML is parsed into a dictionary and the path ``root.value1`` leads to the value ``{ "a": 1, "b": 2 }``. In a
-    ``ConfigValue`` object, this is represented as context path ``["root", "value1"]`` and value ``{ "a": 1, "b": 2 }``.
+    This YAML is parsed into a dictionary and the path ``level1.value1`` leads to the value ``{ "a": 1, "b": 2 }``. In a
+    ``ConfigValue`` object, this is represented as context path ``["level1", "value1"]`` and value
+    ``{ "a": 1, "b": 2 }``.
+
+    If the ``value`` is dictionary, its values are itself also ``ConfigValue`` objects. They can be obtained using the
+    helper function :meth:`~lir.config.pop_field`. When all is done, :meth:`~lir.config.check_empty` will check that
+    all values have been read.
+
+    Some examples for the use of ``ConfigValue``:
+
+    .. jupyter-execute::
+
+        from lir.config import ConfigValue, pop_field, check_is_empty
+
+        my_config_input = {
+            'level1': {
+                'value1': {
+                    'a': 1,
+                    'b': 2,
+                },
+                'value2': {
+                    'c': 3,
+                    'd': 'path/to/file',
+                    'e': 'message text',
+                },
+            },
+        }
+
+        root_config = ConfigValue.wrap([], my_config_input)
+        print(f'The context of root is: {root_config.context}')
+        print(f'The value of root is: {root_config.value}')
+        print(f'The unwrapped value of root is: {root_config.unwrap()}')
+
+    Example for the use of :meth:`~lir.config.check_empty`:
+
+    .. jupyter-execute::
+
+        level1_config = pop_field(root_config, 'level1')
+        print(f'After "level1" is popped, the value of root is: {root_config.value}')
+
+        # We can call `check_is_empty()` to make sure that there are no values left.
+        check_is_empty(root_config)
+
+        print(f'The context of level1 is: {level1_config.context}')
+        print(f'The value of level1 is: {level1_config.value}')
+        print(f'The unwrapped value of level1 is: {level1_config.unwrap()}')
+
+    Example for the use of ``with``:
+
+    .. jupyter-execute::
+
+        # use the `with` statement to automatically check that all fields are used
+        try:
+            with pop_field(level1_config, 'value1') as value1_config:
+                pop_field(value1_config, 'a')
+        except Exception as e:
+            print(f'Exception thrown: {e}')
+
+    More examples:
+
+    .. jupyter-execute::
+
+        value2_config = pop_field(level1_config, 'value2')
+        print(f'The context of level1.value2 is: {value2_config.context}')
+        print(f'The value of level1.value2 is: {value2_config.value}')
+        print(f'The unwrapped value of level1.value2 is: {value2_config.unwrap()}')
+
+    Examples for the use of :meth:`~lir.config.pop_field`:
+
+    .. jupyter-execute::
+
+        from pathlib import Path
+
+        # use `validate_type` to check that the type is as expected
+        c = pop_field(value2_config, 'c', validate_type=int)
+        print(f'The value of level1.value2.c is: {c}')
+
+        # use `validate` to cast types or call a function to otherwise process the value
+        d = pop_field(value2_config, 'd', validate=Path)
+        print(f'The value of level1.value2.d is: {d}')
+
+        # use `unwrap` to control whether the result should be unwrapped or not
+        e = pop_field(value2_config, 'e', unwrap=False)
+        print(f'The value of level1.value2.e is: {e}')
     """
 
     context: list[str]
@@ -75,6 +164,19 @@ class ConfigValue:
             self.value[item] = ConfigValue.wrap(self.context + [str(item)], value)
         else:
             raise ValueError(f'type {type(self)} is not indexable by {item} ({type(item)})')
+
+    def __enter__(self) -> Self:
+        return self
+
+    def __exit__(
+        self,
+        exception_type: type[BaseException] | None,
+        exception_value: BaseException | None,
+        traceback: TracebackType | None,
+    ) -> bool | None:
+        if not exception_value:
+            check_is_empty(self)
+        return None
 
     def unwrap(self) -> list | dict | int | float | bool | str | None:
         """

@@ -30,6 +30,6 @@ def parse_individual_metric(name: str, output_path: Path, context: list[str]) ->
             default_config_parser=GenericFunctionConfigParser,
             search_path=['metric'],
         )
-        return parser.parse(ConfigValue(context, None), output_path)
+        return parser.parse(ConfigValue.wrap(context, None), output_path)
     except ComponentNotFoundError as e:
         raise YamlParseError(context, str(e))

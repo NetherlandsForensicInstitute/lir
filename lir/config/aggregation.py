@@ -37,7 +37,7 @@ def parse_aggregation(config: ConfigValue, output_dir: Path, context: list[str] 
     # Normalise configuration into (class_name, args)
     if isinstance(config.value, str):
         class_name = config.value
-        config = ConfigValue(config.context, {})
+        config = ConfigValue.wrap(config.context, {})
     else:
         config.as_dict(message='invalid output configuration; expected a string or a mapping with a "method" field')
         class_name = pop_field(config, 'method', validate_type=str)

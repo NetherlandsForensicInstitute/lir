@@ -59,6 +59,11 @@ my_data_provider: &my_data_provider           # <-- adapt this name to your own 
   instance_id_column: id                      # Change them to your own column names as appropriate. Note that 'ignore_columns' is a list, because it can
   ignore_columns:                             # have multiple values.
     - Piece
+  cache: ${http_cache}
+
+http_cache:
+  backend: filesystem
+  cache_name: .cache/http
 
 #3. ASSIGNING TEST AND TRAIN DATA ROLES
 # This will describe which data is used to train the system and which to test (validate) the system.

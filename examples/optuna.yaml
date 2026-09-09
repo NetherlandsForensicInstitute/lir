@@ -8,7 +8,7 @@ output_path: output/${timestamp}_optuna_example
 data: &data
   provider:
     method: data_providers.glass
-    cache_dir: cache/glass
+    cache_dir: .cache/http
 
   splits:
     strategy: predefined_train_test

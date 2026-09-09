@@ -178,6 +178,114 @@ class ConfigValue:
             check_is_empty(self)
         return None
 
+    def pop(
+        self,
+        field: str,
+        default: Any = None,
+        required: bool | None = None,
+        validate: Callable[[Any], Any] | None = None,
+        validate_type: type[Any] | None = None,
+    ) -> 'ConfigValue | None':
+        """
+        Validate and retrieve the value for a given field, after which it is removed from this configuration.
+
+        If the value of this ``ConfigValue`` is not a ``dict``, an error is raised.
+
+        If the field exists, it is returned as a ``ConfigValue`` object.
+
+        If the field does not exist, and a default is provided, the default is returned, wrapped in a ``ConfigValue``
+        object.
+
+        If the field does not exist, it is optional, and no default is provided, ``None`` is returned.
+
+        Otherwise, the field does not exist, and it is required: an error is raised.
+
+        This method behaves similarly to ``pop_field()``, except that its return value is wrapped in ``ConfigValue``.
+
+        Parameters
+        ----------
+        field : str
+            Field name to retrieve.
+        default : Any, optional
+            Value to return when ``field`` is absent.
+        required : bool | None, optional
+            Whether to raise when the field is absent. Defaults to ``True`` when
+            ``default`` is ``None``.
+        validate : Callable[[Any], Any] | None, optional
+            Validator function applied to the popped value. The output from the validation function is returned, in
+            place of the original value.
+        validate_type : type[Any] | None, optional
+            Check that the popped value is of this type, or raise a ``ValueError``.
+
+        Returns
+        -------
+        ConfigValue
+            Popped field value or ``default``.
+        """
+        # this value should be a dict
+        dict_value = check_type(dict, self.value)
+
+        # get required status and default value from function arguments
+        required = required if required is not None else (default is None)
+        if default is not None and required:
+            raise ValueError(f'illegal argument values: required={required}; default={default}')
+
+        # try to get the field value
+        if field in dict_value:
+            field_value = dict_value.pop(field)
+
+            try:
+                if validate_type is not None:
+                    check_type(validate_type, field_value.value)  # type: ignore
+                if validate:
+                    field_value = ConfigValue.wrap(field_value.context, validate(field_value.unwrap()))
+            except Exception as e:
+                raise YamlParseError(self.context, f'illegal value for field `{field}`: {e}')
+
+            return field_value
+
+        # if no field value was returned, return the default value or raise an error
+        if required:
+            raise YamlParseError(self.context, f'missing field: `{field}`')
+        elif default is not None:
+            return ConfigValue.wrap(self.context + [field], default)
+        else:
+            return None
+
+    def pop_field(
+        self,
+        field: str,
+        default: Any = None,
+        required: bool | None = None,
+        validate: Callable[[Any], Any] | None = None,
+        validate_type: type[Any] | None = None,
+    ) -> Any:
+        """
+        Validate and retrieve the value for a given field, after which it is removed from the configuration.
+
+        This method behaves similarly to ``pop()``, except that it returns an unwrapped value.
+
+        Parameters
+        ----------
+        field : str
+            Field name to retrieve.
+        default : Any, optional
+            Value to return when ``field`` is absent.
+        required : bool | None, optional
+            Whether to raise when the field is absent. Defaults to ``True`` when ``default`` is ``None``.
+        validate : Callable[[Any], Any] | None, optional
+            Validator function applied to the popped value.
+        validate_type : type[Any] | None, optional
+            Check that the popped value is of this type, or raise a ``ValueError``.
+
+        Returns
+        -------
+        Any
+            Popped field value or ``default``.
+        """
+        value = self.pop(field, default, required, validate, validate_type)
+        return value.unwrap() if value is not None else None
+
     def unwrap(self) -> list | dict | int | float | bool | str | None:
         """
         Obtain the value of this object.
@@ -242,8 +350,10 @@ class ConfigValue:
         ConfigValue
             The value wrapped into ``ConfigValue`` objects recursively.
         """
+        if isinstance(value, ConfigValue):
+            raise ValueError(f'already wrapped: {value}')
         if isinstance(value, Mapping):
-            return ConfigValue(context, {key: ConfigValue.wrap(context + [key], value) for key, value in value.items()})
+            return ConfigValue(context, {k: ConfigValue.wrap(context + [k], v) for k, v in value.items()})
         elif isinstance(value, str):
             return ConfigValue(context, value)
         elif isinstance(value, Sequence):
@@ -548,6 +658,9 @@ def pop_field(
     """
     Validate and retrieve the value for a given field, after which it is removed from the configuration.
 
+    This is a legacy alternative for ``ConfigValue.pop()`` and ``ConfigValue.pop_field()``, and may be deprecated in the
+    future.
+
     Parameters
     ----------
     config : ConfigValue
@@ -573,14 +686,6 @@ def pop_field(
     Any
         Popped field value or ``default``.
     """
-    if validate is not None and validate_type is not None:
-        raise ValueError('illegal combination of `validate` and `validate_type`')
-
-    # get required status and default value from function arguments
-    required = required if required is not None else (default is None)
-    if default is not None and required:
-        raise ValueError(f'illegal argument values: required={required}; default={default}')
-
     if unwrap is None:
         if default is not None and isinstance(default, ConfigValue):
             unwrap = False
@@ -589,27 +694,14 @@ def pop_field(
         else:
             unwrap = False
 
-    # if there is a configuration, it should be a `dict`, and we will try to get the field value from it
-    if field in config.as_dict():
-        value = config.value.pop(field)  # type: ignore
-
-        try:
-            if validate_type is not None:
-                check_type(validate_type, value.value)  # type: ignore
-            if unwrap:
-                value = value.unwrap()
-            if validate:
-                value = validate(value)
-        except Exception as e:
-            raise YamlParseError(config.context, f'illegal value for field `{field}`: {e}')
-
-        return value
-
-    # if no field value was returned, return the default value or raise an error
-    if required:
-        raise YamlParseError(config.context, f'missing field: `{field}`')
+    if unwrap:
+        return config.pop_field(
+            field=field, default=default, required=required, validate=validate, validate_type=validate_type
+        )
     else:
-        return default
+        return config.pop(
+            field=field, default=default, required=required, validate=validate, validate_type=validate_type
+        )
 
 
 def check_is_empty(

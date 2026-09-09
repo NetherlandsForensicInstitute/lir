@@ -400,7 +400,12 @@ def feature_data_csv_http_parser(config: ConfigValue, output_dir: Path) -> Featu
     Initialize the CSV parser that reads data from a stream.
 
     Arguments:
-    - use_cache: boolean indicating whether to cache retrieved data
+    - use_cache: boolean (optional, default False, unless ``cache`` is provided) indicating whether to cache retrieved
+      data
+    - cache: dict (optional) with cache arguments
+
+    See the documentation of :class:`requests_cache.CachedSession` for the use of caching. The value of ``cache`` is
+    passed directly to ``requests_cache.CachedSession.__init__()``.
 
     Other arguments are passed directly to `FeatureDataCsvParser`.
 
@@ -416,12 +421,14 @@ def feature_data_csv_http_parser(config: ConfigValue, output_dir: Path) -> Featu
     FeatureDataCsvHttpParser
         FeatureData object parsed from the source.
     """
-    use_cache = pop_field(config, 'use_cache', default=True, validate_type=bool)
+    cache_config = pop_field(config, 'cache', default={}, unwrap=True)
+    use_cache = pop_field(config, 'use_cache', default=cache_config is not None, validate_type=bool)
 
     session: requests.Session
     if use_cache:
-        session = CachedSession('lir', use_cache_dir=True)
-        LOG.debug(f'using cache location: {session.cache.db_path}')  # type: ignore
+        cache = pop_field(config, 'cache', default={}, unwrap=True, validate_type=dict)
+        session = CachedSession(**cache)
+        LOG.debug(f'using HTTP cache: {session}')
     else:
         session = requests.Session()
 

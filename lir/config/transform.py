@@ -127,7 +127,7 @@ def parse_module(
         return Identity()
     elif isinstance(module_config.value, str):
         class_name = module_config.value
-        args = ConfigValue(module_config.context, {})
+        args = ConfigValue.wrap(module_config.context, {})
     else:
         args = module_config
         class_name = pop_field(args, 'method', default=default_method, validate_type=str)
@@ -164,7 +164,7 @@ def parse_pairing_config(
     """
     if isinstance(module_config.value, str):
         class_name = module_config.value
-        args = ConfigValue(module_config.context, {})
+        args = ConfigValue.wrap(module_config.context, {})
     else:
         class_name = pop_field(module_config, 'method', validate_type=str)
         args = module_config

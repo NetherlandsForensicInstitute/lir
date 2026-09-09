@@ -11,6 +11,7 @@ experiment_strategies:
   single_run: lir.experiments.predefined_experiment.parse_single_run
   grid: lir.experiments.predefined_experiment.parse_grid_experiment
   optuna: lir.experiments.optuna_experiment.parse_optuna_experiment
+  train_only: lir.experiments.train_only.parse_train_only_experiment
 
 data_strategies:
   train_test_instances: lir.data_strategies.TrainTestSplit

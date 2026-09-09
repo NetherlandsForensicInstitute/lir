@@ -341,11 +341,15 @@
         "strategy": {
           "type": "string",
           "description": "Execution strategy controlling how the experiment is run.",
-          "enum": ["single_run", "grid", "optuna"]
+          "enum": ["single_run", "grid", "optuna", "train_only"]
         },
         "data": {
           "$ref": "#/definitions/dataConfiguration",
           "description": "Data configuration for this experiment (references are resolved before validation)."
+        },
+        "data_provider": {
+          "$ref": "#/definitions/dataProvider",
+          "description": "Data provider configuration specifying the data source and how to load it."
         },
         "lrsystem": {
           "oneOf": [
@@ -390,14 +394,14 @@
           "description": "Whether to run experiments in parallel."
         }
       },
-      "required": ["name", "strategy", "output"],
+      "required": ["name", "strategy"],
       "allOf": [
         {
           "if": {
             "properties": {"strategy": {"const": "single_run"}}
           },
           "then": {
-            "required": ["data", "lrsystem"]
+            "required": ["data", "lrsystem", "output"]
           }
         },
         {
@@ -405,6 +409,7 @@
             "properties": {"strategy": {"const": "grid"}}
           },
           "then": {
+            "required": ["output"],
             "anyOf": [
               {"required": ["lrsystem_parameters"]},
               {"required": ["data_parameters"]}
@@ -416,7 +421,15 @@
             "properties": {"strategy": {"const": "optuna"}}
           },
           "then": {
-            "required": ["data", "lrsystem", "lrsystem_parameters", "primary_metric", "n_trials"]
+            "required": ["data", "lrsystem", "lrsystem_parameters", "primary_metric", "n_trials", "output"]
+          }
+        },
+        {
+          "if": {
+            "properties": {"strategy": {"const": "train_only"}}
+          },
+          "then": {
+            "required": ["data_provider", "lrsystem"]
           }
         }
       ],

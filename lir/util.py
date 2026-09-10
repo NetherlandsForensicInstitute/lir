@@ -2,11 +2,15 @@ import collections
 import datetime
 import importlib
 import inspect
+import json
 import warnings
 from enum import Enum
 from functools import partial
+from pathlib import Path
 from typing import Any, TypeVar
 
+import confidence
+import jsonschema
 import numpy as np
 from confidence import Configuration
 from confidence.models import ConfigurationSequence
@@ -377,11 +381,11 @@ def validate_yaml(yaml_path: Path) -> None:
 
     # Resolve ${...} references before validation
     context = {'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')}  # noqa: DTZ005
-    cfg = Configuration(loadf(yaml_path), context)
+    cfg = Configuration(confidence.loadf(yaml_path), context)
     data = to_native_dict(cfg)
 
     # Validate data against schema
-    validate(instance=data, schema=schema)
+    jsonschema.validators.validate(instance=data, schema=schema)
 
 
 class Bind(partial):

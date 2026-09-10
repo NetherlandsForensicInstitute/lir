@@ -3,8 +3,7 @@ from pathlib import Path
 import numpy as np
 import numpy.random
 
-from lir.config.base import ConfigAttribute, config_parser, pop_field
-from lir.config.base import ConfigValue, config_parser, pop_field
+from lir.config.base import ConfigAttribute, ConfigValue, config_parser, pop_field
 from lir.data.models import DataProvider, FeatureData
 
 

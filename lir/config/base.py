@@ -4,12 +4,10 @@ from collections.abc import Callable, Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from functools import partial
 from pathlib import Path
-from types import TracebackType
-from typing import Any, Self
+from types import TracebackType, UnionType
+from typing import Any, NamedTuple, Self
 
 from lir.util import check_type
-from types import UnionType
-from typing import Any, NamedTuple, TypeVar
 
 
 class YamlParseError(ValueError):

@@ -8,8 +8,7 @@ from tqdm import tqdm
 import lir
 from lir.aggregation import Aggregation
 from lir.config.aggregation import parse_aggregations
-from lir.config.base import ConfigAttribute, check_is_empty, config_parser, pop_field
-from lir.config.base import ConfigValue, check_is_empty, config_parser, pop_field
+from lir.config.base import ConfigAttribute, ConfigValue, check_is_empty, config_parser, pop_field
 from lir.config.lrsystem_architectures import augment_config
 from lir.config.substitution import Hyperparameter, parse_config_with_parameters
 from lir.experiments import Experiment

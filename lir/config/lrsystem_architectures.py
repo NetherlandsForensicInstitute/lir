@@ -5,8 +5,8 @@ from typing import Self
 
 from lir import Transformer, registry
 from lir.config.base import (
-    ConfigValue,
     ConfigAttribute,
+    ConfigValue,
     YamlParseError,
     check_is_empty,
     config_parser,

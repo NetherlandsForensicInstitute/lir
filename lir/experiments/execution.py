@@ -148,7 +148,7 @@ class DataConfig(ParameterizedConfig):
             An iterable of training/test set pairs.
         """
         if self._splits is None:
-            self._splits = list(self.splitter.apply(self.provider.get_instances()))
+            self._splits = list(self.splitter.apply(self.filter.apply(self.provider.get_instances())))
         return self._splits
 
 

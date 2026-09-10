@@ -1,3 +1,4 @@
+from functools import partial
 from pathlib import Path
 
 from lir import registry
@@ -97,14 +98,9 @@ def subset_aggregation(config: ConfigValue, output_dir: Path) -> SubsetAggregati
     SubsetAggregation
         Parsed subset aggregation object.
     """
-    config.as_dict(message='output configuration should be a dictionary')
-    category_field = pop_field(config, 'category_field', validate=str)
-    subset_output_dir = output_dir / category_field
+    with config:
+        category_field = config.pop_field('category_field', validate_type=str)
+        aggregation_config = config.pop('output')
 
-    aggregation_config = pop_field(config, 'output')
-    if isinstance(aggregation_config, list):
-        aggregation_methods = [parse_aggregation(item, subset_output_dir) for item in aggregation_config]
-    else:
-        aggregation_methods = [parse_aggregation(aggregation_config, subset_output_dir)]
-
-    return SubsetAggregation(aggregation_methods, category_field)
+        aggregation_list_factory = partial(parse_aggregations, aggregation_config)
+        return SubsetAggregation(aggregation_list_factory, category_field)

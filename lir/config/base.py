@@ -4,8 +4,8 @@ from collections.abc import Callable, Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from functools import partial
 from pathlib import Path
-from types import TracebackType
-from typing import Any, Self
+from types import TracebackType, UnionType
+from typing import Any, NamedTuple, Self
 
 from lir.util import check_type
 
@@ -361,6 +361,28 @@ class ConfigValue:
         return ConfigValue(context, value)
 
 
+class ConfigAttribute(NamedTuple):
+    """
+    An attribute in a configuration section.
+
+    Attributes
+    ----------
+    name : str
+        The attribute name.
+    type : type[Any]
+        The type of the attribute value.
+    required : bool, optional
+        Whether the attribute is required (defaults to ``False``).
+    description : str, optional
+        A text to describe the attribute and how it is used.
+    """
+
+    name: str
+    type: type[Any] | UnionType
+    required: bool = False
+    description: str | None = None
+
+
 class ConfigParser(ABC):
     """
     Abstract base configuration parser class.
@@ -394,9 +416,9 @@ class ConfigParser(ABC):
         raise NotImplementedError
 
     @staticmethod
-    def get_type_name(obj: Any) -> str:
+    def _get_type_name(obj: Any) -> str:
         """
-        Return the fully qualified type name.
+        Return the fully qualified type name of the ``obj`` type.
 
         Parameters
         ----------
@@ -413,7 +435,7 @@ class ConfigParser(ABC):
 
     def reference(self) -> str:
         """
-        Return the full class name that was used to initialize this parser.
+        Return the full class name that has the relevant docstring.
 
         By default, return the name of this class. In a subclass that was initialized with another class or function
         that does the actual work, the name of that class is returned.
@@ -423,7 +445,18 @@ class ConfigParser(ABC):
         str
             Fully qualified class name for this parser instance.
         """
-        return self.get_type_name(self.__class__)
+        return self._get_type_name(self.__class__)
+
+    def attributes(self) -> None | list[ConfigAttribute]:
+        """
+        Return the attributes in a configuration section that describes this object.
+
+        Returns
+        -------
+        list[ConfigAttribute] | None
+            The list of configuration attributes, or ``None`` if unknown.
+        """
+        return None
 
 
 class GenericFunctionConfigParser(ConfigParser):
@@ -474,7 +507,7 @@ class GenericFunctionConfigParser(ConfigParser):
         str
             Fully qualified callable name.
         """
-        return self.get_type_name(self.component_class)
+        return self._get_type_name(self.component_class)
 
 
 class GenericConfigParser(ConfigParser):
@@ -528,7 +561,7 @@ class GenericConfigParser(ConfigParser):
         str
             Fully qualified class name.
         """
-        return self.get_type_name(self.component_class)
+        return self._get_type_name(self.component_class)
 
 
 def get_full_name(obj: type[Any] | Callable) -> str:
@@ -560,7 +593,10 @@ def get_full_name(obj: type[Any] | Callable) -> str:
 
 
 def config_parser(
-    func: Callable[[ConfigValue, Path], Any] | None = None, /, reference: str | type[Any] | None = None
+    func: Callable[[ConfigValue, Path], Any] | None = None,
+    /,
+    reference: str | Any | None = None,
+    attributes: list[ConfigAttribute] | None = None,
 ) -> Callable:
     """
     Wrap a parsing function in a ``ConfigParser`` object using a decorator.
@@ -603,10 +639,12 @@ def config_parser(
 
     Parameters
     ----------
-    func : Callable[[ConfigValue, Path], Any] | None, optional
+    func : Callable[[ConfigValue, Path], Any], optional
         Function to wrap as a config parser.
-    reference : str | Any | None, optional
+    reference : str | Any, optional
         Explicit reference name or object used in generated metadata.
+    attributes : list[ConfigAttribute], optional
+        A list of attributes for the configuration parser.
 
     Returns
     -------
@@ -615,7 +653,7 @@ def config_parser(
     """
     if func is None:
         # take the optional arguments
-        return partial(config_parser, reference=reference)
+        return partial(config_parser, reference=reference, attributes=attributes)
 
     class ConfigParserFunction(ConfigParser):
         __doc__ = func.__doc__
@@ -642,6 +680,9 @@ def config_parser(
 
             # last resort: fallback to wrapped function name
             return get_full_name(func)
+
+        def attributes(self) -> list[ConfigAttribute] | None:
+            return attributes
 
     return ConfigParserFunction
 

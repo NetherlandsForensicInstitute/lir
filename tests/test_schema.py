@@ -7,7 +7,7 @@ import pytest
 import yaml
 from jsonschema import ValidationError
 
-from lir.util import validate_yaml
+from lir.config.schema import validate_yaml
 
 
 ROOT = Path(__file__).resolve().parent.parent  # Go up to project root

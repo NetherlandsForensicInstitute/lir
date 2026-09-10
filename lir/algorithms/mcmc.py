@@ -1,15 +1,24 @@
+import logging
 import sys
 from collections.abc import Callable
+from pathlib import Path
 from typing import Any, Self
 
 import numpy as np
+from KDEpy import FFTKDE
+from matplotlib import pyplot as plt
 from scipy.stats import betabinom, binom, norm
 
 from lir.algorithms.bayeserror import ELUBBounder
 from lir.bounding import LLRBounder, check_type
+from lir.config import ConfigValue, config_parser, pop_field
+from lir.config.transform import parse_module
 from lir.data.models import FeatureData, InstanceData, LLRData
 from lir.transform import Transformer
+from lir.util import partial
 
+
+LOG = logging.getLogger(__name__)
 
 elub_bounder_factory = ELUBBounder
 
@@ -36,6 +45,8 @@ class McmcLLRModel(Transformer):
         Bounding method factory to prevent over-extrapolation.
     interval : tuple[float, float], optional
         Lower and upper bounds of the credible interval in range ``[0, 1]``.
+    plot_path : Path | None, optional
+        If specified, path where distribution plots of the sampled distribution parameters are saved.
     **mcmc_kwargs : Any
         Additional MCMC simulation settings passed to `McmcModel`.
     """
@@ -48,6 +59,7 @@ class McmcLLRModel(Transformer):
         parameters_h2: dict[str, dict[str, float | int | str]] | None,
         bounding: Callable[[], LLRBounder] | None = elub_bounder_factory,
         interval: tuple[float, float] = (0.05, 0.95),
+        plot_path: Path | None = None,
         **mcmc_kwargs: Any,
     ):
         self.model_h1 = McmcModel(distribution_h1, parameters_h1, **mcmc_kwargs)
@@ -55,6 +67,8 @@ class McmcLLRModel(Transformer):
         self.bounder_factory = bounding
         self.bounders: list[LLRBounder] | None = None
         self.interval = interval
+        self.plot_path = plot_path
+        self.plot_count = 0
 
     def fit(self, instances: InstanceData) -> Self:
         """
@@ -74,6 +88,11 @@ class McmcLLRModel(Transformer):
 
         self.model_h1.fit(instances.features[instances.require_labels == 1])
         self.model_h2.fit(instances.features[instances.require_labels == 0])
+
+        # optionally, plot distributions of the sampled distribution parameters
+        if self.plot_path is not None:
+            self._generate_parameter_plots(self.plot_path)
+
         if self.bounder_factory is not None:
             # determine the bounds based on the LLRs of the training data, each sample results into an LR-system
             logp_h1 = self.model_h1.transform(instances.features)
@@ -113,6 +132,31 @@ class McmcLLRModel(Transformer):
                 llrs[:, i_system] = bound_llr_data.llrs
         quantiles = np.quantile(llrs, [0.5] + list(self.interval), axis=1, method='midpoint')
         return instances.replace_as(LLRData, features=quantiles.transpose(1, 0))
+
+    def _generate_parameter_plots(self, plot_path: Path) -> None:
+        plot_path.mkdir(parents=True, exist_ok=True)
+        self.plot_count += 1
+        hypothesis_models = {'h1': self.model_h1, 'h2': self.model_h2}
+        for hypothesis, model in hypothesis_models.items():
+            for parameter_name, parameter_values in model.parameter_samples.items():
+                plot_name = 'distribution-' + hypothesis + '_' + model.distribution + '_' + parameter_name
+                fig, ax = plt.subplots()
+
+                try:
+                    x, y = FFTKDE(bw='silverman').fit(parameter_values).evaluate(2**10)
+                    ax.plot(x, y)
+                    ax.set_xlabel(parameter_name)
+                    ax.set_ylabel('probability density')
+                except ValueError as e:
+                    LOG.warning(f'Could not generate plot {plot_name}: {e}')
+                    continue
+
+                file_name = plot_path / f'{self.plot_count:02d}-{plot_name}.png'
+
+                LOG.info(f'Saving plot {plot_name} to {file_name}')
+                fig.savefig(file_name)
+
+                plt.close(fig)
 
 
 class McmcModel:
@@ -274,3 +318,29 @@ class McmcModel:
                 raise ValueError('Unrecognized distribution')
         # Return 10-base log probabilities
         return logp / np.log(10)
+
+
+@config_parser
+def mcmc(config: ConfigValue, output_dir: Path) -> McmcLLRModel:
+    """
+    Parse MCMC module configuration.
+
+    Parameters
+    ----------
+    config : ConfigValue
+        Configuration for the MCMC model.
+    output_dir : Path
+        Output directory used by nested parser calls.
+
+    Returns
+    -------
+    McmcLLRModel
+        Configured MCMC model instance.
+    """
+    bounding_config = pop_field(config, 'bounding', required=False)
+    bounding = partial(parse_module, bounding_config, output_dir) if bounding_config else None
+
+    include_plots_config = pop_field(config, 'include_plots', default=False, validate_type=bool)
+    plot_path = output_dir / 'mcmc_output' if include_plots_config else None
+
+    return McmcLLRModel(**config.as_dict(), bounding=bounding, plot_path=plot_path)  # type: ignore[arg-type]

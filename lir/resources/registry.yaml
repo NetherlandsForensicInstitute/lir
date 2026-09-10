@@ -24,6 +24,7 @@ data_strategies:
   train_test_pairs: lir.data_strategies.PairsTrainTestSplit
   auto_train_test: lir.data_strategies.AutoTrainTestSplit
   auto_cross_validation: lir.data_strategies.AutoCrossValidation
+  leave_one_category_out: lir.data_strategies.LeaveOneCategoryOut
 
 data_providers:
   synthesized_normal_binary: lir.datasets.synthesized_normal_binary.synthesized_normal_binary

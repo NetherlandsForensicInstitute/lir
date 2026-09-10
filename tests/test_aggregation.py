@@ -73,7 +73,7 @@ def test_subset_aggregation():
             )
 
     llrs = LLRData(features=np.arange(2).repeat(10).reshape((20, 1)), category=np.arange(2).repeat(10))
-    aggregation = SubsetAggregation(aggregation_methods=[MyAggregation()], category_field='category')
+    aggregation = SubsetAggregation(aggregation_list_factory=lambda output_dir: [MyAggregation()], category_field='category')
     with tempfile.TemporaryDirectory() as experiment_output_dir:
         aggregation.report(
             AggregationData(

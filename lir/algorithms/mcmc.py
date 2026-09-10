@@ -91,29 +91,7 @@ class McmcLLRModel(Transformer):
 
         # optionally, plot distributions of the sampled distribution parameters
         if self.plot_path is not None:
-            self.plot_path.mkdir(parents=True, exist_ok=True)
-            self.plot_count += 1
-            hypothesis_models = {'h1': self.model_h1, 'h2': self.model_h2}
-            for hypothesis, model in hypothesis_models.items():
-                for parameter_name, parameter_values in model.parameter_samples.items():
-                    plot_name = 'distribution-' + hypothesis + '_' + model.distribution + '_' + parameter_name
-                    fig, ax = plt.subplots()
-
-                    try:
-                        x, y = FFTKDE(bw='silverman').fit(parameter_values).evaluate(2**10)
-                        ax.plot(x, y)
-                        ax.set_xlabel(parameter_name)
-                        ax.set_ylabel('probability density')
-                    except ValueError as e:
-                        LOG.warning(f'Could not generate plot {plot_name}: {e}')
-                        continue
-
-                    file_name = self.plot_path / f'{self.plot_count:02d}-{plot_name}.png'
-
-                    LOG.info(f'Saving plot {plot_name} to {file_name}')
-                    fig.savefig(file_name)
-
-                    plt.close(fig)
+            self._generate_parameter_plots(self.plot_path)
 
         if self.bounder_factory is not None:
             # determine the bounds based on the LLRs of the training data, each sample results into an LR-system
@@ -154,6 +132,31 @@ class McmcLLRModel(Transformer):
                 llrs[:, i_system] = bound_llr_data.llrs
         quantiles = np.quantile(llrs, [0.5] + list(self.interval), axis=1, method='midpoint')
         return instances.replace_as(LLRData, features=quantiles.transpose(1, 0))
+
+    def _generate_parameter_plots(self, plot_path: Path) -> None:
+        plot_path.mkdir(parents=True, exist_ok=True)
+        self.plot_count += 1
+        hypothesis_models = {'h1': self.model_h1, 'h2': self.model_h2}
+        for hypothesis, model in hypothesis_models.items():
+            for parameter_name, parameter_values in model.parameter_samples.items():
+                plot_name = 'distribution-' + hypothesis + '_' + model.distribution + '_' + parameter_name
+                fig, ax = plt.subplots()
+
+                try:
+                    x, y = FFTKDE(bw='silverman').fit(parameter_values).evaluate(2**10)
+                    ax.plot(x, y)
+                    ax.set_xlabel(parameter_name)
+                    ax.set_ylabel('probability density')
+                except ValueError as e:
+                    LOG.warning(f'Could not generate plot {plot_name}: {e}')
+                    continue
+
+                file_name = plot_path / f'{self.plot_count:02d}-{plot_name}.png'
+
+                LOG.info(f'Saving plot {plot_name} to {file_name}')
+                fig.savefig(file_name)
+
+                plt.close(fig)
 
 
 class McmcModel:
@@ -334,11 +337,10 @@ def mcmc(config: ConfigValue, output_dir: Path) -> McmcLLRModel:
     McmcLLRModel
         Configured MCMC model instance.
     """
-    bounding_config = pop_field(config, 'bounding', default=None)
+    bounding_config = pop_field(config, 'bounding', required=False)
     bounding = partial(parse_module, bounding_config, output_dir) if bounding_config else None
 
     include_plots_config = pop_field(config, 'include_plots', default=False, validate_type=bool)
     plot_path = output_dir / 'mcmc_output' if include_plots_config else None
 
-    mcmc_class: Any = McmcLLRModel
-    return mcmc_class(**config.as_dict(), bounding=bounding, plot_path=plot_path)
+    return McmcLLRModel(**config.as_dict(), bounding=bounding, plot_path=plot_path)  # type: ignore[arg-type]

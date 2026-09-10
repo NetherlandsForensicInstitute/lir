@@ -102,5 +102,5 @@ def subset_aggregation(config: ConfigValue, output_dir: Path) -> SubsetAggregati
         category_field = config.pop_field('category_field', validate_type=str)
         aggregation_config = config.pop('output')
 
-        aggregation_list_factory = partial(parse_aggregations, aggregation_config)
-        return SubsetAggregation(aggregation_list_factory, category_field)
+        aggregation_list = parse_aggregations(aggregation_config, output_dir)
+        return SubsetAggregation(aggregation_list, category_field)

@@ -23,11 +23,9 @@ class SubsetAggregation(Aggregation):
         The name of the category field.
     """
 
-    def __init__(self, aggregation_list_factory: Callable[[Path], list[Aggregation]], category_field: str):
+    def __init__(self, aggregation_list: list[Aggregation], category_field: str):
         self.category_field = category_field
-
-        self._aggregation_list_factory = aggregation_list_factory
-        self._aggregations_by_category = {}
+        self._aggregation_list = aggregation_list
 
     def report(self, data: AggregationData) -> None:
         """
@@ -48,7 +46,7 @@ class SubsetAggregation(Aggregation):
             category_data = AggregationData(
                 llrdata=subset,
                 lrsystem=data.lrsystem,
-                parameters=data.parameters | {self.category_field: str(category)},
+                parameters=data.parameters | {self.category_field: category_str},
                 run_name=run_name,
                 experiment_output_dir=data.experiment_output_dir,
                 run_output_dir=run_output_dir,
@@ -57,14 +55,10 @@ class SubsetAggregation(Aggregation):
 
             # we need one set of aggregations per category
             # instantiate the aggregations if not already available
-            if category_str not in self._aggregations_by_category:
-                self._aggregations_by_category[category_str] = self._aggregation_list_factory(run_output_dir)
-
-            for output in self._aggregations_by_category[category_str]:
+            for output in self._aggregation_list:
                 output.report(category_data)
 
     def close(self) -> None:
         """Close all subset aggregation methods."""
-        for aggregations in self._aggregations_by_category.values():
-            for output in aggregations:
-                output.close()
+        for output in self._aggregation_list:
+            output.close()

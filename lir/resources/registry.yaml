@@ -66,7 +66,7 @@ modules:
   kde: lir.algorithms.kde.KDECalibrator
   isotonic_calibrator: lir.algorithms.isotonic_regression.IsotonicCalibrator
   logistic_calibrator: lir.algorithms.logistic_regression.LogitCalibrator
-  mcmc: lir.config.algorithms.mcmc
+  mcmc: lir.algorithms.mcmc.mcmc
 
   # bounders
   static_bounder: lir.bounding.StaticBounder

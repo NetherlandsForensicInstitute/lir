@@ -149,7 +149,7 @@ output:
 
   save_model: lir.persistence.SaveModel
   case_llr: lir.aggregation.case_llr_csv.parse
-  by_category: lir.config.aggregation.subset_aggregation
+  by_category: lir.aggregation.subset.subset_aggregation
   
 pairing:
   instance_pairs: lir.transform.pairing.InstancePairing

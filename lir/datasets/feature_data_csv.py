@@ -421,13 +421,12 @@ def feature_data_csv_http_parser(config: ConfigValue, output_dir: Path) -> Featu
     FeatureDataCsvHttpParser
         FeatureData object parsed from the source.
     """
-    cache_config = pop_field(config, 'cache', default={}, unwrap=True)
+    cache_config = pop_field(config, 'cache', default={}, unwrap=True, validate_type=dict)
     use_cache = pop_field(config, 'use_cache', default=cache_config is not None, validate_type=bool)
 
     session: requests.Session
     if use_cache:
-        cache = pop_field(config, 'cache', default={}, unwrap=True, validate_type=dict)
-        session = CachedSession(**cache)
+        session = CachedSession(**cache_config)
         LOG.debug(f'using HTTP cache: {session}')
     else:
         session = requests.Session()

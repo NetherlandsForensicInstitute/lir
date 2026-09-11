@@ -97,14 +97,8 @@ def subset_aggregation(config: ConfigValue, output_dir: Path) -> SubsetAggregati
     SubsetAggregation
         Parsed subset aggregation object.
     """
-    config.as_dict(message='output configuration should be a dictionary')
-    category_field = pop_field(config, 'category_field', validate=str)
-    subset_output_dir = output_dir / category_field
+    with config:
+        category_field = config.pop_field('category_field', validate_type=str)
+        aggregation_methods = parse_aggregations(config.pop('output'), output_dir)  # type: ignore
 
-    aggregation_config = pop_field(config, 'output')
-    if isinstance(aggregation_config, list):
-        aggregation_methods = [parse_aggregation(item, subset_output_dir) for item in aggregation_config]
-    else:
-        aggregation_methods = [parse_aggregation(aggregation_config, subset_output_dir)]
-
-    return SubsetAggregation(aggregation_methods, category_field)
+        return SubsetAggregation(aggregation_methods, category_field)

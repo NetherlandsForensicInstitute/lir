@@ -1,13 +1,12 @@
 from pathlib import Path
 
 from lir import registry
-from lir.aggregation import Aggregation, SubsetAggregation
+from lir.aggregation import Aggregation
 from lir.config.base import (
     ConfigParser,
     ConfigValue,
     GenericConfigParser,
     YamlParseError,
-    config_parser,
     pop_field,
 )
 
@@ -78,27 +77,3 @@ def parse_aggregations(config: ConfigValue, output_dir: Path) -> list[Aggregatio
         return [parse_aggregation(item, output_dir) for i, item in enumerate(config.value)]
     else:
         return [parse_aggregation(config, output_dir)]
-
-
-@config_parser
-def subset_aggregation(config: ConfigValue, output_dir: Path) -> SubsetAggregation:
-    """
-    Parse a configuration section for a categorized subset aggregation.
-
-    Parameters
-    ----------
-    config : ConfigValue
-        Configuration section.
-    output_dir : Path
-        Output directory.
-
-    Returns
-    -------
-    SubsetAggregation
-        Parsed subset aggregation object.
-    """
-    with config:
-        category_field = config.pop_field('category_field', validate_type=str)
-        aggregation_methods = parse_aggregations(config.pop('output'), output_dir)  # type: ignore
-
-        return SubsetAggregation(aggregation_methods, category_field)

@@ -1,5 +1,3 @@
 # Override specific values from the example YAML for testing convenience
 
-output_path: tests/yaml_output
-
 http_cache.cache_name: ${output_path}/../examples_yaml_resources/cache

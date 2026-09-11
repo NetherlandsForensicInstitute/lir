@@ -50,7 +50,8 @@ class MetricsBarPlot(Aggregation):
                 ),
                 parameters={'model': 'model1'},
                 lrsystem=None,
-                experiment_output_dir='experiment_results',
+                experiment_output_dir='results',
+                run_output_dir='results/run',
             ),
             AggregationData(
                 run_name='1',
@@ -60,7 +61,8 @@ class MetricsBarPlot(Aggregation):
                 ),
                 parameters={'model': 'model2'},
                 lrsystem=None,
-                experiment_output_dir='experiment_results',
+                experiment_output_dir='results',
+                run_output_dir='results/run',
             ),
         ]
 

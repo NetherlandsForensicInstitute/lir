@@ -85,3 +85,7 @@ def test_subset_aggregation():
                 run_output_dir=Path(experiment_output_dir),
             )
         )
+
+
+def test_subset_aggregation_registry():
+    assert registry.get('output.by_category')

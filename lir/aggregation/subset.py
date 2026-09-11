@@ -1,6 +1,9 @@
 import logging
+from pathlib import Path
 
 from lir.aggregation import Aggregation, AggregationData
+from lir.config import ConfigValue, config_parser
+from lir.config.aggregation import parse_aggregations
 from lir.data.models import get_instances_by_category
 
 
@@ -24,6 +27,19 @@ class SubsetAggregation(Aggregation):
       categories.
     - `experiment_output_dir` is unchanged.
     - `run_output_dir` is modified to be unique within an experiment, even across categories.
+
+    In a configuration file, the aggregation is used in the ``output`` section, and is referred to as `by_category`.
+    Example of use:
+
+    .. code-block:: yaml
+
+        experiment:
+          [...]
+          output:
+            by_category:
+              category_field: my_category
+              output:
+                - metrics_csv
 
     Parameters
     ----------
@@ -70,3 +86,29 @@ class SubsetAggregation(Aggregation):
         """Close all subset aggregation methods."""
         for output in self.aggregation_methods:
             output.close()
+
+
+@config_parser
+def subset_aggregation(config: ConfigValue, output_dir: Path) -> SubsetAggregation:
+    """
+    Parse a configuration section for a categorized subset aggregation.
+
+    See also: :class:`~lir.aggregation.SubsetAggregation`
+
+    Parameters
+    ----------
+    config : ConfigValue
+        Configuration section.
+    output_dir : Path
+        Output directory.
+
+    Returns
+    -------
+    SubsetAggregation
+        Parsed subset aggregation object.
+    """
+    with config:
+        category_field = config.pop_field('category_field', validate_type=str)
+        aggregation_methods = parse_aggregations(config.pop('output'), output_dir)  # type: ignore
+
+        return SubsetAggregation(aggregation_methods, category_field)

@@ -1,3 +1,6 @@
+import socket
+import warnings
+
 import pytest
 
 from lir.algorithms.bootstraps import BootstrapAtData
@@ -24,3 +27,12 @@ def synthesized_llrs(synthesized_normal_data: SynthesizedNormalBinaryData) -> LL
 def synthesized_llrs_with_interval(synthesized_normal_data: FeatureData) -> LLRData:
     bootstrap = BootstrapAtData(steps=[('clf', LogitCalibrator())])
     return bootstrap.fit_apply(synthesized_normal_data)
+
+
+def create_socket_with_warning(*args, **kwargs):
+    warnings.warn('test uses a network socket', stacklevel=1)
+    return raw_socket(*args, **kwargs)
+
+
+raw_socket = socket.socket
+socket.socket = create_socket_with_warning

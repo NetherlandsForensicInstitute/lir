@@ -19,7 +19,7 @@ def test_run_examples(yaml_file: Path):
     listing_file = yaml_file.parent / 'resources' / yaml_file.with_suffix('.lst').name
 
     with (
-        requests_cache.enabled(backend='filesystem', cache_name='tests/examples_yaml_resources/cache1'),
+        requests_cache.enabled(backend='filesystem', cache_name='tests/examples_yaml_resources/cache'),
         tempfile.TemporaryDirectory() as tmpdir,
     ):
         run_yaml(yaml_file, None, listing_file, Path(tmpdir))

@@ -59,7 +59,7 @@ def test_run_examples(yaml_file: Path):
         run_yaml(yaml_file, yaml_override_file, listing_file, Path(tmpdir))
 
 
-def run_yaml(yaml_file: Path, yaml_override_file: Path, listing_file: Path, output_path: Path):
+def run_yaml(yaml_file: Path, yaml_override_file: Path | None, listing_file: Path, output_path: Path):
     """
     Check and run a YAML file.
 

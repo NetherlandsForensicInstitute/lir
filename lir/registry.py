@@ -1,3 +1,4 @@
+import difflib
 import importlib.resources
 import inspect
 import logging
@@ -60,7 +61,88 @@ def _get_attribute_by_name(name: str) -> Any:
 
 
 class ComponentNotFoundError(ValueError):
-    """Representation of an error when a component class cannot be found."""
+    """Representation of an error when a component class cannot be found.
+
+    If `key` and `candidates` are provided, up to three candidates that are close matches to the `key` are
+    appended to the message as "did you mean" suggestions; they are also stored in the `suggestions` attribute.
+
+    Parameters
+    ----------
+    message : str
+        The error message.
+    key : str | None, optional
+        The key that was not found, by default None.
+    candidates : Iterable[str] | None, optional
+        A list of candidate keys that were considered, by default None.
+    """
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        key: str | None = None,
+        candidates: Iterable[str] | None = None,
+    ):
+        suggestions: list[str] = []
+        if key is not None and candidates is not None:
+            suggestions = _suggest_close_matches(key, candidates)
+        if suggestions:
+            quoted = ', '.join(f"'{s}'" for s in suggestions)
+            message = f'{message}; did you mean: {quoted}?'
+        super().__init__(message)
+        self.suggestions = suggestions
+
+
+def _suggest_close_matches(key: str, candidates: Iterable[str], n: int = 3) -> list[str]:
+    """
+    Return up to ``n`` candidates that are close matches to ``key``.
+
+    Suggestions are drawn from two signals, in order of priority:
+
+    1. **Prefix matches**: candidates that start with ``key`` (with ``key`` at least three
+       characters long). This catches cases where the user typed an abbreviated form, such as
+       ``elub`` for ``elub_bounder``.
+    2. **Close matches** via :func:`difflib.get_close_matches` with a cutoff of 0.6. This
+       catches minor typos such as ``metric_bars`` for ``metrics_bars`` or
+       ``leave_two_source_out`` for ``leave_one_source_out``.
+
+    Suggestions are deterministic. Candidates are deduplicated, the ``key`` itself is excluded, and the remaining
+    candidates are sorted before matching; prefix matches take precedence over close matches.
+
+    Parameters
+    ----------
+    key : str
+        The key the user requested.
+    candidates : Iterable[str]
+        Pool of available keys to compare against.
+    n : int, optional
+        Maximum number of suggestions to return, by default 3.
+
+    Returns
+    -------
+    list[str]
+        Up to ``n`` suggestions ordered by likelihood, or an empty list if no signal fired.
+    """
+    unique = sorted(set(candidates) - {key})
+    suggestions: list[str] = []
+    seen: set[str] = set()
+
+    if len(key) >= 3:
+        for c in unique:
+            if c.startswith(key) and c not in seen:
+                seen.add(c)
+                suggestions.append(c)
+            if len(suggestions) >= n:
+                return suggestions
+
+    for c in difflib.get_close_matches(key, unique, n=n, cutoff=0.6):
+        if c not in seen:
+            seen.add(c)
+            suggestions.append(c)
+        if len(suggestions) >= n:
+            break
+
+    return suggestions
 
 
 class InvalidRegistryEntryError(ValueError):
@@ -160,7 +242,7 @@ class ClassLoader(ConfigParserLoader):
         try:
             result_type = _get_attribute_by_name(key)
         except (AttributeError, ModuleNotFoundError) as e:
-            raise ComponentNotFoundError from e
+            raise ComponentNotFoundError(f'no class found: {key}') from e
 
         return ConfigParserLoader._get_config_parser(result_type, default_config_parser)
 
@@ -204,8 +286,22 @@ class FederatedLoader(ConfigParserLoader):
         -------
         ConfigParser
             A `ConfigParser` object.
+
+        Notes
+        -----
+        Keys yielded by the registries are expected to be prefixed with their search path (for example
+        ``output.metrics_bars``). The prefix is stripped to obtain un-prefixed candidate names for suggestions.
+        Registries that do not support iteration are silently skipped.
         """
         errors = []
+        candidates: list[str] = []
+        for r in self.registries:
+            try:
+                for item in r:
+                    candidates.append(item.split('.', 1)[1] if '.' in item else item)
+            except Exception:
+                LOG.debug(f'unable to enumerate candidates from {r}', exc_info=True)
+
         for r in self.registries:
             try:
                 LOG.debug(f'trying to load {key} from {r} (search_path={search_path})')
@@ -213,7 +309,8 @@ class FederatedLoader(ConfigParserLoader):
             except ComponentNotFoundError as e:
                 errors.append(e)
 
-        raise ComponentNotFoundError('; '.join(str(e) for e in errors))
+        message = '; '.join(str(e).split('; did you mean: ')[0] for e in errors)
+        raise ComponentNotFoundError(message, key=key, candidates=candidates)
 
 
 def _load_package_registry() -> 'YamlRegistry':

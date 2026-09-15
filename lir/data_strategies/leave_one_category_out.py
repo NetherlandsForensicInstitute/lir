@@ -54,12 +54,27 @@ class LeaveOneCategoryOut(DataStrategy):
         if not hasattr(instances, self.category_field):
             raise ValueError(f'missing field in input data: {self.category_field}')
 
+        # the field named `self.category_field` holds the category values for all instances
         category_values = check_type(np.ndarray, getattr(instances, self.category_field))
-        if len(category_values.shape) != 1:
+
+        # the category field is expected to be a 1-dimensional array: one category per instance
+        if len(category_values.shape) == 1:
+            for test_category in np.unique(category_values):
+                yield instances[category_values != test_category], instances[category_values == test_category]
+
+        # if the instances are already pairs, the category field may be 2-dimensional
+        elif len(category_values.shape) == 2:
+            for test_category in np.unique(category_values):
+                # the training set consists of all pairs where none of the instances have the test category
+                train_indexes = ~np.any(category_values == test_category, axis=1)
+
+                # the test set consists of all pairs where all the instances have the test category
+                test_indexes = np.all(category_values == test_category, axis=1)
+
+                yield instances[train_indexes], instances[test_indexes]
+
+        else:
             raise ValueError(
-                f'expected 1-dimensional array for category field {self.category_field}; '
+                f'expected 1- or 2-dimensional array for category field {self.category_field}; '
                 + 'found shape: {category_values.shape}'
             )
-
-        for category in np.unique(category_values):
-            yield instances[category_values != category], instances[category_values == category]

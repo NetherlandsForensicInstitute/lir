@@ -75,7 +75,7 @@ class SubsetAggregation(Aggregation):
                 parameters=data.parameters | {self.category_field: category_str},
                 run_name=run_name,
                 experiment_output_dir=data.experiment_output_dir,
-                run_output_dir=data.run_output_dir.parent / f'{self.category_field}={category_str}',
+                run_output_dir=data.run_output_dir / f'{self.category_field}={category_str}',
                 get_full_fit_lrsystem=data.get_full_fit_lrsystem,
             )
 

@@ -2,7 +2,6 @@ import logging
 from collections import OrderedDict
 from collections.abc import Callable, Mapping, Sequence
 from functools import partial
-from numbers import Number
 from pathlib import Path
 from types import NoneType
 from typing import IO, Any
@@ -31,10 +30,12 @@ class MetricsBarPlot(Aggregation):
 
         output:
           - method: metric_bars
-            yrange: [None, 1]
-            metrics:
-              - cllr
-              - cllr_min
+            plot_params:
+              ylim: [None, 1]
+              xlabel: run
+          - metrics:
+            - cllr
+            - cllr_min
 
     .. jupyter-execute::
         :hide-code:
@@ -68,7 +69,11 @@ class MetricsBarPlot(Aggregation):
             ),
         ]
 
-        aggr = MetricsBarPlot(path=None, metrics={'cllr': metrics.cllr, 'cllr_min': metrics.cllr_min})
+        aggr = MetricsBarPlot(
+            path=None,
+            metrics={'cllr': metrics.cllr, 'cllr_min': metrics.cllr_min},
+            plot_params={'ylim': [None, 1], 'xlabel': 'run'}
+        )
         for data in results:
             aggr.report(data)
         aggr.close()
@@ -79,15 +84,15 @@ class MetricsBarPlot(Aggregation):
         The path to where the plot file is written.
     metrics : Mapping[str, Callable]
         A mapping of metric names to functions that compute the values for the metrics.
-    yrange : tuple[float | None, float | None]
-        The bottom and top in data coordinates. The default is to determine the limit automatically.
+    plot_params : Mapping[str, Any]
+        Properties of the plot, passed as keyword arguments to :meth:`matplotlib.axes.Axes.update`.
     """
 
     def __init__(
         self,
         path: Path | None,
         metrics: Mapping[str, Callable[[LLRData], float | list[float]]],
-        yrange: tuple[float | None, float | None] = (None, None),
+        plot_params: dict[str, Any] | None = None,
     ):
         self.path = path
         self.full_path: Path | None = None
@@ -95,7 +100,7 @@ class MetricsBarPlot(Aggregation):
         self.metric_functions = OrderedDict(metrics.items())
         self.calculated_values: list[list[float | None]] = []
         self.run_names: list[str] = []
-        self.yrange = yrange
+        self.plot_params: dict[str, Any] = plot_params or {}
 
     @staticmethod
     def _safe_call(fn: Callable, message: str) -> float | None:
@@ -144,7 +149,7 @@ class MetricsBarPlot(Aggregation):
             ax.bar(x_values, metric_values, label=metric_names[metric_index], width=1.0, align='edge', alpha=0.5)
 
         ax.set_xticks(np.arange(n_runs) * run_width + n_metrics / 2, self.run_names, rotation=20, ha='right')
-        ax.set_ylim(*self.yrange)
+        ax.update(self.plot_params)
 
         fig.legend()
         fig.tight_layout()
@@ -153,15 +158,6 @@ class MetricsBarPlot(Aggregation):
         else:
             plt.show(block=True)
         plt.close(fig)
-
-
-def _check_yrange(yrange: list[float | None]) -> tuple[float | None, float | None]:
-    if len(yrange) != 2:
-        raise ValueError(f'expected a list of two values; found: {yrange}')
-    for i in range(2):
-        if not isinstance(yrange[i], (Number, NoneType)):
-            raise ValueError(f'expected a number or None; found: {yrange[i]}')
-    return yrange[0], yrange[1]
 
 
 @config_parser
@@ -190,7 +186,7 @@ def parse(config: ConfigValue, output_dir: Path) -> MetricsBarPlot:
 
     path: Path = pop_field(config, 'path', default=Path('metrics.png'), validate=Path)
     metrics = {name: parse_individual_metric(name, output_dir, config.context) for name in metric_names}
-    yrange = config.pop_field('yrange', default=(None, None), validate_type=list, validate=_check_yrange)
+    plot_params = pop_field(config, 'plot_params', default={})
 
     check_is_empty(config)
-    return MetricsBarPlot(path, metrics, yrange=yrange)
+    return MetricsBarPlot(path, metrics, plot_params=plot_params)

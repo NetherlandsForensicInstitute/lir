@@ -14,7 +14,10 @@ from lir.config import ConfigValue, YamlParseError
             """
         metrics:
           - cllr
-        yrange: [0, 1]
+          - cllr_min
+        plot_params:
+          ylim: [0, 1]
+          xlabel: run
         """,
             None,
         ),

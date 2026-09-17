@@ -29,7 +29,10 @@ class MetricsBarPlot(Aggregation):
     .. code-block:: yaml
 
         output:
-          metric_bars:
+          - method: metrics_bars
+            plot_params:
+              ylim: [null, 1]
+              xlabel: run
             metrics:
               - cllr
               - cllr_min
@@ -66,7 +69,11 @@ class MetricsBarPlot(Aggregation):
             ),
         ]
 
-        aggr = MetricsBarPlot(path=None, metrics={'cllr': metrics.cllr, 'cllr_min': metrics.cllr_min})
+        aggr = MetricsBarPlot(
+            path=None,
+            metrics={'cllr': metrics.cllr, 'cllr_min': metrics.cllr_min},
+            plot_params={'ylim': [None, 1], 'xlabel': 'run'}
+        )
         for data in results:
             aggr.report(data)
         aggr.close()
@@ -77,15 +84,23 @@ class MetricsBarPlot(Aggregation):
         The path to where the plot file is written.
     metrics : Mapping[str, Callable]
         A mapping of metric names to functions that compute the values for the metrics.
+    plot_params : Mapping[str, Any]
+        Properties of the plot, passed as keyword arguments to :meth:`matplotlib.axes.Axes.update`.
     """
 
-    def __init__(self, path: Path | None, metrics: Mapping[str, Callable[[LLRData], float | list[float]]]):
+    def __init__(
+        self,
+        path: Path | None,
+        metrics: Mapping[str, Callable[[LLRData], float | list[float]]],
+        plot_params: dict[str, Any] | None = None,
+    ):
         self.path = path
         self.full_path: Path | None = None
         self._file: IO[Any] | None = None
         self.metric_functions = OrderedDict(metrics.items())
         self.calculated_values: list[list[float | None]] = []
         self.run_names: list[str] = []
+        self.plot_params: dict[str, Any] = plot_params or {}
 
     @staticmethod
     def _safe_call(fn: Callable, message: str) -> float | None:
@@ -134,6 +149,7 @@ class MetricsBarPlot(Aggregation):
             ax.bar(x_values, metric_values, label=metric_names[metric_index], width=1.0, align='edge', alpha=0.5)
 
         ax.set_xticks(np.arange(n_runs) * run_width + n_metrics / 2, self.run_names, rotation=20, ha='right')
+        ax.update(self.plot_params)
 
         fig.legend()
         fig.tight_layout()
@@ -170,6 +186,7 @@ def parse(config: ConfigValue, output_dir: Path) -> MetricsBarPlot:
 
     path: Path = pop_field(config, 'path', default=Path('metrics.png'), validate=Path)
     metrics = {name: parse_individual_metric(name, output_dir, config.context) for name in metric_names}
+    plot_params = pop_field(config, 'plot_params', default={})
 
     check_is_empty(config)
-    return MetricsBarPlot(path, metrics)
+    return MetricsBarPlot(path, metrics, plot_params=plot_params)

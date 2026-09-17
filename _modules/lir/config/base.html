@@ -1,0 +1,975 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.config.base &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api-overview.html">Python API: Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#organize-your-data">Organize your data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#calculate-llrs">Calculate LLRs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#appearance-plots-and-metrics">Appearance plots and metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Registry reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-strategies">Data strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/lir.html">lir package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.DataProvider"><code class="docutils literal notranslate"><span class="pre">DataProvider</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.DataStrategy"><code class="docutils literal notranslate"><span class="pre">DataStrategy</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.FeatureData"><code class="docutils literal notranslate"><span class="pre">FeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.InstanceData"><code class="docutils literal notranslate"><span class="pre">InstanceData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.LLRData"><code class="docutils literal notranslate"><span class="pre">LLRData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.PairedFeatureData"><code class="docutils literal notranslate"><span class="pre">PairedFeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.Transformer"><code class="docutils literal notranslate"><span class="pre">Transformer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#module-lir.bounding">lir.bounding module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#module-lir.main">lir.main module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#module-lir.persistence">lir.persistence module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#module-lir.registry">lir.registry module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#module-lir.util">lir.util module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../lir.html">lir</a></li>
+      <li class="breadcrumb-item active">lir.config.base</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lir.config.base</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">types</span><span class="w"> </span><span class="kn">import</span> <span class="n">TracebackType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Self</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_type</span>
+
+
+<div class="viewcode-block" id="YamlParseError">
+<a class="viewcode-back" href="../../../api/lir.config.html#lir.config.YamlParseError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">YamlParseError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Error raised when parsing YAML configuration fails, mentioning specific YAML path.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config_context_path : list[str]</span>
+<span class="sd">        Dot-path to the failing configuration node.</span>
+<span class="sd">    message : str</span>
+<span class="sd">        Human-readable validation or parsing message.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_context_path</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config_context_path</span><span class="p">)</span><span class="si">}</span><span class="s1">: &#39;</span> <span class="k">if</span> <span class="n">config_context_path</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}{</span><span class="n">message</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ConfigValue">
+<a class="viewcode-back" href="../../../api/lir.config.html#lir.config.ConfigValue">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConfigValue</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A wrapper for a configuration value and its context path.</span>
+
+<span class="sd">    A ``ConfigValue`` has two attributes: ``context`` contains the path in the original configuration that points to the</span>
+<span class="sd">    current value, and ``value`` contains the actual configuration value. The value attribute may be one of the types</span>
+<span class="sd">    allowed in YAML: ``dict``, ``list``, ``int``, ``float``, ``bool``, ``str``, or ``None``.</span>
+
+<span class="sd">    This configuration value may be part of a bigger configuration tree. For example, consider:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">        level1:</span>
+<span class="sd">          value1:</span>
+<span class="sd">            a: 1</span>
+<span class="sd">            b: 2</span>
+<span class="sd">          value2:</span>
+<span class="sd">            c: 3</span>
+<span class="sd">            d: path/to/file</span>
+<span class="sd">            e: message text</span>
+
+<span class="sd">    This YAML is parsed into a dictionary and the path ``level1.value1`` leads to the value ``{ &quot;a&quot;: 1, &quot;b&quot;: 2 }``. In a</span>
+<span class="sd">    ``ConfigValue`` object, this is represented as context path ``[&quot;level1&quot;, &quot;value1&quot;]`` and value</span>
+<span class="sd">    ``{ &quot;a&quot;: 1, &quot;b&quot;: 2 }``.</span>
+
+<span class="sd">    If the ``value`` is dictionary, its values are itself also ``ConfigValue`` objects. They can be obtained using the</span>
+<span class="sd">    helper function :meth:`~lir.config.pop_field`. When all is done, :meth:`~lir.config.check_empty` will check that</span>
+<span class="sd">    all values have been read.</span>
+
+<span class="sd">    Some examples for the use of ``ConfigValue``:</span>
+
+<span class="sd">    .. jupyter-execute::</span>
+
+<span class="sd">        from lir.config import ConfigValue, pop_field, check_is_empty</span>
+
+<span class="sd">        my_config_input = {</span>
+<span class="sd">            &#39;level1&#39;: {</span>
+<span class="sd">                &#39;value1&#39;: {</span>
+<span class="sd">                    &#39;a&#39;: 1,</span>
+<span class="sd">                    &#39;b&#39;: 2,</span>
+<span class="sd">                },</span>
+<span class="sd">                &#39;value2&#39;: {</span>
+<span class="sd">                    &#39;c&#39;: 3,</span>
+<span class="sd">                    &#39;d&#39;: &#39;path/to/file&#39;,</span>
+<span class="sd">                    &#39;e&#39;: &#39;message text&#39;,</span>
+<span class="sd">                },</span>
+<span class="sd">            },</span>
+<span class="sd">        }</span>
+
+<span class="sd">        root_config = ConfigValue.wrap([], my_config_input)</span>
+<span class="sd">        print(f&#39;The context of root is: {root_config.context}&#39;)</span>
+<span class="sd">        print(f&#39;The value of root is: {root_config.value}&#39;)</span>
+<span class="sd">        print(f&#39;The unwrapped value of root is: {root_config.unwrap()}&#39;)</span>
+
+<span class="sd">    Example for the use of :meth:`~lir.config.check_empty`:</span>
+
+<span class="sd">    .. jupyter-execute::</span>
+
+<span class="sd">        level1_config = pop_field(root_config, &#39;level1&#39;)</span>
+<span class="sd">        print(f&#39;After &quot;level1&quot; is popped, the value of root is: {root_config.value}&#39;)</span>
+
+<span class="sd">        # We can call `check_is_empty()` to make sure that there are no values left.</span>
+<span class="sd">        check_is_empty(root_config)</span>
+
+<span class="sd">        print(f&#39;The context of level1 is: {level1_config.context}&#39;)</span>
+<span class="sd">        print(f&#39;The value of level1 is: {level1_config.value}&#39;)</span>
+<span class="sd">        print(f&#39;The unwrapped value of level1 is: {level1_config.unwrap()}&#39;)</span>
+
+<span class="sd">    Example for the use of ``with``:</span>
+
+<span class="sd">    .. jupyter-execute::</span>
+
+<span class="sd">        # use the `with` statement to automatically check that all fields are used</span>
+<span class="sd">        try:</span>
+<span class="sd">            with pop_field(level1_config, &#39;value1&#39;) as value1_config:</span>
+<span class="sd">                pop_field(value1_config, &#39;a&#39;)</span>
+<span class="sd">        except Exception as e:</span>
+<span class="sd">            print(f&#39;Exception thrown: {e}&#39;)</span>
+
+<span class="sd">    More examples:</span>
+
+<span class="sd">    .. jupyter-execute::</span>
+
+<span class="sd">        value2_config = pop_field(level1_config, &#39;value2&#39;)</span>
+<span class="sd">        print(f&#39;The context of level1.value2 is: {value2_config.context}&#39;)</span>
+<span class="sd">        print(f&#39;The value of level1.value2 is: {value2_config.value}&#39;)</span>
+<span class="sd">        print(f&#39;The unwrapped value of level1.value2 is: {value2_config.unwrap()}&#39;)</span>
+
+<span class="sd">    Examples for the use of :meth:`~lir.config.pop_field`:</span>
+
+<span class="sd">    .. jupyter-execute::</span>
+
+<span class="sd">        from pathlib import Path</span>
+
+<span class="sd">        # use `validate_type` to check that the type is as expected</span>
+<span class="sd">        c = pop_field(value2_config, &#39;c&#39;, validate_type=int)</span>
+<span class="sd">        print(f&#39;The value of level1.value2.c is: {c}&#39;)</span>
+
+<span class="sd">        # use `validate` to cast types or call a function to otherwise process the value</span>
+<span class="sd">        d = pop_field(value2_config, &#39;d&#39;, validate=Path)</span>
+<span class="sd">        print(f&#39;The value of level1.value2.d is: {d}&#39;)</span>
+
+<span class="sd">        # use `unwrap` to control whether the result should be unwrapped or not</span>
+<span class="sd">        e = pop_field(value2_config, &#39;e&#39;, unwrap=False)</span>
+<span class="sd">        print(f&#39;The value of level1.value2.e is: {e}&#39;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">context</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;YAML path used for contextual error messages.&quot;&quot;&quot;</span>
+
+    <span class="n">value</span><span class="p">:</span> <span class="s1">&#39;list[ConfigValue] | dict[str, ConfigValue] | int | float | bool | str | None&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The actual configuration value.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Iterator[str | ConfigValue]&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="n">check_type</span><span class="p">((</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span> <span class="ow">and</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;ConfigValue&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>  <span class="c1"># noqa: SIM114</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s1"> is not indexable by </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">ConfigValue</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">unwrap</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">=</span> <span class="n">ConfigValue</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">+</span> <span class="p">[</span><span class="n">item</span><span class="p">],</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">=</span> <span class="n">ConfigValue</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">+</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">)],</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s1"> is not indexable by </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__exit__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">exception_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="ne">BaseException</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">exception_value</span><span class="p">:</span> <span class="ne">BaseException</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">traceback</span><span class="p">:</span> <span class="n">TracebackType</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">exception_value</span><span class="p">:</span>
+            <span class="n">check_is_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="ConfigValue.pop">
+<a class="viewcode-back" href="../../../api/lir.config.html#lir.config.ConfigValue.pop">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pop</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">default</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">required</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">validate</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">validate_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;ConfigValue | None&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validate and retrieve the value for a given field, after which it is removed from this configuration.</span>
+
+<span class="sd">        If the value of this ``ConfigValue`` is not a ``dict``, an error is raised.</span>
+
+<span class="sd">        If the field exists, it is returned as a ``ConfigValue`` object.</span>
+
+<span class="sd">        If the field does not exist, and a default is provided, the default is returned, wrapped in a ``ConfigValue``</span>
+<span class="sd">        object.</span>
+
+<span class="sd">        If the field does not exist, it is optional, and no default is provided, ``None`` is returned.</span>
+
+<span class="sd">        Otherwise, the field does not exist, and it is required: an error is raised.</span>
+
+<span class="sd">        This method behaves similarly to ``pop_field()``, except that its return value is wrapped in ``ConfigValue``.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        field : str</span>
+<span class="sd">            Field name to retrieve.</span>
+<span class="sd">        default : Any, optional</span>
+<span class="sd">            Value to return when ``field`` is absent.</span>
+<span class="sd">        required : bool | None, optional</span>
+<span class="sd">            Whether to raise when the field is absent. Defaults to ``True`` when</span>
+<span class="sd">            ``default`` is ``None``.</span>
+<span class="sd">        validate : Callable[[Any], Any] | None, optional</span>
+<span class="sd">            Validator function applied to the popped value. The output from the validation function is returned, in</span>
+<span class="sd">            place of the original value.</span>
+<span class="sd">        validate_type : type[Any] | None, optional</span>
+<span class="sd">            Check that the popped value is of this type, or raise a ``ValueError``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ConfigValue</span>
+<span class="sd">            Popped field value or ``default``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># this value should be a dict</span>
+        <span class="n">dict_value</span> <span class="o">=</span> <span class="n">check_type</span><span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="c1"># get required status and default value from function arguments</span>
+        <span class="n">required</span> <span class="o">=</span> <span class="n">required</span> <span class="k">if</span> <span class="n">required</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">(</span><span class="n">default</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">required</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;illegal argument values: required=</span><span class="si">{</span><span class="n">required</span><span class="si">}</span><span class="s1">; default=</span><span class="si">{</span><span class="n">default</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># try to get the field value</span>
+        <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">dict_value</span><span class="p">:</span>
+            <span class="n">field_value</span> <span class="o">=</span> <span class="n">dict_value</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">validate_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">check_type</span><span class="p">(</span><span class="n">validate_type</span><span class="p">,</span> <span class="n">field_value</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+                <span class="k">if</span> <span class="n">validate</span><span class="p">:</span>
+                    <span class="n">field_value</span> <span class="o">=</span> <span class="n">ConfigValue</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">field_value</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="n">validate</span><span class="p">(</span><span class="n">field_value</span><span class="o">.</span><span class="n">unwrap</span><span class="p">()))</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">YamlParseError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;illegal value for field `</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s1">`: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">field_value</span>
+
+        <span class="c1"># if no field value was returned, return the default value or raise an error</span>
+        <span class="k">if</span> <span class="n">required</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">YamlParseError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;missing field: `</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s1">`&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ConfigValue</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">+</span> <span class="p">[</span><span class="n">field</span><span class="p">],</span> <span class="n">default</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="ConfigValue.pop_field">
+<a class="viewcode-back" href="../../../api/lir.config.html#lir.config.ConfigValue.pop_field">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pop_field</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">default</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">required</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">validate</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">validate_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validate and retrieve the value for a given field, after which it is removed from the configuration.</span>
+
+<span class="sd">        This method behaves similarly to ``pop()``, except that it returns an unwrapped value.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        field : str</span>
+<span class="sd">            Field name to retrieve.</span>
+<span class="sd">        default : Any, optional</span>
+<span class="sd">            Value to return when ``field`` is absent.</span>
+<span class="sd">        required : bool | None, optional</span>
+<span class="sd">            Whether to raise when the field is absent. Defaults to ``True`` when ``default`` is ``None``.</span>
+<span class="sd">        validate : Callable[[Any], Any] | None, optional</span>
+<span class="sd">            Validator function applied to the popped value.</span>
+<span class="sd">        validate_type : type[Any] | None, optional</span>
+<span class="sd">            Check that the popped value is of this type, or raise a ``ValueError``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Any</span>
+<span class="sd">            Popped field value or ``default``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">default</span><span class="p">,</span> <span class="n">required</span><span class="p">,</span> <span class="n">validate</span><span class="p">,</span> <span class="n">validate_type</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">unwrap</span><span class="p">()</span> <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="ConfigValue.unwrap">
+<a class="viewcode-back" href="../../../api/lir.config.html#lir.config.ConfigValue.unwrap">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">unwrap</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span> <span class="o">|</span> <span class="nb">dict</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Obtain the value of this object.</span>
+
+<span class="sd">        If the value is a container, its contents are also stripped of its ``ConfigValue`` wrapper recursively.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list | dict | int | float | bool | str | None</span>
+<span class="sd">            The value of this object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">value</span><span class="o">.</span><span class="n">unwrap</span><span class="p">()</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">unwrap</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="ConfigValue.as_dict">
+<a class="viewcode-back" href="../../../api/lir.config.html#lir.config.ConfigValue.as_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>  <span class="c1"># numpydoc ignore=RT01</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return unwrapped dictionary or raise an error.</span>
+
+<span class="sd">        If this ``ConfigValue`` is a dictionary, unwrap it and return the result. Otherwise, raise an error.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        message : str | None</span>
+<span class="sd">            A custom error message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">check_type</span><span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">unwrap</span><span class="p">(),</span> <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ConfigValue.clone">
+<a class="viewcode-back" href="../../../api/lir.config.html#lir.config.ConfigValue.clone">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;ConfigValue&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a cloned list with expanded nested context.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        context : list[str] | None, optional</span>
+<span class="sd">            Replacement context. If omitted, the current context is reused.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ConfigValue</span>
+<span class="sd">            Cloned and context-aware list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ConfigValue</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">context</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">unwrap</span><span class="p">())</span>  <span class="c1"># type: ignore</span></div>
+
+
+<div class="viewcode-block" id="ConfigValue.wrap">
+<a class="viewcode-back" href="../../../api/lir.config.html#lir.config.ConfigValue.wrap">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wrap</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">value</span><span class="p">:</span> <span class="n">Sequence</span> <span class="o">|</span> <span class="n">Mapping</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;ConfigValue&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Wrap a value and all its nested values into :class:`~lir.config.base.ConfigValue` objects, recursively.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        context : list[str]</span>
+<span class="sd">            Current YAML path.</span>
+<span class="sd">        value : Sequence | Mapping | float | int | str | None</span>
+<span class="sd">            Value to expand recursively.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ConfigValue</span>
+<span class="sd">            The value wrapped into ``ConfigValue`` objects recursively.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">ConfigValue</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;already wrapped: </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">ConfigValue</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">ConfigValue</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">context</span> <span class="o">+</span> <span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">ConfigValue</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">ConfigValue</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="p">[</span><span class="n">ConfigValue</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">context</span> <span class="o">+</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)],</span> <span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">)])</span>
+        <span class="k">return</span> <span class="n">ConfigValue</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ConfigParser">
+<a class="viewcode-back" href="../../../api/lir.config.html#lir.config.ConfigParser">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConfigParser</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract base configuration parser class.</span>
+
+<span class="sd">    Each implementation should implement a custom `parse()` method</span>
+<span class="sd">    which is dedicated to parsing a specific aspect, e.g. the configuration</span>
+<span class="sd">    for setting up the numpy CSV writer.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ConfigParser.parse">
+<a class="viewcode-back" href="../../../api/lir.config.html#lir.config.ConfigParser.parse">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">ConfigValue</span><span class="p">,</span>
+        <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parse a specific configuration section.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config : ConfigValue</span>
+<span class="sd">            Configuration section to parse.</span>
+<span class="sd">        output_dir : Path</span>
+<span class="sd">            Directory where produced outputs may be written.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Any</span>
+<span class="sd">            Object configured from ``config``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="ConfigParser.get_type_name">
+<a class="viewcode-back" href="../../../api/lir.config.html#lir.config.ConfigParser.get_type_name">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_type_name</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the fully qualified type name.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        obj : Any</span>
+<span class="sd">            Class or object with ``__module__`` and ``__qualname__`` attributes.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            Fully qualified name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="vm">__module__</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">obj</span><span class="o">.</span><span class="vm">__qualname__</span><span class="si">}</span><span class="s1">&#39;</span></div>
+
+
+<div class="viewcode-block" id="ConfigParser.reference">
+<a class="viewcode-back" href="../../../api/lir.config.html#lir.config.ConfigParser.reference">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reference</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the full class name that was used to initialize this parser.</span>
+
+<span class="sd">        By default, return the name of this class. In a subclass that was initialized with another class or function</span>
+<span class="sd">        that does the actual work, the name of that class is returned.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            Fully qualified class name for this parser instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="GenericFunctionConfigParser">
+<a class="viewcode-back" href="../../../api/lir.config.html#lir.config.GenericFunctionConfigParser">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GenericFunctionConfigParser</span><span class="p">(</span><span class="n">ConfigParser</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parser for callable functions or component classes.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    component_class : Callable</span>
+<span class="sd">        Callable that should be exposed by this parser.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component_class</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">component_class</span> <span class="o">=</span> <span class="n">component_class</span>
+
+<div class="viewcode-block" id="GenericFunctionConfigParser.parse">
+<a class="viewcode-back" href="../../../api/lir.config.html#lir.config.GenericFunctionConfigParser.parse">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">ConfigValue</span><span class="p">,</span>
+        <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parse configuration into a callable.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config : ConfigValue</span>
+<span class="sd">            Configuration section for validation context.</span>
+<span class="sd">        output_dir : Path</span>
+<span class="sd">            Unused output directory argument required by the parser API.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Callable</span>
+<span class="sd">            Resolved callable object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_class</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_class</span>
+
+        <span class="k">raise</span> <span class="n">YamlParseError</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;unrecognized module type: `</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">component_class</span><span class="si">}</span><span class="s1">`&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenericFunctionConfigParser.reference">
+<a class="viewcode-back" href="../../../api/lir.config.html#lir.config.GenericFunctionConfigParser.reference">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reference</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the fully qualified name of the wrapped callable.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            Fully qualified callable name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_class</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="GenericConfigParser">
+<a class="viewcode-back" href="../../../api/lir.config.html#lir.config.GenericConfigParser">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GenericConfigParser</span><span class="p">(</span><span class="n">ConfigParser</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return an instantiation of a class, initialized with the specified arguments.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    component_class : type[Any]</span>
+<span class="sd">        Class to instantiate from configuration values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component_class</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Any</span><span class="p">]):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">component_class</span> <span class="o">=</span> <span class="n">component_class</span>
+
+<div class="viewcode-block" id="GenericConfigParser.parse">
+<a class="viewcode-back" href="../../../api/lir.config.html#lir.config.GenericConfigParser.parse">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">ConfigValue</span><span class="p">,</span>
+        <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Instantiate the configured component class.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config : ConfigValue</span>
+<span class="sd">            Keyword arguments for class initialisation.</span>
+<span class="sd">        output_dir : Path</span>
+<span class="sd">            Unused output directory argument required by the parser API.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Any</span>
+<span class="sd">            Instantiated object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_class</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="o">.</span><span class="n">as_dict</span><span class="p">())</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">YamlParseError</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">context</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">&#39;unable to initialize </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">component_class</span><span class="si">}</span><span class="s1">; the error was: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenericConfigParser.reference">
+<a class="viewcode-back" href="../../../api/lir.config.html#lir.config.GenericConfigParser.reference">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reference</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the fully qualified name of the wrapped class.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            Fully qualified class name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_type_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_class</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="get_full_name">
+<a class="viewcode-back" href="../../../api/lir.config.html#lir.config.get_full_name">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_full_name</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the full name of an importable object.</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        from lir import FeatureData</span>
+<span class="sd">        print(get_full_name(FeatureData))</span>
+<span class="sd">        &#39;lir.data.models.FeatureData&#39;</span>
+
+<span class="sd">    This function does not yet handle type aliases.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    obj : Any</span>
+<span class="sd">        Importable object.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        Fully qualified object name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s1">&#39;__name__&#39;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;type object </span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s1"> has no __name__ attribute; do you mean to call `type()` first?&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">obj</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">obj</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">&#39;</span></div>
+
+
+
+<div class="viewcode-block" id="config_parser">
+<a class="viewcode-back" href="../../../api/lir.config.html#lir.config.config_parser">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">config_parser</span><span class="p">(</span>
+    <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">ConfigValue</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="n">reference</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">type</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wrap a parsing function in a ``ConfigParser`` object using a decorator.</span>
+
+<span class="sd">    The resulting ``ConfigParser`` instance exposes a :meth:`parse` method, as</span>
+<span class="sd">    required by the API. The body of the decorated function is executed when the</span>
+<span class="sd">    :meth:`parse` method is called.</span>
+
+<span class="sd">    This decorator can be used as follows:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        @config_parser</span>
+<span class="sd">        def foo(config, config_context_path, output_dir):</span>
+<span class="sd">            if &quot;some_argument&quot; not in config or &quot;another_argument&quot; not in config:</span>
+<span class="sd">                raise YamlParseError(</span>
+<span class="sd">                    config_context_path,</span>
+<span class="sd">                    &quot;a required argument is missing&quot;,</span>
+<span class="sd">                )</span>
+<span class="sd">            return Bar(config[&quot;some_argument&quot;], config[&quot;another_argument&quot;])</span>
+
+<span class="sd">    After decoration, ``foo`` is replaced by a ``ConfigParser`` instance whose</span>
+<span class="sd">    :meth:`parse` method executes the original function body. See the</span>
+<span class="sd">    documentation of :class:`ConfigParser` for the meaning of the arguments.</span>
+
+<span class="sd">    The annotated function will be the reference object that users will be referred to for documentation. If the</span>
+<span class="sd">    annotation has a `reference` argument, that value will be used instead. The `reference` value may be a `str` or a</span>
+<span class="sd">    Python object. Example of use:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        @config_parser(reference=Bar)</span>
+<span class="sd">        def foo(config, config_context_path, output_dir):</span>
+<span class="sd">            if &quot;some_argument&quot; not in config or &quot;another_argument&quot; not in config:</span>
+<span class="sd">                raise YamlParseError(</span>
+<span class="sd">                    config_context_path,</span>
+<span class="sd">                    &quot;a required argument is missing&quot;,</span>
+<span class="sd">                )</span>
+<span class="sd">            return Bar(config[&quot;some_argument&quot;], config[&quot;another_argument&quot;])</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    func : Callable[[ConfigValue, Path], Any] | None, optional</span>
+<span class="sd">        Function to wrap as a config parser.</span>
+<span class="sd">    reference : str | Any | None, optional</span>
+<span class="sd">        Explicit reference name or object used in generated metadata.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Callable</span>
+<span class="sd">        Decorator result or wrapped ``ConfigParser`` implementation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># take the optional arguments</span>
+        <span class="k">return</span> <span class="n">partial</span><span class="p">(</span><span class="n">config_parser</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="n">reference</span><span class="p">)</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">ConfigParserFunction</span><span class="p">(</span><span class="n">ConfigParser</span><span class="p">):</span>
+        <span class="vm">__doc__</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">config</span><span class="p">:</span> <span class="n">ConfigValue</span><span class="p">,</span>
+            <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">reference</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="c1"># return the reference argument, if any</span>
+            <span class="k">if</span> <span class="n">reference</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">reference</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">get_full_name</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># at this point, func is always available</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;unexpected error: function is not available for reference&#39;</span><span class="p">)</span>
+
+            <span class="c1"># return the return type of the function, if available</span>
+            <span class="n">return_type</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">return_annotation</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">return_type</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">get_full_name</span><span class="p">(</span><span class="n">return_type</span><span class="p">)</span>
+
+            <span class="c1"># last resort: fallback to wrapped function name</span>
+            <span class="k">return</span> <span class="n">get_full_name</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ConfigParserFunction</span></div>
+
+
+
+<div class="viewcode-block" id="pop_field">
+<a class="viewcode-back" href="../../../api/lir.config.html#lir.config.pop_field">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">pop_field</span><span class="p">(</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">ConfigValue</span><span class="p">,</span>
+    <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">default</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">required</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">validate</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">validate_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">unwrap</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate and retrieve the value for a given field, after which it is removed from the configuration.</span>
+
+<span class="sd">    This is a legacy alternative for ``ConfigValue.pop()`` and ``ConfigValue.pop_field()``, and may be deprecated in the</span>
+<span class="sd">    future.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : ConfigValue</span>
+<span class="sd">        Configuration object to pop from.</span>
+<span class="sd">    field : str</span>
+<span class="sd">        Field name to retrieve.</span>
+<span class="sd">    default : Any, optional</span>
+<span class="sd">        Value to return when ``field`` is absent.</span>
+<span class="sd">    required : bool | None, optional</span>
+<span class="sd">        Whether to raise when the field is absent. Defaults to ``True`` when</span>
+<span class="sd">        ``default`` is ``None``.</span>
+<span class="sd">    validate : Callable[[Any], Any] | None, optional</span>
+<span class="sd">        Validator function applied to the popped value.</span>
+<span class="sd">    validate_type : type[Any] | None, optional</span>
+<span class="sd">        Check that the popped value is of this type, or raise a ``ValueError``.</span>
+<span class="sd">    unwrap : bool | None, optional</span>
+<span class="sd">        Strip the popped value of its :class:`~lir.config.base.ConfigValue` wrapper before returning it. Defaults to</span>
+<span class="sd">        ``True`` if either ``validate`` or ``validate_type`` or ``default`` is provided, except if the default is a</span>
+<span class="sd">        ``Config|Value``. Defaults to ``False`` otherwise.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Any</span>
+<span class="sd">        Popped field value or ``default``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">unwrap</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="n">ConfigValue</span><span class="p">):</span>
+            <span class="n">unwrap</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="n">validate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">validate_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">unwrap</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">unwrap</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="n">unwrap</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">pop_field</span><span class="p">(</span>
+            <span class="n">field</span><span class="o">=</span><span class="n">field</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">default</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="n">required</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">validate</span><span class="p">,</span> <span class="n">validate_type</span><span class="o">=</span><span class="n">validate_type</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span>
+            <span class="n">field</span><span class="o">=</span><span class="n">field</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">default</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="n">required</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">validate</span><span class="p">,</span> <span class="n">validate_type</span><span class="o">=</span><span class="n">validate_type</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="check_is_empty">
+<a class="viewcode-back" href="../../../api/lir.config.html#lir.config.check_is_empty">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_is_empty</span><span class="p">(</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">ConfigValue</span><span class="p">,</span>
+    <span class="n">accept_keys</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Ensure all defined expected arguments are parsed and warn about ignored arguments.</span>
+
+<span class="sd">    If any unexpected arguments remain, a `YamlParseError` is raised indicating the</span>
+<span class="sd">    argument was unexpected and not taken into account (i.e. not parsed). This methodology ensures</span>
+<span class="sd">    the user does not assume arguments are parsed that are in fact not recognized.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : ConfigValue</span>
+<span class="sd">        Configuration to validate for remaining keys.</span>
+<span class="sd">    accept_keys : Sequence[str] | None, optional</span>
+<span class="sd">        Keys that may remain without raising an error.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        This function raises on invalid input and otherwise returns ``None``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">return</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">accept_keys</span> <span class="ow">or</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">accept_keys</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">YamlParseError</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;unrecognized argument: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

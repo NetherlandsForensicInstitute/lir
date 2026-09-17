@@ -1,0 +1,69 @@
+lir package
+===========
+
+.. automodule:: lir
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   lir.aggregation
+   lir.algorithms
+   lir.config
+   lir.data
+   lir.data_strategies
+   lir.datasets
+   lir.experiments
+   lir.lrsystems
+   lir.metrics
+   lir.plotting
+   lir.resources
+   lir.transform
+
+Submodules
+----------
+
+lir.bounding module
+-------------------
+
+.. automodule:: lir.bounding
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.main module
+---------------
+
+.. automodule:: lir.main
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.persistence module
+----------------------
+
+.. automodule:: lir.persistence
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.registry module
+-------------------
+
+.. automodule:: lir.registry
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.util module
+---------------
+
+.. automodule:: lir.util
+   :members:
+   :show-inheritance:
+   :undoc-members:

@@ -1,0 +1,18 @@
+lir.metrics package
+===================
+
+.. automodule:: lir.metrics
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+lir.metrics.overestimation module
+---------------------------------
+
+.. automodule:: lir.metrics.overestimation
+   :members:
+   :show-inheritance:
+   :undoc-members:

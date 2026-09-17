@@ -1,0 +1,50 @@
+lir.aggregation package
+=======================
+
+.. automodule:: lir.aggregation
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+lir.aggregation.case\_llr\_csv module
+-------------------------------------
+
+.. automodule:: lir.aggregation.case_llr_csv
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.aggregation.metrics\_bars module
+------------------------------------
+
+.. automodule:: lir.aggregation.metrics_bars
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.aggregation.metrics\_csv module
+-----------------------------------
+
+.. automodule:: lir.aggregation.metrics_csv
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.aggregation.plot\_each module
+---------------------------------
+
+.. automodule:: lir.aggregation.plot_each
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.aggregation.subset module
+-----------------------------
+
+.. automodule:: lir.aggregation.subset
+   :members:
+   :show-inheritance:
+   :undoc-members:

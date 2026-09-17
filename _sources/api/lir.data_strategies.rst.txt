@@ -1,0 +1,58 @@
+lir.data\_strategies package
+============================
+
+.. automodule:: lir.data_strategies
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+lir.data\_strategies.auto module
+--------------------------------
+
+.. automodule:: lir.data_strategies.auto
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.data\_strategies.labels module
+----------------------------------
+
+.. automodule:: lir.data_strategies.labels
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.data\_strategies.leave\_one\_category\_out module
+-----------------------------------------------------
+
+.. automodule:: lir.data_strategies.leave_one_category_out
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.data\_strategies.pairs module
+---------------------------------
+
+.. automodule:: lir.data_strategies.pairs
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.data\_strategies.predefined module
+--------------------------------------
+
+.. automodule:: lir.data_strategies.predefined
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.data\_strategies.sources module
+-----------------------------------
+
+.. automodule:: lir.data_strategies.sources
+   :members:
+   :show-inheritance:
+   :undoc-members:

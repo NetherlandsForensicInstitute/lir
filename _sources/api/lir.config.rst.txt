@@ -1,0 +1,74 @@
+lir.config package
+==================
+
+.. automodule:: lir.config
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+lir.config.aggregation module
+-----------------------------
+
+.. automodule:: lir.config.aggregation
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.config.data module
+----------------------
+
+.. automodule:: lir.config.data
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.config.experiment\_strategies module
+----------------------------------------
+
+.. automodule:: lir.config.experiment_strategies
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.config.lrsystem\_architectures module
+-----------------------------------------
+
+.. automodule:: lir.config.lrsystem_architectures
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.config.metrics module
+-------------------------
+
+.. automodule:: lir.config.metrics
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.config.substitution module
+------------------------------
+
+.. automodule:: lir.config.substitution
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.config.transform module
+---------------------------
+
+.. automodule:: lir.config.transform
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.config.util module
+----------------------
+
+.. automodule:: lir.config.util
+   :members:
+   :show-inheritance:
+   :undoc-members:

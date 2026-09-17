@@ -1,0 +1,42 @@
+lir.experiments package
+=======================
+
+.. automodule:: lir.experiments
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+lir.experiments.execution module
+--------------------------------
+
+.. automodule:: lir.experiments.execution
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.experiments.optuna\_experiment module
+-----------------------------------------
+
+.. automodule:: lir.experiments.optuna_experiment
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.experiments.predefined\_experiment module
+---------------------------------------------
+
+.. automodule:: lir.experiments.predefined_experiment
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.experiments.train\_only module
+----------------------------------
+
+.. automodule:: lir.experiments.train_only
+   :members:
+   :show-inheritance:
+   :undoc-members:

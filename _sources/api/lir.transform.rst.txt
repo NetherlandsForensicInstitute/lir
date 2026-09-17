@@ -1,0 +1,74 @@
+lir.transform package
+=====================
+
+.. automodule:: lir.transform
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+lir.transform.composite module
+------------------------------
+
+.. automodule:: lir.transform.composite
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.transform.csv\_writer module
+--------------------------------
+
+.. automodule:: lir.transform.csv_writer
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.transform.data\_validator module
+------------------------------------
+
+.. automodule:: lir.transform.data_validator
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.transform.distance module
+-----------------------------
+
+.. automodule:: lir.transform.distance
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.transform.pairing module
+----------------------------
+
+.. automodule:: lir.transform.pairing
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.transform.pipeline module
+-----------------------------
+
+.. automodule:: lir.transform.pipeline
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.transform.save\_features module
+-----------------------------------
+
+.. automodule:: lir.transform.save_features
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.transform.select\_instances module
+--------------------------------------
+
+.. automodule:: lir.transform.select_instances
+   :members:
+   :show-inheritance:
+   :undoc-members:

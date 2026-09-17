@@ -37,6 +37,24 @@ from lir.data_strategies import LeaveOneCategoryOut
             np.ones(5) * 80,
             np.ones(5) * 20,
         ),
+        (
+            FeatureData(
+                features=np.arange(5),
+                my_category=np.array([['a', 'a'], ['a', 'a'], ['a', 'b'], ['b', 'b'], ['b', 'a']]),
+            ),
+            2,
+            [1, 2],
+            [2, 1],
+        ),
+        (
+            FeatureData(
+                features=np.arange(6),
+                my_category=np.array([['a', 'a'], ['a', 'a'], ['a', 'a'], ['a', 'b'], ['b', 'b'], ['b', 'a']]),
+            ),
+            2,
+            [1, 3],
+            [3, 1],
+        ),
     ],
 )
 def test_leave_one_category_out(

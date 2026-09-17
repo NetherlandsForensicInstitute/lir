@@ -10,23 +10,36 @@ from lir.config import ConfigValue, YamlParseError
 @pytest.mark.parametrize(
     's,err',
     [
+        # plot_params and metrics are optional; check if they can be omitted.
+        ('', None),
+        # plot_params is optional; check if it can be omitted.
         (
             """
-        metrics:
-          - cllr
-          - cllr_min
-        plot_params:
-          ylim: [0, 1]
-          xlabel: run
-        """,
+            metrics:
+              - cllr
+              - cllr_min
+              """,
             None,
         ),
-        (  # illegal argument: xrange
+        # valid configuration with plot_params and metrics.
+        (
             """
-        metrics:
-          - cllr
-        xrange: [0, 1]
-        """,
+            metrics:
+              - cllr
+              - cllr_min
+            plot_params:
+              ylim: [0, 1]
+              xlabel: run
+            """,
+            None,
+        ),
+        # invalid configuration: xlabel should be an argument to plot_params, not a top-level key.
+        (
+            """
+            metrics:
+              - cllr
+            xlabel: run
+            """,
             YamlParseError,
         ),
     ],

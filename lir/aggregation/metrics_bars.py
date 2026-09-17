@@ -29,13 +29,13 @@ class MetricsBarPlot(Aggregation):
     .. code-block:: yaml
 
         output:
-          - method: metric_bars
+          - method: metrics_bars
             plot_params:
-              ylim: [None, 1]
+              ylim: [null, 1]
               xlabel: run
-          - metrics:
-            - cllr
-            - cllr_min
+            metrics:
+              - cllr
+              - cllr_min
 
     .. jupyter-execute::
         :hide-code:

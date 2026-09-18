@@ -1,4 +1,5 @@
 import inspect
+import warnings
 from abc import ABC, abstractmethod
 from collections.abc import Callable, Iterator, Mapping, Sequence
 from dataclasses import dataclass
@@ -627,6 +628,15 @@ def config_parser(
         ) -> Any:
             return func(config, output_dir)  # type: ignore
 
+        def __call__(self, config: ConfigValue | None = None, output_dir: Path | None = None) -> Any:
+            if config and output_dir:
+                return self.parse(config, output_dir)
+            else:
+                warnings.warn(
+                    DeprecationWarning('legacy invocation of annotated function (remove parentheses)'), stacklevel=2
+                )
+                return self
+
         def reference(self) -> str:
             # return the reference argument, if any
             if reference is not None:
@@ -643,7 +653,7 @@ def config_parser(
             # last resort: fallback to wrapped function name
             return get_full_name(func)
 
-    return ConfigParserFunction
+    return ConfigParserFunction()
 
 
 def pop_field(

@@ -129,9 +129,11 @@ def my_config_parser(config: ConfigValue, output_path: Path) -> int:
     return pop_field(config, 'key', validate_type=int)
 
 
+@pytest.mark.filterwarnings('ignore:legacy')
 def test_config_parser():
     config = ConfigValue.wrap([], {'key': 42})
-    assert my_config_parser().parse(config, Path('/')) == 42
+    assert my_config_parser(config.clone(), Path('/')) == 42
+    assert my_config_parser().parse(config.clone(), Path('/')) == 42
 
 
 def test_generic_config_parser():

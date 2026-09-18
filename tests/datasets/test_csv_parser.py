@@ -156,7 +156,7 @@ def test_csv_parser(
     parser_args['file'] = str(csv_file)
     parser_args = ConfigValue.wrap([], parser_args)
     try:
-        parser = feature_data_csv_file_parser().parse(parser_args, tmp_path)
+        parser = feature_data_csv_file_parser(parser_args, tmp_path)
         actual_result = parser.get_instances()
         if expected_result is not None:
             assert actual_result == expected_result
@@ -173,7 +173,7 @@ def test_csv_parser_label_column_alias_warns(tmp_path: Path):
 
     parser_args = ConfigValue.wrap([], {'label_column': 'label', 'file': str(csv_file)})
     with pytest.warns(UserWarning, match='label_column'):
-        parser = feature_data_csv_file_parser().parse(parser_args, tmp_path)
+        parser = feature_data_csv_file_parser(parser_args, tmp_path)
     actual_result = parser.get_instances()
 
     assert actual_result == FeatureData(hypothesis=np.array([1]), features=np.ones((1, 2)))

@@ -119,7 +119,7 @@ lint.select = [
     "S",    # bandit
     "PIE",  # flake8-pie
 ]
-lint.per-file-ignores = {"tests/*" = [
+lint.per-file-ignores = {"!lir/*" = [
     "D",     # Ignore missing docstrings in tests.
     "S101",  # Allow use of assert in tests.
 ]} 

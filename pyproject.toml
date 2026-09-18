@@ -119,15 +119,10 @@ lint.select = [
     "S",    # bandit
     "PIE",  # flake8-pie
 ]
-lint.per-file-ignores = {"tests/*" = [
-        "D",     # Ignore missing docstrings in tests.
-        "S101",  # Allow use of assert in tests.
-    ], "*_test.py" = [
-        "D",     # Ignore missing docstrings in tests.
-        "S101",  # Allow use of assert in tests.
-    ], "docs/snippets/*.py" = [
-        "D",     # Ignore missing  docstrings in snippets.
-    ]} 
+lint.per-file-ignores = {"!lir/*" = [
+    "D",     # Ignore missing docstrings in tests.
+    "S101",  # Allow use of assert in tests.
+]} 
 lint.pydocstyle.convention = "numpy"
 
 [tool.mypy]

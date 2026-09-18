@@ -564,13 +564,13 @@ def parse_parameter(
 
         parser = registry.get(parameter_type, search_path=['hyperparameter_types'])
     elif 'value' in spec:
-        parser = parse_constant()  # type: ignore
+        parser = parse_constant  # type: ignore
     elif 'options' in spec and 'path' in spec:
-        parser = parse_categorical()  # type: ignore
+        parser = parse_categorical  # type: ignore
     elif 'options' in spec and 'name' in spec:
-        parser = parse_clustered()  # type: ignore
+        parser = parse_clustered  # type: ignore
     elif 'high' in spec:
-        parser = parse_float()  # type: ignore
+        parser = parse_float  # type: ignore
     else:
         raise YamlParseError(
             spec.context,

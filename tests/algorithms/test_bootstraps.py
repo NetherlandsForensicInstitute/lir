@@ -125,4 +125,4 @@ def test_interval_extrapolation(sample_steps_and_data):
 )
 def test_bootstrap_config(config):
     config = ConfigValue.wrap([], config)
-    bootstrap().parse(config, Path('/'))
+    bootstrap(config, Path('/'))

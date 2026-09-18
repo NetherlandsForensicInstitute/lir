@@ -225,8 +225,8 @@ def _parse_categorical_option(spec: Any, path: str, option_index: int | None) ->
     return HyperparameterOption(name, {path: value})
 
 
-@config_parser(reference='lir.config.substitution.parse_categorical')
-def parse_categorical(spec: ConfigValue, output_path: Path) -> 'CategoricalHyperparameter':
+@config_parser
+def parse_categorical(spec: ConfigValue, output_path: Path) -> CategoricalHyperparameter:
     """
     Parse a categorical hyperparameter from configuration.
 
@@ -282,7 +282,7 @@ def _parse_clustered_option(spec: ConfigValue) -> HyperparameterOption:
     return HyperparameterOption(option_name, substitutions)
 
 
-@config_parser(reference='lir.config.substitution.parse_clustered')
+@config_parser
 def parse_clustered(spec: ConfigValue, output_path: Path) -> CategoricalHyperparameter:
     """
     Parse the configuration section of a clustered hyperparameter.
@@ -316,7 +316,7 @@ def parse_clustered(spec: ConfigValue, output_path: Path) -> CategoricalHyperpar
     return CategoricalHyperparameter(parameter_name, options)
 
 
-@config_parser(reference='lir.config.substitution.parse_constant')
+@config_parser
 def parse_constant(spec: ConfigValue, output_path: Path) -> CategoricalHyperparameter:
     """
     Parse the configuration section of a constant.
@@ -400,8 +400,8 @@ class FloatHyperparameter(Hyperparameter):
         return [HyperparameterOption(str(value), {self.path: value}) for value in values]
 
 
-@config_parser(reference='lir.config.substitution.parse_float')
-def parse_float(spec: ConfigValue, output_path: Path) -> 'FloatHyperparameter':
+@config_parser
+def parse_float(spec: ConfigValue, output_path: Path) -> FloatHyperparameter:
     """
     Parse a floating-point hyperparameter from configuration.
 
@@ -514,8 +514,8 @@ class FolderHyperparameter(Hyperparameter):
         return options
 
 
-@config_parser(reference='lir.config.substitution.parse_folder')
-def parse_folder(spec: ConfigValue, output_path: Path) -> 'FolderHyperparameter':
+@config_parser
+def parse_folder(spec: ConfigValue, output_path: Path) -> FolderHyperparameter:
     """
     Parse a folder hyperparameter from configuration.
 
@@ -564,13 +564,13 @@ def parse_parameter(
 
         parser = registry.get(parameter_type, search_path=['hyperparameter_types'])
     elif 'value' in spec:
-        parser = parse_constant()  # type: ignore
+        parser = parse_constant  # type: ignore
     elif 'options' in spec and 'path' in spec:
-        parser = parse_categorical()  # type: ignore
+        parser = parse_categorical  # type: ignore
     elif 'options' in spec and 'name' in spec:
-        parser = parse_clustered()  # type: ignore
+        parser = parse_clustered  # type: ignore
     elif 'high' in spec:
-        parser = parse_float()  # type: ignore
+        parser = parse_float  # type: ignore
     else:
         raise YamlParseError(
             spec.context,

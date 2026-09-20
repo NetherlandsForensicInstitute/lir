@@ -5,13 +5,20 @@ LiR is designed to be easily extensible, allowing developers to add new features
 the core code. This document outlines the process for creating a custom component that can be used in an experiment
 setup configuration file.
 
+Any part of LiR can be replaced by custom components, such as experiment types, LR system architectures, metrics, etc.
+See :doc:`the default component registry <reference>` for a list of components shipped with LiR. In this guide, we describe in detail
+:ref:`how to design a custom module <custom-module>`, and how to apply these principles to
+:ref:`create other types of components <other-components>`.
+
+
+.. _custom-module:
+
+Creating a custom module
+^^^^^^^^^^^^^^^^^^^^^^^^
+
 In this example, we will create a custom module that calculates the cosine similarity between two vectors.
 The module will be integrated into the LiR framework and can be used in experiments just like any other built-in
 component.
-
-This example shows how to create a custom module, but the same principles apply to other types of components, such as
-experiment types, LR system architectures, metrics, etc.
- 
 
 Step 1: setup a new project
 ---------------------------
@@ -72,7 +79,7 @@ We extend the ``CosineSimilarity`` class by adding an  ``__init__`` method that 
     :lines: 1-6,9-33
     :emphasize-lines: 10-11,26-27
 
-Any key/value-pair in the configuration section of ``scorer`` (except for ``method``) will be passed to the component when it is instantiated.
+Any key/value-pair in the configuration section of ``score`` (except for ``method``) will be passed to the component when it is instantiated.
 
 .. literalinclude:: snippets/minimal-single-run-with-cosim.yaml
     :language: yaml
@@ -83,6 +90,10 @@ Step 4: create a configuration parser (optional)
 ------------------------------------------------
 
 There is a good chance that this is all you need to do to create a new component. However, if you want more control over how the component is instantiated, you can create a custom configuration parser.
+Specifically, writing a configuration parser allows you to:
+
+- initialize the component with initialization parameters that cannot be specified in a YAML file (anything other than `str`, `int`, `float`, `dict`, `list`, `None`);
+- pass an output directory to the component to where it can write files to disk.
 
 We create a configuration parser by defining a function that parses a configuration section and returns a ``CosineSimilarity`` object.
 We take care that the function:
@@ -90,6 +101,10 @@ We take care that the function:
 - takes two arguments: a :class:`~lir.config.ConfigValue`, the configuration section in the YAML that is needed to initialize the module, and an output directory as a :class:`~pathlib.Path` object;
 - returns an instance of the component (in our case, ``CosineSimilarity``);
 - is marked as a configuration parser with the :deco:`~lir.config.config_parser` decorator.
+
+The output directory passed to the configuration parser may be affected by higher level components. For example, the
+configuration parser for an experiment receives a sub directory of the top level output directory for that specific
+experiment. If the experiment has multiple runs, the LR system modules receive an output directory for the run.
 
 .. literalinclude:: snippets/py/cosine_similarity.py
     :language: python
@@ -155,8 +170,10 @@ You can also use this mechanism to override specific built-in registry entries, 
 .. _documentation: https://github.com/NetherlandsForensicInstitute/confidence
 
 
+.. _other-components:
+
 Examples for other components
-=============================
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Other components can be added in a similar way, by creating a function with the :deco:`~lir.config.config_parser` decorator, and returning the component instance.
 

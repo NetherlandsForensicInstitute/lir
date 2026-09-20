@@ -4,7 +4,7 @@ import numpy as np
 from numpy.linalg import norm
 
 from lir import FeatureData, InstanceData, PairedFeatureData, Transformer
-from lir.config import ConfigValue, check_is_empty, config_parser, pop_field
+from lir.config import ConfigValue, config_parser
 from lir.util import check_type
 
 
@@ -36,13 +36,13 @@ class CosineSimilarity(Transformer):
 @config_parser
 def parse_cosine_similarity_config(config: ConfigValue, output_dir: Path) -> CosineSimilarity:
     print('CONTEXT:', config.context)
-    print('CONFIG:', config.unwrap())
+    print('CONFIG:', config)
+    print('UNWRAPPED:', config.unwrap())
 
-    # obtain the value of the "square" parameter from the configuration dictionary, and remove it from the dictionary.
-    square = pop_field(config, 'square', default=False)
+    # the use of `with` is optional, and adds a check that all fields in `config` are popped
+    with config:
+        # obtain the value of the "square" parameter, and remove it from the dictionary.
+        square = config.pop_field('square', default=False)
 
-    # check that there are no other parameters left unparsed, and raise an error if there are.
-    check_is_empty(config)
-
-    # instantiate the component with the parsed parameters and return it.
-    return CosineSimilarity(square=square)
+        # instantiate the component with the parsed parameters and return it.
+        return CosineSimilarity(square=square)

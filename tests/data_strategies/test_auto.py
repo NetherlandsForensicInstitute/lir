@@ -34,8 +34,8 @@ from lir.datasets.synthesized_normal_multiclass import SynthesizedDimension, Syn
         ),
         (
             SynthesizedNormalMulticlassData(
-                population_size=10,
-                sources_size=3,
+                num_source_ids=10,
+                num_sources_per_source_id=3,
                 seed=0,
                 dimensions=[SynthesizedDimension(0, 1, 0.2), SynthesizedDimension(0, 1, 0.2)],
             ).get_instances(),
@@ -44,8 +44,8 @@ from lir.datasets.synthesized_normal_multiclass import SynthesizedDimension, Syn
         ),
         (
             SynthesizedNormalMulticlassData(
-                population_size=10,
-                sources_size=3,
+                num_source_ids=10,
+                num_sources_per_source_id=3,
                 seed=0,
                 dimensions=[SynthesizedDimension(0, 1, 0.2), SynthesizedDimension(0, 1, 0.2)],
             ).get_instances(),

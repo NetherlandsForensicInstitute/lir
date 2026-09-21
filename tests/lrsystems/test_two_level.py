@@ -13,8 +13,8 @@ from lir.transform.pairing import SourcePairing
 
 def _calculate_cllr(mean: float = 0.0, std: float = 1.0, error_std: float = 1.0) -> float:
     params = {
-        'population_size': 20,
-        'sources_size': 6,
+        'num_source_ids': 20,
+        'num_sources_per_source_id': 6,
         'dimensions': [SynthesizedDimension(mean, std, error_std)],
         'seed': 0,
     }

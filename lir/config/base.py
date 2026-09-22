@@ -5,7 +5,7 @@ from collections.abc import Callable, Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from functools import partial
 from pathlib import Path
-from types import TracebackType
+from types import TracebackType, UnionType
 from typing import Any, Self
 
 from lir.util import check_type
@@ -185,7 +185,7 @@ class ConfigValue:
         default: Any = None,
         required: bool | None = None,
         validate: Callable[[Any], Any] | None = None,
-        validate_type: type[Any] | None = None,
+        validate_type: type[Any] | UnionType | None = None,
     ) -> 'ConfigValue | None':
         """
         Validate and retrieve the value for a given field, after which it is removed from this configuration.
@@ -259,7 +259,7 @@ class ConfigValue:
         default: Any = None,
         required: bool | None = None,
         validate: Callable[[Any], Any] | None = None,
-        validate_type: type[Any] | None = None,
+        validate_type: type[Any] | UnionType | None = None,
     ) -> Any:
         """
         Validate and retrieve the value for a given field, after which it is removed from the configuration.

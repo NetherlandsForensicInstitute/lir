@@ -1,20 +1,11 @@
 import collections
-import datetime
-import importlib
 import inspect
-import json
 import warnings
 from enum import Enum
 from functools import partial
-from pathlib import Path
 from typing import Any, TypeVar
 
 import numpy as np
-from confidence import Configuration, loadf
-from confidence.models import ConfigurationSequence
-from jsonschema import validate
-
-from . import resources as resources_module
 
 
 LR = collections.namedtuple('LR', ['lr', 'p0', 'p1'])
@@ -317,74 +308,6 @@ def warn_deprecated() -> None:
         'please check documentation for alternatives',
         stacklevel=2,
     )
-
-
-def to_native_dict(cfg: Any) -> Any:
-    """
-    Recursively convert confidence Configuration objects to native Python dicts/lists.
-
-    Accesses each value through cfg[key] to trigger reference resolution. The confidence library doesn't have a built-in
-    method for this, so we manually traverse and resolve.
-
-    Similar to :meth:`~lir.config.base._expand~, but this method returns native dicts/lists instead of
-    :class:`~lir.config.base.ConfigValue`.
-
-    Parameters
-    ----------
-    cfg : Any
-        The input configuration object, which can be a confidence Configuration, ConfigurationSequence, dict, list, or
-        any other type.
-
-    Returns
-    -------
-    Any
-        The input Configuration object converted to a native Python dict or list.
-    """
-    match cfg:
-        case Configuration():
-            return {k: to_native_dict(cfg[k]) for k in cfg}
-        case ConfigurationSequence():
-            return [to_native_dict(item) for item in cfg]
-        case dict():
-            return {k: to_native_dict(v) for k, v in cfg.items()}
-        case list():
-            return [to_native_dict(item) for item in cfg]
-        case _:
-            return cfg
-
-
-def validate_yaml(yaml_path: Path) -> None:
-    """
-    Validate a YAML file against the schema.
-
-    Parameters
-    ----------
-    yaml_path : Path
-        The path to the YAML file to be validated.
-
-    Raises
-    ------
-    FileNotFoundError
-        If the YAML file or the schema file does not exist.
-    yaml.YAMLError
-        If the YAML file is not valid YAML.
-    ValidationError
-        If the YAML file does not conform to the schema.
-    """
-    if not yaml_path.exists():
-        raise FileNotFoundError(f'YAML file not found: {yaml_path}')
-
-    schema_file = importlib.resources.files(resources_module) / 'config-schema.json'
-    with schema_file.open('r') as f:
-        schema = json.load(f)
-
-    # Resolve ${...} references before validation
-    context = {'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')}  # noqa: DTZ005
-    cfg = Configuration(loadf(yaml_path), context)
-    data = to_native_dict(cfg)
-
-    # Validate data against schema
-    validate(instance=data, schema=schema)
 
 
 class Bind(partial):

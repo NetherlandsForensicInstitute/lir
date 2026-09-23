@@ -378,6 +378,8 @@ class ConfigAttribute(NamedTuple):
         A text to describe the attribute and how it is used.
     default : Any, optional
         The default value for this attribute.
+    obsolete : bool, optional
+        If the attribute is obsolete, it will be rejected in strict mode.
     """
 
     name: str
@@ -385,6 +387,7 @@ class ConfigAttribute(NamedTuple):
     required: bool = False
     description: str | None = None
     default: Any = None
+    obsolete: bool = False
 
 
 class ConfigParser(ABC):

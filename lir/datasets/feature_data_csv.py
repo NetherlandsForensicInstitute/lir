@@ -13,7 +13,7 @@ import numpy as np
 import requests
 from requests_cache import CachedSession
 
-from lir.config.base import ConfigValue, check_is_empty, config_parser, pop_field
+from lir.config.base import ConfigAttribute, ConfigValue, check_is_empty, config_parser, pop_field
 from lir.data.io import search_path
 from lir.data.models import DataProvider, FeatureData
 from lir.data_strategies import RoleAssignment
@@ -394,7 +394,29 @@ def _parse_extra_fields(config: ConfigValue) -> list[ExtraField]:
         return []
 
 
-@config_parser
+_feature_data_csv_attributes = [
+    ConfigAttribute('source_id_column', str | list[str], required=False),
+    ConfigAttribute('hypothesis_column', str, required=False),
+    ConfigAttribute('label_column', str, required=False, obsolete=True),
+    ConfigAttribute('feature_columns', str | list[str], required=False),
+    ConfigAttribute('instance_id_column', str, required=False),
+    ConfigAttribute('role_assignment_column', str, required=False),
+    ConfigAttribute('fold_assignment_column', str, required=False),
+    ConfigAttribute('extra_fields', list[dict], required=False),
+    ConfigAttribute('head', int, required=False),
+    ConfigAttribute('message_prefix', str, required=False),
+    ConfigAttribute('continue_on_error', bool, required=False),
+]
+
+
+@config_parser(
+    attributes=[
+        ConfigAttribute('cache', dict, required=False),
+        ConfigAttribute('use_cache', bool, required=False),
+        ConfigAttribute('url', str, required=True),
+    ]
+    + _feature_data_csv_attributes
+)
 def feature_data_csv_http_parser(config: ConfigValue, output_dir: Path) -> FeatureDataCsvParser:
     """
     Initialize the CSV parser that reads data from a stream.
@@ -442,7 +464,12 @@ def feature_data_csv_http_parser(config: ConfigValue, output_dir: Path) -> Featu
     return FeatureDataCsvParser(open_url, **config.as_dict(), extra_fields=extra_fields, message_prefix=f'{url}: ')
 
 
-@config_parser
+@config_parser(
+    attributes=[
+        ConfigAttribute('file', str, required=True),
+    ]
+    + _feature_data_csv_attributes
+)
 def feature_data_csv_file_parser(config: ConfigValue, output_dir: Path) -> FeatureDataCsvParser:
     """
     Initialize the CSV parser that reads data from a stream.

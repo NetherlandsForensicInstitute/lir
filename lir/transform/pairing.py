@@ -1,8 +1,10 @@
 from abc import ABC, abstractmethod
+from numbers import Number
 from typing import Any
 
 import numpy as np
 
+from lir.config.base import ConfigAttribute
 from lir.data.models import FeatureData, InstanceData, PairedFeatureData, concatenate_instances
 from lir.util import check_type
 
@@ -63,17 +65,24 @@ class SourcePairing(PairingMethod):
         Limit for the number or fraction of same-source pairs.
     different_source_limit : int | None
         Limit for the number or fraction of different-source pairs.
-    ratio_limit : int | None
+    ratio_limit : float | None
         Maximum allowed ratio between same-source and different-source pairs.
     seed : Any | int
         Random seed controlling stochastic behaviour for reproducible results.
     """
 
+    __config_attributes__ = [
+        ConfigAttribute(name='same_source_limit', type=int, required=False),
+        ConfigAttribute(name='different_source_limit', type=int, required=False),
+        ConfigAttribute(name='ratio_limit', type=Number, required=False),
+        ConfigAttribute(name='seed', type=int, required=False),
+    ]
+
     def __init__(
         self,
         same_source_limit: int | None = None,
         different_source_limit: int | None = None,
-        ratio_limit: int | None = None,
+        ratio_limit: float | None = None,
         seed: Any | int = None,
     ):
         self._ss_limit = same_source_limit
@@ -260,6 +269,13 @@ class InstancePairing(PairingMethod):
     seed : int | None
         Random seed controlling stochastic behaviour for reproducible results.
     """
+
+    __config_attributes__ = [
+        ConfigAttribute(name='same_source_limit', type=int, required=False),
+        ConfigAttribute(name='different_source_limit', type=int, required=False),
+        ConfigAttribute(name='ratio_limit', type=Number, required=False),
+        ConfigAttribute(name='seed', type=int, required=False),
+    ]
 
     def __init__(
         self,

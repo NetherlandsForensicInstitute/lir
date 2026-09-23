@@ -4,6 +4,7 @@ from pathlib import Path
 from lir.aggregation import Aggregation, AggregationData
 from lir.config import ConfigValue, config_parser
 from lir.config.aggregation import parse_aggregations
+from lir.config.base import ConfigAttribute
 from lir.data.models import get_instances_by_category
 
 
@@ -88,7 +89,12 @@ class SubsetAggregation(Aggregation):
             output.close()
 
 
-@config_parser
+@config_parser(
+    attributes=[
+        ConfigAttribute('category_field', str, required=True),
+        ConfigAttribute('output', list[Aggregation], required=True),
+    ]
+)
 def subset_aggregation(config: ConfigValue, output_dir: Path) -> SubsetAggregation:
     """
     Parse a configuration section for a categorized subset aggregation.

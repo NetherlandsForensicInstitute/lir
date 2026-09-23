@@ -2,6 +2,7 @@ import warnings
 from collections.abc import Iterator
 
 from lir import DataStrategy, InstanceData
+from lir.config.base import ConfigAttribute
 from lir.data_strategies import labels, pairs, predefined, sources
 
 
@@ -41,6 +42,18 @@ class AutoTrainTestSplit(DataStrategy):
     random_state : int | None
         Deprecated random state controlling stochastic behavior for reproducible results.
     """
+
+    __config_attributes__ = [
+        ConfigAttribute(
+            name='test_size', type=float, default=0.5, description='Size of the test set in the range of 0 to 1.'
+        ),
+        ConfigAttribute(
+            name='random_state',
+            type=int,
+            required=False,
+            description='Random seed controlling stochastic behaviour for reproducible results.',
+        ),
+    ]
 
     def __init__(self, test_size: float | int = 0.5, seed: int | None = None, random_state: int | None = None):
         if random_state is not None:
@@ -118,6 +131,21 @@ class AutoCrossValidation(DataStrategy):
     seed : int | None
         Random seed controlling stochastic behavior for reproducible results.
     """
+
+    __config_attributes__ = [
+        ConfigAttribute(
+            name='folds', type=int, required=True, description='Number of cross-validation folds to generate.'
+        ),
+        ConfigAttribute(
+            name='shuffle', type=bool, required=False, description='Randomize the groups before splitting into batches.'
+        ),
+        ConfigAttribute(
+            name='random_state',
+            type=int,
+            required=False,
+            description='Random seed controlling stochastic behaviour for reproducible results.',
+        ),
+    ]
 
     def __init__(self, folds: int, shuffle: bool | None = None, seed: int | None = None):
         self.folds = folds

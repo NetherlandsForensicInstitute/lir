@@ -5,7 +5,7 @@ from typing import Any, Self
 
 import numpy as np
 
-from lir.config.base import ConfigValue, check_is_empty, config_parser, pop_field
+from lir.config.base import ConfigAttribute, ConfigValue, check_is_empty, config_parser, pop_field
 from lir.config.transform import parse_module
 from lir.data.io import DataFileBuilderCsv
 from lir.data.models import FeatureData, InstanceData
@@ -149,7 +149,16 @@ def parse_steps(config: ConfigValue, output_dir: Path) -> list[tuple[str, Transf
     ]
 
 
-@config_parser
+@config_parser(
+    attributes=[
+        ConfigAttribute(
+            name='steps',
+            type=dict[str, Transformer],
+            required=True,
+            description='Sequence of operations in the pipeline.',
+        ),
+    ]
+)
 def pipeline(config: ConfigValue, output_dir: Path) -> Pipeline:
     """
     Construct a scikit-learn Pipeline based on the provided configuration.
@@ -285,7 +294,17 @@ class LoggingPipeline(Pipeline):
         return instances
 
 
-@config_parser(reference=LoggingPipeline)
+@config_parser(
+    reference=LoggingPipeline,
+    attributes=[
+        ConfigAttribute(
+            name='steps',
+            type=dict[str, Transformer],
+            required=True,
+            description='Sequence of operations in the pipeline.',
+        ),
+    ],
+)
 def logging_pipeline(config: ConfigValue, output_dir: Path) -> Pipeline:
     """
     Construct a scikit-learn Pipeline based on the provided configuration.

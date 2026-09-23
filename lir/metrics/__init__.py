@@ -1,8 +1,25 @@
+from typing import Protocol
+
 import numpy as np
 
 from lir.algorithms.isotonic_regression import IsotonicCalibrator
 from lir.data.models import LLRData
 from lir.util import Xy_to_Xn, logodds_to_odds
+
+
+class MetricType(Protocol):
+    """Type definition for metric calculations."""
+
+    def __call__(self, llrdata: LLRData) -> float | None:
+        """
+        Call the metric.
+
+        Parameters
+        ----------
+        llrdata : LLRData
+            The input data.
+        """
+        ...
 
 
 def cllr(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:

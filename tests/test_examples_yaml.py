@@ -6,8 +6,8 @@ from pathlib import Path
 import confidence
 import pytest
 
+from lir.config.schema import validate_yaml
 from lir.main import initialize_experiments
-from lir.util import validate_yaml
 
 
 EXAMPLE_DIR = Path(__file__).parent.parent / 'examples'

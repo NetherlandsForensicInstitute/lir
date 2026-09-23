@@ -1,5 +1,5 @@
-Registry reference
-==================
+Built-in components
+===================
 
 Experiment components
 ---------------------

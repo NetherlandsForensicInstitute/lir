@@ -48,6 +48,6 @@ def test_parse(s: str, err: type[BaseException] | None):
     cfg = ConfigValue.wrap([], confidence.loads(s))
     if err:
         with pytest.raises(err):
-            parse().parse(cfg, Path('/'))
+            parse(cfg, Path('/'))
     else:
-        parse().parse(cfg, Path('/'))
+        parse(cfg, Path('/'))

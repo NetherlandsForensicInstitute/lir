@@ -215,11 +215,16 @@ experiments:
     output:
       - method: metrics
         columns:
-        - cllr
-        - cllr_min
-        - cllr_cal
-        - llr_upper_bound
-        - llr_lower_bound
+          - cllr
+          - cllr_min
+          - cllr_cal
+          - llr_upper_bound
+          - llr_lower_bound
+          - count
+          - count_h1
+          - count_h2
+          - mean_llr_h1
+          - mean_llr_h2
       - pav
       - lr_histogram
 

@@ -578,7 +578,12 @@
                   "cllr_min",
                   "cllr_cal",
                   "llr_lower_bound",
-                  "llr_upper_bound"
+                  "llr_upper_bound",
+                  "count",
+                  "count_h1",
+                  "count_h2",
+                  "mean_llr_h1",
+                  "mean_llr_h2"
                 ]
               }
             },

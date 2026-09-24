@@ -76,12 +76,20 @@ modules:
   n_source_bounder: lir.bounding.NSourceBounder
 
 metric:
+  # Performance metrics
   cllr: lir.metrics.cllr
   cllr_min: lir.metrics.cllr_min
   cllr_cal: lir.metrics.cllr_cal
   llr_lower_bound: lir.metrics.llr_lower_bound
   llr_upper_bound: lir.metrics.llr_upper_bound
   devpav: lir.algorithms.devpav.devpav
+
+  # Statistical metrics
+  count: lir.metrics.statistics.count
+  count_h1: lir.metrics.statistics.count_h1
+  count_h2: lir.metrics.statistics.count_h2
+  mean_llr_h1: lir.metrics.statistics.mean_llr_h1
+  mean_llr_h2: lir.metrics.statistics.mean_llr_h2
 
 output:
   metrics: lir.aggregation.metrics_csv.parse

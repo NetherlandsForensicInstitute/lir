@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.1"
-content_hash = "sha256:fb495a37c1b6a7c07aaee10aca8d18699fd2947dea2f7cc19e8ff406c7e1e4a3"
+content_hash = "sha256:043cd5a59875d2adecc0a9db248976497513c06e960c5240edbefa24f8748cf2"
 
 [[metadata.targets]]
 requires_python = ">=3.12,<3.15"
@@ -66,27 +66,83 @@ files = [
 
 [[package]]
 name = "arviz"
-version = "0.23.4"
-requires_python = ">=3.10"
-summary = "Exploratory analysis of Bayesian models"
+version = "1.3.0"
+requires_python = ">=3.12"
+summary = "Expose features from _ArviZverse_ refactored packages together in the ``arviz`` namespace."
 groups = ["default"]
 dependencies = [
-    "h5netcdf>=1.0.2",
-    "h5py",
-    "matplotlib>=3.8",
-    "numpy>=1.26.0",
-    "packaging",
-    "pandas>=2.1.0",
-    "platformdirs",
-    "scipy>=1.11.0",
-    "setuptools>=60.0.0",
-    "typing-extensions>=4.1.0",
-    "xarray-einstats>=0.3",
-    "xarray>=2023.7.0",
+    "arviz-base<1.4.0,>=1.3.0",
+    "arviz-plots<1.4.0,>=1.3.0",
+    "arviz-stats[xarray]<1.4.0,>=1.3.0",
 ]
 files = [
-    {file = "arviz-0.23.4-py3-none-any.whl", hash = "sha256:c46c7faf8a06abadc9b5b64000584062ecbc20c2298e2bd6dfba04bb01a684ca"},
-    {file = "arviz-0.23.4.tar.gz", hash = "sha256:611be826995066036c9443ea98d11486c279ef3da3b6cdc5c0816fab434115b9"},
+    {file = "arviz-1.3.0-py3-none-any.whl", hash = "sha256:16ab348e94c80295d205ea65e695d835b66daef8b31eddf71b88fd9b48490a85"},
+    {file = "arviz-1.3.0.tar.gz", hash = "sha256:9e332c0a0da370cb1c00823678065e9b0462fbdf1efa0f38c37485cc78c8a576"},
+]
+
+[[package]]
+name = "arviz-base"
+version = "1.3.0"
+requires_python = ">=3.12"
+summary = "Base ArviZ features and converters."
+groups = ["default"]
+dependencies = [
+    "lazy-loader>=0.4",
+    "numpy>=2",
+    "typing-extensions>=3.10",
+    "xarray>=2024.11.0",
+]
+files = [
+    {file = "arviz_base-1.3.0-py3-none-any.whl", hash = "sha256:9f3d66353434ee81db78cb54fe00efd74ae2fc5519d20c593dd2dceae8f247b7"},
+    {file = "arviz_base-1.3.0.tar.gz", hash = "sha256:285fe0ac413f515d1962644b471d916327446d58247ae7f331043b1bed5a4d5b"},
+]
+
+[[package]]
+name = "arviz-plots"
+version = "1.3.1"
+requires_python = ">=3.12"
+summary = "ArviZ-plots provides ready to use and composable plots for Bayesian Workflow."
+groups = ["default"]
+dependencies = [
+    "arviz-base<1.4.0,>=1.3.0",
+    "arviz-stats[xarray]<1.4.0,>=1.3.0",
+]
+files = [
+    {file = "arviz_plots-1.3.1-py3-none-any.whl", hash = "sha256:78bfca8c87c71dad467e2790aa0c1dd6e505907c1376d9f4abbf39dc1212b983"},
+    {file = "arviz_plots-1.3.1.tar.gz", hash = "sha256:0d17cbb98754ecce4484552dce7bd43cf5b040d6135a4e7b02383a50d817f1ae"},
+]
+
+[[package]]
+name = "arviz-stats"
+version = "1.3.2"
+requires_python = ">=3.12"
+summary = "Statistical computation and diagnostics for ArviZ."
+groups = ["default"]
+dependencies = [
+    "numpy>=2",
+    "scipy>=1.13",
+]
+files = [
+    {file = "arviz_stats-1.3.2-py3-none-any.whl", hash = "sha256:bf186dc22ff6fd2a5e6897c640b55f846dd39aa1f22f8e7e08cc515d09a1ad16"},
+    {file = "arviz_stats-1.3.2.tar.gz", hash = "sha256:7b8296f4416757e706b829273d5391c97f4dd52702bc279059dfca0fe90681fd"},
+]
+
+[[package]]
+name = "arviz-stats"
+version = "1.3.2"
+extras = ["xarray"]
+requires_python = ">=3.12"
+summary = "Statistical computation and diagnostics for ArviZ."
+groups = ["default"]
+dependencies = [
+    "arviz-base<1.4.0,>=1.3.0",
+    "arviz-stats==1.3.2",
+    "xarray-einstats",
+    "xarray>=2024.11.0",
+]
+files = [
+    {file = "arviz_stats-1.3.2-py3-none-any.whl", hash = "sha256:bf186dc22ff6fd2a5e6897c640b55f846dd39aa1f22f8e7e08cc515d09a1ad16"},
+    {file = "arviz_stats-1.3.2.tar.gz", hash = "sha256:7b8296f4416757e706b829273d5391c97f4dd52702bc279059dfca0fe90681fd"},
 ]
 
 [[package]]
@@ -172,13 +228,13 @@ files = [
 
 [[package]]
 name = "cachetools"
-version = "7.0.1"
-requires_python = ">=3.10"
+version = "6.2.6"
+requires_python = ">=3.9"
 summary = "Extensible memoizing collections and decorators"
 groups = ["default"]
 files = [
-    {file = "cachetools-7.0.1-py3-none-any.whl", hash = "sha256:8f086515c254d5664ae2146d14fc7f65c9a4bce75152eb247e5a9c5e6d7b2ecf"},
-    {file = "cachetools-7.0.1.tar.gz", hash = "sha256:e31e579d2c5b6e2944177a0397150d312888ddf4e16e12f1016068f0c03b8341"},
+    {file = "cachetools-6.2.6-py3-none-any.whl", hash = "sha256:8c9717235b3c651603fff0076db52d6acbfd1b338b8ed50256092f7ce9c85bda"},
+    {file = "cachetools-6.2.6.tar.gz", hash = "sha256:16c33e1f276b9a9c0b49ab5782d901e3ad3de0dd6da9bf9bcd29ac5672f2f9e6"},
 ]
 
 [[package]]
@@ -406,20 +462,6 @@ files = [
 ]
 
 [[package]]
-name = "cons"
-version = "0.4.7"
-requires_python = ">=3.9"
-summary = "An implementation of Lisp/Scheme-like cons in Python."
-groups = ["default"]
-dependencies = [
-    "logical-unification>=0.4.0",
-]
-files = [
-    {file = "cons-0.4.7-py3-none-any.whl", hash = "sha256:e38ee12cf703559ea744c94f725bee0e2329f32daf0249b49db1b0437cc6cb94"},
-    {file = "cons-0.4.7.tar.gz", hash = "sha256:0a96cd2abd6a9f494816c1272cf5583a960041750c2d7a48eeeccd47ce369dfd"},
-]
-
-[[package]]
 name = "contourpy"
 version = "1.3.2"
 requires_python = ">=3.10"
@@ -632,21 +674,6 @@ files = [
 ]
 
 [[package]]
-name = "etuples"
-version = "0.3.10"
-requires_python = ">=3.9"
-summary = "Python S-expression emulation using tuple-like objects."
-groups = ["default"]
-dependencies = [
-    "cons",
-    "multipledispatch",
-]
-files = [
-    {file = "etuples-0.3.10-py3-none-any.whl", hash = "sha256:4408c7940ef06af52dbbea0954a8a1817ed5750ce905ff48091ac3cd3aeb720b"},
-    {file = "etuples-0.3.10.tar.gz", hash = "sha256:26fde81d7e822837146231bfce4d6ba67eab5d7ed55bc58ba7437c2568051167"},
-]
-
-[[package]]
 name = "executing"
 version = "2.2.1"
 requires_python = ">=3.8"
@@ -780,58 +807,6 @@ files = [
     {file = "greenlet-3.2.4-cp314-cp314-musllinux_1_2_x86_64.whl", hash = "sha256:015d48959d4add5d6c9f6c5210ee3803a830dce46356e3bc326d6776bde54681"},
     {file = "greenlet-3.2.4-cp314-cp314-win_amd64.whl", hash = "sha256:e37ab26028f12dbb0ff65f29a8d3d44a765c61e729647bf2ddfbbed621726f01"},
     {file = "greenlet-3.2.4.tar.gz", hash = "sha256:0dca0d95ff849f9a364385f36ab49f50065d76964944638be9691e1832e9f86d"},
-]
-
-[[package]]
-name = "h5netcdf"
-version = "1.8.1"
-requires_python = ">=3.9"
-summary = "netCDF4 via h5py"
-groups = ["default"]
-dependencies = [
-    "numpy",
-    "packaging",
-]
-files = [
-    {file = "h5netcdf-1.8.1-py3-none-any.whl", hash = "sha256:a76ed7cfc9b8a8908ea7057c4e57e27307acff1049b7f5ed52db6c2247636879"},
-    {file = "h5netcdf-1.8.1.tar.gz", hash = "sha256:9b396a4cc346050fc1a4df8523bc1853681ec3544e0449027ae397cb953c7a16"},
-]
-
-[[package]]
-name = "h5py"
-version = "3.15.1"
-requires_python = ">=3.10"
-summary = "Read and write HDF5 files from Python"
-groups = ["default"]
-dependencies = [
-    "numpy>=1.21.2",
-]
-files = [
-    {file = "h5py-3.15.1-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:316dd0f119734f324ca7ed10b5627a2de4ea42cc4dfbcedbee026aaa361c238c"},
-    {file = "h5py-3.15.1-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:b51469890e58e85d5242e43aab29f5e9c7e526b951caab354f3ded4ac88e7b76"},
-    {file = "h5py-3.15.1-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:8a33bfd5dfcea037196f7778534b1ff7e36a7f40a89e648c8f2967292eb6898e"},
-    {file = "h5py-3.15.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:25c8843fec43b2cc368aa15afa1cdf83fc5e17b1c4e10cd3771ef6c39b72e5ce"},
-    {file = "h5py-3.15.1-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:a308fd8681a864c04423c0324527237a0484e2611e3441f8089fd00ed56a8171"},
-    {file = "h5py-3.15.1-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:f4a016df3f4a8a14d573b496e4d1964deb380e26031fc85fb40e417e9131888a"},
-    {file = "h5py-3.15.1-cp312-cp312-win_amd64.whl", hash = "sha256:59b25cf02411bf12e14f803fef0b80886444c7fe21a5ad17c6a28d3f08098a1e"},
-    {file = "h5py-3.15.1-cp312-cp312-win_arm64.whl", hash = "sha256:61d5a58a9851e01ee61c932bbbb1c98fe20aba0a5674776600fb9a361c0aa652"},
-    {file = "h5py-3.15.1-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:c8440fd8bee9500c235ecb7aa1917a0389a2adb80c209fa1cc485bd70e0d94a5"},
-    {file = "h5py-3.15.1-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:ab2219dbc6fcdb6932f76b548e2b16f34a1f52b7666e998157a4dfc02e2c4123"},
-    {file = "h5py-3.15.1-cp313-cp313-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:d8cb02c3a96255149ed3ac811eeea25b655d959c6dd5ce702c9a95ff11859eb5"},
-    {file = "h5py-3.15.1-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:121b2b7a4c1915d63737483b7bff14ef253020f617c2fb2811f67a4bed9ac5e8"},
-    {file = "h5py-3.15.1-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:59b0d63b318bf3cc06687def2b45afd75926bbc006f7b8cd2b1a231299fc8599"},
-    {file = "h5py-3.15.1-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:e02fe77a03f652500d8bff288cbf3675f742fc0411f5a628fa37116507dc7cc0"},
-    {file = "h5py-3.15.1-cp313-cp313-win_amd64.whl", hash = "sha256:dea78b092fd80a083563ed79a3171258d4a4d307492e7cf8b2313d464c82ba52"},
-    {file = "h5py-3.15.1-cp313-cp313-win_arm64.whl", hash = "sha256:c256254a8a81e2bddc0d376e23e2a6d2dc8a1e8a2261835ed8c1281a0744cd97"},
-    {file = "h5py-3.15.1-cp314-cp314-macosx_10_15_x86_64.whl", hash = "sha256:5f4fb0567eb8517c3ecd6b3c02c4f4e9da220c8932604960fd04e24ee1254763"},
-    {file = "h5py-3.15.1-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:954e480433e82d3872503104f9b285d369048c3a788b2b1a00e53d1c47c98dd2"},
-    {file = "h5py-3.15.1-cp314-cp314-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:fd125c131889ebbef0849f4a0e29cf363b48aba42f228d08b4079913b576bb3a"},
-    {file = "h5py-3.15.1-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:28a20e1a4082a479b3d7db2169f3a5034af010b90842e75ebbf2e9e49eb4183e"},
-    {file = "h5py-3.15.1-cp314-cp314-musllinux_1_2_aarch64.whl", hash = "sha256:fa8df5267f545b4946df8ca0d93d23382191018e4cda2deda4c2cedf9a010e13"},
-    {file = "h5py-3.15.1-cp314-cp314-musllinux_1_2_x86_64.whl", hash = "sha256:99d374a21f7321a4c6ab327c4ab23bd925ad69821aeb53a1e75dd809d19f67fa"},
-    {file = "h5py-3.15.1-cp314-cp314-win_amd64.whl", hash = "sha256:9c73d1d7cdb97d5b17ae385153472ce118bed607e43be11e9a9deefaa54e0734"},
-    {file = "h5py-3.15.1-cp314-cp314-win_arm64.whl", hash = "sha256:a6d8c5a05a76aca9a494b4c53ce8a9c29023b7f64f625c6ce1841e92a362ccdf"},
-    {file = "h5py-3.15.1.tar.gz", hash = "sha256:c86e3ed45c4473564de55aa83b6fc9e5ead86578773dfbd93047380042e26b69"},
 ]
 
 [[package]]
@@ -1229,6 +1204,20 @@ files = [
 ]
 
 [[package]]
+name = "lazy-loader"
+version = "0.6"
+requires_python = ">=3.9"
+summary = "Makes it easy to load subpackages and functions on demand."
+groups = ["default"]
+dependencies = [
+    "packaging",
+]
+files = [
+    {file = "lazy_loader-0.6-py3-none-any.whl", hash = "sha256:77253be3391b06124a0e16105bd663b6c54470af1a9ca8e1cf026f38d58ed056"},
+    {file = "lazy_loader-0.6.tar.gz", hash = "sha256:2f4b7824d6401958639008a0cae20c776b61dff619accd6890693e2de8260167"},
+]
+
+[[package]]
 name = "librt"
 version = "0.7.7"
 requires_python = ">=3.9"
@@ -1314,21 +1303,6 @@ files = [
     {file = "llvmlite-0.46.0-cp314-cp314-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:2e8cbfff7f6db0fa2c771ad24154e2a7e457c2444d7673e6de06b8b698c3b269"},
     {file = "llvmlite-0.46.0-cp314-cp314-win_amd64.whl", hash = "sha256:7821eda3ec1f18050f981819756631d60b6d7ab1a6cf806d9efefbe3f4082d61"},
     {file = "llvmlite-0.46.0.tar.gz", hash = "sha256:227c9fd6d09dce2783c18b754b7cd9d9b3b3515210c46acc2d3c5badd9870ceb"},
-]
-
-[[package]]
-name = "logical-unification"
-version = "0.4.7"
-requires_python = ">=3.9"
-summary = "Logical unification in Python"
-groups = ["default"]
-dependencies = [
-    "multipledispatch",
-    "toolz",
-]
-files = [
-    {file = "logical_unification-0.4.7-py3-none-any.whl", hash = "sha256:077f49e32693bc66a418f08c1de540f55b5a20f237ffb80ea85d99bfc6139c3b"},
-    {file = "logical_unification-0.4.7.tar.gz", hash = "sha256:3d73b263a870827b3f52d89c94f3336afd7fcaecf1e0c67fa18e73025399775c"},
 ]
 
 [[package]]
@@ -1527,25 +1501,6 @@ files = [
 ]
 
 [[package]]
-name = "minikanren"
-version = "1.0.5"
-requires_python = ">=3.9"
-summary = "Relational programming in Python"
-groups = ["default"]
-dependencies = [
-    "cons>=0.4.0",
-    "etuples>=0.3.1",
-    "logical-unification>=0.4.1",
-    "multipledispatch",
-    "toolz",
-    "typing-extensions",
-]
-files = [
-    {file = "minikanren-1.0.5-py3-none-any.whl", hash = "sha256:22c24f4fdf009a56e30655787af45c90f0704bcc24e8d3e651378675b4bccb21"},
-    {file = "minikanren-1.0.5.tar.gz", hash = "sha256:c030e3e9a3fa5f372f84b66966776a8dc63b16b98768b78be0401982b892e00d"},
-]
-
-[[package]]
 name = "mistune"
 version = "3.2.0"
 requires_python = ">=3.8"
@@ -1557,16 +1512,6 @@ dependencies = [
 files = [
     {file = "mistune-3.2.0-py3-none-any.whl", hash = "sha256:febdc629a3c78616b94393c6580551e0e34cc289987ec6c35ed3f4be42d0eee1"},
     {file = "mistune-3.2.0.tar.gz", hash = "sha256:708487c8a8cdd99c9d90eb3ed4c3ed961246ff78ac82f03418f5183ab70e398a"},
-]
-
-[[package]]
-name = "multipledispatch"
-version = "1.0.0"
-summary = "Multiple dispatch"
-groups = ["default"]
-files = [
-    {file = "multipledispatch-1.0.0-py3-none-any.whl", hash = "sha256:0c53cd8b077546da4e48869f49b13164bebafd0c2a5afceb6bb6a316e7fb46e4"},
-    {file = "multipledispatch-1.0.0.tar.gz", hash = "sha256:5c839915465c68206c3e9c473357908216c28383b425361e5d144594bf85a7e0"},
 ]
 
 [[package]]
@@ -2302,25 +2247,25 @@ files = [
 
 [[package]]
 name = "pymc"
-version = "5.27.1"
-requires_python = ">=3.11"
+version = "6.3.2"
+requires_python = ">=3.12"
 summary = "Probabilistic Programming in Python: Bayesian Modeling and Probabilistic Machine Learning with PyTensor"
 groups = ["default"]
 dependencies = [
-    "arviz>=0.13.0",
-    "cachetools>=4.2.1",
+    "arviz<2.0,>=1.1.0",
+    "cachetools<7,>=4.2.1",
     "cloudpickle",
     "numpy>=1.25.0",
     "pandas>=0.24.0",
-    "pytensor<2.38.0,>=2.37.0",
+    "pytensor<3.4,>=3.2.2",
     "rich>=13.7.1",
     "scipy>=1.4.1",
     "threadpoolctl<4.0.0,>=3.1.0",
     "typing-extensions>=3.7.4",
 ]
 files = [
-    {file = "pymc-5.27.1-py3-none-any.whl", hash = "sha256:7a5e663d1b2f9d51bd764ad8da4538b254df78889465f23a136a21d20425e046"},
-    {file = "pymc-5.27.1.tar.gz", hash = "sha256:f62da370dc1722ea77cddc57322b99f2703100f0cc9b66e811da98d080f47f8b"},
+    {file = "pymc-6.3.2-py3-none-any.whl", hash = "sha256:f3eef7d1637d4bac243562abcd087a5363e99103ae984c69ab72d081f2eb0a1e"},
+    {file = "pymc-6.3.2.tar.gz", hash = "sha256:3cd58e55249b3650786e2c717078de5595811e17187a666868072d15e3a931a1"},
 ]
 
 [[package]]
@@ -2336,36 +2281,36 @@ files = [
 
 [[package]]
 name = "pytensor"
-version = "2.37.0"
-requires_python = "<3.15,>=3.11"
+version = "3.3.2"
+requires_python = "<3.15,>=3.12"
 summary = "Optimizing compiler for evaluating mathematical expressions on CPUs and GPUs."
 groups = ["default"]
 dependencies = [
-    "cons",
-    "etuples",
     "filelock>=3.15",
-    "logical-unification",
-    "miniKanren",
-    "numba<1,>0.57",
+    "numba<=0.67.0,>=0.58",
     "numpy>=2.0",
     "scipy<2,>=1",
     "setuptools>=59.0.0",
 ]
 files = [
-    {file = "pytensor-2.37.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:560892cde2277cedbfd0c59f16df31ed457013cb294aabe2d1e6eec1ec3dd55b"},
-    {file = "pytensor-2.37.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:6438d5f36478e2e24023c245340ad5de4cfcf6dfa739332dfd0c9ac8f2679686"},
-    {file = "pytensor-2.37.0-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:0d4060dbfff3392d5bc53d6337a8d9000250e03b445785fbb3ea06572a5f21e3"},
-    {file = "pytensor-2.37.0-cp312-cp312-win_amd64.whl", hash = "sha256:b93734bf4f23401d63db9dd3cfed56423687e504e5c277ac65b0ceab8e3bac97"},
-    {file = "pytensor-2.37.0-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:780fab66c4545ee8c08c14b457253d8494577c70b16117fe89190f941a750cbc"},
-    {file = "pytensor-2.37.0-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:bebfc9460ded277cdcd2614edd2a5540817806c2fd7dce2a8d44e771c630f9e1"},
-    {file = "pytensor-2.37.0-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:88734f96f77f2edd697f48fb017ce4cdd5fd5e4050761aa0dd8d14584e2a2e52"},
-    {file = "pytensor-2.37.0-cp313-cp313-win_amd64.whl", hash = "sha256:6fbd94b2fd1ae30a817130802ec9d62ab20dd5ff6a859ed9f04407dfe116d915"},
-    {file = "pytensor-2.37.0-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:c018a069f93ec1f679ffe63323996b7392f0d8b582858b4a44da4cf5ab2c79fd"},
-    {file = "pytensor-2.37.0-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:12b29f50d666c1391269778e651ba4c64a0cd5a1a3ce5552a8917e0bfc127aaf"},
-    {file = "pytensor-2.37.0-cp314-cp314-musllinux_1_2_x86_64.whl", hash = "sha256:88ff250954acbd62c4475dba0a5e5b3a1dccddcdcb5938719e574169358fec8f"},
-    {file = "pytensor-2.37.0-cp314-cp314-win_amd64.whl", hash = "sha256:65d8aa6639f8dd746e96660fa1f3e775f1c4f4766100e63d85489ebe253049b2"},
-    {file = "pytensor-2.37.0-py2.py3-none-any.whl", hash = "sha256:7beb782f0579d57adaeecc7396f184c2c254e46e2ce7cb6bcbda1979792e5a0d"},
-    {file = "pytensor-2.37.0.tar.gz", hash = "sha256:881ae920d082aa3651fb83016c76e4e2588ba643f0506ceea556d8332ab0362c"},
+    {file = "pytensor-3.3.2-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:42ba7f00728ed450895b5ae982648567d43335258e131c24f225d293f23e4365"},
+    {file = "pytensor-3.3.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:e596922e4a4f312ea7f1ac21f18f96ed11e0b1118120080137eabe903d999b0c"},
+    {file = "pytensor-3.3.2-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:35307b2dec3d80028fdca2f8dcce81418cfdfbcebcb4ba9d628b649780709f92"},
+    {file = "pytensor-3.3.2-cp312-cp312-win_amd64.whl", hash = "sha256:eca08095ddb322a35b8ad2332bba1a062f08e0647e776e7c2cc1b064a04754e4"},
+    {file = "pytensor-3.3.2-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:baeb7c333905d0205b1a5448c61ba9ceb88bd7446fd080384b18070f993394a9"},
+    {file = "pytensor-3.3.2-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:fc82b7e236a872385a64e56746b9bae1da862a0d5f26bf65a61400ef6974c393"},
+    {file = "pytensor-3.3.2-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:b7a1a880b9e2df8d8e52d3059871544380b33b0cb672e1cafa70497356e0a836"},
+    {file = "pytensor-3.3.2-cp313-cp313-win_amd64.whl", hash = "sha256:0f7e4373094063400bb0f6475b802f3aec53d70e494f8d2ea71812205075314d"},
+    {file = "pytensor-3.3.2-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:cd55489fa501f4e44f9ffb17b4efe6a229774acd3669c2a55b94799a9db4d603"},
+    {file = "pytensor-3.3.2-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:bd34a76a2e0b3f03ff173c7ad8650d1a9787817ad664584a389b205ca97bf2dc"},
+    {file = "pytensor-3.3.2-cp314-cp314-musllinux_1_2_x86_64.whl", hash = "sha256:140a7475cbc6a13f435e790fcf515c7ef5be4368ceee68f42c63feda528397e3"},
+    {file = "pytensor-3.3.2-cp314-cp314-win_amd64.whl", hash = "sha256:40e30d7eec70c6b137484688e585a1d91be8d4c48473e54d02053c7d9e2de50f"},
+    {file = "pytensor-3.3.2-cp314-cp314t-macosx_11_0_arm64.whl", hash = "sha256:7430c8b38db8360630331d83380e0a53c35e5411848e124964747d291af6918b"},
+    {file = "pytensor-3.3.2-cp314-cp314t-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:dbd54e80df9c0acec8cd6f34490287d3982c8aed13e1bf463f769d5600583d35"},
+    {file = "pytensor-3.3.2-cp314-cp314t-musllinux_1_2_x86_64.whl", hash = "sha256:d4252a4c207579cf4c0ff4c45890b93119cf78575a084a2077abb3ba2359c95b"},
+    {file = "pytensor-3.3.2-cp314-cp314t-win_amd64.whl", hash = "sha256:91b4f018dc21cd884ec6ba3ef9c3db95ad5d372e2fdce57073c69a8ba0d8d671"},
+    {file = "pytensor-3.3.2-py2.py3-none-any.whl", hash = "sha256:983858dbe0f57c8294c12141267b32819e20514c1d9f28f09786bd83f9fc5352"},
+    {file = "pytensor-3.3.2.tar.gz", hash = "sha256:6d340a333ff6bfb2f7962a1d7647ab64225518073b9f49f53590db763ed81fa2"},
 ]
 
 [[package]]
@@ -3136,17 +3081,6 @@ groups = ["default"]
 files = [
     {file = "tomlkit-0.13.3-py3-none-any.whl", hash = "sha256:c89c649d79ee40629a9fda55f8ace8c6a1b42deb912b2a8fd8d942ddadb606b0"},
     {file = "tomlkit-0.13.3.tar.gz", hash = "sha256:430cf247ee57df2b94ee3fbe588e71d362a941ebb545dec29b53961d61add2a1"},
-]
-
-[[package]]
-name = "toolz"
-version = "1.1.0"
-requires_python = ">=3.9"
-summary = "List processing tools and functional utilities"
-groups = ["default"]
-files = [
-    {file = "toolz-1.1.0-py3-none-any.whl", hash = "sha256:15ccc861ac51c53696de0a5d6d4607f99c210739caf987b5d2054f3efed429d8"},
-    {file = "toolz-1.1.0.tar.gz", hash = "sha256:27a5c770d068c110d9ed9323f24f1543e83b2f300a687b7891c1a6d56b697b5b"},
 ]
 
 [[package]]

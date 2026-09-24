@@ -5,7 +5,7 @@ from pathlib import Path
 import numpy as np
 
 from lir import LLRData
-from lir.config import ConfigValue, config_parser, pop_field
+from lir.config import ConfigValue, config_parser
 from lir.util import logodds_to_odds
 
 
@@ -20,6 +20,8 @@ def calculate_weighted_cllr(llrdata: LLRData, h0_weight: float, h1_weight: float
 
 @config_parser
 def weighted_cllr(config: ConfigValue, output_dir: Path) -> Callable[[LLRData], float]:
-    h0_weight = pop_field(config, 'h0_weight', validate=float, default=1.0)
-    h1_weight = pop_field(config, 'h1_weight', validate=float, default=1.0)
-    return functools.partial(calculate_weighted_cllr, h0_weight=h0_weight, h1_weight=h1_weight)
+    # the use of `with` is optional, and adds a check that all fields in `config` are consumed
+    with config:
+        h0_weight = config.pop_field('h0_weight', validate=float, default=1.0)
+        h1_weight = config.pop_field('h1_weight', validate=float, default=1.0)
+        return functools.partial(calculate_weighted_cllr, h0_weight=h0_weight, h1_weight=h1_weight)

@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from lir import DataProvider
-from lir.config import ConfigValue, config_parser, pop_field
+from lir.config import ConfigValue, config_parser
 from lir.config.data import parse_data_provider
 from lir.experiments import Experiment
 
@@ -19,6 +19,8 @@ class DataCounterExperiment(Experiment):
 
 @config_parser
 def parse_data_counter_experiment_config(config: ConfigValue, output_dir: Path) -> Experiment:
-    data_provider_config = pop_field(config, 'data_provider')
-    data_provider = parse_data_provider(data_provider_config, output_dir)
-    return DataCounterExperiment(data_provider, output_dir)
+    # the use of `with` is optional, and adds a check that all fields in `config` are consumed
+    with config:
+        data_provider_config = config.pop_field('data_provider')
+        data_provider = parse_data_provider(data_provider_config, output_dir)
+        return DataCounterExperiment(data_provider, output_dir)

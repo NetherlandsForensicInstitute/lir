@@ -39,7 +39,7 @@ def parse_cosine_similarity_config(config: ConfigValue, output_dir: Path) -> Cos
     print('CONFIG:', config)
     print('UNWRAPPED:', config.unwrap())
 
-    # the use of `with` is optional, and adds a check that all fields in `config` are popped
+    # the use of `with` is optional, and adds a check that all fields in `config` are consumed
     with config:
         # obtain the value of the "square" parameter, and remove it from the dictionary.
         square = config.pop_field('square', default=False)

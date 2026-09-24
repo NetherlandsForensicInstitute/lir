@@ -3,7 +3,7 @@ from pathlib import Path
 import numpy as np
 
 from lir.aggregation import Aggregation, AggregationData
-from lir.config import ConfigValue, config_parser, pop_field
+from lir.config import ConfigValue, config_parser
 
 
 class AverageLLR(Aggregation):
@@ -27,5 +27,7 @@ class AverageLLR(Aggregation):
 
 @config_parser
 def average_llr(config: ConfigValue, output_dir: Path) -> AverageLLR:
-    filename = pop_field(config, 'filename')
-    return AverageLLR(output_dir / filename)
+    # the use of `with` is optional, and adds a check that all fields in `config` are consumed
+    with config:
+        filename = config.pop_field('filename')
+        return AverageLLR(output_dir / filename)

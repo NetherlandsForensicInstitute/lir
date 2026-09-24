@@ -7,6 +7,7 @@ from _pytest.tmpdir import TempPathFactory
 
 from lir import registry
 from lir.aggregation import Aggregation, AggregationData, SubsetAggregation
+from lir.config import check_is_empty
 from lir.config.base import ConfigValue, GenericConfigParser
 from lir.data.models import LLRData
 from lir.lrsystems.binary_lrsystem import BinaryLRSystem
@@ -17,18 +18,21 @@ def test_registry_items_available(synthesized_llrs_with_interval: LLRData, tmp_p
     """Test all registered output aggregation methods."""
 
     # define a mapping from output aggregator to initialization arguments
-    args_by_method = {
-        'output.csv': {'columns': []},
-        'output.case_llr': {
-            'case_llr_data': {
-                'method': 'synthesized_normal_binary',
-                'seed': 42,
-                'h1': {'mean': 1, 'std': 1, 'size': 10},
-                'h2': {'mean': -1, 'std': 1, 'size': 10},
-            }
+    args_by_method = ConfigValue.wrap(
+        [],
+        {
+            'output.metrics_csv': {'columns': []},
+            'output.case_llr': {
+                'case_llr_data': {
+                    'method': 'synthesized_normal_binary',
+                    'seed': 42,
+                    'h1': {'mean': 1, 'std': 1, 'size': 10},
+                    'h2': {'mean': -1, 'std': 1, 'size': 10},
+                }
+            },
+            'output.by_category': {'category_field': 'my_category_field', 'output': 'pav'},
         },
-        'output.by_category': {'category_field': 'my_category_field', 'output': 'pav'},
-    }
+    )
 
     synthesized_llrs_with_interval = synthesized_llrs_with_interval.replace(
         my_category_field=np.array(['a'] * len(synthesized_llrs_with_interval))
@@ -40,8 +44,8 @@ def test_registry_items_available(synthesized_llrs_with_interval: LLRData, tmp_p
         if name.startswith('output.'):
             # create the object
             parser = registry.get(name, default_config_parser=GenericConfigParser)
-            args = ConfigValue.wrap([], args_by_method.get(name, {}))
-            obj = parser.parse(args, tmp_path_factory.mktemp('output'))
+            output_dir = tmp_path_factory.mktemp('output')
+            obj = parser.parse(args_by_method.pop(name, default={}), output_dir)  # type: ignore
             assert isinstance(obj, Aggregation), (
                 f'registry item is not an instance of `Aggregation`: {name}; found: {type(obj)}'
             )
@@ -49,19 +53,22 @@ def test_registry_items_available(synthesized_llrs_with_interval: LLRData, tmp_p
             # generate output
             try:
                 lrsystem = BinaryLRSystem(pipeline=Identity())
-                with tempfile.TemporaryDirectory() as experiment_output_dir:
-                    obj.report(
-                        AggregationData(
-                            llrdata=synthesized_llrs_with_interval,
-                            lrsystem=lrsystem,
-                            parameters={},
-                            run_name='',
-                            experiment_output_dir=Path(experiment_output_dir),
-                            run_output_dir=Path(experiment_output_dir),
-                        )
+                obj.report(
+                    AggregationData(
+                        llrdata=synthesized_llrs_with_interval,
+                        lrsystem=lrsystem,
+                        parameters={},
+                        run_name='',
+                        experiment_output_dir=output_dir,
+                        run_output_dir=output_dir,
                     )
+                )
             except Exception as _:
                 pytest.fail(f'generating output failed for registry item `{name}`')
+            finally:
+                obj.close()
+
+    check_is_empty(args_by_method)
 
 
 def test_subset_aggregation():

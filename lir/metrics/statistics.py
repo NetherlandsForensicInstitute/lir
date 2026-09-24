@@ -38,7 +38,7 @@ def count_h1(llr_data: LLRData) -> float:
     float
         The number of instances or pairs of instances.
     """
-    return np.sum(check_type(np.ndarray, llr_data.labels) == 1)
+    return np.sum(check_type(np.ndarray, llr_data.hypothesis) == 1)
 
 
 def count_h2(llr_data: LLRData) -> float:

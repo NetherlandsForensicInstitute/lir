@@ -1,4 +1,3 @@
-import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -92,41 +91,38 @@ def test_substitution(desc, yaml: str, expected_options: list[Any]):
     assert param.options() == expected_options, desc
 
 
-def test_folder_hyperparameter():
-    tmp_folder = tempfile.mkdtemp()
+def test_folder_hyperparameter(tmp_path: Path):
     for i in range(3):
-        (Path(tmp_folder) / f'file_{i}.txt').touch()
-    folders = FolderHyperparameter('name', str(tmp_folder))
+        (tmp_path / f'file_{i}.txt').touch()
+    folders = FolderHyperparameter('name', str(tmp_path))
 
     # We expect three files in the temporary folder
     assert len(folders.options()) == 3
 
     # Check that the names correspond to the created files
-    expected_names = {str(search_path(Path(tmp_folder) / f'file_{i}.txt')) for i in range(3)}
+    expected_names = {str(search_path(tmp_path / f'file_{i}.txt')) for i in range(3)}
     actual_names = {list(opt.substitutions.values())[0] for opt in folders.options()}
     assert actual_names == expected_names
 
 
-def test_folder_hyperparameter_ignore():
-    tmp_folder = tempfile.mkdtemp()
+def test_folder_hyperparameter_ignore(tmp_path: Path):
     for i in range(3):
-        (Path(tmp_folder) / f'file_{i}.txt').touch()
-    folders = FolderHyperparameter('name', str(tmp_folder), ignore_files=['*1.txt'])
+        (tmp_path / f'file_{i}.txt').touch()
+    folders = FolderHyperparameter('name', str(tmp_path), ignore_files=['*1.txt'])
 
     # We expect two files in the temporary folder, as file_1.txt is ignored.
     assert len(folders.options()) == 2
 
     # Check that the names correspond to the created files
-    expected_names = {str(search_path(Path(tmp_folder) / f'file_{i}.txt')) for i in (0, 2)}
+    expected_names = {str(search_path(tmp_path / f'file_{i}.txt')) for i in (0, 2)}
     actual_names = {list(opt.substitutions.values())[0] for opt in folders.options()}
     assert actual_names == expected_names
 
 
-def test_folder_hyperparameter_value_errors():
+def test_folder_hyperparameter_value_errors(tmp_path: Path):
     with pytest.raises(ValueError):
         FolderHyperparameter('name', '/path/does/not/exist')
 
-    tmp_folder = tempfile.mkdtemp()
-    FolderHyperparameter('name', tmp_folder)
+    FolderHyperparameter('name', str(tmp_path))
     with pytest.raises(ValueError):
-        FolderHyperparameter('name', tmp_folder).options()
+        FolderHyperparameter('name', str(tmp_path)).options()

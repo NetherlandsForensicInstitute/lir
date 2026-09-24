@@ -1,6 +1,5 @@
 import os
 import shutil
-import tempfile
 from collections.abc import Iterable
 from pathlib import Path
 
@@ -51,12 +50,10 @@ def _get_directory_listing(path: Path) -> Iterable[str]:
 
 
 @pytest.mark.parametrize('yaml_file', EXAMPLE_FILES)
-def test_run_examples(yaml_file: Path):
+def test_run_examples(yaml_file: Path, tmp_path: Path):
     yaml_override_file = Path('tests/examples_yaml_resources') / yaml_file.name
     listing_file = yaml_override_file.with_suffix('.lst')
-
-    with tempfile.TemporaryDirectory() as tmpdir:
-        run_yaml(yaml_file, yaml_override_file, listing_file, Path(tmpdir))
+    run_yaml(yaml_file, yaml_override_file, listing_file, tmp_path)
 
 
 def run_yaml(yaml_file: Path, yaml_override_file: Path | None, listing_file: Path, output_path: Path):

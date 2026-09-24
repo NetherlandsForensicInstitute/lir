@@ -5,6 +5,7 @@ from pathlib import Path
 
 import confidence
 import pytest
+import requests_cache
 
 from lir.main import initialize_experiments
 from lir.util import validate_yaml
@@ -53,7 +54,9 @@ def _get_directory_listing(path: Path) -> Iterable[str]:
 def test_run_examples(yaml_file: Path, tmp_path: Path):
     yaml_override_file = Path('tests/examples_yaml_resources') / yaml_file.name
     listing_file = yaml_override_file.with_suffix('.lst')
-    run_yaml(yaml_file, yaml_override_file, listing_file, tmp_path)
+
+    with requests_cache.enabled(backend='filesystem', cache_name='tests/examples_yaml_resources/cache'):
+        run_yaml(yaml_file, yaml_override_file, listing_file, tmp_path)
 
 
 def run_yaml(yaml_file: Path, yaml_override_file: Path | None, listing_file: Path, output_path: Path):

@@ -1,9 +1,5 @@
 output_path: output/${timestamp}_train_only
 
-http_cache:
-  backend: filesystem
-  cache_name: .cache/http
-
 experiments:
   - name: my_experiment               # Choose a descriptive name for the experiment.
     strategy: train_only              # no evaluation, just training.
@@ -16,7 +12,7 @@ experiments:
       ignore_columns:                 # We don't need these columns at the moment, so we can safely ignore them.
         - id
         - Piece
-      cache: ${http_cache}
+      #use_cache: True                # <-- uncomment this line to cache HTTP responses
 
     # The LR system section: this is where the action is.
     lrsystem:

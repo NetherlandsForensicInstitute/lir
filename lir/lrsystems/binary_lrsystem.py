@@ -45,7 +45,7 @@ class BinaryLRSystem(LRSystem):
         """
         Use LR system to calculate the LLR data from the instance data.
 
-        Applies the specific source LR system on a set of instances, optionally with corresponding labels, and returns a
+        Applies the LR system on a set of instances, optionally with corresponding labels, and returns a
         representation of the calculated LLR data through the `LLRData` tuple.
 
         The returned set of LLRs has the same order as the set of input instances, and the returned labels are unchanged

@@ -3,7 +3,8 @@
 # See also: documentation of `lir.registry`
 
 lrsystem_architectures:
-  specific_source: lir.config.lrsystem_architectures.specific_source
+  binary_lrsystem: lir.config.lrsystem_architectures.binary_lrsystem
+  specific_source: lir.config.lrsystem_architectures.binary_lrsystem
   score_based: lir.config.lrsystem_architectures.score_based
   two_level: lir.config.lrsystem_architectures.two_level
 
@@ -100,66 +101,66 @@ output:
     class: lir.aggregation.plot_each.PlotEachConfigParser
     args:
       method: lir.plotting.pav
-      default_plot_name: 'PAV'
+      default_plot_name: "PAV"
 
   ece:
     class: lir.aggregation.plot_each.PlotEachConfigParser
     args:
       method: lir.plotting.expected_calibration_error.plot_ece
-      default_plot_name: 'ECE'
+      default_plot_name: "ECE"
 
   lr_histogram:
     class: lir.aggregation.plot_each.PlotEachConfigParser
     args:
       method: lir.plotting.lr_histogram
-      default_plot_name: 'LR_Histogram'
+      default_plot_name: "LR_Histogram"
 
   llr_interval:
     class: lir.aggregation.plot_each.PlotEachConfigParser
     args:
       method: lir.plotting.llr_interval
-      default_plot_name: 'LLR_Interval'
+      default_plot_name: "LLR_Interval"
 
   llr_overestimation:
     class: lir.aggregation.plot_each.PlotEachConfigParser
     args:
       method: lir.algorithms.llr_overestimation.plot_llr_overestimation
-      default_plot_name: 'LLR_Overestimation'
+      default_plot_name: "LLR_Overestimation"
 
   nbe:
     class: lir.aggregation.plot_each.PlotEachConfigParser
     args:
       method: lir.plotting.nbe
-      default_plot_name: 'NBE'
+      default_plot_name: "NBE"
 
   invariance_delta_function:
     class: lir.aggregation.plot_each.PlotEachConfigParser
     args:
       method: lir.algorithms.invariance_bounds.plot_invariance_delta_functions
-      default_plot_name: 'Invariance_Delta_Functions'
+      default_plot_name: "Invariance_Delta_Functions"
 
   tippett:
     class: lir.aggregation.plot_each.PlotEachConfigParser
     args:
       method: lir.plotting.tippett
-      default_plot_name: 'Tippett'
+      default_plot_name: "Tippett"
 
   score_to_llr:
     class: lir.aggregation.plot_each.PlotEachConfigParser
     args:
       method: lir.plotting.score_to_llr
-      default_plot_name: 'Score_LLR'
+      default_plot_name: "Score_LLR"
 
   score_distribution:
     class: lir.aggregation.plot_each.PlotEachConfigParser
     args:
       method: lir.plotting.score_distribution
-      default_plot_name: 'Score_Distribution'
+      default_plot_name: "Score_Distribution"
 
   save_model: lir.persistence.SaveModel
   case_llr: lir.aggregation.case_llr_csv.parse
   by_category: lir.aggregation.subset.subset_aggregation
-  
+
 pairing:
   instance_pairs: lir.transform.pairing.InstancePairing
   source_pairs: lir.transform.pairing.SourcePairing

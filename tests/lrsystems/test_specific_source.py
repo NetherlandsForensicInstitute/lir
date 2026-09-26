@@ -11,8 +11,8 @@ from lir.lrsystems.binary_lrsystem import BinaryLRSystem
 from lir.transform.pipeline import Pipeline
 
 
-def test_specific_source_pipeline(synthesized_normal_data: FeatureData):
-    """Check that a simple Specific Source LR system can be utilized through a SKLearn pipeline."""
+def test_binary_lrsystem_pipeline(synthesized_normal_data: FeatureData):
+    """Check that a simple BinaryLRSystem can be utilized through a SKLearn pipeline."""
     splitter = TrainTestSplit(0.2, seed=0)
 
     steps = [
@@ -21,15 +21,15 @@ def test_specific_source_pipeline(synthesized_normal_data: FeatureData):
 
     pipeline = Pipeline(steps)
 
-    specific_source_system = BinaryLRSystem(pipeline)
+    binary_lrsystem_system = BinaryLRSystem(pipeline)
     data_train, data_test = next(iter(splitter.apply(synthesized_normal_data)))
-    specific_source_system.fit(data_train)
-    llr_data: LLRData = specific_source_system.apply(data_test)
+    binary_lrsystem_system.fit(data_train)
+    llr_data: LLRData = binary_lrsystem_system.apply(data_test)
 
     scores = llr_data.features
     hypothesis = llr_data.hypothesis
 
-    golden_master_path = Path('tests/golden_master/test_specific_source_pipeline')
+    golden_master_path = Path('tests/golden_master/test_binary_lrsystem_pipeline')
     if not Path(f'{golden_master_path}.npz').exists():
         np.savez(golden_master_path, scores=scores, hypothesis=hypothesis)
         pytest.skip(f'Written {golden_master_path}, skipped test for this run.')

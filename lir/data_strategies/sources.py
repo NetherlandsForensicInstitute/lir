@@ -5,6 +5,7 @@ import numpy as np
 from sklearn.model_selection import GroupKFold, GroupShuffleSplit
 
 from lir import DataStrategy, InstanceData
+from lir.config.base import ConfigAttribute
 from lir.util import check_type
 
 
@@ -52,6 +53,18 @@ class SourcesTrainTestSplit(DataStrategy):
     seed : int | None
         Random seed controlling stochastic behaviour for reproducible results.
     """
+
+    __config_attributes__ = [
+        ConfigAttribute(
+            name='test_size', type=float, required=True, description='Size of the test set in the range of 0 to 1.'
+        ),
+        ConfigAttribute(
+            name='seed',
+            type=int,
+            required=False,
+            description='Random seed controlling stochastic behaviour for reproducible results.',
+        ),
+    ]
 
     def __init__(self, test_size: float | int, seed: int | None = None):
         self.test_size = test_size
@@ -112,6 +125,21 @@ class SourcesCrossValidation(DataStrategy):
         fold. Otherwise, this parameter has no effect. Pass an int for reproducible output across multiple function
         calls.
     """
+
+    __config_attributes__ = [
+        ConfigAttribute(
+            name='folds', type=int, required=True, description='Number of cross-validation folds to generate.'
+        ),
+        ConfigAttribute(
+            name='shuffle', type=bool, required=False, description='Randomize the groups before splitting into batches.'
+        ),
+        ConfigAttribute(
+            name='random_state',
+            type=int,
+            required=False,
+            description='Random seed controlling stochastic behaviour for reproducible results.',
+        ),
+    ]
 
     def __init__(self, folds: int, shuffle: bool | None = None, random_state: int | None = None):
         if shuffle is None:

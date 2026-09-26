@@ -2,8 +2,9 @@ import numpy as np
 import pytest
 
 from lir import DataStrategy
+from lir.data.models import get_instances_by_category
 from lir.data_strategies import SourcesCrossValidation, SourcesTrainTestSplit
-from lir.data_strategies.sources import LeaveOneSourceOut
+from lir.data_strategies.sources import LeaveOneSourceOut, LeaveTwoSourcesOut
 from lir.datasets.synthesized_normal_multiclass import (
     SynthesizedDimension,
     SynthesizedNormalMulticlassData,
@@ -12,7 +13,9 @@ from lir.datasets.synthesized_normal_multiclass import (
 
 def test_multiclass_train_test_split():
     dimensions = [SynthesizedDimension(0, 1, 0.2), SynthesizedDimension(0, 1, 0.2)]
-    data = SynthesizedNormalMulticlassData(population_size=100, sources_size=3, seed=0, dimensions=dimensions)
+    data = SynthesizedNormalMulticlassData(
+        num_source_ids=100, num_sources_per_source_id=3, seed=0, dimensions=dimensions
+    )
     strategy = SourcesTrainTestSplit(test_size=0.5, seed=0)
     instances = data.get_instances()
     for data_train, data_test in strategy.apply(instances):
@@ -25,7 +28,7 @@ def test_multiclass_train_test_split():
 def test_multiclass_train_test_split_seed():
     dimensions = [SynthesizedDimension(0, 1, 0.2), SynthesizedDimension(0, 1, 0.2)]
     data = SynthesizedNormalMulticlassData(
-        population_size=100, sources_size=3, seed=0, dimensions=dimensions
+        num_source_ids=100, num_sources_per_source_id=3, seed=0, dimensions=dimensions
     ).get_instances()
 
     ref_strategy = SourcesTrainTestSplit(test_size=0.5, seed=0)
@@ -59,7 +62,9 @@ def test_multiclass_train_test_split_seed():
 )
 def test_reproducibility(strategy: DataStrategy):
     dimensions = [SynthesizedDimension(0, 1, 0.2), SynthesizedDimension(0, 1, 0.2)]
-    data = SynthesizedNormalMulticlassData(population_size=100, sources_size=3, seed=0, dimensions=dimensions)
+    data = SynthesizedNormalMulticlassData(
+        num_source_ids=100, num_sources_per_source_id=3, seed=0, dimensions=dimensions
+    )
     instances = data.get_instances()
     splits1 = list(strategy.apply(instances))
     splits2 = list(strategy.apply(instances))
@@ -69,7 +74,21 @@ def test_reproducibility(strategy: DataStrategy):
 
 def test_leave_one_out():
     dimensions = [SynthesizedDimension(0, 1, 0.2), SynthesizedDimension(0, 1, 0.2)]
-    data = SynthesizedNormalMulticlassData(population_size=100, sources_size=3, seed=0, dimensions=dimensions)
+    data = SynthesizedNormalMulticlassData(
+        num_source_ids=100, num_sources_per_source_id=3, seed=0, dimensions=dimensions
+    )
     instances = data.get_instances()
     strategy = LeaveOneSourceOut()
     assert len(list(strategy.apply(instances))) == 100
+
+
+def test_leave_two_source_out():
+    dimensions = [SynthesizedDimension(0, 1, 0.2), SynthesizedDimension(0, 1, 0.2)]
+    data = SynthesizedNormalMulticlassData(
+        num_source_ids=10, num_sources_per_source_id=4, seed=0, dimensions=dimensions
+    )
+    instances = data.get_instances()
+    assert len(list(get_instances_by_category(instances, 'source_ids'))) == 10
+
+    strategy = LeaveTwoSourcesOut()
+    assert len(list(strategy.apply(instances))) == 45

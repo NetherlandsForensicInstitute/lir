@@ -1,4 +1,5 @@
 from collections.abc import Iterator
+from itertools import combinations
 
 import numpy as np
 from sklearn.model_selection import GroupKFold, GroupShuffleSplit
@@ -15,9 +16,9 @@ def is_valid_input(instances: InstanceData) -> bool:  # numpydoc ignore=PR01,RT0
 def _check_input(instances: InstanceData) -> None:  # numpydoc ignore=PR01
     """Raise an error unless source id based strategies can be applied."""
     if instances.source_ids is None:
-        raise ValueError('unable to perform leave-one-source-out without a `source_ids` attribute')
+        raise ValueError('unable to perform leave-n-source-out without a `source_ids` attribute')
     if len(instances.source_ids.shape) != 1:
-        raise ValueError('leave-one-source-out: attribute `source_ids` should be one-dimensional')
+        raise ValueError('leave-n-source-out: attribute `source_ids` should be one-dimensional')
 
 
 class SourcesTrainTestSplit(DataStrategy):
@@ -170,3 +171,43 @@ class LeaveOneSourceOut(DataStrategy):
         sources = np.unique(check_type(np.ndarray, instances.source_ids))
         for source in sources:
             yield instances[instances.source_ids != source], instances[instances.source_ids == source]
+
+
+class LeaveTwoSourcesOut(DataStrategy):
+    """
+    Leave-two-out by source id.
+
+    This data strategy uses the ``source_ids`` attribute and assigns two sources at a time to the test set, and the
+    others to the training set. There will be as many splits as there are combinations of two sources, so that each
+    combination of two sources will be in the test set once.
+
+    In an experiment setup file, the data strategy can be referenced as:
+
+    .. code-block:: yaml
+
+        splits:
+          strategy: leave_two_source_out
+    """
+
+    def apply[DataType: InstanceData](self, instances: DataType) -> Iterator[tuple[DataType, DataType]]:
+        """
+        Perform leave-two-source-out.
+
+        Parameters
+        ----------
+        instances : InstanceDataType
+            Input instances with a `source_ids` attribute.
+
+        Returns
+        -------
+        Iterator[tuple[DataType, DataType]]
+            An iterator over train/test splits.
+        """
+        _check_input(instances)
+
+        sources = np.unique(check_type(np.ndarray, instances.source_ids))
+        for source1, source2 in combinations(sources, 2):
+            yield (
+                instances[(instances.source_ids != source1) & (instances.source_ids != source2)],
+                instances[(instances.source_ids == source1) | (instances.source_ids == source2)],
+            )

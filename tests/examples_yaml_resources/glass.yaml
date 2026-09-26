@@ -1,3 +1,4 @@
 # Override specific values from the example YAML for testing convenience
 
-data.provider.cache_dir: tests/examples_yaml_resources/cache
+# disable cache in experiment setup; cache is configured in unit test
+data.provider.cache_dir:

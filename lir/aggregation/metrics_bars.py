@@ -11,7 +11,7 @@ from matplotlib import pyplot as plt
 
 from lir import LLRData
 from lir.aggregation.base import Aggregation, AggregationData
-from lir.config.base import ConfigValue, YamlParseError, check_is_empty, config_parser, pop_field
+from lir.config.base import ConfigAttribute, ConfigValue, YamlParseError, check_is_empty, config_parser, pop_field
 from lir.config.metrics import parse_individual_metric
 
 
@@ -160,7 +160,13 @@ class MetricsBarPlot(Aggregation):
         plt.close(fig)
 
 
-@config_parser
+@config_parser(
+    attributes=[
+        ConfigAttribute('path', str, required=False),
+        ConfigAttribute('metrics', list[str], required=True),
+        ConfigAttribute('plot_params', dict, required=False),
+    ]
+)
 def parse(config: ConfigValue, output_dir: Path) -> MetricsBarPlot:
     """
     Parse a configuration section into an :class:`~lir.aggregation.metrics_bars.MetricsBarPlot`.

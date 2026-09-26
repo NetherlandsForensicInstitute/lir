@@ -7,7 +7,7 @@ import optuna
 
 from lir.aggregation import Aggregation
 from lir.config.aggregation import parse_aggregations
-from lir.config.base import ConfigValue, check_is_empty, config_parser, pop_field
+from lir.config.base import ConfigAttribute, ConfigValue, check_is_empty, config_parser, pop_field
 from lir.config.lrsystem_architectures import augment_config
 from lir.config.metrics import parse_individual_metric
 from lir.config.substitution import (
@@ -19,6 +19,7 @@ from lir.config.substitution import (
 from lir.data.models import LLRData
 from lir.experiments import Experiment
 from lir.experiments.execution import DataConfig, LRSystemConfig, run_lrsystem
+from lir.metrics import MetricType
 
 
 class OptunaExperiment(Experiment):
@@ -131,7 +132,16 @@ class OptunaExperiment(Experiment):
                 output.close()
 
 
-@config_parser
+@config_parser(
+    attributes=[
+        ConfigAttribute('data', DataConfig, required=True),
+        ConfigAttribute('lrsystem', LRSystemConfig | None, required=True),
+        ConfigAttribute('lrsystem_parameters', list[Hyperparameter], required=True),
+        ConfigAttribute('output', list[Aggregation], required=False),
+        ConfigAttribute('primary_metric', MetricType, required=True),
+        ConfigAttribute('n_trials', int, required=True),
+    ]
+)
 def parse_optuna_experiment(config: ConfigValue, output_dir: Path) -> OptunaExperiment:
     """
     Get experiment for an Optuna optimisation strategy.

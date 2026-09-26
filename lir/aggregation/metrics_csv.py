@@ -7,8 +7,9 @@ from pathlib import Path
 from typing import IO, Any
 
 from lir.aggregation.base import Aggregation, AggregationData
-from lir.config.base import ConfigValue, YamlParseError, check_is_empty, config_parser, pop_field
+from lir.config.base import ConfigAttribute, ConfigValue, YamlParseError, check_is_empty, config_parser, pop_field
 from lir.config.metrics import parse_individual_metric
+from lir.metrics import MetricType
 
 
 LOG = logging.getLogger(__name__)
@@ -78,7 +79,11 @@ class WriteMetricsToCsv(Aggregation):
             self._file.close()
 
 
-@config_parser
+@config_parser(
+    attributes=[
+        ConfigAttribute('columns', list[MetricType], required=True),
+    ]
+)
 def parse(config: ConfigValue, output_dir: Path) -> WriteMetricsToCsv:
     """
     Corresponding registry function to leverage CSV Writer class to write results to disk.

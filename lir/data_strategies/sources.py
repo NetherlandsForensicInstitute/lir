@@ -173,7 +173,7 @@ class LeaveOneSourceOut(DataStrategy):
             yield instances[instances.source_ids != source], instances[instances.source_ids == source]
 
 
-class LeaveTwoSourceOut(DataStrategy):
+class LeaveTwoSourcesOut(DataStrategy):
     """
     Leave-two-out by source id.
 

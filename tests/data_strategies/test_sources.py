@@ -4,7 +4,7 @@ import pytest
 from lir import DataStrategy
 from lir.data.models import get_instances_by_category
 from lir.data_strategies import SourcesCrossValidation, SourcesTrainTestSplit
-from lir.data_strategies.sources import LeaveOneSourceOut, LeaveTwoSourceOut
+from lir.data_strategies.sources import LeaveOneSourceOut, LeaveTwoSourcesOut
 from lir.datasets.synthesized_normal_multiclass import (
     SynthesizedDimension,
     SynthesizedNormalMulticlassData,
@@ -90,5 +90,5 @@ def test_leave_two_source_out():
     instances = data.get_instances()
     assert len(list(get_instances_by_category(instances, 'source_ids'))) == 10
 
-    strategy = LeaveTwoSourceOut()
+    strategy = LeaveTwoSourcesOut()
     assert len(list(strategy.apply(instances))) == 45

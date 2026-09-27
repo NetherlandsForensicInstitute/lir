@@ -96,7 +96,7 @@ class SourcesCrossValidation(DataStrategy):
         splits:
           strategy: cross_validation_sources
           folds: 5
-          random_state: 0
+          seed: 0
 
     This class internally uses :class:`~sklearn.model_selection.GroupKFold`.
 
@@ -106,18 +106,17 @@ class SourcesCrossValidation(DataStrategy):
         Number of cross-validation folds to generate.
     shuffle : bool | None
         Whether to shuffle the groups before splitting into batches. Note that the samples within each split will not be
-        shuffled. If `None`, the data will be shuffled if `random_state` is not `None`.
-    random_state : int | None
-        When shuffle is True, random_state affects the ordering of the indices, which controls the randomness of each
+        shuffled. If `None`, the data will be shuffled if `seed` is not `None`.
+    seed : int | None
+        When shuffle is True, seed affects the ordering of the indices, which controls the randomness of each
         fold. Otherwise, this parameter has no effect. Pass an int for reproducible output across multiple function
         calls.
     """
 
-    def __init__(self, folds: int, shuffle: bool | None = None, random_state: int | None = None):
+    def __init__(self, folds: int, shuffle: bool | None = None, seed: int | None = None):
         if shuffle is None:
-            shuffle = random_state is not None
-        random_state = random_state
-        self._kf = GroupKFold(n_splits=folds, shuffle=shuffle, random_state=random_state)
+            shuffle = seed is not None
+        self._kf = GroupKFold(n_splits=folds, shuffle=shuffle, random_state=seed)
 
     def apply[DataType: InstanceData](self, instances: DataType) -> Iterator[tuple[DataType, DataType]]:
         """

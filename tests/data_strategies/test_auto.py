@@ -22,7 +22,7 @@ from lir.datasets.synthesized_normal_multiclass import SynthesizedDimension, Syn
             SynthesizedNormalBinaryData(
                 SynthesizedNormalData(-1, 1, 10), SynthesizedNormalData(1, 1, 10)
             ).get_instances(),
-            AutoTrainTestSplit(random_state=0),
+            AutoTrainTestSplit(seed=0),
             TrainTestSplit(test_size=0.5, seed=0),
         ),
         (
@@ -39,7 +39,7 @@ from lir.datasets.synthesized_normal_multiclass import SynthesizedDimension, Syn
                 seed=0,
                 dimensions=[SynthesizedDimension(0, 1, 0.2), SynthesizedDimension(0, 1, 0.2)],
             ).get_instances(),
-            AutoTrainTestSplit(random_state=0),
+            AutoTrainTestSplit(seed=0),
             SourcesTrainTestSplit(test_size=0.5, seed=0),
         ),
         (

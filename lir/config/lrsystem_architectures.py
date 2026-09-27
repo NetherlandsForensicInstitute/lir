@@ -78,12 +78,12 @@ class ParsedLRSystem(LRSystem):
 
 
 @config_parser
-def specific_source(config: ConfigValue, output_dir: Path) -> BinaryLRSystem:
+def binary_lrsystem(config: ConfigValue, output_dir: Path) -> BinaryLRSystem:
     """
     Construct a specific-source LR system based on the provided configuration.
 
-    The `specific_source` function name corresponds with the naming scheme in the
-    registry. See for example: `lir.config.lrsystems.specific_source`.
+    The `binary_lrsystem` function name corresponds with the naming scheme in the
+    registry. See for example: `lir.config.lrsystems.binary_lrsystem`.
 
     The config can contain:
      - modules: module configuration for the pipeline

@@ -3,7 +3,8 @@
 # See also: documentation of `lir.registry`
 
 lrsystem_architectures:
-  specific_source: lir.config.lrsystem_architectures.specific_source
+  binary_lrsystem: lir.config.lrsystem_architectures.binary_lrsystem
+  specific_source: lir.config.lrsystem_architectures.binary_lrsystem
   score_based: lir.config.lrsystem_architectures.score_based
   two_level: lir.config.lrsystem_architectures.two_level
 

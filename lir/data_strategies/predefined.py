@@ -36,7 +36,7 @@ class PredefinedTrainTestSplit(DataStrategy):
 
     .. code-block:: yaml
 
-        train_test_splits:
+        splits:
             strategy: predefined_train_test
     """
 
@@ -46,7 +46,7 @@ class PredefinedTrainTestSplit(DataStrategy):
 
         Parameters
         ----------
-        instances : InstanceDataType
+        instances : DataType
             Input instances to be processed by this method.
 
         Yields
@@ -66,17 +66,17 @@ class PredefinedCrossValidation(DataStrategy):
     Split data into cross validation folds based on predefined assignments.
 
     This strategy expects a ``fold_assignments`` field in the data. For example, the
-    ``parse_features_from_csv_file`` with the ``fold_assignment_column`` specifeid will create this field.
+    ``parse_features_from_csv_file`` with the ``fold_assignment_column`` specified will create this field.
 
-    Each instance should be labelled according in which test set (fold) the instance should be. This means that care
-    should be taken to use the correct number of folds (= number of unique labels) and wether the folds are based on
+    Each instance should be labelled according to which test set (fold) the instance should be. This means that care
+    should be taken to use the correct number of folds (= number of unique labels) and whether the folds are based on
     sources or on instances.
 
     In the experiment setup file, this split strategy can be referenced as follows:
 
     .. code-block:: yaml
 
-        cross_validation_splits:
+        splits:
             strategy: predefined_cross_validation
     """
 

@@ -116,7 +116,7 @@ def elub(
     eu_negative_left = llr_threshold[(llr_threshold <= 0) & (eu_ratio < 1)]
     eu_negative_right = llr_threshold[(llr_threshold >= 0) & (eu_ratio < 1)]
 
-    # use the most conservative LLR as bound (closest to 0, assuming all are on the expected size of 0)
+    # use the most conservative LLR as bound (closest to 0, assuming all are on the expected side of 0)
     lower_bound = np.max(eu_negative_left + step_size, initial=np.min(llr_threshold))
     upper_bound = np.min(eu_negative_right - step_size, initial=np.max(llr_threshold))
 
@@ -176,7 +176,7 @@ class ELUBBounder(LLRBounder):
     P. Vergeer, A. van Es, A. de Jongh, I. Alberink, R.D. Stoel,
     Numerical likelihood ratios outputted by LR systems are often based on extrapolation:
     when to stop extrapolating?
-    Sci. Justics 56 (2016) 482-491.
+    Sci. Justice 56 (2016) 482-491.
 
     # MATLAB code from the authors:
 

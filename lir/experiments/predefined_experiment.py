@@ -33,8 +33,8 @@ class PredefinedExperiment(Experiment):
 
     Multiple runs can be defined using the ``grid`` strategy, with additional configuration options:
 
-    - use the ``hyperparameters`` field to configure which hyperparameters can be varied;
-    - use the ``dataparameters`` field to configure which dataparameters can be varied;
+    - use the ``lrsystem_parameters`` field to configure which hyperparameters can be varied;
+    - use the ``data_parameters`` field to configure which data parameters can be varied;
     - set the ``enable_parallelization`` field to ``True`` to enable parallelization.
 
     For more guidance and working examples, see: :doc:`/experiment-setup`.
@@ -178,7 +178,7 @@ def _create_configs_from_hyperparameters(
     Generates a Cartesian product of all hyperparameter options and creates a configuration
     for each combination by substituting the values into the baseline configuration.
 
-    This is used for both dataparameters and lrsystem hyperparameters in grid search.
+    This is used for both data parameters and lrsystem hyperparameters in grid search.
 
     Parameters
     ----------
@@ -193,7 +193,7 @@ def _create_configs_from_hyperparameters(
 
     Returns
     -------
-    list[tuple[ConfigValue, dict[str, Any]]]
+    Iterator[tuple[ConfigValue, dict[str, Any]]]
         Augmented configurations and applied substitutions.
     """
     baseline_config, parameters = parse_config_with_parameters(config, output_dir, baseline_field, parameters_field)

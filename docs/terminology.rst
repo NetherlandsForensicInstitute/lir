@@ -4,17 +4,17 @@ Terminology
 - **lr system**: An algorithm to calculate likelihood ratios.
 - **lr system architecture**: A way to compose an LR system, e.g. feature based, specific source, etc.
 - **source**: Something that can generate instances, or where instances are derived from. This is typically the level
-  relevant to the forensic question and the hypotheses. Examples**: a glass pane, a person whose face may be pictured, a
+  relevant to the forensic question and the hypotheses. **Examples**: a glass pane, a person whose face may be pictured, a
   speaker of the voice, a shoe.
 - **instance**: A single manifestation of a source. Traces and reference samples are instances of a source. In a feature
-  based system, instances are used as the building blocks for modeling hypotheses. Examples**: the measurements on a
+  based system, instances are used as the building blocks for modeling hypotheses. **Examples**: the measurements on a
   fragment of glass, a face image, a voice recording, a shoe print.
 - **pair**: A combination of two groups of instances. The instance groups may be same source or different source. In a
   common-source system, pairs are used as the building blocks for modeling hypotheses. A group may contain only one
   instance, or it may consist of multiple repeated measurements of the same source that are compared as one unit.
 - **data set**: A set of instances and/or pairs, labeled or unlabeled for source or for hypothesis, that may be used for calculating likelihood ratios.
 - **label**: The ground-truth value for an instance or a pair. The label may be on the level of the hypothesis (e.g. H1,
-  H2), or on the level of the source (e.g. Speaker1, Speaker2). Hypothesis labels may derived from source labels.
+  H2), or on the level of the source (e.g. Speaker1, Speaker2). Hypothesis labels may be derived from source labels.
   In case of a labeled data set, the ground truth (i.e. labels) is known. This will typically be the data that is used
   for development, analysis or validation of an LR system. Unlabeled data has no ground truth. This will typically be
   the application data, or case data in a forensic setting.

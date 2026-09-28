@@ -4,9 +4,9 @@ Substitution module.
 This module provides utility functions for replacing or modifying components of
 an LR Benchmark pipeline at runtime. Typical use cases include comparing
 different modelling approaches (e.g. logistic regression versus support vector
-machines) or optimising system lrsystem_parameters.
+machines) or optimising system parameters.
 
-For example, the ``parameters`` section of the ``model_selection_run`` benchmark
+For example, the ``lrsystem_parameters`` section of the ``model_selection_run`` benchmark
 can define a path (``comparing.clf``) to be modified using the options listed in
 the ``values`` field. Each option updates the ``comparing`` component in the LR
 system configuration used by the pipeline.
@@ -71,7 +71,7 @@ class HyperparameterOption(NamedTuple):
 
 class Hyperparameter(ABC):
     """
-    Base class for all lrsystem_parameters.
+    Base class for all hyperparameters.
 
     Parameters
     ----------
@@ -287,14 +287,14 @@ def parse_clustered(spec: ConfigValue, output_path: Path) -> CategoricalHyperpar
     """
     Parse the configuration section of a clustered hyperparameter.
 
-    A cluster is a set of lrsystem_parameters that are changed at the same time.
+    A cluster is a set of parameters that are changed at the same time.
 
     A clustered hyperparameter has the following fields in a YAML configuration:
     - name (optional): a descriptive name for this hyperparameter
     - options: a list of options
 
-    Each option has the following options:
-    - name: a descriptive name for this option
+    Each option has the following fields:
+    - option_name: a descriptive name for this option
     - substitutions: a list of substitutions, with a `path` and `value` field each
 
     Parameters
@@ -617,7 +617,7 @@ def parse_config_with_parameters(
 
 def _assign(struct: ConfigValue, path: list[str], value: Any) -> None:
     """
-    Assign a new value to a path within an hierarchical `dict` structure.
+    Assign a new value to a path within a hierarchical `dict` structure.
 
     Parameters
     ----------

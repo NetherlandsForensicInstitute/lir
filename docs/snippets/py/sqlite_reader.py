@@ -18,4 +18,4 @@ def read_from_sqlite3(path: str) -> FeatureData:
             features.append([row[1], row[2]])
 
     db.close()
-    return FeatureData(hypthesis=np.array(hypotheses), features=np.array(features))
+    return FeatureData(hypothesis=np.array(hypotheses), features=np.array(features))

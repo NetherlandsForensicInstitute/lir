@@ -1,6 +1,6 @@
 # optuna.yaml -- finetuning lrsystem_parameters using `optuna`
 #
-# This example uses the `optuna` experiment strategy to demonstrate how to find the best hypoerparameter values for an
+# This example uses the `optuna` experiment strategy to demonstrate how to find the best hyperparameter values for an
 # LR system.
 
 output_path: output/${timestamp}_optuna_example
@@ -59,7 +59,7 @@ experiments:
     #
     # - low -- the low end of the search domain
     # - high -- the high end of the search domain
-    # - log -- sample for the log space if True; otherwise sample from linear space
+    # - log -- sample from the log space if True; otherwise sample from linear space
     #
     lrsystem_parameters:
       - path: comparing.steps.calibration.bandwidth

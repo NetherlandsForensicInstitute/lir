@@ -167,7 +167,7 @@ Now it is time to calculate LLRs...
 Split the data into a training set and a test set
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Above, we training the system and calculated LLRs using the same pairs, which is **not** a sound experimental setup!
+Above, we trained the system and calculated LLRs using the same pairs, which is **not** a sound experimental setup!
 In an experiment we work with :mod:`lir.data_strategies`. This can be a simple train/test split, or a more
 advanced configuration such as cross-validation.
 

@@ -289,7 +289,7 @@ def run_multiple(
     output_base_dir : Path
         The base directory where the results may be written.
     lrsystem_configs : list[LRSystemConfig]
-        A list of LR system configuraitons.
+        A list of LR system configurations.
     data_configs : list[DataConfig]
         A list of dataset configurations.
 
@@ -381,7 +381,7 @@ def parallellize_runs(
         else:
             # there is a single data setup and multiple lrsystems --> iterate over lrsystems
 
-            # we need no more chunks that the number of processes (the default chunk size is 1)
+            # we need no more chunks than the number of processes (the default chunk size is 1)
             chunksize = math.ceil(len(lrsystem_configs) / n_processes)
 
             LOG.debug(f'spawning {len(lrsystem_configs)} tasks to do a total of {n_runs} runs in chunks of {chunksize}')

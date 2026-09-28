@@ -227,7 +227,7 @@ class KDECalibrator(Transformer):
         instances = check_type(FeatureData, instances)
         instances = instances.replace_as(LLRData)
 
-        # initiate LRs_output
+        # initialize LRs_output
         llrs_output = np.empty(instances.llrs.shape)
         p0 = np.empty(instances.llrs.shape)
         p1 = np.empty(instances.llrs.shape)

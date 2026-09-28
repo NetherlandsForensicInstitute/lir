@@ -15,26 +15,26 @@ LOG = logging.getLogger(__name__)
 
 def _validate_hypothesis(hypothesis: np.ndarray | None) -> np.ndarray | None:
     """
-    Check if labels have the correct shape.
+    Check if hypothesis values have the correct shape.
 
     Parameters
     ----------
     hypothesis : np.ndarray | None
-        Value passed via ``labels``.
+        Value passed via ``hypothesis``.
 
     Returns
     -------
     np.ndarray | None
-        Validated label array, or ``None`` when labels are absent.
+        Validated hypothesis array, or ``None`` when hypothesis values are absent.
     """
     if hypothesis is None:
         return hypothesis
 
     if len(hypothesis.shape) != 1:
-        raise ValueError(f'labels must be 1-dimensional; shape: {hypothesis.shape}')
+        raise ValueError(f'hypothesis must be 1-dimensional; shape: {hypothesis.shape}')
 
     if np.any((hypothesis != 0) & (hypothesis != 1)):
-        raise ValueError(f'labels allowed: 0, 1; found: {np.unique(hypothesis)}')
+        raise ValueError(f'hypothesis values allowed: 0, 1; found: {np.unique(hypothesis)}')
 
     return hypothesis
 
@@ -92,8 +92,8 @@ class InstanceData(BaseModel, ABC):
 
     Attributes
     ----------
-    - `labels`: The hypothesis labels of the instances, as a 1-dimensional array with one value per instance, can be
-      either 0 or 1.
+    - `hypothesis`: The hypothesis labels of the instances, as a 1-dimensional array with one value per instance, can
+      be either 0 or 1.
     - `source_ids`: The ids of all sources that contributed to the instances. Each instance is from a single source,
       except if it is a pair, in which case it has two sources. The source ids is either a 1-dimensional array or a
       2-dimensional array with two columns.
@@ -158,7 +158,7 @@ class InstanceData(BaseModel, ABC):
             and self.hypothesis.shape[0] != self.source_ids.shape[0]
         ):
             raise ValueError(
-                f'dimensions of labels and source_ids do not match; "'
+                f'dimensions of labels and source_ids do not match; '
                 f'{self.hypothesis.shape[0]} != {self.source_ids.shape[0]}'
             )
 
@@ -377,7 +377,7 @@ class InstanceData(BaseModel, ABC):
                 values = [first_value]
                 for instances in others:
                     if not self.has_same_type(instances):
-                        raise ValueError('instances to concatenate must have the same types and fields')
+                        raise ValueError('instances to combine must have the same types and fields')
                     values.append(getattr(instances, field))
 
                 # apply the function
@@ -538,7 +538,7 @@ class InstanceData(BaseModel, ABC):
 
 def _validate_features(features: np.ndarray) -> np.ndarray:
     """
-    Check if labels have the correct shape.
+    Check if features have the correct shape.
 
     Parameters
     ----------
@@ -591,12 +591,12 @@ class FeatureData(InstanceData):
         """
         if self.hypothesis is not None and self.hypothesis.shape[0] != self.features.shape[0]:
             raise ValueError(
-                f'dimensions of labels and features do not match; \
-                 {self.hypothesis.shape[0]} != {self.features.shape[0]}'
+                f'dimensions of labels and features do not match; '
+                f'{self.hypothesis.shape[0]} != {self.features.shape[0]}'
             )
         if self.source_ids is not None and self.source_ids.shape[0] != self.features.shape[0]:
             raise ValueError(
-                f'dimensions of source_ids and features do not match; "'
+                f'dimensions of source_ids and features do not match; '
                 f'{self.source_ids.shape[0]} != {self.features.shape[0]}'
             )
         return self
@@ -856,7 +856,7 @@ class LLRData(FeatureData):
         if self.model_extra is None or source_key not in self.model_extra:
             raise ValueError(
                 f'{source_key} are not available for this instance. '
-                f'Add the method `save_features` with parameter `save_as: {source_key}` to your pipeline.'
+                f'Add the method `save_features` with parameter `save_as: {source_key}` to your pipeline. '
                 f'Currently available sources: {list(self.model_extra.keys()) if self.model_extra else "none"}'
             )
         return self.model_extra[source_key]
@@ -985,7 +985,7 @@ class DataStrategy(ABC):
         Provide iterator to access training and test set.
 
         Returns an iterator over tuples of a training set and a test set. Both the training set and the test
-        is represented by an `InstanceData` object.
+        set are represented by an `InstanceData` object.
 
         Parameters
         ----------

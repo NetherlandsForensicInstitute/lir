@@ -107,7 +107,7 @@ How to read a PAV plot? The example below shows how to interpret the different s
   near the diagonal. In that case, the calibration loss will be close to 0.
 - LLRs that appear **above the diagonal** are increased after optimization, and the original LLRs were therefore
   **biased towards H2**.
-- LLRs thet appear **below the diagonal** are decreased after optimization, and the original LLRs were therefore
+- LLRs that appear **below the diagonal** are decreased after optimization, and the original LLRs were therefore
   **biased towards H1**.
 
 Another way to look at it, is to distinguish between overestimated and underestimated LLRs.

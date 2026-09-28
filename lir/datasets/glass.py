@@ -18,7 +18,7 @@ GLASS_DATA_URL = 'https://raw.githubusercontent.com/NetherlandsForensicInstitute
 
 class GlassData(DataProvider):
     """
-    LA-ICP-MS measurements of elemental concentration from floatglass.
+    LA-ICP-MS measurements of elemental concentration from float glass.
 
     The measurements are from reference glass from casework, collected in the past 10 years or so.
     For more info on the DataProvider, see: https://github.com/NetherlandsForensicInstitute/elemental_composition_glass
@@ -27,7 +27,7 @@ class GlassData(DataProvider):
     set of five instances per source.
 
     If ``cache_dir`` is not None, data are retrieved from the web as needed and stored
-    locally for later use. The class :class:`requests_cache.CachedSesson` from the requests library handles caching.
+    locally for later use. The class :class:`requests_cache.CachedSession` from the requests library handles caching.
 
     Parameters
     ----------
@@ -111,7 +111,7 @@ class GlassData(DataProvider):
 
         The source_ids are unique identifiers of a glass particle. Each particle is from a different reference window.
         An instance is a replicate measurement on a glass particle. Source ids are prefixed with the role assignment,
-        e.g. 'test-123' and 'train-123'. The ids 'test-123' and 'train-123' refer to different glass particles (and
+        e.g. 'test123' and 'train123'. The ids 'test123' and 'train123' refer to different glass particles (and
         therefore different reference windows).
 
         The instance_ids values of an instance are a concatenation of the filename and a row number,

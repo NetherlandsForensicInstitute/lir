@@ -22,7 +22,7 @@ class DataSetup:
     """
     Data setup, consisting of three components: a data provider, a filter, and a strategy.
 
-    The filter is a :class:`~lir.Transformer` that supports calling the `apply()` method without priorly calling
+    The filter is a :class:`~lir.Transformer` that supports calling the `apply()` method without first calling
     `fit()`. Unlike in LR system pipelines, this transformer may change the number of instances in the dataset.
 
     Parameters
@@ -90,10 +90,10 @@ def parse_data_strategy(cfg: ConfigValue, output_path: Path) -> DataStrategy:
     Instantiate specific implementation of `DataStrategy` as configured.
 
     The `strategy` field is parsed, which is expected to refer to a name in
-    the registry. See for example `lir.data_setup.binary_cross_validation`
-    or `lir.data_setup.binary_train_test_split`.
+    the registry. See for example :class:`lir.data_strategies.CrossValidation`
+    or :class:`lir.data_strategies.TrainTestSplit`.
 
-    Data setup configuration is provided under the `data_setup` key.
+    Data strategy configuration is provided under the `data.splits` key.
 
     Parameters
     ----------
@@ -151,7 +151,7 @@ def data_provider[ReturnType: InstanceData](func: Callable[[ConfigValue, Path], 
 
     Parameters
     ----------
-    func : Callable[[ContextAwareDict, Path], Any]
+    func : Callable[[ConfigValue, Path], ReturnType]
         Function to wrap as a config parser.
 
     Returns
@@ -185,10 +185,10 @@ def parse_data_provider(cfg: ConfigValue, output_path: Path) -> DataProvider:
     Instantiate specific implementation of `DataProvider` as configured.
 
     The `method` field is parsed, which is expected to refer to a name in
-    the registry. See for example `lir.config.data_sources.synthesized_normal_binary`
-    or `lir.config.data_sources.synthesized_normal_multiclass`.
+    the registry. See for example `lir.datasets.synthesized_normal_binary`
+    or `lir.datasets.synthesized_normal_multiclass`.
 
-    Data sources are provided under the `data_sources` key.
+    Data sources are provided under the `data_providers` key.
 
     Parameters
     ----------

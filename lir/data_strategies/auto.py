@@ -27,7 +27,7 @@ class AutoTrainTestSplit(DataStrategy):
 
         splits:
           strategy: auto_train_test
-          test_size: 0.2  # the (hold-out) test set  is 20% of the data
+          test_size: 0.2  # the (hold-out) test set is 20% of the data
           seed: 42  # optional
 
     Parameters
@@ -79,7 +79,7 @@ class AutoCrossValidation(DataStrategy):
 
     This splitter attempts to find a suitable splitting strategy for the input data. Candidate strategies are:
 
-    - :class:`~lir.data_strategies.PredefinedCrossValidation`, if the dataset has role assignments;
+    - :class:`~lir.data_strategies.PredefinedCrossValidation`, if the dataset has fold assignments;
     - :class:`~lir.data_strategies.SourcesCrossValidation`, if the dataset has pairs with source ids (i.e., two source
       ids per pair);
     - :class:`~lir.data_strategies.CrossValidation`, if the instances in the dataset have hypothesis labels.
@@ -105,7 +105,7 @@ class AutoCrossValidation(DataStrategy):
         Whether to shuffle the groups before splitting into batches. If `None`, the data will be shuffled if
         `random_state` is not `None`.
     random_state : int | None
-        Random seed controlling stochastic behavior for reproducible results.
+        Random seed controlling stochastic behaviour for reproducible results.
     """
 
     def __init__(self, folds: int, shuffle: bool | None = None, random_state: int | None = None):
@@ -119,7 +119,7 @@ class AutoCrossValidation(DataStrategy):
 
         Parameters
         ----------
-        instances : InstanceDataType
+        instances : DataType
             Input instances to be processed by this method.
 
         Returns

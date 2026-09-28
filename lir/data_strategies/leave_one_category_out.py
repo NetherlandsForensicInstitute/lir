@@ -43,7 +43,7 @@ class LeaveOneCategoryOut(DataStrategy):
 
         Parameters
         ----------
-        instances : InstanceDataType
+        instances : DataType
             Input instances.
 
         Yields

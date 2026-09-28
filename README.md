@@ -60,7 +60,7 @@ lir --list-registry
 ```
 
 ### Setting up the validation schema
-A schema that validates lir configuration `yaml` files is available, namely `lir.schema.json`. This schema can be used to validate a specific `yaml` file by using
+A schema that validates lir configuration `yaml` files is available, namely `lir/resources/config-schema.json`. This schema can be used to validate a specific `yaml` file by using
 ```commandline
 lir --validate your_experiment.yaml
 ```
@@ -77,12 +77,12 @@ To specify the schema in PyCharm, see [this official documentation entry](https:
    1. Add
       ```json
         "yaml.schemas": {
-            "lir.schema.json": "*.yaml"
+            "lir/resources/config-schema.json": "*.yaml"
         }
       ```
       to `settings.json`.
     
-    2. Open settings (`ctrl` + `,`), find the `Yaml: Schemas` settings and create an entry with `lir.schema.json` as item and `*.yaml` as value.
+    2. Open settings (`ctrl` + `,`), find the `Yaml: Schemas` settings and create an entry with `lir/resources/config-schema.json` as item and `*.yaml` as value.
 
 
 Contributing / Development

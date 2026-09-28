@@ -181,7 +181,7 @@ In that case, the train/test roles are assigned by the data provider, and we can
 
 So far, we assumed that the instances are paired by the LR system. The data provider delivers source ids, but not
 hypothesis labels. If the instances are not paired, and the data provider delivers hypothesis labels, we also need to
-choose our splitting strategy differently. Applicable data strategies are ``train_test`` and ``cross_validation``. See
+choose our splitting strategy differently. Applicable data strategies are ``train_test_instances`` and ``cross_validation_instances``. See
 the setup file ``specific_source_evaluation.yaml`` in the ``examples`` folder for a fully working example.
 
 

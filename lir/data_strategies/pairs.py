@@ -47,7 +47,7 @@ class PairsTrainTestSplit(DataStrategy):
 
         Parameters
         ----------
-        instances : InstanceDataType
+        instances : DataType
             Input instances to be processed by this method.
 
         Yields

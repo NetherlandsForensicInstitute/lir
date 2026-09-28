@@ -113,12 +113,12 @@ You can contribute in several ways:
 
 ### 5. Documentation
 
-Please update the documentation when adding or modifying functionality. The documentation is build from the ReStructured Text (RST) files
+Please update the documentation when adding or modifying functionality. The documentation is built from the ReStructured Text (RST) files
 in the `docs/` directory using [Sphinx](https://www.sphinx-doc.org/) and published to GitHub pages. The latest version of
 the documentation resides at https://netherlandsforensicinstitute.github.io/lir/.
 
 For each Pull Request, please include any relevant updates in the `docs/*.rst` files (preferably in a separate commit). The
-documentation will be rebuild upon merging the work into the `main` branch, as part of a GitHub workflow.
+documentation will be rebuilt upon merging the work into the `main` branch, as part of a GitHub workflow.
 
 The documentation can be generated locally (for inspection) as follows:
  - `pdm run generate-docs` to regenerate all documentation

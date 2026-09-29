@@ -9,7 +9,7 @@ from lir.data.models import DataProvider, FeatureData
 
 class SynthesizedNormalData:
     """
-    Representation of normally distributed data, leveraging a number generator.
+    Representation of normally distributed data, leveraging a random number generator.
 
     The generated data can be used to generate normally distributed data and is useful
     for debugging purposes or gaining insight in the effect of varying parts within the

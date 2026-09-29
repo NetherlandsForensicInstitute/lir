@@ -144,9 +144,9 @@ To use this configuration parser, simply replace ``CosineSimilarity`` in the con
 Step 5: register your component (optional)
 ------------------------------------------
 
-Registring a component creates an alias. When registered, the component can be referenced by its alias (e.g.
+Registering a component creates an alias. When registered, the component can be referenced by its alias (e.g.
 ``cosim``) instead of its full module path (i.e. ``cosine_similarity.CosineSimilarity`` or
-``cosine_similarity.parse_cosine_similarity``).
+``cosine_similarity.parse_cosine_similarity_config``).
 
 To register a component, create a file named ``registry.yaml`` in the current directory.
 See the `documentation`_ of ``confidence.load_name`` for the list of locations where registry files are searched.

@@ -36,8 +36,8 @@ class TrainTestSplit(DataStrategy):
     .. code-block:: yaml
 
         splits:
-          strategy: train_test
-          test_size: 0.2  # the (hold-out) test set  is 20% of the data
+          strategy: train_test_instances
+          test_size: 0.2  # the (hold-out) test set is 20% of the data
           seed: 42  # optional
 
     Parameters
@@ -89,7 +89,7 @@ class CrossValidation(DataStrategy):
     .. code-block:: yaml
 
         splits:
-          strategy: cross_validation
+          strategy: cross_validation_instances
           folds: 5  # the number k in k-fold cross-validation
           seed: 42  # optional
 
@@ -98,7 +98,7 @@ class CrossValidation(DataStrategy):
     folds : int
         Number of cross-validation folds to generate.
     shuffle : bool | None
-        Whether to shuffle the data splitting. If `None`, the data will be shuffled if `random_state` is not `None`.
+        Whether to shuffle the data splitting. If `None`, the data will be shuffled if `seed` is not `None`.
     seed : int | None
         Random seed controlling stochastic behaviour for reproducible results.
     """
@@ -114,7 +114,7 @@ class CrossValidation(DataStrategy):
 
         Parameters
         ----------
-        instances : InstanceDataType
+        instances : DataType
             Input instances to be processed by this method.
         """
         kf = KFold(n_splits=self.folds, shuffle=self.shuffle, random_state=self.seed)

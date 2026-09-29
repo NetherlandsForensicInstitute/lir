@@ -54,9 +54,9 @@ class ConfigValue:
     ``ConfigValue`` object, this is represented as context path ``["level1", "value1"]`` and value
     ``{ "a": 1, "b": 2 }``.
 
-    If the ``value`` is dictionary, its values are itself also ``ConfigValue`` objects. They can be obtained using the
-    helper function :meth:`~lir.config.pop_field`. When all is done, :meth:`~lir.config.check_empty` will check that
-    all values have been read.
+    If the ``value`` is a dictionary, its values are themselves also ``ConfigValue`` objects. They can be obtained
+    using the helper function :meth:`~lir.config.pop_field`. When all is done, :meth:`~lir.config.check_is_empty` will
+    check that all values have been read.
 
     Some examples for the use of ``ConfigValue``:
 
@@ -83,7 +83,7 @@ class ConfigValue:
         print(f'The value of root is: {root_config.value}')
         print(f'The unwrapped value of root is: {root_config.unwrap()}')
 
-    Example for the use of :meth:`~lir.config.check_empty`:
+    Example for the use of :meth:`~lir.config.check_is_empty`:
 
     .. jupyter-execute::
 
@@ -343,7 +343,7 @@ class ConfigValue:
         ----------
         context : list[str]
             Current YAML path.
-        value : Sequence | Mapping | float | int | str | None
+        value : Sequence | Mapping | int | float | bool | str | None
             Value to expand recursively.
 
         Returns
@@ -689,7 +689,7 @@ def pop_field(
     unwrap : bool | None, optional
         Strip the popped value of its :class:`~lir.config.base.ConfigValue` wrapper before returning it. Defaults to
         ``True`` if either ``validate`` or ``validate_type`` or ``default`` is provided, except if the default is a
-        ``Config|Value``. Defaults to ``False`` otherwise.
+        ``ConfigValue``. Defaults to ``False`` otherwise.
 
     Returns
     -------

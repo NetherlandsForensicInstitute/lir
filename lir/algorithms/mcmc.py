@@ -94,7 +94,7 @@ class McmcLLRModel(Transformer):
             self._generate_parameter_plots(self.plot_path)
 
         if self.bounder_factory is not None:
-            # determine the bounds based on the LLRs of the training data, each sample results into an LR-system
+            # determine the bounds based on the LLRs of the training data, each sample results in an LR-system
             logp_h1 = self.model_h1.transform(instances.features)
             logp_h2 = self.model_h2.transform(instances.features)
             llrs = logp_h1 - logp_h2

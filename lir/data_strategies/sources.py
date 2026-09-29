@@ -47,7 +47,7 @@ class SourcesTrainTestSplit(DataStrategy):
     ----------
     test_size : float | int
         Fraction or absolute number of items assigned to the test split. If float, should be between 0.0 and 1.0 and
-        represent the proportion of sources to include inthe test split (rounded up). If int, represents the absolute
+        represent the proportion of sources to include in the test split (rounded up). If int, represents the absolute
         number of test sources.
     seed : int | None
         Random seed controlling stochastic behaviour for reproducible results.
@@ -63,7 +63,7 @@ class SourcesTrainTestSplit(DataStrategy):
 
         Parameters
         ----------
-        instances : InstanceDataType
+        instances : DataType
             Input instances to be processed by this method.
 
         Yields

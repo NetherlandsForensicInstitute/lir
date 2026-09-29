@@ -25,7 +25,7 @@
 output_path: output/${timestamp}_score_based_common_source  # <-- adapt this value to your preference 
 
 # 2. PATH TO DATA AND HOW TO PROCESS IT
-# An example dataset of LA-ICP-MS measurements of elemental concentration from floatglass is provided as a default dataset. For more
+# An example dataset of LA-ICP-MS measurements of elemental concentration from float glass is provided as a default dataset. For more
 # information on the dataset, see: https://github.com/NetherlandsForensicInstitute/elemental_composition_glass
 #
 # This example is only provided to give working default values for the information you need to enter for your own data. 
@@ -130,7 +130,7 @@ my_score_based_lrsystem: &my_score_based_lrsystem         # <-- this is a custom
   # Define the way you want to pair your data.
   # 'instance_pairs' will make a pair by pairing all instances exhaustively. It will produce n*(n-1)/2 pairs. For other pairing types and explanations, see HERE
     method: instance_pairs
-  # To avoid a large disbalance between the number of pairs for each of the categories same-source and different-source, it is possible to add limits.
+  # To avoid a large imbalance between the number of pairs for each of the categories same-source and different-source, it is possible to add limits.
   # "Use same_source_limit: N" or "different_source_limit: N" for an absolute maximum on the number of pairs.
   # Alternatively, you can limit the number of different source-pairs as a multiple of the number of same-source pairs, using ratio_limit.
   # Use 'None' or delete the line to not use a limit

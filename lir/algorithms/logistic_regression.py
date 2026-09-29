@@ -204,8 +204,8 @@ class FourParameterLogisticCalibrator(Transformer):
             self.model = self._four_pl_model
             bounds.extend([(10**-10, 1 - 10**-10), (10**-10, np.inf)])
             LOG.debug(
-                'There were -Inf lrs for the same source samples and Inf lrs for the different source samples '
-                ', therefore a 4pl calibrator was fitted.'
+                'There were -Inf lrs for the same source samples and Inf lrs for the different source samples, '
+                'therefore a 4pl calibrator was fitted.'
             )
         elif estimate_c:
             # then define 3-PL logistic model. Set 'd' to 0

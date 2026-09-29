@@ -71,7 +71,7 @@ class ConfigParserLoader(ABC, Iterable):
     """
     Base class for a configuration parser loader.
 
-    A configuration parser is able to interpret a dictionary-style configuration loaded from a YAML. Sub classes are
+    A configuration parser is able to interpret a dictionary-style configuration loaded from a YAML. Subclasses are
     expected to implement the `get()` method.
     """
 
@@ -279,11 +279,11 @@ class YamlRegistry(ConfigParserLoader):
     """
     Representation of a YAML-based registry.
 
-    The YAML registry is organized into sections as the lop=level key names. Each section can have registry entries. A
+    The YAML registry is organized into sections as the top-level key names. Each section can have registry entries. A
     registry entry is a configuration parser. It can be used in an experiment setup to materialize a component and
     initialize it with its configuration.
 
-    This registry parses this YAML mapping and provides access to registry antries through a ``get()`` method.
+    This registry parses this YAML mapping and provides access to registry entries through a ``get()`` method.
 
     A registry entry can take the following arguments:
 
@@ -348,7 +348,7 @@ class YamlRegistry(ConfigParserLoader):
 
         parser_init_args = spec.get('args', {})
         if not isinstance(parser_init_args, Mapping):
-            raise ValueError(f'dictionary expected as argument `args` to `{key}`; found; {type(parser_init_args)}')
+            raise ValueError(f'dictionary expected as argument `args` to `{key}`; found: {type(parser_init_args)}')
 
         return ConfigParserLoader._get_config_parser(cls, default_config_parser, args=parser_init_args)
 

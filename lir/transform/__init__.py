@@ -275,7 +275,7 @@ class TransformerWrapper(Transformer):
     """
     Base class for a transformer wrapper.
 
-    This class is derived from `AdvancedTransformer` and has a default implementation of all functions
+    This class is derived from `Transformer` and has a default implementation of all functions
     by forwarding the call to the wrapped transformer. A subclass may add or change functionality
     by overriding functions.
 

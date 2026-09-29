@@ -64,7 +64,7 @@ class TwoLevelModelNormalKDE:
         X np.ndarray of measurements, rows are sources/repetitions, columns are features
         y np 1d-array of labels. For each source a unique identifier (label). Repetitions get the same label.
 
-        Construct the necessary matrices/scores/etc based on test data (X) so that we can predict a score later on.
+        Construct the necessary matrices/scores/etc based on training data (X) so that we can predict a score later on.
         Store any calculated parameters in `self`.
 
         Parameters
@@ -95,13 +95,13 @@ class TwoLevelModelNormalKDE:
         """
         Transform the input data using the fitted model.
 
-        Predict odds scores, making use of the parameters constructed during `self.fit()` (which should
-        now be stored in `self`).
+        Predict odds scores, making use of the parameters constructed during `self.fit_on_unpaired_instances()` (which
+        should now be stored in `self`).
 
         X_trace measurements of trace object. np.ndarray of shape (instances, repetitions_trace, features)
         X_ref measurements of reference object. np.ndarray of shape (instances, repetitions_ref, features)
 
-        returns: odds of same source / different source: one-dimensional np.ndarray with one element per instance
+        returns: log10 LLR scores: one-dimensional np.ndarray with one element per instance
 
         Parameters
         ----------
@@ -116,7 +116,7 @@ class TwoLevelModelNormalKDE:
             Log10 LR scores for each trace/reference pair.
         """
         if not self.model_fitted:
-            raise RuntimeError('fit() must be called before transform()')
+            raise RuntimeError('fit_on_unpaired_instances() must be called before transform()')
         log10_lr_score = self._predict_log10_lr_score(X_trace, X_ref)
         return log10_lr_score
 
@@ -130,7 +130,7 @@ class TwoLevelModelNormalKDE:
         X_trace measurements of trace object. np.ndarray of shape (instances, repetitions_trace, features)
         X_ref measurements of reference object. np.ndarray of shape (instances, repetitions_ref, features)
 
-        returns: probabilities for same source and different source: np.ndarray with shape (instances, 2)
+        returns: probabilities for different source and same source: np.ndarray with shape (instances, 2)
 
         Parameters
         ----------
@@ -461,7 +461,7 @@ class TwoLevelModelNormalKDE:
         covars_trace_update = T_hn + mean_within_covars / n_trace
         covars_trace_update_inv = np.linalg.inv(covars_trace_update)
 
-        # TODO covars_trace redundant to return?
+        # TODO covars_ref redundant to return?
         return (
             covars_trace,
             covars_trace_update,
@@ -638,7 +638,7 @@ class TwoLevelModelNormalKDE:
             Final base-10 logarithm LR score.
         """
         if self.n_sources is None:
-            raise RuntimeError('model state is invalid: n_sources is not set; call fit() first')
+            raise RuntimeError('model state is invalid: n_sources is not set; call fit_on_unpaired_instances() first')
         # calculate ln LR_score and change base to 10log
         ln_LR_score = (
             np.log(self.n_sources)

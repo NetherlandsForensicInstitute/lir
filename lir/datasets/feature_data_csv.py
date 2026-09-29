@@ -27,7 +27,7 @@ class ParseError(ValueError):
     """
     Exception to be raised on parse errors.
 
-    This happens when an input file is malformatted or contains invalid input.
+    This happens when an input file is malformed or contains invalid input.
     """
 
 
@@ -137,7 +137,7 @@ class FeatureDataCsvParser(DataProvider):
     source_id_column : str | list[str] | None
         Column name(s) containing source identifiers (each source has a unique string identifier).
     hypothesis_column : str | None
-        Column name containing hypothesis labels (value 0 for H2 or 1 for H2).
+        Column name containing hypothesis labels (value 0 for H2 or 1 for H1).
     label_column : str | None
         Deprecated alias for `hypothesis_column`.
     feature_columns : str | list[str] | None
@@ -238,7 +238,9 @@ class FeatureDataCsvParser(DataProvider):
                 stacklevel=2,
             )
             if hypothesis_column:
-                raise ValueError('`label_column` and `hypothesis_column` are used; please use only `hypothesis_column`')
+                raise ValueError(
+                    '`label_column` and `hypothesis_column` are both used; please use only `hypothesis_column`'
+                )
             hypothesis_column = label_column
 
         if hypothesis_column:
@@ -397,7 +399,7 @@ def _parse_extra_fields(config: ConfigValue) -> list[ExtraField]:
 @config_parser
 def feature_data_csv_http_parser(config: ConfigValue, output_dir: Path) -> FeatureDataCsvParser:
     """
-    Initialize the CSV parser that reads data from a stream.
+    Initialize the CSV parser that reads data from a URL.
 
     Arguments:
     - use_cache: boolean (optional, default False, unless ``cache`` is provided) indicating whether to cache retrieved
@@ -418,8 +420,8 @@ def feature_data_csv_http_parser(config: ConfigValue, output_dir: Path) -> Featu
 
     Returns
     -------
-    FeatureDataCsvHttpParser
-        FeatureData object parsed from the source.
+    FeatureDataCsvParser
+        CSV parser configured to read data from the URL given in the configuration.
     """
     cache_config = pop_field(config, 'cache', default={}, unwrap=True, validate_type=dict)
     use_cache = pop_field(config, 'use_cache', default=cache_config is not None, validate_type=bool)
@@ -445,7 +447,7 @@ def feature_data_csv_http_parser(config: ConfigValue, output_dir: Path) -> Featu
 @config_parser
 def feature_data_csv_file_parser(config: ConfigValue, output_dir: Path) -> FeatureDataCsvParser:
     """
-    Initialize the CSV parser that reads data from a stream.
+    Initialize the CSV parser that reads data from a file.
 
     Parameters
     ----------
@@ -456,8 +458,8 @@ def feature_data_csv_file_parser(config: ConfigValue, output_dir: Path) -> Featu
 
     Returns
     -------
-    FeatureDataCsvFileParser
-        FeatureData object parsed from the source.
+    FeatureDataCsvParser
+        CSV parser configured to read data from the file given in the configuration.
     """
     file = Path(pop_field(config, 'file', validate=Path))
     extra_fields = _parse_extra_fields(config)

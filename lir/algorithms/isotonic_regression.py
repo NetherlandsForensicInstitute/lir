@@ -12,7 +12,7 @@ from lir.util import check_type, probability_to_logodds
 
 class IsotonicRegression(sklearn.isotonic.IsotonicRegression):
     """
-    Wrap SKlearn implementation to support infinite values.
+    Wrap sklearn implementation to support infinite values.
 
     Sklearn implementation IsotonicRegression throws an error when values are Inf or -Inf when in fact
     IsotonicRegression can handle infinite values. This wrapper around the sklearn implementation of IsotonicRegression

@@ -20,7 +20,7 @@ def plot_llr_overestimation(
 
     The LLR-overestimation is defined as the log-10 of the ratio between
         (1) the system LRs; the outputs of the LR-system, and
-        (2) the empirical LRs; the ratio's between the relative frequencies of the H1-LLRs and H2-LLRs.
+        (2) the empirical LRs; the ratios between the relative frequencies of the H1-LLRs and H2-LLRs.
 
     See documentation on :func:`calc_llr_overestimation` for more details on the LLR-overestimation.
 
@@ -236,7 +236,7 @@ def calc_fiducial_density_functions(
     # Ensure no probabilities below 0 or above 1 in the cdfs
     cdfs_extended_grid[cdfs_extended_grid < 0] = 0
     cdfs_extended_grid[cdfs_extended_grid > 1] = 1
-    # Calculate pdfs (1st derivative) or cdfs (no derivative) , while also performing smoothing/noise-reduction;
+    # Calculate pdfs (1st derivative) or cdfs (no derivative), while also performing smoothing/noise-reduction;
     # This uses a low-order Savitzky-Golay filter, which requires an equally spaced grid.
     window_length = 2 * half_window + 1
     if df_type == 'pdf':

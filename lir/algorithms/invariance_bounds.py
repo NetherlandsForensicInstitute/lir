@@ -163,7 +163,7 @@ def calculate_invariance_delta_functions(llrdata: LLRData, llr_threshold: np.nda
     success_h1 = np.sum(llr_h1_2d >= llr_threshold, axis=0)
     success_h2 = np.sum(llr_h2_2d >= llr_threshold, axis=0)
 
-    # use the as inputs for calculations of the probabilities
+    # use these as inputs for calculations of the probabilities
     prob_h1_above_grid = (success_h1 + beta_parameter) / (len(llrs_h1) + 2 * beta_parameter)
     prob_h2_above_grid = (success_h2 + beta_parameter) / (len(llrs_h2) + 2 * beta_parameter)
     prob_h1_below_grid = 1 - prob_h1_above_grid

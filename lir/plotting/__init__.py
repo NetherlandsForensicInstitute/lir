@@ -38,7 +38,7 @@ class Canvas:
     ax : Axes
         Matplotlib axes instance used by wrapped plotting methods.
     ece : Callable[..., Any]
-        Method to plot expected calibration error (ECE) on this canvas.
+        Method to plot empirical cross-entropy (ECE) on this canvas.
     lr_histogram : Callable[..., Any]
         Method to plot a histogram of likelihood ratios on this canvas.
     nbe : Callable[..., Any]
@@ -228,7 +228,7 @@ def pav(
             neg_inf: bool, pos_inf: bool, axis_lower: float, axis_upper: float
         ) -> tuple[tuple[float, float], list[float], list[str]]:
             # We want a maximum of 10 ticks on the axis. If the range is larger,
-            # we adjust the step_size accordingly. We devide by 9 because the range
+            # we adjust the step_size accordingly. We divide by 9 because the range
             # is inclusive, so 10 ticks means 9 steps.
             step_size = (axis_upper - axis_lower) / 9
 
@@ -319,7 +319,7 @@ def histogram(
     """
     Plot x as a histogram, optionally separated by class labels.
 
-    This class is mainly used as a helper for plotting LLR or score histograms.
+    This function is mainly used as a helper for plotting LLR or score histograms.
 
     Parameters
     ----------
@@ -422,7 +422,7 @@ def llr_interval(ax: Axes, llrdata: LLRData) -> None:
         The LLRData object containing the likelihood ratios and interval scores.
     """
     if not llrdata.has_intervals:
-        raise ValueError('LLRData must contain interval scores to plot Score-LR.')
+        raise ValueError('LLRData must contain interval scores to plot LLR intervals.')
 
     llr_data = llrdata.features
     llr_sorted = np.sort(llr_data, axis=0)
@@ -449,8 +449,8 @@ def score_distribution(
     """
     Plot the distributions of scores calculated by the (fitted) LR system.
 
-    If `weighted` is `True`, the y-axis represents the probability density within the class. Otherwise, they-axis shows
-    the number of instances.
+    If `weighted` is `True`, the y-axis represents the probability density within the class. Otherwise, the y-axis
+    shows the number of instances.
 
     Parameters
     ----------

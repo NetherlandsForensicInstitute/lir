@@ -103,7 +103,7 @@ def parse_module(
     - If it defines a ``transform`` method, or is a subclass of ``Transformer``, it
       is instantiated and returned.
     - If it defines a ``predict_proba`` method, it is instantiated, wrapped in
-      :class:`EstimatorTransformer`, and returned.
+      :class:`BinaryClassifierTransformer`, and returned.
     - Any other callable is wrapped in :class:`FunctionTransformer` and returned.
 
     If ``module_config`` is a string, this function behaves as if a dictionary with a
@@ -111,7 +111,7 @@ def parse_module(
 
     Parameters
     ----------
-    module_config : ConfigValue
+    module_config : ConfigValue | None
         Specification of the module.
     output_dir : Path
         Directory where any output produced by the module is written.

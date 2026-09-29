@@ -80,10 +80,10 @@ class ParsedLRSystem(LRSystem):
 @config_parser
 def binary_lrsystem(config: ConfigValue, output_dir: Path) -> BinaryLRSystem:
     """
-    Construct a specific-source LR system based on the provided configuration.
+    Construct a binary LR system based on the provided configuration.
 
     The `binary_lrsystem` function name corresponds with the naming scheme in the
-    registry. See for example: `lir.config.lrsystems.binary_lrsystem`.
+    registry. See for example: `lir.config.lrsystem_architectures`.
 
     The config can contain:
      - modules: module configuration for the pipeline
@@ -94,14 +94,14 @@ def binary_lrsystem(config: ConfigValue, output_dir: Path) -> BinaryLRSystem:
     Parameters
     ----------
     config : ConfigValue
-        Specific-source architecture configuration.
+        Binary LR system architecture configuration.
     output_dir : Path
         Output directory passed to nested module parsers.
 
     Returns
     -------
     BinaryLRSystem
-        Configured specific-source LR system.
+        Configured binary LR system.
     """
     pipeline = parse_module(pop_field(config, 'modules'), output_dir, default_method=parse_default_pipeline(config))
     check_is_empty(config)
@@ -114,7 +114,7 @@ def score_based(config: ConfigValue, output_dir: Path) -> ScoreBasedSystem:
     Construct a score-based LR system based on the provided configuration.
 
     The `score_based` function name corresponds with the naming scheme in the
-    registry. See for example: `lir.config.lrsystems.score_based`.
+    registry. See for example: `lir.config.lrsystem_architectures`.
 
     The config can contain:
      - preprocessing: module configuration for preprocessing
@@ -152,7 +152,7 @@ def two_level(config: ConfigValue, output_dir: Path) -> TwoLevelSystem:
     Construct a two-level LR system based on the provided configuration.
 
     The `two_level` function name corresponds with the naming scheme in the
-    registry. See for example: `lir.config.lrsystems.two_level`.
+    registry. See for example: `lir.config.lrsystem_architectures`.
 
     The config can contain:
     - preprocessing: module for preprocessing trace and reference data

@@ -13,8 +13,7 @@ Terminology
   common-source system, pairs are used as the building blocks for modeling hypotheses. A group may contain only one
   instance, or it may consist of multiple repeated measurements of the same source that are compared as one unit.
 - **data set**: A set of instances and/or pairs, labeled or unlabeled for source or for hypothesis, that may be used for calculating likelihood ratios.
-- **label**: The ground-truth value for an instance or a pair. The label may be on the level of the hypothesis (e.g. H1,
-  H2), or on the level of the source (e.g. Speaker1, Speaker2). Hypothesis labels may be derived from source labels.
+- **hypothesis (label)**: The ground-truth value for an instance or a pair. Hypothesis labels may be derived from source labels.
   In case of a labeled data set, the ground truth (i.e. labels) is known. This will typically be the data that is used
   for development, analysis or validation of an LR system. Unlabeled data has no ground truth. This will typically be
   the application data, or case data in a forensic setting.

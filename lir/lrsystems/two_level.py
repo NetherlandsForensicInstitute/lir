@@ -95,8 +95,8 @@ class TwoLevelModelNormalKDE:
         """
         Transform the input data using the fitted model.
 
-        Predict odds scores, making use of the parameters constructed during `self.fit_on_unpaired_instances()` (which should
-        now be stored in `self`).
+        Predict odds scores, making use of the parameters constructed during `self.fit_on_unpaired_instances()` (which
+        should now be stored in `self`).
 
         X_trace measurements of trace object. np.ndarray of shape (instances, repetitions_trace, features)
         X_ref measurements of reference object. np.ndarray of shape (instances, repetitions_ref, features)

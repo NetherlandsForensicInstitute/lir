@@ -582,7 +582,7 @@ class FeatureData(InstanceData):
     @model_validator(mode='after')
     def check_matching_shapes(self) -> Self:
         """
-        Validate the shape of the features and the labels are matching.
+        Validate the shape of the features and the hypothesis are matching.
 
         Returns
         -------
@@ -591,7 +591,7 @@ class FeatureData(InstanceData):
         """
         if self.hypothesis is not None and self.hypothesis.shape[0] != self.features.shape[0]:
             raise ValueError(
-                f'dimensions of labels and features do not match; '
+                f'dimensions of hypothesis and features do not match; '
                 f'{self.hypothesis.shape[0]} != {self.features.shape[0]}'
             )
         if self.source_ids is not None and self.source_ids.shape[0] != self.features.shape[0]:

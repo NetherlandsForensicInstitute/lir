@@ -1,3 +1,4 @@
+import warnings
 from collections.abc import Iterator
 
 from lir import DataStrategy, InstanceData
@@ -35,13 +36,23 @@ class AutoTrainTestSplit(DataStrategy):
     test_size : float | int
         Size of the test set. If `float`, should be between 0.0 and 1.0 and represent the proportion of the dataset to
         include in the test split. If `int`, represents the absolute number of test samples. The default value is 0.5.
-    random_state : int | None
+    seed : int | None
         Random seed controlling stochastic behaviour for reproducible results.
+    random_state : int | None
+        Deprecated random state controlling stochastic behavior for reproducible results.
     """
 
-    def __init__(self, test_size: float | int = 0.5, random_state: int | None = None):
+    def __init__(self, test_size: float | int = 0.5, seed: int | None = None, random_state: int | None = None):
+        if random_state is not None:
+            seed = random_state
+            warnings.warn(
+                '`random_state` is deprecated and will be removed in a future version. Use `seed` instead.',
+                DeprecationWarning,
+                stacklevel=2,
+            )
+
         self.test_size = test_size
-        self.random_state = random_state
+        self.seed = seed
 
     def apply[DataType: InstanceData](self, instances: DataType) -> Iterator[tuple[DataType, DataType]]:
         """
@@ -62,11 +73,11 @@ class AutoTrainTestSplit(DataStrategy):
         if predefined.is_valid_input(instances):
             strategy = predefined.PredefinedTrainTestSplit()
         elif pairs.is_valid_input(instances):
-            strategy = pairs.PairsTrainTestSplit(self.test_size, self.random_state)
+            strategy = pairs.PairsTrainTestSplit(self.test_size, self.seed)
         elif sources.is_valid_input(instances):
-            strategy = sources.SourcesTrainTestSplit(self.test_size, self.random_state)
+            strategy = sources.SourcesTrainTestSplit(self.test_size, self.seed)
         elif labels.is_valid_input(instances):
-            strategy = labels.TrainTestSplit(self.test_size, self.random_state)
+            strategy = labels.TrainTestSplit(self.test_size, self.seed)
         else:
             raise ValueError('no valid data strategy found for the input data')
 
@@ -95,7 +106,7 @@ class AutoCrossValidation(DataStrategy):
         splits:
           strategy: auto_cross_validation
           folds: 5  # the number k in k-fold cross-validation
-          random_state: 42  # optional
+          seed: 42  # optional
 
     Parameters
     ----------
@@ -103,15 +114,15 @@ class AutoCrossValidation(DataStrategy):
         Number of cross-validation folds to generate.
     shuffle : bool | None
         Whether to shuffle the groups before splitting into batches. If `None`, the data will be shuffled if
-        `random_state` is not `None`.
-    random_state : int | None
-        Random seed controlling stochastic behaviour for reproducible results.
+        `seed` is not `None`.
+    seed : int | None
+        Random seed controlling stochastic behavior for reproducible results.
     """
 
-    def __init__(self, folds: int, shuffle: bool | None = None, random_state: int | None = None):
+    def __init__(self, folds: int, shuffle: bool | None = None, seed: int | None = None):
         self.folds = folds
-        self.random_state = random_state
-        self.shuffle: bool = shuffle or (shuffle is None and random_state is not None)
+        self.seed = seed
+        self.shuffle: bool = shuffle or (shuffle is None and seed is not None)
 
     def apply[DataType: InstanceData](self, instances: DataType) -> Iterator[tuple[DataType, DataType]]:
         """
@@ -131,11 +142,9 @@ class AutoCrossValidation(DataStrategy):
         if predefined.is_valid_input(instances):
             strategy = predefined.PredefinedCrossValidation()
         elif sources.is_valid_input(instances):
-            strategy = sources.SourcesCrossValidation(
-                folds=self.folds, shuffle=self.shuffle, random_state=self.random_state
-            )
+            strategy = sources.SourcesCrossValidation(folds=self.folds, shuffle=self.shuffle, seed=self.seed)
         elif labels.is_valid_input(instances):
-            strategy = labels.CrossValidation(folds=self.folds, shuffle=self.shuffle, seed=self.random_state)
+            strategy = labels.CrossValidation(folds=self.folds, shuffle=self.shuffle, seed=self.seed)
         else:
             raise ValueError('no valid data strategy found for the input data')
 

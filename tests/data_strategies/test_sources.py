@@ -56,7 +56,7 @@ def test_multiclass_train_test_split_seed():
     [
         SourcesTrainTestSplit(test_size=0.5, seed=0),
         SourcesCrossValidation(folds=20),  # no shuffle
-        SourcesCrossValidation(folds=20, random_state=0),
+        SourcesCrossValidation(folds=20, seed=0),
         LeaveOneSourceOut(),
     ],
 )

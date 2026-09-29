@@ -29,7 +29,7 @@ lrsystem: &lrsystem
         method: element_wise_difference
       clf:
         method: logistic_regression
-        random_state: 0
+        seed: 0
       to_llr:
         method: probabilities_to_logodds
       calibration:

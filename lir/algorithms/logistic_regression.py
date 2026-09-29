@@ -1,7 +1,7 @@
 import logging
 from collections.abc import Callable
 from functools import partial
-from typing import Self
+from typing import Any, Self
 
 import numpy as np
 import sklearn
@@ -36,11 +36,18 @@ class LogisticRegression(BinaryClassifierTransformer):
     output_model_parameters : bool, optional
         Store the attributes ``logit_intercept`` and ``logit_coef`` in the output of ``apply()``, and also send the
         values to the log.
+    seed : int | None
+        Random seed for reproducible results.
     **kwargs : dict
         Keyword arguments forwarded to :class:`~sklearn.linear_model.LogisticRegression`.
     """
 
-    def __init__(self, output_model_parameters: bool = False, **kwargs: dict):
+    def __init__(self, output_model_parameters: bool = False, seed: int | None = None, **kwargs: Any):
+        # LogisticRegression expects 'random_state' as the keyword argument for the random seed, but we want to use
+        # 'seed' for consistency with other classes.
+        if seed is not None:
+            kwargs['random_state'] = seed
+
         super().__init__(sklearn.linear_model.LogisticRegression(**kwargs))
         self.output_model_parameters = output_model_parameters
 

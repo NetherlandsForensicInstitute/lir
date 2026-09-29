@@ -1,3 +1,4 @@
+import warnings
 from collections.abc import Iterator
 
 from lir import DataStrategy, InstanceData
@@ -37,9 +38,19 @@ class AutoTrainTestSplit(DataStrategy):
         include in the test split. If `int`, represents the absolute number of test samples. The default value is 0.5.
     seed : int | None
         Random seed controlling stochastic behaviour for reproducible results.
+    random_state : int | None
+        Deprecated random state controlling stochastic behavior for reproducible results.
     """
 
-    def __init__(self, test_size: float | int = 0.5, seed: int | None = None):
+    def __init__(self, test_size: float | int = 0.5, seed: int | None = None, random_state: int | None = None):
+        if random_state is not None:
+            seed = random_state
+            warnings.warn(
+                '`random_state` is deprecated and will be removed in a future version. Use `seed` instead.',
+                DeprecationWarning,
+                stacklevel=2,
+            )
+
         self.test_size = test_size
         self.seed = seed
 

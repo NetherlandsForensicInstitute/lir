@@ -36,10 +36,10 @@ class LogisticRegression(BinaryClassifierTransformer):
     output_model_parameters : bool, optional
         Store the attributes ``logit_intercept`` and ``logit_coef`` in the output of ``apply()``, and also send the
         values to the log.
-    **kwargs : dict
-        Keyword arguments forwarded to :class:`~sklearn.linear_model.LogisticRegression`.
     seed : int | None
         Random seed for reproducible results.
+    **kwargs : dict
+        Keyword arguments forwarded to :class:`~sklearn.linear_model.LogisticRegression`.
     """
 
     def __init__(self, output_model_parameters: bool = False, seed: int | None = None, **kwargs: Any):

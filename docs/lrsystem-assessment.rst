@@ -82,7 +82,7 @@ How to read a PAV plot? The example below shows how to interpret the different s
     instances = GlassData(cache_dir='glass-data').get_instances()
     train, test = next(PredefinedTrainTestSplit().apply(instances))
 
-    scoring = Pipeline(steps=[('diff', ManhattanDistance()), ('calib', LogitCalibrator(seed=0)), ('elub', ELUBBounder())])
+    scoring = Pipeline(steps=[('diff', ManhattanDistance()), ('calib', LogitCalibrator(random_state=0)), ('elub', ELUBBounder())])
     lrsystem = ScoreBasedSystem(preprocessing_pipeline=as_transformer(StandardScaler()), evaluation_pipeline=scoring, pairing_function=SourcePairing(ratio_limit=1, seed=0))
 
     lrsystem.fit(train)

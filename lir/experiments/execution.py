@@ -333,7 +333,7 @@ def run_multiple_lrsystems(
         LOG.debug(f'process {multiprocessing.current_process()} finished {len(lrsystem_configs)} runs')
 
 
-def parallellize_runs(
+def parallelize_runs(
     output_base_dir: Path, lrsystem_configs: list[LRSystemConfig], data_configs: list[DataConfig]
 ) -> Iterable[AggregationData]:
     """
@@ -354,14 +354,14 @@ def parallellize_runs(
     output_base_dir : Path
         The base directory where the results may be written.
     lrsystem_configs : list[LRSystemConfig]
-        A list of LR system configuraitons.
+        A list of LR system configurations.
     data_configs : list[DataConfig]
         A list of dataset configurations.
 
     Returns
     -------
-    list[AggregationData]
-        A list of results for all runs.
+    Iterable[AggregationData]
+        An iterable over the results for all runs.
     """
     n_runs = len(lrsystem_configs) * len(data_configs)
     n_processes = (os.process_cpu_count() or 1) if hasattr(os, 'process_cpu_count') else 1
@@ -370,6 +370,7 @@ def parallellize_runs(
         # don't bother parallelizing if there is only a single configuration or a single CPU
         LOG.debug('only a single run to be issued: parallelization disabled')
         yield from run_multiple(output_base_dir, lrsystem_configs, data_configs)
+        return
 
     with multiprocessing.Pool(processes=n_processes) as pool:
         if len(data_configs) > 1:

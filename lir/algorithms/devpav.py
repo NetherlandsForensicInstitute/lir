@@ -112,7 +112,7 @@ def _devpavcalculator(lrs: np.ndarray, pav_lrs: np.ndarray, y: np.ndarray) -> fl
 
     # Check for pathological cases where devPAV is infinite or undefined.
     # PAV-transform has a horizontal line from log(X) = -Inf to log(X) = Inf
-    if Y[0] != 0 and Y[-1] != np.inf and X[0] == 0 and X[-1] == np.inf:
+    if Y[0] != 0 and Y[-1] != np.inf and X[-1] == np.inf and X[-1] == np.inf:
         return np.inf
 
     # PAV-transform has a horizontal line to log(X) = -Inf

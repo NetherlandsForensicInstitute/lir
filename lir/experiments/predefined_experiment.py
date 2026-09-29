@@ -13,7 +13,7 @@ from lir.config.lrsystem_architectures import augment_config
 from lir.config.substitution import parse_config_with_parameters
 from lir.experiments import Experiment
 
-from .execution import DataConfig, LRSystemConfig, parallellize_runs, run_multiple
+from .execution import DataConfig, LRSystemConfig, parallelize_runs, run_multiple
 
 
 class PredefinedExperiment(Experiment):
@@ -73,7 +73,7 @@ class PredefinedExperiment(Experiment):
         disable_tqdm = not lir.is_interactive() or number_of_runs == 1
 
         progress = tqdm(desc=self.output_path.name, total=number_of_runs, disable=disable_tqdm)
-        run_func = parallellize_runs if self._enable_parallelization else run_multiple
+        run_func = parallelize_runs if self._enable_parallelization else run_multiple
         for result in run_func(self.output_path, self._lrsystem_configs, self._data_configs):
             for output in self.outputs:
                 output.report(result)

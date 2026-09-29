@@ -147,7 +147,7 @@ def calculate_expected_utility(
 
     Returns
     -------
-    float
+    np.ndarray
         Expected utility values, one element for each threshold LR.
     """
     m_accept = lrs.reshape(len(lrs), 1) > threshold_lrs.reshape(1, len(threshold_lrs))

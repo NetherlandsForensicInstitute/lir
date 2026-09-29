@@ -121,7 +121,7 @@ class InstanceData(BaseModel, ABC):
         Returns
         -------
         np.ndarray
-            Label array guaranteed to contain values for both hypotheses.
+            Hypothesis array, or ``None`` when hypothesis values are absent.
         """
         warnings.warn(
             '`labels` is deprecated and will be removed in a future version; use `hypothesis` instead', stacklevel=2
@@ -136,7 +136,7 @@ class InstanceData(BaseModel, ABC):
         Returns
         -------
         np.ndarray
-            Label array guaranteed to contain values for both hypotheses.
+            Hypothesis array, guaranteed not to be ``None``.
         """
         if self.hypothesis is None:
             raise ValueError('labels not set')

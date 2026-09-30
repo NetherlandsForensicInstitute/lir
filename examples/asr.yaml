@@ -1,0 +1,116 @@
+# asr.yaml - an example LR system evaluation for pre-scored ASR speaker comparison data.
+#
+# The data in `examples/data/speakerscores_10s.csv` consists of pairwise comparison scores that were calculated
+# offline by an ASR-based speaker recognition system. Each row is one comparison (i.e. one pair) between a suspect
+# interview recording and a tapped telephone recording, with the following columns:
+#
+# - `SourceID_a`, `RecordingID_a`, `RecordingType_a`, `duration_a`: the first recording of the pair;
+# - `SourceID_b`, `RecordingID_b`, `RecordingType_b`, `duration_b`: the second recording of the pair;
+# - `truth`: the ground truth label: 1 (same source) or 0 (different source);
+# - `score`: the comparison score for the pair, expressed as a log-likelihood ratio.
+#
+# Because the data are already paired and scored, the LR system does not need to preprocess instance features,
+# construct pairs, or calculate scores. All that is left is to calibrate the pre-computed scores to LLRs and to
+# bound the calibrated values.
+#
+# Usage: pdm run lir examples/asr.yaml
+#
+
+# Output will be written to the folder specified below. There will be a sub folder for each experiment. The sub folders
+# each contain a file named `metrics.csv` which contains the metrics for each LR system that is tested, and for each LR
+# system there is a folder that may contain visualizations and other by products.
+output_path: output/${timestamp}_asr_example
+
+# The data are read from the CSV file in `examples/data`. Each record is a labeled pair with a pre-computed score, so
+# only the `score` column is used as a feature, and the `truth` column provides the hypothesis labels. Pairs are
+# assigned randomly to the training and test sets, stratified by hypothesis.
+data:
+  provider:
+    method: parse_features_from_csv_file
+    file: examples/data/speakerscores_10s.csv
+    hypothesis_column: truth
+    source_id_column:
+      - SourceID_a
+      - SourceID_b
+    feature_columns:
+      - score
+
+  splits:
+    strategy: train_test_pairs
+    test_size: 0.3
+    seed: 0
+
+# This defines the LR system for pre-scored data. The pipeline takes the raw comparison scores as input and converts
+# them into bounded LLRs:
+#
+# - `calibration`: calibrates the scores to LLRs (a logistic regression calibrator maps scores to log-odds);
+# - `bounding`: prevents excessive extrapolation by applying an LLR bounder.
+#
+# We may later experiment with different parameter values by augmenting this system.
+asr_lrsystem:
+  architecture: specific_source
+
+  modules:
+    steps:
+      save_scores:
+        method: save_features
+        save_as: score
+      step1:
+        method: logistic_calibrator # calibrate the scores to LLRs using logistic regression
+      step2: elub_bounder # apply empirical upper and lower LLR bounds
+
+# Below we define how the LR system should be evaluated. We define two experiments:
+#
+# - `model_selection` does a grid search on the calibration method of the LR system;
+# - `validation` evaluates just a single LR system.
+#
+experiments:
+  # Each experiment has a required argument `strategy`. All other values are parameters of the strategy. See
+  # `examples/glass.yaml` for a full description of the grid search configuration.
+  - name: model_selection
+    strategy: grid # use a grid search
+    lrsystem: ${asr_lrsystem} # refer to the previously defined `asr_lrsystem`
+    data: ${data} # refer to the previously defined data
+
+    lrsystem_parameters:
+      # vary the calibration method by substituting the module at path "modules.steps.calibration"; note that the
+      # `two_level` and score-based comparison modules (classifier + KDE) do not apply here, since the scores are
+      # already calculated
+      - name: calibration_method
+        path: modules.steps.step1
+        options:
+          - option_name: logistic
+            value: logistic_calibrator
+          - option_name: kde
+            value:
+              method: kde
+              bandwidth: silverman
+      - name: bounder
+        path: modules.steps.step2
+        options:
+          - option_name: elub
+            value: elub_bounder
+          - option_name: iv
+            value: iv_bounder
+    output:
+      - method: metrics
+        columns:
+          - cllr
+          - cllr_min
+          - cllr_cal
+      - pav
+      - ece
+      - lr_histogram
+
+  - name: validation
+    strategy: single_run
+    lrsystem: ${asr_lrsystem}
+    data: ${data}
+    output:
+      - metrics
+      - pav
+      - ece
+      - lr_histogram
+      - save_model
+      - score_to_llr
+      - score_distribution

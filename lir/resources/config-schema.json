@@ -120,8 +120,16 @@
           "description": "Path to CSV file (for parse_features_from_csv_file)."
         },
         "source_id_column": {
-          "type": "string",
-          "description": "Name of the column containing source identifiers in CSV data."
+          "description": "Name of the column (or list of at most two columns) containing source identifiers in CSV data.",
+          "oneOf": [
+            {"type": "string"},
+            {
+              "type": "array",
+              "items": {"type": "string"},
+              "minItems": 1,
+              "maxItems": 2
+            }
+          ]
         },
         "instance_id_column": {
           "type": "string",

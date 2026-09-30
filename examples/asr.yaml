@@ -55,9 +55,9 @@ asr_lrsystem:
       save_scores:
         method: save_features
         save_as: score
-      calibration:
+      step1:
         method: logistic_calibrator # calibrate the scores to LLRs using logistic regression
-      bounding: elub_bounder # apply empirical upper and lower LLR bounds
+      step2: elub_bounder # apply empirical upper and lower LLR bounds
 
 # Below we define how the LR system should be evaluated. We define two experiments:
 #
@@ -77,7 +77,7 @@ experiments:
       # `two_level` and score-based comparison modules (classifier + KDE) do not apply here, since the scores are
       # already calculated
       - name: calibration_method
-        path: modules.steps.calibration
+        path: modules.steps.step1
         options:
           - option_name: logistic
             value: logistic_calibrator
@@ -85,8 +85,13 @@ experiments:
             value:
               method: kde
               bandwidth: silverman
-          - option_name: isotonic
-            value: isotonic_calibrator
+      - name: bounder
+        path: modules.steps.step2
+        options:
+          - option_name: elub
+            value: elub_bounder
+          - option_name: iv
+            value: iv_bounder
     output:
       - method: metrics
         columns:
@@ -95,6 +100,7 @@ experiments:
           - cllr_cal
       - pav
       - ece
+      - lr_histogram
 
   - name: validation
     strategy: single_run

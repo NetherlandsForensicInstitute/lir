@@ -1,4 +1,3 @@
-import collections
 import datetime
 import importlib
 import inspect
@@ -15,9 +14,6 @@ from confidence.models import ConfigurationSequence
 from jsonschema import validate
 
 from . import resources as resources_module
-
-
-LR = collections.namedtuple('LR', ['lr', 'p0', 'p1'])
 
 
 def check_not_none[AnyType](v: AnyType | None, message: str | None = None) -> AnyType:
@@ -414,24 +410,3 @@ class Bind(partial):
         iargs = iter(args)
         args = tuple(next(iargs) if arg is ... else arg for arg in self.args)
         return self.func(*args, *iargs, **keywords)
-
-
-def parse_float(s: str, none_for_empty: bool = False) -> float | None:
-    """
-    Convert a string to a float.
-
-    Parameters
-    ----------
-    s : str
-        The string to convert to a float.
-    none_for_empty : bool
-        If `True`, return `None` if the string is empty. Otherwise, raise a ValueError.
-
-    Returns
-    -------
-    float
-        The converted value.
-    """
-    if none_for_empty and s == '':
-        return None
-    return float(s)

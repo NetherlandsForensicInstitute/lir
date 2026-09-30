@@ -76,5 +76,5 @@ class LeaveOneCategoryOut(DataStrategy):
         else:
             raise ValueError(
                 f'expected 1- or 2-dimensional array for category field {self.category_field}; '
-                + 'found shape: {category_values.shape}'
+                + f'found shape: {category_values.shape}'
             )

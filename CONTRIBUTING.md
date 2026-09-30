@@ -130,11 +130,11 @@ Alternatively, you can also build and serve the documentation as follows:
 
 Please also modify the README, wiki, or inline documentation as needed.
 
-### 7. Releases
+### 6. Releases
 
 - Releases are handled by the maintainers
 - All releases follow semantic versioning: `major.minor.patch`
 
-### 8. Contact
+### 7. Contact
 
 - If you have any questions or suggestions, please open an issue

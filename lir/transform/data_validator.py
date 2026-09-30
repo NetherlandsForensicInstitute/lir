@@ -71,7 +71,7 @@ class ValidateFeatureDataType(Transformer):
         """
         instances = check_type(FeatureData, instances)
 
-        # Ensrure that the number of features matches the number of data types determined during fitting.
+        # Ensure that the number of features matches the number of data types determined during fitting.
         if instances.features.shape[1:] != self._features_size:
             raise ValueError(f'Expected features of size {self._features_size} but got {instances.features.shape[1:]}')
 

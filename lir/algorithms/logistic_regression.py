@@ -177,9 +177,8 @@ class FourParameterLogisticCalibrator(Transformer):
     Depending on the training data, a 2-, 3- or 4-parameter logistic model is used.
     """
 
-    def __int__(self) -> None:
-        self.coef_: np.ndarray | None = None
-        self.model: Callable
+    coef_: np.ndarray | None = None
+    model: Callable
 
     def fit(self, instances: InstanceData) -> Self:
         """

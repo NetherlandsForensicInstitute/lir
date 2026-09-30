@@ -74,6 +74,6 @@ def parse_aggregations(config: ConfigValue, output_dir: Path) -> list[Aggregatio
         Parsed aggregation instances.
     """
     if isinstance(config.value, list):
-        return [parse_aggregation(item, output_dir) for i, item in enumerate(config.value)]
+        return [parse_aggregation(item, output_dir) for item in config.value]
     else:
         return [parse_aggregation(config, output_dir)]

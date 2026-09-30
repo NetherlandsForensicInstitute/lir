@@ -55,7 +55,7 @@ class CaseLLRToCsv(Aggregation):
 
         if len(case_instances) != len(case_llrs):
             raise ValueError(
-                f'Cannot export original case features to case_llr.csv because row counts differ: '
+                f'Cannot export original case features to {self.filename} because row counts differ: '
                 f'{len(case_instances)} case rows vs {len(case_llrs)} LLR rows.'
             )
 

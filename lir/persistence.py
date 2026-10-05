@@ -12,7 +12,7 @@ def load_model(path: Path) -> LRSystem:
     Load previously cached model.
 
     The model is expected to be stored as a pickle file, and is assumed to exclusively contain an
-    :class:`~lir.lrsystems.base.LRSystem` instance.
+    :class:`~lir.lrsystems.LRSystem` instance.
 
     Parameters
     ----------

@@ -137,8 +137,8 @@ def Xy_to_Xn(X: np.ndarray, y: np.ndarray, classes: list[int] | None = None) -> 
     y : np.ndarray
         A 1D array of the same length as the number of samples in X, where each element indicates the class label.
     classes : list[int] | None, optional
-        An optional list of class labels to be used for splitting the data. If not provided, the unique values in `y`
-        will be used as class labels.
+        An optional list of class labels to be used for splitting the data. If not provided, class labels
+        ``[0, 1]`` are assumed.
 
     Returns
     -------

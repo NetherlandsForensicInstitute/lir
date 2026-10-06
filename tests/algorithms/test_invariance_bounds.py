@@ -13,7 +13,7 @@ from lir.util import Xn_to_Xy, odds_to_logodds, probability_to_logodds
 
 
 class UnboundLRs(DataProvider):
-    """ "
+    """
     Examples from paper:
         A transparent method to determine limit values for Likelihood Ratio systems, by
         Ivo Alberink, Jeannette Leegwater, Jonas Malmborg, Anders Nordgaard, Marjan Sjerps, Leen van der Ham

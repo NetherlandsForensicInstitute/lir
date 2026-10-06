@@ -4,7 +4,7 @@ Normalised Bayes error rate (NBE).
 References
 ----------
 Vergeer, P., van Es, A., de Jongh, A., Alberink, I., & Stoel, R. (2016).
-Numerical likelihood ratios output by LR systems are often based on
+Numerical likelihood ratios outputted by LR systems are often based on
 extrapolation: When to stop extrapolating? *Science and Justice*, 56,
 482–491.
 """

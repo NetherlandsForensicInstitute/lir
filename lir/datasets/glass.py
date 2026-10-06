@@ -45,7 +45,7 @@ class GlassData(DataProvider):
 
     def _load_data(self, file: str, role: RoleAssignment) -> FeatureData:
         """
-        Return a tuple of features, source_ids and instance_ids.
+        Return a FeatureData object with features, source_ids and instance_ids.
 
         The data columns are:
         - id: measurement id, unique within the file

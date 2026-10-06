@@ -159,7 +159,7 @@ def parse_grid_experiment(config: ConfigValue, output_dir: Path) -> PredefinedEx
     aggregations = parse_aggregations(output_config, output_dir) if output_config else []
 
     if 'lr_system' in config:
-        raise ValueError("The attribute 'lr_system' has been replaced by 'lrsystem' as of lir v1.7. ")
+        raise ValueError("The attribute 'lr_system' has been replaced by 'lrsystem' as of lir v1.7.")
 
     lrsystem_configs = [
         LRSystemConfig(*cfg, output_dir)

@@ -254,7 +254,7 @@ class KDECalibrator(Transformer):
         ln_dif = ln_H1 - ln_H2
         log10_dif = ln_to_log10(ln_dif)
 
-        # calculate p0 and p1's (redundant?)
+        # calculate p0 and p1
         p0[finite_llrs_index] = self.denominator * np.exp(ln_H2)
         p1[finite_llrs_index] = self.numerator * np.exp(ln_H1)
 

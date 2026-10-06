@@ -153,7 +153,7 @@ class TwoLevelModelNormalKDE:
         """
         Predict natural log LR scores (ln_LR scores) using the fitted model.
 
-        Predict ln_LR scores, making use of the parameters constructed during `self.fit()` (which should
+        Predict log10 LR scores, making use of the parameters constructed during `self.fit()` (which should
                 now be stored in `self`).
 
         X_trace measurements of trace object. np.ndarray of shape (instances, repetitions_trace, features)

@@ -53,7 +53,7 @@ class TestPlotting(unittest.TestCase):
         llr_data_finite = llr_data[finite_index]
 
         # The LLRData interval is just a 3-column ndarray where each row is:
-        # [llr_point_estimate. llr_lower_bound, llr_upper_bound]
+        # [llr_point_estimate, llr_lower_bound, llr_upper_bound]
         llrs_and_interval_ndarray = np.array(
             [
                 [-2.0, -2.5, -1.5],

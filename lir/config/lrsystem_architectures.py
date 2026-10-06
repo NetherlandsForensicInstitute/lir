@@ -251,8 +251,7 @@ def augment_config(baseline_config: ConfigValue, hyperparameters: dict[str, Hype
     Parse an augmented LR system.
 
     The LR system is parsed from a base configuration and a set of parameter substitutions that override parts of the
-    base configuration. Results are written to a subdirectory of `output_dir` that is named by its parameter
-    substitutions and prefixed by `dirname_prefix`.
+    base configuration.
 
     Parameters
     ----------

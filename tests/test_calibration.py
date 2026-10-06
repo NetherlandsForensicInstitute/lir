@@ -63,7 +63,6 @@ class TestIsotonicRegression(unittest.TestCase):
         self.run_cllrmin([1], [1] * 10)
         self.run_cllrmin([4, 0.25, 0.25, 0.25, 0.25, 1], [4, 4, 4, 4, 0.25, 1])
 
-        # np.random.seed(0)
         X0 = np.random.normal(loc=0, scale=1, size=(40000,))
         X1 = np.random.normal(loc=1, scale=1, size=(40000,))
         lr0 = _pdf(X0, 1, 1) / _pdf(X0, 0, 1)

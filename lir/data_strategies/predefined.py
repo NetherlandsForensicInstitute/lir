@@ -63,7 +63,7 @@ class PredefinedTrainTestSplit(DataStrategy):
 
 class PredefinedCrossValidation(DataStrategy):
     """
-    Split data into cross validation folds based on predefined assignments.
+    Split data into cross-validation folds based on predefined assignments.
 
     This strategy expects a ``fold_assignments`` field in the data. For example, the
     ``parse_features_from_csv_file`` with the ``fold_assignment_column`` specified will create this field.
@@ -90,7 +90,7 @@ class PredefinedCrossValidation(DataStrategy):
 
         Parameters
         ----------
-        instances : InstanceDataType
+        instances : DataType
             Input instances to be processed by this method.
         """
         _check_input(instances)

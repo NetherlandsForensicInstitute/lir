@@ -115,7 +115,7 @@ class EuclideanDistance(Transformer):
         """
         instances = check_type(FeatureData, instances)
 
-        # if the data are paired instances, calculate the element wise difference first
+        # if the data are paired instances, calculate the element-wise difference first
         if isinstance(instances, PairedFeatureData):
             instances = ElementWiseDifference().apply(instances)
 

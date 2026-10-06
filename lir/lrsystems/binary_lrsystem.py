@@ -13,7 +13,7 @@ class BinaryLRSystem(LRSystem):
 
     In this strategy, a set of instances - captured within the
     feature vector X - and a set of (ground-truth) labels are used to train and
-    afterward calculate corresponding LLR's for given feature vectors.
+    afterward calculate corresponding LLRs for given feature vectors.
 
     Parameters
     ----------

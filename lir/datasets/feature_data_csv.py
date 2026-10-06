@@ -263,9 +263,7 @@ class FeatureDataCsvParser(DataProvider):
         else:
             self.data_fields.append(ImplicitFeaturesField())
 
-    def _parse_row(
-        self, row: dict[str, str], reader: csv.DictReader
-    ) -> dict[str, str | list[str] | int | float | list[float]]:
+    def _parse_row(self, row: dict[str, str]) -> dict[str, str | list[str] | int | float | list[float]]:
         fields: dict[str, str | list[str] | int | float | list[float]] = {}
 
         for column_name in self.ignore_columns:
@@ -299,7 +297,7 @@ class FeatureDataCsvParser(DataProvider):
         n_instances = 0
         for row in itertools.islice(reader, self._head):
             try:
-                fields = self._parse_row(row, reader)
+                fields = self._parse_row(row)
                 if not all_instances:
                     for key in fields:
                         all_instances[key] = []

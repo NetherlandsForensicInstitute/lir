@@ -95,7 +95,7 @@ class LLRBounder(Transformer, ABC):
 
     def apply(self, instances: InstanceData) -> LLRData:
         """
-        Recalculate the LLR data using the first step calibrator and applying the bounds.
+        Apply the bounds to the LLR data.
 
         Parameters
         ----------
@@ -180,10 +180,10 @@ class NSourceBounder(LLRBounder):
         if llrdata.source_ids is None:
             raise ValueError(f'{type(self)} requires source IDs to calculate bounds')
 
-        n_sources = np.unique(llrdata.source_ids, sorted=False)
-        log_n_sources = np.log10(len(n_sources))
+        unique_sources = np.unique(llrdata.source_ids, sorted=False)
+        log_n_sources = np.log10(len(unique_sources))
 
-        LOG.debug(f'NSourceBounder: number of sources: N={len(n_sources)}')
+        LOG.debug(f'NSourceBounder: number of sources: N={len(unique_sources)}')
         LOG.debug(f'NSourceBounder: calculated bounds: -log(N)={-log_n_sources}, log(N)={log_n_sources}')
         return -log_n_sources, log_n_sources
 

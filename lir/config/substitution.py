@@ -276,7 +276,7 @@ def _parse_substitution(spec: ConfigValue) -> tuple[str, Any]:
 def _parse_clustered_option(spec: ConfigValue) -> HyperparameterOption:
     option_name = pop_field(spec, 'option_name', validate=str)
     substitutions = pop_field(spec, 'substitutions', unwrap=False, validate_type=list)
-    substitutions = [_parse_substitution(subst) for i, subst in enumerate(substitutions)]
+    substitutions = [_parse_substitution(subst) for subst in substitutions]
     substitutions = dict(substitutions)
     check_is_empty(spec)
     return HyperparameterOption(option_name, substitutions)
@@ -311,7 +311,7 @@ def parse_clustered(spec: ConfigValue, output_path: Path) -> CategoricalHyperpar
     """
     parameter_name = pop_field(spec, 'name', validate=str)
     options = pop_field(spec, 'options')
-    options = [_parse_clustered_option(option) for i, option in enumerate(options)]
+    options = [_parse_clustered_option(option) for option in options]
     check_is_empty(spec)
     return CategoricalHyperparameter(parameter_name, options)
 

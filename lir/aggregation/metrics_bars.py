@@ -4,7 +4,7 @@ from collections.abc import Callable, Mapping, Sequence
 from functools import partial
 from pathlib import Path
 from types import NoneType
-from typing import IO, Any
+from typing import Any
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -57,7 +57,7 @@ class MetricsBarPlot(Aggregation):
                 run_output_dir='results/run',
             ),
             AggregationData(
-                run_name='1',
+                run_name='2',
                 llrdata=LLRData(
                     features=np.array([9., 9, 9, 9, 9, .5, .5, -9, -9, -9, -9, -9]).reshape(-1, 1),
                     hypothesis=np.array([1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0])
@@ -96,7 +96,6 @@ class MetricsBarPlot(Aggregation):
     ):
         self.path = path
         self.full_path: Path | None = None
-        self._file: IO[Any] | None = None
         self.metric_functions = OrderedDict(metrics.items())
         self.calculated_values: list[list[float | None]] = []
         self.run_names: list[str] = []
@@ -135,7 +134,7 @@ class MetricsBarPlot(Aggregation):
             self.full_path = data.resolve_path_for_experiment(self.path)
 
     def close(self) -> None:
-        """Ensure the CSV file is properly closed after writing."""
+        """Render the bar plot and write it to the output path (or show it)."""
         fig, ax = plt.subplots()
         metric_names = list(self.metric_functions.keys())
         n_runs = len(self.run_names)

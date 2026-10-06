@@ -47,6 +47,8 @@ class Canvas:
         Method to plot the Pool Adjacent Violators (PAV) transformation on this canvas.
     score_distribution : Callable[..., Any]
         Method to plot the distribution of scores on this canvas.
+    score_to_llr : Callable[..., Any]
+        Method to plot scores versus LLRs on this canvas.
     tippett : Callable[..., Any]
         Method to plot Tippett plots on this canvas.
     llr_interval : Callable[..., Any]
@@ -402,8 +404,8 @@ def tippett(ax: Axes, llrdata: LLRData, plot_type: int = 1) -> None:
         perc1 = (sum(i <= xvalues for i in lr_1) / len(lr_1)) * 100
     else:
         raise ValueError(f'Argument plot_type in tippett() must be either 1 or 2, got `{plot_type}`.')
-    ax.plot(xvalues, perc1, color='b', label=r'LRs given $\mathregular{H_1}$')
-    ax.plot(xvalues, perc0, color='r', label=r'LRs given $\mathregular{H_2}$')
+    ax.plot(xvalues, perc1, color=H1_COLOR, label=r'LRs given $\mathregular{H_1}$')
+    ax.plot(xvalues, perc0, color=H2_COLOR, label=r'LRs given $\mathregular{H_2}$')
     ax.axvline(x=0, color='k', linestyle='--')
     ax.set_xlabel('log$_{10}$(LR)')
     ax.set_ylabel('Cumulative proportion')

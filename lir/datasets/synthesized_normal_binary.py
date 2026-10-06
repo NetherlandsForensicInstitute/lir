@@ -103,4 +103,4 @@ def synthesized_normal_binary(config: ConfigValue, _: Path) -> SynthesizedNormal
     seed = pop_field(config, 'seed', required=False, validate_type=int)
     h1 = pop_field(config, 'h1', validate_type=dict)
     h2 = pop_field(config, 'h2', validate_type=dict)
-    return SynthesizedNormalBinaryData(SynthesizedNormalData(**h2), SynthesizedNormalData(**h1), seed=seed)
+    return SynthesizedNormalBinaryData(SynthesizedNormalData(**h1), SynthesizedNormalData(**h2), seed=seed)

@@ -179,7 +179,7 @@ class LoggingPipeline(Pipeline):
     """
     A pipeline that writes debugging output to a CSV file.
 
-    This pipeline act like a normal ``Pipeline``, but has a CSV file as a side effect. Depending on the settings and the
+    This pipeline acts like a normal ``Pipeline``, but has a CSV file as a side effect. Depending on the settings and
     data, the CSV file may have the following columns:
 
     - ``batch``: if the data strategy yields multiple train/test splits, the batch value is the sequence number of the

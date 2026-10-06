@@ -229,12 +229,15 @@ class InstanceData(BaseModel, ABC):
         """
         Return hypothesis labels or raise an error if they are missing or if they do not represent both hypotheses.
 
-        :raise: ValueError if hypothesis labels are missing or either label is not represented.
-
         Returns
         -------
         np.ndarray
             Hypothesis array containing both classes 0 and 1.
+
+        Raises
+        ------
+        ValueError
+            If hypothesis labels are missing or either label is not represented.
         """
         if self.hypothesis is None:
             raise ValueError('hypothesis not set')
@@ -932,7 +935,6 @@ class LLRData(FeatureData):
 
 
 InstanceDataType = TypeVar('InstanceDataType', bound=InstanceData)
-FeatureDataType = TypeVar('FeatureDataType', bound=FeatureData)
 
 
 def concatenate_instances(first: InstanceDataType, *others: InstanceDataType) -> InstanceDataType:

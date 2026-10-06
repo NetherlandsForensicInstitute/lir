@@ -78,7 +78,7 @@ def calc_llr_overestimation(
 
      The LLR-overestimation is defined as the log-10 of the ratio between
         (1) the system LRs; the outputs of the LR-system, and
-        (2) the empirical LRs; the ratio's between the relative frequencies of the H1-LLRs and H2-LLRs.
+        (2) the empirical LRs; the ratios between the relative frequencies of the H1-LLRs and H2-LLRs.
 
      - It quantifies the deviation from the requirement that 'the LR of the LR is the LR': the 'LR-consistency'.
      - For a perfect LR-system, the LLR-overestimation is 0: the system and empirical LRs are the same.

@@ -377,7 +377,7 @@ def lr_histogram(
 
 def tippett(ax: Axes, llrdata: LLRData, plot_type: int = 1) -> None:
     """
-    Plot empirical cumulative distribution functions of same-source and different-sources LRs.
+    Plot empirical cumulative distribution functions of same-source and different-source LRs.
 
     Parameters
     ----------

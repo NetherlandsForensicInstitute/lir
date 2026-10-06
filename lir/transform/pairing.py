@@ -26,7 +26,7 @@ class PairingMethod(ABC):
 
         A pair may be a pair of sources, with multiple instances per source.
 
-        The returned features have dimensions `(p, i, ...)`` where the first dimension is the pairs, the second
+        The returned features have dimensions ``(p, i, ...)`` where the first dimension is the pairs, the second
         dimension is the instances, and subsequent dimensions are the features.
         If the input has labels, the returned labels are an array of source labels, one label per pair, where the labels
         are 0=different source, 1=same source.
@@ -44,7 +44,7 @@ class PairingMethod(ABC):
         Returns
         -------
         PairedFeatureData
-            FeatureData object parsed from the source.
+            PairedFeatureData object containing the constructed pairs.
         """
         raise NotImplementedError
 
@@ -171,7 +171,7 @@ class SourcePairing(PairingMethod):
         Returns
         -------
         PairedFeatureData
-            FeatureData object parsed from the source.
+            PairedFeatureData object containing the constructed pairs.
         """
         instances = check_type(FeatureData, instances)
 
@@ -309,7 +309,7 @@ class InstancePairing(PairingMethod):
         Returns
         -------
         PairedFeatureData
-            FeatureData object parsed from the source.
+            PairedFeatureData object containing the constructed pairs.
         """
         instances = check_type(FeatureData, instances)
         if instances.source_ids is None:

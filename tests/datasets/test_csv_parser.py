@@ -130,7 +130,7 @@ from lir.datasets.feature_data_csv import (
             'feature1,feature2,feature3,duration1\n1,2,3,99\n',
             {'extra_fields': [{'name': 'duration', 'column': 'duration1'}]},
             FeatureData(features=np.array([[1, 2, 3]]), duration=np.array(['99'])),
-            '1 row, 3 features, with d extra field (no cell_type)',
+            '1 row, 3 features, with 1d extra field (no cell_type)',
         ),
         (
             'feature1,feature2,feature3,duration1\n1,2,3,99\n',

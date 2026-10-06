@@ -131,7 +131,7 @@ def _parse_categorical_option(spec: Any, path: str, option_index: int | None) ->
     """
     Parse one categorical option specification.
 
-    An option generally has a name and a value. The name is a human-readable string. This is how it is referred to is
+    An option generally has a name and a value. The name is a human-readable string. This is how it is referred to in
     user output. The value is a number or a string, this is usually a sensible way to refer to the option, and there is
     no need to define a name explicitly. If the value is more complex, like a dictionary, a more friendly name can be
     defined.
@@ -650,22 +650,6 @@ def _assign(struct: ConfigValue, path: list[str], value: Any) -> None:
             _assign(struct[path[0]], path[1:], value)
     else:
         raise YamlParseError(struct.context, 'illegal state')
-
-
-def _path_exists(struct: dict | list, path: list[str]) -> bool:
-    index = int(path[0]) if isinstance(struct, list) else path[0]
-
-    if index not in struct:
-        if isinstance(struct, dict):  # noqa: SIM108
-            options = ', '.join(struct.keys())
-        else:
-            options = f'0..{len(struct) - 1}'
-        raise ValueError(f'no such key: {index}; found: {options}')
-
-    if len(path) == 1:
-        return index in struct
-    else:
-        return index in struct and _path_exists(struct[index], path[1:])  # type: ignore
 
 
 def substitute_parameters(

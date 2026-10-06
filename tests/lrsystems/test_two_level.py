@@ -37,7 +37,7 @@ def test_two_level_system():
     # identical parameter values should yield the same results
     assert _calculate_cllr(error_std=1) == _calculate_cllr(error_std=1)
 
-    # extremely large variation should yield an non-informative system with CLLR=1
+    # extremely large variation should yield a non-informative system with CLLR=1
     assert _calculate_cllr(error_std=1000) == pytest.approx(1, abs=0.01)
 
     # increasing variation should reduce performance (increase CLLR)

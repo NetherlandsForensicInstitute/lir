@@ -134,7 +134,7 @@ class SourcesCrossValidation(DataStrategy):
             name='shuffle', type=bool, required=False, description='Randomize the groups before splitting into batches.'
         ),
         ConfigAttribute(
-            name='random_state',
+            name='seed',
             type=int,
             required=False,
             description='Random seed controlling stochastic behaviour for reproducible results.',

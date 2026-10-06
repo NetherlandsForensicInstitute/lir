@@ -48,10 +48,17 @@ class AutoTrainTestSplit(DataStrategy):
             name='test_size', type=float, default=0.5, description='Size of the test set in the range of 0 to 1.'
         ),
         ConfigAttribute(
+            name='seed',
+            type=int,
+            required=False,
+            description='Random seed controlling stochastic behaviour for reproducible results.',
+        ),
+        ConfigAttribute(
             name='random_state',
             type=int,
             required=False,
             description='Random seed controlling stochastic behaviour for reproducible results.',
+            obsolete=True,
         ),
     ]
 
@@ -140,7 +147,7 @@ class AutoCrossValidation(DataStrategy):
             name='shuffle', type=bool, required=False, description='Randomize the groups before splitting into batches.'
         ),
         ConfigAttribute(
-            name='random_state',
+            name='seed',
             type=int,
             required=False,
             description='Random seed controlling stochastic behaviour for reproducible results.',

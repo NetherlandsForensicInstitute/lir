@@ -1,0 +1,43 @@
+output_path: output/${timestamp}_inference
+
+http_cache:
+  backend: filesystem
+  cache_name: .cache/http
+
+experiments:
+  - name: my_experiment               # Choose a descriptive name for the experiment.
+    strategy: inference               # Apply an LR system on case data to calculate LLRs.
+
+    # The training data section: the data to use for training
+    training_data:                    # The data provider specifies which data to use.
+      method: parse_features_from_csv_url  # We use the generic CSV parser to get glass data.
+      url: https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/main/training.csv
+      source_id_column: Item          # This column identifies the source.
+      feature_columns: ["K39","Ti49","Mn55","Rb85","Sr88","Zr90","Ba137","La139","Ce140","Pb208"]
+      cache: ${http_cache}
+
+    # The inference data section: the case data
+    inference_data:
+      method: parse_features_from_csv_url  # We use the generic CSV parser to get glass data.
+      url: https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/main/duplo.csv
+      source_id_column: Item          # This column identifies the source.
+      feature_columns: ["K39","Ti49","Mn55","Rb85","Sr88","Zr90","Ba137","La139","Ce140","Pb208"]
+      cache: ${http_cache}
+
+    # The LR system section: this is where the action is.
+    lrsystem:
+      architecture: score_based
+      preprocessing: standard_scaler  # The preprocessing is applied on the single measurements, before pairing.
+      pairing:                        # The pairing method governs the way the measurements are paired.
+        method: source_pairs          # The source_pairing method generates one pair for each combination of sources.
+        ratio_limit: 1                # Subsample different-source pairs until their number is the same as the number of
+                                      # same-source pairs.
+      comparing:                      # The comparing module is applied on pairs.
+        method: pipeline              # We need two modules, so we combine them in a pipeline.
+        steps:
+          score: manhattan_distance   # First, we use the manhattan distance to calculate a "score".
+          to_llr: logistic_calibrator # Next, we turn the scores into LLRs.
+
+    # The output section
+    output:
+      - lr_histogram                  # Plots a histogram of LRs.

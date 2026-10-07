@@ -1,5 +1,5 @@
 from lir.aggregation.base import Aggregation, AggregationData
-from lir.aggregation.case_llr_csv import CaseLLRToCsv
+from lir.aggregation.llr_csv import LLRToCsv
 from lir.aggregation.metrics_bars import MetricsBarPlot
 from lir.aggregation.metrics_csv import WriteMetricsToCsv
 from lir.aggregation.plot_each import PlotEach
@@ -11,7 +11,7 @@ __all__ = [
     'AggregationData',
     'Aggregation',
     # methods
-    'CaseLLRToCsv',
+    'LLRToCsv',
     'MetricsBarPlot',
     'WriteMetricsToCsv',
     'PlotEach',

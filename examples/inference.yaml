@@ -40,4 +40,5 @@ experiments:
 
     # The output section
     output:
+      - llr_csv                       # This writes the LLRs to a CSV file, including their source ids, if available.
       - lr_histogram                  # Plots a histogram of LRs.

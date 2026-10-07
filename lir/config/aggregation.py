@@ -2,6 +2,7 @@ from pathlib import Path
 
 from lir import registry
 from lir.aggregation import Aggregation
+from lir.aggregation.group import AggregationGroup
 from lir.config.base import (
     ConfigParser,
     ConfigValue,
@@ -57,23 +58,25 @@ def parse_aggregation(config: ConfigValue, output_dir: Path, context: list[str] 
     return parsed_object
 
 
-def parse_aggregations(config: ConfigValue, output_dir: Path) -> list[Aggregation]:
+def parse_aggregations(config: ConfigValue | None, output_dir: Path) -> Aggregation:
     """
-    Parse a list of configurations for aggregation.
+    Parse a configuration section for an aggregation, or a list of aggregation configuration sections.
 
     Parameters
     ----------
-    config : ConfigValue
+    config : ConfigValue, optional
         Configuration for a single aggregation or a list of aggregation configurations.
     output_dir : Path
         Output directory for the aggregation instances.
 
     Returns
     -------
-    list[Aggregation]
-        Parsed aggregation instances.
+    Aggregation
+        Parsed aggregation instance, or a group of aggregation instances.
     """
-    if isinstance(config.value, list):
-        return [parse_aggregation(item, output_dir) for item in config.value]
+    if config is None:
+        return AggregationGroup([])
+    elif isinstance(config.value, list):
+        return AggregationGroup([parse_aggregation(item, output_dir) for item in config.value])
     else:
-        return [parse_aggregation(config, output_dir)]
+        return parse_aggregation(config, output_dir)

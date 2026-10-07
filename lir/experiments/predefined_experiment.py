@@ -1,4 +1,4 @@
-from collections.abc import Iterator, Sequence
+from collections.abc import Iterator
 from itertools import product
 from pathlib import Path
 from typing import Any
@@ -43,7 +43,7 @@ class PredefinedExperiment(Experiment):
     ----------
     data_configs : list[DataConfig]
         Data configurations evaluated by this experiment.
-    outputs : Sequence[Aggregation]
+    output : Aggregation
         Output aggregation definitions executed after each run.
     output_path : Path
         Path where generated outputs are written.
@@ -56,7 +56,7 @@ class PredefinedExperiment(Experiment):
     def __init__(
         self,
         data_configs: list[DataConfig],
-        outputs: Sequence[Aggregation],
+        output: Aggregation,
         output_path: Path,
         lrsystem_configs: list[LRSystemConfig],
         enable_parallelization: bool = False,
@@ -64,7 +64,7 @@ class PredefinedExperiment(Experiment):
         super().__init__(output_path)
         self._lrsystem_configs = lrsystem_configs
         self._data_configs = data_configs
-        self.outputs = outputs
+        self.output = output
         self._enable_parallelization = enable_parallelization
 
     def _generate_and_run(self) -> None:
@@ -75,8 +75,7 @@ class PredefinedExperiment(Experiment):
         progress = tqdm(desc=self.output_path.name, total=number_of_runs, disable=disable_tqdm)
         run_func = parallelize_runs if self._enable_parallelization else run_multiple
         for result in run_func(self.output_path, self._lrsystem_configs, self._data_configs):
-            for output in self.outputs:
-                output.report(result)
+            self.output.report(result)
             progress.update(1)
         progress.close()
 
@@ -89,8 +88,7 @@ class PredefinedExperiment(Experiment):
         try:
             self._generate_and_run()
         finally:
-            for output in self.outputs:
-                output.close()
+            self.output.close()
 
 
 @config_parser(
@@ -116,12 +114,9 @@ def parse_single_run(config: ConfigValue, output_dir: Path) -> PredefinedExperim
     PredefinedExperiment
         Predefined single-run experiment.
     """
-    output_config = pop_field(config, 'output', required=False)
-    aggregations = parse_aggregations(output_config, output_dir) if output_config else []
-
     exp = PredefinedExperiment(
         [DataConfig(pop_field(config, 'data'), {}, output_dir)],
-        aggregations,
+        parse_aggregations(config.pop('output', required=False), output_dir),
         output_dir,
         [LRSystemConfig(pop_field(config, 'lrsystem'), {}, output_dir)],
     )
@@ -155,8 +150,7 @@ def parse_grid_experiment(config: ConfigValue, output_dir: Path) -> PredefinedEx
     PredefinedExperiment
         Predefined experiment with all parameter combinations.
     """
-    output_config = pop_field(config, 'output', required=False)
-    aggregations = parse_aggregations(output_config, output_dir) if output_config else []
+    aggregation = parse_aggregations(config.pop('output', required=False), output_dir)
 
     if 'lr_system' in config:
         raise ValueError("The attribute 'lr_system' has been replaced by 'lrsystem' as of lir v1.7.")
@@ -174,7 +168,7 @@ def parse_grid_experiment(config: ConfigValue, output_dir: Path) -> PredefinedEx
 
     return PredefinedExperiment(
         data_configs,
-        aggregations,
+        aggregation,
         output_dir,
         lrsystem_configs,
         enable_parallelization=enable_parallelization,

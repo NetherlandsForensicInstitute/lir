@@ -3,7 +3,7 @@ import pytest
 from _pytest.tmpdir import TempPathFactory
 
 from lir import registry
-from lir.aggregation import Aggregation, AggregationData
+from lir.aggregation import Aggregation, AggregationData, LLRToCsv
 from lir.config import check_is_empty
 from lir.config.base import ConfigValue, GenericConfigParser
 from lir.data.models import LLRData
@@ -19,14 +19,7 @@ def test_registry_items_available(synthesized_llrs_with_interval: LLRData, tmp_p
         [],
         {
             'output.metrics_csv': {'columns': []},
-            'output.case_llr': {
-                'case_llr_data': {
-                    'method': 'synthesized_normal_binary',
-                    'seed': 42,
-                    'h1': {'mean': 1, 'std': 1, 'size': 10},
-                    'h2': {'mean': -1, 'std': 1, 'size': 10},
-                }
-            },
+            'output.llr_csv': {},
             'output.by_category': {'category_field': 'my_category_field', 'output': 'pav'},
         },
     )
@@ -66,3 +59,46 @@ def test_registry_items_available(synthesized_llrs_with_interval: LLRData, tmp_p
                 obj.close()
 
     check_is_empty(args_by_method)
+
+
+def test_llr_to_csv_report(synthesized_llrs_with_interval: LLRData, tmp_path_factory: TempPathFactory):
+    """Test that `LLRToCsv.report` writes the LLRs and intervals to a CSV file."""
+    n = len(synthesized_llrs_with_interval)
+    llrdata = synthesized_llrs_with_interval.replace(source_ids=np.array([f'id_{i}' for i in range(n)]))
+
+    output_dir = tmp_path_factory.mktemp('output')
+    aggregator = LLRToCsv()
+    aggregator.report(
+        AggregationData(
+            llrdata=llrdata,
+            lrsystem=None,
+            parameters={},
+            run_name='',
+            experiment_output_dir=output_dir,
+            run_output_dir=output_dir,
+        )
+    )
+
+    csv_path = output_dir / 'case_llr.csv'
+    assert csv_path.is_file()
+    lines = csv_path.read_text().strip().splitlines()
+    assert lines[0] == 'source_id,llr,llr_interval_low,llr_interval_high'
+    assert len(lines) == n + 1
+    assert lines[1].startswith('id_0,')
+
+
+def test_llr_to_csv_report_requires_llrdata(tmp_path_factory: TempPathFactory):
+    """Test that `LLRToCsv.report` raises when the LLR data is missing."""
+    output_dir = tmp_path_factory.mktemp('output')
+    aggregator = LLRToCsv()
+    with pytest.raises(ValueError):
+        aggregator.report(
+            AggregationData(
+                llrdata=None,
+                lrsystem=None,
+                parameters={},
+                run_name='',
+                experiment_output_dir=output_dir,
+                run_output_dir=output_dir,
+            )
+        )

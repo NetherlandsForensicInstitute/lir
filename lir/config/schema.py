@@ -8,7 +8,7 @@ from typing import Any
 import confidence
 from jsonschema import validate
 
-from lir import Transformer, registry
+from lir import DataProvider, Transformer, registry
 from lir.aggregation import Aggregation
 from lir.config.base import ConfigAttribute, ConfigParser, ConfigValue, GenericConfigParser
 from lir.config.substitution import Hyperparameter
@@ -32,6 +32,10 @@ DEFINITIONS: dict[type | types.UnionType | tuple[type, type], dict[str, Any]] = 
     DataConfig: {
         '$ref': '#/definitions/dataConfiguration',
         'description': 'Data configuration for this experiment (references are resolved before validation).',
+    },
+    DataProvider: {
+        '$ref': '#/definitions/dataProvider',
+        'description': 'The method for loading the data.',
     },
     LRSystemConfig: {
         '$ref': '#/definitions/lrSystemConfiguration',

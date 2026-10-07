@@ -15,9 +15,8 @@ def synthesized_normal_data() -> FeatureData:
 
 
 @pytest.fixture
-def synthesized_llrs(synthesized_normal_data: SynthesizedNormalBinaryData) -> LLRData:
-    data = synthesized_normal_data.get_instances()
-    return as_transformer(LogitCalibrator()).fit_apply(data).replace_as(LLRData)
+def synthesized_llrs(synthesized_normal_data: FeatureData) -> LLRData:
+    return as_transformer(LogitCalibrator()).fit_apply(synthesized_normal_data).replace_as(LLRData)
 
 
 @pytest.fixture

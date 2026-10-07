@@ -44,14 +44,14 @@ class SubsetAggregation(Aggregation):
 
     Parameters
     ----------
-    aggregation_methods : list[Aggregation]
+    aggregation_method : Aggregation
         A list of methods to aggregate results by category.
     category_field : str
         The name of the category field.
     """
 
-    def __init__(self, aggregation_methods: list[Aggregation], category_field: str):
-        self.aggregation_methods = aggregation_methods
+    def __init__(self, aggregation_method: Aggregation, category_field: str):
+        self.aggregation_method = aggregation_method
         self.category_field = category_field
 
     def report(self, data: AggregationData) -> None:
@@ -80,13 +80,11 @@ class SubsetAggregation(Aggregation):
                 get_full_fit_lrsystem=data.get_full_fit_lrsystem,
             )
 
-            for output in self.aggregation_methods:
-                output.report(category_data)
+            self.aggregation_method.report(category_data)
 
     def close(self) -> None:
         """Close all subset aggregation methods."""
-        for output in self.aggregation_methods:
-            output.close()
+        self.aggregation_method.close()
 
 
 @config_parser(
@@ -115,6 +113,6 @@ def subset_aggregation(config: ConfigValue, output_dir: Path) -> SubsetAggregati
     """
     with config:
         category_field = config.pop_field('category_field', validate_type=str)
-        aggregation_methods = parse_aggregations(config.pop('output'), output_dir)  # type: ignore
+        aggregation = parse_aggregations(config.pop('output'), output_dir)
 
-        return SubsetAggregation(aggregation_methods, category_field)
+        return SubsetAggregation(aggregation, category_field)

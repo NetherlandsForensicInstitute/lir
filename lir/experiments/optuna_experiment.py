@@ -1,4 +1,4 @@
-from collections.abc import Callable, Sequence
+from collections.abc import Callable
 from copy import deepcopy
 from pathlib import Path
 from typing import Any
@@ -34,7 +34,7 @@ class OptunaExperiment(Experiment):
     ----------
     data_config : ConfigValue
         Data configuration used to construct datasets for runs.
-    outputs : Sequence[Aggregation]
+    output : Aggregation
         Output aggregation definitions executed after each run.
     output_path : Path
         Path where generated outputs are written.
@@ -51,7 +51,7 @@ class OptunaExperiment(Experiment):
     def __init__(
         self,
         data_config: ConfigValue,
-        outputs: Sequence[Aggregation],
+        output: Aggregation,
         output_path: Path,
         baseline_config: ConfigValue,
         lrsystem_parameters: list[Hyperparameter],
@@ -62,7 +62,7 @@ class OptunaExperiment(Experiment):
 
         self._data_config = DataConfig(spec=data_config, params={}, experiment_output_dir=output_path)
 
-        self.outputs = outputs
+        self.output = output
         self.baseline_config = baseline_config
         self.lrsystem_parameters = lrsystem_parameters
         self.n_trials = n_trials
@@ -113,9 +113,7 @@ class OptunaExperiment(Experiment):
             run_name=f'trial{trial.number:03d}',
         )
 
-        for output in self.outputs:
-            output.report(result)
-
+        self.output.report(result)
         return self.metric_function(result.llrdata)
 
     def run(self) -> None:
@@ -128,8 +126,7 @@ class OptunaExperiment(Experiment):
             study = optuna.create_study()  # Create a new study.
             study.optimize(self._objective, n_trials=self.n_trials)  # Invoke optimization of the objective function.
         finally:
-            for output in self.outputs:
-                output.close()
+            self.output.close()
 
 
 @config_parser(
@@ -166,14 +163,13 @@ def parse_optuna_experiment(config: ConfigValue, output_dir: Path) -> OptunaExpe
 
     data_config = pop_field(config, 'data')
 
-    output_config = pop_field(config, 'output', required=False)
-    aggregations = parse_aggregations(output_config, output_dir) if output_config else []
+    aggregation = parse_aggregations(config.pop('output', required=False), output_dir)
 
     check_is_empty(config)
 
     return OptunaExperiment(
         data_config=data_config,
-        outputs=aggregations,
+        output=aggregation,
         output_path=output_dir,
         baseline_config=baseline_config,
         lrsystem_parameters=parameters,

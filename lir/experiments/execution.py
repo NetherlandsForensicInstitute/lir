@@ -176,7 +176,6 @@ def run_lrsystem(
     experiment_output_dir: Path,
     lrsystem_config: LRSystemConfig,
     data_config: DataConfig,
-    skip_full_lrsystem: bool = False,
     run_name: str | None = None,
 ) -> AggregationData:
     """
@@ -201,8 +200,6 @@ def run_lrsystem(
         LR-system configuration for a single run.
     data_config : DataConfig
         Data configuration used to construct datasets for runs.
-    skip_full_lrsystem : bool
-        If True, the full LR system will not be trained.
     run_name : str | None
         The name of the run (optional). If None, the name will be derived from parameter values.
 
@@ -253,17 +250,6 @@ def run_lrsystem(
     # Combine collected numpy arrays after iteration over the train/test split(s)
     llrs: LLRData = concatenate_instances(*llrs)
 
-    # Create a lazy factory for full-data-fitted model with memoization
-    _cached_full_fit_lrsystem = None
-
-    def get_full_fit_lrsystem() -> LRSystem:
-        nonlocal _cached_full_fit_lrsystem
-        if _cached_full_fit_lrsystem is None:
-            full_training_data = concatenate_instances(*next(iter(data_config.splits)))
-            _cached_full_fit_lrsystem = parse_lrsystem(deepcopy(lrsystem_config.spec), run_output_dir)
-            _cached_full_fit_lrsystem.fit(full_training_data)
-        return _cached_full_fit_lrsystem
-
     # Collect and report results as configured by `outputs`
     return AggregationData(
         llrdata=llrs,
@@ -272,7 +258,6 @@ def run_lrsystem(
         run_name=run_name,
         experiment_output_dir=experiment_output_dir,
         run_output_dir=run_output_dir,
-        get_full_fit_lrsystem=None if skip_full_lrsystem else get_full_fit_lrsystem,
     )
 
 
@@ -325,10 +310,7 @@ def run_multiple_lrsystems(
     """
     LOG.debug(f'process {multiprocessing.current_process()} about to do {len(lrsystem_configs)} runs')
     try:
-        return [
-            run_lrsystem(output_base_dir, lrsystem_config, data_config, skip_full_lrsystem=True)
-            for lrsystem_config in lrsystem_configs
-        ]
+        return [run_lrsystem(output_base_dir, lrsystem_config, data_config) for lrsystem_config in lrsystem_configs]
     finally:
         LOG.debug(f'process {multiprocessing.current_process()} finished {len(lrsystem_configs)} runs')
 
@@ -387,7 +369,7 @@ def parallelize_runs(
 
             LOG.debug(f'spawning {len(lrsystem_configs)} tasks to do a total of {n_runs} runs in chunks of {chunksize}')
             yield from pool.imap_unordered(
-                partial(run_lrsystem, output_base_dir, data_config=data_configs[0], skip_full_lrsystem=True),
+                partial(run_lrsystem, output_base_dir, data_config=data_configs[0]),
                 lrsystem_configs,
                 chunksize=chunksize,
             )

@@ -68,7 +68,6 @@ class InferenceExperiment(Experiment):
                 run_name='inference',
                 experiment_output_dir=self.output_path,
                 run_output_dir=self.output_path,
-                get_full_fit_lrsystem=None,
             )
             self.output.report(aggregation_data)
 

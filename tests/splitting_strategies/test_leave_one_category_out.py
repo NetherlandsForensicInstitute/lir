@@ -3,7 +3,7 @@ import pytest
 
 from lir import FeatureData, InstanceData, registry
 from lir.config.base import GenericConfigParser
-from lir.data_strategies import LeaveOneCategoryOut
+from lir.splitting_strategies import LeaveOneCategoryOut
 
 
 @pytest.mark.parametrize(

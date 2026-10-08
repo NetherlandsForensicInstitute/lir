@@ -23,4 +23,5 @@ __all__ = [
     'pop_field',
     'check_is_empty',
     'get_full_name',
+    'ConfigAttribute',
 ]

@@ -11,9 +11,9 @@ from lir.config.base import (
     YamlParseError,
     check_is_empty,
     get_full_name,
-    pop_field,
 )
 from lir.config.transform import parse_module
+from lir.config.util import parse_config
 from lir.data.models import DataProvider, DataStrategy, InstanceData
 from lir.transform import Identity
 
@@ -107,21 +107,13 @@ def parse_splitting_strategy(cfg: ConfigValue, output_path: Path) -> DataStrateg
     DataStrategy
         Parsed data strategy instance.
     """
-    strategy = pop_field(cfg, 'strategy', validate_type=str)
-
-    try:
-        parser = registry.get(
-            strategy,
-            search_path=['data_strategies'],
-            default_config_parser=GenericConfigParser,
-        )
-    except Exception as e:
-        raise YamlParseError(
-            cfg.context,
-            f'no parser available for data strategy `{strategy}`; the error was: {e}',
-        )
-
-    return parser.parse(cfg, output_path)
+    return parse_config(
+        cfg,
+        output_path,
+        method_key='strategy',
+        search_path=['data_strategies'],
+        default_config_parser=GenericConfigParser,
+    )
 
 
 class _DataProviderFunction(DataProvider):
@@ -202,18 +194,10 @@ def parse_data_provider(cfg: ConfigValue, output_path: Path) -> DataProvider:
     DataProvider
         Parsed data provider instance.
     """
-    provider = pop_field(cfg, 'method', validate_type=str)
-
-    try:
-        parser = registry.get(
-            provider,
-            search_path=['data_providers'],
-            default_config_parser=GenericConfigParser,
-        )
-    except Exception as e:
-        raise YamlParseError(
-            cfg.context,
-            f'no parser available for data provider `{provider}`; the error was: {e}',
-        )
-
-    return parser.parse(cfg, output_path)
+    return parse_config(
+        cfg,
+        output_path,
+        method_key='method',
+        default_config_parser=GenericConfigParser,
+        search_path=['data_providers'],
+    )

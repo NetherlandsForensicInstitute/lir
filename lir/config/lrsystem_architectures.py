@@ -3,11 +3,10 @@ import logging
 from pathlib import Path
 from typing import Self
 
-from lir import Transformer, registry
+from lir import Transformer
 from lir.config.base import (
     ConfigAttribute,
     ConfigValue,
-    YamlParseError,
     check_is_empty,
     config_parser,
     pop_field,
@@ -17,12 +16,12 @@ from lir.config.substitution import (
     substitute_parameters,
 )
 from lir.config.transform import parse_module, parse_pairing_config
+from lir.config.util import parse_config
 from lir.data.models import InstanceData, LLRData
 from lir.lrsystems.base import LRSystem
 from lir.lrsystems.binary_lrsystem import BinaryLRSystem
 from lir.lrsystems.score_based import ScoreBasedSystem
 from lir.lrsystems.two_level import TwoLevelSystem
-from lir.registry import ComponentNotFoundError
 from lir.transform.pairing import PairingMethod
 from lir.transform.pipeline import Pipeline
 
@@ -233,17 +232,10 @@ def parse_lrsystem(config: ConfigValue, output_dir: Path) -> ParsedLRSystem:
     ParsedLRSystem
         Wrapper containing parsed LR system and source configuration.
     """
-    lrsystem_config = config.clone()  # save for later
-
-    architecture = pop_field(config, 'architecture', validate_type=str)
-
-    try:
-        parser = registry.get(architecture, search_path=['lrsystem_architectures'])
-    except ComponentNotFoundError as e:
-        raise YamlParseError(config.context, f'{e}')
-
-    lrsystem = parser.parse(config, output_dir)
-    return ParsedLRSystem(lrsystem, lrsystem_config)
+    lrsystem = parse_config(
+        config.clone(), output_dir, method_key='architecture', search_path=['lrsystem_architectures']
+    )
+    return ParsedLRSystem(lrsystem, config)
 
 
 def augment_config(baseline_config: ConfigValue, hyperparameters: dict[str, HyperparameterOption]) -> ConfigValue:

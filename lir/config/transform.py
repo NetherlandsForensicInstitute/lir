@@ -10,6 +10,7 @@ from lir.config.base import (
     YamlParseError,
     pop_field,
 )
+from lir.config.util import parse_config
 from lir.transform import (
     FunctionTransformer,
     Identity,
@@ -125,14 +126,16 @@ def parse_module(
     """
     if module_config is None or module_config.value is None:
         return Identity()
-    elif isinstance(module_config.value, str):
-        class_name = module_config.value
-        args = ConfigValue.wrap(module_config.context, {})
-    else:
-        args = module_config
-        class_name = pop_field(args, 'method', default=default_method, validate_type=str)
 
-    return registry.get(class_name, GenericTransformerConfigParser, search_path=['modules']).parse(args, output_dir)
+    return parse_config(
+        module_config,
+        output_dir,
+        method_key='method',
+        allow_shorthand=True,
+        default_method=default_method,
+        default_config_parser=GenericTransformerConfigParser,
+        search_path=['modules'],
+    )
 
 
 def parse_pairing_config(

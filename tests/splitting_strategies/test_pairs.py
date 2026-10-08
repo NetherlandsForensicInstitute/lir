@@ -1,7 +1,7 @@
 import numpy as np
 
 from lir.data.models import FeatureData
-from lir.data_strategies import PairsTrainTestSplit
+from lir.splitting_strategies import PairsTrainTestSplit
 from lir.transform.pairing import InstancePairing
 
 

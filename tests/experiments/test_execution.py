@@ -3,9 +3,9 @@ from pathlib import Path
 import numpy as np
 
 from lir.config.data import DataSetup
-from lir.data_strategies.labels import TrainTestSplit
 from lir.datasets.synthesized_normal_binary import SynthesizedNormalBinaryData, SynthesizedNormalData
 from lir.experiments.execution import DataConfig
+from lir.splitting_strategies.labels import TrainTestSplit
 from lir.transform.select_instances import SelectInstances
 
 

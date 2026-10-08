@@ -80,12 +80,12 @@ def parse_data_setup(cfg: ConfigValue, output_path: Path) -> DataSetup:
     """
     provider = parse_data_provider(pop_field(cfg, 'provider'), output_path)
     data_filter = parse_module(pop_field(cfg, 'filter', required=False), output_path)
-    strategy = parse_data_strategy(pop_field(cfg, 'splits'), output_path)
+    strategy = parse_splitting_strategy(pop_field(cfg, 'splits'), output_path)
     check_is_empty(cfg)
     return DataSetup(provider, strategy, data_filter)
 
 
-def parse_data_strategy(cfg: ConfigValue, output_path: Path) -> DataStrategy:
+def parse_splitting_strategy(cfg: ConfigValue, output_path: Path) -> DataStrategy:
     """
     Instantiate specific implementation of `DataStrategy` as configured.
 

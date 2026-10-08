@@ -123,9 +123,9 @@ The `data provider`_ delivers the dataset. The organization depends somewhat on 
     at a later stage, for example from media such as text in case of authorship analysis.
 - **instance_ids:** Optional attribute, used to identify instances. This attribute is mostly useful for debugging.
 - **role_assignments:** Optional attribute, used to prescribe which instances should be used for training/testing. To be
-    used with a predefined train/test split (e.g. :class:`~lir.data_strategies.PredefinedTrainTestSplit`).
+    used with a predefined train/test split (e.g. :class:`~lir.splitting_strategies.PredefinedTrainTestSplit`).
 - **fold_assignment_column:** Optional attribute, used to prescribe how cross-validation should be applied. To be used
-    with predefined cross-validation (e.g. :class:`~lir.data_strategies.PredefinedCrossValidation`).
+    with predefined cross-validation (e.g. :class:`~lir.splitting_strategies.PredefinedCrossValidation`).
 
 In a YAML setup, the data provider has at least the ``method`` property, and any other property is passed
 as a parameter of the data provision method.

@@ -3,7 +3,7 @@ from collections.abc import Iterator
 
 from lir import DataStrategy, InstanceData
 from lir.config.base import ConfigAttribute
-from lir.data_strategies import labels, pairs, predefined, sources
+from lir.splitting_strategies import labels, pairs, predefined, sources
 
 
 class AutoTrainTestSplit(DataStrategy):
@@ -13,11 +13,11 @@ class AutoTrainTestSplit(DataStrategy):
     This splitter attempts to find a suitable splitting strategy for the input data. Candidate strategies are, in order
     of priority:
 
-    - :class:`~lir.data_strategies.PredefinedTrainTestSplit`, if the dataset has role assignments;
-    - :class:`~lir.data_strategies.PairsTrainTestSplit`, if the dataset has pairs with source ids (i.e., two source ids
-      per pair);
-    - :class:`~lir.data_strategies.SourcesTrainTestSplit`, if the instances in the dataset have source ids;
-    - :class:`~lir.data_strategies.TrainTestSplit`, if the instances in the dataset have hypothesis labels.
+    - :class:`~lir.splitting_strategies.PredefinedTrainTestSplit`, if the dataset has role assignments;
+    - :class:`~lir.splitting_strategies.PairsTrainTestSplit`, if the dataset has pairs with source ids
+      (i.e., two source ids per pair);
+    - :class:`~lir.splitting_strategies.SourcesTrainTestSplit`, if the instances in the dataset have source ids;
+    - :class:`~lir.splitting_strategies.TrainTestSplit`, if the instances in the dataset have hypothesis labels.
 
     The data strategy will be decided in ``apply()``. Subsequent calls to ``apply()`` are not guaranteed to use the same
     strategy, although in realistic use cases this is most likely the case. If no suitable strategy is found, a
@@ -110,10 +110,10 @@ class AutoCrossValidation(DataStrategy):
 
     This splitter attempts to find a suitable splitting strategy for the input data. Candidate strategies are:
 
-    - :class:`~lir.data_strategies.PredefinedCrossValidation`, if the dataset has fold assignments;
-    - :class:`~lir.data_strategies.SourcesCrossValidation`, if the dataset has pairs with source ids (i.e., two source
-      ids per pair);
-    - :class:`~lir.data_strategies.CrossValidation`, if the instances in the dataset have hypothesis labels.
+    - :class:`~lir.splitting_strategies.PredefinedCrossValidation`, if the dataset has fold assignments;
+    - :class:`~lir.splitting_strategies.SourcesCrossValidation`, if the dataset has pairs with source ids
+      (i.e., two source ids per pair);
+    - :class:`~lir.splitting_strategies.CrossValidation`, if the instances in the dataset have hypothesis labels.
 
     The data strategy will be decided in ``apply()``. Subsequent calls to ``apply()`` are not guaranteed to use the same
     strategy, although in realistic use cases this is most likely the case. If no suitable strategy is found, a

@@ -97,7 +97,7 @@ class SourcesCrossValidation(DataStrategy):
     K-fold cross-validation by source id.
 
     This data strategy uses the ``source_ids`` attribute and distributes the sources over *k* different subsets. If the
-    data have hypothesis labels, use :class:`~lir.data_strategies.CrossValidation` instead.
+    data have hypothesis labels, use :class:`~lir.splitting_strategies.CrossValidation` instead.
 
     Each of the subsets will be offered once as the test set, using the others as the training set. Each source is
     assigned to exactly one of the subsets, and no sources will have instances that appear in more than one.

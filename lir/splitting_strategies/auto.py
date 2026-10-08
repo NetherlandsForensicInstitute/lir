@@ -3,7 +3,7 @@ from collections.abc import Iterator
 
 from lir import DataStrategy, InstanceData
 from lir.config.base import ConfigAttribute
-from lir.data_strategies import labels, pairs, predefined, sources
+from lir.splitting_strategies import labels, pairs, predefined, sources
 
 
 class AutoTrainTestSplit(DataStrategy):

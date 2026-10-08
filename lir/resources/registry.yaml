@@ -55,7 +55,7 @@ modules:
   manhattan_distance: lir.transform.distance.ManhattanDistance
 
   # utility modules
-  tee: lir.config.util.TeeParser
+  tee: lir.transform.tee.parse
   csv_writer: lir.transform.csv_writer.csv_writer
   save_features: lir.transform.save_features.SaveFeatureTransformer
   validate_feature_data_type: lir.transform.data_validator.ValidateFeatureDataType

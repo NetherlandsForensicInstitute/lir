@@ -10,7 +10,6 @@ from lir.config.base import (
     GenericConfigParser,
     check_is_empty,
     get_full_name,
-    pop_field,
 )
 from lir.config.transform import parse_module
 from lir.config.util import parse_config

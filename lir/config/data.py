@@ -37,7 +37,6 @@ def parse_data_setup(cfg: ConfigValue, output_path: Path) -> DataSetup:
         cfg,
         output_path,
         method_key='setup',
-        default_method='split_data',
         default_config_parser=GenericConfigParser,
         search_path=['data_setup'],
     )

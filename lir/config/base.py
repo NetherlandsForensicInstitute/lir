@@ -363,31 +363,25 @@ class ConfigValue:
 
 
 class ConfigAttribute(NamedTuple):
-    """
-    An attribute in a configuration section.
-
-    Attributes
-    ----------
-    name : str
-        The attribute name.
-    type : type[Any]
-        The type of the attribute value.
-    required : bool, optional
-        Whether the attribute is required (defaults to ``False``).
-    description : str, optional
-        A text to describe the attribute and how it is used.
-    default : Any, optional
-        The default value for this attribute.
-    obsolete : bool, optional
-        If the attribute is obsolete, it will be rejected in strict mode.
-    """
+    """An attribute in a configuration section."""
 
     name: str
+    """The attribute name."""
+
     type: type[Any] | UnionType
+    """The type of the attribute value."""
+
     required: bool = False
+    """Whether the attribute is required (defaults to ``False``)."""
+
     description: str | None = None
+    """A text to describe the attribute and how it is used."""
+
     default: Any = None
+    """The default value for this attribute."""
+
     obsolete: bool = False
+    """If the attribute is obsolete, it will be rejected in strict mode."""
 
 
 class ConfigParser(ABC):

@@ -170,6 +170,7 @@ In that case, the train/test roles are assigned by the data provider, and we can
 .. code-block:: yaml
 
     data:
+      setup: split_data
       provider:
         method: glass
         cache_dir: .glass-data
@@ -273,7 +274,7 @@ say we want to try other LR calculation methods as well, and compare the results
 
 .. literalinclude:: snippets/model-selection.yaml
     :language: yaml
-    :emphasize-lines: 3-4,41-47
+    :emphasize-lines: 3-4,43-49
 
 This will run the LR system three times, once for each LR calculation method. All metrics are collected in
 ``metrics.csv`` and its contents is the following.
@@ -299,7 +300,7 @@ we vary the input data, we use ``data_parameters`` instead of ``lrsystem_paramet
 
 .. literalinclude:: snippets/sensitivity-analysis.yaml
     :language: yaml
-    :emphasize-lines: 3,16,42-50
+    :emphasize-lines: 3,17,44-52
 
 Again, this generates the results for the different data sizes, and metrics are collected in ``metrics.csv``.
 
@@ -323,7 +324,7 @@ We may instead use a numerical variable, which yields the exact same results:
 
 .. literalinclude:: snippets/sensitivity-analysis-numerical.yaml
     :language: yaml
-    :emphasize-lines: 43-46
+    :emphasize-lines: 45-48
 
 In the examples above, the parameters are automatically recognized to be categorical or numerical. However, we can also
 explicitly specify the parameter type. The following is equivalent to the above.

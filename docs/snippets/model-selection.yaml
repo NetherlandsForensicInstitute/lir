@@ -5,6 +5,8 @@ experiments:
 
     # The data section: which data to use and how to use it.
     data:
+      setup: split_data               # Use a single dataset to be split into a training set and a test set
+
       provider:                       # The data provider specifies which data to use.
         method: parse_features_from_csv_url  # We use the generic CSV parser to get glass data.
         url: https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/main/training.csv

@@ -20,6 +20,7 @@ from lir.data.models import LLRData
 from lir.experiments import Experiment
 from lir.experiments.execution import DataConfig, LRSystemConfig, run_lrsystem
 from lir.metrics import MetricType
+from lir.util import check_not_none
 
 
 class OptunaExperiment(Experiment):
@@ -114,7 +115,7 @@ class OptunaExperiment(Experiment):
         )
 
         self.output.report(result)
-        return self.metric_function(result.llrdata)
+        return self.metric_function(check_not_none(result.llrdata))
 
     def run(self) -> None:
         """

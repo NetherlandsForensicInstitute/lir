@@ -58,7 +58,7 @@ def parse_aggregation(config: ConfigValue, output_dir: Path, context: list[str] 
     return parsed_object
 
 
-def parse_aggregations(config: ConfigValue | None, output_dir: Path) -> Aggregation:
+def parse_aggregations(config: ConfigValue, output_dir: Path) -> Aggregation:
     """
     Parse a configuration section for an aggregation, or a list of aggregation configuration sections.
 
@@ -74,7 +74,7 @@ def parse_aggregations(config: ConfigValue | None, output_dir: Path) -> Aggregat
     Aggregation
         Parsed aggregation instance, or a group of aggregation instances.
     """
-    if config is None:
+    if config.value is None:
         return AggregationGroup([])
     elif isinstance(config.value, list):
         return AggregationGroup([parse_aggregation(item, output_dir) for item in config.value])

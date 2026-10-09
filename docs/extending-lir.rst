@@ -59,8 +59,8 @@ This module is now ready to run in an LR system, and can be referenced in a conf
 
 .. literalinclude:: snippets/minimal-single-run-with-cosim.yaml
     :language: yaml
-    :lines: 1-40,42-
-    :emphasize-lines: 39-40
+    :lines: 1-42,44-
+    :emphasize-lines: 41-42
 
 Try running the above example in LiR. If it does not work, make sure the Python interpreter can access the
 ``cosine_similarity.py`` file. It should work if the file is in the working directory or if it is in the
@@ -83,7 +83,7 @@ Any key/value-pair in the configuration section of ``score`` (except for ``metho
 
 .. literalinclude:: snippets/minimal-single-run-with-cosim.yaml
     :language: yaml
-    :emphasize-lines: 41
+    :emphasize-lines: 43
 
 
 Step 4: create a configuration parser (optional)

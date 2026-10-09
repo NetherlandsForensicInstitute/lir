@@ -72,7 +72,7 @@ How to read a PAV plot? The example below shows how to interpret the different s
     from lir.algorithms.bayeserror import ELUBBounder
     from lir.algorithms.logistic_regression import LogitCalibrator
     from lir.datasets.glass import GlassData
-    from lir.data_strategies import PredefinedTrainTestSplit
+    from lir.splitting_strategies import PredefinedTrainTestSplit
     from lir.lrsystems.score_based import ScoreBasedSystem
     from lir.transform import as_transformer
     from lir.transform.distance import ManhattanDistance
@@ -227,7 +227,7 @@ distribution. It visualizes as follows.
 .. jupyter-execute::
 
     from lir.algorithms.logistic_regression import LogitCalibrator
-    from lir.data_strategies import TrainTestSplit
+    from lir.splitting_strategies import TrainTestSplit
     from lir.datasets.synthesized_normal_binary import SynthesizedNormalData, SynthesizedNormalBinaryData
 
     # set the parameters for H1 data and H2 data

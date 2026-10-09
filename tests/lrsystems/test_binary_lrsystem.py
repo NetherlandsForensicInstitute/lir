@@ -5,9 +5,9 @@ import pytest
 from sklearn.preprocessing import StandardScaler
 
 from lir.data.models import FeatureData
-from lir.data_strategies import TrainTestSplit
 from lir.lrsystems.base import LLRData
 from lir.lrsystems.binary_lrsystem import BinaryLRSystem
+from lir.splitting_strategies import TrainTestSplit
 from lir.transform.pipeline import Pipeline
 
 

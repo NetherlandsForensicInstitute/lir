@@ -1,14 +1,13 @@
+import warnings
 from collections.abc import Callable
 from functools import partial
 from pathlib import Path
 from typing import Any
 
-from lir import registry
 from lir.config.base import (
     ConfigParser,
     ConfigValue,
     GenericConfigParser,
-    YamlParseError,
     get_full_name,
 )
 from lir.config.util import parse_config
@@ -35,11 +34,18 @@ def parse_data_setup(cfg: ConfigValue, output_path: Path) -> DataSetup:
     DataSetup
         Parsed data provider, filter and strategy.
     """
+    default_method = 'split_data'
+
+    if 'setup' not in cfg:
+        warnings.warn(
+            f'{".".join(cfg.context)}: missing key: setup; using default data setup: {default_method}', stacklevel=2
+        )
+
     return parse_config(
         cfg,
         output_path,
         method_key='setup',
-        default_method='split_data',
+        default_method=default_method,
         default_config_parser=GenericConfigParser,
         search_path=['data_setup'],
     )

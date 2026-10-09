@@ -27,3 +27,6 @@ experiments:
         steps:
           score: manhattan_distance   # First, we use the manhattan distance to calculate a "score".
           to_llr: logistic_calibrator # Next, we turn the scores into LLRs.
+
+    output:
+      - save_model

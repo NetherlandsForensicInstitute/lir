@@ -186,7 +186,7 @@ class ConfigValue:
         required: bool | None = None,
         validate: Callable[[Any], Any] | None = None,
         validate_type: type[Any] | UnionType | None = None,
-    ) -> 'ConfigValue | None':
+    ) -> 'ConfigValue':
         """
         Validate and retrieve the value for a given field, after which it is removed from this configuration.
 
@@ -197,7 +197,8 @@ class ConfigValue:
         If the field does not exist, and a default is provided, the default is returned, wrapped in a ``ConfigValue``
         object.
 
-        If the field does not exist, it is optional, and no default is provided, ``None`` is returned.
+        If the field does not exist, it is optional, and no default is provided, ``None`` is returned, wrapped in a
+        ``ConfigValue`` object.
 
         Otherwise, the field does not exist, and it is required: an error is raised.
 
@@ -248,10 +249,8 @@ class ConfigValue:
         # if no field value was returned, return the default value or raise an error
         if required:
             raise YamlParseError(self.context, f'missing field: `{field}`')
-        elif default is not None:
-            return ConfigValue.wrap(self.context + [field], default)
-        else:
-            return None
+
+        return ConfigValue.wrap(self.context + [field], default)
 
     def pop_field(
         self,
@@ -284,8 +283,7 @@ class ConfigValue:
         Any
             Popped field value or ``default``.
         """
-        value = self.pop(field, default, required, validate, validate_type)
-        return value.unwrap() if value is not None else None
+        return self.pop(field, default, required, validate, validate_type).unwrap()
 
     def unwrap(self) -> list | dict | int | float | bool | str | None:
         """
@@ -775,9 +773,11 @@ def pop_field(
             field=field, default=default, required=required, validate=validate, validate_type=validate_type
         )
     else:
-        return config.pop(
+        has_attr = isinstance(config.value, dict) and field in config.value
+        value = config.pop(
             field=field, default=default, required=required, validate=validate, validate_type=validate_type
         )
+        return None if not has_attr else value
 
 
 def check_is_empty(

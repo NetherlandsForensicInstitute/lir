@@ -30,6 +30,7 @@ data_strategies:
 
 data_setup:
   split_data: lir.data_setup.train_test_split.parse
+  inference: lir.data_setup.inference.parse
 
 data_providers:
   synthesized_normal_binary: lir.datasets.synthesized_normal_binary.synthesized_normal_binary

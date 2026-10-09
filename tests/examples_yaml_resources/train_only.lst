@@ -1,2 +1,4 @@
 log.txt
-my_experiment/lrsystem.pkl
+my_training_session/data.yaml
+my_training_session/lrsystem.yaml
+my_training_session/model.pkl

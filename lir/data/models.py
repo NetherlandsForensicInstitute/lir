@@ -1002,6 +1002,30 @@ class DataStrategy(ABC):
         raise NotImplementedError
 
 
+class DataSetup(ABC):
+    """
+    Data setup, governs how data are organized.
+
+    A data setup must implement the ``get_train_test_pairs()`` method, which returns a sequence of train and inference
+    datasets. A model should be fit on the training data, and use the test data for inference. Either the training or
+    the inference data may be ``None``. If the training dataset is ``None``, the training step should be skipped. This
+    only applies to models that are pre-fitted. If the inference dataset is ``None``, the inference step should be
+    skipped. Each run, the model should process all pairs of training and inference datasets.
+    """
+
+    @abstractmethod
+    def get_train_inference_pairs(self) -> Iterable[tuple[InstanceData | None, InstanceData | None]]:
+        """
+        Return the data in the form of one or more train/inference dataset pairs.
+
+        Returns
+        -------
+        Iterable[tuple[InstanceData | None, InstanceData | None]]
+            An iterator over tuples of train/inference datasets.
+        """
+        raise NotImplementedError
+
+
 def get_instances_by_category[InstanceDataType: InstanceData](
     instances: InstanceDataType, category_field: str, category_shape: tuple[int] | None = None
 ) -> Iterator[tuple[np.ndarray, InstanceDataType]]:

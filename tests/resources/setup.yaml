@@ -1,6 +1,8 @@
 output_path: output/${timestamp}_specific_source
 
 data: &data
+  setup: split_data
+
   provider:
     method: synthesized_normal_binary
     seed: 42

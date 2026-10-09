@@ -5,10 +5,10 @@ import pytest
 
 from lir.config.base import ConfigValue
 from lir.data.models import FeatureData
-from lir.data_strategies import RoleAssignment
 from lir.datasets.feature_data_csv import (
     feature_data_csv_file_parser,
 )
+from lir.splitting_strategies import RoleAssignment
 
 
 @pytest.mark.parametrize(

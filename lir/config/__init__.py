@@ -1,4 +1,5 @@
 from lir.config.base import (
+    ConfigAttribute,
     ConfigParser,
     ConfigValue,
     GenericConfigParser,
@@ -12,6 +13,7 @@ from lir.config.base import (
 
 
 __all__ = [
+    'ConfigAttribute',
     'ConfigValue',
     'YamlParseError',
     'ConfigParser',
@@ -21,4 +23,5 @@ __all__ = [
     'pop_field',
     'check_is_empty',
     'get_full_name',
+    'ConfigAttribute',
 ]

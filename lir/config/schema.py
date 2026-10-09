@@ -8,7 +8,7 @@ from typing import Any
 import confidence
 from jsonschema import validate
 
-from lir import Transformer, registry
+from lir import DataProvider, DataStrategy, Transformer, registry
 from lir.aggregation import Aggregation
 from lir.config.base import ConfigAttribute, ConfigParser, ConfigValue, GenericConfigParser
 from lir.config.substitution import Hyperparameter
@@ -29,6 +29,14 @@ DEFINITIONS: dict[type | types.UnionType | tuple[type, type], dict[str, Any]] = 
     Transformer: {'$ref': '#/definitions/module'},
     (Transformer, Pipeline): {'$ref': '#/definitions/pipeline'},
     PairingMethod: {'$ref': '#/definitions/pairingConfiguration'},
+    DataProvider: {
+        '$ref': '#/definitions/dataProvider',
+        'description': 'The data provider specifies the data source and how to load it.',
+    },
+    DataStrategy: {
+        '$ref': '#/definitions/dataSplits',
+        'description': 'Choose a data splitting strategy to define how to divide data into training and testing sets.',
+    },
     DataConfig: {
         '$ref': '#/definitions/dataConfiguration',
         'description': 'Data configuration for this experiment (references are resolved before validation).',
@@ -478,23 +486,9 @@ class SchemaGenerator:
             },
             'definitions': {
                 'experiment': experiments_definition,
-                'dataConfiguration': {
-                    'type': 'object',
-                    'description': 'Configuration for data loading and splitting into train/test sets.',
-                    'properties': {
-                        'provider': {
-                            '$ref': '#/definitions/dataProvider',
-                            'description': 'Data provider configuration specifying the data source and how to load it.',
-                        },
-                        'splits': {
-                            '$ref': '#/definitions/dataSplits',
-                            'description': 'Data splitting strategy defining how to divide data into training and '
-                            + 'testing sets.',
-                        },
-                    },
-                    'required': ['provider', 'splits'],
-                    'additionalProperties': False,
-                },
+                'dataConfiguration': self._generate_alternatives_schema(
+                    'data_setup', 'Choose your data setup.', 'setup'
+                ),
                 'dataProvider': self._generate_alternatives_schema(
                     'data_providers', 'The data provider specifies the data source and how to load it.', 'method'
                 ),

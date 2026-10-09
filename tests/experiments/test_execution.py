@@ -2,11 +2,12 @@ from pathlib import Path
 
 import numpy as np
 
-from lir.config.data import DataSetup
+from lir.data_setup.train_test_split import SplitDataSetup
 from lir.datasets.synthesized_normal_binary import SynthesizedNormalBinaryData, SynthesizedNormalData
 from lir.experiments.execution import DataConfig
 from lir.splitting_strategies.labels import TrainTestSplit
 from lir.transform.select_instances import SelectInstances
+from lir.util import check_not_none
 
 
 def test_filter_is_applied_before_splitting():
@@ -18,12 +19,12 @@ def test_filter_is_applied_before_splitting():
     expected = provider.get_instances().features[::2, 0]  # feature values of every other instance
 
     config = DataConfig(spec={}, params={}, experiment_output_dir=Path())
-    config._data_setup = DataSetup(
+    config._data_setup = SplitDataSetup(
         provider, TrainTestSplit(test_size=0.5, seed=1), SelectInstances(lambda i: i % 2 == 0)
     )
 
-    train, test = next(iter(config.splits))
-    actual = train + test
+    train, test = next(iter(config.train_inference_pairs))
+    actual = check_not_none(train) + check_not_none(test)
 
     assert len(actual) == 10
     np.testing.assert_array_equal(np.sort(actual.features.reshape(-1)), np.sort(expected))

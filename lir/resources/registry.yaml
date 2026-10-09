@@ -28,6 +28,9 @@ data_strategies:
   auto_cross_validation: lir.splitting_strategies.AutoCrossValidation
   leave_one_category_out: lir.splitting_strategies.LeaveOneCategoryOut
 
+data_setup:
+  split_data: lir.data_setup.train_test_split.parse
+
 data_providers:
   synthesized_normal_binary: lir.datasets.synthesized_normal_binary.synthesized_normal_binary
   synthesized_normal_multiclass: lir.datasets.synthesized_normal_multiclass.synthesized_normal_multiclass

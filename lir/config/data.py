@@ -1,61 +1,18 @@
-from collections.abc import Callable, Iterable
+from collections.abc import Callable
 from functools import partial
 from pathlib import Path
 from typing import Any
 
-from lir import Transformer, registry
+from lir import registry
 from lir.config.base import (
     ConfigParser,
     ConfigValue,
     GenericConfigParser,
     YamlParseError,
-    check_is_empty,
     get_full_name,
 )
-from lir.config.transform import parse_module
 from lir.config.util import parse_config
-from lir.data.models import DataProvider, DataStrategy, InstanceData
-from lir.transform import Identity
-
-
-class DataSetup:
-    """
-    Data setup, consisting of three components: a data provider, a filter, and a strategy.
-
-    The filter is a :class:`~lir.Transformer` that supports calling the `apply()` method without first calling
-    `fit()`. Unlike in LR system pipelines, this transformer may change the number of instances in the dataset.
-
-    Parameters
-    ----------
-    provider : DataProvider
-        The :class:`~lir.data.models.DataProvider` that retrieves the data from some data source, such as
-          a CSV file or a database.
-    strategy : DataStrategy
-        The :class:`~lir.data.models.DataStrategy` that determines how the data are used.
-    data_filter : Transformer | None
-        An optional filter (:class:`~lir.Transformer`) to apply to the raw data before doing anything else.
-    """
-
-    def __init__(self, provider: DataProvider, strategy: DataStrategy, data_filter: Transformer | None):
-        self.provider = provider
-        self.strategy = strategy
-        self.filter = data_filter or Identity()
-
-    def get_splits(self) -> Iterable[tuple[InstanceData, InstanceData]]:
-        """
-        Return the data in the form of one or more train/test splits.
-
-        This method follows three steps:
-        - retrieve instances from the data provider;
-        - pass them through the filter by calling its `apply()` method;
-        - apply the data strategy to arrange them into one or more train/test splits.
-
-        Returns
-        -------
-        Iterable[tuple[InstanceData, InstanceData]]
-            An iterator over tuples of train/test splits.
-        """
-        return self.strategy.apply(self.filter.apply(self.provider.get_instances()))
+from lir.data.models import DataProvider, DataSetup, DataStrategy, InstanceData
 
 
 def parse_data_setup(cfg: ConfigValue, output_path: Path) -> DataSetup:
@@ -78,11 +35,14 @@ def parse_data_setup(cfg: ConfigValue, output_path: Path) -> DataSetup:
     DataSetup
         Parsed data provider, filter and strategy.
     """
-    provider = parse_data_provider(pop_field(cfg, 'provider'), output_path)
-    data_filter = parse_module(pop_field(cfg, 'filter', required=False), output_path)
-    strategy = parse_splitting_strategy(pop_field(cfg, 'splits'), output_path)
-    check_is_empty(cfg)
-    return DataSetup(provider, strategy, data_filter)
+    return parse_config(
+        cfg,
+        output_path,
+        method_key='setup',
+        default_method='split_data',
+        default_config_parser=GenericConfigParser,
+        search_path=['data_setup'],
+    )
 
 
 def parse_splitting_strategy(cfg: ConfigValue, output_path: Path) -> DataStrategy:

@@ -16,7 +16,7 @@ This page lists the components that may be needed to set up an experiment.
 
     {% for registry_section, friendly_name in [
         ('experiment_strategies', 'Experiment strategies'),
-        ('data_strategies', 'Data strategies'),
+        ('splitting_strategies', 'Splitting strategies'),
         ('data_providers', 'Data providers'),
         ('metric', 'Metrics'),
         ('output', 'Output'),

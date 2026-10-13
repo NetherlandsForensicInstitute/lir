@@ -2,7 +2,9 @@ import numpy as np
 import pytest
 
 from lir import DataStrategy, FeatureData
-from lir.data_strategies import (
+from lir.datasets.synthesized_normal_binary import SynthesizedNormalBinaryData, SynthesizedNormalData
+from lir.datasets.synthesized_normal_multiclass import SynthesizedDimension, SynthesizedNormalMulticlassData
+from lir.splitting_strategies import (
     AutoCrossValidation,
     AutoTrainTestSplit,
     CrossValidation,
@@ -11,8 +13,6 @@ from lir.data_strategies import (
     SourcesTrainTestSplit,
     TrainTestSplit,
 )
-from lir.datasets.synthesized_normal_binary import SynthesizedNormalBinaryData, SynthesizedNormalData
-from lir.datasets.synthesized_normal_multiclass import SynthesizedDimension, SynthesizedNormalMulticlassData
 
 
 @pytest.mark.parametrize(

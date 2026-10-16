@@ -162,6 +162,7 @@ experiments:
     strategy: single_run                    # For a single validation experiment, use 'single_run'.
     lrsystem: *my_score_based_lrsystem    # This refers to the lr system defined above, make sure to use the name you used above.
     data:
+      setup: split_data
       provider: *my_data_provider           # This refers to the data provider defined above, make sure to use the name you used above.
       splits: *my_data_splits               # This refers to the data splits defined above, make sure to use the name you used above.
     output:                                 # Here you define what output you want. The output will at least include a copy of this yaml and statistics like number of sources and instances.

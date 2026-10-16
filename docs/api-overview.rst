@@ -168,7 +168,7 @@ Split the data into a training set and a test set
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Above, we trained the system and calculated LLRs using the same pairs, which is **not** a sound experimental setup!
-In an experiment we work with :mod:`lir.data_strategies`. This can be a simple train/test split, or a more
+In an experiment we work with :mod:`lir.splitting_strategies`. This can be a simple train/test split, or a more
 advanced configuration such as cross-validation.
 
 A data strategy inherits from :class:`~lir.DataStrategy` and implements an ``apply()`` method that returns an iterator
@@ -178,7 +178,7 @@ Example:
 
 .. jupyter-execute::
 
-    from lir.data_strategies import SourcesTrainTestSplit
+    from lir.splitting_strategies import SourcesTrainTestSplit
 
     splitter = SourcesTrainTestSplit(test_size=0.5)
     ((training_data, test_data),) = splitter.apply(glass_data)
@@ -276,7 +276,7 @@ we have to deal with multiple train/test splits.
 
 .. jupyter-execute::
 
-    from lir.data_strategies import SourcesCrossValidation
+    from lir.splitting_strategies import SourcesCrossValidation
     from lir.data.models import concatenate_instances
 
     # initialize 5-fold cross-validation

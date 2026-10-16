@@ -187,6 +187,12 @@ experiments:
                 value: logistic_regression
               - path: comparing.steps.calibration
                 value: identity
+          - option_name: bigaussian
+            substitutions:
+              - path: comparing.steps.clf
+                value: logistic_regression
+              - path: comparing.steps.calibration
+                value: bigaussian_calibrator
     output:
       - method: metrics
         columns:

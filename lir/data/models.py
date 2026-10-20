@@ -107,10 +107,11 @@ class InstanceData(BaseModel, ABC):
     @model_validator(mode='before')
     @classmethod
     def _alias_labels_to_hypothesis(cls, data: Any) -> Any:
-        if isinstance(data, dict) and 'labels' in data and 'hypothesis' not in data:
+        if isinstance(data, dict) and 'labels' in data:
             warnings.warn('`labels` is deprecated; use `hypothesis` instead', stacklevel=2)
-            data = dict(data)
-            data['hypothesis'] = data.pop('labels')
+            if 'hypothesis' not in data or data['hypothesis'] is None:
+                data = dict(data)
+                data['hypothesis'] = data.pop('labels')
         return data
 
     @property

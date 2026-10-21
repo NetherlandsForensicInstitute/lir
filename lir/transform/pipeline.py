@@ -325,6 +325,7 @@ def logging_pipeline(config: ConfigValue, output_dir: Path) -> Pipeline:
         return Pipeline([])
 
     steps = parse_steps(pop_field(config, 'steps'), output_dir)
-    output_file = output_dir / pop_field(config, 'output_file', default=f'{config.context[-1]}.csv')
+    default_filename = f'{config.context[-1]}.csv' if config.context else 'pipeline.csv'
+    output_file = output_dir / pop_field(config, 'output_file', default=default_filename)
 
     return LoggingPipeline(steps, output_file, **config.as_dict())

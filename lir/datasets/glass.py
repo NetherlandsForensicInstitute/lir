@@ -8,7 +8,7 @@ import requests
 from requests_cache import CachedSession
 
 from lir.data.models import DataProvider, FeatureData
-from lir.data_strategies import RoleAssignment
+from lir.splitting_strategies import RoleAssignment
 
 
 LOG = logging.getLogger(__name__)

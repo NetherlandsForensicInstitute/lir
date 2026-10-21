@@ -1,7 +1,7 @@
 import numpy as np
 
 from lir.data.models import FeatureData
-from lir.data_strategies import PredefinedTrainTestSplit
+from lir.splitting_strategies import PredefinedTrainTestSplit
 
 
 def test_predefined_role_splitter():

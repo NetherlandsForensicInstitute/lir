@@ -69,6 +69,7 @@ modules:
   isotonic_calibrator: lir.algorithms.isotonic_regression.IsotonicCalibrator
   logistic_calibrator: lir.algorithms.logistic_regression.LogitCalibrator
   mcmc: lir.algorithms.mcmc.mcmc
+  bigaussian_calibrator: lir.algorithms.bigaussian.BiGaussianCalibrator
 
   # bounders
   static_bounder: lir.bounding.StaticBounder

@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import Any
 
 import confidence
-from jsonschema import validate
 
 from lir import Transformer, registry
 from lir.aggregation import Aggregation
@@ -589,6 +588,8 @@ def validate_yaml(yaml_path: Path, strict: bool = False) -> None:
     ValidationError
         If the YAML file does not conform to the schema.
     """
+    from jsonschema import validate
+
     schema = generate_schema(strict=strict)
 
     # Resolve ${...} references before validation

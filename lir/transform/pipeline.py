@@ -213,8 +213,8 @@ class LoggingPipeline(Pipeline):
         Additional instance fields to include in logged output.
     include_steps : list[str] | None
         Whether to include step names in logged output.
-    include_input : bool
-        Whether to include original inputs in logged output.
+    include_input : bool, optional
+        Whether to log the pipeline input (defaults to ``True`` iff it is of type :class:`~lir.FeatureData`).
     """
 
     def __init__(
@@ -225,14 +225,14 @@ class LoggingPipeline(Pipeline):
         include_labels: bool = True,
         include_fields: list[str] | None = None,
         include_steps: list[str] | None = None,
-        include_input: bool = True,
+        include_input: bool | None = None,
     ):
         super().__init__(steps)
         self.output_file = Path(output_file)
         self.include_batch_number = include_batch_number
         self.include_labels = include_labels
-        self.include_fields = include_fields or []
-        self.include_steps = set(include_steps or list(zip(*steps, strict=True))[0])
+        self.include_fields: list[str] = include_fields or []
+        self.include_steps = include_steps
         self.include_input = include_input
         self.n_batches = 0
 
@@ -263,7 +263,7 @@ class LoggingPipeline(Pipeline):
             csv_builder.add_column(instances.hypothesis, 'label')
 
         # add columns: features
-        if self.include_input:
+        if self.include_input or (self.include_input is None and isinstance(instances, FeatureData)):
             instances = check_type(FeatureData, instances, message='expected FeatureData as pipeline input')
             csv_builder.add_column(instances.features, 'features')
 
@@ -272,7 +272,12 @@ class LoggingPipeline(Pipeline):
             for module_name, module in self.steps:
                 instances = module.apply(instances)
 
-                if module_name in self.include_steps:
+                if self.include_steps is None:
+                    add_to_log = isinstance(instances, FeatureData)
+                else:
+                    add_to_log = module_name in self.include_steps
+
+                if add_to_log:
                     instances = check_type(
                         FeatureData, instances, message=f'expected FeatureData as output of pipeline step {module_name}'
                     )

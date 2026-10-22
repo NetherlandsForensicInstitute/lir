@@ -1,3 +1,4 @@
+import warnings
 from typing import Any
 
 import numpy as np
@@ -22,6 +23,27 @@ def count(llr_data: LLRData) -> float:
         The number of instances or pairs of instances.
     """
     return len(llr_data)
+
+
+def count_sources(llr_data: LLRData) -> float:
+    """
+    Count the number of distinct sources to which the instances (or pairs of instances) belong.
+
+    Parameters
+    ----------
+    llr_data : LLRData
+        LLRs and their metadata, wrapped in an ``LLRData`` object.
+
+    Returns
+    -------
+    float
+        The number of distinct sources, or ``np.nan`` when source identifiers are not available.
+    """
+    if llr_data.source_ids is None:
+        warnings.warn('missing `source_ids` attribute required by `count_sources()`', stacklevel=2)
+        return np.nan
+
+    return len(np.unique(llr_data.source_ids))
 
 
 def count_h1(llr_data: LLRData) -> float:

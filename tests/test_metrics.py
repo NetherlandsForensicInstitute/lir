@@ -3,6 +3,7 @@ import pytest
 
 from lir import metrics
 from lir.data.models import LLRData
+from lir.metrics.statistics import count, count_sources
 from lir.util import Xn_to_Xy, odds_to_logodds
 
 
@@ -79,6 +80,33 @@ def test_illegal_cllr(h1_llrs, h2_llrs):
 
     if np.all(np.isfinite(llrs)):  # this condition should be removed ?! --> see issue #301
         assert np.isnan(metrics.cllr_min(llr_data))
+
+
+def test_count():
+    llrs, labels = Xn_to_Xy(np.array([1.0, 2.0]), np.array([3.0, 4.0]))
+    llr_data = LLRData(features=llrs, hypothesis=labels)
+    assert count(llr_data) == 4
+
+
+def test_count_sources():
+    llrs, labels = Xn_to_Xy(np.array([1.0, 2.0]), np.array([3.0, 4.0]))
+    source_ids = np.array([1, 1, 2, 3])
+    llr_data = LLRData(features=llrs, hypothesis=labels, source_ids=source_ids)
+    assert count_sources(llr_data) == 3
+
+
+def test_count_sources_paired():
+    llrs, labels = Xn_to_Xy(np.array([1.0, 2.0]), np.array([3.0]))
+    source_ids = np.array([[1, 2], [2, 3], [3, 1]])
+    llr_data = LLRData(features=llrs, hypothesis=labels, source_ids=source_ids)
+    assert count_sources(llr_data) == 3
+
+
+def test_count_sources_missing():
+    llrs, labels = Xn_to_Xy(np.array([1.0, 2.0]), np.array([3.0, 4.0]))
+    llr_data = LLRData(features=llrs, hypothesis=labels)
+    with pytest.warns(UserWarning):
+        assert np.isnan(count_sources(llr_data))
 
 
 def make_llr_data(h1_llrs, h2_llrs) -> LLRData:

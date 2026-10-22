@@ -15,17 +15,21 @@ experiment_strategies:
   train_only: lir.experiments.train_only.parse_train_only_experiment
 
 data_strategies:
-  train_test_instances: lir.data_strategies.TrainTestSplit
-  cross_validation_instances: lir.data_strategies.CrossValidation
-  train_test_sources: lir.data_strategies.SourcesTrainTestSplit
-  cross_validation_sources: lir.data_strategies.SourcesCrossValidation
-  leave_one_source_out: lir.data_strategies.LeaveOneSourceOut
-  predefined_train_test: lir.data_strategies.PredefinedTrainTestSplit
-  predefined_cross_validation: lir.data_strategies.PredefinedCrossValidation
-  train_test_pairs: lir.data_strategies.PairsTrainTestSplit
-  auto_train_test: lir.data_strategies.AutoTrainTestSplit
-  auto_cross_validation: lir.data_strategies.AutoCrossValidation
-  leave_one_category_out: lir.data_strategies.LeaveOneCategoryOut
+  train_test_instances: lir.splitting_strategies.TrainTestSplit
+  cross_validation_instances: lir.splitting_strategies.CrossValidation
+  train_test_sources: lir.splitting_strategies.SourcesTrainTestSplit
+  cross_validation_sources: lir.splitting_strategies.SourcesCrossValidation
+  leave_one_source_out: lir.splitting_strategies.LeaveOneSourceOut
+  leave_two_sources_out: lir.splitting_strategies.LeaveTwoSourcesOut
+  predefined_train_test: lir.splitting_strategies.PredefinedTrainTestSplit
+  predefined_cross_validation: lir.splitting_strategies.PredefinedCrossValidation
+  train_test_pairs: lir.splitting_strategies.PairsTrainTestSplit
+  auto_train_test: lir.splitting_strategies.AutoTrainTestSplit
+  auto_cross_validation: lir.splitting_strategies.AutoCrossValidation
+  leave_one_category_out: lir.splitting_strategies.LeaveOneCategoryOut
+
+data_setup:
+  split_data: lir.data_setup.train_test_split.parse
 
 data_providers:
   synthesized_normal_binary: lir.datasets.synthesized_normal_binary.synthesized_normal_binary
@@ -54,7 +58,7 @@ modules:
   manhattan_distance: lir.transform.distance.ManhattanDistance
 
   # utility modules
-  tee: lir.config.util.TeeParser
+  tee: lir.transform.tee.parse
   csv_writer: lir.transform.csv_writer.csv_writer
   save_features: lir.transform.save_features.SaveFeatureTransformer
   validate_feature_data_type: lir.transform.data_validator.ValidateFeatureDataType

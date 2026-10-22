@@ -46,6 +46,11 @@ apidoc_modules = [
         'exclude_patterns': [
             '../lir/data/models.py',
             '**/base.py',
+            '../lir/splitting_strategies/auto.py',
+            '../lir/splitting_strategies/labels.py',
+            '../lir/splitting_strategies/pairs.py',
+            '../lir/splitting_strategies/predefined.py',
+            '../lir/splitting_strategies/sources.py',
         ],
         'module_first': True,
         'separate_modules': False,

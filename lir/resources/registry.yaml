@@ -62,7 +62,7 @@ modules:
 
   # classifiers
   logistic_regression: lir.algorithms.logistic_regression.LogisticRegression
-  svm: sklearn.svm.SVC
+  svm: lir.algorithms.svm.CalibratedSVC
 
   # calibrators
   kde: lir.algorithms.kde.KDECalibrator

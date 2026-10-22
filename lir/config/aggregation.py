@@ -1,18 +1,16 @@
 from pathlib import Path
 
-from lir import registry
 from lir.aggregation import Aggregation
 from lir.aggregation.group import AggregationGroup
 from lir.config.base import (
-    ConfigParser,
     ConfigValue,
     GenericConfigParser,
     YamlParseError,
-    pop_field,
 )
+from lir.config.util import parse_config
 
 
-def parse_aggregation(config: ConfigValue, output_dir: Path, context: list[str] | None = None) -> Aggregation:
+def parse_aggregation(config: ConfigValue, output_dir: Path) -> Aggregation:
     """
     Parse a configuration section for output aggregation.
 
@@ -25,29 +23,21 @@ def parse_aggregation(config: ConfigValue, output_dir: Path, context: list[str] 
     config : ConfigValue
         The configuration as a dictionary or string.
     output_dir : Path
-        Output directory where derived artefacts are written.
-    context : list[str] | None, optional
-        Context for error reporting when ``config`` is provided as a string.
+        Output directory where derived artifacts are written.
 
     Returns
     -------
     Aggregation
         Parsed aggregation instance.
     """
-    # Normalise configuration into (class_name, args)
-    if isinstance(config.value, str):
-        class_name = config.value
-        config = ConfigValue.wrap(config.context, {})
-    else:
-        config.as_dict(message='invalid output configuration; expected a string or a mapping with a "method" field')
-        class_name = pop_field(config, 'method', validate_type=str)
-
-    parser: ConfigParser = registry.get(
-        class_name,
+    parsed_object = parse_config(
+        config,
+        output_dir,
+        method_key='method',
+        allow_shorthand=True,
         default_config_parser=GenericConfigParser,
         search_path=['output'],
     )
-    parsed_object = parser.parse(config, output_dir)
 
     if not isinstance(parsed_object, Aggregation):
         raise YamlParseError(

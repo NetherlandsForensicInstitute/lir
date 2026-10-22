@@ -36,7 +36,6 @@ experiments:
             method: logistic_regression
           - option_name: svm
             method: svm
-            probability: True
     output:
       - method: metrics
         columns:

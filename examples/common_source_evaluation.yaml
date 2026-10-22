@@ -47,7 +47,6 @@ experiments:
             C: 1
           - option_name: svm
             method: svm
-            probability: True
     output:
       - method: metrics
         columns:

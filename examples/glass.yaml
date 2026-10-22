@@ -135,7 +135,6 @@ experiments:
   #           - path: comparing.steps.clf
   #             value:
   #               method: svm
-  #               probability: True
   #           - path: comparing.steps.calibration
   #             value:
   #               method: kde
@@ -176,7 +175,6 @@ experiments:
               - path: comparing.steps.clf
                 value:
                   method: svm
-                  probability: True
               - path: comparing.steps.calibration
                 value:
                   method: kde

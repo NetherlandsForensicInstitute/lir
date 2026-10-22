@@ -84,6 +84,8 @@ metric:
   llr_lower_bound: lir.metrics.llr_lower_bound
   llr_upper_bound: lir.metrics.llr_upper_bound
   devpav: lir.algorithms.devpav.devpav
+  equal_error_rate: lir.metrics.equal_error_rate
+  auc: lir.metrics.auc
 
   # Statistical metrics
   count: lir.metrics.statistics.count

@@ -87,6 +87,7 @@ metric:
 
   # Statistical metrics
   count: lir.metrics.statistics.count
+  count_sources: lir.metrics.statistics.count_sources
   count_h1: lir.metrics.statistics.count_h1
   count_h2: lir.metrics.statistics.count_h2
   mean_llr_h1: lir.metrics.statistics.mean_llr_h1

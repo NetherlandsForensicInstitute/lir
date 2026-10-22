@@ -24,6 +24,25 @@ def count(llr_data: LLRData) -> float:
     return len(llr_data)
 
 
+def count_sources(llr_data: LLRData) -> float:
+    """
+    Count the number of distinct sources to which the instances (or pairs of instances) belong.
+
+    Parameters
+    ----------
+    llr_data : LLRData
+        LLRs and their metadata, wrapped in an ``LLRData`` object.
+
+    Returns
+    -------
+    float
+        The number of distinct sources, or ``np.nan`` when source identifiers are not available.
+    """
+    if llr_data.source_ids is None:
+        return np.nan
+    return len(np.unique(llr_data.source_ids))
+
+
 def count_h1(llr_data: LLRData) -> float:
     """
     Count the number of instances or pairs of instances labeled as Hypothesis 1 (hypothesis label 1).

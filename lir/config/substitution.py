@@ -25,7 +25,6 @@ system configuration used by the pipeline.
                 C: 1
               - name: svm
                 method: svm
-                probability: True
 """  # noqa: D214, D405, D406, D407, D411
 
 import json
@@ -155,7 +154,6 @@ def _parse_categorical_option(spec: Any, path: str, option_index: int | None) ->
           - method: logistic_regression
             C: 1
           - method: svm
-            probability: True
 
     To avoid non-informative names, the option's name can be declared explicitly, like so:
 
@@ -167,7 +165,6 @@ def _parse_categorical_option(spec: Any, path: str, option_index: int | None) ->
             C: 1
           - option_name: svm
             method: svm
-            probability: True
 
     The value can also be declared explicitly. The following snippet is equivalent to the previous one:
 
@@ -181,7 +178,6 @@ def _parse_categorical_option(spec: Any, path: str, option_index: int | None) ->
           - option_name: svm
             value:
               method: svm
-              probability: True
 
     Parameters
     ----------

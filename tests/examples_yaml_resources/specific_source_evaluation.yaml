@@ -1,1 +1,4 @@
 # Override specific values from the example YAML for testing convenience
+
+data.provider.h1.size: 200
+data.provider.h2.size: 200

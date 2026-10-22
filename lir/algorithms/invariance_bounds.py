@@ -156,12 +156,12 @@ def calculate_invariance_delta_functions(llrdata: LLRData, llr_threshold: np.nda
     beta_parameter = 1 / 2
 
     # for all possible llr_threshold values, count how many of the lrs are larger or equal to them for both h1 and h2
-    llrs_h1 = llrs[y == 1]
-    llrs_h2 = llrs[y == 0]
-    llr_h1_2d = np.tile(np.expand_dims(llrs_h1, 1), (1, llr_threshold.shape[0]))
-    llr_h2_2d = np.tile(np.expand_dims(llrs_h2, 1), (1, llr_threshold.shape[0]))
-    success_h1 = np.sum(llr_h1_2d >= llr_threshold, axis=0)
-    success_h2 = np.sum(llr_h2_2d >= llr_threshold, axis=0)
+    # (count via searchsorted on sorted LLRs; equivalent to the pairwise `>=` comparison, but without building
+    # an n_llrs x n_thresholds matrix)
+    llrs_h1 = np.sort(llrs[y == 1])
+    llrs_h2 = np.sort(llrs[y == 0])
+    success_h1 = len(llrs_h1) - np.searchsorted(llrs_h1, llr_threshold, side='left')
+    success_h2 = len(llrs_h2) - np.searchsorted(llrs_h2, llr_threshold, side='left')
 
     # use these as inputs for calculations of the probabilities
     prob_h1_above_grid = (success_h1 + beta_parameter) / (len(llrs_h1) + 2 * beta_parameter)

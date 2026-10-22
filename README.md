@@ -29,6 +29,11 @@ Usage
 
 This repository offers both a Python API and a command-line interface.
 
+Lir uses matplotlib for plotting, with the Agg backend as default. If you want to use a different backend, you can set the `MPLBACKEND` environment variable to your preferred backend. For example, to use the TkAgg backend, you can run:
+
+```shell
+export MPLBACKEND=TkAgg
+```
 
 Command-line interface
 ----------------------

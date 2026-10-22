@@ -1,7 +1,6 @@
 from typing import Self
 
 import numpy as np
-from scipy.special import logsumexp
 
 from lir import Transformer
 from lir.data.models import FeatureData, InstanceData, check_type
@@ -9,6 +8,28 @@ from lir.lrsystems.base import LLRData, LRSystem
 from lir.transform.pairing import PairingMethod
 from lir.transform.pipeline import Pipeline
 from lir.util import check_not_none
+
+
+def _logsumexp(a: np.ndarray) -> np.float64:
+    """
+    Compute the log of the sum of exponentials of a one-dimensional array.
+
+    Equivalent to ``scipy.special.logsumexp`` for one-dimensional input, but without the per-call overhead of scipy.
+
+    Parameters
+    ----------
+    a : np.ndarray
+        One-dimensional input array.
+
+    Returns
+    -------
+    np.float64
+        The value ``log(sum(exp(a)))``.
+    """
+    a_max = np.amax(a)
+    if not np.isfinite(a_max):
+        a_max = 0.0
+    return np.log(np.sum(np.exp(a - a_max))) + a_max
 
 
 class TwoLevelModelNormalKDE:
@@ -566,7 +587,7 @@ class TwoLevelModelNormalKDE:
         )
 
         # exponentiate, sum and take log again
-        return logsumexp(ln_num_terms)
+        return _logsumexp(ln_num_terms)
 
     def _predict_ln_den_term(self, X_ref_or_trace: np.ndarray, covars_inv: np.ndarray) -> np.floating:
         """
@@ -600,7 +621,7 @@ class TwoLevelModelNormalKDE:
         ln_den_terms = -0.5 * np.sum(np.matmul(dif_ref, covars_inv) * dif_ref, axis=1)
 
         # exponentiate, sum and take log again
-        return logsumexp(ln_den_terms)
+        return _logsumexp(ln_den_terms)
 
     def _predict_log10_LR_from_formula_Bolck(
         self,

@@ -1,6 +1,7 @@
 from typing import Protocol
 
 import numpy as np
+import sklearn
 
 from lir.algorithms.isotonic_regression import IsotonicCalibrator
 from lir.data.models import LLRData
@@ -141,3 +142,44 @@ def llr_lower_bound(llrs: LLRData) -> float | None:
         The LLR lower bound, or `None`.
     """
     return llrs.llr_lower_bound
+
+
+def equal_error_rate(data: LLRData) -> float:
+    """
+    Calculate the Equal Error Rate (EER) from the ROC curve.
+
+    The EER is the operating point where the True Positive Rate (TPR) equals
+    the False Negative Rate (FNR).
+
+    Parameters
+    ----------
+    data : LLRData
+        LLRs and their metadata, wrapped in an `LLRData` object.
+
+    Returns
+    -------
+    float
+        The equal error rate.
+    """
+    hypothesis = data.hypothesis
+    fpr, tpr, threshold = sklearn.metrics.roc_curve(hypothesis, data.llrs)
+    fnr = 1 - tpr
+
+    return fpr[np.nanargmin(np.absolute(fnr - fpr))]
+
+
+def auc(data: LLRData) -> float:
+    """
+    Calculate the Area Under the Curve (AUC) of the ROC curve.
+
+    Parameters
+    ----------
+    data : LLRData
+        LLRs and their metadata, wrapped in an `LLRData` object.
+
+    Returns
+    -------
+    float
+        The area under the ROC curve (AUC score).
+    """
+    return sklearn.metrics.roc_auc_score(data.hypothesis, data.llrs)

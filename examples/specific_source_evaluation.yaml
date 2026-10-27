@@ -35,8 +35,8 @@ lrsystem: &lrsystem
 experiments:
   - name: model_selection
     strategy: grid
-    lrsystem: *lrsystem
-    data: *data
+    lrsystem: ${lrsystem}
+    data: ${data}
     lrsystem_parameters:
       - path: modules.steps.clf
         options:
@@ -68,8 +68,8 @@ experiments:
 
   - name: validation
     strategy: single_run
-    lrsystem: *lrsystem
-    data: *data
+    lrsystem: ${lrsystem}
+    data: ${data}
     output:
       - metrics
       - pav

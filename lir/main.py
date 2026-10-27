@@ -2,6 +2,7 @@ import argparse
 import datetime
 import json
 import logging
+import os
 import shutil
 import sys
 from collections.abc import Mapping
@@ -183,6 +184,14 @@ def main(input_args: list[str] | None = None) -> None:
     parser.add_argument('-v', help='increases verbosity', action='count', default=0)
     parser.add_argument('-q', help='decreases verbosity', action='count', default=0)
     args = parser.parse_args(input_args)
+
+    if args.setup:
+        # batch tool: figures are only saved to file, so use the non-interactive Agg backend unless the user
+        # explicitly selected a backend via the MPLBACKEND environment variable
+        import matplotlib
+
+        if os.environ.get('MPLBACKEND') is None:
+            matplotlib.use('Agg')
 
     setup_logging(args.v - args.q)
 

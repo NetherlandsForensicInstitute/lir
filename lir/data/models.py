@@ -535,7 +535,7 @@ class InstanceData(BaseModel, ABC):
         'InstanceDataType'
             Instance data object produced by this operation.
         """
-        args = self.model_dump()
+        args = {field: getattr(self, field) for field in self.all_fields}
         args.update(kwargs)
         return datatype(**args)
 

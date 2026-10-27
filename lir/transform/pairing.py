@@ -105,13 +105,22 @@ class SourcePairing(PairingMethod):
         n_ref_instances: int,
     ) -> PairedFeatureData | None:
         result_features: list[FeatureData] = []
+        source_instances: dict[Any, FeatureData] = {}
+
+        def instances_of_source(source_id: Any) -> FeatureData:
+            # Similar to instances[instances.source_ids == source_id], but caches to avoid repeated filtering of the
+            # same source.
+            if source_id not in source_instances:
+                source_instances[source_id] = instances[instances.source_ids == source_id]
+            return source_instances[source_id]
+
         for trace_source_id, ref_source_id in source_pairs:
             pair_source_ids = np.array([[trace_source_id, ref_source_id]])
             if trace_source_id == ref_source_id:
                 # construct a same-source pair
                 pair_instances = self._get_random_subset(
                     n_trace_instances + n_ref_instances,
-                    instances[instances.source_ids == trace_source_id],
+                    instances_of_source(trace_source_id),
                 )
                 if pair_instances is not None:
                     pair_instances = pair_instances.replace(source_ids=None)
@@ -124,11 +133,11 @@ class SourcePairing(PairingMethod):
                 # construct a different-source pair
                 trace_instances = self._get_random_subset(
                     n_trace_instances,
-                    instances[instances.source_ids == trace_source_id],
+                    instances_of_source(trace_source_id),
                 )
                 ref_instances = self._get_random_subset(
                     n_ref_instances,
-                    instances[instances.source_ids == ref_source_id],
+                    instances_of_source(ref_source_id),
                 )
                 if trace_instances and ref_instances:
                     pair_instances = (trace_instances + ref_instances).replace(source_ids=None)

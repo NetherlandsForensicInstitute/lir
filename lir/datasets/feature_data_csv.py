@@ -16,7 +16,7 @@ from requests_cache import CachedSession
 from lir.config.base import ConfigAttribute, ConfigValue, check_is_empty, config_parser, pop_field
 from lir.data.io import search_path
 from lir.data.models import DataProvider, FeatureData
-from lir.data_strategies import RoleAssignment
+from lir.splitting_strategies import RoleAssignment
 from lir.util import check_is_enum_option, check_type
 
 

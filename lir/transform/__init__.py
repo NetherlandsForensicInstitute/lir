@@ -218,59 +218,6 @@ class FunctionTransformer(Transformer):
         return instances.replace(features=self.func(instances.features))
 
 
-class Tee(Transformer):
-    """
-    Implementation of a custom transformer allowing to perform two separate tasks on a given input.
-
-    Parameters
-    ----------
-    transformers : list[Transformer]
-        Collection of transformers applied in sequence or parallel.
-    """
-
-    def __init__(self, transformers: list[Transformer]):
-        super().__init__()
-        self.transformers = transformers
-
-    def fit(self, instances: InstanceData) -> Self:
-        """
-        Delegate `fit()` to all specified transformers.
-
-        Parameters
-        ----------
-        instances : InstanceData
-            Input instances to be processed by this method.
-
-        Returns
-        -------
-        Self
-            This tee transformer instance after delegating fit.
-        """
-        for transformer in self.transformers:
-            transformer.fit(instances)
-
-        return self
-
-    def apply(self, instances: InstanceData) -> InstanceData:
-        """
-        Delegate `apply()` to all specified transformers.
-
-        Parameters
-        ----------
-        instances : InstanceData
-            Input instances to be processed by this method.
-
-        Returns
-        -------
-        InstanceData
-            Instance data object produced by this operation.
-        """
-        for transformer in self.transformers:
-            transformer.apply(instances)
-
-        return instances
-
-
 class TransformerWrapper(Transformer):
     """
     Base class for a transformer wrapper.

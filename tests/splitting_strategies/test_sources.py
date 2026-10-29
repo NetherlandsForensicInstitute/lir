@@ -3,12 +3,12 @@ import pytest
 
 from lir import DataStrategy
 from lir.data.models import get_instances_by_category
-from lir.data_strategies import SourcesCrossValidation, SourcesTrainTestSplit
-from lir.data_strategies.sources import LeaveOneSourceOut, LeaveTwoSourcesOut
 from lir.datasets.synthesized_normal_multiclass import (
     SynthesizedDimension,
     SynthesizedNormalMulticlassData,
 )
+from lir.splitting_strategies import SourcesCrossValidation, SourcesTrainTestSplit
+from lir.splitting_strategies.sources import LeaveOneSourceOut, LeaveTwoSourcesOut
 
 
 def test_multiclass_train_test_split():

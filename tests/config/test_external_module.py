@@ -15,7 +15,7 @@ def test_parse_external_directly():
     try:
         registry.get(
             'tests.resources.external_modules.ExampleExternalData',
-            search_path=['data_strategies'],
+            search_path=['splitting_strategies'],
             default_config_parser=GenericConfigParser,
         )
     except registry.ComponentNotFoundError:

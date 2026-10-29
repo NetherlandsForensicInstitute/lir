@@ -64,7 +64,7 @@ def parse_data_setup(cfg: ConfigValue, output_path: Path) -> DataSetup:
 
     The fields `provider`, `filter` and `splits` are parsed, which are expected to refer
     to specific implementations of `DataProvider`, `Transformer` and `DataStrategy`, respectively.
-    See `parse_data_provider`, `parse_module` and `parse_data_strategy` for more information.
+    See `parse_data_provider`, `parse_module` and `parse_splitting_strategy` for more information.
 
     Parameters
     ----------
@@ -112,13 +112,13 @@ def parse_splitting_strategy(cfg: ConfigValue, output_path: Path) -> DataStrateg
     try:
         parser = registry.get(
             strategy,
-            search_path=['data_strategies'],
+            search_path=['splitting_strategies'],
             default_config_parser=GenericConfigParser,
         )
     except Exception as e:
         raise YamlParseError(
             cfg.context,
-            f'no parser available for data strategy `{strategy}`; the error was: {e}',
+            f'no parser available for splitting strategy `{strategy}`; the error was: {e}',
         )
 
     return parser.parse(cfg, output_path)

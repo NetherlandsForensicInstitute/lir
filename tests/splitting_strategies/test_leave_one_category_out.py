@@ -68,4 +68,4 @@ def test_leave_one_category_out(
 
 
 def test_registry():
-    assert registry.get('data_strategies.leave_one_category_out', default_config_parser=GenericConfigParser)
+    assert registry.get('splitting_strategies.leave_one_category_out', default_config_parser=GenericConfigParser)

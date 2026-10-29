@@ -225,16 +225,17 @@ class ConfigValue:
             Popped field value or ``default``.
         """
         # this value should be a dict
-        dict_value = check_type(dict, self.value)
+        if not isinstance(self.value, dict):
+            raise YamlParseError(self.context, f'mapping expected; found type: {type(self.value)}')
 
         # get required status and default value from function arguments
         required = required if required is not None else (default is None)
         if default is not None and required:
-            raise ValueError(f'illegal argument values: required={required}; default={default}')
+            raise YamlParseError(self.context, f'illegal argument values: required={required}; default={default}')
 
         # try to get the field value
-        if field in dict_value:
-            field_value = dict_value.pop(field)
+        if field in self.value:
+            field_value = self.value.pop(field)
 
             try:
                 if validate_type is not None:

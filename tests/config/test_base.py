@@ -12,6 +12,7 @@ from lir.config.base import (
     ConfigValue,
     GenericConfigParser,
     GenericFunctionConfigParser,
+    YamlParseError,
     check_is_empty,
     config_parser,
     get_full_name,
@@ -106,6 +107,47 @@ def test_pop_field():
     assert pop_field(config, 'key5').unwrap() == 42
     assert pop_field(config, 'key6', unwrap=True) == 42
     assert pop_field(config, 'key7', validate=check_not_none) == 42
+
+
+def _always_fail(value: Any) -> Any:
+    raise ValueError('deliberate validation failure')
+
+
+@pytest.mark.parametrize(
+    'config,pop_kwargs',
+    [
+        # error path: the config value is not a dict
+        (ConfigValue.wrap([], 'some text'), {'field': 'key'}),
+        (ConfigValue.wrap([], [1, 2, 3]), {'field': 'key'}),
+        (ConfigValue.wrap([], 42), {'field': 'key'}),
+        (ConfigValue.wrap([], 1.1), {'field': 'key'}),
+        (ConfigValue.wrap([], True), {'field': 'key'}),
+        (ConfigValue.wrap([], None), {'field': 'key'}),
+        # error path: field is missing and required
+        (ConfigValue.wrap([], {}), {'field': 'key'}),
+        (ConfigValue.wrap([], {'other': 1}), {'field': 'key', 'required': True}),
+        # error path: illegal argument values: both default and required
+        (ConfigValue.wrap([], {'key': 1}), {'field': 'key', 'default': 2, 'required': True}),
+        # error path: validate_type check fails
+        (ConfigValue.wrap([], {'key': 'some text'}), {'field': 'key', 'validate_type': int}),
+        # error path: validate function raises
+        (ConfigValue.wrap([], {'key': 1}), {'field': 'key', 'validate': _always_fail}),
+    ],
+)
+def test_pop_always_raises_yaml_parse_error(config: ConfigValue, pop_kwargs: dict[str, Any]) -> None:
+    """
+    Any error raised by ``ConfigValue.pop()`` must be a ``YamlParseError``, not a plain ``ValueError``.
+
+    ``YamlParseError`` carries the configuration context path, which plain ``ValueError`` does not.
+    """
+    with pytest.raises(YamlParseError):
+        config.pop(**pop_kwargs)
+
+
+def test_pop_error_message_contains_context_path() -> None:
+    config = ConfigValue.wrap(['level1', 'level2'], {'key': 42})
+    with pytest.raises(YamlParseError, match=r'^level1\.level2: '):
+        config.pop('other')
 
 
 def test_get_full_name_fail():

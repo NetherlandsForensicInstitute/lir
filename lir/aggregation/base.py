@@ -29,7 +29,7 @@ class AggregationData(NamedTuple):  # numpydoc ignore=PR02
 
     Parameters
     ----------
-    llrdata : LLRData
+    llrdata : LLRData | None
         The LLR data containing LLRs and labels.
     lrsystem : LRSystem
         The model that produced the results.
@@ -45,7 +45,7 @@ class AggregationData(NamedTuple):  # numpydoc ignore=PR02
         Optional callable that lazily provides a model fitted on full data (ignoring splits).
     """
 
-    llrdata: LLRData
+    llrdata: LLRData | None
     lrsystem: LRSystem | None
     parameters: dict[str, HyperparameterOption | str]
     run_name: str

@@ -25,6 +25,8 @@ output_path: output/${timestamp}_asr_example
 # only the `score` column is used as a feature, and the `truth` column provides the hypothesis labels. Pairs are
 # assigned randomly to the training and test sets, stratified by hypothesis.
 data:
+  setup: split_data
+
   provider:
     method: parse_features_from_csv_file
     file: examples/data/speakerscores_10s.csv

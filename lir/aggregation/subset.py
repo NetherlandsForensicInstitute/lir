@@ -6,6 +6,7 @@ from lir.config import ConfigValue, config_parser
 from lir.config.aggregation import parse_aggregations
 from lir.config.base import ConfigAttribute
 from lir.data.models import get_instances_by_category
+from lir.util import check_not_none
 
 
 LOG = logging.getLogger(__name__)
@@ -66,7 +67,7 @@ class SubsetAggregation(Aggregation):
             The aggregated data to be reported.
         """
         run_name_prefix = f'{data.run_name}_' if data.run_name else ''
-        for category, subset in get_instances_by_category(data.llrdata, self.category_field):
+        for category, subset in get_instances_by_category(check_not_none(data.llrdata), self.category_field):
             category_str = '_'.join(str(v) for v in category.reshape(-1))
             run_name = f'{run_name_prefix}{category_str}'
 

@@ -7,6 +7,8 @@
 output_path: output/${timestamp}_optuna_example
 
 data: &data
+  setup: split_data
+
   provider:
     method: glass
     cache_dir: .cache/http

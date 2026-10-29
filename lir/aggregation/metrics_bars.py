@@ -13,6 +13,7 @@ from lir import LLRData
 from lir.aggregation.base import Aggregation, AggregationData
 from lir.config.base import ConfigAttribute, ConfigValue, YamlParseError, check_is_empty, config_parser, pop_field
 from lir.config.metrics import parse_individual_metric
+from lir.util import check_not_none
 
 
 LOG = logging.getLogger(__name__)
@@ -121,9 +122,10 @@ class MetricsBarPlot(Aggregation):
         data : AggregationData
             The data for which to compute metrics.
         """
+        llrdata = check_not_none(data.llrdata)
         self.calculated_values.append(
             [
-                (self._safe_call(partial(fn, data.llrdata), f'calculating metric {key} failed'))
+                (self._safe_call(partial(fn, llrdata), f'calculating metric {key} failed'))
                 for key, fn in self.metric_functions.items()
             ]
         )

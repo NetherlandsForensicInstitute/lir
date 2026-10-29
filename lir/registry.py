@@ -263,7 +263,8 @@ def get(
     name : str
         The key name to resolve.
     default_config_parser : Callable[[Any], ConfigParser] | None, optional
-        A function that returns a `ConfigParser` if the `key` does not resolve to a `ConfigParser`, by default None.
+        A function that returns a :class:`~lir.config.ConfigParser` if the `key` does not resolve to a
+        :class:`~lir.config.ConfigParser`, by default ``None``.
     search_path : list[str] | None, optional
         The domain of the search query, by default None.
 

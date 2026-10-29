@@ -2,11 +2,11 @@ from collections import OrderedDict
 from collections.abc import Mapping
 from pathlib import Path
 
-from lir import registry
 from lir.config.base import (
     ConfigValue,
     pop_field,
 )
+from lir.config.util import parse_config
 from lir.experiments import Experiment
 
 
@@ -28,9 +28,7 @@ def parse_experiment_strategy(config: ConfigValue, output_path: Path) -> Experim
     Experiment
         Parsed experiment strategy instance.
     """
-    strategy_name = pop_field(config, 'strategy', validate_type=str)
-    strategy_parser = registry.get(strategy_name, search_path=['experiment_strategies'])
-    return strategy_parser.parse(config, output_path)
+    return parse_config(config, output_path, method_key='strategy', search_path=['experiment_strategies'])
 
 
 def parse_experiments(cfg: ConfigValue, output_path: Path) -> Mapping[str, Experiment]:

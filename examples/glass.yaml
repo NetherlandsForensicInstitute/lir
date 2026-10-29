@@ -19,6 +19,8 @@ output_path: output/${timestamp}_glass_example
 # test data has five instances per source, from which to draw two-to-three pairs for LR calculations.
 #
 data:
+  setup: split_data
+
   provider:
     method: glass
     cache_dir: .cache/http

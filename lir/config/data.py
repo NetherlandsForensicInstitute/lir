@@ -1,88 +1,59 @@
-from collections.abc import Callable, Iterable
+import warnings
+from collections.abc import Callable
 from functools import partial
 from pathlib import Path
 from typing import Any
 
-from lir import Transformer
 from lir.config.base import (
     ConfigParser,
     ConfigValue,
     GenericConfigParser,
-    check_is_empty,
     get_full_name,
-    pop_field,
 )
-from lir.config.transform import parse_module
 from lir.config.util import parse_config
-from lir.data.models import DataProvider, DataStrategy, InstanceData
-from lir.transform import Identity
-
-
-class DataSetup:
-    """
-    Data setup, consisting of three components: a data provider, a filter, and a strategy.
-
-    The filter is a :class:`~lir.Transformer` that supports calling the `apply()` method without first calling
-    `fit()`. Unlike in LR system pipelines, this transformer may change the number of instances in the dataset.
-
-    Parameters
-    ----------
-    provider : DataProvider
-        The :class:`~lir.data.models.DataProvider` that retrieves the data from some data source, such as
-          a CSV file or a database.
-    strategy : DataStrategy
-        The :class:`~lir.data.models.DataStrategy` that determines how the data are used.
-    data_filter : Transformer | None
-        An optional filter (:class:`~lir.Transformer`) to apply to the raw data before doing anything else.
-    """
-
-    def __init__(self, provider: DataProvider, strategy: DataStrategy, data_filter: Transformer | None):
-        self.provider = provider
-        self.strategy = strategy
-        self.filter = data_filter or Identity()
-
-    def get_splits(self) -> Iterable[tuple[InstanceData, InstanceData]]:
-        """
-        Return the data in the form of one or more train/test splits.
-
-        This method follows three steps:
-        - retrieve instances from the data provider;
-        - pass them through the filter by calling its `apply()` method;
-        - apply the data strategy to arrange them into one or more train/test splits.
-
-        Returns
-        -------
-        Iterable[tuple[InstanceData, InstanceData]]
-            An iterator over tuples of train/test splits.
-        """
-        return self.strategy.apply(self.filter.apply(self.provider.get_instances()))
+from lir.data.models import DataProvider, DataSetup, DataStrategy, InstanceData
 
 
 def parse_data_setup(cfg: ConfigValue, output_path: Path) -> DataSetup:
     """
-    Parse data provider and data strategy from configuration.
+    Parse the data setup from configuration.
 
-    The fields `provider`, `filter` and `splits` are parsed, which are expected to refer
-    to specific implementations of `DataProvider`, `Transformer` and `DataStrategy`, respectively.
-    See `parse_data_provider`, `parse_module` and `parse_splitting_strategy` for more information.
+    The `setup` key selects the data setup.
+
+    The selected setup is looked up in the ``data_setup`` section of the registry.
+
+    When the ``setup`` key is missing, it defaults to ``split_data`` and a DeprecationWarning is emitted.
 
     Parameters
     ----------
     cfg : ConfigValue
-        Configuration section containing provider and split strategy.
+        Configuration section containing the data setup.
     output_path : Path
         Output path for created objects.
 
     Returns
     -------
     DataSetup
-        Parsed data provider, filter and strategy.
+        The parsed data setup.
     """
-    provider = parse_data_provider(pop_field(cfg, 'provider'), output_path)
-    data_filter = parse_module(pop_field(cfg, 'filter', required=False), output_path)
-    strategy = parse_splitting_strategy(pop_field(cfg, 'splits'), output_path)
-    check_is_empty(cfg)
-    return DataSetup(provider, strategy, data_filter)
+    default_method = 'split_data'
+
+    if 'setup' not in cfg:
+        warnings.warn(
+            f'{".".join(cfg.context)}: missing key: setup; using default data setup: {default_method}; '
+            'the `setup` key is required in a future version',
+            DeprecationWarning,
+            stacklevel=2,
+        )
+
+    return parse_config(
+        cfg,
+        output_path,
+        method_key='setup',
+        default_method=default_method,
+        default_config_parser=GenericConfigParser,
+        search_path=['data_setup'],
+    )
 
 
 def parse_splitting_strategy(cfg: ConfigValue, output_path: Path) -> DataStrategy:

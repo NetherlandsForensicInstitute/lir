@@ -1,6 +1,8 @@
 output_path: output/${timestamp}_common_source
 
 data: &data
+  setup: split_data
+
   provider:
     method: synthesized_normal_multiclass
     seed: 42

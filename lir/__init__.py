@@ -7,7 +7,7 @@ sampling schemes or techniques, and doing case-based validation and computation 
 
 import sys
 
-from lir.data.models import DataProvider, DataStrategy, FeatureData, InstanceData, LLRData, PairedFeatureData
+from lir.data.models import DataProvider, DataSetup, DataStrategy, FeatureData, InstanceData, LLRData, PairedFeatureData
 from lir.transform import Transformer
 
 
@@ -36,6 +36,7 @@ __all__ = [
     'LLRData',
     'DataProvider',
     'DataStrategy',
+    'DataSetup',
     #
     # transform
     # ---------

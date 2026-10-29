@@ -17,9 +17,10 @@ An experiment setup file is a YAML file with at least the ``experiments`` proper
       - ... definition of experiment 1 ...
       - ... definition of experiment 2 ...
 
-LiR uses the ``confidence`` package for parsing YAML files. Refer to its `documentation`_ to make the most of it! In
-particular, you may use the ``timestamp`` variable to substitute the current date and time in the YAML configuration,
-for example:
+LiR uses the ``confidence`` package for parsing YAML files. Refer to the :doc:`yaml-configuration` page for an
+overview of the structure of a YAML configuration and the extra features that the package provides, such as
+``${...}`` references and dotted keys, and to its `documentation`_ for the full details! In particular, you may use
+the ``timestamp`` variable to substitute the current date and time in the YAML configuration, for example:
 
 .. code-block:: yaml
 

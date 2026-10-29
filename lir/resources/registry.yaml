@@ -14,7 +14,7 @@ experiment_strategies:
   optuna: lir.experiments.optuna_experiment.parse_optuna_experiment
   train_only: lir.experiments.train_only.parse_train_only_experiment
 
-data_strategies:
+splitting_strategies:
   train_test_instances: lir.splitting_strategies.TrainTestSplit
   cross_validation_instances: lir.splitting_strategies.CrossValidation
   train_test_sources: lir.splitting_strategies.SourcesTrainTestSplit

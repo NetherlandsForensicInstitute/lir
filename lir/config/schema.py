@@ -498,7 +498,7 @@ class SchemaGenerator:
                     'data_providers', 'The data provider specifies the data source and how to load it.', 'method'
                 ),
                 'dataSplits': self._generate_alternatives_schema(
-                    'data_strategies',
+                    'splitting_strategies',
                     'Choose a data splitting strategy to define how to divide data into training and '
                     + 'testing sets.',
                     'strategy',

@@ -91,7 +91,7 @@ def parse_splitting_strategy(cfg: ConfigValue, output_path: Path) -> DataStrateg
 
     The `strategy` field is parsed, which is expected to refer to a name in
     the registry. See for example :class:`lir.splitting_strategies.CrossValidation`
-    or :class:`lir.data_strategies.TrainTestSplit`.
+    or :class:`lir.splitting_strategies.TrainTestSplit`.
 
     Data strategy configuration is provided under the `data.splits` key.
 

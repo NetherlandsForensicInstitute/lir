@@ -11,12 +11,12 @@ from typing import Any, NamedTuple
 
 import confidence
 
-from lir import InstanceData, LLRData, Transformer
+from lir import InstanceData, LLRData
 from lir.aggregation import AggregationData
 from lir.config.base import ConfigValue
 from lir.config.data import DataSetup, parse_data_setup
 from lir.config.lrsystem_architectures import parse_lrsystem
-from lir.data.models import DataProvider, DataStrategy, concatenate_instances
+from lir.data.models import concatenate_instances
 from lir.lrsystems import LRSystem
 
 
@@ -79,7 +79,6 @@ class DataConfig(ParameterizedConfig):
     """Data configuration object."""
 
     _data_setup: DataSetup | None = None
-    _splits: list[tuple[InstanceData, InstanceData]] | None = None
 
     @property
     def data_setup(self) -> DataSetup:
@@ -97,46 +96,10 @@ class DataConfig(ParameterizedConfig):
         """
         if self._data_setup is None:
             self._data_setup = parse_data_setup(deepcopy(self.spec), self.run_output_dir or self.experiment_output_dir)
-        return self._data_setup
+        return self._data_setup  # type: ignore
 
     @property
-    def provider(self) -> DataProvider:
-        """
-        Return a data provider.
-
-        Returns
-        -------
-        DataProvider
-            A data provider object.
-        """
-        return self.data_setup.provider
-
-    @property
-    def filter(self) -> Transformer:
-        """
-        Return a data filter.
-
-        Returns
-        -------
-        Transformer
-            A data transformer object.
-        """
-        return self.data_setup.filter
-
-    @property
-    def splitter(self) -> DataStrategy:
-        """
-        Return a data splitter.
-
-        Returns
-        -------
-        DataStrategy
-            A data splitter object.
-        """
-        return self.data_setup.strategy
-
-    @property
-    def splits(self) -> Iterable[tuple[InstanceData, InstanceData]]:
+    def train_inference_pairs(self) -> Iterable[tuple[InstanceData | None, InstanceData | None]]:
         """
         Convert the split_data iterable to a list to allow multiple iterations over the splits.
 
@@ -147,9 +110,7 @@ class DataConfig(ParameterizedConfig):
         Iterable[tuple[InstanceData, InstanceData]]
             An iterable of training/test set pairs.
         """
-        if self._splits is None:
-            self._splits = list(self.splitter.apply(self.filter.apply(self.provider.get_instances())))
-        return self._splits
+        return self.data_setup.get_train_inference_pairs()
 
 
 class LRSystemConfig(ParameterizedConfig):
@@ -245,13 +206,14 @@ def run_lrsystem(
     # Placeholders for numpy arrays of LLRs and labels obtained from each train/test split
     llrs: list[LLRData] = []
 
-    for training_data, test_data in data_config.splits:
-        if len(training_data) > 0:
+    for training_data, test_data in data_config.train_inference_pairs:
+        if training_data is not None and len(training_data) > 0:
             lrsystem_config.lrsystem.fit(training_data)
-        llrs.append(lrsystem_config.lrsystem.apply(test_data))
+        if test_data is not None:
+            llrs.append(lrsystem_config.lrsystem.apply(test_data))
 
     # Combine collected numpy arrays after iteration over the train/test split(s)
-    llrs: LLRData = concatenate_instances(*llrs)
+    llrs: LLRData | None = concatenate_instances(*llrs) if llrs else None
 
     # Create a lazy factory for full-data-fitted model with memoization
     _cached_full_fit_lrsystem = None
@@ -259,7 +221,8 @@ def run_lrsystem(
     def get_full_fit_lrsystem() -> LRSystem:
         nonlocal _cached_full_fit_lrsystem
         if _cached_full_fit_lrsystem is None:
-            full_training_data = concatenate_instances(*next(iter(data_config.splits)))
+            first_pair = next(iter(data_config.train_inference_pairs))
+            full_training_data = concatenate_instances(*[subset for subset in first_pair if subset is not None])
             _cached_full_fit_lrsystem = parse_lrsystem(deepcopy(lrsystem_config.spec), run_output_dir)
             _cached_full_fit_lrsystem.fit(full_training_data)
         return _cached_full_fit_lrsystem

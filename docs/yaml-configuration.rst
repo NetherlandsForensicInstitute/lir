@@ -138,8 +138,8 @@ A reference may be embedded in a larger value, in which case the result is alway
     name: my_experiment
     output_path: output/${name}_run
 
-If a reference cannot be resolved, an error is raised that mentions the referenced key. Recursive references, in
-which a section refers to itself directly or indirectly, are rejected as well.
+If a reference cannot be resolved, an error is raised that mentions the referenced key. A value that refers to
+itself, directly or indirectly (e.g. ``a: ${b}`` with ``b: ${a}``), is rejected as well.
 
 
 Built-in variables
@@ -168,5 +168,5 @@ Values from the configuration file may be overridden on the command line with th
 Keys in ``--set`` may be dotted, e.g. ``--set data.provider.method=csv``: the override is applied to the top-level
 sections of the configuration file, so it affects the experiments that refer to such a section. Note that values
 inside a list, such as the fields of an experiment definition in the ``experiments`` list, may not be overridden
-this way, and that command-line values are read as strings: a numeric field will reject a value such as
-``--set data.splits.test_size=0.3``, because the value is the string ``'0.3'``, not a number.
+this way, and that command-line values are read as strings: ``--set data.splits.test_size=0.3`` passes the string
+``'0.3'`` to the field rather than the number ``0.3``, so the experiment fails when the field is used.

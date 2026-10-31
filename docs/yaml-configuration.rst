@@ -94,6 +94,26 @@ Only *keys* are affected by this: dots in *values* are not special. This is why 
 is left as-is.
 
 
+Anchors and aliases
+-------------------
+
+YAML itself supports **anchors** and **aliases** for reusing a part of the file. An anchor names a value with
+``&name``; an alias ``*name`` inserts the anchored value at another location:
+
+.. code-block:: yaml
+
+    data: &data
+      provider:
+        method: glass
+
+    experiments:
+      - name: validation
+        data: *data
+
+Anchors and aliases are resolved by the YAML parser, before LiR reads the file: an alias is fixed to the
+anchored value as it appears in the file. Unlike a reference (see below), an alias does not pick up later
+changes to the anchored section, such as an override with ``--set`` on the command line.
+
 References
 ----------
 

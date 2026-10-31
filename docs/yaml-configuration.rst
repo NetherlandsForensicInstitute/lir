@@ -65,7 +65,8 @@ The ``null`` value is useful to explicitly leave an optional field empty, for ex
         lrsystem_parameters:
           ...
 
-Comments may be added anywhere with a ``#``: everything from the ``#`` to the end of the line is ignored.
+Comments may be added on any line with a ``#`` (at the start of the line, or preceded by a space): everything from the
+``#`` to the end of the line is ignored.
 
 
 Dots in declarations

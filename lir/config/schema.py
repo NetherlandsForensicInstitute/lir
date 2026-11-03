@@ -232,7 +232,7 @@ class SchemaGenerator:
         self,
         category: str,
         section_description: str,
-        method_key: str,
+        method_key: str | None,
         default_option: str | None = None,
         allow_shorthand: bool = False,
     ) -> dict[str, Any]:
@@ -253,10 +253,10 @@ class SchemaGenerator:
             The name of the registry section. This refers to a section in the registry, i.e. ``registry.yaml``.
         section_description : str
             Description of the section. This should describe the role of the selected option.
-        method_key : str
-            The key in the configuration section that is used to select an option, e.g. ``method`` for module selection.
-        default_option : str, optional
-            A default method.
+        method_key : str | None
+            The key in the configuration section that is used to select an option, e.g. ``method`` for module
+            selection. If `None`, the configuration section consists of the option name only, e.g. the metric
+            definition.
         default_option : str | None
             The default value for the variable.
         allow_shorthand : bool
@@ -272,49 +272,56 @@ class SchemaGenerator:
             for name in _list_components(f'{category}.')
         }
 
-        schema: dict[str, Any] = {
-            'type': 'object',
-            'required': [],
-            'properties': {
-                method_key: {
-                    'enum': list(config_parsers.keys()),
-                },
-                'additionalProperties': not all(parser.attributes() is not None for parser in config_parsers.values()),
-            },
-            'allOf': [],
-        }
+        options: list[dict[str, Any]] = []
 
-        # require the method key if there is no default option
-        if default_option is None:
-            schema['required'].append(method_key)
-
-        if default_option is not None:
-            schema['properties'][method_key]['default'] = default_option
-
-        for name, parser in config_parsers.items():
-            schema['allOf'].append(
-                {
-                    'if': {'properties': {method_key: {'const': name}}},
-                    'then': {
-                        'required': [attr.name for attr in parser.attributes() or [] if attr.required],
-                        'properties': {'__comment__': {'type': 'null', 'description': _get_docstr_short(parser)}}
-                        | {
-                            attr.name: _generate_attribute_definition(attr, strict=self.strict)
-                            for attr in parser.attributes() or []
-                            if not attr.obsolete
-                        },
+        if method_key is None:
+            options.append({'type': 'string', 'enum': list(config_parsers.keys())})
+        else:
+            schema: dict[str, Any] = {
+                'type': 'object',
+                'required': [],
+                'properties': {
+                    method_key: {
+                        'enum': list(config_parsers.keys()),
                     },
-                }
-            )
+                    'additionalProperties': not all(
+                        parser.attributes() is not None for parser in config_parsers.values()
+                    ),
+                },
+                'allOf': [],
+            }
 
-        options = [schema]
+            # require the method key if there is no default option
+            if default_option is None:
+                schema['required'].append(method_key)
 
-        if not self.strict and allow_shorthand:
-            options.append(
-                {
-                    'type': 'string',
-                }
-            )
+            if default_option is not None:
+                schema['properties'][method_key]['default'] = default_option
+
+            for name, parser in config_parsers.items():
+                schema['allOf'].append(
+                    {
+                        'if': {'properties': {method_key: {'const': name}}},
+                        'then': {
+                            'required': [attr.name for attr in parser.attributes() or [] if attr.required],
+                            'properties': {'__comment__': {'type': 'null', 'description': _get_docstr_short(parser)}}
+                            | {
+                                attr.name: _generate_attribute_definition(attr, strict=self.strict)
+                                for attr in parser.attributes() or []
+                                if not attr.obsolete
+                            },
+                        },
+                    }
+                )
+
+            options.append(schema)
+
+            if not self.strict and allow_shorthand:
+                options.append(
+                    {
+                        'type': 'string',
+                    }
+                )
 
         if len(options) == 1:
             return options[0] | {

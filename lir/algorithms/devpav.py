@@ -110,23 +110,16 @@ def _devpavcalculator(lrs: np.ndarray, pav_lrs: np.ndarray, y: np.ndarray) -> fl
     X = data[0, :]
     Y = data[1, :]
 
-    # Check for pathological cases where devPAV is infinite or undefined.
-    # PAV-transform has a horizontal line from log(X) = -Inf to log(X) = Inf
-    if Y[0] != 0 and Y[-1] != np.inf and X[-1] == np.inf and X[-1] == np.inf:
-        return np.inf
-
-    # PAV-transform has a horizontal line to log(X) = -Inf
-    if Y[0] != 0 and X[0] == 0 and Y[-1] == np.inf:
-        return np.inf
-
-    # PAV-transform has a horizontal line to log(X) = Inf
-    if Y[0] == 0 and Y[-1] != np.inf and X[-1] == np.inf:
-        return np.inf
-
-    # PAV-transform has one vertical line from log(Y) = -Inf to log(Y) = Inf
-    wh = (Y == 0) | (np.inf == Y)
+    # Check for pathological case where devPAV = undefined
+    # PAV-transform has one vertical line from log(Y) = -Inf to log(Y) = Inf; there is no overlap in the DS and SS LLRs.
+    wh = (Y == 0) | (Y == np.inf)
     if np.sum(wh) == len(Y):
         return np.nan
+
+    # Check for pathological cases where devPAV is infinite.
+    # devPAV is infinite if we have a horizontal line either to log(X) = -inf or to log(X) = inf (or both).
+    if (Y[0] != 0 and X[0] == 0) or (Y[-1] != np.inf and X[-1] == np.inf):
+        return np.inf
 
     # filtering out -Inf or 0 Y's
     within_range_index = (Y > 0) & (np.inf > Y)

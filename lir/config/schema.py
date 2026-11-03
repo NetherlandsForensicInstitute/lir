@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 import confidence
+from jsonschema import validate
 
 from lir import DataProvider, DataStrategy, Transformer, registry
 from lir.aggregation import Aggregation
@@ -228,11 +229,13 @@ class SchemaGenerator:
     def __init__(self, strict: bool = False):
         self.strict = strict
 
-    def _generate_alternatives_as_dict(
+    def _generate_alternatives_schema(
         self,
-        config_parsers: dict[str, ConfigParser],
+        category: str,
+        section_description: str,
         method_key: str,
         default_option: str | None = None,
+        allow_shorthand: bool = False,
     ) -> dict[str, Any]:
         """
         Generate a schema for a configuration section of a particular registry category.
@@ -247,18 +250,29 @@ class SchemaGenerator:
 
         Parameters
         ----------
-        config_parsers : dict[str, ConfigParser]
-            The configuration parsers that can be applied in the configuration section.
+        category : str
+            The name of the registry section. This refers to a section in the registry, i.e. ``registry.yaml``.
+        section_description : str
+            Description of the section. This should describe the role of the selected option.
         method_key : str
-            The key that refers to the configuration parser.
+            The key in the configuration section that is used to select an option, e.g. ``method`` for module selection.
         default_option : str, optional
             A default method.
+        default_option : str | None
+            The default value for the variable.
+        allow_shorthand : bool
+            Allow shorthand-notation.
 
         Returns
         -------
         dict[str, Any]
-            The schema definition.
+            A schema for the configuration section, excluding the section name itself.
         """
+        config_parsers = {
+            name: registry.get(name, default_config_parser=GenericConfigParser, search_path=[category])
+            for name in _list_components(f'{category}.')
+        }
+
         schema: dict[str, Any] = {
             'type': 'object',
             'required': [],
@@ -294,52 +308,14 @@ class SchemaGenerator:
                 }
             )
 
-        return schema
+        options = [schema]
 
-    def _generate_alternatives_schema(
-        self,
-        category: str,
-        section_description: str,
-        method_key: str | None,
-        default_option: str | None = None,
-        allow_shorthand: bool = False,
-    ) -> dict[str, Any]:
-        """
-        Generate a schema for a configuration section of a particular category in the registry.
-
-        Parameters
-        ----------
-        category : str
-            The name of the registry section. This refers to a section in the registry, i.e. ``registry.yaml``.
-        section_description : str
-            Description of the section. This should describe the role of the selected option.
-        method_key : str
-            The key in the configuration section that is used to select an option, e.g. ``method`` for module selection.
-        default_option : str | None
-            The default value for the variable.
-        allow_shorthand : bool
-            Allow shorthand-notation in tolerant (non-strict) mode.
-
-        Returns
-        -------
-        dict[str, Any]
-            A schema for the configuration section, excluding the section name itself.
-        """
-        config_parsers = {
-            name: registry.get(name, default_config_parser=GenericConfigParser, search_path=[category])
-            for name in _list_components(f'{category}.')
-        }
-
-        if not config_parsers:
-            raise ValueError(f'no candidates for category: {category}')
-
-        options = []
-
-        if method_key:
-            options.append(self._generate_alternatives_as_dict(config_parsers, method_key, default_option))
-
-        if not method_key or (not self.strict and allow_shorthand):
-            options.append({'type': 'string', 'enum': list(config_parsers.keys())})
+        if not self.strict and allow_shorthand:
+            options.append(
+                {
+                    'type': 'string',
+                }
+            )
 
         if len(options) == 1:
             return options[0] | {

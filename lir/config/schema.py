@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import Any
 
 import confidence
-from jsonschema import validate
 
 from lir import DataProvider, DataStrategy, Transformer, registry
 from lir.aggregation import Aggregation

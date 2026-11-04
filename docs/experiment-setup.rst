@@ -171,7 +171,7 @@ In that case, the train/test roles are assigned by the data provider, and we can
 .. code-block:: yaml
 
     data:
-      setup: split_data
+      setup: splits
       provider:
         method: glass
         cache_dir: .glass-data

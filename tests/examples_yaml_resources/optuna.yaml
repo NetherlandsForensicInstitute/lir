@@ -2,6 +2,9 @@
 
 data.provider.cache_dir: tests/examples_yaml_resources/cache
 
+# limit the number of pairs to keep the single-trial optimization fast (glass test set has 320 sources)
+lrsystem.pairing.same_source_limit: 50
+
 experiments:
   - name: optimize_kde_bandwidth
     strategy: optuna

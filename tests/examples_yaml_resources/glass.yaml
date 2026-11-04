@@ -2,3 +2,8 @@
 
 # disable cache in experiment setup; cache is configured in unit test
 data.provider.cache_dir:
+
+# limit the number of same-source pairs (and, via ratio_limit, the different-source pairs) to keep the test fast;
+# the glass test set contains 320 sources
+score_based_lrsystem.pairing.same_source_limit: 10
+two_level_lrsystem.pairing.same_source_limit: 10

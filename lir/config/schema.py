@@ -486,7 +486,7 @@ class SchemaGenerator:
             'definitions': {
                 'experiment': experiments_definition,
                 'dataConfiguration': self._generate_alternatives_schema(
-                    'data_setup', 'Choose your data setup.', 'setup', default_option='split_data'
+                    'data_setup', 'Choose your data setup.', 'setup', default_option='splits'
                 ),
                 'dataProvider': self._generate_alternatives_schema(
                     'data_providers', 'The data provider specifies the data source and how to load it.', 'method'

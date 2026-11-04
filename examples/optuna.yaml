@@ -7,7 +7,7 @@
 output_path: output/${timestamp}_optuna_example
 
 data: &data
-  setup: split_data
+  setup: splits
 
   provider:
     method: glass

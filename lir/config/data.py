@@ -22,7 +22,7 @@ def parse_data_setup(cfg: ConfigValue, output_path: Path) -> DataSetup:
 
     The selected setup is looked up in the ``data_setup`` section of the registry.
 
-    When the ``setup`` key is missing, it defaults to ``split_data`` and a DeprecationWarning is emitted.
+    When the ``setup`` key is missing, it defaults to ``splits`` and a DeprecationWarning is emitted.
 
     Parameters
     ----------
@@ -36,7 +36,7 @@ def parse_data_setup(cfg: ConfigValue, output_path: Path) -> DataSetup:
     DataSetup
         The parsed data setup.
     """
-    default_method = 'split_data'
+    default_method = 'splits'
 
     if 'setup' not in cfg:
         warnings.warn(

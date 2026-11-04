@@ -25,7 +25,7 @@ class CountingProvider(DataProvider):
 
 def _data_section(**extra) -> dict:
     return {
-        'setup': 'split_data',
+        'setup': 'splits',
         'provider': {
             'method': 'synthesized_normal_binary',
             'seed': 42,

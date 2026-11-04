@@ -8,6 +8,9 @@ import pytest
 from lir import LLRData
 from lir.aggregation import AggregationData
 
+# also warn if a snippet test attempts to access the network (issue #520)
+from tests.conftest import _warn_on_network_access  # noqa: F401
+
 
 @pytest.fixture
 def aggregation_data() -> Iterable[list[AggregationData]]:

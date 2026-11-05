@@ -2,7 +2,7 @@ import numpy as np
 
 from lir.algorithms.isotonic_regression import IsotonicCalibrator
 from lir.data.models import LLRData
-from lir.util import Xy_to_Xn, logodds_to_odds
+from lir.util import logodds_to_odds
 
 
 def _calcsurface(c1: tuple[float, float], c2: tuple[float, float]) -> float:
@@ -99,7 +99,6 @@ def _devpavcalculator(lrs: np.ndarray, pav_lrs: np.ndarray, y: np.ndarray) -> fl
     float
         DevPAV value.
     """
-
     # order coordinates based on lrs then pav_lrs and filter out identical datapoints
     data = np.unique(np.array([lrs, pav_lrs]), axis=1)
     lrs_sorted = data[0, :]
@@ -115,9 +114,7 @@ def _devpavcalculator(lrs: np.ndarray, pav_lrs: np.ndarray, y: np.ndarray) -> fl
     # Check for pathological cases where devPAV is infinite.
     # devPAV is infinite if we have a horizontal line either to log(lrs_sorted) = -inf or
     #   to log(lrs_sorted) = inf (or both).
-    if (pav_lrs_sorted[0] != 0 and lrs_sorted[0] == 0) or (
-        pav_lrs_sorted[-1] != np.inf and lrs_sorted[-1] == np.inf
-    ):
+    if (pav_lrs_sorted[0] != 0 and lrs_sorted[0] == 0) or (pav_lrs_sorted[-1] != np.inf and lrs_sorted[-1] == np.inf):
         return np.inf
 
     # filtering out Inf or 0 Y's and taking log10

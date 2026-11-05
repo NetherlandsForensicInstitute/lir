@@ -99,49 +99,45 @@ def _devpavcalculator(lrs: np.ndarray, pav_lrs: np.ndarray, y: np.ndarray) -> fl
     float
         DevPAV value.
     """
-    # split same-source and different-source LRs and PAV-LRs
-    ds_lrs, ss_lrs = Xy_to_Xn(lrs, y)
-    ds_pav_lrs, ss_pav_lrs = Xy_to_Xn(pav_lrs, y)
-    pav_result = np.concatenate([ss_pav_lrs, ds_pav_lrs])
-    all_lrs = np.concatenate([ss_lrs, ds_lrs])
 
-    # order coordinates based on all_lrs then pav_result and filter out identical datapoints
-    data = np.unique(np.array([all_lrs, pav_result]), axis=1)
-    all_lrs_sorted = data[0, :]
-    pav_result_sorted = data[1, :]
+    # order coordinates based on lrs then pav_lrs and filter out identical datapoints
+    data = np.unique(np.array([lrs, pav_lrs]), axis=1)
+    lrs_sorted = data[0, :]
+    pav_lrs_sorted = data[1, :]
 
     # Check for pathological case where devPAV = undefined
-    # PAV-transform has one vertical line from log(pav_result_sorted) = -Inf to log(pav_result_sorted) = Inf;
+    # PAV-transform has one vertical line from log(pav_lrs_sorted) = -Inf to log(pav_lrs_sorted) = Inf;
     #   there is no overlap in the DS and SS LRs.
-    wh = (pav_result_sorted == 0) | (pav_result_sorted == np.inf)
-    if np.sum(wh) == len(pav_result_sorted):
+    is_zero_or_infinite = (pav_lrs_sorted == 0) | (pav_lrs_sorted == np.inf)
+    if np.sum(is_zero_or_infinite) == len(pav_lrs_sorted):
         return np.nan
 
     # Check for pathological cases where devPAV is infinite.
-    # devPAV is infinite if we have a horizontal line either to log(all_lrs_sorted) = -inf or
-    #   to log(all_lrs_sorted) = inf (or both).
-    if (pav_result_sorted[0] != 0 and all_lrs_sorted[0] == 0) or (
-        pav_result_sorted[-1] != np.inf and all_lrs_sorted[-1] == np.inf
+    # devPAV is infinite if we have a horizontal line either to log(lrs_sorted) = -inf or
+    #   to log(lrs_sorted) = inf (or both).
+    if (pav_lrs_sorted[0] != 0 and lrs_sorted[0] == 0) or (
+        pav_lrs_sorted[-1] != np.inf and lrs_sorted[-1] == np.inf
     ):
         return np.inf
 
     # filtering out Inf or 0 Y's and taking log10
-    within_range_index = (pav_result_sorted > 0) & (pav_result_sorted < np.inf)
-    llrs_sorted = np.log10(all_lrs_sorted[within_range_index])
-    log_pav_result_sorted = np.log10(pav_result_sorted[within_range_index])
+    within_range_index = (pav_lrs_sorted > 0) & (pav_lrs_sorted < np.inf)
+    llrs_sorted = np.log10(lrs_sorted[within_range_index])
+    pav_llrs_sorted = np.log10(pav_lrs_sorted[within_range_index])
 
-    # Check two pathological cases
-    #   1. Return nan for no data left
+    # Check pathological case
+    #   Return nan for no data left
     if len(llrs_sorted) == 0:
         return np.nan
 
-    #   2. Return abs(x - y) if only one datapoint left
+    # Check only one coordinate. We cannot calculate surfaces
+    #   Return abs(x - y) if only one datapoint left
     if len(llrs_sorted) == 1:
-        return abs(llrs_sorted[0] - log_pav_result_sorted[0])
+        return abs(llrs_sorted[0] - pav_llrs_sorted[0])
 
     # Actual devPAV calculation
     surface = sum(
-        _calcsurface((llrs_sorted[i - 1], log_pav_result_sorted[i - 1]), (llrs_sorted[i], log_pav_result_sorted[i]))
+        _calcsurface((llrs_sorted[i - 1], pav_llrs_sorted[i - 1]), (llrs_sorted[i], pav_llrs_sorted[i]))
         for i in range(1, len(llrs_sorted))
     )
 

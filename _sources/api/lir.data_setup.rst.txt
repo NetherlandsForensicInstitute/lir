@@ -1,0 +1,18 @@
+lir.data\_setup package
+=======================
+
+.. automodule:: lir.data_setup
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+lir.data\_setup.train\_test\_split module
+-----------------------------------------
+
+.. automodule:: lir.data_setup.train_test_split
+   :members:
+   :show-inheritance:
+   :undoc-members:

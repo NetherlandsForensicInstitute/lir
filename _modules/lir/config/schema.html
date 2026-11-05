@@ -1,0 +1,796 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lir.config.schema &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api-overview.html">Python API: Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#organize-your-data">Organize your data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api-overview.html#calculate-llrs">Calculate LLRs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lrsystem-assessment.html#appearance-plots-and-metrics">Appearance plots and metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../yaml-configuration.html">YAML configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../yaml-configuration.html#sections-and-lists">Sections and lists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../yaml-configuration.html#values-and-types">Values and types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../yaml-configuration.html#dots-in-declarations">Dots in declarations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../yaml-configuration.html#anchors-and-aliases">Anchors and aliases</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../yaml-configuration.html#references">References</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../yaml-configuration.html#built-in-variables">Built-in variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../yaml-configuration.html#overriding-values-on-the-command-line">Overriding values on the command line</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../extending-lir.html">Extending LiR by creating a custom component</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../extending-lir.html#creating-a-custom-module">Creating a custom module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../extending-lir.html#examples-for-other-components">Examples for other components</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Built-in components</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#splitting-strategies">Splitting strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/lir.html">lir package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.DataProvider"><code class="docutils literal notranslate"><span class="pre">DataProvider</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.DataSetup"><code class="docutils literal notranslate"><span class="pre">DataSetup</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.DataStrategy"><code class="docutils literal notranslate"><span class="pre">DataStrategy</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.FeatureData"><code class="docutils literal notranslate"><span class="pre">FeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.InstanceData"><code class="docutils literal notranslate"><span class="pre">InstanceData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.LLRData"><code class="docutils literal notranslate"><span class="pre">LLRData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.PairedFeatureData"><code class="docutils literal notranslate"><span class="pre">PairedFeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.Transformer"><code class="docutils literal notranslate"><span class="pre">Transformer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#module-lir.bounding">lir.bounding module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#module-lir.main">lir.main module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#module-lir.persistence">lir.persistence module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#module-lir.registry">lir.registry module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/lir.html#module-lir.util">lir.util module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../lir.html">lir</a></li>
+      <li class="breadcrumb-item active">lir.config.schema</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lir.config.schema</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">types</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numbers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Number</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">confidence</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataProvider</span><span class="p">,</span> <span class="n">DataStrategy</span><span class="p">,</span> <span class="n">Transformer</span><span class="p">,</span> <span class="n">registry</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.aggregation</span><span class="w"> </span><span class="kn">import</span> <span class="n">Aggregation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigAttribute</span><span class="p">,</span> <span class="n">ConfigParser</span><span class="p">,</span> <span class="n">ConfigValue</span><span class="p">,</span> <span class="n">GenericConfigParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.substitution</span><span class="w"> </span><span class="kn">import</span> <span class="n">Hyperparameter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.datasets.synthesized_normal_binary</span><span class="w"> </span><span class="kn">import</span> <span class="n">SynthesizedNormalData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.experiments.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataConfig</span><span class="p">,</span> <span class="n">LRSystemConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">MetricType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.transform.pairing</span><span class="w"> </span><span class="kn">import</span> <span class="n">PairingMethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.transform.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
+
+
+<span class="n">DEFINITIONS</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">type</span> <span class="o">|</span> <span class="n">types</span><span class="o">.</span><span class="n">UnionType</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">type</span><span class="p">,</span> <span class="nb">type</span><span class="p">],</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nb">int</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;integer&#39;</span><span class="p">},</span>
+    <span class="nb">bool</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span><span class="p">},</span>
+    <span class="nb">float</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;number&#39;</span><span class="p">},</span>
+    <span class="n">Number</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;number&#39;</span><span class="p">},</span>
+    <span class="nb">str</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">},</span>
+    <span class="nb">dict</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span> <span class="s1">&#39;additionalProperties&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+    <span class="n">Transformer</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;$ref&#39;</span><span class="p">:</span> <span class="s1">&#39;#/definitions/module&#39;</span><span class="p">},</span>
+    <span class="p">(</span><span class="n">Transformer</span><span class="p">,</span> <span class="n">Pipeline</span><span class="p">):</span> <span class="p">{</span><span class="s1">&#39;$ref&#39;</span><span class="p">:</span> <span class="s1">&#39;#/definitions/pipeline&#39;</span><span class="p">},</span>
+    <span class="n">PairingMethod</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;$ref&#39;</span><span class="p">:</span> <span class="s1">&#39;#/definitions/pairingConfiguration&#39;</span><span class="p">},</span>
+    <span class="n">DataProvider</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;$ref&#39;</span><span class="p">:</span> <span class="s1">&#39;#/definitions/dataProvider&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;The data provider specifies the data source and how to load it.&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">DataStrategy</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;$ref&#39;</span><span class="p">:</span> <span class="s1">&#39;#/definitions/dataSplits&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Choose a data splitting strategy to define how to divide data into training and testing sets.&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">DataConfig</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;$ref&#39;</span><span class="p">:</span> <span class="s1">&#39;#/definitions/dataConfiguration&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Data configuration for this experiment (references are resolved before validation).&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">LRSystemConfig</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;$ref&#39;</span><span class="p">:</span> <span class="s1">&#39;#/definitions/lrSystemConfiguration&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;LR system configuration that defines the architecture and modules for likelihood ratio &#39;</span>
+        <span class="o">+</span> <span class="s1">&#39;calculation.&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">Aggregation</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;$ref&#39;</span><span class="p">:</span> <span class="s1">&#39;#/definitions/aggregation&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Output aggregations.&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">SynthesizedNormalData</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;std&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;mean&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;number&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Mean value.&#39;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s1">&#39;std&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;number&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Standard deviation.&#39;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;integer&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Number of instances.&#39;</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+    <span class="nb">list</span><span class="p">[</span><span class="n">Hyperparameter</span><span class="p">]:</span> <span class="p">{</span>
+        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;array&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;List of hyperparameters to vary (for grid and optuna strategies).&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;items&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;$ref&#39;</span><span class="p">:</span> <span class="s1">&#39;#/definitions/hyperparameter&#39;</span><span class="p">},</span>
+    <span class="p">},</span>
+    <span class="n">MetricType</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;$ref&#39;</span><span class="p">:</span> <span class="s1">&#39;#/definitions/metric&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;An output metric.&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">types</span><span class="o">.</span><span class="n">NoneType</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;null&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_generate_type_definition</span><span class="p">(</span><span class="n">config_type</span><span class="p">:</span> <span class="nb">type</span> <span class="o">|</span> <span class="n">types</span><span class="o">.</span><span class="n">UnionType</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a schema for a type definition.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config_type : type | UnionType | tuple</span>
+<span class="sd">        The type to generate a schema for.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict[str, Any]</span>
+<span class="sd">        The schema definition.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># if the type is predefined, return its value</span>
+    <span class="k">if</span> <span class="n">config_type</span> <span class="ow">in</span> <span class="n">DEFINITIONS</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">DEFINITIONS</span><span class="p">[</span><span class="n">config_type</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config_type</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;no rule for generating a type definition for </span><span class="si">{</span><span class="n">config_type</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># if the type is a union of multiple types, allow any of the types</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config_type</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">UnionType</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;anyOf&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">_generate_type_definition</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">config_type</span><span class="o">.</span><span class="n">__args__</span><span class="p">]}</span>
+
+    <span class="c1"># if the type is a list, allow an array of its element types</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config_type</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">GenericAlias</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">config_type</span><span class="o">.</span><span class="n">__origin__</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">elem_type</span> <span class="o">=</span> <span class="n">config_type</span><span class="o">.</span><span class="n">__args__</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;array&#39;</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">:</span> <span class="n">_generate_type_definition</span><span class="p">(</span><span class="n">elem_type</span><span class="p">)}</span>
+
+    <span class="c1"># if the type is a dict, allow a dictionary whose values of its declared value types</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config_type</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">GenericAlias</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">config_type</span><span class="o">.</span><span class="n">__origin__</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">key_type</span><span class="p">,</span> <span class="n">value_type</span> <span class="o">=</span> <span class="n">config_type</span><span class="o">.</span><span class="n">__args__</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">key_type</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;key must be str; found: </span><span class="si">{</span><span class="n">key_type</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;additionalProperties&#39;</span><span class="p">:</span> <span class="n">_generate_type_definition</span><span class="p">(</span><span class="n">value_type</span><span class="p">),</span>
+        <span class="p">}</span>
+
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;no schema for type: </span><span class="si">{</span><span class="n">config_type</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_generate_attribute_definition</span><span class="p">(</span><span class="n">attribute</span><span class="p">:</span> <span class="n">ConfigAttribute</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a schema for an attribute in a configuration section.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    attribute : ConfigAttribute</span>
+<span class="sd">        The attribute to generate a schema for.</span>
+<span class="sd">    strict : bool</span>
+<span class="sd">        Enforce strict syntax mode.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict[str, Any]</span>
+<span class="sd">        The schema definition.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">is_complex_type</span> <span class="o">=</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attribute</span><span class="o">.</span><span class="n">default</span><span class="p">,</span> <span class="p">(</span><span class="n">Number</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">NoneType</span><span class="p">))</span>
+
+    <span class="c1"># use the default type to generate the type definition, unless it is a complex type</span>
+    <span class="n">attr_type</span> <span class="o">=</span> <span class="p">(</span><span class="n">attribute</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">attribute</span><span class="o">.</span><span class="n">default</span><span class="p">)</span> <span class="k">if</span> <span class="n">is_complex_type</span> <span class="k">else</span> <span class="n">attribute</span><span class="o">.</span><span class="n">type</span>
+
+    <span class="c1"># in lenient mode, allow the attribute to be None if it is not required</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">attribute</span><span class="o">.</span><span class="n">required</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">strict</span><span class="p">:</span>
+        <span class="n">attr_type</span> <span class="o">|=</span> <span class="n">types</span><span class="o">.</span><span class="n">NoneType</span>
+
+    <span class="c1"># generate the schema</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">_generate_type_definition</span><span class="p">(</span><span class="n">attr_type</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">attribute</span><span class="o">.</span><span class="n">description</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">attribute</span><span class="o">.</span><span class="n">description</span>
+    <span class="k">if</span> <span class="n">attribute</span><span class="o">.</span><span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_complex_type</span><span class="p">:</span>
+        <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">attribute</span><span class="o">.</span><span class="n">default</span>
+
+    <span class="k">return</span> <span class="n">schema</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_list_components</span><span class="p">(</span><span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="n">components</span> <span class="o">=</span> <span class="p">[</span><span class="n">component</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="p">:]</span> <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">registry</span><span class="o">.</span><span class="n">registry</span><span class="p">()</span> <span class="k">if</span> <span class="n">component</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">components</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_prune</span><span class="p">(</span><span class="n">schema</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Prune a schema by dropping empty elements.</span>
+
+<span class="sd">    This creates a copy of the schema from which non-functional elements are removed.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    schema : Any</span>
+<span class="sd">        A schema to prune.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Any</span>
+<span class="sd">        The pruned schema.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">schema</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">_prune</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">schema</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="k">if</span> <span class="s1">&#39;required&#39;</span> <span class="ow">in</span> <span class="n">schema</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">schema</span><span class="p">[</span><span class="s1">&#39;required&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;required&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;properties&#39;</span> <span class="ow">in</span> <span class="n">schema</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">schema</span><span class="p">[</span><span class="s1">&#39;properties&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;properties&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;then&#39;</span> <span class="ow">in</span> <span class="n">schema</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">schema</span><span class="p">[</span><span class="s1">&#39;then&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;if&#39;</span><span class="p">]</span>
+            <span class="k">del</span> <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;then&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;allOf&#39;</span> <span class="ow">in</span> <span class="n">schema</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">schema</span><span class="p">[</span><span class="s1">&#39;allOf&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;allOf&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;oneOf&#39;</span> <span class="ow">in</span> <span class="n">schema</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">schema</span><span class="p">[</span><span class="s1">&#39;oneOf&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">schema</span> <span class="o">|=</span> <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;oneOf&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;anyOf&#39;</span> <span class="ow">in</span> <span class="n">schema</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">schema</span><span class="p">[</span><span class="s1">&#39;anyOf&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">schema</span> <span class="o">|=</span> <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;anyOf&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">schema</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">schema</span> <span class="o">=</span> <span class="p">[</span><span class="n">_prune</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">schema</span><span class="p">]</span>
+        <span class="n">schema</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">schema</span> <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="n">schema</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">schema</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_docstr_short</span><span class="p">(</span><span class="n">class_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">ConfigParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="c1"># TODO: reuse from docs/config.py</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">class_name</span><span class="p">,</span> <span class="n">ConfigParser</span><span class="p">):</span>
+        <span class="n">class_name</span> <span class="o">=</span> <span class="n">class_name</span><span class="o">.</span><span class="n">reference</span><span class="p">()</span>
+
+    <span class="n">docstr</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">_get_attribute_by_name</span><span class="p">(</span><span class="n">class_name</span><span class="p">)</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">docstr</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">.*&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">docstr</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">docstr</span>
+
+
+<div class="viewcode-block" id="SchemaGenerator">
+<a class="viewcode-back" href="../../../api/lir.config.html#lir.config.schema.SchemaGenerator">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SchemaGenerator</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for schema generation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    strict : bool</span>
+<span class="sd">        Enforce strict syntax rules.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">strict</span> <span class="o">=</span> <span class="n">strict</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_alternatives_as_dict</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config_parsers</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ConfigParser</span><span class="p">],</span>
+        <span class="n">method_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">default_option</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate a schema for a configuration section of a particular registry category.</span>
+
+<span class="sd">        The configuration section must have its canonical form, e.g.</span>
+
+<span class="sd">        .. code-block:: yaml</span>
+
+<span class="sd">            method: my_method</span>
+<span class="sd">            arg1: value1</span>
+<span class="sd">            arg2: value2</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config_parsers : dict[str, ConfigParser]</span>
+<span class="sd">            The configuration parsers that can be applied in the configuration section.</span>
+<span class="sd">        method_key : str</span>
+<span class="sd">            The key that refers to the configuration parser.</span>
+<span class="sd">        default_option : str, optional</span>
+<span class="sd">            A default method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict[str, Any]</span>
+<span class="sd">            The schema definition.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">schema</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">method_key</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">config_parsers</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
+                <span class="p">},</span>
+                <span class="s1">&#39;additionalProperties&#39;</span><span class="p">:</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">attributes</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">parser</span> <span class="ow">in</span> <span class="n">config_parsers</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span>
+            <span class="p">},</span>
+            <span class="s1">&#39;allOf&#39;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="p">}</span>
+
+        <span class="c1"># require the method key if there is no default option</span>
+        <span class="k">if</span> <span class="n">default_option</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;required&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">method_key</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">default_option</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;properties&#39;</span><span class="p">][</span><span class="n">method_key</span><span class="p">][</span><span class="s1">&#39;default&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">default_option</span>
+
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">parser</span> <span class="ow">in</span> <span class="n">config_parsers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;allOf&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s1">&#39;if&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span><span class="n">method_key</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;const&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">}}},</span>
+                    <span class="s1">&#39;then&#39;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">attr</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">parser</span><span class="o">.</span><span class="n">attributes</span><span class="p">()</span> <span class="ow">or</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">attr</span><span class="o">.</span><span class="n">required</span><span class="p">],</span>
+                        <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;__comment__&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;null&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">_get_docstr_short</span><span class="p">(</span><span class="n">parser</span><span class="p">)}}</span>
+                        <span class="o">|</span> <span class="p">{</span>
+                            <span class="n">attr</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">_generate_attribute_definition</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">strict</span><span class="p">)</span>
+                            <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">parser</span><span class="o">.</span><span class="n">attributes</span><span class="p">()</span> <span class="ow">or</span> <span class="p">[]</span>
+                            <span class="k">if</span> <span class="ow">not</span> <span class="n">attr</span><span class="o">.</span><span class="n">obsolete</span>
+                        <span class="p">},</span>
+                    <span class="p">},</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">schema</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_alternatives_schema</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">category</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">section_description</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">method_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">default_option</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">allow_shorthand</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate a schema for a configuration section of a particular category in the registry.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        category : str</span>
+<span class="sd">            The name of the registry section. This refers to a section in the registry, i.e. ``registry.yaml``.</span>
+<span class="sd">        section_description : str</span>
+<span class="sd">            Description of the section. This should describe the role of the selected option.</span>
+<span class="sd">        method_key : str</span>
+<span class="sd">            The key in the configuration section that is used to select an option, e.g. ``method`` for module selection.</span>
+<span class="sd">        default_option : str | None</span>
+<span class="sd">            The default value for the variable.</span>
+<span class="sd">        allow_shorthand : bool</span>
+<span class="sd">            Allow shorthand-notation in tolerant (non-strict) mode.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict[str, Any]</span>
+<span class="sd">            A schema for the configuration section, excluding the section name itself.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">config_parsers</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">name</span><span class="p">:</span> <span class="n">registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">default_config_parser</span><span class="o">=</span><span class="n">GenericConfigParser</span><span class="p">,</span> <span class="n">search_path</span><span class="o">=</span><span class="p">[</span><span class="n">category</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">_list_components</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">category</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">config_parsers</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;no candidates for category: </span><span class="si">{</span><span class="n">category</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">options</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">method_key</span><span class="p">:</span>
+            <span class="n">options</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_generate_alternatives_as_dict</span><span class="p">(</span><span class="n">config_parsers</span><span class="p">,</span> <span class="n">method_key</span><span class="p">,</span> <span class="n">default_option</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">method_key</span> <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">strict</span> <span class="ow">and</span> <span class="n">allow_shorthand</span><span class="p">):</span>
+            <span class="n">options</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">config_parsers</span><span class="o">.</span><span class="n">keys</span><span class="p">())})</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">options</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">|</span> <span class="p">{</span>
+                <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">section_description</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">section_description</span><span class="p">,</span>
+                <span class="s1">&#39;anyOf&#39;</span><span class="p">:</span> <span class="n">options</span><span class="p">,</span>
+            <span class="p">}</span>
+
+<div class="viewcode-block" id="SchemaGenerator.generate">
+<a class="viewcode-back" href="../../../api/lir.config.html#lir.config.schema.SchemaGenerator.generate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate a schema for the YAML configuration.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            The schema as a dict.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hyperparameter_schema_options</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_generate_alternatives_schema</span><span class="p">(</span>
+                <span class="s1">&#39;hyperparameter_types&#39;</span><span class="p">,</span> <span class="s1">&#39;Select the parameter type&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;categorical&#39;</span>
+            <span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">strict</span><span class="p">:</span>
+            <span class="n">hyperparameter_schema_options</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;The hyperparameter type.&#39;</span><span class="p">,</span>
+                        <span class="p">},</span>
+                        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Optional descriptive name for the hyperparameter (defaults to path).&#39;</span><span class="p">,</span>
+                        <span class="p">},</span>
+                        <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Dot-separated path to the parameter in the configuration (e.g., &#39;</span>
+                            <span class="o">+</span> <span class="s2">&quot;&#39;comparing.steps.clf&#39;).&quot;</span><span class="p">,</span>
+                        <span class="p">},</span>
+                        <span class="s1">&#39;options&#39;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;array&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;List of categorical options or clustered substitutions.&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;items&#39;</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="s1">&#39;oneOf&#39;</span><span class="p">:</span> <span class="p">[</span>
+                                    <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">},</span>
+                                    <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;number&#39;</span><span class="p">},</span>
+                                    <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span><span class="p">},</span>
+                                    <span class="p">{</span>
+                                        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span>
+                                            <span class="s1">&#39;option_name&#39;</span><span class="p">:</span> <span class="p">{</span>
+                                                <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span>
+                                                <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Name for this option.&#39;</span><span class="p">,</span>
+                                            <span class="p">},</span>
+                                            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">{</span>
+                                                <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Value to substitute (alternative to inline &#39;</span>
+                                                <span class="o">+</span> <span class="s1">&#39;specification).&#39;</span>
+                                            <span class="p">},</span>
+                                            <span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="p">{</span>
+                                                <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span>
+                                                <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Method name (when option is a module specification).&#39;</span><span class="p">,</span>
+                                            <span class="p">},</span>
+                                            <span class="s1">&#39;substitutions&#39;</span><span class="p">:</span> <span class="p">{</span>
+                                                <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;array&#39;</span><span class="p">,</span>
+                                                <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;List of path/value substitutions (for cluster type).&#39;</span><span class="p">,</span>
+                                                <span class="s1">&#39;items&#39;</span><span class="p">:</span> <span class="p">{</span>
+                                                    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
+                                                    <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">},</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">{}},</span>
+                                                    <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">],</span>
+                                                    <span class="s1">&#39;additionalProperties&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                                                <span class="p">},</span>
+                                            <span class="p">},</span>
+                                        <span class="p">},</span>
+                                        <span class="s1">&#39;additionalProperties&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                                    <span class="p">},</span>
+                                <span class="p">]</span>
+                            <span class="p">},</span>
+                        <span class="p">},</span>
+                        <span class="s1">&#39;low&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Lower bound for float hyperparameter.&#39;</span><span class="p">},</span>
+                        <span class="s1">&#39;high&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Upper bound for float hyperparameter.&#39;</span><span class="p">},</span>
+                        <span class="s1">&#39;step&#39;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;number&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Step size for float hyperparameter (for grid search).&#39;</span><span class="p">,</span>
+                        <span class="p">},</span>
+                        <span class="s1">&#39;log&#39;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Sample from log space instead of linear (for float hyperparameter).&#39;</span><span class="p">,</span>
+                        <span class="p">},</span>
+                        <span class="s1">&#39;folder&#39;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Path to folder containing options (for folder hyperparameter type).&#39;</span><span class="p">,</span>
+                        <span class="p">},</span>
+                        <span class="s1">&#39;ignore_files&#39;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;array&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;File patterns to ignore in folder (for folder hyperparameter type).&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;items&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">},</span>
+                        <span class="p">},</span>
+                        <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Constant value (for constant hyperparameter type).&#39;</span><span class="p">},</span>
+                    <span class="p">},</span>
+                    <span class="s1">&#39;additionalProperties&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+
+        <span class="n">experiments_definition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_alternatives_schema</span><span class="p">(</span>
+            <span class="s1">&#39;experiment_strategies&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;Define a LiR experiment. First, choose the experiment execution strategy, controlling how the &#39;</span>
+            <span class="o">+</span> <span class="s1">&#39;experiment is run.&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;strategy&#39;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">schema</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;$schema&#39;</span><span class="p">:</span> <span class="s1">&#39;http://json-schema.org/draft-07/schema#&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;LiR Configuration Schema&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Configuration file for running Likelihood Ratio (LiR) experiments. A configuration defines &#39;</span>
+            <span class="o">+</span> <span class="s1">&#39;where outputs are written and specifies one or more experiments, each describing data, system &#39;</span>
+            <span class="o">+</span> <span class="s2">&quot;configuration, and requested output artefacts.</span><span class="se">\n\n</span><span class="s2">Note: This configuration uses the &#39;confidence&#39; library&quot;</span>
+            <span class="o">+</span> <span class="s1">&#39; which extends standard YAML with variable substitution using $</span><span class="si">{variable_name}</span><span class="s1"> syntax. This is NOT part &#39;</span>
+            <span class="o">+</span> <span class="s1">&#39;of standard YAML but a LiR-specific feature.&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;output_path&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;minLength&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Base directory where all experiment outputs will be written. The path may &#39;</span>
+                    <span class="o">+</span> <span class="s1">&#39;contain placeholders such as $</span><span class="si">{timestamp}</span><span class="s1">, which are resolved at runtime using the confidence &#39;</span>
+                    <span class="o">+</span> <span class="s1">&#39;library to create unique output folders per run. The $</span><span class="si">{timestamp}</span><span class="s1"> variable is automatically &#39;</span>
+                    <span class="o">+</span> <span class="s1">&#39;provided by LiR.&#39;</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="s1">&#39;experiments&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;array&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;minItems&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;List of experiments to execute. Each experiment defines a LiR pipeline &#39;</span>
+                    <span class="o">+</span> <span class="s1">&#39;including data selection, LR system configuration, execution strategy, and requested outputs. &#39;</span>
+                    <span class="o">+</span> <span class="s1">&#39;Experiments are executed independently and produce their own outputs within &#39;</span>
+                    <span class="o">+</span> <span class="s1">&#39;the configured output path.&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;items&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;$ref&#39;</span><span class="p">:</span> <span class="s1">&#39;#/definitions/experiment&#39;</span><span class="p">},</span>
+                <span class="p">},</span>
+            <span class="p">},</span>
+            <span class="s1">&#39;definitions&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;experiment&#39;</span><span class="p">:</span> <span class="n">experiments_definition</span><span class="p">,</span>
+                <span class="s1">&#39;dataConfiguration&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_alternatives_schema</span><span class="p">(</span>
+                    <span class="s1">&#39;data_setup&#39;</span><span class="p">,</span> <span class="s1">&#39;Choose your data setup.&#39;</span><span class="p">,</span> <span class="s1">&#39;setup&#39;</span><span class="p">,</span> <span class="n">default_option</span><span class="o">=</span><span class="s1">&#39;splits&#39;</span>
+                <span class="p">),</span>
+                <span class="s1">&#39;dataProvider&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_alternatives_schema</span><span class="p">(</span>
+                    <span class="s1">&#39;data_providers&#39;</span><span class="p">,</span> <span class="s1">&#39;The data provider specifies the data source and how to load it.&#39;</span><span class="p">,</span> <span class="s1">&#39;method&#39;</span>
+                <span class="p">),</span>
+                <span class="s1">&#39;dataSplits&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_alternatives_schema</span><span class="p">(</span>
+                    <span class="s1">&#39;splitting_strategies&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;Choose a data splitting strategy to define how to divide data into training and &#39;</span>
+                    <span class="o">+</span> <span class="s1">&#39;testing sets.&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;strategy&#39;</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="s1">&#39;lrSystemConfiguration&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_alternatives_schema</span><span class="p">(</span>
+                    <span class="s1">&#39;lrsystem_architectures&#39;</span><span class="p">,</span> <span class="s1">&#39;Choose an LR system architecture.&#39;</span><span class="p">,</span> <span class="s1">&#39;architecture&#39;</span>
+                <span class="p">),</span>
+                <span class="s1">&#39;module&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_alternatives_schema</span><span class="p">(</span>
+                    <span class="s1">&#39;modules&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;Select the module to run. Multiple modules can be combined in a pipeline. The &#39;</span>
+                    <span class="o">+</span> <span class="s1">&#39;identity module does nothing and can be used as a placeholder.&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;method&#39;</span><span class="p">,</span>
+                    <span class="n">default_option</span><span class="o">=</span><span class="s1">&#39;identity&#39;</span><span class="p">,</span>
+                    <span class="n">allow_shorthand</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="s1">&#39;pipeline&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_alternatives_schema</span><span class="p">(</span>
+                    <span class="s1">&#39;modules&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;Select the module to run. Multiple modules can be combined in a pipeline. The &#39;</span>
+                    <span class="o">+</span> <span class="s1">&#39;identity module does nothing and can be used as a placeholder.&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;method&#39;</span><span class="p">,</span>
+                    <span class="n">default_option</span><span class="o">=</span><span class="s1">&#39;pipeline&#39;</span><span class="p">,</span>
+                    <span class="n">allow_shorthand</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="s1">&#39;pairingConfiguration&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_alternatives_schema</span><span class="p">(</span>
+                    <span class="s1">&#39;pairing&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;Select the pairing method, which controls how instances are combined into pairs.&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;method&#39;</span><span class="p">,</span>
+                    <span class="n">allow_shorthand</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="s1">&#39;hyperparameter&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;oneOf&#39;</span><span class="p">:</span> <span class="n">hyperparameter_schema_options</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="s1">&#39;aggregation&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_alternatives_schema</span><span class="p">(</span>
+                    <span class="s1">&#39;output&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;Select methods for collecting system output, plots and metrics.&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;method&#39;</span><span class="p">,</span>
+                    <span class="n">allow_shorthand</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="s1">&#39;metric&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_alternatives_schema</span><span class="p">(</span>
+                    <span class="s1">&#39;metric&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;Select a metric for evaluation of the results.&#39;</span><span class="p">,</span>
+                    <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">allow_shorthand</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">_prune</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="generate_schema">
+<a class="viewcode-back" href="../../../api/lir.config.html#lir.config.schema.generate_schema">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_schema</span><span class="p">(</span><span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a schema for LiR experiment definition.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    strict : bool</span>
+<span class="sd">        Enforce strict syntax rules (recommended for form generation, not for validation).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        A schema.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">SchemaGenerator</span><span class="p">(</span><span class="n">strict</span><span class="o">=</span><span class="n">strict</span><span class="p">)</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="validate_yaml">
+<a class="viewcode-back" href="../../../api/lir.config.html#lir.config.schema.validate_yaml">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_yaml</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate a YAML file against the schema.</span>
+
+<span class="sd">    In strict mode, only the canonical form is allowed. This is generally recommended if the use of a GUI is intended.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    yaml_path : Path</span>
+<span class="sd">        The path to the YAML file to be validated.</span>
+<span class="sd">    strict : bool, optional</span>
+<span class="sd">        Strict mode.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    FileNotFoundError</span>
+<span class="sd">        If the YAML file or the schema file does not exist.</span>
+<span class="sd">    yaml.YAMLError</span>
+<span class="sd">        If the YAML file is not valid YAML.</span>
+<span class="sd">    ValidationError</span>
+<span class="sd">        If the YAML file does not conform to the schema.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">jsonschema</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate</span>
+
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">generate_schema</span><span class="p">(</span><span class="n">strict</span><span class="o">=</span><span class="n">strict</span><span class="p">)</span>
+
+    <span class="c1"># Resolve ${...} references before validation</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H-%M-%S&#39;</span><span class="p">)}</span>  <span class="c1"># noqa: DTZ005</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">confidence</span><span class="o">.</span><span class="n">Configuration</span><span class="p">(</span><span class="n">confidence</span><span class="o">.</span><span class="n">loadf</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">),</span> <span class="n">context</span><span class="p">)</span>
+
+    <span class="c1"># Validate data against schema</span>
+    <span class="n">validate</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">ConfigValue</span><span class="o">.</span><span class="n">wrap</span><span class="p">([],</span> <span class="n">cfg</span><span class="p">)</span><span class="o">.</span><span class="n">unwrap</span><span class="p">(),</span> <span class="n">schema</span><span class="o">=</span><span class="n">schema</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

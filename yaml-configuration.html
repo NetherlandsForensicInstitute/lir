@@ -1,0 +1,352 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YAML configuration &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="_static/thebelab.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Setting up an experiment" href="experiment-setup.html" />
+    <link rel="prev" title="Assessing LR system performance" href="lrsystem-assessment.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Getting started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="guides.html">Guides</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api-overview.html">Python API: Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api-overview.html#organize-your-data">Organize your data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api-overview.html#calculate-llrs">Calculate LLRs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#appearance-plots-and-metrics">Appearance plots and metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">YAML configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sections-and-lists">Sections and lists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#values-and-types">Values and types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dots-in-declarations">Dots in declarations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#anchors-and-aliases">Anchors and aliases</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#references">References</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#built-in-variables">Built-in variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#overriding-values-on-the-command-line">Overriding values on the command line</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="extending-lir.html">Extending LiR by creating a custom component</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="extending-lir.html#creating-a-custom-module">Creating a custom module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extending-lir.html#examples-for-other-components">Examples for other components</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Built-in components</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#splitting-strategies">Splitting strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/lir.html">lir package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.DataProvider"><code class="docutils literal notranslate"><span class="pre">DataProvider</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.DataSetup"><code class="docutils literal notranslate"><span class="pre">DataSetup</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.DataStrategy"><code class="docutils literal notranslate"><span class="pre">DataStrategy</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.FeatureData"><code class="docutils literal notranslate"><span class="pre">FeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.InstanceData"><code class="docutils literal notranslate"><span class="pre">InstanceData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.LLRData"><code class="docutils literal notranslate"><span class="pre">LLRData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.PairedFeatureData"><code class="docutils literal notranslate"><span class="pre">PairedFeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.Transformer"><code class="docutils literal notranslate"><span class="pre">Transformer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#module-lir.bounding">lir.bounding module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#module-lir.main">lir.main module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#module-lir.persistence">lir.persistence module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#module-lir.registry">lir.registry module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#module-lir.util">lir.util module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="guides.html">Guides</a></li>
+      <li class="breadcrumb-item active">YAML configuration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/yaml-configuration.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="yaml-configuration">
+<h1>YAML configuration<a class="headerlink" href="#yaml-configuration" title="Link to this heading"></a></h1>
+<p>LiR experiments are configured in YAML files. This page explains the structure of a YAML configuration, the types of
+values that may be used, and the extra features that the <a class="reference external" href="https://github.com/NetherlandsForensicInstitute/confidence">confidence</a> package – on which LiR relies for parsing
+YAML files – provides. The <a class="reference external" href="experiment-setup.html">Setting up an experiment</a> page shows how these elements are used to define an
+experiment.</p>
+<section id="sections-and-lists">
+<h2>Sections and lists<a class="headerlink" href="#sections-and-lists" title="Link to this heading"></a></h2>
+<p>A YAML file consists of keys and values. A key whose value is again a set of keys and values is called a
+<strong>section</strong>; a key whose value is an ordered collection is called a <strong>list</strong>.</p>
+<p>Sections correspond to Python dictionaries, and lists correspond to Python lists. For example, in the minimal
+experiment setup below, <code class="docutils literal notranslate"><span class="pre">experiments</span></code> is a list of experiment definitions, and each experiment definition is a
+section with the subsections <code class="docutils literal notranslate"><span class="pre">data</span></code>, <code class="docutils literal notranslate"><span class="pre">lrsystem</span></code> and <code class="docutils literal notranslate"><span class="pre">output</span></code>:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">output_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./output</span>
+<span class="nt">experiments</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my_experiment</span>
+<span class="w">    </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">single_run</span>
+<span class="w">    </span><span class="nt">data</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">provider</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">glass</span>
+<span class="w">      </span><span class="nt">splits</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">train_test_sources</span>
+<span class="w">        </span><span class="nt">test_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">    </span><span class="nt">lrsystem</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">architecture</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">score_based</span>
+<span class="w">      </span><span class="nt">preprocessing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">standard_scaler</span>
+<span class="w">      </span><span class="nt">pairing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_pairs</span>
+<span class="w">      </span><span class="nt">comparing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manhattan_distance</span>
+<span class="w">    </span><span class="nt">output</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metrics</span>
+<span class="w">        </span><span class="nt">columns</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cllr</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cllr_min</span>
+</pre></div>
+</div>
+</section>
+<section id="values-and-types">
+<h2>Values and types<a class="headerlink" href="#values-and-types" title="Link to this heading"></a></h2>
+<p>Scalar values in YAML are converted to their Python counterparts:</p>
+<ul class="simple">
+<li><p>integers and floats, e.g. <code class="docutils literal notranslate"><span class="pre">3</span></code> and <code class="docutils literal notranslate"><span class="pre">0.5</span></code>;</p></li>
+<li><p>booleans, written as <code class="docutils literal notranslate"><span class="pre">true</span></code> or <code class="docutils literal notranslate"><span class="pre">false</span></code> (converted to <code class="docutils literal notranslate"><span class="pre">True</span></code> and <code class="docutils literal notranslate"><span class="pre">False</span></code> in Python);</p></li>
+<li><p>strings, e.g. <code class="docutils literal notranslate"><span class="pre">my_experiment</span></code> (quoting is only needed when the string would otherwise be ambiguous);</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">null</span></code>: a key without a value, or a key with the value <code class="docutils literal notranslate"><span class="pre">null</span></code> or <code class="docutils literal notranslate"><span class="pre">~</span></code>, is converted to <code class="docutils literal notranslate"><span class="pre">None</span></code> in Python.</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">null</span></code> value is useful to explicitly leave an optional field empty, for example:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">experiments</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">architecture_evaluation</span>
+<span class="w">    </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grid</span>
+<span class="w">    </span><span class="nt">lrsystem</span><span class="p">:</span><span class="w">               </span><span class="c1"># no base LR system; it is substituted by the grid search</span>
+<span class="w">    </span><span class="nt">lrsystem_parameters</span><span class="p">:</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+</pre></div>
+</div>
+<p>Comments may be added on any line with a <code class="docutils literal notranslate"><span class="pre">#</span></code> (at the start of the line, or preceded by a space): everything from the
+<code class="docutils literal notranslate"><span class="pre">#</span></code> to the end of the line is ignored.</p>
+</section>
+<section id="dots-in-declarations">
+<h2>Dots in declarations<a class="headerlink" href="#dots-in-declarations" title="Link to this heading"></a></h2>
+<p>Nested sections may also be declared with a dot in the key, as an alternative to nesting with indentation. The
+following two declarations are equivalent:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">data</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">provider</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">glass</span>
+</pre></div>
+</div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">data.provider</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">glass</span>
+</pre></div>
+</div>
+<p>Dotted keys are expanded into nested sections anywhere in the configuration, except for keys inside a list, where
+they are kept as-is. In particular, keys of an experiment definition in the <code class="docutils literal notranslate"><span class="pre">experiments</span></code> list may not contain
+dots, so the nested form with indentation should be used there.</p>
+<p>Only <em>keys</em> are affected by this: dots in <em>values</em> are not special. This is why a value such as
+<code class="docutils literal notranslate"><span class="pre">sklearn.impute.SimpleImputer</span></code> in a <code class="docutils literal notranslate"><span class="pre">method</span></code> field, or a path such as <code class="docutils literal notranslate"><span class="pre">comparing.steps.calibration.bandwidth</span></code>,
+is left as-is.</p>
+</section>
+<section id="anchors-and-aliases">
+<h2>Anchors and aliases<a class="headerlink" href="#anchors-and-aliases" title="Link to this heading"></a></h2>
+<p>YAML itself supports <strong>anchors</strong> and <strong>aliases</strong> for reusing a part of the file. An anchor names a value with
+<code class="docutils literal notranslate"><span class="pre">&amp;name</span></code>; an alias <code class="docutils literal notranslate"><span class="pre">*name</span></code> inserts the anchored value at another location:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">data</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;data</span>
+<span class="w">  </span><span class="nt">provider</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">glass</span>
+
+<span class="nt">experiments</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">validation</span>
+<span class="w">    </span><span class="nt">data</span><span class="p">:</span><span class="w"> </span><span class="nv">*data</span>
+</pre></div>
+</div>
+<p>Anchors and aliases are resolved by the YAML parser, before LiR reads the file: an alias is fixed to the
+anchored value as it appears in the file. Unlike a reference (see below), an alias does not pick up later
+changes to the anchored section, such as an override with <code class="docutils literal notranslate"><span class="pre">--set</span></code> on the command line.</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">confidence</span></code> package supports <strong>references</strong>: a value enclosed in <code class="docutils literal notranslate"><span class="pre">${...}</span></code> refers to another part of the
+configuration. References are always resolved from the root of the configuration, so any section may be referred
+to from anywhere in the file. This is useful to define a section once and reuse it in multiple experiments:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">data</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">provider</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">glass</span>
+
+<span class="nt">score_based_lrsystem</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">architecture</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">score_based</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+
+<span class="nt">experiments</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">validation</span>
+<span class="w">    </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">single_run</span>
+<span class="w">    </span><span class="nt">data</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${data}</span>
+<span class="w">    </span><span class="nt">lrsystem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${score_based_lrsystem}</span>
+</pre></div>
+</div>
+<p>The value of a reference is the value of the referenced section itself, including its type: a reference to the
+integer <code class="docutils literal notranslate"><span class="pre">5</span></code> evaluates to <code class="docutils literal notranslate"><span class="pre">5</span></code>, not to the string <code class="docutils literal notranslate"><span class="pre">'5'</span></code>.</p>
+<p>A reference may also point to a nested section by using a dot in the reference, e.g.
+<code class="docutils literal notranslate"><span class="pre">${section_name.subsection_name}</span></code>:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">data</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">provider</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">glass</span>
+
+<span class="nt">short_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${data.provider.method}</span>
+</pre></div>
+</div>
+<p>A reference may be embedded in a larger value, in which case the result is always a string:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my_experiment</span>
+<span class="nt">output_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">output/${name}_run</span>
+</pre></div>
+</div>
+<p>If a reference cannot be resolved, an error is raised that mentions the referenced key. A value that refers to
+itself, directly or indirectly (e.g. <code class="docutils literal notranslate"><span class="pre">a:</span> <span class="pre">${b}</span></code> with <code class="docutils literal notranslate"><span class="pre">b:</span> <span class="pre">${a}</span></code>), is rejected as well.</p>
+</section>
+<section id="built-in-variables">
+<h2>Built-in variables<a class="headerlink" href="#built-in-variables" title="Link to this heading"></a></h2>
+<p>LiR provides a predefined variable that may be referred to in any string value:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">${timestamp}</span></code>: the date and time at which the experiment was started, in the format <code class="docutils literal notranslate"><span class="pre">YYYY-MM-DD</span> <span class="pre">HH-MM-SS</span></code>.</p></li>
+</ul>
+<p>For example:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">output_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">output/${timestamp}_glass_example</span>
+</pre></div>
+</div>
+</section>
+<section id="overriding-values-on-the-command-line">
+<h2>Overriding values on the command line<a class="headerlink" href="#overriding-values-on-the-command-line" title="Link to this heading"></a></h2>
+<p>Values from the configuration file may be overridden on the command line with the <code class="docutils literal notranslate"><span class="pre">--set</span></code> option:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>lir<span class="w"> </span>my_setup.yaml<span class="w"> </span>--set<span class="w"> </span><span class="nv">output_path</span><span class="o">=</span>/tmp/results
+</pre></div>
+</div>
+<p>Keys in <code class="docutils literal notranslate"><span class="pre">--set</span></code> may be dotted, e.g. <code class="docutils literal notranslate"><span class="pre">--set</span> <span class="pre">data.provider.method=csv</span></code>: the override is applied to the top-level
+sections of the configuration file, so it affects the experiments that refer to such a section. Note that values
+inside a list, such as the fields of an experiment definition in the <code class="docutils literal notranslate"><span class="pre">experiments</span></code> list, may not be overridden
+this way, and that command-line values are read as strings: <code class="docutils literal notranslate"><span class="pre">--set</span> <span class="pre">data.splits.test_size=0.3</span></code> passes the string
+<code class="docutils literal notranslate"><span class="pre">'0.3'</span></code> to the field rather than the number <code class="docutils literal notranslate"><span class="pre">0.3</span></code>, so the experiment fails when the field is used.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lrsystem-assessment.html" class="btn btn-neutral float-left" title="Assessing LR system performance" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="experiment-setup.html" class="btn btn-neutral float-right" title="Setting up an experiment" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

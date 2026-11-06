@@ -14,26 +14,12 @@ their use.
 The GUI is a development aid: it does not run experiments. Submitted form values are written to the browser
 console, where they can be inspected and converted into a YAML configuration file.
 
-Running the GUI
----------------
+The form
+--------
 
-The GUI lives in the ``gui/`` folder of the repository. Running it requires a development installation of LiR
-(see `CONTRIBUTING.md`_) and Node.js with npm.
+.. raw:: html
 
-1. Generate the JSON schema that the form is based on:
+   <div id="lir-gui"></div>
+   <script type="module" src="assets/gui.js"></script>
 
-   .. code-block:: bash
-
-      pdm lir --generate-schema > gui/lir.schema.json
-
-2. Install the dependencies of the GUI and start its development server:
-
-   .. code-block:: bash
-
-      cd gui
-      npm install
-      npm run dev
-
-3. Open the URL shown in the terminal (by default ``http://localhost:5173``) in a browser.
-
-.. _CONTRIBUTING.md: https://github.com/NetherlandsForensicInstitute/lir/blob/main/CONTRIBUTING.md
+The source code of the GUI is available in the ``gui/`` folder of the repository.

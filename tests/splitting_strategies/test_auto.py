@@ -8,6 +8,7 @@ from lir.splitting_strategies import (
     AutoCrossValidation,
     AutoTrainTestSplit,
     CrossValidation,
+    PairsTrainTestSplit,
     PredefinedTrainTestSplit,
     SourcesCrossValidation,
     SourcesTrainTestSplit,
@@ -69,3 +70,17 @@ def test_reproducibility(instances: FeatureData, auto_strategy: DataStrategy, ex
     # the splits from both strategies should be equal
     for i in range(len(splits1)):
         assert np.all(splits1[i][0].features == splits2[i][0].features)
+
+
+def test_auto_train_test_split_uses_pairs_strategy_for_two_column_source_ids():
+    instances = FeatureData(
+        features=np.arange(16).reshape(8, 2),
+        source_ids=np.array([[0, 1], [0, 2], [1, 2], [3, 4], [3, 5], [4, 5], [0, 3], [1, 4]]),
+    )
+
+    auto_splits = list(AutoTrainTestSplit(test_size=0.5, seed=0).apply(instances))
+    explicit_splits = list(PairsTrainTestSplit(test_size=0.5, seed=0).apply(instances))
+
+    assert len(auto_splits) == len(explicit_splits) == 1
+    assert np.array_equal(auto_splits[0][0].features, explicit_splits[0][0].features)
+    assert np.array_equal(auto_splits[0][1].features, explicit_splits[0][1].features)

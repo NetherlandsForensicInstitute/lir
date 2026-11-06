@@ -11,13 +11,13 @@ from lir.util import check_type
 def is_valid_input(instances: InstanceData) -> bool:  # numpydoc ignore=PR01,RT01
     """Return True iff pair-based strategies can be applied."""
     return (
-        instances.source_ids is not None and len(instances.source_ids.shape) == 2 and instances.source_ids.shape[1] != 2
+        instances.source_ids is not None and len(instances.source_ids.shape) == 2 and instances.source_ids.shape[1] == 2
     )
 
 
 def _check_input(instances: InstanceData) -> None:  # numpydoc ignore=PR01
     """Raise an error unless pair-based strategies can be applied."""
-    if instances.source_ids is None or len(instances.source_ids.shape) != 2 or instances.source_ids.shape[1] != 2:
+    if not is_valid_input(instances):
         raise ValueError(f'expected two-column source_ids; shape found: {getattr(instances.source_ids, "shape", None)}')
 
 

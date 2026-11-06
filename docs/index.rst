@@ -40,7 +40,10 @@ For more detailed instructions of the CLI please refer to the project `README.md
 Usage
 -----
 
-This repository offers both a Python API and a command-line interface.
+This repository offers both a Python API and a command-line interface. An experimental
+`graphical user interface`_ is available for creating and exploring experiment configurations.
+
+.. _graphical user interface: gui.html
 
 
 Command-line interface

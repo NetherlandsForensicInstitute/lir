@@ -1,1 +1,4 @@
 # Override specific values from the example YAML for testing convenience
+
+# read only a subset of the CSV to keep the test fast (the file contains ~9600 labeled pairs)
+data.provider.head: 2000

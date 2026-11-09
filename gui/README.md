@@ -1,6 +1,7 @@
 # Setup LiR GUI
 
-pdm lir --generate-schema >gui/lir.schema.json
+pdm lir --generate-schema --strict >gui/lir.schema.json
+# note: the --strict flag is required for the form to render correctly
 npm config set cafile /etc/ssl/certs/ca-certificates.crt
 npm install --verbose
 npm run dev

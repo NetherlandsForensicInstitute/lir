@@ -22,8 +22,9 @@ def main() -> None:
     if npm is None:
         raise RuntimeError('npm is required to build the GUI; install Node.js and npm')
 
-    # generate the JSON schema that the form is based on
-    (GUI_DIR / 'lir.schema.json').write_text(json.dumps(generate_schema(strict=False), indent=2) + '\n')
+    # generate the JSON schema that the form is based on; strict mode is required, because the lenient schema
+    # expresses optional fields as an any-of-null alternative, which form renderers display as a choice menu
+    (GUI_DIR / 'lir.schema.json').write_text(json.dumps(generate_schema(strict=True), indent=2) + '\n')
 
     # install the dependencies if needed, then build the GUI to static assets
     if not (GUI_DIR / 'node_modules').is_dir():

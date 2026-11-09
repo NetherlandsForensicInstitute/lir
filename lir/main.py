@@ -181,6 +181,13 @@ def main(input_args: list[str] | None = None) -> None:
         '--generate-schema', help='Generate a JSON schema that describes the experiment setup', action='store_true'
     )
 
+    parser.add_argument(
+        '--strict',
+        help='Generate the schema in strict mode (canonical syntax only). This mode is recommended when the '
+        'schema is used for form generation, e.g. for the GUI.',
+        action='store_true',
+    )
+
     parser.add_argument('-v', help='increases verbosity', action='count', default=0)
     parser.add_argument('-q', help='decreases verbosity', action='count', default=0)
     args = parser.parse_args(input_args)
@@ -201,7 +208,7 @@ def main(input_args: list[str] | None = None) -> None:
         return
 
     if args.generate_schema:
-        print(json.dumps(generate_schema(strict=False), indent=2))
+        print(json.dumps(generate_schema(strict=args.strict), indent=2))
         return
 
     ### an experiment setup is required beyond this point ###

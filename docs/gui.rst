@@ -11,11 +11,16 @@ the JSON schema that describes the experiment setup (the same schema that is use
 configurations), so all registry options are available as form fields, including the descriptions that explain
 their use.
 
-The GUI is a development aid: it does not run experiments. Submitted form values are written to the browser
-console, where they can be inspected and converted into a YAML configuration file.
+The GUI is a development aid: it does not run experiments.
 
 The form
 --------
+
+The form starts with a standard minimal configuration, so the data and LR system sections are visible from the
+start. Changing the discriminators (for example, the experiment ``strategy``, the data ``setup``, the provider
+``method``, or the LR system ``architecture``) shows the fields that apply to the selected option. Submitting the
+form displays the resulting configuration below the form; the output is JSON, which is also valid YAML and can be
+saved as a ``.yaml`` file.
 
 .. raw:: html
 

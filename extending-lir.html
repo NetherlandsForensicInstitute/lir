@@ -1,0 +1,778 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Extending LiR by creating a custom component &mdash; LiR - Likelihood Ratio Toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="_static/thebelab.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Built-in components" href="reference.html" />
+    <link rel="prev" title="Setting up an experiment" href="experiment-setup.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            LiR - Likelihood Ratio Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Getting started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="guides.html">Guides</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lrsystem_yaml.html">LR System selection helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#specific-source-system">Specific source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#pre-scored-common-source-system">Pre-scored common source system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem_yaml.html#common-source-system">Common source system</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api-overview.html">Python API: Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api-overview.html#organize-your-data">Organize your data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api-overview.html#calculate-llrs">Calculate LLRs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lrsystem-assessment.html">Assessing LR system performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#visualizations">Visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lrsystem-assessment.html#appearance-plots-and-metrics">Appearance plots and metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="yaml-configuration.html">YAML configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="yaml-configuration.html#sections-and-lists">Sections and lists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="yaml-configuration.html#values-and-types">Values and types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="yaml-configuration.html#dots-in-declarations">Dots in declarations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="yaml-configuration.html#anchors-and-aliases">Anchors and aliases</a></li>
+<li class="toctree-l3"><a class="reference internal" href="yaml-configuration.html#references">References</a></li>
+<li class="toctree-l3"><a class="reference internal" href="yaml-configuration.html#built-in-variables">Built-in variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="yaml-configuration.html#overriding-values-on-the-command-line">Overriding values on the command line</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="experiment-setup.html">Setting up an experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="experiment-setup.html#experiment-definition">Experiment definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="experiment-setup.html#data-organization">Data organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="experiment-setup.html#lr-systems">LR systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="experiment-setup.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="experiment-setup.html#hyperparameters-and-data-parameters">Hyperparameters and data parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Extending LiR by creating a custom component</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#creating-a-custom-module">Creating a custom module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#examples-for-other-components">Examples for other components</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Built-in components</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#experiment-components">Experiment components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#experiment-strategies">Experiment strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#splitting-strategies">Splitting strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#data-providers">Data providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#lr-system-components">LR system components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#lr-system-architecture">LR system architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#lr-system-modules">LR system modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#pairing-methods">Pairing methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/lir.html">lir package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.DataProvider"><code class="docutils literal notranslate"><span class="pre">DataProvider</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.DataSetup"><code class="docutils literal notranslate"><span class="pre">DataSetup</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.DataStrategy"><code class="docutils literal notranslate"><span class="pre">DataStrategy</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.FeatureData"><code class="docutils literal notranslate"><span class="pre">FeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.InstanceData"><code class="docutils literal notranslate"><span class="pre">InstanceData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.LLRData"><code class="docutils literal notranslate"><span class="pre">LLRData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.PairedFeatureData"><code class="docutils literal notranslate"><span class="pre">PairedFeatureData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.Transformer"><code class="docutils literal notranslate"><span class="pre">Transformer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#lir.is_interactive"><code class="docutils literal notranslate"><span class="pre">is_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#module-lir.bounding">lir.bounding module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#module-lir.main">lir.main module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#module-lir.persistence">lir.persistence module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#module-lir.registry">lir.registry module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/lir.html#module-lir.util">lir.util module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">LiR - Likelihood Ratio Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="guides.html">Guides</a></li>
+      <li class="breadcrumb-item active">Extending LiR by creating a custom component</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/extending-lir.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="extending-lir-by-creating-a-custom-component">
+<h1>Extending LiR by creating a custom component<a class="headerlink" href="#extending-lir-by-creating-a-custom-component" title="Link to this heading"></a></h1>
+<p>LiR is designed to be easily extensible, allowing developers to add new features and functionality without modifying
+the core code. This document outlines the process for creating a custom component that can be used in an experiment
+setup configuration file.</p>
+<p>Any part of LiR can be replaced by custom components, such as experiment types, LR system architectures, metrics, etc.
+See <a class="reference internal" href="reference.html"><span class="doc">the default component registry</span></a> for a list of components shipped with LiR. In this guide, we describe in detail
+<a class="reference internal" href="#custom-module"><span class="std std-ref">how to design a custom module</span></a>, and how to apply these principles to
+<a class="reference internal" href="#other-components"><span class="std std-ref">create other types of components</span></a>.</p>
+<section id="creating-a-custom-module">
+<span id="custom-module"></span><h2>Creating a custom module<a class="headerlink" href="#creating-a-custom-module" title="Link to this heading"></a></h2>
+<p>In this example, we will create a custom module that calculates the cosine similarity between two vectors.
+The module will be integrated into the LiR framework and can be used in experiments just like any other built-in
+component.</p>
+<section id="step-1-setup-a-new-project">
+<h3>Step 1: setup a new project<a class="headerlink" href="#step-1-setup-a-new-project" title="Link to this heading"></a></h3>
+<p>Let’s start by setting up a new project for an experiment with a simple LR system.
+The following example shows a configuration file for an experiment:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">output_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./output/${timestamp}_single_run_example</span><span class="w">  </span><span class="c1"># This is where generated output is saved.</span>
+<span class="nt">experiments</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my_experiment</span><span class="w">               </span><span class="c1"># Choose a descriptive name for the experiment.</span>
+<span class="w">    </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">single_run</span><span class="w">              </span><span class="c1"># single_run is the most basic strategy.</span>
+
+<span class="w">    </span><span class="c1"># The data section: which data to use and how to use it.</span>
+<span class="w">    </span><span class="nt">data</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">setup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">splits</span><span class="w">               </span><span class="c1"># Use a single dataset to be split into a training set and a test set</span>
+
+<span class="w">      </span><span class="nt">provider</span><span class="p">:</span><span class="w">                       </span><span class="c1"># The data provider specifies which data to use.</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">parse_features_from_csv_url</span><span class="w">  </span><span class="c1"># We use the generic CSV parser to get glass data.</span>
+<span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/main/training.csv</span>
+<span class="w">        </span><span class="nt">source_id_column</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Item</span><span class="w">        </span><span class="c1"># This column identifies the source.</span>
+<span class="w">        </span><span class="nt">feature_columns</span><span class="p">:</span><span class="w">              </span><span class="c1"># The features that are used to characterize the glass fragments.</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">K39</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ti49</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mn55</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Rb85</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sr88</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Zr90</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ba137</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">La139</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ce140</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pb208</span>
+
+<span class="w">      </span><span class="nt">splits</span><span class="p">:</span><span class="w">                         </span><span class="c1"># The data splitter specifies how to split the data into training and test sets.</span>
+<span class="w">        </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">train_test_sources</span><span class="w">  </span><span class="c1"># Use a single train/test split, and split on the source IDs.</span>
+<span class="w">        </span><span class="nt">test_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span><span class="w">                </span><span class="c1"># Split the data 50/50.</span>
+
+<span class="w">    </span><span class="c1"># The LR system section: this is where the action is.</span>
+<span class="w">    </span><span class="nt">lrsystem</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">architecture</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">score_based</span>
+<span class="w">      </span><span class="nt">preprocessing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">standard_scaler</span><span class="w">  </span><span class="c1"># The preprocessing is applied on the single measurements, before pairing.</span>
+<span class="w">      </span><span class="nt">pairing</span><span class="p">:</span><span class="w">                        </span><span class="c1"># The pairing method governs the way the measurements are paired.</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_pairs</span><span class="w">          </span><span class="c1"># The source_pairing method generates one pair for each combination of sources.</span>
+<span class="w">        </span><span class="nt">ratio_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">                </span><span class="c1"># Subsample different-source pairs until their number is the same as the number of</span>
+<span class="w">                                      </span><span class="c1"># same-source pairs.</span>
+<span class="w">      </span><span class="nt">comparing</span><span class="p">:</span><span class="w">                      </span><span class="c1"># The comparing module is applied on pairs.</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pipeline</span><span class="w">              </span><span class="c1"># We need two modules, so we combine them in a pipeline.</span>
+<span class="w">        </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">score</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manhattan_distance</span><span class="w">   </span><span class="c1"># First, we use the manhattan distance to calculate a &quot;score&quot;.</span>
+<span class="w">          </span><span class="nt">to_llr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logistic_calibrator</span><span class="w"> </span><span class="c1"># Next, we turn the scores into LLRs.</span>
+
+<span class="w">    </span><span class="c1"># The output section: where results are aggregated.</span>
+<span class="w">    </span><span class="nt">output</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metrics</span>
+<span class="w">        </span><span class="nt">columns</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cllr</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cllr_min</span>
+</pre></div>
+</div>
+<p>It uses glass data in CSV format, fetched from a URL.
+The LR system uses the score-based architecture, <a class="reference internal" href="api/lir.lrsystems.html#lir.lrsystems.ScoreBasedSystem" title="lir.lrsystems.ScoreBasedSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScoreBasedSystem</span></code></a>.
+Manhattan distance is used to calculate the distance between pairs, and discriminate between same-source and
+different-source pairs.</p>
+<p>To run this experiment, save this snippet as <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> and run it with the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lir<span class="w"> </span>run<span class="w"> </span>config.yaml
+</pre></div>
+</div>
+</section>
+<section id="step-2-implement-cosine-similarity">
+<h3>Step 2: implement cosine similarity<a class="headerlink" href="#step-2-implement-cosine-similarity" title="Link to this heading"></a></h3>
+<p>Our goal is to replace manhattan distance by cosine similarity. The first thing we need to do is to implement cosine
+similarity. We create a file named <code class="docutils literal notranslate"><span class="pre">cosine_similarity.py</span></code> and implement the cosine similarity class.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">norm</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeatureData</span><span class="p">,</span> <span class="n">InstanceData</span><span class="p">,</span> <span class="n">PairedFeatureData</span><span class="p">,</span> <span class="n">Transformer</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CosineSimilarity</span><span class="p">(</span><span class="n">Transformer</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pairs</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FeatureData</span><span class="p">:</span>
+        <span class="c1"># make sure that we have pairs of feature vectors</span>
+        <span class="n">pairs</span> <span class="o">=</span> <span class="n">check_type</span><span class="p">(</span><span class="n">PairedFeatureData</span><span class="p">,</span> <span class="n">pairs</span><span class="p">)</span>
+
+        <span class="c1"># get the feature vectors for the trace and reference data</span>
+        <span class="n">features_trace</span> <span class="o">=</span> <span class="n">pairs</span><span class="o">.</span><span class="n">features_trace</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">features_ref</span> <span class="o">=</span> <span class="n">pairs</span><span class="o">.</span><span class="n">features_ref</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="c1"># calculate the similarities between the trace and the reference feature vectors</span>
+        <span class="n">dot_products</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">features_trace</span> <span class="o">*</span> <span class="n">features_ref</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">norms</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">features_trace</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">norm</span><span class="p">(</span><span class="n">features_ref</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">cosine_similarities</span> <span class="o">=</span> <span class="n">dot_products</span> <span class="o">/</span> <span class="n">norms</span>
+
+        <span class="c1"># return a FeatureData object with the same attributes as the input pairs, but with the calculated similarities</span>
+        <span class="c1"># as the features</span>
+        <span class="k">return</span> <span class="n">pairs</span><span class="o">.</span><span class="n">replace_as</span><span class="p">(</span><span class="n">FeatureData</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="n">cosine_similarities</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The class we created is a child of <a class="reference internal" href="api/lir.html#lir.Transformer" title="lir.Transformer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transformer</span></code></a>. This tells LiR that it is a module that transforms data.
+It has an <code class="docutils literal notranslate"><span class="pre">apply()</span></code> method that takes pairs of feature vectors and returns a similarity score.
+The cosine similarity is calculated using the dot product of the two feature vectors, divided by the product of their
+norms.</p>
+<p>This module is now ready to run in an LR system, and can be referenced in a configuration file as <code class="docutils literal notranslate"><span class="pre">cosine_similarity.CosineSimilarity</span></code>.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">output_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./output/${timestamp}_single_run_example</span><span class="w">  </span><span class="c1"># This is where generated output is saved.</span>
+<span class="nt">experiments</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my_experiment</span><span class="w">               </span><span class="c1"># Choose a descriptive name for the experiment.</span>
+<span class="w">    </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">single_run</span><span class="w">              </span><span class="c1"># single_run is the most basic strategy.</span>
+
+<span class="w">    </span><span class="c1"># The data section: which data to use and how to use it.</span>
+<span class="w">    </span><span class="nt">data</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">setup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">splits</span><span class="w">               </span><span class="c1"># Use a single dataset to be split into a training set and a test set</span>
+
+<span class="w">      </span><span class="nt">provider</span><span class="p">:</span><span class="w">                       </span><span class="c1"># The data provider specifies which data to use.</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">parse_features_from_csv_url</span><span class="w">  </span><span class="c1"># We use the generic CSV parser to get glass data.</span>
+<span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/main/training.csv</span>
+<span class="w">        </span><span class="nt">source_id_column</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Item</span><span class="w">        </span><span class="c1"># This column identifies the source.</span>
+<span class="w">        </span><span class="nt">feature_columns</span><span class="p">:</span><span class="w">              </span><span class="c1"># The features that are used to characterize the glass fragments.</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">K39</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ti49</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mn55</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Rb85</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sr88</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Zr90</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ba137</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">La139</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ce140</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pb208</span>
+
+<span class="w">      </span><span class="nt">splits</span><span class="p">:</span><span class="w">                         </span><span class="c1"># The data splitter specifies how to split the data into training and test sets.</span>
+<span class="w">        </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">train_test_sources</span><span class="w">  </span><span class="c1"># Use a single train/test split, and split on the source IDs.</span>
+<span class="w">        </span><span class="nt">test_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span><span class="w">                </span><span class="c1"># Split the data 50/50.</span>
+
+<span class="w">    </span><span class="c1"># The LR system section: this is where the action is.</span>
+<span class="w">    </span><span class="nt">lrsystem</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">architecture</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">score_based</span>
+<span class="w">      </span><span class="nt">preprocessing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">standard_scaler</span><span class="w">  </span><span class="c1"># The preprocessing is applied on the single measurements, before pairing.</span>
+<span class="w">      </span><span class="nt">pairing</span><span class="p">:</span><span class="w">                        </span><span class="c1"># The pairing method governs the way the measurements are paired.</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_pairs</span><span class="w">          </span><span class="c1"># The source_pairing method generates one pair for each combination of sources.</span>
+<span class="w">        </span><span class="nt">ratio_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">                </span><span class="c1"># Subsample different-source pairs until their number is the same as the number of</span>
+<span class="w">                                      </span><span class="c1"># same-source pairs.</span>
+<span class="w">      </span><span class="nt">comparing</span><span class="p">:</span><span class="w">                      </span><span class="c1"># The comparing module is applied on pairs.</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pipeline</span><span class="w">              </span><span class="c1"># We need two modules, so we combine them in a pipeline.</span>
+<span class="w">        </span><span class="nt">steps</span><span class="p">:</span>
+<span class="hll"><span class="w">          </span><span class="nt">score</span><span class="p">:</span>
+</span><span class="hll"><span class="w">            </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cosine_similarity.CosineSimilarity</span>
+</span><span class="w">          </span><span class="nt">to_llr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logistic_calibrator</span><span class="w"> </span><span class="c1"># Next, we turn the scores into LLRs.</span>
+
+<span class="w">    </span><span class="c1"># The output section: where results are aggregated.</span>
+<span class="w">    </span><span class="nt">output</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metrics</span>
+<span class="w">        </span><span class="nt">columns</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cllr</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cllr_min</span>
+</pre></div>
+</div>
+<p>Try running the above example in LiR. If it does not work, make sure the Python interpreter can access the
+<code class="docutils literal notranslate"><span class="pre">cosine_similarity.py</span></code> file. It should work if the file is in the working directory or if it is in the
+<code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code>.</p>
+</section>
+<section id="step-3-add-parameters">
+<h3>Step 3: add parameters<a class="headerlink" href="#step-3-add-parameters" title="Link to this heading"></a></h3>
+<p>Our cosine similarity component works without any parameters. For the sake of it, we will add a parameter to control
+whether the cosine similarity should be squared or not.
+We extend the <code class="docutils literal notranslate"><span class="pre">CosineSimilarity</span></code> class by adding an  <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method that takes a boolean parameter:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">norm</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeatureData</span><span class="p">,</span> <span class="n">InstanceData</span><span class="p">,</span> <span class="n">PairedFeatureData</span><span class="p">,</span> <span class="n">Transformer</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CosineSimilarity</span><span class="p">(</span><span class="n">Transformer</span><span class="p">):</span>
+<span class="hll">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">square</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+</span><span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">square</span> <span class="o">=</span> <span class="n">square</span>
+</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pairs</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FeatureData</span><span class="p">:</span>
+        <span class="c1"># make sure that we have pairs of feature vectors</span>
+        <span class="n">pairs</span> <span class="o">=</span> <span class="n">check_type</span><span class="p">(</span><span class="n">PairedFeatureData</span><span class="p">,</span> <span class="n">pairs</span><span class="p">)</span>
+
+        <span class="c1"># get the feature vectors for the trace and reference data</span>
+        <span class="n">features_trace</span> <span class="o">=</span> <span class="n">pairs</span><span class="o">.</span><span class="n">features_trace</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">features_ref</span> <span class="o">=</span> <span class="n">pairs</span><span class="o">.</span><span class="n">features_ref</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="c1"># calculate the similarities between the trace and the reference feature vectors</span>
+        <span class="n">dot_products</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">features_trace</span> <span class="o">*</span> <span class="n">features_ref</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">norms</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">features_trace</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">norm</span><span class="p">(</span><span class="n">features_ref</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">cosine_similarities</span> <span class="o">=</span> <span class="n">dot_products</span> <span class="o">/</span> <span class="n">norms</span>
+
+<span class="hll">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">square</span><span class="p">:</span>
+</span><span class="hll">            <span class="n">cosine_similarities</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">cosine_similarities</span><span class="p">)</span>
+</span>
+        <span class="c1"># return a FeatureData object with the same attributes as the input pairs, but with the calculated similarities</span>
+        <span class="c1"># as the features</span>
+        <span class="k">return</span> <span class="n">pairs</span><span class="o">.</span><span class="n">replace_as</span><span class="p">(</span><span class="n">FeatureData</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="n">cosine_similarities</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Any key/value-pair in the configuration section of <code class="docutils literal notranslate"><span class="pre">score</span></code> (except for <code class="docutils literal notranslate"><span class="pre">method</span></code>) will be passed to the component when it is instantiated.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">output_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./output/${timestamp}_single_run_example</span><span class="w">  </span><span class="c1"># This is where generated output is saved.</span>
+<span class="nt">experiments</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my_experiment</span><span class="w">               </span><span class="c1"># Choose a descriptive name for the experiment.</span>
+<span class="w">    </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">single_run</span><span class="w">              </span><span class="c1"># single_run is the most basic strategy.</span>
+
+<span class="w">    </span><span class="c1"># The data section: which data to use and how to use it.</span>
+<span class="w">    </span><span class="nt">data</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">setup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">splits</span><span class="w">               </span><span class="c1"># Use a single dataset to be split into a training set and a test set</span>
+
+<span class="w">      </span><span class="nt">provider</span><span class="p">:</span><span class="w">                       </span><span class="c1"># The data provider specifies which data to use.</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">parse_features_from_csv_url</span><span class="w">  </span><span class="c1"># We use the generic CSV parser to get glass data.</span>
+<span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://raw.githubusercontent.com/NetherlandsForensicInstitute/elemental_composition_glass/main/training.csv</span>
+<span class="w">        </span><span class="nt">source_id_column</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Item</span><span class="w">        </span><span class="c1"># This column identifies the source.</span>
+<span class="w">        </span><span class="nt">feature_columns</span><span class="p">:</span><span class="w">              </span><span class="c1"># The features that are used to characterize the glass fragments.</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">K39</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ti49</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mn55</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Rb85</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sr88</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Zr90</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ba137</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">La139</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ce140</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pb208</span>
+
+<span class="w">      </span><span class="nt">splits</span><span class="p">:</span><span class="w">                         </span><span class="c1"># The data splitter specifies how to split the data into training and test sets.</span>
+<span class="w">        </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">train_test_sources</span><span class="w">  </span><span class="c1"># Use a single train/test split, and split on the source IDs.</span>
+<span class="w">        </span><span class="nt">test_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span><span class="w">                </span><span class="c1"># Split the data 50/50.</span>
+
+<span class="w">    </span><span class="c1"># The LR system section: this is where the action is.</span>
+<span class="w">    </span><span class="nt">lrsystem</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">architecture</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">score_based</span>
+<span class="w">      </span><span class="nt">preprocessing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">standard_scaler</span><span class="w">  </span><span class="c1"># The preprocessing is applied on the single measurements, before pairing.</span>
+<span class="w">      </span><span class="nt">pairing</span><span class="p">:</span><span class="w">                        </span><span class="c1"># The pairing method governs the way the measurements are paired.</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_pairs</span><span class="w">          </span><span class="c1"># The source_pairing method generates one pair for each combination of sources.</span>
+<span class="w">        </span><span class="nt">ratio_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">                </span><span class="c1"># Subsample different-source pairs until their number is the same as the number of</span>
+<span class="w">                                      </span><span class="c1"># same-source pairs.</span>
+<span class="w">      </span><span class="nt">comparing</span><span class="p">:</span><span class="w">                      </span><span class="c1"># The comparing module is applied on pairs.</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pipeline</span><span class="w">              </span><span class="c1"># We need two modules, so we combine them in a pipeline.</span>
+<span class="w">        </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">score</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cosine_similarity.CosineSimilarity</span>
+<span class="hll"><span class="w">            </span><span class="nt">square</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+</span><span class="w">          </span><span class="nt">to_llr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logistic_calibrator</span><span class="w"> </span><span class="c1"># Next, we turn the scores into LLRs.</span>
+
+<span class="w">    </span><span class="c1"># The output section: where results are aggregated.</span>
+<span class="w">    </span><span class="nt">output</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metrics</span>
+<span class="w">        </span><span class="nt">columns</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cllr</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cllr_min</span>
+</pre></div>
+</div>
+</section>
+<section id="step-4-create-a-configuration-parser-optional">
+<h3>Step 4: create a configuration parser (optional)<a class="headerlink" href="#step-4-create-a-configuration-parser-optional" title="Link to this heading"></a></h3>
+<p>There is a good chance that this is all you need to do to create a new component. However, if you want more control over how the component is instantiated, you can create a custom configuration parser.
+Specifically, writing a configuration parser allows you to:</p>
+<ul class="simple">
+<li><p>initialize the component with initialization parameters that cannot be specified in a YAML file (anything other than <cite>str</cite>, <cite>int</cite>, <cite>float</cite>, <cite>dict</cite>, <cite>list</cite>, <cite>None</cite>);</p></li>
+<li><p>pass an output directory to the component to where it can write files to disk.</p></li>
+</ul>
+<p>We create a configuration parser by defining a function that parses a configuration section and returns a <code class="docutils literal notranslate"><span class="pre">CosineSimilarity</span></code> object.
+We take care that the function:</p>
+<ul class="simple">
+<li><p>takes two arguments: a <a class="reference internal" href="api/lir.config.html#lir.config.ConfigValue" title="lir.config.ConfigValue"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigValue</span></code></a>, the configuration section in the YAML that is needed to initialize the module, and an output directory as a <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></a> object;</p></li>
+<li><p>returns an instance of the component (in our case, <code class="docutils literal notranslate"><span class="pre">CosineSimilarity</span></code>);</p></li>
+<li><p>is marked as a configuration parser with the <a class="reference internal" href="api/lir.config.html#lir.config.config_parser" title="lir.config.config_parser"><code class="xref py py-deco docutils literal notranslate"><span class="pre">&#64;config_parser</span></code></a> decorator.</p></li>
+</ul>
+<p>The output directory passed to the configuration parser may be affected by higher level components. For example, the
+configuration parser for an experiment receives a sub directory of the top level output directory for that specific
+experiment. If the experiment has multiple runs, the LR system modules receive an output directory for the run.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">norm</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeatureData</span><span class="p">,</span> <span class="n">InstanceData</span><span class="p">,</span> <span class="n">PairedFeatureData</span><span class="p">,</span> <span class="n">Transformer</span>
+<span class="hll"><span class="kn">from</span><span class="w"> </span><span class="nn">lir.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigValue</span><span class="p">,</span> <span class="n">config_parser</span>
+</span><span class="kn">from</span><span class="w"> </span><span class="nn">lir.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_type</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CosineSimilarity</span><span class="p">(</span><span class="n">Transformer</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">square</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">square</span> <span class="o">=</span> <span class="n">square</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pairs</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FeatureData</span><span class="p">:</span>
+        <span class="c1"># make sure that we have pairs of feature vectors</span>
+        <span class="n">pairs</span> <span class="o">=</span> <span class="n">check_type</span><span class="p">(</span><span class="n">PairedFeatureData</span><span class="p">,</span> <span class="n">pairs</span><span class="p">)</span>
+
+        <span class="c1"># get the feature vectors for the trace and reference data</span>
+        <span class="n">features_trace</span> <span class="o">=</span> <span class="n">pairs</span><span class="o">.</span><span class="n">features_trace</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">features_ref</span> <span class="o">=</span> <span class="n">pairs</span><span class="o">.</span><span class="n">features_ref</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="c1"># calculate the similarities between the trace and the reference feature vectors</span>
+        <span class="n">dot_products</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">features_trace</span> <span class="o">*</span> <span class="n">features_ref</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">norms</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">features_trace</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">norm</span><span class="p">(</span><span class="n">features_ref</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">cosine_similarities</span> <span class="o">=</span> <span class="n">dot_products</span> <span class="o">/</span> <span class="n">norms</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">square</span><span class="p">:</span>
+            <span class="n">cosine_similarities</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">cosine_similarities</span><span class="p">)</span>
+
+        <span class="c1"># return a FeatureData object with the same attributes as the input pairs, but with the calculated similarities</span>
+        <span class="c1"># as the features</span>
+        <span class="k">return</span> <span class="n">pairs</span><span class="o">.</span><span class="n">replace_as</span><span class="p">(</span><span class="n">FeatureData</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="n">cosine_similarities</span><span class="p">)</span>
+
+
+<span class="hll"><span class="nd">@config_parser</span>
+</span><span class="hll"><span class="k">def</span><span class="w"> </span><span class="nf">parse_cosine_similarity_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ConfigValue</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CosineSimilarity</span><span class="p">:</span>
+</span><span class="hll">    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;CONTEXT:&#39;</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+</span><span class="hll">    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;CONFIG:&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+</span><span class="hll">    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;UNWRAPPED:&#39;</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">unwrap</span><span class="p">())</span>
+</span><span class="hll">
+</span><span class="hll">    <span class="c1"># the use of `with` is optional, and adds a check that all fields in `config` are consumed</span>
+</span><span class="hll">    <span class="k">with</span> <span class="n">config</span><span class="p">:</span>
+</span><span class="hll">        <span class="c1"># obtain the value of the &quot;square&quot; parameter, and remove it from the dictionary.</span>
+</span><span class="hll">        <span class="n">square</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">pop_field</span><span class="p">(</span><span class="s1">&#39;square&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="c1"># instantiate the component with the parsed parameters and return it.</span>
+</span><span class="hll">        <span class="k">return</span> <span class="n">CosineSimilarity</span><span class="p">(</span><span class="n">square</span><span class="o">=</span><span class="n">square</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">config</span></code> parameter contains the relevant section in the configuration YAML.
+Each <a class="reference internal" href="api/lir.config.html#lir.config.ConfigValue" title="lir.config.ConfigValue"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigValue</span></code></a> object has a <code class="docutils literal notranslate"><span class="pre">context</span></code> attribute, which is the full path of the configuration value in the original YAML file, and a <code class="docutils literal notranslate"><span class="pre">value</span></code> attribute, which is the actual value.
+If <code class="docutils literal notranslate"><span class="pre">value</span></code> is a container object such as a list or a dictionary, it is also wrapped inside a <a class="reference internal" href="api/lir.config.html#lir.config.ConfigValue" title="lir.config.ConfigValue"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigValue</span></code></a> object.
+Please refer to the API documentation for more information on dealing with <a class="reference internal" href="api/lir.config.html#lir.config.ConfigValue" title="lir.config.ConfigValue"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigValue</span></code></a> objects.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lir<span class="w"> </span>run<span class="w"> </span>minimal-single-run-with-cosim-parser.yaml
+</pre></div>
+</div>
+<div class="jupyter_cell docutils container">
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>CONTEXT: [&#39;experiments&#39;, &#39;0&#39;, &#39;lrsystem&#39;, &#39;comparing&#39;, &#39;steps&#39;, &#39;score&#39;]
+CONFIG: ConfigValue(context=[&#39;experiments&#39;, &#39;0&#39;, &#39;lrsystem&#39;, &#39;comparing&#39;, &#39;steps&#39;, &#39;score&#39;], value={&#39;square&#39;: ConfigValue(context=[&#39;experiments&#39;, &#39;0&#39;, &#39;lrsystem&#39;, &#39;comparing&#39;, &#39;steps&#39;, &#39;score&#39;, &#39;square&#39;], value=True)})
+UNWRAPPED: {&#39;square&#39;: True}
+</pre></div>
+</div>
+</div>
+</div>
+<p>In our case, the <code class="docutils literal notranslate"><span class="pre">config</span></code> parameter holds the configuration section under <code class="docutils literal notranslate"><span class="pre">score</span></code> (line 31), which is a dictionary of two keys, namely <code class="docutils literal notranslate"><span class="pre">method</span></code> and <code class="docutils literal notranslate"><span class="pre">square</span></code>.
+Since the <code class="docutils literal notranslate"><span class="pre">method</span></code> is already consumed to identify the configuration parser, this leaves a dictionary with just <code class="docutils literal notranslate"><span class="pre">square</span></code> as its single key.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">output_dir</span></code> value is the path to the directory where the component may save its results, if applicable.</p>
+<p>To use this configuration parser, simply replace <code class="docutils literal notranslate"><span class="pre">CosineSimilarity</span></code> in the configuration file in <a class="reference internal" href="#step-3-add-parameters">Step 3: add parameters</a> with <code class="docutils literal notranslate"><span class="pre">parse_cosine_similarity_config</span></code>.</p>
+</section>
+<section id="step-5-register-your-component-optional">
+<h3>Step 5: register your component (optional)<a class="headerlink" href="#step-5-register-your-component-optional" title="Link to this heading"></a></h3>
+<p>Registering a component creates an alias. When registered, the component can be referenced by its alias (e.g.
+<code class="docutils literal notranslate"><span class="pre">cosim</span></code>) instead of its full module path (i.e. <code class="docutils literal notranslate"><span class="pre">cosine_similarity.CosineSimilarity</span></code> or
+<code class="docutils literal notranslate"><span class="pre">cosine_similarity.parse_cosine_similarity_config</span></code>).</p>
+<p>To register a component, create a file named <code class="docutils literal notranslate"><span class="pre">registry.yaml</span></code> in the current directory.
+See the <a class="reference external" href="https://github.com/NetherlandsForensicInstitute/confidence">documentation</a> of <code class="docutils literal notranslate"><span class="pre">confidence.load_name</span></code> for the list of locations where registry files are searched.</p>
+<p>The cosine similarity module can be registered by adding the following entry to the <code class="docutils literal notranslate"><span class="pre">registry.yaml</span></code> file:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">modules</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cosine_similarity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cosine_similarity.CosineSimilarity</span>
+</pre></div>
+</div>
+<p>Or, if you want to use the configuration parser:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">modules</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cosine_similarity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cosine_similarity.parse_cosine_similarity_config</span>
+</pre></div>
+</div>
+<p>You can also use this mechanism to override specific built-in registry entries, since user-defined registry entries take precedence over built-in registry entries.</p>
+</section>
+</section>
+<section id="examples-for-other-components">
+<span id="other-components"></span><h2>Examples for other components<a class="headerlink" href="#examples-for-other-components" title="Link to this heading"></a></h2>
+<p>Other components can be added in a similar way, by creating a function with the <a class="reference internal" href="api/lir.config.html#lir.config.config_parser" title="lir.config.config_parser"><code class="xref py py-deco docutils literal notranslate"><span class="pre">&#64;config_parser</span></code></a> decorator, and returning the component instance.</p>
+<section id="a-data-provider-to-read-from-a-database">
+<h3>A data provider to read from a database<a class="headerlink" href="#a-data-provider-to-read-from-a-database" title="Link to this heading"></a></h3>
+<p>We will create a data provider that obtains its data from a Sqlite database.</p>
+<p>Before writing the component, we create and populate a database with dummy values.</p>
+<div class="jupyter_cell docutils container">
+<div class="cell_output docutils container">
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sqlite3</span>
+
+<span class="k">with</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;example.db&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">db</span><span class="p">:</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;CREATE TABLE feature_table (hypothesis INT, feature1 FLOAT, feature2 FLOAT)&#39;</span><span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;INSERT INTO feature_table VALUES(1, 1.0, 1.1), (1, 1.1, 1.2), (0, 3.1, 3.3), (0, 3.0, 4.0)&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+<p>Now that we have the database, we create a data provider component to read from it.
+The recommended way to do it, is to define a function that returns the data, and decorate it with <a class="reference internal" href="api/lir.config.html#lir.config.data.data_provider" title="lir.config.data.data_provider"><code class="xref py py-deco docutils literal notranslate"><span class="pre">&#64;data_provider</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sqlite3</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeatureData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">data_provider</span>
+
+
+<span class="nd">@data_provider</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_from_sqlite3</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FeatureData</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">as</span> <span class="n">db</span><span class="p">:</span>
+        <span class="n">hypotheses</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;SELECT hypothesis, feature1, feature2 FROM feature_table&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">hypotheses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+
+    <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">FeatureData</span><span class="p">(</span><span class="n">hypothesis</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">hypotheses</span><span class="p">),</span> <span class="n">features</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">features</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Alternatively, we may define a <a class="reference internal" href="api/lir.html#lir.DataProvider" title="lir.DataProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataProvider</span></code></a> class. If its <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method requires no parameters or atomic parameters only, like here, it can be used directly.
+Otherwise, we’ll have to use <a class="reference internal" href="api/lir.config.html#lir.config.config_parser" title="lir.config.config_parser"><code class="xref py py-deco docutils literal notranslate"><span class="pre">&#64;config_parser</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataProvider</span><span class="p">,</span> <span class="n">FeatureData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigValue</span><span class="p">,</span> <span class="n">config_parser</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.sqlite_reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_from_sqlite3</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SqliteDataProvider</span><span class="p">(</span><span class="n">DataProvider</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FeatureData</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">read_from_sqlite3</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+
+
+<span class="nd">@config_parser</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_sqlite_data_provider_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ConfigValue</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SqliteDataProvider</span><span class="p">:</span>
+    <span class="c1"># the use of `with` is optional, and adds a check that all fields in `config` are consumed</span>
+    <span class="k">with</span> <span class="n">config</span><span class="p">:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">pop_field</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">SqliteDataProvider</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="an-experiment-type-to-count-the-number-of-records-in-the-dataset">
+<h3>An experiment type to count the number of records in the dataset<a class="headerlink" href="#an-experiment-type-to-count-the-number-of-records-in-the-dataset" title="Link to this heading"></a></h3>
+<p>This example shows how to create a new type of experiment. All it does is to count the number of instances in a dataset.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataProvider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigValue</span><span class="p">,</span> <span class="n">config_parser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_data_provider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.experiments</span><span class="w"> </span><span class="kn">import</span> <span class="n">Experiment</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">DataCounterExperiment</span><span class="p">(</span><span class="n">Experiment</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_provider</span><span class="p">:</span> <span class="n">DataProvider</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">output_path</span><span class="o">=</span><span class="n">output_dir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_provider</span> <span class="o">=</span> <span class="n">data_provider</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">number_of_instances</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_provider</span><span class="o">.</span><span class="n">get_instances</span><span class="p">())</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span> <span class="o">/</span> <span class="s1">&#39;counter.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">number_of_instances</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+
+<span class="nd">@config_parser</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_data_counter_experiment_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ConfigValue</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Experiment</span><span class="p">:</span>
+    <span class="c1"># the use of `with` is optional, and adds a check that all fields in `config` are consumed</span>
+    <span class="k">with</span> <span class="n">config</span><span class="p">:</span>
+        <span class="n">data_provider_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">pop_field</span><span class="p">(</span><span class="s1">&#39;data_provider&#39;</span><span class="p">)</span>
+        <span class="n">data_provider</span> <span class="o">=</span> <span class="n">parse_data_provider</span><span class="p">(</span><span class="n">data_provider_config</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">DataCounterExperiment</span><span class="p">(</span><span class="n">data_provider</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="an-output-method-to-calculate-the-average-llr">
+<h3>An output method to calculate the average LLR<a class="headerlink" href="#an-output-method-to-calculate-the-average-llr" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">output</span></code> section of the experiments list methods to aggregate results.
+This is done by <a class="reference internal" href="api/lir.aggregation.html#lir.aggregation.Aggregation" title="lir.aggregation.Aggregation"><code class="xref py py-class docutils literal notranslate"><span class="pre">Aggregation</span></code></a> objects, which receive the results of each LR system run one by one.</p>
+<p>In this example, we will create an output method that calculates the average LLR for each run, and writes it to a file.
+Finally, we will calculate the average of all runs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.aggregation</span><span class="w"> </span><span class="kn">import</span> <span class="n">Aggregation</span><span class="p">,</span> <span class="n">AggregationData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigValue</span><span class="p">,</span> <span class="n">config_parser</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AverageLLR</span><span class="p">(</span><span class="n">Aggregation</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_average_cumulative</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_average_count</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">AggregationData</span><span class="p">):</span>
+        <span class="n">average</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">llrdata</span><span class="o">.</span><span class="n">llrs</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;average LLR for run </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">run_name</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">average</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_average_cumulative</span> <span class="o">+=</span> <span class="n">average</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_average_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;overall average LLR: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_average_cumulative</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_average_count</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+
+<span class="nd">@config_parser</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">average_llr</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ConfigValue</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AverageLLR</span><span class="p">:</span>
+    <span class="c1"># the use of `with` is optional, and adds a check that all fields in `config` are consumed</span>
+    <span class="k">with</span> <span class="n">config</span><span class="p">:</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">pop_field</span><span class="p">(</span><span class="s1">&#39;filename&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">AverageLLR</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="a-metric-to-calculate-the-average-llr">
+<h3>A metric to calculate the average LLR<a class="headerlink" href="#a-metric-to-calculate-the-average-llr" title="Link to this heading"></a></h3>
+<p>A metric is a function that takes <a class="reference internal" href="api/lir.html#lir.LLRData" title="lir.LLRData"><code class="xref py py-class docutils literal notranslate"><span class="pre">LLRData</span></code></a> and returns a <code class="docutils literal notranslate"><span class="pre">float</span></code>.
+In this example, we implement the average of LLRs as a metric.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLRData</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">average_llr</span><span class="p">(</span><span class="n">llrdata</span><span class="p">:</span> <span class="n">LLRData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">llrdata</span><span class="o">.</span><span class="n">llrs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A slightly more complicated example is the calculation of a weighted CLLR value, which involves the <a class="reference internal" href="api/lir.config.html#lir.config.config_parser" title="lir.config.config_parser"><code class="xref py py-deco docutils literal notranslate"><span class="pre">&#64;config_parser</span></code></a> decorator.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">functools</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLRData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigValue</span><span class="p">,</span> <span class="n">config_parser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">logodds_to_odds</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_weighted_cllr</span><span class="p">(</span><span class="n">llrdata</span><span class="p">:</span> <span class="n">LLRData</span><span class="p">,</span> <span class="n">h0_weight</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">h1_weight</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="n">lrs</span> <span class="o">=</span> <span class="n">logodds_to_odds</span><span class="p">(</span><span class="n">llrdata</span><span class="o">.</span><span class="n">llrs</span><span class="p">)</span>
+    <span class="n">lrs0</span> <span class="o">=</span> <span class="n">lrs</span><span class="p">[</span><span class="n">llrdata</span><span class="o">.</span><span class="n">hypothesis</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">lrs1</span> <span class="o">=</span> <span class="n">lrs</span><span class="p">[</span><span class="n">llrdata</span><span class="o">.</span><span class="n">hypothesis</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">cllr0</span> <span class="o">=</span> <span class="n">h0_weight</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">lrs0</span><span class="p">))</span>
+    <span class="n">cllr1</span> <span class="o">=</span> <span class="n">h1_weight</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">lrs1</span><span class="p">))</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">cllr0</span> <span class="o">+</span> <span class="n">cllr1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">h0_weight</span> <span class="o">+</span> <span class="n">h1_weight</span><span class="p">)</span>
+
+
+<span class="nd">@config_parser</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">weighted_cllr</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ConfigValue</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">LLRData</span><span class="p">],</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="c1"># the use of `with` is optional, and adds a check that all fields in `config` are consumed</span>
+    <span class="k">with</span> <span class="n">config</span><span class="p">:</span>
+        <span class="n">h0_weight</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">pop_field</span><span class="p">(</span><span class="s1">&#39;h0_weight&#39;</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">h1_weight</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">pop_field</span><span class="p">(</span><span class="s1">&#39;h1_weight&#39;</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">calculate_weighted_cllr</span><span class="p">,</span> <span class="n">h0_weight</span><span class="o">=</span><span class="n">h0_weight</span><span class="p">,</span> <span class="n">h1_weight</span><span class="o">=</span><span class="n">h1_weight</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="a-test-only-data-strategy">
+<h3>A test-only data strategy<a class="headerlink" href="#a-test-only-data-strategy" title="Link to this heading"></a></h3>
+<p>Some models do not require a training phase.
+In this example, we implement a data strategy that assumes we work with such models only, and offers the full dataset for testing.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterator</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lir</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataStrategy</span><span class="p">,</span> <span class="n">InstanceData</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AllTest</span><span class="p">(</span><span class="n">DataStrategy</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">[</span><span class="n">DataType</span><span class="p">:</span> <span class="n">InstanceData</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">DataType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">DataType</span><span class="p">,</span> <span class="n">DataType</span><span class="p">]]:</span>
+        <span class="k">yield</span> <span class="kc">None</span><span class="p">,</span> <span class="n">instances</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="experiment-setup.html" class="btn btn-neutral float-left" title="Setting up an experiment" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="reference.html" class="btn btn-neutral float-right" title="Built-in components" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Netherlands Forensic Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

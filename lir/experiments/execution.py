@@ -1,4 +1,5 @@
 import itertools
+import json
 import logging
 import math
 import multiprocessing
@@ -207,11 +208,18 @@ def run_lrsystem(
     # Placeholders for numpy arrays of LLRs and labels obtained from each train/test split
     llrs: list[LLRData] = []
 
-    for training_data, test_data in data_config.train_inference_pairs:
-        if training_data is not None and len(training_data) > 0:
-            lrsystem_config.lrsystem.fit(training_data)
-        if test_data is not None:
-            llrs.append(lrsystem_config.lrsystem.apply(test_data))
+    try:
+        for training_data, test_data in data_config.train_inference_pairs:
+            if training_data is not None and len(training_data) > 0:
+                lrsystem_config.lrsystem.fit(training_data)
+            if test_data is not None:
+                llrs.append(lrsystem_config.lrsystem.apply(test_data))
+    except Exception as e:
+        LOG.error(f'FAILED to run LRSystem: "{run_name}"')
+        LOG.error(f'experiment output dir: {experiment_output_dir}')
+        LOG.error(f'LR system configuration: {json.dumps(lrsystem_config_dict)}')
+        LOG.exception(f'the error was: {str(e)}')
+        raise RuntimeError(f'failed to run LRSystem: "{run_name}" (check the logs for details); the error was: {e}')
 
     # Combine collected numpy arrays after iteration over the train/test split(s)
     llrs: LLRData | None = concatenate_instances(*llrs) if llrs else None

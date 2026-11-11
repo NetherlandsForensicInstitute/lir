@@ -1,3 +1,5 @@
+from collections.abc import Callable
+
 import numpy as np
 import pytest
 
@@ -80,6 +82,44 @@ def test_illegal_cllr(h1_llrs, h2_llrs):
 
     if np.all(np.isfinite(llrs)):  # this condition should be removed ?! --> see issue #301
         assert np.isnan(metrics.cllr_min(llr_data))
+
+
+def test_cllr_h1_weight():
+    llr_data = LLRData(features=np.array([2.0, -1.0]), hypothesis=np.array([1, 0]))
+    h1_cost = float(np.log2(1 + 10**-2))  # log2(1 + 1 / lr) for the H1 sample, with lr = 10 ** 2
+    h2_cost = float(np.log2(1 + 10**-1))  # log2(1 + lr) for the H2 sample, with lr = 10 ** -1
+
+    assert metrics.cllr(llr_data) == pytest.approx(0.5 * h1_cost + 0.5 * h2_cost)
+    assert metrics.cllr(llr_data, 0.5) == pytest.approx(0.5 * h1_cost + 0.5 * h2_cost)
+    assert metrics.cllr(llr_data, 0.0) == pytest.approx(h2_cost)
+    assert metrics.cllr(llr_data, 1.0) == pytest.approx(h1_cost)
+    assert metrics.cllr(llr_data, 0.25) == pytest.approx(0.25 * h1_cost + 0.75 * h2_cost)
+
+
+def test_cllr_min_and_cal_h1_weight():
+    llr_data = LLRData(features=np.array([2.0, -1.0, 1.0, -2.0]), hypothesis=np.array([1, 0, 1, 0]))
+
+    for h1_weight in (0.0, 0.3, 1.0):
+        assert metrics.cllr_cal(llr_data, h1_weight) == pytest.approx(
+            metrics.cllr(llr_data, h1_weight) - metrics.cllr_min(llr_data, h1_weight)
+        )
+
+
+@pytest.mark.parametrize('metric', [metrics.cllr, metrics.cllr_min, metrics.cllr_cal])
+@pytest.mark.parametrize('h1_weight', [-0.1, 1.1])
+def test_cllr_illegal_h1_weight(metric: Callable, h1_weight: float):
+    llr_data = LLRData(features=np.array([2.0, -1.0]), hypothesis=np.array([1, 0]))
+    with pytest.raises(ValueError, match='h1_weight'):
+        metric(llr_data, h1_weight)
+
+
+def test_cllr_weighted_missing_hypothesis():
+    llr_data = LLRData(features=np.array([-1.0, -2.0]), hypothesis=np.array([0, 0]))
+
+    assert np.isnan(metrics.cllr(llr_data))
+    assert np.isnan(metrics.cllr(llr_data, 0.5))
+    assert np.isnan(metrics.cllr(llr_data, 1.0))
+    assert metrics.cllr(llr_data, 0.0) == pytest.approx(np.mean(np.log2(1 + 10 ** np.array([-1.0, -2.0]))))
 
 
 def test_count():

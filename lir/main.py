@@ -15,6 +15,8 @@ from lir.config.base import ConfigValue, YamlParseError, pop_field
 from lir.config.experiment_strategies import parse_experiments
 from lir.config.schema import generate_schema, validate_config
 from lir.experiments import Experiment
+from lir.util import check_type
+from lir.versions import write_versions_yaml
 
 
 LOG = logging.getLogger(__name__)
@@ -274,6 +276,8 @@ def main(input_args: list[str] | None = None) -> None:
     sys.path.append(str(Path().resolve()))
     LOG.debug(f'added {Path().resolve()} to sys.path')
 
+    include_versions = check_type(bool, cfg.get('include_versions_in_output', True))
+
     try:
         experiments, output_dir = initialize_experiments(cfg)
     except YamlParseError as e:
@@ -282,6 +286,8 @@ def main(input_args: list[str] | None = None) -> None:
 
     # Log the used experiment configuration setup
     write_config(output_dir, cfg)
+    if include_versions:
+        write_versions_yaml(output_dir, setup, command=input_args)
 
     if args.list_experiments:
         for name in experiments:

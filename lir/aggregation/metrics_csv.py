@@ -1,14 +1,14 @@
 import csv
 import logging
 from collections import OrderedDict
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Mapping
 from functools import partial
 from pathlib import Path
 from typing import IO, Any
 
 from lir.aggregation.base import Aggregation, AggregationData
-from lir.config.base import ConfigAttribute, ConfigValue, YamlParseError, check_is_empty, config_parser, pop_field
-from lir.config.metrics import parse_individual_metric
+from lir.config.base import ConfigAttribute, ConfigValue, check_is_empty, config_parser
+from lir.config.metrics import parse_metrics
 from lir.metrics import MetricType
 
 
@@ -100,14 +100,7 @@ def parse(config: ConfigValue, output_dir: Path) -> WriteMetricsToCsv:
     WriteMetricsToCsv
         An instance of the WriteMetricsToCsv class configured to write metrics to a CSV file.
     """
-    columns = pop_field(config, 'columns', default=['cllr', 'cllr_min'])
-    if not isinstance(columns, Sequence):
-        raise YamlParseError(
-            config.context,
-            'Invalid metrics configuration; expected a list of metric names.',
-        )
-
-    columns = {name: parse_individual_metric(name, output_dir, config.context) for name in columns}
+    columns = parse_metrics(config.pop('columns', default=['cllr', 'cllr_min']), output_dir)
 
     check_is_empty(config)
     return WriteMetricsToCsv('metrics.csv', columns)

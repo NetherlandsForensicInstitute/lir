@@ -1,6 +1,6 @@
 import logging
 from collections import OrderedDict
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Mapping
 from functools import partial
 from pathlib import Path
 from types import NoneType
@@ -11,8 +11,9 @@ from matplotlib import pyplot as plt
 
 from lir import LLRData
 from lir.aggregation.base import Aggregation, AggregationData
-from lir.config.base import ConfigAttribute, ConfigValue, YamlParseError, check_is_empty, config_parser, pop_field
-from lir.config.metrics import parse_individual_metric
+from lir.config.base import ConfigAttribute, ConfigValue, check_is_empty, config_parser, pop_field
+from lir.config.metrics import parse_metrics
+from lir.metrics import MetricType
 from lir.util import check_not_none
 
 
@@ -164,7 +165,7 @@ class MetricsBarPlot(Aggregation):
 @config_parser(
     attributes=[
         ConfigAttribute('path', str, required=False),
-        ConfigAttribute('metrics', list[str], required=True),
+        ConfigAttribute('metrics', list[MetricType], required=True),
         ConfigAttribute('plot_params', dict, required=False),
     ]
 )
@@ -184,15 +185,8 @@ def parse(config: ConfigValue, output_dir: Path) -> MetricsBarPlot:
     MetricsBarPlot
         An instance of :class:`~lir.aggregation.metrics_bars.MetricsBarPlot`.
     """
-    metric_names = pop_field(config, 'metrics', default=['cllr'])
-    if not isinstance(metric_names, Sequence):
-        raise YamlParseError(
-            config.context,
-            'Invalid metrics configuration; expected a list of metric names.',
-        )
-
+    metrics = parse_metrics(config.pop('metrics', default=['cllr']), output_dir)
     path: Path = pop_field(config, 'path', default=Path('metrics.png'), validate=Path)
-    metrics = {name: parse_individual_metric(name, output_dir, config.context) for name in metric_names}
     plot_params = pop_field(config, 'plot_params', default={})
 
     check_is_empty(config)

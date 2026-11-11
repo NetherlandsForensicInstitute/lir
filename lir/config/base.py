@@ -463,6 +463,10 @@ class GenericFunctionConfigParser(ConfigParser):
     """
     Parser for callable functions or component classes.
 
+    Any configuration values in the corresponding YAML section are passed to the callable as keyword arguments. This
+    makes it possible to configure a function-based metric, for example, without writing a dedicated configuration
+    parser.
+
     Parameters
     ----------
     component_class : Callable
@@ -484,19 +488,26 @@ class GenericFunctionConfigParser(ConfigParser):
         Parameters
         ----------
         config : ConfigValue
-            Configuration section for validation context.
+            Keyword arguments for the callable, or ``None`` if the callable takes no arguments.
         output_dir : Path
             Unused output directory argument required by the parser API.
 
         Returns
         -------
         Callable
-            Resolved callable object.
+            Resolved callable object, partially applied with the configured arguments.
         """
-        if callable(self.component_class):
-            return self.component_class
+        if not callable(self.component_class):
+            raise YamlParseError(config.context, f'unrecognized module type: `{self.component_class}`')
 
-        raise YamlParseError(config.context, f'unrecognized module type: `{self.component_class}`')
+        with config:
+            kwargs = {
+                attribute.name: config.pop_field(attribute.name)
+                for attribute in self.attributes() or []
+                if attribute.name in config
+            }
+
+        return partial(self.component_class, **kwargs) if kwargs else self.component_class
 
     def reference(self) -> str:
         """
@@ -508,6 +519,33 @@ class GenericFunctionConfigParser(ConfigParser):
             Fully qualified callable name.
         """
         return self._get_type_name(self.component_class)
+
+    def attributes(self) -> list[ConfigAttribute] | None:
+        """
+        Return the attributes in a configuration section that describes this callable.
+
+        The attributes are the parameters of the callable that have a default value, because those are the parameters
+        that can be omitted when the callable is invoked. Returns ``None`` if the signature cannot be determined.
+
+        Returns
+        -------
+        list[ConfigAttribute], optional
+            A list of configuration attribute definitions.
+        """
+        try:
+            parameters = inspect.signature(self.component_class).parameters.values()
+        except (TypeError, ValueError):
+            return None
+
+        return [
+            ConfigAttribute(
+                parameter.name,
+                parameter.annotation if parameter.annotation is not inspect.Parameter.empty else Any,
+                default=parameter.default,
+            )
+            for parameter in parameters
+            if parameter.default is not inspect.Parameter.empty
+        ]
 
 
 class GenericConfigParser(ConfigParser):

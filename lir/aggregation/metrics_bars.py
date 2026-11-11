@@ -164,7 +164,7 @@ class MetricsBarPlot(Aggregation):
 @config_parser(
     attributes=[
         ConfigAttribute('path', str, required=False),
-        ConfigAttribute('metrics', list[str], required=True),
+        ConfigAttribute('metrics', list[MetricType], required=True),
         ConfigAttribute('plot_params', dict, required=False),
     ]
 )

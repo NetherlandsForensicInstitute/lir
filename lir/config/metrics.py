@@ -41,7 +41,15 @@ def parse_metrics(config: ConfigValue, output_path: Path) -> dict[str, Callable[
 
     Each entry is either the registered name of a metric or a mapping with the registered name in the ``method`` field.
     The name of the metric is used as the key in the resulting mapping, unless the ``name`` field overrides it. This key
-    is used to label the metric in the output.
+    is used to label the metric in the output. Example:
+
+    .. code-block:: yaml
+
+        columns:
+          - cllr
+          - name: cllr_forensic
+            method: cllr
+            h1_weight: 0.9
 
     Parameters
     ----------

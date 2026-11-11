@@ -19,6 +19,18 @@ class WriteMetricsToCsv(Aggregation):
     """
     Helper class to write aggregated results to CSV file.
 
+    Usage example in YAML:
+
+    .. code-block:: yaml
+
+        output:
+          - method: metrics
+            columns:
+              - cllr
+              - name: cllr_weighted
+                method: cllr
+                h1_weight: 0.8
+
     Parameters
     ----------
     path : Path

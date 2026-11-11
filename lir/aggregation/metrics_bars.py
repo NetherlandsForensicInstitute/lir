@@ -38,6 +38,9 @@ class MetricsBarPlot(Aggregation):
             metrics:
               - cllr
               - cllr_min
+              - name: cllr_weighted
+                method: cllr
+                h1_weight: 0.8
 
     .. jupyter-execute::
         :hide-code:

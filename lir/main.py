@@ -16,6 +16,8 @@ from lir.config.base import ConfigValue, YamlParseError, pop_field
 from lir.config.experiment_strategies import parse_experiments
 from lir.config.schema import generate_schema, validate_yaml
 from lir.experiments import Experiment
+from lir.util import check_type
+from lir.versions import write_versions_yaml
 
 
 LOG = logging.getLogger(__name__)
@@ -228,6 +230,7 @@ def main(input_args: list[str] | None = None) -> None:
 
     cfg = confidence.loadf(args.setup)
     cfg = confidence.Configuration(cfg, dict(value.split('=', 1) for value in args.set_value))
+    include_versions = check_type(bool, cfg.get('include_versions_in_output', True))
 
     try:
         experiments, output_dir = initialize_experiments(cfg)
@@ -236,6 +239,8 @@ def main(input_args: list[str] | None = None) -> None:
         raise  # this statement is not reachable, but helps code validation
 
     copy_yaml_definition(output_dir, Path(args.setup))
+    if include_versions:
+        write_versions_yaml(output_dir, Path(args.setup), command=input_args)
 
     if args.list_experiments:
         for name in experiments:

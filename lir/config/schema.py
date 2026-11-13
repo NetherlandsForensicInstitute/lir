@@ -473,6 +473,17 @@ class SchemaGenerator:
                     + 'library to create unique output folders per run. The ${timestamp} variable is automatically '
                     + 'provided by LiR.',
                 },
+                'include_versions_in_output': _generate_attribute_definition(
+                    ConfigAttribute(
+                        'include_versions_in_output',
+                        bool,
+                        required=False,
+                        default=True,
+                        description='Whether to write system and package version information to versions.yaml in the '
+                        + 'output directory.',
+                    ),
+                    strict=self.strict,
+                ),
                 'experiments': {
                     'type': 'array',
                     'minItems': 1,

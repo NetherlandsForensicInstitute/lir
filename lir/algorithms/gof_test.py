@@ -319,12 +319,12 @@ def within_source_gof_test(
 
     References
     ----------
-    .. [1] Hanka, J. L., Ommen, D. M., Hietpas, J., Buscaglia, J., & Saunders, C. P. (2026). Development and
-           evaluation of a goodness-of-fit test for comparing within-source distributions of scores suitable for
-           small sample sizes. Law, Probability and Risk, 25(1), mgag008.
-    .. [2] Miller, J. J., Gantz, D. T., & Saunders, C. P. (2009). Quantifying the effects of database size and
-           sample quality on measures of individualization validity and accuracy in forensics. NIJ, Phase I, Part B,
-           pp. 51-67.
+    Hanka, J. L., Ommen, D. M., Hietpas, J., Buscaglia, J., & Saunders, C. P. (2026). Development and evaluation
+    of a goodness-of-fit test for comparing within-source distributions of scores suitable for small sample sizes.
+    *Law, Probability and Risk*, 25(1), mgag008.
+
+    Miller, J. J., Gantz, D. T., & Saunders, C. P. (2009). Quantifying the effects of database size and sample
+    quality on measures of individualization validity and accuracy in forensics. NIJ, Phase I, Part B, pp. 51-67.
     """
     if not callable(score_function):
         raise ValueError(f'score_function must be callable; found: {type(score_function)}')

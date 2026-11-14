@@ -82,7 +82,42 @@ DEFINITIONS: dict[type | types.UnionType | tuple[type, type], dict[str, Any]] = 
 }
 
 
-def _generate_type_definition(config_type: type | types.UnionType | tuple) -> dict[str, Any]:
+def _type_label(config_type: type | types.UnionType | tuple) -> str:
+    """
+    Generate a human-readable label for a type.
+
+    The label is used to distinguish the alternatives of a union type in the schema, so that form
+    renderers can display a meaningful choice instead of a generic option name.
+
+    Parameters
+    ----------
+    config_type : type | UnionType | tuple
+        The type to label.
+
+    Returns
+    -------
+    str
+        A label for the type.
+    """
+    if config_type is str:
+        return 'String'
+    if config_type is int:
+        return 'Integer'
+    if config_type is float:
+        return 'Number'
+    if config_type is bool:
+        return 'Boolean'
+    if isinstance(config_type, types.GenericAlias) and issubclass(config_type.__origin__, list):
+        elem_type = config_type.__args__[0]
+        return 'List of Strings' if elem_type is str else f'List of {_type_label(elem_type)}'
+    if isinstance(config_type, types.GenericAlias) and issubclass(config_type.__origin__, dict):
+        return 'Object'
+    if isinstance(config_type, type):
+        return config_type.__name__
+    return 'Value'
+
+
+def _generate_type_definition(config_type: type | types.UnionType | tuple, strict: bool = False) -> dict[str, Any]:
     """
     Generate a schema for a type definition.
 
@@ -90,6 +125,9 @@ def _generate_type_definition(config_type: type | types.UnionType | tuple) -> di
     ----------
     config_type : type | UnionType | tuple
         The type to generate a schema for.
+    strict : bool
+        Enforce strict syntax mode; in particular, drop the `None` alternative of a union type, as it
+        has no representation in a form (an omitted field is interpreted as `None` by the parser).
 
     Returns
     -------
@@ -105,12 +143,26 @@ def _generate_type_definition(config_type: type | types.UnionType | tuple) -> di
 
     # if the type is a union of multiple types, allow any of the types
     if isinstance(config_type, types.UnionType):
-        return {'anyOf': [_generate_type_definition(attr) for attr in config_type.__args__]}
+        union_args = config_type.__args__
+        if strict:
+            union_args = tuple(arg for arg in union_args if arg is not types.NoneType)
+        if len(union_args) == 0:
+            return {'type': 'null'}
+        if len(union_args) == 1:
+            return _generate_type_definition(union_args[0], strict=strict)
+        options = []
+        for arg in union_args:
+            option = _generate_type_definition(arg, strict=strict)
+            # label the alternative so that form renderers can display a meaningful choice
+            if isinstance(option, dict) and not {'title', 'enum', '$ref'} & option.keys():
+                option = {'title': _type_label(arg), **option}
+            options.append(option)
+        return {'anyOf': options}
 
     # if the type is a list, allow an array of its element types
     if isinstance(config_type, types.GenericAlias) and issubclass(config_type.__origin__, list):
         elem_type = config_type.__args__[0]
-        return {'type': 'array', 'items': _generate_type_definition(elem_type)}
+        return {'type': 'array', 'items': _generate_type_definition(elem_type, strict=strict)}
 
     # if the type is a dict, allow a dictionary whose values of its declared value types
     if isinstance(config_type, types.GenericAlias) and issubclass(config_type.__origin__, dict):
@@ -119,7 +171,7 @@ def _generate_type_definition(config_type: type | types.UnionType | tuple) -> di
             raise ValueError(f'key must be str; found: {key_type}')
         return {
             'type': 'object',
-            'additionalProperties': _generate_type_definition(value_type),
+            'additionalProperties': _generate_type_definition(value_type, strict=strict),
         }
 
     raise ValueError(f'no schema for type: {config_type}')
@@ -151,7 +203,7 @@ def _generate_attribute_definition(attribute: ConfigAttribute, strict: bool) -> 
         attr_type |= types.NoneType
 
     # generate the schema
-    schema = dict(_generate_type_definition(attr_type))
+    schema = dict(_generate_type_definition(attr_type, strict=strict))
     if attribute.description is not None:
         schema['description'] = attribute.description
     if attribute.default is not None and not is_complex_type:
@@ -194,8 +246,10 @@ def _prune(schema: Any) -> Any:
             del schema['allOf']
         if 'oneOf' in schema and len(schema['oneOf']) == 1:
             schema |= schema['oneOf'][0]
+            del schema['oneOf']
         if 'anyOf' in schema and len(schema['anyOf']) == 1:
             schema |= schema['anyOf'][0]
+            del schema['anyOf']
         return schema
     elif isinstance(schema, list):
         schema = [_prune(item) for item in schema]
@@ -228,11 +282,13 @@ class SchemaGenerator:
     def __init__(self, strict: bool = False):
         self.strict = strict
 
-    def _generate_alternatives_as_dict(
+    def _generate_alternatives_schema(
         self,
-        config_parsers: dict[str, ConfigParser],
-        method_key: str,
+        category: str,
+        section_description: str,
+        method_key: str | None,
         default_option: str | None = None,
+        allow_shorthand: bool = False,
     ) -> dict[str, Any]:
         """
         Generate a schema for a configuration section of a particular registry category.
@@ -247,78 +303,18 @@ class SchemaGenerator:
 
         Parameters
         ----------
-        config_parsers : dict[str, ConfigParser]
-            The configuration parsers that can be applied in the configuration section.
-        method_key : str
-            The key that refers to the configuration parser.
-        default_option : str, optional
-            A default method.
-
-        Returns
-        -------
-        dict[str, Any]
-            The schema definition.
-        """
-        schema: dict[str, Any] = {
-            'type': 'object',
-            'required': [],
-            'properties': {
-                method_key: {
-                    'enum': list(config_parsers.keys()),
-                },
-                'additionalProperties': not all(parser.attributes() is not None for parser in config_parsers.values()),
-            },
-            'allOf': [],
-        }
-
-        # require the method key if there is no default option
-        if default_option is None:
-            schema['required'].append(method_key)
-
-        if default_option is not None:
-            schema['properties'][method_key]['default'] = default_option
-
-        for name, parser in config_parsers.items():
-            schema['allOf'].append(
-                {
-                    'if': {'properties': {method_key: {'const': name}}},
-                    'then': {
-                        'required': [attr.name for attr in parser.attributes() or [] if attr.required],
-                        'properties': {'__comment__': {'type': 'null', 'description': _get_docstr_short(parser)}}
-                        | {
-                            attr.name: _generate_attribute_definition(attr, strict=self.strict)
-                            for attr in parser.attributes() or []
-                            if not attr.obsolete
-                        },
-                    },
-                }
-            )
-
-        return schema
-
-    def _generate_alternatives_schema(
-        self,
-        category: str,
-        section_description: str,
-        method_key: str | None,
-        default_option: str | None = None,
-        allow_shorthand: bool = False,
-    ) -> dict[str, Any]:
-        """
-        Generate a schema for a configuration section of a particular category in the registry.
-
-        Parameters
-        ----------
         category : str
             The name of the registry section. This refers to a section in the registry, i.e. ``registry.yaml``.
         section_description : str
             Description of the section. This should describe the role of the selected option.
-        method_key : str
-            The key in the configuration section that is used to select an option, e.g. ``method`` for module selection.
+        method_key : str | None
+            The key in the configuration section that is used to select an option, e.g. ``method`` for module
+            selection. If `None`, the configuration section consists of the option name only, e.g. the metric
+            definition.
         default_option : str | None
             The default value for the variable.
         allow_shorthand : bool
-            Allow shorthand-notation in tolerant (non-strict) mode.
+            Allow shorthand-notation.
 
         Returns
         -------
@@ -330,16 +326,59 @@ class SchemaGenerator:
             for name in _list_components(f'{category}.')
         }
 
-        if not config_parsers:
-            raise ValueError(f'no candidates for category: {category}')
+        options: list[dict[str, Any]] = []
 
-        options = []
-
-        if method_key:
-            options.append(self._generate_alternatives_as_dict(config_parsers, method_key, default_option))
-
-        if not method_key or (not self.strict and allow_shorthand):
+        if method_key is None:
             options.append({'type': 'string', 'enum': list(config_parsers.keys())})
+        else:
+            schema: dict[str, Any] = {
+                'type': 'object',
+                'required': [],
+                'properties': {
+                    method_key: {
+                        'enum': list(config_parsers.keys()),
+                    },
+                    'additionalProperties': not all(
+                        parser.attributes() is not None for parser in config_parsers.values()
+                    ),
+                },
+                'allOf': [],
+            }
+
+            # require the method key if there is no default option
+            if default_option is None:
+                schema['required'].append(method_key)
+
+            if default_option is not None:
+                schema['properties'][method_key]['default'] = default_option
+
+            for name, parser in config_parsers.items():
+                attrs = [attr for attr in parser.attributes() or [] if not attr.obsolete]
+                then: dict[str, Any] = {
+                    'properties': {'__comment__': {'type': 'null', 'description': _get_docstr_short(parser)}}
+                    | {attr.name: _generate_attribute_definition(attr, strict=self.strict) for attr in attrs},
+                }
+                required = [attr.name for attr in parser.attributes() or [] if attr.required]
+                if required:
+                    then['required'] = required
+                # the 'if' condition must require the method key; without it, the condition is vacuously satisfied
+                # when the key is absent, which makes form renderers merge all branches at once (reporting
+                # false-positive circular references for the repeated definitions)
+                schema['allOf'].append(
+                    {
+                        'if': {'properties': {method_key: {'const': name}}, 'required': [method_key]},
+                        'then': then,
+                    }
+                )
+
+            options.append(schema)
+
+            if not self.strict and allow_shorthand:
+                options.append(
+                    {
+                        'type': 'string',
+                    }
+                )
 
         if len(options) == 1:
             return options[0] | {
@@ -550,7 +589,9 @@ def generate_schema(strict: bool = False) -> dict[str, Any]:
     Parameters
     ----------
     strict : bool
-        Enforce strict syntax rules (recommended for form generation, not for validation).
+        Enforce strict syntax rules. In particular, optional fields do not get an explicit `null` alternative,
+        which form renderers would otherwise display as a choice menu. Strict mode is recommended for form
+        generation, not for validation.
 
     Returns
     -------

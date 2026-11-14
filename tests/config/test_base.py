@@ -187,5 +187,24 @@ def test_function_config_parser():
     config = ConfigValue.wrap([], {})
     assert GenericFunctionConfigParser(lambda x: x * x).parse(config, Path('/'))(3) == 9
 
-    config = ConfigValue.wrap([], {'features': np.array([[1], [2]])})  # NB: arguments have no effect!!!
-    assert GenericFunctionConfigParser(lambda x: x * x).parse(config, Path('/'))(3) == 9
+    config = ConfigValue.wrap([], {'offset': 2})
+    assert GenericFunctionConfigParser(lambda x, offset=0: x + offset).parse(config, Path('/'))(3) == 5
+
+    # arguments are passed by keyword, so keyword-only parameters work as well
+    config = ConfigValue.wrap([], {'offset': 2})
+    assert GenericFunctionConfigParser(lambda x, *, offset=0: x + offset).parse(config, Path('/'))(3) == 5
+
+    # required parameters and unknown arguments are rejected
+    config = ConfigValue.wrap([], {'offset': 2})
+    with pytest.raises(YamlParseError, match='unrecognized argument: offset'):
+        GenericFunctionConfigParser(lambda x, offset: x + offset).parse(config, Path('/'))
+
+
+def test_function_config_parser_attributes():
+    def fn(data: int, threshold: float = 0.5, *args: Any, legacy=None) -> float: ...
+
+    parser = GenericFunctionConfigParser(fn)
+    assert [(attr.name, attr.type, attr.default) for attr in parser.attributes()] == [
+        ('threshold', float, 0.5),
+        ('legacy', Any, None),
+    ]

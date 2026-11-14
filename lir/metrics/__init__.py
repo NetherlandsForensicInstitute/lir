@@ -23,7 +23,7 @@ class MetricType(Protocol):
         ...
 
 
-def cllr(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
+def cllr(llr_data: LLRData, h1_weight: float = 0.5) -> float:
     """
     Calculate a log likelihood ratio cost (C_llr) for a series of log likelihood ratios.
 
@@ -34,14 +34,33 @@ def cllr(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
     ----------
     llr_data : LLRData
         LLRs and their metadata, wrapped in an `LLRData` object.
-    weights : tuple[float, float], optional
-        The relative weights of the classes.
+    h1_weight : float, optional
+        The relative weight of hypothesis H1, as a fraction of 1; H2 gets the remaining weight ``1 - h1_weight``.
+        Defaults to 0.5, which weighs both hypotheses equally.
 
     Returns
     -------
     float
         CLLR, the log likelihood ratio cost.
+
+    Examples
+    --------
+    The weight can also be set in the YAML configuration of an experiment:
+
+    .. code-block:: yaml
+
+        output:
+          - method: metrics
+            columns:
+              - cllr
+              - name: cllr_weighted
+                method: cllr
+                h1_weight: 0.9
     """
+    if not 0 <= h1_weight <= 1:
+        raise ValueError(f'expected `h1_weight` to be between 0 and 1; found: {h1_weight}')
+    h2_weight = 1 - h1_weight
+
     llrs, y = llr_data.llrs, llr_data.require_labels
 
     lrs = logodds_to_odds(llrs)
@@ -51,15 +70,15 @@ def cllr(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
     #   over -> ignore scalar overflow
     with np.errstate(divide='ignore', over='ignore'):
         lrs0, lrs1 = Xy_to_Xn(lrs, y)
-        if (weights[0] > 0 and len(lrs0) == 0) or (weights[1] > 0 and len(lrs1) == 0):
+        if (h2_weight > 0 and len(lrs0) == 0) or (h1_weight > 0 and len(lrs1) == 0):
             return np.nan
 
-        cllr0 = weights[0] * np.mean(np.log2(1 + lrs0)) if weights[0] > 0 else 0
-        cllr1 = weights[1] * np.mean(np.log2(1 + 1 / lrs1)) if weights[1] > 0 else 0
-        return float((cllr0 + cllr1) / sum(weights))
+        cllr0 = h2_weight * np.mean(np.log2(1 + lrs0)) if h2_weight > 0 else 0
+        cllr1 = h1_weight * np.mean(np.log2(1 + 1 / lrs1)) if h1_weight > 0 else 0
+        return float(cllr0 + cllr1)
 
 
-def cllr_min(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
+def cllr_min(llr_data: LLRData, h1_weight: float = 0.5) -> float:
     """
     Estimate the discriminative power from a collection of log likelihood ratios.
 
@@ -67,8 +86,9 @@ def cllr_min(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
     ----------
     llr_data : LLRData
         LLRs and their metadata, wrapped in an `LLRData` object.
-    weights : tuple[float, float], optional
-        The relative weights of the classes.
+    h1_weight : float, optional
+        The relative weight of hypothesis H1, as a fraction of 1; H2 gets the remaining weight ``1 - h1_weight``.
+        Defaults to 0.5, which weighs both hypotheses equally.
 
     Returns
     -------
@@ -81,10 +101,10 @@ def cllr_min(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
     cal = IsotonicCalibrator()
     llrmin = cal.fit_apply(llr_data)
 
-    return cllr(llrmin, weights)
+    return cllr(llrmin, h1_weight)
 
 
-def cllr_cal(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
+def cllr_cal(llr_data: LLRData, h1_weight: float = 0.5) -> float:
     """
     Calculate the difference between the C_llr before and after isotonic calibration.
 
@@ -92,16 +112,17 @@ def cllr_cal(llr_data: LLRData, weights: tuple[float, float] = (1, 1)) -> float:
     ----------
     llr_data : LLRData
         LLRs and their metadata, wrapped in an `LLRData` object.
-    weights : tuple[float, float], optional
-        The relative weights of the classes.
+    h1_weight : float, optional
+        The relative weight of hypothesis H1, as a fraction of 1; H2 gets the remaining weight ``1 - h1_weight``.
+        Defaults to 0.5, which weighs both hypotheses equally.
 
     Returns
     -------
     float
         CLLR_cal, the difference after isotonic calibration.
     """
-    cllr_min_val = cllr_min(llr_data, weights)
-    cllr_val = cllr(llr_data, weights)
+    cllr_min_val = cllr_min(llr_data, h1_weight)
+    cllr_val = cllr(llr_data, h1_weight)
 
     return cllr_val - cllr_min_val
 

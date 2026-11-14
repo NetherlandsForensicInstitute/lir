@@ -159,8 +159,7 @@ def parse_optuna_experiment(config: ConfigValue, output_dir: Path) -> OptunaExpe
     baseline_config, parameters = parse_config_with_parameters(config, output_dir, 'lrsystem', 'lrsystem_parameters')
     n_trials = pop_field(config, 'n_trials', validate=int)
 
-    metric_name = pop_field(config, 'primary_metric', validate_type=str)
-    primary_metric = parse_individual_metric(metric_name, output_dir, config.context)
+    primary_metric = parse_individual_metric(config.pop('primary_metric'), output_dir)
 
     data_config = pop_field(config, 'data')
 

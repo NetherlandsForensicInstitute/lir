@@ -204,6 +204,18 @@ def test_function_config_parser():
     with pytest.raises(YamlParseError, match='unrecognized argument: bogus'):
         GenericFunctionConfigParser(lambda x, offset=0: x + offset).parse(config, Path('/'))
 
+    # argument types are validated at parse time, based on the parameter annotation
+    def fn(x: int, offset: float = 0.0) -> float:
+        return x + offset
+
+    config = ConfigValue.wrap([], {'offset': '2'})
+    with pytest.raises(YamlParseError, match='expected a number'):
+        GenericFunctionConfigParser(fn).parse(config, Path('/'))
+
+    # integers are accepted for float parameters, and converted
+    config = ConfigValue.wrap([], {'offset': 2})
+    assert GenericFunctionConfigParser(fn).parse(config, Path('/'))(3) == 5
+
 
 def test_function_config_parser_attributes():
     def fn(data: int, threshold: float = 0.5, *args: Any, legacy=None) -> float: ...

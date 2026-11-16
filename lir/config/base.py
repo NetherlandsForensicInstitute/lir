@@ -507,7 +507,11 @@ class GenericFunctionConfigParser(ConfigParser):
 
         with config:
             kwargs = {
-                attribute.name: config.pop_field(attribute.name)
+                attribute.name: self._validate_argument(
+                    attribute,
+                    config.pop_field(attribute.name),
+                    config.context,
+                )
                 for attribute in self.attributes() or []
                 if attribute.name in config
             }
@@ -541,6 +545,54 @@ class GenericFunctionConfigParser(ConfigParser):
             Fully qualified callable name.
         """
         return self._get_type_name(self.component_class)
+
+    @staticmethod
+    def _validate_argument(attribute: ConfigAttribute, value: Any, context: list[str]) -> Any:
+        """
+        Validate the value of a configuration argument against the annotation of the corresponding parameter.
+
+        Only scalar annotations are validated, and integers are accepted for ``float`` annotations. For other
+        annotations, the value is returned unchanged, and the callable is responsible for rejecting invalid values.
+
+        Parameters
+        ----------
+        attribute : ConfigAttribute
+            The definition of the configuration argument.
+        value : Any
+            The value of the argument in the configuration.
+        context : list[str]
+            YAML context used for error reporting.
+
+        Returns
+        -------
+        Any
+            The validated value, converted to the annotated type where applicable.
+        """
+        if attribute.type is float:
+            if isinstance(value, bool) or not isinstance(value, (int, float)):
+                raise YamlParseError(
+                    context, f'illegal value for field `{attribute.name}`: expected a number; found: {value!r}'
+                )
+            return float(value)
+        if attribute.type is int:
+            if isinstance(value, bool) or not isinstance(value, int):
+                raise YamlParseError(
+                    context, f'illegal value for field `{attribute.name}`: expected an integer; found: {value!r}'
+                )
+            return value
+        if attribute.type is str:
+            if not isinstance(value, str):
+                raise YamlParseError(
+                    context, f'illegal value for field `{attribute.name}`: expected a string; found: {value!r}'
+                )
+            return value
+        if attribute.type is bool:
+            if not isinstance(value, bool):
+                raise YamlParseError(
+                    context, f'illegal value for field `{attribute.name}`: expected a boolean; found: {value!r}'
+                )
+            return value
+        return value
 
     def attributes(self) -> list[ConfigAttribute] | None:
         """

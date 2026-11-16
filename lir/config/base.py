@@ -501,6 +501,11 @@ class GenericFunctionConfigParser(ConfigParser):
         if not callable(self.component_class):
             raise YamlParseError(config.context, f'unrecognized module type: `{self.component_class}`')
 
+        try:
+            parameters = inspect.signature(self.component_class).parameters
+        except (TypeError, ValueError):
+            parameters = {}
+
         with config:
             kwargs = {
                 attribute.name: self._validate_argument(
@@ -511,6 +516,23 @@ class GenericFunctionConfigParser(ConfigParser):
                 for attribute in self.attributes() or []
                 if attribute.name in config
             }
+            for name, parameter in parameters.items():
+                if (
+                    parameter.default is inspect.Parameter.empty
+                    and parameter.kind
+                    in (
+                        inspect.Parameter.POSITIONAL_ONLY,
+                        inspect.Parameter.POSITIONAL_OR_KEYWORD,
+                        inspect.Parameter.KEYWORD_ONLY,
+                    )
+                    and name in config
+                ):
+                    raise YamlParseError(
+                        config.context,
+                        f'argument `{name}` is a required parameter of {self.reference()} and therefore cannot be '
+                        'set in the configuration; give the parameter a default value, or register a dedicated '
+                        'configuration parser',
+                    )
 
         return partial(self.component_class, **kwargs) if kwargs else self.component_class
 
@@ -578,7 +600,9 @@ class GenericFunctionConfigParser(ConfigParser):
         Return the attributes in a configuration section that describes this callable.
 
         The attributes are the parameters of the callable that have a default value, because those are the parameters
-        that can be omitted when the callable is invoked. Returns ``None`` if the signature cannot be determined.
+        that can be omitted when the callable is invoked. Parameters without a default value are not configurable:
+        the generic parser cannot distinguish the data argument, which is passed at call time, from other required
+        parameters. Returns ``None`` if the signature cannot be determined.
 
         Returns
         -------

@@ -96,6 +96,20 @@ def test_cllr_h1_weight():
     assert metrics.cllr(llr_data, 0.25) == pytest.approx(0.25 * h1_cost + 0.75 * h2_cost)
 
 
+@pytest.mark.parametrize('metric', [metrics.cllr, metrics.cllr_min, metrics.cllr_cal])
+def test_cllr_deprecated_weights(metric: Callable) -> None:
+    llr_data = LLRData(features=np.array([2.0, -1.0]), hypothesis=np.array([1, 0]))
+
+    with pytest.warns(DeprecationWarning, match='weights'):
+        assert metric(llr_data, weights=(1, 3)) == pytest.approx(metric(llr_data, 0.75))
+    with pytest.warns(DeprecationWarning, match='weights'):
+        assert metric(llr_data, weights=(1, 1)) == pytest.approx(metric(llr_data))
+    with pytest.raises(ValueError, match='weights'):
+        metric(llr_data, weights=(0, 0))
+    with pytest.raises(TypeError, match='unexpected keyword argument'):
+        metric(llr_data, bogus=1)
+
+
 def test_cllr_min_and_cal_h1_weight():
     llr_data = LLRData(features=np.array([2.0, -1.0, 1.0, -2.0]), hypothesis=np.array([1, 0, 1, 0]))
 

@@ -240,6 +240,7 @@ class SchemaGenerator:
         config_parsers: dict[str, ConfigParser],
         method_key: str,
         default_option: str | None = None,
+        extra_properties: dict[str, dict[str, Any]] | None = None,
     ) -> dict[str, Any]:
         """
         Generate a schema for a configuration section of a particular registry category.
@@ -260,6 +261,9 @@ class SchemaGenerator:
             The key that refers to the configuration parser.
         default_option : str, optional
             A default method.
+        extra_properties : dict[str, dict[str, Any]], optional
+            Additional properties that are accepted in the configuration section, in addition to the attributes of
+            the configuration parsers.
 
         Returns
         -------
@@ -277,6 +281,9 @@ class SchemaGenerator:
             },
             'allOf': [],
         }
+
+        if extra_properties:
+            schema['properties'].update(extra_properties)
 
         # require the method key if there is no default option
         if default_option is None:
@@ -311,6 +318,7 @@ class SchemaGenerator:
         default_option: str | None = None,
         allow_shorthand: bool = False,
         default_config_parser: Callable[..., ConfigParser] = GenericConfigParser,
+        extra_properties: dict[str, dict[str, Any]] | None = None,
     ) -> dict[str, Any]:
         """
         Generate a schema for a configuration section of a particular category in the registry.
@@ -329,6 +337,9 @@ class SchemaGenerator:
             Allow shorthand-notation in tolerant (non-strict) mode.
         default_config_parser : Callable[..., ConfigParser]
             Configuration parser used for registry entries that are not themselves configuration parsers.
+        extra_properties : dict[str, dict[str, Any]], optional
+            Additional properties that are accepted in the canonical form of the configuration section, in addition
+            to the attributes of the configuration parsers.
 
         Returns
         -------
@@ -346,7 +357,11 @@ class SchemaGenerator:
         options = []
 
         if method_key:
-            options.append(self._generate_alternatives_as_dict(config_parsers, method_key, default_option))
+            options.append(
+                self._generate_alternatives_as_dict(
+                    config_parsers, method_key, default_option, extra_properties=extra_properties
+                )
+            )
 
         if not method_key or (not self.strict and allow_shorthand):
             options.append({'type': 'string', 'enum': list(config_parsers.keys())})
@@ -547,6 +562,12 @@ class SchemaGenerator:
                     'method',
                     allow_shorthand=True,
                     default_config_parser=GenericFunctionConfigParser,
+                    extra_properties={
+                        'name': {
+                            'type': 'string',
+                            'description': 'Label for the metric in the output (defaults to the metric name).',
+                        },
+                    },
                 ),
             },
         }

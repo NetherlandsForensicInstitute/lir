@@ -194,10 +194,15 @@ def test_function_config_parser():
     config = ConfigValue.wrap([], {'offset': 2})
     assert GenericFunctionConfigParser(lambda x, *, offset=0: x + offset).parse(config, Path('/'))(3) == 5
 
-    # required parameters and unknown arguments are rejected
+    # required parameters cannot be set: they are rejected with a specific error
     config = ConfigValue.wrap([], {'offset': 2})
-    with pytest.raises(YamlParseError, match='unrecognized argument: offset'):
+    with pytest.raises(YamlParseError, match='argument `offset` is a required parameter'):
         GenericFunctionConfigParser(lambda x, offset: x + offset).parse(config, Path('/'))
+
+    # unknown arguments are still rejected
+    config = ConfigValue.wrap([], {'bogus': 2})
+    with pytest.raises(YamlParseError, match='unrecognized argument: bogus'):
+        GenericFunctionConfigParser(lambda x, offset=0: x + offset).parse(config, Path('/'))
 
 
 def test_function_config_parser_attributes():

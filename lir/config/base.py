@@ -463,9 +463,10 @@ class GenericFunctionConfigParser(ConfigParser):
     """
     Parser for callable functions or component classes.
 
-    Any configuration values in the corresponding YAML section are passed to the callable as keyword arguments. This
-    makes it possible to configure a function-based metric, for example, without writing a dedicated configuration
-    parser.
+    Configuration values in the corresponding YAML section are passed to the callable as keyword arguments. This makes
+    it possible to configure a function-based metric, for example, without writing a dedicated configuration parser.
+    Only parameters with a default value can be set: the parser cannot distinguish the data argument, which is passed
+    at call time, from other required parameters, so those are rejected with a specific error.
 
     Parameters
     ----------
@@ -488,7 +489,7 @@ class GenericFunctionConfigParser(ConfigParser):
         Parameters
         ----------
         config : ConfigValue
-            Keyword arguments for the callable, or ``None`` if the callable takes no arguments.
+            Keyword arguments for the callable.
         output_dir : Path
             Unused output directory argument required by the parser API.
 

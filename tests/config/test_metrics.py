@@ -47,6 +47,11 @@ def test_parse_metric_with_invalid_type():
         parse_individual_metric(ConfigValue.wrap(CONTEXT, 42), OUTPUT_PATH)
 
 
+def test_parse_metric_with_invalid_argument_type():
+    with pytest.raises(YamlParseError, match='expected a number'):
+        parse_individual_metric(ConfigValue.wrap(CONTEXT, {'method': 'cllr', 'h1_weight': 'abc'}), OUTPUT_PATH)
+
+
 def test_parse_metrics():
     parsed = parse_metrics(
         ConfigValue.wrap(

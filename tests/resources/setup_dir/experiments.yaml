@@ -1,0 +1,58 @@
+experiments:
+  - name: exp1
+    strategy: single_run
+    lrsystem:
+      architecture: specific_source
+      modules:
+        steps:
+          clf: logistic_regression
+          to_llr: probabilities_to_logodds
+    data:
+      setup: splits
+      provider:
+        method: synthesized_normal_binary
+        seed: 42
+        h1:
+          mean: 1
+          std: 1
+          size: 100
+        h2:
+          mean: -1
+          std: 1
+          size: 100
+      splits:
+        strategy: train_test_instances
+        test_size: 0.5
+    output:
+      - method: metrics
+        columns:
+          - cllr
+
+  - name: exp2
+    strategy: single_run
+    lrsystem:
+      architecture: specific_source
+      modules:
+        steps:
+          clf: logistic_regression
+          to_llr: probabilities_to_logodds
+    data:
+      setup: splits
+      provider:
+        method: synthesized_normal_binary
+        seed: 42
+        h1:
+          mean: 1
+          std: 1
+          size: 100
+        h2:
+          mean: -1
+          std: 1
+          size: 100
+      splits:
+        strategy: train_test_instances
+        test_size: 0.5
+    output:
+      - method: metrics
+        columns:
+          - cllr

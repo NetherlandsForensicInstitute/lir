@@ -3,7 +3,6 @@ import datetime
 import json
 import logging
 import os
-import shutil
 import sys
 from collections.abc import Mapping
 from pathlib import Path
@@ -61,19 +60,44 @@ def initialize_logfile(output_dir: Path) -> None:
     logging.getLogger().addHandler(fh)
 
 
-def copy_yaml_definition(output_dir: Path, config_yaml_path: Path) -> None:
+def load_setup(setup: Path) -> confidence.Configuration:
     """
-    Copy the YAML definition for a given LR system experiment to persist the used configuration.
+    Load the experiment setup from a single YAML file or a given directory containing multiple YAML files.
+
+    Parameters
+    ----------
+    setup : Path
+        The path to the setup file, or to a directory containing the setup files.
+
+    Returns
+    -------
+    confidence.Configuration
+        The merged configuration.
+    """
+    if setup.is_dir():
+        # `confidence` resolves name templates relative to the working directory, so use a relative path here
+        name = os.path.relpath(setup)
+        return confidence.load_name(
+            name,
+            format=confidence.YAML,
+            load_order=confidence.loaders(confidence.io.glob_pattern('{name}/*{suffix}')),
+        )
+    return confidence.loadf(setup)
+
+
+def write_config(output_dir: Path, cfg: confidence.Configuration) -> None:
+    """
+    Write the used configuration to a `config.yaml` file in the output directory.
 
     Parameters
     ----------
     output_dir : Path
-        The directory where the YAML definition should be copied.
-    config_yaml_path : Path
-        The path to the YAML file describing the experiment configuration.
+        The directory where the used configuration should be written.
+    cfg : confidence.Configuration
+        The used configuration setup for the experiment.
     """
     output_dir.mkdir(parents=True, exist_ok=True)
-    shutil.copyfile(config_yaml_path, output_dir / 'config.yaml')
+    confidence.dumpf(cfg, output_dir / 'config.yaml')
 
 
 def initialize_experiments(
@@ -136,7 +160,8 @@ def main(input_args: list[str] | None = None) -> None:
     parser.add_argument(
         'setup',
         metavar='FILENAME',
-        help='path to YAML file describing the evaluation setup',
+        type=Path,
+        help='path to a YAML file or a directory of YAML files describing the evaluation setup',
         nargs='?',
     )
     parser.add_argument(
@@ -184,8 +209,9 @@ def main(input_args: list[str] | None = None) -> None:
     parser.add_argument('-v', help='increases verbosity', action='count', default=0)
     parser.add_argument('-q', help='decreases verbosity', action='count', default=0)
     args = parser.parse_args(input_args)
+    setup = args.setup
 
-    if args.setup:
+    if setup:
         # batch tool: figures are only saved to file, so use the non-interactive Agg backend unless the user
         # explicitly selected a backend via the MPLBACKEND environment variable
         import matplotlib
@@ -206,36 +232,37 @@ def main(input_args: list[str] | None = None) -> None:
 
     ### an experiment setup is required beyond this point ###
 
-    if not args.setup:
+    if not setup:
         parser.error('missing FILENAME argument')
 
     if args.validate:
         try:
-            validate_yaml(Path(args.setup))
-            print(f'✓ {args.setup} is valid')
+            validate_yaml(setup)
+            print(f'✓ {setup} is valid')
         except FileNotFoundError as e:
             error(str(e))
         except Exception as e:
-            error(f'Error validating {args.setup}: {e}')
+            error(f'Error validating {setup}: {e}')
         return
 
-    # Add directories (setup file and current folder) to sys.path for custom components.
-    sys.path.append(str(Path(args.setup).resolve().parent))
-    LOG.debug(f'added {Path(args.setup).resolve().parent} to sys.path')
+    # Add the setup directory and the current folder to sys.path for custom components.
+    sys.path.append(str(setup.resolve().parent))
+    LOG.debug(f'added {setup.resolve().parent} to sys.path')
 
     sys.path.append(str(Path().resolve()))
     LOG.debug(f'added {Path().resolve()} to sys.path')
 
-    cfg = confidence.loadf(args.setup)
+    cfg = load_setup(setup)
     cfg = confidence.Configuration(cfg, dict(value.split('=', 1) for value in args.set_value))
 
     try:
         experiments, output_dir = initialize_experiments(cfg)
     except YamlParseError as e:
-        error(f'error while parsing {args.setup}: {str(e)}', e)
+        error(f'error while parsing {setup}: {str(e)}', e)
         raise  # this statement is not reachable, but helps code validation
 
-    copy_yaml_definition(output_dir, Path(args.setup))
+    # Log the used experiment configuration setup
+    write_config(output_dir, cfg)
 
     if args.list_experiments:
         for name in experiments:

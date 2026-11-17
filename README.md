@@ -73,6 +73,20 @@ lir --validate your_experiment.yaml
 
 Next to this, most modern IDEs support JSON/YAML schema validation.
 
+### Multiple YAML files in a directory
+
+Alternatively, it is possible to combine multiple YAML files in a given directory into a single experiment configuration.
+This might be desired when strictly separating multiple parts of the experiment setup, for example using different data setups having a shared experiment pipeline.
+
+- some_directory
+  - file_a.yaml
+  - file_b.yaml
+  - ...
+
+The `lir` command can be executed as follows: `lir run config/some_directory`.
+This would result in a combined configuration of `file_a.yaml` and `file_b.yaml`.
+
+
 #### PyCharm
 To specify the schema in PyCharm, see [this official documentation entry](https://www.jetbrains.com/help/pycharm/yaml.html#select-schema-for-file).
 

@@ -62,4 +62,4 @@ class BinaryLRSystem(LRSystem):
             Likelihood-ratio data produced by applying the LR system.
         """
         llrs = self.pipeline.apply(instances)
-        return LLRData(**llrs.model_dump())
+        return llrs.replace_as(LLRData)

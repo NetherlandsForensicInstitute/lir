@@ -16,9 +16,9 @@ def is_valid_input(instances: InstanceData) -> bool:  # numpydoc ignore=PR01,RT0
 
 def _check_input(instances: InstanceData) -> None:  # numpydoc ignore=PR01
     """Raise an error unless source id based strategies can be applied."""
-    if instances.source_ids is None:
-        raise ValueError('unable to perform leave-n-source-out without a `source_ids` attribute')
-    if len(instances.source_ids.shape) != 1:
+    if not is_valid_input(instances):
+        if instances.source_ids is None:
+            raise ValueError('unable to perform leave-n-source-out without a `source_ids` attribute')
         raise ValueError('leave-n-source-out: attribute `source_ids` should be one-dimensional')
 
 

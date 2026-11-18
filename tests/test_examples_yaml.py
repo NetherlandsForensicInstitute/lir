@@ -88,9 +88,9 @@ def run_yaml(yaml_file: Path, yaml_override_file: Path | None, listing_file: Pat
         },
     )
 
-    experiments, _ = initialize_experiments(configuration)
+    initialized_experiments = initialize_experiments(configuration)
 
-    for name, experiment_definition in experiments.items():
+    for name, experiment_definition in initialized_experiments.experiments.items():
         try:
             experiment_definition.run()
         except Exception as e:

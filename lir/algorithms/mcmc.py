@@ -10,12 +10,12 @@ from matplotlib import pyplot as plt
 from scipy.stats import betabinom, binom, norm
 
 from lir.algorithms.bayeserror import ELUBBounder
-from lir.bounding import LLRBounder, check_type
+from lir.bounding import LLRBounder
 from lir.config import ConfigValue, config_parser, pop_field
 from lir.config.transform import parse_module
 from lir.data.models import FeatureData, InstanceData, LLRData
 from lir.transform import Transformer
-from lir.util import partial
+from lir.util import check_type, partial
 
 
 LOG = logging.getLogger(__name__)
@@ -147,16 +147,15 @@ class McmcLLRModel(Transformer):
                     ax.plot(x, y)
                     ax.set_xlabel(parameter_name)
                     ax.set_ylabel('probability density')
+
+                    file_name = plot_path / f'{self.plot_count:02d}-{plot_name}.png'
+
+                    LOG.info(f'Saving plot {plot_name} to {file_name}')
+                    fig.savefig(file_name)
                 except ValueError as e:
                     LOG.warning(f'Could not generate plot {plot_name}: {e}')
-                    continue
-
-                file_name = plot_path / f'{self.plot_count:02d}-{plot_name}.png'
-
-                LOG.info(f'Saving plot {plot_name} to {file_name}')
-                fig.savefig(file_name)
-
-                plt.close(fig)
+                finally:
+                    plt.close(fig)
 
 
 class McmcModel:

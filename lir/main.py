@@ -37,6 +37,11 @@ def setup_logging(level_increase: int) -> None:
     log_format = '[%(asctime)-15s %(levelname)s] %(name)s: %(message)s'
     fmt = logging.Formatter(log_format)
 
+    # remove and close handlers of previous runs, so that repeated calls do not accumulate handlers
+    for handler in logging.getLogger().handlers:
+        handler.close()
+    logging.getLogger().handlers.clear()
+
     ch = logging.StreamHandler()
     ch.setFormatter(fmt)
     ch.setLevel(loglevel)
@@ -108,14 +113,14 @@ def initialize_experiments(
 
 def error(msg: str, e: Exception | None = None) -> None:
     """
-    Stop execution with given error message or raise exception.
+    Stop execution with given error message.
 
     Parameters
     ----------
     msg : str
         The error message to be printed to stderr.
-    e : Exception | None
-        The exception to be raised, or None to not raise an exception.
+    e : Exception | None, optional
+        The exception that caused the error, if any. It is only used to add details to the log, not raised.
     """
     sys.stderr.write(f'{msg}{" (see log for details)" if e else ""}\n')
     LOG.debug(f'abort: {msg}', exc_info=e)

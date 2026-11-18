@@ -6,7 +6,7 @@ experiments:
       modules:
         steps:
           clf: logistic_regression
-          to_llr: probabilities_to_logodds
+          to_llr: custom_module.double_logodds
     data:
       setup: splits
       provider:
@@ -35,7 +35,7 @@ experiments:
       modules:
         steps:
           clf: logistic_regression
-          to_llr: probabilities_to_logodds
+          to_llr: custom_module.double_logodds
     data:
       setup: splits
       provider:

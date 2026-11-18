@@ -245,9 +245,12 @@ def main(input_args: list[str] | None = None) -> None:
             error(f'Error validating {setup}: {e}')
         return
 
-    # Add the setup directory and the current folder to sys.path for custom components.
-    sys.path.append(str(setup.resolve().parent))
-    LOG.debug(f'added {setup.resolve().parent} to sys.path')
+    # Add the setup directory (or, for a single-file setup, the directory containing it) and the current
+    # folder to sys.path for custom components.
+    resolved_setup = setup.resolve()
+    setup_dir = resolved_setup if resolved_setup.is_dir() else resolved_setup.parent
+    sys.path.append(str(setup_dir))
+    LOG.debug(f'added {setup_dir} to sys.path')
 
     sys.path.append(str(Path().resolve()))
     LOG.debug(f'added {Path().resolve()} to sys.path')

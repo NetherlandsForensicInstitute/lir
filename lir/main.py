@@ -64,8 +64,9 @@ def load_setup(setup: Path) -> confidence.Configuration:
     """
     Load the experiment setup from a single YAML file, or from all YAML files directly inside a directory.
 
-    When a directory is given, all ``*.yaml`` files directly inside it are combined into a single
-    configuration in alphabetical (file name) order, with values from later files overriding earlier ones.
+    When a directory is given, all ``*.yaml`` and ``*.yml`` files directly inside it are combined into a
+    single configuration in alphabetical (file name) order, with values from later files overriding
+    earlier ones.
 
     Parameters
     ----------
@@ -79,7 +80,7 @@ def load_setup(setup: Path) -> confidence.Configuration:
     """
     if setup.is_dir():
         files = sorted(
-            f for f in setup.iterdir() if f.is_file() and not f.name.startswith('.') and f.suffix == '.yaml'
+            f for f in setup.iterdir() if f.is_file() and not f.name.startswith('.') and f.suffix in ('.yaml', '.yml')
         )
         return confidence.loadf(*files)
     return confidence.loadf(setup)

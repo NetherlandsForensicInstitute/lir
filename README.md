@@ -83,7 +83,7 @@ This might be desired when strictly separating multiple parts of the experiment 
   - file_b.yaml
   - ...
 
-The `lir` command can be executed as follows: `lir run config/some_directory`.
+The `lir` command can be executed as follows: `lir config/some_directory`.
 This would result in a combined configuration of `file_a.yaml` and `file_b.yaml`.
 
 

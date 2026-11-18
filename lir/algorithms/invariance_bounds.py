@@ -117,14 +117,14 @@ def calculate_invariance_bounds(
     if not any(delta_high_negative):
         upper_bound = np.max(sanitized_llrs[y == 1])
     else:
-        upper_bound_index = delta_high_negative[0] - 1
+        upper_bound_index = max(delta_high_negative[0] - 1, 0)
         upper_bound = llr_threshold[upper_bound_index]
 
     delta_low_negative = np.where(delta_low < 0)[0]
     if not any(delta_low_negative):
         lower_bound = np.min(sanitized_llrs[y == 0])
     else:
-        lower_bound_index = delta_low_negative[-1] + 1
+        lower_bound_index = min(delta_low_negative[-1] + 1, len(llr_threshold) - 1)
         lower_bound = llr_threshold[lower_bound_index]
 
     # Check for bounds on the wrong side of 0 (or 1 in LR-space). This may occur for badly

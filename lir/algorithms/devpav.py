@@ -81,7 +81,7 @@ def _calcsurface(c1: tuple[float, float], c2: tuple[float, float]) -> float:
     return surface
 
 
-def _devpavcalculator(lrs: np.ndarray, pav_lrs: np.ndarray, y: np.ndarray) -> float:
+def _devpavcalculator(lrs: np.ndarray, pav_lrs: np.ndarray) -> float:
     """
     Calculate devPAV for PAV-transformed LRs.
 
@@ -91,8 +91,6 @@ def _devpavcalculator(lrs: np.ndarray, pav_lrs: np.ndarray, y: np.ndarray) -> fl
         Array of LR values.
     pav_lrs : np.ndarray
         Array of LRs after PAV transformation.
-    y : np.ndarray
-        Array of labels (`1` for H1 and `0` for H2).
 
     Returns
     -------
@@ -156,7 +154,8 @@ def devpav(llrs: LLRData) -> float:
     float
         DevPAV score.
     """
-    hypothesis = llrs.check_both_hypotheses()
+    # validate that both hypotheses are present in the data
+    llrs.check_both_hypotheses()
     cal = IsotonicCalibrator()
     pavllrs = cal.fit_apply(llrs)
-    return _devpavcalculator(logodds_to_odds(llrs.llrs), logodds_to_odds(pavllrs.llrs), hypothesis)
+    return _devpavcalculator(logodds_to_odds(llrs.llrs), logodds_to_odds(pavllrs.llrs))

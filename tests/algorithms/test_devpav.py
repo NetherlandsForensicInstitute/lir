@@ -60,30 +60,30 @@ class TestDevpavcalculator(unittest.TestCase):
         lrs_same = (0, 1, 10**3)
         lrs_dif = (0.001, 2, 10**2)
         PAVresult = np.array([0.66666667, 0.66666667, 0.66666667, 0.66666667, 0.66666667, np.inf])
-        lrs, y = Xn_to_Xy(lrs_dif, lrs_same)
-        self.assertEqual(_devpavcalculator(lrs, PAVresult, y), np.inf)
+        lrs, _ = Xn_to_Xy(lrs_dif, lrs_same)
+        self.assertEqual(_devpavcalculator(lrs, PAVresult), np.inf)
 
         # 2 of 4: test on data where PAV-transform has a horizontal line ending at log(X) = Inf
         lrs_same = (0.01, 1, 10**2)
         lrs_dif = (0.001, 2, float('inf'))
         PAVresult = np.array([0.0, 1.5, 1.5, 1.5, 1.5, 1.5])
-        lrs, y = Xn_to_Xy(lrs_dif, lrs_same)
-        self.assertEqual(_devpavcalculator(lrs, PAVresult, y), np.inf)
+        lrs, _ = Xn_to_Xy(lrs_dif, lrs_same)
+        self.assertEqual(_devpavcalculator(lrs, PAVresult), np.inf)
 
         # 3 of 4: test on data where PAV-transform has a horizontal line starting at log(X) = -Inf, and another one
         # ending at log(X) = Inf
         lrs_same = (0, 1, 10**3, 10**3, 10**3, 10**3)
         lrs_dif = (0.001, 2, float('inf'))
         PAVresult = np.array([0.5, 0.5, 2, 0.5, 0.5, 2, 2, 2, 2])
-        lrs, y = Xn_to_Xy(lrs_dif, lrs_same)
-        self.assertEqual(_devpavcalculator(lrs, PAVresult, y), np.inf)
+        lrs, _ = Xn_to_Xy(lrs_dif, lrs_same)
+        self.assertEqual(_devpavcalculator(lrs, PAVresult), np.inf)
 
         # 4 of 4: test on data where lrs_same and lrs_dif are completely separated (and PAV result is a vertical line)
         lrs_same = (10**4, 10**5, float('inf'))
         lrs_dif = (0, 1, 10**3)
         PAVresult = np.array([0, 0, 0, float('inf'), float('inf'), float('inf')])
-        lrs, y = Xn_to_Xy(lrs_dif, lrs_same)
-        self.assertTrue(np.isnan(_devpavcalculator(lrs, PAVresult, y)))
+        lrs, _ = Xn_to_Xy(lrs_dif, lrs_same)
+        self.assertTrue(np.isnan(_devpavcalculator(lrs, PAVresult)))
 
         ### tests on ordinary data
 
@@ -91,26 +91,22 @@ class TestDevpavcalculator(unittest.TestCase):
         lrs_same = (1, 10**3)
         lrs_dif = (0.1, 10)
         PAVresult = np.array([0, 1, 1, float('inf')])
-        lrs, y = Xn_to_Xy(lrs_dif, lrs_same)
-        self.assertAlmostEqual(_devpavcalculator(lrs, PAVresult, y), 0.5)
+        lrs, _ = Xn_to_Xy(lrs_dif, lrs_same)
+        self.assertAlmostEqual(_devpavcalculator(lrs, PAVresult), 0.5)
 
         # test on dummy data 2, this PAV-transform crosses the identity line
         lrs_same = (0.1, 100, 10**3)
         lrs_dif = (10**-3, 10**-2, 10)
         fakePAVresult = np.array([0, 10**-3, 10**2, 10**-2, 10**2, float('inf')])
-        lrs, y = Xn_to_Xy(lrs_dif, lrs_same)
-        self.assertAlmostEqual(
-            _devpavcalculator(lrs, fakePAVresult, y), (1 + 2 * (0.5 * 2 * 1 - 0.5 * 1 * 1) + 0.5) / 4
-        )
+        lrs, _ = Xn_to_Xy(lrs_dif, lrs_same)
+        self.assertAlmostEqual(_devpavcalculator(lrs, fakePAVresult), (1 + 2 * (0.5 * 2 * 1 - 0.5 * 1 * 1) + 0.5) / 4)
 
         # test on dummy data 3, this PAV-transform is finite
         lrs_same = (0.1, 100)
         lrs_dif = (10**-2, 10)
         fakePAVresult = np.array([10**-3, 10**2, 10**-2, 10**2])
-        lrs, y = Xn_to_Xy(lrs_dif, lrs_same)
-        self.assertAlmostEqual(
-            _devpavcalculator(lrs, fakePAVresult, y), (1 + 2 * (0.5 * 2 * 1 - 0.5 * 1 * 1) + 0.5) / 4
-        )
+        lrs, _ = Xn_to_Xy(lrs_dif, lrs_same)
+        self.assertAlmostEqual(_devpavcalculator(lrs, fakePAVresult), (1 + 2 * (0.5 * 2 * 1 - 0.5 * 1 * 1) + 0.5) / 4)
 
     def test_calcsurface(self):
         # tests for the _calcsurface function

@@ -198,11 +198,13 @@ def pav(
 
     pav = IsotonicCalibrator(add_misleading=add_misleading)
     pav_llrs = pav.fit_apply(llrdata).llrs
+    y = util.check_not_none(y)
 
-    xrange = yrange = [
+    xrange = [
         llrs[llrs != -np.inf].min() - 0.5,
         llrs[llrs != np.inf].max() + 0.5,
     ]
+    yrange = xrange.copy()
 
     legend = ax.get_legend()
     has_legend = legend is not None
@@ -253,11 +255,10 @@ def pav(
         def replace_values_out_of_range(values: np.ndarray, min_range: float, max_range: float) -> np.ndarray:
             # create margin for point so no overlap with axis line
             margin = (max_range - min_range) / 60
-            return np.concatenate(
-                [
-                    np.where(np.isneginf(values), min_range + margin, values),
-                    np.where(np.isposinf(values), max_range - margin, values),
-                ]
+            return np.where(
+                np.isneginf(values),
+                min_range + margin,
+                np.where(np.isposinf(values), max_range - margin, values),
             )
 
         yrange_tuple, ticks_y, tick_labels_y = adjust_ticks_labels_and_range(
@@ -267,9 +268,9 @@ def pav(
             bool(np.isneginf(llrs).any()), bool(np.isposinf(llrs).any()), xrange[0], xrange[1]
         )
 
-        mask_not_inf = np.logical_or(np.isinf(llrs), np.isinf(pav_llrs))
-        x_inf = replace_values_out_of_range(llrs[mask_not_inf], xrange_tuple[0], xrange_tuple[1])
-        y_inf = replace_values_out_of_range(pav_llrs[mask_not_inf], yrange_tuple[0], yrange_tuple[1])
+        mask_inf = np.logical_or(np.isinf(llrs), np.isinf(pav_llrs))
+        x_inf = replace_values_out_of_range(llrs[mask_inf], xrange_tuple[0], xrange_tuple[1])
+        y_inf = replace_values_out_of_range(pav_llrs[mask_inf], yrange_tuple[0], yrange_tuple[1])
 
         ax.set_yticks(ticks_y, tick_labels_y)
         ax.set_xticks(ticks_x, tick_labels_x)
@@ -278,7 +279,7 @@ def pav(
         ax.axhline(y=0, color='gray', linewidth=0.5, linestyle=':')
         ax.axvline(x=0, color='gray', linewidth=0.5, linestyle=':')
 
-        color = [H1_COLOR if i > 0 else H2_COLOR for i in y_inf]
+        color = [H1_COLOR if label == 1 else H2_COLOR for label in y[mask_inf]]
         ax.scatter(x_inf, y_inf, color=color, marker='|', linewidths=0.2)
 
         xrange = list(xrange_tuple)
@@ -296,7 +297,6 @@ def pav(
         h2_llrs = np.where(mask_not_y, llrs, np.nan)
         h2_pav = np.where(mask_not_y, pav_llrs, np.nan)
 
-        y = util.check_not_none(y)
         n_h1 = np.count_nonzero(y)
         n_h2 = len(y) - n_h1
 

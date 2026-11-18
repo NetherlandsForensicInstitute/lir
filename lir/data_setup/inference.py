@@ -72,14 +72,11 @@ def parse(config: ConfigValue, output_path: Path) -> InferenceDataSetup:
         Parsed data setup.
     """
     with config:
-        training_data_config = config.pop('training', required=False)
-        training_data = (
-            parse_data_provider(training_data_config, output_path) if training_data_config.value is not None else None
-        )
+        data_providers: dict[str, DataProvider | None] = {}
+        for field in ('training', 'inference'):
+            field_config = config.pop(field, required=False)
+            data_providers[field] = (
+                parse_data_provider(field_config, output_path) if field_config.value is not None else None
+            )
 
-        inference_data_config = config.pop('inference', required=False)
-        inference_data = (
-            parse_data_provider(inference_data_config, output_path) if inference_data_config.value is not None else None
-        )
-
-        return InferenceDataSetup(training_data, inference_data)
+        return InferenceDataSetup(data_providers['training'], data_providers['inference'])

@@ -40,8 +40,6 @@ class CsvWriter(Transformer):
     ):
         super().__init__()
         self.path = Path(path)
-        if self.path is None:
-            raise ValueError('missing argument: path')
 
         self.include_batch_number = include_batch_number
         self.include_fields = include_fields

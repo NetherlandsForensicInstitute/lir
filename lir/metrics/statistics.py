@@ -5,7 +5,6 @@ import numpy as np
 from numpy import floating
 
 from lir import LLRData
-from lir.util import check_type
 
 
 def count(llr_data: LLRData) -> float:
@@ -60,7 +59,7 @@ def count_h1(llr_data: LLRData) -> float:
     float
         The number of instances or pairs of instances.
     """
-    return np.sum(check_type(np.ndarray, llr_data.hypothesis) == 1)
+    return np.sum(llr_data.require_labels == 1)
 
 
 def count_h2(llr_data: LLRData) -> float:

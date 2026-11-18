@@ -162,7 +162,7 @@ def equal_error_rate(data: LLRData) -> float:
         The equal error rate.
     """
     hypothesis = data.require_labels
-    fpr, tpr, threshold = sklearn.metrics.roc_curve(hypothesis, data.llrs)
+    fpr, tpr, _ = sklearn.metrics.roc_curve(hypothesis, data.llrs)
     fnr = 1 - tpr
 
     return fpr[np.nanargmin(np.absolute(fnr - fpr))]

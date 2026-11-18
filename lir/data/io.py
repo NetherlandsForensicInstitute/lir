@@ -94,8 +94,6 @@ class DataFileBuilderCsv:
         The data argument is an arbitrary numpy array. Its first dimension are the rows. Any other dimension will be
         columns in the CSV output.
 
-            of the data. Because dimension 0 corresponds to rows, it should have no headers
-
         Parameters
         ----------
         data : np.ndarray
@@ -103,7 +101,8 @@ class DataFileBuilderCsv:
         header_prefix : str
             Prefix used for generated header names.
         dimension_headers : dict[int, list[str]] | None
-            Optional explicit names for feature dimensions.
+            Optional explicit names for feature dimensions. Because dimension 0 corresponds to rows, it should have
+            no headers.
         """
         dimension_headers = dimension_headers or {}
 

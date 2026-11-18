@@ -227,7 +227,7 @@ This example shows how to create a new type of experiment. All it does is to cou
 An output method to calculate the average LLR
 ---------------------------------------------
 
-The ``output`` section of the experiments list methods to aggregate results.
+The ``output`` section of the experiments lists methods to aggregate results.
 This is done by :class:`~lir.aggregation.Aggregation` objects, which receive the results of each LR system run one by one.
 
 In this example, we will create an output method that calculates the average LLR for each run, and writes it to a file.

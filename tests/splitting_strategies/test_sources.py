@@ -11,7 +11,7 @@ from lir.splitting_strategies import SourcesCrossValidation, SourcesTrainTestSpl
 from lir.splitting_strategies.sources import LeaveOneSourceOut, LeaveTwoSourcesOut
 
 
-def test_multiclass_train_test_split():
+def test_sources_train_test_split():
     dimensions = [SynthesizedDimension(0, 1, 0.2), SynthesizedDimension(0, 1, 0.2)]
     data = SynthesizedNormalMulticlassData(
         num_source_ids=100, num_sources_per_source_id=3, seed=0, dimensions=dimensions
@@ -25,7 +25,7 @@ def test_multiclass_train_test_split():
         assert len(data_train.source_ids) + len(data_test.source_ids) == len(instances.source_ids)
 
 
-def test_multiclass_train_test_split_seed():
+def test_sources_train_test_split_seed():
     dimensions = [SynthesizedDimension(0, 1, 0.2), SynthesizedDimension(0, 1, 0.2)]
     data = SynthesizedNormalMulticlassData(
         num_source_ids=100, num_sources_per_source_id=3, seed=0, dimensions=dimensions
@@ -35,7 +35,7 @@ def test_multiclass_train_test_split_seed():
     ref_train, ref_test = next(iter(ref_strategy.apply(data)))
 
     # test:
-    # - another MulticlassTrainTestSplit instance with the same seed should yield the same results
+    # - another SourcesTrainTestSplit instance with the same seed should yield the same results
     # - the same instance should yield the same results twice
     strategies = [SourcesTrainTestSplit(test_size=0.5, seed=0)] * 2
     for strategy in strategies:
@@ -44,7 +44,7 @@ def test_multiclass_train_test_split_seed():
             assert data_test == ref_test
 
     # test:
-    # - another MulticlassTrainTestSplit instance with another seed should yield different results
+    # - another SourcesTrainTestSplit instance with another seed should yield different results
     strategy = SourcesTrainTestSplit(test_size=0.5, seed=1)
     for data_train, data_test in strategy.apply(data):
         assert data_train != ref_train

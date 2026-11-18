@@ -238,7 +238,7 @@ def test_concatenate_field():
     assert TestData._concatenate_field('field2', [data1.field2, data2.field2]) == {'a': 1, 'b': 2}
     assert TestData._concatenate_field('field2', [data1.field2, data2.field2, data3.field2]) is None
 
-    # When comapring numpy arrays, == does not work. Thus None is returned.
+    # When comparing numpy arrays, == does not work. Thus None is returned.
     # Note that numpy arrays are only compared if they are inside some other data structure (like a dict or list).
     # If the field itself is a numpy array, then the concatenation works (see test_concatenate_field_with_numpy_arrays).
     assert TestData._concatenate_field('field3', [data1.field3, data2.field3]) is None

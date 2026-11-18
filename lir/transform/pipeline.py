@@ -27,7 +27,7 @@ class Pipeline(Transformer):
     """
     A pipeline of processing modules.
 
-    Each step in the pipeline may be a
+    Each step in the pipeline may be one of the following:
 
     - a scikit-learn style transformer (with ``fit()`` and ``transform()`` functions),
     - a scikit-learn style estimator (with ``fit()`` and ``predict_proba()``), or
@@ -312,7 +312,7 @@ class LoggingPipeline(Pipeline):
 )
 def logging_pipeline(config: ConfigValue, output_dir: Path) -> Pipeline:
     """
-    Construct a scikit-learn Pipeline based on the provided configuration.
+    Construct a LoggingPipeline based on the provided configuration.
 
     Parameters
     ----------

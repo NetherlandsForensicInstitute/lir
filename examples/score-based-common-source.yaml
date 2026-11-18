@@ -72,7 +72,7 @@ my_data_splits: &my_data_splits             # <-- adapt this name to your own pr
   folds: 5
 
 # Alternatively, you may choose a simple split, where some data is assigned the role of training data and some is assigned the role of validation data.
-# If you want that, you use 'multiclass_train_test_split' for 'strategy' and you specify what the size of the test data with 'test_size'.
+# If you want that, you use 'train_test_sources' for 'strategy' and you specify the size of the test data with 'test_size'.
 # All the rest will be used as training data. The test size can be a float between 0 and 1, which will be used as a percentage.
 # It can also be an integer, that will be used as an absolute number of sources.
 # You should also specify a seed for the random assignment of sources to the train or test category.

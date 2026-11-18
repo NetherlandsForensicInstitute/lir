@@ -57,10 +57,10 @@ class AggregationData(NamedTuple):  # numpydoc ignore=PR02
         """
         Obtain the full path for a filename and make sure it is a sub path of ``experiment_output_dir``.
 
-        If the filename is an absolute path, or the filename is relative to ``run_output_dir``, return the
+        If the filename is an absolute path, or the filename is relative to ``experiment_output_dir``, return the
         filename as-is.
 
-        Otherwise, construct a path for the filename relative to ``run_output_dir``.
+        Otherwise, construct a path for the filename relative to ``experiment_output_dir``.
 
         Parameters
         ----------
@@ -76,12 +76,12 @@ class AggregationData(NamedTuple):  # numpydoc ignore=PR02
 
     def resolve_path_for_run(self, filename: Path | PathLike | str) -> Path:
         """
-        Obtain the full path for a filename and make sure it is a sub path of ``experiment_output_dir``.
+        Obtain the full path for a filename and make sure it is a sub path of ``run_output_dir``.
 
-        If the filename is an absolute path, or the filename is relative to ``experiment_output_dir``, return the
+        If the filename is an absolute path, or the filename is relative to ``run_output_dir``, return the
         filename as-is.
 
-        Otherwise, construct a path for the filename relative to ``experiment_output_dir``.
+        Otherwise, construct a path for the filename relative to ``run_output_dir``.
 
         Parameters
         ----------

@@ -19,21 +19,21 @@ Other metrics may have practical use as well. See the table below for a list of 
 .. _widely used: https://doi.org/10.1016/j.fsisyn.2024.100466
 .. _consistency: https://doi.org/10.1016/j.forsciint.2021.110722
 
-+----------------------------------+--------------------------------+--------------------------------+
-| Metric                           | Assessment of                  | Implementation                 |
-+==================================+================================+================================+
-| log likelihood ratio cost        | discrimination and consistency | :meth:`~lir.metrics.cllr`      |
-+----------------------------------+--------------------------------+--------------------------------+
-| minimized cllr                   | discrimination                 | :meth:`~lir.metrics.cllr_min`  |
-+----------------------------------+--------------------------------+--------------------------------+
-| calibration loss                 | consistency                    | :meth:`~lir.metrics.cllr_cal`  |
-+----------------------------------+--------------------------------+--------------------------------+
-| rate of misleading evidence      | mostly consistency             |                                |
-+----------------------------------+--------------------------------+--------------------------------+
-| devPAV                           | consistency                    | :meth:`~lir.metrics.devPAV`    |
-+----------------------------------+--------------------------------+--------------------------------+
-| expected LR for both hypotheses  | discrimination                 |                                |
-+----------------------------------+--------------------------------+--------------------------------+
++----------------------------------+--------------------------------+---------------------------------------+
+| Metric                           | Assessment of                  | Implementation                        |
++==================================+================================+=======================================+
+| log likelihood ratio cost        | discrimination and consistency | :meth:`~lir.metrics.cllr`             |
++----------------------------------+--------------------------------+---------------------------------------+
+| minimized cllr                   | discrimination                 | :meth:`~lir.metrics.cllr_min`         |
++----------------------------------+--------------------------------+---------------------------------------+
+| calibration loss                 | consistency                    | :meth:`~lir.metrics.cllr_cal`         |
++----------------------------------+--------------------------------+---------------------------------------+
+| rate of misleading evidence      | mostly consistency             |                                       |
++----------------------------------+--------------------------------+---------------------------------------+
+| devPAV                           | consistency                    | :meth:`~lir.algorithms.devpav.devpav` |
++----------------------------------+--------------------------------+---------------------------------------+
+| expected LR for both hypotheses  | discrimination                 |                                       |
++----------------------------------+--------------------------------+---------------------------------------+
 
 By definition, the log likelihood ratio cost :meth:`~lir.metrics.cllr` equals :meth:`~lir.metrics.cllr_min` + :meth:`~lir.metrics.cllr_cal`.
 
@@ -313,7 +313,7 @@ Observations for LLRs that are biased towards H2:
 
 - the value for ``cllr``, ``cllr_min`` and ``cllr_cal`` are similar to data biased towards H1;
 - the LR histogram still shows distinct distributions, but they are shifted to the **left**;
-- in the LR histogram, the peak of the overlap of both distributions is to the right of 0;
+- in the LR histogram, the peak of the overlap of both distributions is to the left of 0;
 - the PAV plot is **above** the diagonal;
 - in the ECE plot, the LRs line is evidently above the PAV-LRs line, similar to the LLRs shifted towards H1;
 - the Tippett plot is shifted to the right.
@@ -343,10 +343,10 @@ Observations for overestimated LLRs:
     llr_metrics_and_visualizations(underestimated_llrs)
 
 
-Observations for overestimated LLRs:
+Observations for underestimated LLRs:
 
 - the value for ``cllr``, ``cllr_min`` and ``cllr_cal`` are similar to biased data;
-- the LR histogram still shows distinct distributions, but the scale on the X-axis is increased;
+- the LR histogram still shows distinct distributions, but the scale on the X-axis is decreased;
 - the PAV plot is steeper than the diagonal, and crosses it near the origin;
 - in the ECE plot, the LRs line is slightly further away from the PAV-LRs line;
 - the scale of the Tippett plot is decreased.

@@ -13,7 +13,7 @@ from joblib import Parallel, delayed
 from lir import registry
 from lir.config.base import ConfigValue, YamlParseError, pop_field
 from lir.config.experiment_strategies import parse_experiments
-from lir.config.schema import generate_schema, validate_yaml
+from lir.config.schema import generate_schema, validate_config
 from lir.experiments import Experiment
 
 
@@ -197,7 +197,7 @@ def main(input_args: list[str] | None = None) -> None:
     )
     parser.add_argument(
         '--validate',
-        help='validate a YAML file against the schema',
+        help='validate a YAML file, or a directory of YAML files, against the schema',
         action='store_true',
     )
     parser.add_argument(
@@ -245,7 +245,7 @@ def main(input_args: list[str] | None = None) -> None:
 
     if args.validate:
         try:
-            validate_yaml(setup)
+            validate_config(load_setup(setup))
             print(f'✓ {setup} is valid')
         except FileNotFoundError as e:
             error(str(e))

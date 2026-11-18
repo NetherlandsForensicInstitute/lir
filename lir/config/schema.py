@@ -560,6 +560,36 @@ def generate_schema(strict: bool = False) -> dict[str, Any]:
     return SchemaGenerator(strict=strict).generate()
 
 
+def validate_config(cfg: confidence.Configuration, strict: bool = False) -> None:
+    """
+    Validate a configuration against the schema.
+
+    In strict mode, only the canonical form is allowed. This is generally recommended if the use of a GUI is intended.
+
+    Parameters
+    ----------
+    cfg : confidence.Configuration
+        The configuration to be validated.
+    strict : bool, optional
+        Strict mode.
+
+    Raises
+    ------
+    ValidationError
+        If the configuration does not conform to the schema.
+    """
+    from jsonschema import validate
+
+    schema = generate_schema(strict=strict)
+
+    # Resolve ${...} references before validation
+    context = {'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')}  # noqa: DTZ005
+    cfg = confidence.Configuration(cfg, context)
+
+    # Validate data against schema
+    validate(instance=ConfigValue.wrap([], cfg).unwrap(), schema=schema)
+
+
 def validate_yaml(yaml_path: Path, strict: bool = False) -> None:
     """
     Validate a YAML file against the schema.
@@ -582,13 +612,4 @@ def validate_yaml(yaml_path: Path, strict: bool = False) -> None:
     ValidationError
         If the YAML file does not conform to the schema.
     """
-    from jsonschema import validate
-
-    schema = generate_schema(strict=strict)
-
-    # Resolve ${...} references before validation
-    context = {'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')}  # noqa: DTZ005
-    cfg = confidence.Configuration(confidence.loadf(yaml_path), context)
-
-    # Validate data against schema
-    validate(instance=ConfigValue.wrap([], cfg).unwrap(), schema=schema)
+    validate_config(confidence.loadf(yaml_path), strict=strict)

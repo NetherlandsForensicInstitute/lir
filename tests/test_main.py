@@ -31,6 +31,8 @@ sys.exit = raise_on_exit
         f'--list-experiments {config_dir}',
         f'{config_dir}',
         f'--experiment exp1 {config_dir}',
+        # Validate a single configuration file
+        f'--validate {config}',
     ],
 )
 def test_main_commands(command: str):
@@ -51,6 +53,18 @@ def test_main_commands(command: str):
 def test_invalid_main_commands(command: str):
     with pytest.raises((ValueError, FileNotFoundError)):
         main(command.split())
+
+
+def test_validate_directory_setup(tmp_path):
+    (tmp_path / 'part1.yaml').write_text(config.read_text())
+    (tmp_path / 'part2.yaml').write_text('output_path: out\n')
+    main(['--validate', str(tmp_path)])
+
+
+def test_validate_invalid_directory_setup(tmp_path):
+    (tmp_path / 'part1.yaml').write_text('experiments: not_a_list\n')
+    with pytest.raises((ValueError, FileNotFoundError)):
+        main(['--validate', str(tmp_path)])
 
 
 def test_load_setup_from_file(tmp_path):

@@ -71,6 +71,14 @@ def test_load_setup_from_directory_includes_yml(tmp_path):
     assert dict(load_setup(tmp_path)) == {'a': 1, 'b': 2}
 
 
+@pytest.mark.parametrize('names', [['readme.txt', 'data.csv'], []])
+def test_load_setup_from_directory_without_yaml(tmp_path, names):
+    for name in names:
+        (tmp_path / name).write_text('content\n')
+    with pytest.raises(FileNotFoundError, match='no YAML files found'):
+        load_setup(tmp_path)
+
+
 def test_write_config(tmp_path):
     cfg = confidence.Configuration({'a': 1}, {'b': 2})
     output_dir = tmp_path / 'output'

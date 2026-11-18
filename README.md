@@ -57,22 +57,6 @@ Evaluate an LR system using the command-line interface as follows:
 
 The `examples` folder may be a good starting point for setting up an experiment.
 
-The elements of the experiment configuration YAML are looked up in the registry. The following lists all available
-elements in the registry.
-
-```commandline
-lir --list-registry
-```
-
-### Setting up the validation schema
-A schema that validates lir configuration `yaml` files is available, namely `lir/resources/config-schema.json`. This schema can be used to validate a specific `yaml` file by using
-```commandline
-lir --validate your_experiment.yaml
-```
-
-
-Next to this, most modern IDEs support JSON/YAML schema validation.
-
 ### Multiple YAML files in a directory
 
 Alternatively, it is possible to combine multiple YAML files in a given directory into a single experiment configuration.
@@ -84,8 +68,26 @@ This might be desired when strictly separating multiple parts of the experiment 
   - ...
 
 The `lir` command can be executed as follows: `lir config/some_directory`.
-This would result in a combined configuration of `file_a.yaml` and `file_b.yaml`.
+All `*.yaml` and `*.yml` files directly inside the directory (hidden files and subdirectories are ignored) are combined
+in alphabetical (file name) order into a single configuration, so the setup directory above results in a combined
+configuration of `file_a.yaml` and `file_b.yaml`. If a value is defined in multiple files, the value from the file
+that appears later in this order takes precedence.
 
+The elements of the experiment configuration YAML are looked up in the registry. The following lists all available
+elements in the registry.
+
+```commandline
+lir --list-registry
+```
+
+### Setting up the validation schema
+A schema that validates lir configuration `yaml` files is available, namely `lir/resources/config-schema.json`. This schema can be used to validate a `yaml` file, or a directory of `yaml` files, by using
+```commandline
+lir --validate your_experiment.yaml
+```
+
+
+Next to this, most modern IDEs support JSON/YAML schema validation.
 
 #### PyCharm
 To specify the schema in PyCharm, see [this official documentation entry](https://www.jetbrains.com/help/pycharm/yaml.html#select-schema-for-file).

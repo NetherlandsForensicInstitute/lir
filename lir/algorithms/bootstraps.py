@@ -256,11 +256,10 @@ class BootstrapEquidistant(Bootstrap):
 
         feat_vals = instances.features.reshape(-1)
 
-        if self.n_points is None:
-            self.n_points = len(instances)
+        n_points = len(instances) if self.n_points is None else self.n_points
 
         equidistant_indices = np.linspace(
-            start=np.min(feat_vals), stop=np.max(feat_vals), num=self.n_points, dtype=instances.features.dtype
+            start=np.min(feat_vals), stop=np.max(feat_vals), num=n_points, dtype=instances.features.dtype
         ).reshape(-1, 1)
         return FeatureData(features=equidistant_indices)
 

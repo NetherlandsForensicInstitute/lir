@@ -72,12 +72,11 @@ class PredefinedExperiment(Experiment):
         number_of_runs = len(self._lrsystem_configs) * len(self._data_configs)
         disable_tqdm = not lir.is_interactive() or number_of_runs == 1
 
-        progress = tqdm(desc=self.output_path.name, total=number_of_runs, disable=disable_tqdm)
         run_func = parallelize_runs if self._enable_parallelization else run_multiple
-        for result in run_func(self.output_path, self._lrsystem_configs, self._data_configs):
-            self.output.report(result)
-            progress.update(1)
-        progress.close()
+        with tqdm(desc=self.output_path.name, total=number_of_runs, disable=disable_tqdm) as progress:
+            for result in run_func(self.output_path, self._lrsystem_configs, self._data_configs):
+                self.output.report(result)
+                progress.update(1)
 
     def run(self) -> None:
         """

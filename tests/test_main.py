@@ -94,12 +94,13 @@ def test_load_setup_from_directory_without_yaml(tmp_path, names):
 
 
 def test_write_config(tmp_path):
+    setup = tmp_path / 'setup.yaml'
+    setup.write_text('a: 1\n# a comment that should be preserved\nb: 2\n')
     cfg = confidence.Configuration({'a': 1}, {'b': 2})
     output_dir = tmp_path / 'output'
-    write_config(output_dir, cfg)
-    saved_cfg = confidence.loadf(output_dir / 'config.yaml')
-    assert dict(saved_cfg) == {'a': 1, 'b': 2}
-    assert not (output_dir / 'config').exists()
+    write_config(output_dir, setup, cfg)
+    assert (output_dir / 'config.yaml').read_text() == setup.read_text()
+    assert dict(confidence.loadf(output_dir / 'config.yaml')) == {'a': 1, 'b': 2}
 
 
 def test_write_config_from_directory_setup(tmp_path):
@@ -109,5 +110,5 @@ def test_write_config_from_directory_setup(tmp_path):
     (setup / 'part2.yaml').write_text('b: 2\n')
     cfg = load_setup(setup)
     output_dir = tmp_path / 'output'
-    write_config(output_dir, cfg)
+    write_config(output_dir, setup, cfg)
     assert dict(confidence.loadf(output_dir / 'config.yaml')) == {'a': 1, 'b': 2}

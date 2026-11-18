@@ -3,6 +3,7 @@ import datetime
 import json
 import logging
 import os
+import shutil
 import sys
 from collections.abc import Mapping
 from pathlib import Path
@@ -93,19 +94,27 @@ def load_setup(setup: Path) -> confidence.Configuration:
     return confidence.loadf(setup)
 
 
-def write_config(output_dir: Path, cfg: confidence.Configuration) -> None:
+def write_config(output_dir: Path, setup: Path, cfg: confidence.Configuration) -> None:
     """
     Write the used configuration to a `config.yaml` file in the output directory.
+
+    For a single setup file, the original file is copied as-is (preserving comments and formatting).
+    For a directory setup, the merged configuration is serialized.
 
     Parameters
     ----------
     output_dir : Path
         The directory where the used configuration should be written.
+    setup : Path
+        The path to the setup file, or to a directory containing the setup files.
     cfg : confidence.Configuration
         The used configuration setup for the experiment.
     """
     output_dir.mkdir(parents=True, exist_ok=True)
-    confidence.dumpf(cfg, output_dir / 'config.yaml')
+    if setup.is_file():
+        shutil.copyfile(setup, output_dir / 'config.yaml')
+    else:
+        confidence.dumpf(cfg, output_dir / 'config.yaml')
 
 
 def initialize_experiments(
@@ -273,7 +282,7 @@ def main(input_args: list[str] | None = None) -> None:
         raise  # this statement is not reachable, but helps code validation
 
     # Log the used experiment configuration setup
-    write_config(output_dir, cfg)
+    write_config(output_dir, setup, cfg)
 
     if args.list_experiments:
         for name in experiments:

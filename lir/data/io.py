@@ -114,7 +114,7 @@ class DataFileBuilderCsv:
                 raise ValueError(f'dimension index out of bounds: {dim}')
             if len(header) != data.shape[dim]:
                 raise ValueError(
-                    f'the header size does not match the number of columns: {len(header)} != {data.shape[1]}'
+                    f'the header size does not match the number of columns: {len(header)} != {data.shape[dim]}'
                 )
 
         dimensions = [dimension_headers.get(dim + 1, size) for dim, size in enumerate(data.shape[1:])]

@@ -72,6 +72,16 @@ class TestElub(unittest.TestCase):
         data3 = LLRData(features=odds_to_logodds(lrs3), hypothesis=y3)
         np.testing.assert_almost_equal((1, 1), np.pow(10, bayeserror.elub(data3, add_misleading=1)))
 
+    def test_elub_does_not_mutate_input(self):
+        llrs = odds_to_logodds(np.array([np.inf, np.inf, 1, 10.0**-15, 10.0**20]))
+        original = llrs.copy()
+        y = np.array([1, 1, 0, 0, 1])
+        data = LLRData(features=llrs, hypothesis=y)
+
+        bayeserror.elub(data, add_misleading=1)
+
+        np.testing.assert_array_equal(data.llrs, original)
+
     def test_bounded_calibrated_scorer(self):
         rng = np.random.default_rng(seed=0)
 

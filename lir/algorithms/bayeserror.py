@@ -96,7 +96,7 @@ def elub(
         raise ValueError('LLRData must contain both hypothesis labels to calculate ELUB bounds.')
 
     # remove LLRs of -infinity and +infinity
-    sanitized_llrs = llrs
+    sanitized_llrs = llrs.copy()
     sanitized_llrs[sanitized_llrs < substitute_extremes[0]] = substitute_extremes[0]
     sanitized_llrs[sanitized_llrs > substitute_extremes[1]] = substitute_extremes[1]
 

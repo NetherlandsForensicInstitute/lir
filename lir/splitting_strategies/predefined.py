@@ -20,7 +20,7 @@ def is_valid_input(instances: InstanceData) -> bool:  # numpydoc ignore=PR01,RT0
 
 def _check_input(instances: InstanceData) -> None:  # numpydoc ignore=PR01
     """Raise an error unless predefined strategies can be applied."""
-    if 'role_assignments' not in instances.all_fields:
+    if not is_valid_input(instances):
         raise ValueError('`role_assignments` field is missing')
 
 

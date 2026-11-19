@@ -1,6 +1,6 @@
 # glass.yaml - an example LR system evaluation for glass data.
 #
-# This file features two common-source systems for evaluation on glass data: a score-based system and a features-based
+# This file features two common-source systems for evaluation on glass data: a score-based system and a feature-based
 # system.
 #
 # Usage: pdm run lir --setup examples/glass.yaml
@@ -11,7 +11,7 @@
 # system there is a folder that may contain visualizations and other by products.
 output_path: output/${timestamp}_glass_example
 
-# We use a pre-defined dataset of LA-ICP-MS measurements of elemental concentration from floatglass. For more
+# We use a pre-defined dataset of LA-ICP-MS measurements of elemental concentration from float glass. For more
 # information on the dataset, see: https://github.com/NetherlandsForensicInstitute/elemental_composition_glass
 #
 # This requires internet access on first run to fetch the data. Subsequent runs will use the cached data in `cache_dir`.

@@ -96,7 +96,7 @@ transformed into a :class:`~lir.FeatureData` object.
     for instance_count, source_count in zip(instance_counts, source_counts):
         print(f'There are {source_count} sources with {instance_count} instances each.')
 
-The dataset is obtained using :class:`~lir.datasets.feature_data_csv.FeatureDataCsvHttpParser`. Like other
+The dataset is obtained using :class:`~lir.datasets.feature_data_csv.FeatureDataCsvParser`. Like other
 :class:`~lir.DataProvider`s, it implements the method :meth:`~lir.DataProvider.get_instances()` to obtain the dataset.
 
 

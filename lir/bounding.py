@@ -180,7 +180,7 @@ class NSourceBounder(LLRBounder):
         if llrdata.source_ids is None:
             raise ValueError(f'{type(self)} requires source IDs to calculate bounds')
 
-        unique_sources = np.unique(llrdata.source_ids, sorted=False)
+        unique_sources = np.unique(llrdata.source_ids)
         log_n_sources = np.log10(len(unique_sources))
 
         LOG.debug(f'NSourceBounder: number of sources: N={len(unique_sources)}')

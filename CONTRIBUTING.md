@@ -42,7 +42,7 @@ pdm run lir --help
 
 ### Adding new dependencies
 New dependencies should be installed through `pdm add <dependency_name>`.
-New develop only, i.e. "dev" dependencies should be added using `pdm add <dev_dependency_name> -G dev`.
+New development-only, i.e. "dev", dependencies should be added using `pdm add <dev_dependency_name> -G dev`.
 
 When developing locally, the following PDM scripts can be employed:
 - Run linting / formatting / static analysis: `pdm check`

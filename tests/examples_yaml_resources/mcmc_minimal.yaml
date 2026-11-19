@@ -1,4 +1,4 @@
-# Test override for mcmc_minimal.yml
+# Test override for mcmc_minimal.yaml
 # This provides sensible defaults for automated testing
 # (minimal data, fast MCMC settings, local output path)
 

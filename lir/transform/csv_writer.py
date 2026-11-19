@@ -23,8 +23,8 @@ class CsvWriter(Transformer):
     path : Path
         Filesystem path used by this operation.
     include_batch_number : bool
-        The batch number is the sequence number of the call to `apply()`. Iff `include_batch`, this value is included as
-        a column in the CSV file (default: True).
+        The batch number is the sequence number of the call to `apply()`. Iff `include_batch_number`, this value is
+        included as a column in the CSV file (default: True).
     include_fields : list[str] | None
         Fields to be included, or include all fields if not specified.
     exclude_fields : list[str] | None
@@ -40,8 +40,6 @@ class CsvWriter(Transformer):
     ):
         super().__init__()
         self.path = Path(path)
-        if self.path is None:
-            raise ValueError('missing argument: path')
 
         self.include_batch_number = include_batch_number
         self.include_fields = include_fields

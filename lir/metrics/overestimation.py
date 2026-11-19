@@ -24,7 +24,7 @@ def llr_overestimation(llrs: np.ndarray, y: np.ndarray, **kwargs: Any) -> float:
         Mean absolute value of the overestimation grid, or `np.nan` when unavailable.
     """
     _, llr_overestimation_grid, _ = calc_llr_overestimation(llrs, y, num_fids=0, **kwargs)
-    if llr_overestimation_grid is not None and llr_overestimation_grid.all():
+    if llr_overestimation_grid is not None:
         return float(np.mean(np.abs(llr_overestimation_grid)))
     else:
         return np.nan

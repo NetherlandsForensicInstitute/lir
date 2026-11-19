@@ -10,12 +10,12 @@ from matplotlib import pyplot as plt
 from scipy.stats import betabinom, binom, norm
 
 from lir.algorithms.bayeserror import ELUBBounder
-from lir.bounding import LLRBounder, check_type
+from lir.bounding import LLRBounder
 from lir.config import ConfigValue, config_parser, pop_field
 from lir.config.transform import parse_module
 from lir.data.models import FeatureData, InstanceData, LLRData
 from lir.transform import Transformer
-from lir.util import partial
+from lir.util import check_type, partial
 
 
 LOG = logging.getLogger(__name__)
@@ -95,9 +95,7 @@ class McmcLLRModel(Transformer):
 
         if self.bounder_factory is not None:
             # determine the bounds based on the LLRs of the training data, each sample results in an LR-system
-            logp_h1 = self.model_h1.transform(instances.features)
-            logp_h2 = self.model_h2.transform(instances.features)
-            llrs = logp_h1 - logp_h2
+            llrs = self._compute_raw_llrs(instances)
 
             # determine the bounds for each LR-system individually
             self.bounders = [self.bounder_factory() for _ in range(llrs.shape[1])]
@@ -105,6 +103,24 @@ class McmcLLRModel(Transformer):
                 llr_data = LLRData(features=llrs[:, i_system], hypothesis=instances.require_labels)
                 self.bounders[i_system] = self.bounders[i_system].fit(llr_data)
         return self
+
+    def _compute_raw_llrs(self, instances: FeatureData) -> np.ndarray:
+        """
+        Compute the raw LLRs of the supplied instances for each posterior sample.
+
+        Parameters
+        ----------
+        instances : FeatureData
+            Instances to compute LLRs for.
+
+        Returns
+        -------
+        np.ndarray
+            LLRs for each posterior sample, with one column per sample.
+        """
+        logp_h1 = self.model_h1.transform(instances.features)
+        logp_h2 = self.model_h2.transform(instances.features)
+        return logp_h1 - logp_h2
 
     def apply(self, instances: InstanceData) -> LLRData:
         """
@@ -121,9 +137,7 @@ class McmcLLRModel(Transformer):
             LLR estimates with median and credible interval columns.
         """
         instances = check_type(FeatureData, instances)
-        logp_h1 = self.model_h1.transform(instances.features)
-        logp_h2 = self.model_h2.transform(instances.features)
-        llrs = logp_h1 - logp_h2
+        llrs = self._compute_raw_llrs(instances)
         if (self.bounder_factory is not None) and (self.bounders is not None):
             # apply the bounders one by one
             for i_system in range(llrs.shape[1]):
@@ -147,16 +161,15 @@ class McmcLLRModel(Transformer):
                     ax.plot(x, y)
                     ax.set_xlabel(parameter_name)
                     ax.set_ylabel('probability density')
+
+                    file_name = plot_path / f'{self.plot_count:02d}-{plot_name}.png'
+
+                    LOG.info(f'Saving plot {plot_name} to {file_name}')
+                    fig.savefig(file_name)
                 except ValueError as e:
                     LOG.warning(f'Could not generate plot {plot_name}: {e}')
-                    continue
-
-                file_name = plot_path / f'{self.plot_count:02d}-{plot_name}.png'
-
-                LOG.info(f'Saving plot {plot_name} to {file_name}')
-                fig.savefig(file_name)
-
-                plt.close(fig)
+                finally:
+                    plt.close(fig)
 
 
 class McmcModel:

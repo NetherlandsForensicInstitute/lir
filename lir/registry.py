@@ -157,10 +157,7 @@ class ClassLoader(ConfigParserLoader):
         if len(parts) < 2:
             raise ComponentNotFoundError(f'no full class name: {key}')
 
-        try:
-            result_type = _get_attribute_by_name(key)
-        except (AttributeError, ModuleNotFoundError) as e:
-            raise ComponentNotFoundError from e
+        result_type = _get_attribute_by_name(key)
 
         return ConfigParserLoader._get_config_parser(result_type, default_config_parser)
 

@@ -1,5 +1,3 @@
-import inspect
-import warnings
 from enum import Enum
 from functools import partial
 from typing import Any, TypeVar
@@ -94,8 +92,6 @@ def get_classes_from_Xy(X: np.ndarray, y: np.ndarray, classes: list[Any] | None 
     np.ndarray
         An array of unique classes found in `y` if `classes` is None; otherwise, an array of the provided `classes`.
     """
-    if len(X.shape) < 1:
-        raise ValueError(f'expected: X is a 1-dimensional array; found: {len(X.shape)} dimensions')
     if len(y.shape) != 1:
         raise ValueError(f'expected: y is a 1-dimensional array; found: {len(y.shape)} dimensions')
     if X.shape[0] != y.size:
@@ -295,15 +291,6 @@ def ln_to_log10[FloatOrArray: (np.ndarray, float)](ln_data: FloatOrArray) -> Flo
         The input data converted from natural logarithm to 10-base logarithm.
     """
     return np.log10(np.e) * ln_data
-
-
-def warn_deprecated() -> None:
-    """Provide template message for deprecated functions."""
-    warnings.warn(
-        f'the function `{inspect.stack()[1].function}` is no longer maintained; '
-        'please check documentation for alternatives',
-        stacklevel=2,
-    )
 
 
 class Bind(partial):

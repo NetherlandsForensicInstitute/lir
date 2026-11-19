@@ -439,7 +439,7 @@ class TwoLevelModelNormalKDE:
         returns: covariance matrices of the trace and reference data and their respective inverses needed for
         LR calculation;
             covars_trace is the covariance matrix for the trace data given a KDE background mean (U_h0),
-            covars_trace_update is the covariance matrix for the trace mean with a bayesian update of reference mean
+            covars_trace_update is the covariance matrix for the trace mean with a Bayesian update of reference mean
             given a KDE background mean (U_hn),
             covars_ref is the covariance matrix for the reference data given a KDE background mean (U_hx),
             covars_trace_inv is the inverse of covars_trace,
@@ -494,10 +494,10 @@ class TwoLevelModelNormalKDE:
 
     def _predict_updated_ref_mean(self, X_ref: np.ndarray, covars_ref_inv: np.ndarray) -> np.ndarray:
         """
-        Calculate and return bayesian update of reference mean given KDE background means.
+        Calculate and return Bayesian update of reference mean given KDE background means.
 
         X_ref np.array of measurements of reference object, rows are repetitions, columns features
-        returns: updated_ref_mean, bayesian update of reference mean given KDE background means.
+        returns: updated_ref_mean, Bayesian update of reference mean given KDE background means.
 
         Parameters
         ----------

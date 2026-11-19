@@ -37,7 +37,7 @@ def plot_nbe(
         The range of log LR threshold values to consider for the plot. If None, it will be determined based on the
         minimum and maximum LLRs in the data, with a margin of 0.5 added to both ends. Default is None.
     add_misleading : int, optional
-        The number of consequential misleading LLRs to be added to both sides (labels 0 and 1). Default is 1.
+        The number of consecutive misleading LLRs to be added to both sides (labels 0 and 1). Default is 1.
     step_size : float, optional
         The step size for the log LR threshold range, determining the resolution of the plot. Default is 0.01.
     """
@@ -77,7 +77,7 @@ def elub(
     llrdata : LLRData
         An instance of LLRData containing LLRs and ground-truth labels.
     add_misleading : int, optional
-        The number of consequential misleading LLRs to be added to both sides (labels 0 and 1).
+        The number of consecutive misleading LLRs to be added to both sides (labels 0 and 1).
     step_size : float, optional
         Required accuracy on a 10-base logarithmic scale.
     substitute_extremes : tuple[float, float], optional
@@ -96,7 +96,7 @@ def elub(
         raise ValueError('LLRData must contain both hypothesis labels to calculate ELUB bounds.')
 
     # remove LLRs of -infinity and +infinity
-    sanitized_llrs = llrs
+    sanitized_llrs = llrs.copy()
     sanitized_llrs[sanitized_llrs < substitute_extremes[0]] = substitute_extremes[0]
     sanitized_llrs[sanitized_llrs > substitute_extremes[1]] = substitute_extremes[1]
 
@@ -143,7 +143,7 @@ def calculate_expected_utility(
     threshold_lrs : np.ndarray
         Array of threshold LRs used as acceptance thresholds.
     add_misleading : int, optional
-        Number of consequential misleading LRs to add.
+        Number of consecutive misleading LRs to add.
 
     Returns
     -------

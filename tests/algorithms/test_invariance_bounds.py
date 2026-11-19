@@ -130,6 +130,18 @@ class TestBounding(unittest.TestCase):
         bounds = invariance_bounds.calculate_invariance_bounds(data)
         np.testing.assert_almost_equal((0, 0.581), bounds[:2])
 
+    def test_badly_performing_system(self):
+        # the delta function is negative from the first threshold on; no positive upper bound exists
+        data = LLRData(features=np.array([1.0, 10.0, 10.0]), hypothesis=np.array([1, 0, 0]))
+        bounds = invariance_bounds.calculate_invariance_bounds(data)
+        np.testing.assert_almost_equal((0, 0), bounds[:2])
+
+    def test_negative_delta_at_last_threshold(self):
+        # the delta function is negative at the last threshold; no negative lower bound exists
+        data = LLRData(features=np.array([-10.0, -10.0, -10.0, -1.0]), hypothesis=np.array([1, 1, 0, 1]))
+        bounds = invariance_bounds.calculate_invariance_bounds(data)
+        np.testing.assert_almost_equal((0, 0), bounds[:2])
+
     def test_bounded_calibrated_scorer(self):
         rng = np.random.default_rng(0)
 

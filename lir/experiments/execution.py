@@ -149,9 +149,9 @@ def run_lrsystem(
     subsequently used to determine LLRs for the test subset data. The results are stored in
     a temporary list which contains the determined data of each test / train split.
 
-    The collected results are combined and passed to the configured `outputs` aggregations,
-    which may write metrics and visualizations to the `output_path` directory. The combined
-    LLR data is returned.
+    The collected results are combined into a single ``AggregationData`` object, which the
+    caller can pass to the configured `outputs` aggregations, which may write metrics and
+    visualizations to the output directory.
 
     Next to this, the configuration of both the data and LR system are stored in the output
     directory for future reference.
@@ -171,8 +171,8 @@ def run_lrsystem(
 
     Returns
     -------
-    LLRData
-        Likelihood-ratio data produced by applying the LR system.
+    AggregationData
+        The combined LLR data of all runs, with metadata for reporting by aggregations.
     """
     # Combine the data parameter with the LR system parameters to create a unique name for this run.
     run_name: str = (
@@ -198,7 +198,7 @@ def run_lrsystem(
     lrsystem_config_dict = lrsystem_config.spec.as_dict()
     data_config_dict = data_config.spec.as_dict()
 
-    # Check that simplify_data_structure returned a dict for type checking.
+    # Check that the configurations converted to dicts as expected, for type checking.
     if not isinstance(lrsystem_config_dict, dict) or not isinstance(data_config_dict, dict):
         raise ValueError('hyperparameters are not the expected type (dict)')
 
@@ -254,7 +254,7 @@ def run_multiple(
     """
     Run LR systems sequentially.
 
-    Consider using :meth:`parallellize_runs` to speed up processing by doing runs in parallel.
+    Consider using :func:`parallelize_runs` to speed up processing by doing runs in parallel.
 
     Parameters
     ----------
@@ -286,7 +286,7 @@ def run_multiple_lrsystems(
     output_base_dir : Path
         The base directory where the results may be written.
     lrsystem_configs : list[LRSystemConfig]
-        A list of LR system configuraitons.
+        A list of LR system configurations.
     data_config : DataConfig
         Data configuration used to construct the dataset.
 
@@ -311,14 +311,14 @@ def parallelize_runs(
     """
     Run LR systems in parallel.
 
-    This method has exactly the same effect as :meth:`run_multiple`, but uses ``multiprocessing`` to do runs in
+    This function has exactly the same effect as :func:`run_multiple`, but uses ``multiprocessing`` to do runs in
     parallel. It selects a parallelization strategy to distribute the runs over workers.
 
     Issues:
 
     - this may lead to repetitive loading of data, which may take additional (costly) I/O operations
-    - in some cases (notably, when bootstrapping) the `multiprocessing.imap_unsorted` operation may produce a "leaked
-      semaphore" warning
+    - in some cases (notably, when bootstrapping) the `multiprocessing.Pool.imap_unordered` operation may produce a
+      "leaked semaphore" warning
     - logging in workers is disabled
 
     Parameters

@@ -94,8 +94,6 @@ class DataFileBuilderCsv:
         The data argument is an arbitrary numpy array. Its first dimension are the rows. Any other dimension will be
         columns in the CSV output.
 
-            of the data. Because dimension 0 corresponds to rows, it should have no headers
-
         Parameters
         ----------
         data : np.ndarray
@@ -103,7 +101,8 @@ class DataFileBuilderCsv:
         header_prefix : str
             Prefix used for generated header names.
         dimension_headers : dict[int, list[str]] | None
-            Optional explicit names for feature dimensions.
+            Optional explicit names for feature dimensions. Because dimension 0 corresponds to rows, it should have
+            no headers.
         """
         dimension_headers = dimension_headers or {}
 
@@ -115,7 +114,7 @@ class DataFileBuilderCsv:
                 raise ValueError(f'dimension index out of bounds: {dim}')
             if len(header) != data.shape[dim]:
                 raise ValueError(
-                    f'the header size does not match the number of columns: {len(header)} != {data.shape[1]}'
+                    f'the header size does not match the number of columns: {len(header)} != {data.shape[dim]}'
                 )
 
         dimensions = [dimension_headers.get(dim + 1, size) for dim, size in enumerate(data.shape[1:])]

@@ -11,12 +11,6 @@ def is_valid_input(instances: InstanceData) -> bool:  # numpydoc ignore=PR01,RT0
     return instances.hypothesis is not None
 
 
-def _check_input(instances: InstanceData) -> None:  # numpydoc ignore=PR01
-    """Raise an error unless label-based strategies can be applied."""
-    if instances.hypothesis is None:
-        raise ValueError('unable to perform train/test split by hypothesis labels without labels')
-
-
 class TrainTestSplit(DataStrategy):
     """
     Split the data into a training set and a test set.

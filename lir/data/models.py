@@ -491,18 +491,6 @@ class InstanceData(BaseModel, ABC):
             all_fields += list(self.model_extra.keys())
         return all_fields
 
-    @property
-    def has_labels(self) -> bool:
-        """
-        Indicate whether label values are available.
-
-        Returns
-        -------
-        bool
-            ``True`` when label information is present.
-        """
-        return self.hypothesis is not None
-
     def replace(self, **kwargs: Any) -> Self:
         """
         Return a modified copy with updated values.
@@ -801,46 +789,13 @@ class LLRData(FeatureData):
         else:
             return None
 
-    @property
-    def llr_bounds(self) -> tuple[float | None, float | None]:
-        """
-        Return global lower and upper bounds applied to LLR values.
-
-        Returns
-        -------
-        tuple[float | None, float | None]
-            Tuple containing global lower and upper LLR clipping bounds.
-        """
-        return self.llr_lower_bound, self.llr_upper_bound
-
-    def feature_for_plot(self, source_key: str) -> np.ndarray | None:
-        """
-        Return the feature values for a given source key, or None if not available.
-
-        The return value has to be saved during the LR system execution by using the `save_features_after_step`
-        configuration option. If the feature values for the given source key are not available, this method returns
-        `None`. Use the `require_feature_for_plots` if you want to raise an error instead of returning `None` when the
-        feature values are not available.
-
-        Parameters
-        ----------
-        source_key : str
-            Key identifying the source of the feature values to be returned.
-
-        Returns
-        -------
-        np.ndarray | None
-            Feature values for the specified source key, or ``None`` if not available.
-        """
-        return self.model_extra.get(source_key) if self.model_extra is not None else None
-
     def require_feature_for_plots(self, source_key: str) -> np.ndarray:
         """
         Return the feature values for a given source key, raising an error if not available.
 
-        If the feature values for the given source key are not available, this method raises a ValueError with an
-        informative error message. Use the `feature_for_plot` method if you want to return `None` instead of raising an
-        error when the feature values for the given source key are not available.
+        The return value has to be saved during the LR system execution by using the `save_features_after_step`
+        configuration option. If the feature values for the given source key are not available, this method raises a
+        ValueError with an informative error message.
 
         Parameters
         ----------

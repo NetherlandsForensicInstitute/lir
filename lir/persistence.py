@@ -40,8 +40,8 @@ def load_model(path: Path) -> LRSystem:
         with open(path, 'rb') as f:
             # It is assumed exclusively `LRSystem` models will be loaded, which are considered safe
             return pickle.load(f)  # noqa: S301
-    except Exception:
-        raise RuntimeError('Could not load model from .pkl file')
+    except Exception as e:
+        raise RuntimeError(f'Could not load model from .pkl file {path}') from e
 
 
 def save_model(path: Path, model: LRSystem) -> None:

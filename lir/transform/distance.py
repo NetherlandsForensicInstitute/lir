@@ -43,6 +43,31 @@ class ElementWiseDifference(Transformer):
         return instances.replace_as(FeatureData, features=np.abs(instances.features[:, 0] - instances.features[:, 1]))
 
 
+def _to_feature_differences(instances: InstanceData) -> FeatureData:
+    """
+    Return the feature data as element-wise differences.
+
+    If the input is a PairedFeatureData object, the element-wise difference between both sides of the pairs is
+    calculated first.
+
+    Parameters
+    ----------
+    instances : InstanceData
+        Input instances to be processed by this method.
+
+    Returns
+    -------
+    FeatureData
+        FeatureData object with the (element-wise difference) features.
+    """
+    instances = check_type(FeatureData, instances)
+
+    if isinstance(instances, PairedFeatureData):
+        instances = ElementWiseDifference().apply(instances)
+
+    return instances
+
+
 class ManhattanDistance(Transformer):
     """
     Calculate the Manhattan distance between pairs.
@@ -70,11 +95,7 @@ class ManhattanDistance(Transformer):
         FeatureData
             FeatureData object parsed from the source.
         """
-        instances = check_type(FeatureData, instances)
-
-        # if the data are paired instances, calculate the element wise difference first
-        if isinstance(instances, PairedFeatureData):
-            instances = ElementWiseDifference().apply(instances)
+        instances = _to_feature_differences(instances)
 
         # the feature axes are all axes except the first
         feature_axes = tuple(range(1, len(instances.features.shape)))
@@ -113,11 +134,7 @@ class EuclideanDistance(Transformer):
         FeatureData
             FeatureData object parsed from the source.
         """
-        instances = check_type(FeatureData, instances)
-
-        # if the data are paired instances, calculate the element-wise difference first
-        if isinstance(instances, PairedFeatureData):
-            instances = ElementWiseDifference().apply(instances)
+        instances = _to_feature_differences(instances)
 
         # the feature axes are all axes except the first
         feature_axes = tuple(range(1, len(instances.features.shape)))

@@ -121,7 +121,7 @@ class BinaryClassifierTransformer(Transformer):
 
 class SklearnTransformer(Transformer):
     """
-    Implementation of a binary class classifier as scikit-learn `Pipeline` step.
+    Implementation of a scikit-learn style transformer as a `Pipeline` step.
 
     Parameters
     ----------

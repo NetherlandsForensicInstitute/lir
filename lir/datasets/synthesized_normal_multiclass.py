@@ -23,7 +23,7 @@ class SynthesizedNormalMulticlassData(DataProvider):
     Parameters
     ----------
     dimensions : list[SynthesizedDimension]
-        Number of feature dimensions to include in the header.
+        Distribution definitions (population mean/std and per-source spread) for each feature dimension.
     num_source_ids : int
         Number of sources to sample in the synthetic population.
     num_sources_per_source_id : int

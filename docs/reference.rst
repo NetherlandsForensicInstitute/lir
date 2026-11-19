@@ -48,7 +48,7 @@ This page lists the components that may be needed to define an LR system.
 .. jinja::
 
     {% for registry_section, friendly_name in [
-        ('lrsystem_architecture', 'LR system architecture'),
+        ('lrsystem_architectures', 'LR system architecture'),
         ('modules', 'LR system modules'),
         ('pairing', 'Pairing methods'),
     ] %}

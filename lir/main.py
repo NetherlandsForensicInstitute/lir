@@ -85,22 +85,14 @@ def copy_yaml_definition(output_dir: Path, config_yaml_path: Path) -> None:
 
 
 class InitializedExperiments(NamedTuple):
-    """
-    The experiments and settings as extracted from a configuration.
-
-    Attributes
-    ----------
-    experiments : Mapping[str, Experiment]
-        Mapping of experiment names to experiments.
-    output_dir : Path
-        Path to the output directory.
-    include_versions : bool
-        Whether version information should be written to the output directory.
-    """
+    """The experiments and settings as extracted from a configuration."""
 
     experiments: Mapping[str, Experiment]
+    """Mapping of experiment names to experiments."""
     output_dir: Path
+    """Path to the output directory."""
     include_versions: bool
+    """Whether version information should be written to the output directory."""
 
 
 def initialize_experiments(

@@ -18,7 +18,7 @@ def _git_repo_info(path: Path) -> tuple[Path | None, str | None]:
             check=True,
             capture_output=True,
         )
-        toplevel, commit_hash = result.stdout.decode('utf-8').split()
+        toplevel, commit_hash = result.stdout.decode('utf-8').splitlines()
         return Path(toplevel), commit_hash
     except (OSError, subprocess.CalledProcessError, ValueError):
         return None, None
@@ -55,9 +55,15 @@ def _pyproject_info(git_root: Path) -> tuple[str, str | None]:
 
 def _package_info(package_name: str, path: Path) -> dict[str, str | None]:
     root, commit_hash = _git_repo_info(path)
-    if root is not None and _pyproject_info(root)[0] != package_name:
-        root, commit_hash = None, None  # package is not checked out here (e.g. installed in a venv within a repository)
-    version = _installed_version(package_name)
+    version = None
+    if root is not None:
+        name, version = _pyproject_info(root)
+        if name != package_name:
+            # the path is inside a different repository (e.g. the package is installed in a virtual environment
+            # within a project repository), so the package itself is not checked out here
+            root, commit_hash, version = None, None, None
+    if version is None:
+        version = _installed_version(package_name)
     return {
         'version': version,
         'commit_hash': commit_hash or _extract_hash_from_version(version),
@@ -65,7 +71,7 @@ def _package_info(package_name: str, path: Path) -> dict[str, str | None]:
 
 
 def _collect_packages_info(config_yaml_path: Path | None = None) -> dict[str, dict[str, str | None]]:
-    packages = {'lir': _package_info('lir', Path(__file__))}
+    packages = {'lir': _package_info('lir', Path(__file__).resolve().parent)}
 
     paths = [Path.cwd()]
     if config_yaml_path is not None:
@@ -90,7 +96,9 @@ def collect_version_info(
     command: list[str] | None = None,
 ) -> dict[str, Any]:
     """
-    Collect system metadata and version information for ``lir`` and the current project.
+    Collect system metadata and version information for ``lir`` and the git projects involved in the run.
+
+    The git projects are those containing the working directory and the experiment setup file, if any.
 
     Parameters
     ----------
@@ -126,6 +134,8 @@ def write_versions_yaml(
     """
     Write system and package version information to ``versions.yaml`` in the output directory.
 
+    The output directory is created if it does not exist yet.
+
     Parameters
     ----------
     output_dir : Path
@@ -135,5 +145,6 @@ def write_versions_yaml(
     command : list[str] | None, optional
         The command-line arguments used to invoke the run, by default None.
     """
+    output_dir.mkdir(parents=True, exist_ok=True)
     version_info = collect_version_info(config_yaml_path, command=command)
     confidence.dumpf(version_info, output_dir / 'versions.yaml')

@@ -7,8 +7,9 @@ from pathlib import Path
 import confidence
 import pytest
 
-from lir.main import load_setup, main, write_config
-from lir.versions import _git_repo_info, collect_version_info
+import lir.versions
+from lir.main import _to_bool, load_setup, main, write_config
+from lir.versions import _extract_hash_from_version, _git_repo_info, collect_version_info
 
 from . import resources as resources_package
 
@@ -125,6 +126,7 @@ def test_write_config_from_directory_setup(tmp_path):
     assert dict(confidence.loadf(output_dir / 'config.yaml')) == {'a': 1, 'b': 2}
 
 
+@requires_git
 def test_main_writes_versions_yaml(tmp_path: Path):
     output_dir = tmp_path / 'out'
     main([str(config), '--experiment', 'exp2', '--set', f'output_path={output_dir}'])
@@ -139,21 +141,47 @@ def test_main_writes_versions_yaml(tmp_path: Path):
         'working_directory',
         'command',
     }
-    assert versions.packages.lir.version is not None
-    assert versions.packages.lir.commit_hash is not None
+    lir_info = versions.packages.lir
+    assert lir_info.version is not None
+
+    # the recorded commit hash must be that of the running code: from the lir repository when lir is checked out,
+    # or from the hash embedded in the installed version string otherwise
+    _, commit_hash = _git_repo_info(Path(lir.versions.__file__).resolve().parent)
+    assert lir_info.commit_hash == (commit_hash or _extract_hash_from_version(lir_info.version))
     assert 'numpy' not in versions.packages
 
 
 def test_main_disable_versions_yaml(tmp_path: Path):
-    disabled_config = tmp_path / 'setup_disabled.yaml'
-    disabled_config.write_text(
-        f'include_versions_in_output: false\n{config.read_text(encoding="utf-8")}', encoding='utf-8'
+    output_dir = tmp_path / 'out'
+    main(
+        [
+            str(config),
+            '--experiment',
+            'exp2',
+            '--set',
+            f'output_path={output_dir}',
+            '--set',
+            'include_versions_in_output=false',
+        ]
     )
 
-    output_dir = tmp_path / 'out'
-    main([str(disabled_config), '--experiment', 'exp2', '--set', f'output_path={output_dir}'])
-
     assert not (output_dir / 'versions.yaml').exists()
+
+
+@pytest.mark.parametrize(
+    ('value', 'expected'),
+    [
+        (True, True),
+        (False, False),
+        ('true', True),
+        ('True', True),
+        ('false', False),
+        ('FALSE', False),
+        (None, True),
+    ],
+)
+def test_to_bool(value: bool | str | None, expected: bool):
+    assert _to_bool(value) == expected
 
 
 def test_main_invalid_include_versions_in_output(tmp_path: Path):

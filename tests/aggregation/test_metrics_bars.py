@@ -33,6 +33,26 @@ from lir.config import ConfigValue, YamlParseError
             """,
             None,
         ),
+        # metrics may take arguments, and may be renamed in the output.
+        (
+            """
+            metrics:
+              - cllr
+              - name: cllr_forensic
+                method: cllr
+                h1_weight: 0.9
+            """,
+            None,
+        ),
+        # invalid configuration: the metric does not take this argument.
+        (
+            """
+            metrics:
+              - method: cllr
+                bogus: 0.9
+            """,
+            YamlParseError,
+        ),
         # invalid configuration: xlabel should be an argument to plot_params, not a top-level key.
         (
             """

@@ -187,5 +187,41 @@ def test_function_config_parser():
     config = ConfigValue.wrap([], {})
     assert GenericFunctionConfigParser(lambda x: x * x).parse(config, Path('/'))(3) == 9
 
-    config = ConfigValue.wrap([], {'features': np.array([[1], [2]])})  # NB: arguments have no effect!!!
-    assert GenericFunctionConfigParser(lambda x: x * x).parse(config, Path('/'))(3) == 9
+    config = ConfigValue.wrap([], {'offset': 2})
+    assert GenericFunctionConfigParser(lambda x, offset=0: x + offset).parse(config, Path('/'))(3) == 5
+
+    # arguments are passed by keyword, so keyword-only parameters work as well
+    config = ConfigValue.wrap([], {'offset': 2})
+    assert GenericFunctionConfigParser(lambda x, *, offset=0: x + offset).parse(config, Path('/'))(3) == 5
+
+    # required parameters cannot be set: they are rejected with a specific error
+    config = ConfigValue.wrap([], {'offset': 2})
+    with pytest.raises(YamlParseError, match='argument `offset` is a required parameter'):
+        GenericFunctionConfigParser(lambda x, offset: x + offset).parse(config, Path('/'))
+
+    # unknown arguments are still rejected
+    config = ConfigValue.wrap([], {'bogus': 2})
+    with pytest.raises(YamlParseError, match='unrecognized argument: bogus'):
+        GenericFunctionConfigParser(lambda x, offset=0: x + offset).parse(config, Path('/'))
+
+    # argument types are validated at parse time, based on the parameter annotation
+    def fn(x: int, offset: float = 0.0) -> float:
+        return x + offset
+
+    config = ConfigValue.wrap([], {'offset': '2'})
+    with pytest.raises(YamlParseError, match='expected a number'):
+        GenericFunctionConfigParser(fn).parse(config, Path('/'))
+
+    # integers are accepted for float parameters, and converted
+    config = ConfigValue.wrap([], {'offset': 2})
+    assert GenericFunctionConfigParser(fn).parse(config, Path('/'))(3) == 5
+
+
+def test_function_config_parser_attributes():
+    def fn(data: int, threshold: float = 0.5, *args: Any, legacy=None) -> float: ...
+
+    parser = GenericFunctionConfigParser(fn)
+    assert [(attr.name, attr.type, attr.default) for attr in parser.attributes()] == [
+        ('threshold', float, 0.5),
+        ('legacy', Any, None),
+    ]

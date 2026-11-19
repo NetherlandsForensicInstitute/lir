@@ -1,5 +1,6 @@
 import logging
 import sys
+import warnings
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any, Self
@@ -354,7 +355,15 @@ def mcmc(config: ConfigValue, output_dir: Path) -> McmcLLRModel:
     bounding_config = pop_field(config, 'bounding', required=False)
     bounding = partial(parse_module, bounding_config, output_dir) if bounding_config else None
 
+    include_plots_config = pop_field(config, 'include_plots', default=False, validate_type=bool)
+    if include_plots_config:
+        warnings.warn(
+            'Deprecated: `include_plots` is superseded by `include_parameter_outputs` and may be removed in the'
+            ' future.',
+            stacklevel=2,
+        )
+
     include_outputs_config = pop_field(config, 'include_parameter_outputs', default=False, validate_type=bool)
-    output_path = output_dir / 'mcmc_output' if include_outputs_config else None
+    output_path = output_dir / 'mcmc_output' if (include_plots_config or include_outputs_config) else None
 
     return McmcLLRModel(**config.as_dict(), bounding=bounding, output_path=output_path)  # type: ignore[arg-type]

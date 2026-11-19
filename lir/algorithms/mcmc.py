@@ -9,7 +9,7 @@ from KDEpy import FFTKDE
 from matplotlib import pyplot as plt
 from scipy.stats import betabinom, binom, norm
 
-from lir.algorithms.bayeserror import ELUBBounder
+from lir.algorithms.invariance_bounds import IVBounder
 from lir.bounding import LLRBounder
 from lir.config import ConfigValue, config_parser, pop_field
 from lir.config.transform import parse_module
@@ -20,7 +20,7 @@ from lir.util import check_type, partial
 
 LOG = logging.getLogger(__name__)
 
-elub_bounder_factory = ELUBBounder
+iv_bounder_factory = IVBounder
 
 
 class McmcLLRModel(Transformer):
@@ -45,8 +45,8 @@ class McmcLLRModel(Transformer):
         Bounding method factory to prevent over-extrapolation.
     interval : tuple[float, float], optional
         Lower and upper bounds of the credible interval in range ``[0, 1]``.
-    plot_path : Path | None, optional
-        If specified, path where distribution plots of the sampled distribution parameters are saved.
+    output_path : Path | None, optional
+        If specified, path where distribution plots and csv's of the sampled distribution parameters are saved.
     **mcmc_kwargs : Any
         Additional MCMC simulation settings passed to `McmcModel`.
     """
@@ -57,9 +57,9 @@ class McmcLLRModel(Transformer):
         parameters_h1: dict[str, dict[str, float | int | str]] | None,
         distribution_h2: str,
         parameters_h2: dict[str, dict[str, float | int | str]] | None,
-        bounding: Callable[[], LLRBounder] | None = elub_bounder_factory,
+        bounding: Callable[[], LLRBounder] | None = iv_bounder_factory,
         interval: tuple[float, float] = (0.05, 0.95),
-        plot_path: Path | None = None,
+        output_path: Path | None = None,
         **mcmc_kwargs: Any,
     ):
         self.model_h1 = McmcModel(distribution_h1, parameters_h1, **mcmc_kwargs)
@@ -67,8 +67,8 @@ class McmcLLRModel(Transformer):
         self.bounder_factory = bounding
         self.bounders: list[LLRBounder] | None = None
         self.interval = interval
-        self.plot_path = plot_path
-        self.plot_count = 0
+        self.output_path = output_path
+        self.batch_count = 0
 
     def fit(self, instances: InstanceData) -> Self:
         """
@@ -89,9 +89,9 @@ class McmcLLRModel(Transformer):
         self.model_h1.fit(instances.features[instances.require_labels == 1])
         self.model_h2.fit(instances.features[instances.require_labels == 0])
 
-        # optionally, plot distributions of the sampled distribution parameters
-        if self.plot_path is not None:
-            self._generate_parameter_plots(self.plot_path)
+        # optionally, save plot distributions and csv's of the sampled distribution parameters
+        if self.output_path is not None:
+            self._generate_parameter_outputs(self.output_path)
 
         if self.bounder_factory is not None:
             # determine the bounds based on the LLRs of the training data, each sample results in an LR-system
@@ -147,13 +147,13 @@ class McmcLLRModel(Transformer):
         quantiles = np.quantile(llrs, [0.5] + list(self.interval), axis=1, method='midpoint')
         return instances.replace_as(LLRData, features=quantiles.transpose(1, 0))
 
-    def _generate_parameter_plots(self, plot_path: Path) -> None:
-        plot_path.mkdir(parents=True, exist_ok=True)
-        self.plot_count += 1
+    def _generate_parameter_outputs(self, output_path: Path) -> None:
+        output_path.mkdir(parents=True, exist_ok=True)
+        self.batch_count += 1
         hypothesis_models = {'h1': self.model_h1, 'h2': self.model_h2}
         for hypothesis, model in hypothesis_models.items():
             for parameter_name, parameter_values in model.parameter_samples.items():
-                plot_name = 'distribution-' + hypothesis + '_' + model.distribution + '_' + parameter_name
+                output_name = hypothesis + '_' + model.distribution + '_' + parameter_name
                 fig, ax = plt.subplots()
 
                 try:
@@ -162,12 +162,13 @@ class McmcLLRModel(Transformer):
                     ax.set_xlabel(parameter_name)
                     ax.set_ylabel('probability density')
 
-                    file_name = plot_path / f'{self.plot_count:02d}-{plot_name}.png'
+                    file_name = f'batch_{self.batch_count:02d}-{output_name}'
 
-                    LOG.info(f'Saving plot {plot_name} to {file_name}')
-                    fig.savefig(file_name)
+                    LOG.info(f'Saving output {output_name} to {output_path / file_name}')
+                    fig.savefig(output_path / (file_name + '-distribution.png'))
+                    np.savetxt(output_path / (file_name + '-values.csv'), parameter_values)
                 except ValueError as e:
-                    LOG.warning(f'Could not generate plot {plot_name}: {e}')
+                    LOG.warning(f'Could not generate output {output_name}: {e}')
                 finally:
                     plt.close(fig)
 
@@ -353,7 +354,7 @@ def mcmc(config: ConfigValue, output_dir: Path) -> McmcLLRModel:
     bounding_config = pop_field(config, 'bounding', required=False)
     bounding = partial(parse_module, bounding_config, output_dir) if bounding_config else None
 
-    include_plots_config = pop_field(config, 'include_plots', default=False, validate_type=bool)
-    plot_path = output_dir / 'mcmc_output' if include_plots_config else None
+    include_outputs_config = pop_field(config, 'include_parameter_outputs', default=False, validate_type=bool)
+    output_path = output_dir / 'mcmc_output' if include_outputs_config else None
 
-    return McmcLLRModel(**config.as_dict(), bounding=bounding, plot_path=plot_path)  # type: ignore[arg-type]
+    return McmcLLRModel(**config.as_dict(), bounding=bounding, output_path=output_path)  # type: ignore[arg-type]

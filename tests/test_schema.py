@@ -47,8 +47,14 @@ def test_weighted_metric_in_output_is_valid() -> None:
                     'splits': {'strategy': 'train_test_instances'},
                 },
                 'output': [
-                    {'method': 'metrics', 'columns': ['cllr', {'name': 'cllr_forensic', 'method': 'cllr', 'h1_weight': 0.9}]},
-                    {'method': 'metrics_bars', 'metrics': [{'name': 'cllr_weighted', 'method': 'cllr', 'h1_weight': 0.8}]},
+                    {
+                        'method': 'metrics',
+                        'columns': ['cllr', {'name': 'cllr_forensic', 'method': 'cllr', 'h1_weight': 0.9}],
+                    },
+                    {
+                        'method': 'metrics_bars',
+                        'metrics': [{'name': 'cllr_weighted', 'method': 'cllr', 'h1_weight': 0.8}],
+                    },
                 ],
             },
         ],
@@ -59,9 +65,7 @@ def test_weighted_metric_in_output_is_valid() -> None:
 def test_metric_schema_declares_name() -> None:
     """The metric schema declares the `name` field used to rename metrics in the output."""
     schema = generate_schema()
-    object_options = [
-        option for option in schema['definitions']['metric']['anyOf'] if option.get('type') == 'object'
-    ]
+    object_options = [option for option in schema['definitions']['metric']['anyOf'] if option.get('type') == 'object']
     assert len(object_options) == 1
     assert 'name' in object_options[0]['properties']
 

@@ -12,7 +12,8 @@ from matplotlib import pyplot as plt
 from lir import LLRData
 from lir.aggregation.base import Aggregation, AggregationData
 from lir.config.base import ConfigAttribute, ConfigValue, check_is_empty, config_parser, pop_field
-from lir.config.metrics import parse_metric_mapping
+from lir.config.metrics import parse_metrics
+from lir.metrics import MetricType
 from lir.util import check_not_none
 
 
@@ -187,7 +188,7 @@ def parse(config: ConfigValue, output_dir: Path) -> MetricsBarPlot:
     MetricsBarPlot
         An instance of :class:`~lir.aggregation.metrics_bars.MetricsBarPlot`.
     """
-    metrics = parse_metric_mapping(config, 'metrics', ['cllr'], output_dir)
+    metrics = parse_metrics(config.pop('metrics', default=['cllr']), output_dir)
     path: Path = pop_field(config, 'path', default=Path('metrics.png'), validate=Path)
     plot_params = pop_field(config, 'plot_params', default={})
 

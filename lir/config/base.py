@@ -502,7 +502,7 @@ class GenericFunctionConfigParser(ConfigParser):
             raise YamlParseError(config.context, f'unrecognized module type: `{self.component_class}`')
 
         try:
-            parameters = inspect.signature(self.component_class).parameters
+            parameters: Mapping[str, inspect.Parameter] = inspect.signature(self.component_class).parameters
         except (TypeError, ValueError):
             parameters = {}
 

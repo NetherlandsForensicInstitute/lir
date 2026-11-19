@@ -8,7 +8,7 @@ from typing import IO, Any
 
 from lir.aggregation.base import Aggregation, AggregationData
 from lir.config.base import ConfigAttribute, ConfigValue, check_is_empty, config_parser
-from lir.config.metrics import parse_metric_mapping
+from lir.config.metrics import parse_metrics
 from lir.metrics import MetricType
 
 
@@ -112,7 +112,7 @@ def parse(config: ConfigValue, output_dir: Path) -> WriteMetricsToCsv:
     WriteMetricsToCsv
         An instance of the WriteMetricsToCsv class configured to write metrics to a CSV file.
     """
-    columns = parse_metric_mapping(config, 'columns', ['cllr', 'cllr_min'], output_dir)
+    columns = parse_metrics(config.pop('columns', default=['cllr', 'cllr_min']), output_dir)
 
     check_is_empty(config)
     return WriteMetricsToCsv('metrics.csv', columns)

@@ -17,6 +17,7 @@ from lir.config.base import ConfigValue, YamlParseError, pop_field
 from lir.config.experiment_strategies import parse_experiments
 from lir.config.schema import generate_schema, validate_yaml
 from lir.experiments import Experiment
+from lir.util import check_type
 from lir.versions import write_versions_yaml
 
 
@@ -87,7 +88,7 @@ class InitializedExperiments(NamedTuple):
     """
     The experiments and settings as extracted from a configuration.
 
-    Parameters
+    Attributes
     ----------
     experiments : Mapping[str, Experiment]
         Mapping of experiment names to experiments.
@@ -128,10 +129,37 @@ def initialize_experiments(
     cfg = ConfigValue.wrap([], cfg)
 
     output_dir = pop_field(cfg, 'output_path', validate=Path)
-    include_versions = pop_field(cfg, 'include_versions_in_output', default=True, validate_type=bool)
+    include_versions = pop_field(cfg, 'include_versions_in_output', default=True, validate=_to_bool)
     initialize_logfile(output_dir)
 
     return InitializedExperiments(parse_experiments(cfg, output_dir), output_dir, include_versions)
+
+
+def _to_bool(value: bool | str | None) -> bool:
+    """
+    Interpret a configuration value as a boolean.
+
+    String values are accepted, as they occur when a value is overridden from the command line with ``--set``.
+    ``None``, which the schema allows for optional attributes, is interpreted as the default value.
+
+    Parameters
+    ----------
+    value : bool | str | None
+        The value to interpret as a boolean.
+
+    Returns
+    -------
+    bool
+        The interpreted boolean value.
+    """
+    if value is None:
+        return True
+    if isinstance(value, str):
+        if value.lower() == 'true':
+            return True
+        if value.lower() == 'false':
+            return False
+    return check_type(bool, value)
 
 
 def error(msg: str, e: Exception | None = None) -> None:

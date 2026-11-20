@@ -57,24 +57,7 @@ Evaluate an LR system using the command-line interface as follows:
 
 The `examples` folder may be a good starting point for setting up an experiment.
 
-The elements of the experiment configuration YAML are looked up in the registry. The following lists all available
-elements in the registry.
-
-```commandline
-lir --list-registry
-```
-
-### Setting up the validation schema
-A schema that validates lir configuration `yaml` files is available, namely `lir/resources/config-schema.json`. This schema can be used to validate a specific `yaml` file by using
-```commandline
-lir --validate your_experiment.yaml
-```
-
-
-Next to this, most modern IDEs support JSON/YAML schema validation.
-
-### Multiple YAML files in a directory
-
+### Multiple YAML setup files in a directory
 Alternatively, it is possible to combine multiple YAML files in a given directory into a single experiment configuration.
 This might be desired when strictly separating multiple parts of the experiment setup, for example using different data setups having a shared experiment pipeline.
 
@@ -85,6 +68,30 @@ This might be desired when strictly separating multiple parts of the experiment 
 
 The `lir` command can be executed as follows: `lir config/some_directory`.
 This would result in a combined configuration of `file_a.yaml` and `file_b.yaml`.
+
+The elements of the experiment configuration YAML are looked up in the registry. The following lists all available
+elements in the registry.
+
+```commandline
+lir --list-registry
+```
+
+### Setting up the validation schema
+A schema that validates lir configuration `yaml` files is available, namely `lir/resources/config-schema.json`. 
+This schema can be used to validate a specific `yaml` file or directory of YAML files by using
+
+```commandline
+lir --validate your_experiment.yaml
+```
+
+or for a directory of YAML files:
+
+```commandline
+lir --validate my_dir/experiment
+```
+
+
+Next to this, most modern IDEs support JSON/YAML schema validation.
 
 
 #### PyCharm

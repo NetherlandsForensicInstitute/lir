@@ -164,6 +164,11 @@ efficiently. We could instead use `cross validation`_:
 Now, if we run the experiment again, the system will be trained and applied five times, on different subsets. The five
 test sets are merged and we can calculate the metrics on the full dataset!
 
+If the data set is too small to make a meaningful train/test split, for example when it consists of pairs of
+instances, we can use the ``train_test_full`` strategy. It does not split the data, but uses the full data set for
+both training and testing. This is useful to assess whether the data has any discriminative power at all, but note
+that the resulting performance metrics will be optimistic.
+
 In some cases, we want full control over which instances are used for training and which ones end up in the test set.
 In that case, the train/test roles are assigned by the data provider, and we can use the predefined splitting strategies
 ``predefined_train_test`` or ``predefined_cross_validation``.

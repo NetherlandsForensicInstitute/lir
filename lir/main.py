@@ -13,7 +13,7 @@ from joblib import Parallel, delayed
 from lir import registry
 from lir.config.base import ConfigValue, YamlParseError, pop_field
 from lir.config.experiment_strategies import parse_experiments
-from lir.config.schema import generate_schema, validate_yaml
+from lir.config.schema import generate_schema, validate_config
 from lir.experiments import Experiment
 
 
@@ -63,6 +63,7 @@ def initialize_logfile(output_dir: Path) -> None:
 def load_setup(setup: Path) -> confidence.Configuration:
     """
     Load the experiment setup from a single YAML file or a given directory containing multiple YAML files.
+
     The files are loaded in alphabetical order if multiple files are presented.
 
     Parameters
@@ -237,9 +238,13 @@ def main(input_args: list[str] | None = None) -> None:
     if not setup:
         parser.error('missing FILENAME argument')
 
+    # Load the setup into a confidence.Configuration
+    cfg = load_setup(setup)
+    cfg = confidence.Configuration(cfg, dict(value.split('=', 1) for value in args.set_value))
+
     if args.validate:
         try:
-            validate_yaml(setup)
+            validate_config(cfg)
             print(f'✓ {setup} is valid')
         except FileNotFoundError as e:
             error(str(e))
@@ -253,9 +258,6 @@ def main(input_args: list[str] | None = None) -> None:
 
     sys.path.append(str(Path().resolve()))
     LOG.debug(f'added {Path().resolve()} to sys.path')
-
-    cfg = load_setup(setup)
-    cfg = confidence.Configuration(cfg, dict(value.split('=', 1) for value in args.set_value))
 
     try:
         experiments, output_dir = initialize_experiments(cfg)

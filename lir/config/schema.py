@@ -2,7 +2,6 @@ import datetime
 import re
 import types
 from numbers import Number
-from pathlib import Path
 from typing import Any
 
 import confidence
@@ -560,25 +559,21 @@ def generate_schema(strict: bool = False) -> dict[str, Any]:
     return SchemaGenerator(strict=strict).generate()
 
 
-def validate_yaml(yaml_path: Path, strict: bool = False) -> None:
+def validate_config(cfg: confidence.Configuration, strict: bool = False) -> None:
     """
-    Validate a YAML file against the schema.
+    Validate a configuration setup against the schema.
 
     In strict mode, only the canonical form is allowed. This is generally recommended if the use of a GUI is intended.
 
     Parameters
     ----------
-    yaml_path : Path
-        The path to the YAML file to be validated.
+    cfg : confidence.Configuration
+        The configuration that needs to be validated.
     strict : bool, optional
         Strict mode.
 
     Raises
     ------
-    FileNotFoundError
-        If the YAML file or the schema file does not exist.
-    yaml.YAMLError
-        If the YAML file is not valid YAML.
     ValidationError
         If the YAML file does not conform to the schema.
     """
@@ -588,7 +583,7 @@ def validate_yaml(yaml_path: Path, strict: bool = False) -> None:
 
     # Resolve ${...} references before validation
     context = {'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')}  # noqa: DTZ005
-    cfg = confidence.Configuration(confidence.loadf(yaml_path), context)
+    cfg = confidence.Configuration(cfg, context)
 
     # Validate data against schema
     validate(instance=ConfigValue.wrap([], cfg).unwrap(), schema=schema)

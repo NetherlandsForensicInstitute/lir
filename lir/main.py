@@ -63,6 +63,7 @@ def initialize_logfile(output_dir: Path) -> None:
 def load_setup(setup: Path) -> confidence.Configuration:
     """
     Load the experiment setup from a single YAML file or a given directory containing multiple YAML files.
+    The files are loaded in alphabetical order if multiple files are presented.
 
     Parameters
     ----------
@@ -74,15 +75,16 @@ def load_setup(setup: Path) -> confidence.Configuration:
     confidence.Configuration
         The merged configuration.
     """
-    if setup.is_dir():
-        # `confidence` resolves name templates relative to the working directory, so use a relative path here
-        name = os.path.relpath(setup)
-        return confidence.load_name(
-            name,
-            format=confidence.YAML,
-            load_order=confidence.loaders(confidence.io.glob_pattern('{name}/*{suffix}')),
-        )
-    return confidence.loadf(setup)
+    if setup.is_file():
+        return confidence.loadf(setup)
+
+    # Setup refers to a directory
+    yaml_suffixes = ('.yaml', '.yml')
+    yaml_files = []
+    for f in setup.iterdir():
+        if f.suffix in yaml_suffixes:
+            yaml_files.append(f)
+    return confidence.loadf(*yaml_files)
 
 
 def write_config(output_dir: Path, cfg: confidence.Configuration) -> None:

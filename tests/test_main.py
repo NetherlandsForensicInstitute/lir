@@ -65,6 +65,11 @@ def test_load_setup_from_directory(tmp_path):
     assert dict(load_setup(tmp_path)) == {'a': 1, 'b': 2}
 
 
+def test_load_setup_from_directory_includes_yml_suffix(tmp_path):
+    (tmp_path / 'part1.yaml').write_text('a: 1\n')
+    (tmp_path / 'part2.yml').write_text('b: 2\n')
+    assert dict(load_setup(tmp_path)) == {'a': 1, 'b': 2}
+
 def test_write_config(tmp_path):
     cfg = confidence.Configuration({'a': 1}, {'b': 2})
     output_dir = tmp_path / 'output'

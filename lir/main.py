@@ -75,6 +75,11 @@ def load_setup(setup: Path) -> confidence.Configuration:
     -------
     confidence.Configuration
         The merged configuration.
+
+    Raises
+    ------
+    FileNotFoundError
+        If the setup file does not exist, or if the directory does not contain any YAML files.
     """
     if setup.is_file():
         return confidence.loadf(setup)
@@ -85,6 +90,8 @@ def load_setup(setup: Path) -> confidence.Configuration:
     for f in setup.iterdir():
         if f.suffix in yaml_suffixes:
             yaml_files.append(f)
+    if not yaml_files:
+        raise FileNotFoundError(f'no YAML files found in directory: {setup}')
     return confidence.loadf(*yaml_files)
 
 

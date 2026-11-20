@@ -196,7 +196,8 @@ this way, and that command-line values are read as strings: ``--set data.splits.
 Combining multiple YAML files
 ------------------------------
 
-It is possible to separate common, reusable logic from variable parts; for example when you're building a pipeline
+The `lir` command also accepts a folder for an experiment setup argument, instead of a YAML file. In that case it reads and merges all YAML files in the folder.
+This makes it possible to separate common, reusable logic from variable parts; for example when you're building a pipeline
 to be executed for a series of different datasets, requiring a different data setup.
 
 ### Example of use with symlinks (not working on Windows)

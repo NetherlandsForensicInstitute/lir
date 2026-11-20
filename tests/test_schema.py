@@ -3,11 +3,12 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import confidence
 import pytest
 import yaml
 from jsonschema import ValidationError, validate
 
-from lir.config.schema import generate_schema, validate_yaml
+from lir.config.schema import generate_schema, validate_config
 
 
 ROOT = Path(__file__).resolve().parent.parent  # Go up to project root
@@ -18,8 +19,9 @@ YAML_DIR = ROOT / 'examples'
 @pytest.mark.parametrize('yaml_path', sorted(YAML_DIR.glob('**/*.y*ml')))
 def test_yaml_files_conform_to_schema(yaml_path: Path) -> None:
     """Test that all YAML files in the examples directory conform to the schema."""
+    cfg = confidence.loadf(yaml_path)
     try:
-        validate_yaml(yaml_path)
+        validate_config(cfg)
     except (FileNotFoundError, yaml.YAMLError, ValidationError) as e:
         pytest.fail(f'Validation failed for {yaml_path}: {e}')
 

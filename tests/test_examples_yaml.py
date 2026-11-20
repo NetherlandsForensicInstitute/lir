@@ -7,7 +7,7 @@ import confidence
 import pytest
 import requests_cache
 
-from lir.config.schema import validate_yaml
+from lir.config.schema import validate_config
 from lir.main import initialize_experiments
 
 
@@ -22,7 +22,8 @@ def test_parse_examples(yaml_file: Path):
 
 @pytest.mark.parametrize('yaml_file', EXAMPLE_FILES)
 def test_validate_examples(yaml_file: Path):
-    validate_yaml(yaml_file)
+    cfg = confidence.loadf(yaml_file)
+    validate_config(cfg)
 
 
 def _check_directory_listing(listing_file: Path, output_dir: Path):

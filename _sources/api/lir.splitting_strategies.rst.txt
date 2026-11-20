@@ -1,0 +1,7 @@
+lir.splitting\_strategies package
+=================================
+
+.. automodule:: lir.splitting_strategies
+   :members:
+   :show-inheritance:
+   :undoc-members:

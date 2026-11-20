@@ -1,0 +1,18 @@
+lir.data package
+================
+
+.. automodule:: lir.data
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+lir.data.io module
+------------------
+
+.. automodule:: lir.data.io
+   :members:
+   :show-inheritance:
+   :undoc-members:

@@ -1,0 +1,50 @@
+lir.datasets package
+====================
+
+.. automodule:: lir.datasets
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+lir.datasets.alcohol\_breath\_analyser module
+---------------------------------------------
+
+.. automodule:: lir.datasets.alcohol_breath_analyser
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.datasets.feature\_data\_csv module
+--------------------------------------
+
+.. automodule:: lir.datasets.feature_data_csv
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.datasets.glass module
+-------------------------
+
+.. automodule:: lir.datasets.glass
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.datasets.synthesized\_normal\_binary module
+-----------------------------------------------
+
+.. automodule:: lir.datasets.synthesized_normal_binary
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+lir.datasets.synthesized\_normal\_multiclass module
+---------------------------------------------------
+
+.. automodule:: lir.datasets.synthesized_normal_multiclass
+   :members:
+   :show-inheritance:
+   :undoc-members:

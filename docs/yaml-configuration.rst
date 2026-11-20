@@ -199,6 +199,8 @@ Combining multiple YAML files
 It is possible to separate common, reusable logic from variable parts; for example when you're building a pipeline
 to be executed for a series of different datasets, requiring a different data setup.
 
+### Example of use with symlinks (not working on Windows)
+
 The directory structure might look as follows:
 
 .. code-block:: shell

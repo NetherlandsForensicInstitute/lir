@@ -1,4 +1,5 @@
 from lir.splitting_strategies.auto import AutoCrossValidation, AutoTrainTestSplit
+from lir.splitting_strategies.full import FullTrainTestSplit
 from lir.splitting_strategies.labels import CrossValidation, TrainTestSplit
 from lir.splitting_strategies.leave_one_category_out import LeaveOneCategoryOut
 from lir.splitting_strategies.pairs import PairsTrainTestSplit
@@ -25,4 +26,5 @@ __all__ = [
     'AutoTrainTestSplit',
     'AutoCrossValidation',
     'LeaveOneCategoryOut',
+    'FullTrainTestSplit',
 ]

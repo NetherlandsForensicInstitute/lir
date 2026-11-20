@@ -27,6 +27,7 @@ splitting_strategies:
   auto_train_test: lir.splitting_strategies.AutoTrainTestSplit
   auto_cross_validation: lir.splitting_strategies.AutoCrossValidation
   leave_one_category_out: lir.splitting_strategies.LeaveOneCategoryOut
+  train_test_full: lir.splitting_strategies.FullTrainTestSplit
 
 data_setup:
   splits: lir.data_setup.train_test_split.parse

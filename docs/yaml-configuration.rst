@@ -191,3 +191,34 @@ sections of the configuration file, so it affects the experiments that refer to 
 inside a list, such as the fields of an experiment definition in the ``experiments`` list, may not be overridden
 this way, and that command-line values are read as strings: ``--set data.splits.test_size=0.3`` passes the string
 ``'0.3'`` to the field rather than the number ``0.3``, so the experiment fails when the field is used.
+
+
+Combining multiple YAML files
+------------------------------
+
+It is possible to separate common, reusable logic from variable parts; for example when you're building a pipeline
+to be executed for a series of different datasets, requiring a different data setup.
+
+The directory structure might look as follows:
+
+.. code-block:: shell
+
+    config/
+       shared_pipeline.yaml
+       experiment_a/
+          data_setup.yaml
+       experiment_b/
+          data_setup.yaml
+
+By creating a symlink of ``shared_pipeline.yaml`` in ``experiment_a`` and ``experiment_b``, the shared pipeline logic does not have to be duplicated.
+The ``shared_pipeline.yaml`` can depend on (YAML) keys defined in ``data_setup.yaml``.
+
+A symlink can be created as follows, in this scenario:
+
+ - for experiment_a: ``ln -s ../shared_pipeline.yaml config/experiment_a/shared_pipeline.yaml``
+ - for experiment_b: ``ln -s ../shared_pipeline.yaml config/experiment_b/shared_pipeline.yaml``
+
+The ``lir`` command can be executed as follows:
+
+  - for experiment_a: ``lir config/experiment_a``
+  - for experiment_b: ``lir config/experiment_b``

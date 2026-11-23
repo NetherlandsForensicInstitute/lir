@@ -442,6 +442,39 @@ def llr_interval(ax: Axes, llrdata: LLRData) -> None:
     ax.legend(loc=1)
 
 
+def _require_score(llrdata: LLRData) -> np.ndarray:
+    """
+    Return the score values from the given LLRData, raising an informative error if not available.
+
+    The scores have to be saved during the LR system execution by adding a
+    `lir.transform.save_features.SaveFeatureTransformer` with parameter `save_as: score` to the pipeline.
+
+    Parameters
+    ----------
+    llrdata : LLRData
+        The LLRData object to retrieve the scores from. Must have scores available.
+
+    Returns
+    -------
+    np.ndarray
+        The score values.
+
+    Raises
+    ------
+    ValueError
+        If the score values are not available, with a message explaining how to make them available.
+    """
+    extra = llrdata.model_extra
+    if extra is None or 'score' not in extra:
+        raise ValueError(
+            'Feature values for `score` are not available for this instance. '
+            'Add the transformer `lir.transform.save_features.SaveFeatureTransformer` with parameter '
+            '`save_as: score` to your pipeline. '
+            f'Currently available sources: {list(extra.keys()) if extra else "none"}'
+        )
+    return extra['score']
+
+
 def score_distribution(
     ax: Axes,
     llrdata: LLRData,
@@ -466,7 +499,7 @@ def score_distribution(
         If y-axis should be the probability density within each class,
         instead of counts (default: `True`).
     """
-    scores = llrdata.require_feature_for_plots('score')
+    scores = _require_score(llrdata)
     histogram(ax, scores, llrdata.require_labels, bins=bins, weighted=weighted, x_label='score')
 
 
@@ -483,7 +516,7 @@ def score_to_llr(ax: Axes, llrdata: LLRData) -> None:
     """
     llrs = llrdata.llrs
     labels = llrdata.hypothesis
-    scores = llrdata.require_feature_for_plots('score')
+    scores = _require_score(llrdata)
 
     # General settings; do them regardless of labels.
     ax.axhline(y=0, color='gray', linestyle='--', linewidth=0.5)

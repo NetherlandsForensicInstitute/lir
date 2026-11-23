@@ -189,20 +189,6 @@ def test_llr_data():
     assert np.all(LLRData(features=llr_values).llr_intervals == llr_values[:, 1:3])
 
 
-def test_llr_data_require_feature_for_plots():
-    llrdata = LLRData(features=np.ones((10, 1)), score=np.arange(10))
-
-    # available feature values are returned
-    assert np.all(llrdata.require_feature_for_plots('score') == np.arange(10))
-
-    # missing feature values raise an informative error
-    with pytest.raises(ValueError, match='`nonexistent` are not available') as error:
-        llrdata.require_feature_for_plots('nonexistent')
-    message = str(error.value)
-    assert 'lir.transform.save_features.SaveFeatureTransformer' in message
-    assert 'save_as: nonexistent' in message
-
-
 def test_indexing():
     features = FeatureData(features=np.ones((10, 1)), hypothesis=np.ones(10))
     assert len(features[:2]) == 2

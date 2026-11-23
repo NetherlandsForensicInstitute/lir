@@ -789,39 +789,6 @@ class LLRData(FeatureData):
         else:
             return None
 
-    def require_feature_for_plots(self, source_key: str) -> np.ndarray:
-        """
-        Return the feature values for a given source key, raising an error if not available.
-
-        The feature values have to be saved during the LR system execution by adding a
-        `lir.transform.save_features.SaveFeatureTransformer` with the corresponding `save_as` parameter to the
-        pipeline. If the feature values for the given source key are not available, this method raises a
-        ValueError with an informative error message.
-
-        Parameters
-        ----------
-        source_key : str
-            Key identifying the source of the feature values to be returned.
-
-        Returns
-        -------
-        np.ndarray
-            Feature values for the specified source key.
-
-        Raises
-        ------
-        ValueError
-            If the feature values for the given source key are not available.
-        """
-        if self.model_extra is None or source_key not in self.model_extra:
-            raise ValueError(
-                f'Feature values for `{source_key}` are not available for this instance. '
-                f'Add the transformer `lir.transform.save_features.SaveFeatureTransformer` with parameter '
-                f'`save_as: {source_key}` to your pipeline. '
-                f'Currently available sources: {list(self.model_extra.keys()) if self.model_extra else "none"}'
-            )
-        return self.model_extra[source_key]
-
     @model_validator(mode='after')
     def check_features_are_llrs(self) -> Self:
         """

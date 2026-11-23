@@ -95,9 +95,25 @@ class TestPlotting(unittest.TestCase):
                 ax.score_distribution(llr_data_with_scores)
 
             with plotting.axes() as ax:
+                ax.score_to_llr(llr_data_with_scores)
+
+            with plotting.axes() as ax:
                 ax.llr_interval(llr_data_intervals)
         except Exception as e:
             self.fail(f'Unexpected failure creating plot(s), while using valid data: {e}')
+
+    def test_score_plots_raise_informative_error_without_scores(self):
+        """Score plots require scores and raise an actionable error if they are missing."""
+        llr_data = LLRData(features=np.ones((10, 1)), hypothesis=np.array([0, 1] * 5))
+
+        for plot in (plotting.score_distribution, plotting.score_to_llr):
+            with self.assertRaises(ValueError) as context, plotting.axes() as ax:
+                plot(ax, llr_data)
+
+            message = str(context.exception)
+            self.assertIn('Feature values for `score` are not available', message)
+            self.assertIn('lir.transform.save_features.SaveFeatureTransformer', message)
+            self.assertIn('save_as: score', message)
 
 
 if __name__ == '__main__':

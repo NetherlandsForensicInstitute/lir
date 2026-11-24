@@ -16,7 +16,7 @@ and computes metrics, bounds, and plots.
 - Never edit `pdm.lock` by hand. Add dependencies with `pdm add` (use `-G dev` for
   dev-only dependencies), then commit the updated lock file. CI verifies it with
   `pdm lock --check`.
-- if the virtual environment is broken, do not fix it, but use `pdm` to create a new one named `.venv-pi`.
+- if the virtual environment is broken, do not fix it, but use `pdm` to create a new one named `.venv-agent`.
 
 ## Common commands (run from the repository root)
 

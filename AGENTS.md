@@ -42,6 +42,8 @@ A pre-commit hook that runs these checks can be installed from `pre-commit.examp
 - Docstrings use the numpy style and are linted by `numpydoc`; validate with
   `pdm lint-docs`.
 - Tests in `tests/` are exempt from the docstring rules (`D`) and may use `assert` (`S101`).
+- Code should be clean and concise, without extraneous functionality for testability or
+  otherwise not immediately required.
 
 ## Repository layout
 

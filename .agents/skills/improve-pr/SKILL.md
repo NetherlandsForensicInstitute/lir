@@ -1,6 +1,7 @@
 ---
 name: improve-pr
-description: Improve a PR by addressing review comments. Use when explicitly instructed to improve the PR or address comments on a PR. Ignore when reviewing a PR.
+description: Improve a PR by addressing review comments. Use when explicitly instructed to improve the PR
+  or address comments on a PR. Ignore when reviewing a PR.
 ---
 
 # Improve a pull request

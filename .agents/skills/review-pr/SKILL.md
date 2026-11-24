@@ -12,11 +12,8 @@ Write a critical review, looking out for bugs, code structure, docstrings. Check
 dangling or incorrect references, etc. Check the modifications against the issue and PR description. In particular for
 this codebase:
 
-- The code follows the `ruff` and `mypy` configuration in `pyproject.toml` (line length 120, single quotes,
-  fully typed functions, numpy-style docstrings).
-- New or changed functionality has tests in `tests/`, mirroring the package layout, and the documentation in
-  `docs/*.rst` is updated accordingly.
-- Snippets in `docs/snippets/py/` remain runnable, as they are executed as part of the test suite.
+- New or changed functionality has tests in `tests/`, mirroring the package layout.
+- The documentation in `docs/*.rst` is updated accordingly.
 - Dependency changes are made through `pdm add`, with an updated `pdm.lock` lock file.
 
 Number all findings for later reference. Write inline comments where possible.

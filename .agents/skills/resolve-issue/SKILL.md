@@ -13,7 +13,7 @@ If the issue can be addressed:
 1. Fetch and check out the main branch
 2. Create a new branch for the issue, with a name formatted as: TYPE/SCOPE/NUMBER (e.g. `fix/config/123`)
 3. Create a plan to resolve the issue in one or more steps
-4. Applying the necessary changes for each of the steps in a separate commit
+4. Apply the necessary changes for each of the steps in a separate commit
 5. Create a draft pull request to target branch `main`, with an adequate description
 
 Follow the project conventions from `AGENTS.md` while working: use `pdm check` and `pdm test` to verify the changes,

@@ -8,6 +8,7 @@ Guides
    api-overview
    lrsystem-assessment
    yaml-configuration
+   gui
    experiment-setup
    extending-lir
    

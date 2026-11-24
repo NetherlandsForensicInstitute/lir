@@ -1,0 +1,4 @@
+node_modules
+*.local
+.idea
+lir.schema.json

@@ -87,6 +87,9 @@ napoleon_custom_sections = None
 templates_path = ['_templates']
 exclude_patterns = []
 
+# the static assets of the GUI, built by `python docs/build_gui.py` (see the `generate-docs` script)
+html_extra_path = ['gui_static']
+
 # -- Options for HTML output -------------------------------------------------
 html_theme = 'sphinx_rtd_theme'
 html_theme_options = {

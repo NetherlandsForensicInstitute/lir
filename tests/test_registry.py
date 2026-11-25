@@ -68,6 +68,18 @@ def test_federated_loader_suggests_abbreviation():
     assert "did you mean: 'elub_bounder'" in str(exc_info.value)
 
 
+def test_federated_loader_ignores_entries_outside_search_path():
+    """'cllr' exists under 'metrics', but 'output.cllr' does not exist; 'metrics.cllr' must not be suggested."""
+    yaml_registry = registry.YamlRegistry(
+        confidence.Configuration({'metrics': {'cllr': 'lir.registry'}, 'output': {'csv': 'lir.registry'}})
+    )
+    loader = registry.FederatedLoader([yaml_registry, registry.ClassLoader()])
+
+    with pytest.raises(registry.ComponentNotFoundError) as exc_info:
+        loader.get('cllr', search_path=['output'])
+    assert 'did you mean' not in str(exc_info.value)
+
+
 def test_federated_loader_without_close_key_has_no_hint():
     yaml_registry = registry.YamlRegistry(confidence.Configuration({'metric': {'metrics_bars': 'lir.registry'}}))
     loader = registry.FederatedLoader([yaml_registry, registry.ClassLoader()])

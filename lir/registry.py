@@ -247,13 +247,15 @@ class FederatedLoader(ConfigParserLoader):
             except ComponentNotFoundError as e:
                 errors.append(e)
 
-        # registry keys are prefixed with their section (e.g. 'metric.metrics_bars'); offer the bare name as well
+        # only suggest entries that the caller could actually reach through the search path
         candidates = []
         for r in self.registries:
             for item in r:
-                candidates.append(item)
-                if '.' in item:
-                    candidates.append(item.split('.', 1)[1])
+                if search_path is None:
+                    candidates.append(item)
+                for path in search_path or []:
+                    if item.startswith(f'{path}.'):
+                        candidates.append(item[len(path) + 1 :])
         raise ComponentNotFoundError('; '.join(str(e) for e in errors) + _did_you_mean(key, candidates))
 
 

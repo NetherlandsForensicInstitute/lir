@@ -20,6 +20,9 @@ def _did_you_mean(key: str, candidates: Iterable[str]) -> str:
     """
     Return a 'did you mean' hint for an unknown key, or an empty string if no close match exists.
 
+    Candidates starting with the key (for abbreviations such as 'elub' for 'elub_bounder') are preferred; close
+    spellings (typos such as 'metric_bars' for 'metrics_bars') are added after them.
+
     Parameters
     ----------
     key : str
@@ -32,7 +35,15 @@ def _did_you_mean(key: str, candidates: Iterable[str]) -> str:
     str
         A hint such as ``"; did you mean: 'metrics_bars'?"``, or ``""``.
     """
-    matches = difflib.get_close_matches(key, sorted(set(candidates)), n=3, cutoff=0.6)
+    pool = sorted(set(candidates) - {key})
+    matches: list[str] = []
+    if len(key) >= 3:
+        matches = [c for c in pool if c.startswith(key)][:3]
+    for c in difflib.get_close_matches(key, pool, n=3, cutoff=0.6):
+        if len(matches) >= 3:
+            break
+        if c not in matches:
+            matches.append(c)
     if not matches:
         return ''
     return '; did you mean: ' + ', '.join(f"'{m}'" for m in matches) + '?'

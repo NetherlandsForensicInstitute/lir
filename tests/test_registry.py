@@ -57,6 +57,17 @@ def test_federated_loader_suggests_close_key():
     assert str(exc_info.value).count('did you mean') == 1
 
 
+def test_federated_loader_suggests_abbreviation():
+    yaml_registry = registry.YamlRegistry(
+        confidence.Configuration({'output': {'elub_bounder': 'lir.registry', 'iv_bounder': 'lir.registry'}})
+    )
+    loader = registry.FederatedLoader([yaml_registry, registry.ClassLoader()])
+
+    with pytest.raises(registry.ComponentNotFoundError) as exc_info:
+        loader.get('elub', search_path=['output'])
+    assert "did you mean: 'elub_bounder'" in str(exc_info.value)
+
+
 def test_federated_loader_without_close_key_has_no_hint():
     yaml_registry = registry.YamlRegistry(confidence.Configuration({'metric': {'metrics_bars': 'lir.registry'}}))
     loader = registry.FederatedLoader([yaml_registry, registry.ClassLoader()])

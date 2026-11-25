@@ -27,7 +27,8 @@ class InferenceDataSetup(DataSetup):
         after they are retrieved from their data providers. The filter's `apply()` method is called without `fit()`,
         and it may change the number of instances. The same filter instance is applied once per configured side (up to
         two times), so it must be safe to call `apply()` multiple times, i.e. it must be stateless and free of
-        cross-call side effects.
+        cross-call side effects. If `None` (the default), an :class:`~lir.transform.Identity` transformer is used, so
+        the data passes through unchanged.
     """
 
     def __init__(

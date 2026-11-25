@@ -468,6 +468,11 @@ class GenericFunctionConfigParser(ConfigParser):
     Only parameters with a default value can be set: the parser cannot distinguish the data argument, which is passed
     at call time, from other required parameters, so those are rejected with a specific error.
 
+    In short, the requirements for a component_class are:
+     - the class is callable;
+     - it accepts ``InstanceData`` as first and only required argument;
+     - it accepts more arguments, as long as they have a default value.
+
     Parameters
     ----------
     component_class : Callable
@@ -501,12 +506,15 @@ class GenericFunctionConfigParser(ConfigParser):
         if not callable(self.component_class):
             raise YamlParseError(config.context, f'unrecognized module type: `{self.component_class}`')
 
+        # get the parameters of the callable, to validate config fields against them
         try:
             parameters: Mapping[str, inspect.Parameter] = inspect.signature(self.component_class).parameters
         except (TypeError, ValueError):
+            # some builtins do not expose a signature
             parameters = {}
 
         with config:
+            # collect the configured fields as keyword arguments, validated against the parameter annotations
             kwargs = {
                 attribute.name: self._validate_argument(
                     attribute,
@@ -516,6 +524,10 @@ class GenericFunctionConfigParser(ConfigParser):
                 for attribute in self.attributes() or []
                 if attribute.name in config
             }
+
+            # only parameters with a default value may be set in the configuration: required parameters (such as
+            # the data argument) are supplied at call time, and positional-only parameters cannot be passed by
+            # keyword at all; reject them with a dedicated error message instead of failing at call time
             for name, parameter in parameters.items():
                 if (
                     parameter.default is inspect.Parameter.empty
@@ -534,6 +546,8 @@ class GenericFunctionConfigParser(ConfigParser):
                         'configuration parser',
                     )
 
+        # partially apply the configured keyword arguments; the remaining (required) arguments are supplied
+        # when the returned callable is invoked
         return partial(self.component_class, **kwargs) if kwargs else self.component_class
 
     def reference(self) -> str:

@@ -1,3 +1,4 @@
+import difflib
 import importlib.resources
 import inspect
 import logging
@@ -13,6 +14,28 @@ from . import resources as package_resources
 
 
 LOG = logging.getLogger(__name__)
+
+
+def _did_you_mean(key: str, candidates: Iterable[str]) -> str:
+    """
+    Return a 'did you mean' hint for an unknown key, or an empty string if no close match exists.
+
+    Parameters
+    ----------
+    key : str
+        The key that could not be resolved.
+    candidates : Iterable[str]
+        The known keys to compare against.
+
+    Returns
+    -------
+    str
+        A hint such as ``"; did you mean: 'metrics_bars'?"``, or ``""``.
+    """
+    matches = difflib.get_close_matches(key, sorted(set(candidates)), n=3, cutoff=0.6)
+    if not matches:
+        return ''
+    return '; did you mean: ' + ', '.join(f"'{m}'" for m in matches) + '?'
 
 
 def _get_attribute_by_name(name: str) -> Any:
@@ -213,7 +236,14 @@ class FederatedLoader(ConfigParserLoader):
             except ComponentNotFoundError as e:
                 errors.append(e)
 
-        raise ComponentNotFoundError('; '.join(str(e) for e in errors))
+        # registry keys are prefixed with their section (e.g. 'metric.metrics_bars'); offer the bare name as well
+        candidates = []
+        for r in self.registries:
+            for item in r:
+                candidates.append(item)
+                if '.' in item:
+                    candidates.append(item.split('.', 1)[1])
+        raise ComponentNotFoundError('; '.join(str(e) for e in errors) + _did_you_mean(key, candidates))
 
 
 def _load_package_registry() -> 'YamlRegistry':

@@ -10,6 +10,8 @@ from typing import Any
 
 import confidence
 
+from lir.util import get_setup_directory
+
 
 def _git_repo_info(path: Path) -> tuple[Path | None, str | None]:
     try:
@@ -75,7 +77,7 @@ def _collect_packages_info(config_yaml_path: Path | None = None) -> dict[str, di
 
     paths = [Path.cwd()]
     if config_yaml_path is not None:
-        paths.append(config_yaml_path.resolve().parent)
+        paths.append(get_setup_directory(config_yaml_path))
     for path in paths:
         root, commit_hash = _git_repo_info(path)
         if root is not None:
@@ -98,12 +100,12 @@ def collect_version_info(
     """
     Collect system metadata and version information for ``lir`` and the git projects involved in the run.
 
-    The git projects are those containing the working directory and the experiment setup file, if any.
+    The git projects are those containing the working directory and the experiment setup (file or directory), if any.
 
     Parameters
     ----------
     config_yaml_path : Path | None, optional
-        The path to the YAML file describing the experiment configuration, by default None.
+        The path to the experiment setup file or directory, by default None.
     command : list[str] | None, optional
         The command-line arguments used to invoke the run, by default None.
 
@@ -141,7 +143,7 @@ def write_versions_yaml(
     output_dir : Path
         The directory where ``versions.yaml`` should be written.
     config_yaml_path : Path | None, optional
-        The path to the YAML file describing the experiment configuration, by default None.
+        The path to the experiment setup file or directory, by default None.
     command : list[str] | None, optional
         The command-line arguments used to invoke the run, by default None.
     """

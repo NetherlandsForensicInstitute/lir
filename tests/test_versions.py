@@ -46,6 +46,22 @@ def test_collect_version_info_current_project(tmp_path: Path):
 
 
 @requires_git
+def test_collect_version_info_setup_directory(tmp_path: Path):
+    # the setup directory is itself the root of a git project, whose parent directory is not a git repository
+    repo_dir = tmp_path / 'lr_module_setup_dir'
+    repo_dir.mkdir()
+    (repo_dir / 'pyproject.toml').write_text(
+        '[project]\nname = "lr_module_setup_dir"\nversion = "0.3.0"\n', encoding='utf-8'
+    )
+    (repo_dir / 'part1.yaml').write_text('output_path: out\n', encoding='utf-8')
+    expected_commit = create_git_repo(repo_dir)
+
+    packages = collect_version_info(repo_dir, command=['lir'])['packages']
+
+    assert packages['lr_module_setup_dir'] == {'version': '0.3.0', 'commit_hash': expected_commit}
+
+
+@requires_git
 def test_git_repo_info(tmp_path: Path):
     repo_dir = tmp_path / 'repo'
     repo_dir.mkdir()

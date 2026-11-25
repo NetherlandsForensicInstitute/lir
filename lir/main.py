@@ -16,6 +16,7 @@ from lir.config.base import ConfigValue, YamlParseError, pop_field
 from lir.config.experiment_strategies import parse_experiments
 from lir.config.schema import generate_schema, validate_config
 from lir.experiments import Experiment
+from lir.util import get_setup_directory
 from lir.versions import write_versions_yaml
 
 
@@ -281,8 +282,7 @@ def main(input_args: list[str] | None = None) -> None:
 
     # Add the setup directory (or, for a single-file setup, the directory containing it) and the current
     # folder to sys.path for custom components.
-    resolved_setup = setup.resolve()
-    setup_dir = resolved_setup if resolved_setup.is_dir() else resolved_setup.parent
+    setup_dir = get_setup_directory(setup)
     sys.path.append(str(setup_dir))
     LOG.debug(f'added {setup_dir} to sys.path')
 

@@ -76,8 +76,7 @@ Results are written to the directory in ``output_path``.
 By default, a detailed log file is written to ``output_path/log.txt``. In addition, the experiment setup file is
 copied to ``output_path/config.yaml``, and system and package version information (such as the version and commit
 hash of LiR itself) is written to ``output_path/versions.yaml``, so that each result can be traced back to the code
-that produced it. The latter can be disabled with ``include_versions_in_output: false`` in the experiment setup, or
-from the command line with ``--set include_versions_in_output=false``.
+that produced it. The latter can be disabled with ``include_versions_in_output: false`` in the experiment setup.
 
 Within ``output_path``, a directory is created with the same name as the experiment. In the above example,
 the experiment only has a single run, but other experiment strategies may have multiple. In that case, a separate

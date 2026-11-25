@@ -8,7 +8,7 @@ import confidence
 import pytest
 
 import lir.versions
-from lir.main import _to_bool, load_setup, main, write_config
+from lir.main import load_setup, main, write_config
 from lir.versions import _extract_hash_from_version, _git_repo_info, collect_version_info
 
 from . import resources as resources_package
@@ -152,36 +152,15 @@ def test_main_writes_versions_yaml(tmp_path: Path):
 
 
 def test_main_disable_versions_yaml(tmp_path: Path):
-    output_dir = tmp_path / 'out'
-    main(
-        [
-            str(config),
-            '--experiment',
-            'exp2',
-            '--set',
-            f'output_path={output_dir}',
-            '--set',
-            'include_versions_in_output=false',
-        ]
+    disabled_config = tmp_path / 'setup_disabled.yaml'
+    disabled_config.write_text(
+        f'include_versions_in_output: false\n{config.read_text(encoding="utf-8")}', encoding='utf-8'
     )
 
+    output_dir = tmp_path / 'out'
+    main([str(disabled_config), '--experiment', 'exp2', '--set', f'output_path={output_dir}'])
+
     assert not (output_dir / 'versions.yaml').exists()
-
-
-@pytest.mark.parametrize(
-    ('value', 'expected'),
-    [
-        (True, True),
-        (False, False),
-        ('true', True),
-        ('True', True),
-        ('false', False),
-        ('FALSE', False),
-        (None, True),
-    ],
-)
-def test_to_bool(value: bool | str | None, expected: bool):
-    assert _to_bool(value) == expected
 
 
 def test_main_invalid_include_versions_in_output(tmp_path: Path):

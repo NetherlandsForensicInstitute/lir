@@ -178,6 +178,22 @@ In that case, the train/test roles are assigned by the data provider, and we can
       splits:
         strategy: predefined_train_test
 
+Both the ``splits`` and the ``inference`` setup support an optional ``filter`` key. The filter is a transformer whose
+``apply()`` method is called without ``fit()`` and which may change the number of instances. In the ``splits`` setup it
+is applied to the raw data before splitting; in the ``inference`` setup it is applied to the training and the
+inference data separately. For example, to keep only the first five instances of each dataset:
+
+.. code-block:: yaml
+
+    data:
+      setup: inference
+      training: {...}   # any data provider configuration
+      inference: {...}  # any data provider configuration
+      filter:
+        method: select_instances
+        indices:
+          - 0-4
+
 .. _data provider: reference.html#data-providers
 .. _splitting strategies: reference.html#data-strategies
 

@@ -1,3 +1,4 @@
+import difflib
 import importlib.resources
 import inspect
 import logging
@@ -13,6 +14,39 @@ from . import resources as package_resources
 
 
 LOG = logging.getLogger(__name__)
+
+
+def _did_you_mean(key: str, candidates: Iterable[str]) -> str:
+    """
+    Return a 'did you mean' hint for an unknown key, or an empty string if no close match exists.
+
+    Candidates starting with the key (for abbreviations such as 'elub' for 'elub_bounder') are preferred; close
+    spellings (typos such as 'metric_bars' for 'metrics_bars') are added after them.
+
+    Parameters
+    ----------
+    key : str
+        The key that could not be resolved.
+    candidates : Iterable[str]
+        The known keys to compare against.
+
+    Returns
+    -------
+    str
+        A hint such as ``"; did you mean: 'metrics_bars'?"``, or ``""``.
+    """
+    pool = sorted(set(candidates) - {key})
+    matches: list[str] = []
+    if len(key) >= 3:
+        matches = [c for c in pool if c.startswith(key)][:3]
+    for c in difflib.get_close_matches(key, pool, n=3, cutoff=0.6):
+        if len(matches) >= 3:
+            break
+        if c not in matches:
+            matches.append(c)
+    if not matches:
+        return ''
+    return '; did you mean: ' + ', '.join(f"'{m}'" for m in matches) + '?'
 
 
 def _get_attribute_by_name(name: str) -> Any:
@@ -210,7 +244,16 @@ class FederatedLoader(ConfigParserLoader):
             except ComponentNotFoundError as e:
                 errors.append(e)
 
-        raise ComponentNotFoundError('; '.join(str(e) for e in errors))
+        # only suggest entries that the caller could actually reach through the search path
+        candidates = []
+        for r in self.registries:
+            for item in r:
+                if search_path is None:
+                    candidates.append(item)
+                for path in search_path or []:
+                    if item.startswith(f'{path}.'):
+                        candidates.append(item[len(path) + 1 :])
+        raise ComponentNotFoundError('; '.join(str(e) for e in errors) + _did_you_mean(key, candidates))
 
 
 def _load_package_registry() -> 'YamlRegistry':

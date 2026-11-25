@@ -25,7 +25,9 @@ class InferenceDataSetup(DataSetup):
     data_filter : Transformer | None, optional
         An optional filter (:class:`~lir.Transformer`) that is applied to both the training and the inference data,
         after they are retrieved from their data providers. The filter's `apply()` method is called without `fit()`,
-        and it may change the number of instances.
+        and it may change the number of instances. The same filter instance is applied once per configured side (up to
+        two times), so it must be safe to call `apply()` multiple times, i.e. it must be stateless and free of
+        cross-call side effects.
     """
 
     def __init__(

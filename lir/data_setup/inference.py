@@ -61,7 +61,19 @@ class InferenceDataSetup(DataSetup):
         return (self._pairs,)
 
     def _load(self, provider: DataProvider | None) -> InstanceData | None:
-        """Retrieve the instances from a provider and apply the filter, or return `None` if there is no provider."""
+        """
+        Retrieve the instances from a provider and apply the filter.
+
+        Parameters
+        ----------
+        provider : DataProvider | None
+            The data provider to retrieve the instances from, or `None` if no provider is configured.
+
+        Returns
+        -------
+        InstanceData | None
+            The filtered instances, or `None` if no provider is configured.
+        """
         if provider is None:
             return None
         return self.filter.apply(provider.get_instances())

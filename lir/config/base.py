@@ -463,6 +463,16 @@ class GenericFunctionConfigParser(ConfigParser):
     """
     Parser for callable functions or component classes.
 
+    Configuration values in the corresponding YAML section are passed to the callable as keyword arguments. This makes
+    it possible to configure a function-based metric, for example, without writing a dedicated configuration parser.
+    Only parameters with a default value can be set: the parser cannot distinguish the data argument, which is passed
+    at call time, from other required parameters, so those are rejected with a specific error.
+
+    In short, the requirements for a component_class are:
+     - the class is callable;
+     - it accepts ``InstanceData`` as first and only required argument;
+     - it accepts more arguments, as long as they have a default value.
+
     Parameters
     ----------
     component_class : Callable
@@ -484,19 +494,61 @@ class GenericFunctionConfigParser(ConfigParser):
         Parameters
         ----------
         config : ConfigValue
-            Configuration section for validation context.
+            Keyword arguments for the callable.
         output_dir : Path
             Unused output directory argument required by the parser API.
 
         Returns
         -------
         Callable
-            Resolved callable object.
+            Resolved callable object, partially applied with the configured arguments.
         """
-        if callable(self.component_class):
-            return self.component_class
+        if not callable(self.component_class):
+            raise YamlParseError(config.context, f'unrecognized module type: `{self.component_class}`')
 
-        raise YamlParseError(config.context, f'unrecognized module type: `{self.component_class}`')
+        # get the parameters of the callable, to validate config fields against them
+        try:
+            parameters: Mapping[str, inspect.Parameter] = inspect.signature(self.component_class).parameters
+        except (TypeError, ValueError):
+            # some builtins do not expose a signature
+            parameters = {}
+
+        with config:
+            # collect the configured fields as keyword arguments, validated against the parameter annotations
+            kwargs = {
+                attribute.name: self._validate_argument(
+                    attribute,
+                    config.pop_field(attribute.name),
+                    config.context,
+                )
+                for attribute in self.attributes() or []
+                if attribute.name in config
+            }
+
+            # only parameters with a default value may be set in the configuration: required parameters (such as
+            # the data argument) are supplied at call time, and positional-only parameters cannot be passed by
+            # keyword at all; reject them with a dedicated error message instead of failing at call time
+            for name, parameter in parameters.items():
+                if (
+                    parameter.default is inspect.Parameter.empty
+                    and parameter.kind
+                    in (
+                        inspect.Parameter.POSITIONAL_ONLY,
+                        inspect.Parameter.POSITIONAL_OR_KEYWORD,
+                        inspect.Parameter.KEYWORD_ONLY,
+                    )
+                    and name in config
+                ):
+                    raise YamlParseError(
+                        config.context,
+                        f'argument `{name}` is a required parameter of {self.reference()} and therefore cannot be '
+                        'set in the configuration; give the parameter a default value, or register a dedicated '
+                        'configuration parser',
+                    )
+
+        # partially apply the configured keyword arguments; the remaining (required) arguments are supplied
+        # when the returned callable is invoked
+        return partial(self.component_class, **kwargs) if kwargs else self.component_class
 
     def reference(self) -> str:
         """
@@ -508,6 +560,83 @@ class GenericFunctionConfigParser(ConfigParser):
             Fully qualified callable name.
         """
         return self._get_type_name(self.component_class)
+
+    @staticmethod
+    def _validate_argument(attribute: ConfigAttribute, value: Any, context: list[str]) -> Any:
+        """
+        Validate the value of a configuration argument against the annotation of the corresponding parameter.
+
+        Only scalar annotations are validated, and integers are accepted for ``float`` annotations. For other
+        annotations, the value is returned unchanged, and the callable is responsible for rejecting invalid values.
+
+        Parameters
+        ----------
+        attribute : ConfigAttribute
+            The definition of the configuration argument.
+        value : Any
+            The value of the argument in the configuration.
+        context : list[str]
+            YAML context used for error reporting.
+
+        Returns
+        -------
+        Any
+            The validated value, converted to the annotated type where applicable.
+        """
+        if attribute.type is float:
+            if isinstance(value, bool) or not isinstance(value, (int, float)):
+                raise YamlParseError(
+                    context, f'illegal value for field `{attribute.name}`: expected a number; found: {value!r}'
+                )
+            return float(value)
+        if attribute.type is int:
+            if isinstance(value, bool) or not isinstance(value, int):
+                raise YamlParseError(
+                    context, f'illegal value for field `{attribute.name}`: expected an integer; found: {value!r}'
+                )
+            return value
+        if attribute.type is str:
+            if not isinstance(value, str):
+                raise YamlParseError(
+                    context, f'illegal value for field `{attribute.name}`: expected a string; found: {value!r}'
+                )
+            return value
+        if attribute.type is bool:
+            if not isinstance(value, bool):
+                raise YamlParseError(
+                    context, f'illegal value for field `{attribute.name}`: expected a boolean; found: {value!r}'
+                )
+            return value
+        return value
+
+    def attributes(self) -> list[ConfigAttribute] | None:
+        """
+        Return the attributes in a configuration section that describes this callable.
+
+        The attributes are the parameters of the callable that have a default value, because those are the parameters
+        that can be omitted when the callable is invoked. Parameters without a default value are not configurable:
+        the generic parser cannot distinguish the data argument, which is passed at call time, from other required
+        parameters. Returns ``None`` if the signature cannot be determined.
+
+        Returns
+        -------
+        list[ConfigAttribute], optional
+            A list of configuration attribute definitions.
+        """
+        try:
+            parameters = inspect.signature(self.component_class).parameters.values()
+        except (TypeError, ValueError):
+            return None
+
+        return [
+            ConfigAttribute(
+                parameter.name,
+                parameter.annotation if parameter.annotation is not inspect.Parameter.empty else Any,
+                default=parameter.default,
+            )
+            for parameter in parameters
+            if parameter.default is not inspect.Parameter.empty
+        ]
 
 
 class GenericConfigParser(ConfigParser):

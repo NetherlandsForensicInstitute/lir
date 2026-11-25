@@ -99,7 +99,7 @@ class _DropFirstInstance(Transformer):
     """Filter that removes the first instance, so that the effect of the filter is observable."""
 
     def apply(self, instances: InstanceData) -> InstanceData:
-        return instances[1:]
+        return instances[np.arange(1, len(instances))]
 
 
 def test_inference_data_setup_applies_filter_to_both_sides(synthesized_normal_data_provider: DataProvider):

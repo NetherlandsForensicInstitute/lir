@@ -7,6 +7,7 @@ from lir.config import ConfigValue
 from lir.config.data import parse_data_setup
 from lir.data.models import DataProvider, FeatureData, InstanceData
 from lir.data_setup.inference import InferenceDataSetup
+from lir.transform import Identity, Transformer
 
 
 class CountingProvider(DataProvider):
@@ -92,3 +93,42 @@ def test_parse_inference_data_setup_empty_raises():
     config = ConfigValue.wrap(['data'], {'setup': 'inference'})
     with pytest.raises(ValueError, match='specify at least one of training data and inference data'):
         parse_data_setup(config, Path())
+
+
+class _DropFirstInstance(Transformer):
+    """Filter that removes the first instance, so that the effect of the filter is observable."""
+
+    def apply(self, instances: InstanceData) -> InstanceData:
+        return instances[1:]
+
+
+def test_inference_data_setup_applies_filter_to_both_sides(synthesized_normal_data_provider: DataProvider):
+    setup = InferenceDataSetup(synthesized_normal_data_provider, synthesized_normal_data_provider, _DropFirstInstance())
+    pair = next(iter(setup.get_train_inference_pairs()))
+    original_len = len(synthesized_normal_data_provider.get_instances())
+    assert len(pair[0]) == original_len - 1
+    assert len(pair[1]) == original_len - 1
+
+
+def test_inference_data_setup_filter_skips_missing_provider(synthesized_normal_data_provider: DataProvider):
+    setup = InferenceDataSetup(None, synthesized_normal_data_provider, _DropFirstInstance())
+    pair = next(iter(setup.get_train_inference_pairs()))
+    assert pair[0] is None
+    assert len(pair[1]) == len(synthesized_normal_data_provider.get_instances()) - 1
+
+
+def test_parse_inference_data_setup_with_filter():
+    config = ConfigValue.wrap(
+        ['data'], _inference_data_section(filter={'method': 'select_instances', 'indices': ['0-4']})
+    )
+    setup = parse_data_setup(config, Path())
+    assert isinstance(setup, InferenceDataSetup)
+    pair = next(iter(setup.get_train_inference_pairs()))
+    assert len(pair[0]) == 5
+    assert len(pair[1]) == 5
+
+
+def test_parse_inference_data_setup_without_filter_is_identity():
+    config = ConfigValue.wrap(['data'], _inference_data_section())
+    setup = parse_data_setup(config, Path())
+    assert isinstance(setup.filter, Identity)

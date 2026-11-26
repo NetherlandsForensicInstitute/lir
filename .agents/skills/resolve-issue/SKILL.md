@@ -41,4 +41,6 @@ In the description for other types of issues, clearly state:
 
 Prefix the PR description with: "This pull request is AI-generated and awaiting human revision."
 
-Request a review from the user who opened the issue.
+Link it to the issue with the text: "resolves #NUMBER".
+
+Request a review from the issue owner.

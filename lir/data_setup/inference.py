@@ -1,9 +1,11 @@
 from collections.abc import Iterable
 from pathlib import Path
 
-from lir import DataProvider, DataSetup, InstanceData
+from lir import DataProvider, DataSetup, InstanceData, Transformer
 from lir.config import ConfigAttribute, ConfigValue, config_parser
 from lir.config.data import parse_data_provider
+from lir.config.transform import parse_module
+from lir.transform import Identity
 
 
 class InferenceDataSetup(DataSetup):
@@ -20,11 +22,24 @@ class InferenceDataSetup(DataSetup):
         The :class:`~lir.DataProvider` that loads the training data.
     inference : DataProvider, optional
         The :class:`~lir.DataProvider` that loads the inference data.
+    data_filter : Transformer | None, optional
+        An optional filter (:class:`~lir.Transformer`) that is applied to both the training and the inference data,
+        after they are retrieved from their data providers. The filter's `apply()` method is called without `fit()`,
+        and it may change the number of instances. The same filter instance is applied once per configured side (up to
+        two times), so it must be safe to call `apply()` multiple times, i.e. it must be stateless and free of
+        cross-call side effects. If `None` (the default), an :class:`~lir.transform.Identity` transformer is used, so
+        the data passes through unchanged.
     """
 
-    def __init__(self, training: DataProvider | None, inference: DataProvider | None):
+    def __init__(
+        self,
+        training: DataProvider | None,
+        inference: DataProvider | None,
+        data_filter: Transformer | None = None,
+    ):
         self.training = training
         self.inference = inference
+        self.filter = data_filter or Identity()
         if self.training is None and self.inference is None:
             raise ValueError('specify at least one of training data and inference data')
         self._pairs: tuple[InstanceData | None, InstanceData | None] | None = None
@@ -33,8 +48,8 @@ class InferenceDataSetup(DataSetup):
         """
         Return the training and inference data as a single (training, inference) pair.
 
-        The instances of the data providers are fetched once and cached, so consecutive calls return the
-        same data.
+        The instances of the data providers are fetched once, passed through the filter, and cached, so consecutive
+        calls return the same data.
 
         Returns
         -------
@@ -43,16 +58,35 @@ class InferenceDataSetup(DataSetup):
             `None` if the corresponding data provider is not configured.
         """
         if self._pairs is None:
-            training_data = self.training.get_instances() if self.training is not None else None
-            inference_data = self.inference.get_instances() if self.inference is not None else None
+            training_data = self._load(self.training)
+            inference_data = self._load(self.inference)
             self._pairs = (training_data, inference_data)
         return (self._pairs,)
+
+    def _load(self, provider: DataProvider | None) -> InstanceData | None:
+        """
+        Retrieve the instances from a provider and apply the filter.
+
+        Parameters
+        ----------
+        provider : DataProvider | None
+            The data provider to retrieve the instances from, or `None` if no provider is configured.
+
+        Returns
+        -------
+        InstanceData | None
+            The filtered instances, or `None` if no provider is configured.
+        """
+        if provider is None:
+            return None
+        return self.filter.fit_apply(provider.get_instances())
 
 
 @config_parser(
     attributes=[
         ConfigAttribute('training', DataProvider, required=False),
         ConfigAttribute('inference', DataProvider, required=False),
+        ConfigAttribute('filter', Transformer, required=False),
     ]
 )
 def parse(config: ConfigValue, output_path: Path) -> InferenceDataSetup:
@@ -62,7 +96,7 @@ def parse(config: ConfigValue, output_path: Path) -> InferenceDataSetup:
     Parameters
     ----------
     config : ConfigValue
-        Configuration section containing the training and inference data providers.
+        Configuration section containing the training and inference data providers and an optional filter.
     output_path : Path
         Output path for created objects.
 
@@ -79,4 +113,6 @@ def parse(config: ConfigValue, output_path: Path) -> InferenceDataSetup:
                 parse_data_provider(field_config, output_path) if field_config.value is not None else None
             )
 
-        return InferenceDataSetup(data_providers['training'], data_providers['inference'])
+        data_filter = parse_module(config.pop('filter', required=False), output_path)
+
+        return InferenceDataSetup(data_providers['training'], data_providers['inference'], data_filter)

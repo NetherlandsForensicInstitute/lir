@@ -79,7 +79,7 @@ class InferenceDataSetup(DataSetup):
         """
         if provider is None:
             return None
-        return self.filter.apply(provider.get_instances())
+        return self.filter.fit_apply(provider.get_instances())
 
 
 @config_parser(

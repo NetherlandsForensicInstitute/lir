@@ -1,5 +1,6 @@
 from enum import Enum
 from functools import partial
+from pathlib import Path
 from typing import Any, TypeVar
 
 import numpy as np
@@ -320,3 +321,23 @@ class Bind(partial):
         iargs = iter(args)
         args = tuple(next(iargs) if arg is ... else arg for arg in self.args)
         return self.func(*args, *iargs, **keywords)
+
+
+def get_setup_directory(setup: Path) -> Path:
+    """
+    Return the directory that belongs to an experiment setup.
+
+    For a setup directory this is the directory itself; for a single setup file it is the directory containing the file.
+
+    Parameters
+    ----------
+    setup : Path
+        The path to the setup file or to the setup directory.
+
+    Returns
+    -------
+    Path
+        The resolved directory of the setup.
+    """
+    resolved = setup.resolve()
+    return resolved if resolved.is_dir() else resolved.parent

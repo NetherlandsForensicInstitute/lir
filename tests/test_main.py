@@ -1,12 +1,19 @@
 import importlib
+import shutil
 import sys
+from pathlib import Path
 
 import confidence
 import pytest
 
+import lir.versions
 from lir.main import load_setup, main, write_config
+from lir.versions import _extract_hash_from_version, _git_repo_info
 
 from . import resources as resources_package
+
+
+requires_git = pytest.mark.skipif(shutil.which('git') is None, reason='git is not available')
 
 
 def raise_on_exit(exitval: int):
@@ -97,3 +104,56 @@ def test_write_config_from_directory_setup(tmp_path):
     output_dir = tmp_path / 'output'
     write_config(output_dir, cfg)
     assert dict(confidence.loadf(output_dir / 'config.yaml')) == {'a': 1, 'b': 2}
+
+
+@requires_git
+def test_main_writes_versions_yaml(tmp_path: Path):
+    output_dir = tmp_path / 'out'
+    main([str(config), '--experiment', 'exp2', '--set', f'output_path={output_dir}'])
+
+    versions = confidence.loadf(output_dir / 'versions.yaml')
+    assert set(versions.system) >= {
+        'timestamp',
+        'python_version',
+        'os',
+        'architecture',
+        'hostname',
+        'working_directory',
+        'command',
+    }
+    lir_info = versions.packages.lir
+    assert lir_info.version is not None
+
+    # the recorded commit hash must be that of the running code: from the lir repository when lir is checked out,
+    # or from the hash embedded in the installed version string otherwise
+    _, commit_hash = _git_repo_info(Path(lir.versions.__file__).resolve().parent)
+    assert lir_info.commit_hash == (commit_hash or _extract_hash_from_version(lir_info.version))
+    assert 'numpy' not in versions.packages
+
+
+def test_main_disable_versions_yaml(tmp_path: Path):
+    disabled_config = tmp_path / 'setup_disabled.yaml'
+    disabled_config.write_text(
+        f'include_versions_in_output: false\n{config.read_text(encoding="utf-8")}', encoding='utf-8'
+    )
+
+    output_dir = tmp_path / 'out'
+    main([str(disabled_config), '--experiment', 'exp2', '--set', f'output_path={output_dir}'])
+
+    assert not (output_dir / 'versions.yaml').exists()
+
+
+def test_main_invalid_include_versions_in_output(tmp_path: Path):
+    output_dir = tmp_path / 'out'
+    with pytest.raises(ValueError):
+        main(
+            [
+                str(config),
+                '--experiment',
+                'exp2',
+                '--set',
+                f'output_path={output_dir}',
+                '--set',
+                'include_versions_in_output=not_a_bool',
+            ]
+        )

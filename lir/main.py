@@ -6,6 +6,7 @@ import os
 import sys
 from collections.abc import Mapping
 from pathlib import Path
+from typing import NamedTuple
 
 import confidence
 from joblib import Parallel, delayed
@@ -15,6 +16,8 @@ from lir.config.base import ConfigValue, YamlParseError, pop_field
 from lir.config.experiment_strategies import parse_experiments
 from lir.config.schema import generate_schema, validate_config
 from lir.experiments import Experiment
+from lir.util import get_setup_directory
+from lir.versions import write_versions_yaml
 
 
 LOG = logging.getLogger(__name__)
@@ -115,9 +118,20 @@ def write_config(output_dir: Path, cfg: confidence.Configuration) -> None:
     confidence.dumpf(cfg, output_dir / 'config.yaml')
 
 
+class InitializedExperiments(NamedTuple):
+    """The experiments and settings as extracted from a configuration."""
+
+    experiments: Mapping[str, Experiment]
+    """Mapping of experiment names to experiments."""
+    output_dir: Path
+    """Path to the output directory."""
+    include_versions: bool
+    """Whether version information should be written to the output directory."""
+
+
 def initialize_experiments(
     cfg: confidence.Configuration,
-) -> tuple[Mapping[str, Experiment], Path]:
+) -> InitializedExperiments:
     """
     Extract which Experiment to run as dictated in the configuration.
 
@@ -132,17 +146,19 @@ def initialize_experiments(
 
     Returns
     -------
-    tuple[Mapping[str, Experiment], Path]
-        A tuple with two elements: (1) mapping of names to experiments; (2) path to output directory.
+    InitializedExperiments
+        The experiments extracted from the configuration, the output directory, and whether version information
+        should be written to the output directory.
     """
     cfg = confidence.Configuration(cfg, {'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')})  # noqa: DTZ005
 
     cfg = ConfigValue.wrap([], cfg)
 
     output_dir = pop_field(cfg, 'output_path', validate=Path)
+    include_versions = pop_field(cfg, 'include_versions_in_output', default=True, validate_type=bool)
     initialize_logfile(output_dir)
 
-    return parse_experiments(cfg, output_dir), output_dir
+    return InitializedExperiments(parse_experiments(cfg, output_dir), output_dir, include_versions)
 
 
 def error(msg: str, e: Exception | None = None) -> None:
@@ -266,8 +282,7 @@ def main(input_args: list[str] | None = None) -> None:
 
     # Add the setup directory (or, for a single-file setup, the directory containing it) and the current
     # folder to sys.path for custom components.
-    resolved_setup = setup.resolve()
-    setup_dir = resolved_setup if resolved_setup.is_dir() else resolved_setup.parent
+    setup_dir = get_setup_directory(setup)
     sys.path.append(str(setup_dir))
     LOG.debug(f'added {setup_dir} to sys.path')
 
@@ -275,19 +290,22 @@ def main(input_args: list[str] | None = None) -> None:
     LOG.debug(f'added {Path().resolve()} to sys.path')
 
     try:
-        experiments, output_dir = initialize_experiments(cfg)
+        initialized_experiments = initialize_experiments(cfg)
     except YamlParseError as e:
         error(f'error while parsing {setup}: {str(e)}', e)
         raise  # this statement is not reachable, but helps code validation
 
     # Log the used experiment configuration setup
-    write_config(output_dir, cfg)
+    write_config(initialized_experiments.output_dir, cfg)
+    if initialized_experiments.include_versions:
+        write_versions_yaml(initialized_experiments.output_dir, setup, command=input_args)
 
     if args.list_experiments:
-        for name in experiments:
+        for name in initialized_experiments.experiments:
             print(name)
         return
 
+    experiments = initialized_experiments.experiments
     if args.experiment:
         for name in args.experiment:
             if name not in experiments:
